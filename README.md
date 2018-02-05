@@ -90,7 +90,7 @@ You can now quit the Docker application, if you wish.
 
 Your local Tidepool includes a number of environment variables that specify configuration secrets, hash salts, and a self-signed TLS certificate that can be customized to uniquely secure your installation. The default values for these environment variables were copied from the previous local development setup in order to maintain backwards compatibility. However, if your local Tidepool is to be used for anything more than development purposes, you should change these environment variables for security reasons.
 
-NOTE: Changing some of these environment variables **will** cause existing data in your Mongo database to become useable. It is highly recommended that you change the above environment variables *only* if you are willing to create a new Mongo database, thus losing all previously created accounts and uploaded data.
+NOTE: Changing some of these environment variables **will** cause existing data in your Mongo database to become unusable. It is highly recommended that you change the above environment variables *only* if you are willing to create a new Mongo database, thus losing all previously created accounts and uploaded data.
 
 ### Stop Local Tidepool
 
