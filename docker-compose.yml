@@ -9,7 +9,7 @@ services:
       - '27017:27017'
 
   blip:
-    image: tidepool/blip:docker-build
+    image: tidepool/blip
     depends_on:
       - hakken
     # build: ${TIDEPOOL_DOCKER_BLIP_DIR}
@@ -35,7 +35,7 @@ services:
       WEBPACK_DEVTOOL: cheap-module-eval-source-map
 
   gatekeeper:
-    image: tidepool/gatekeeper:docker-build
+    image: tidepool/gatekeeper
     depends_on:
       - hakken
     # build: ${TIDEPOOL_DOCKER_GATEKEEPER_DIR}
@@ -56,7 +56,7 @@ services:
       USER_API_SERVICE: '{"type": "static", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_SHORELINE_HOST}:9107"}]}'
 
   hakken:
-    image: tidepool/hakken:docker-build
+    image: tidepool/hakken
     # build: ${TIDEPOOL_DOCKER_HAKKEN_DIR}
     # volumes:
     #   - ${TIDEPOOL_DOCKER_HAKKEN_DIR}:/app:cached
@@ -72,7 +72,7 @@ services:
       PORT: '${TIDEPOOL_DOCKER_HAKKEN_PORT_PREFIX}8000'
 
   highwater:
-    image: tidepool/highwater:docker-build
+    image: tidepool/highwater
     depends_on:
       - hakken
     # build: ${TIDEPOOL_DOCKER_HIGHWATER_DIR}
@@ -94,7 +94,7 @@ services:
       USER_API_SERVICE: '{"type": "static", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_SHORELINE_HOST}:9107"}]}'
 
   hydrophone:
-    image: tidepool/hydrophone:docker-build
+    image: tidepool/hydrophone
     depends_on:
       - hakken
     # build:
@@ -150,7 +150,7 @@ services:
         }
 
   jellyfish:
-    image: tidepool/jellyfish:docker-build
+    image: tidepool/jellyfish
     depends_on:
       - hakken
     # build: ${TIDEPOOL_DOCKER_JELLYFISH_DIR}
@@ -176,7 +176,7 @@ services:
       USER_API_SERVICE: '{"type": "static", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_SHORELINE_HOST}:9107"}]}'
 
   message-api:
-    image: tidepool/message-api:docker-build
+    image: tidepool/message-api
     depends_on:
       - hakken
     # build: ${TIDEPOOL_DOCKER_MESSAGE_API_DIR}
@@ -200,7 +200,7 @@ services:
       USER_API_SERVICE: '{"type": "static", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_SHORELINE_HOST}:9107"}]}'
 
   platform-auth:
-    image: tidepool/auth:docker-build
+    image: tidepool/platform-auth
     # build:
     #   context: ${TIDEPOOL_DOCKER_PLATFORM_AUTH_DIR}
     #   dockerfile: Dockerfile.auth
@@ -258,7 +258,7 @@ services:
       TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT: '${TIDEPOOL_DOCKER_SERVICE_PROVIDER_DEXCOM_STATE_SALT}'
 
   platform-data:
-    image: tidepool/data:docker-build
+    image: tidepool/platform-data
     # build:
     #   context: ${TIDEPOOL_DOCKER_PLATFORM_DATA_DIR}
     #   dockerfile: Dockerfile.data
@@ -271,7 +271,7 @@ services:
     environment: *platform-environment
 
   platform-migrations:
-    image: tidepool/migrations:docker-build
+    image: tidepool/platform-migrations
     # build:
     #   context: ${TIDEPOOL_DOCKER_PLATFORM_MIGRATIONS_DIR}
     #   dockerfile: Dockerfile.migrations
@@ -282,7 +282,7 @@ services:
     environment: *platform-environment
 
   platform-notification:
-    image: tidepool/notification:docker-build
+    image: tidepool/platform-notification
     # build:
     #   context: ${TIDEPOOL_DOCKER_PLATFORM_NOTIFICATION_DIR}
     #   dockerfile: Dockerfile.notification
@@ -295,7 +295,7 @@ services:
     environment: *platform-environment
 
   platform-task:
-    image: tidepool/task:docker-build
+    image: tidepool/platform-task
     # build:
     #   context: ${TIDEPOOL_DOCKER_PLATFORM_TASK_DIR}
     #   dockerfile: Dockerfile.task
@@ -308,7 +308,7 @@ services:
     environment: *platform-environment
 
   platform-tools:
-    image: tidepool/tools:docker-build
+    image: tidepool/platform-tools
     # build:
     #   context: ${TIDEPOOL_DOCKER_PLATFORM_TOOLS_DIR}
     #   dockerfile: Dockerfile.tools
@@ -319,7 +319,7 @@ services:
     environment: *platform-environment
 
   platform-user:
-    image: tidepool/user:docker-build
+    image: tidepool/platform-user
     # build:
     #   context: ${TIDEPOOL_DOCKER_PLATFORM_USER_DIR}
     #   dockerfile: Dockerfile.user
@@ -332,7 +332,7 @@ services:
     environment: *platform-environment
 
   seagull:
-    image: tidepool/seagull:docker-build
+    image: tidepool/seagull
     depends_on:
       - hakken
     # build: ${TIDEPOOL_DOCKER_SEAGULL_DIR}
@@ -355,7 +355,7 @@ services:
       USER_API_SERVICE: '{"type": "static", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_SHORELINE_HOST}:9107"}]}'
 
   shoreline:
-    image: tidepool/shoreline:docker-build
+    image: tidepool/shoreline
     depends_on:
       - hakken
     # build:
@@ -406,7 +406,7 @@ services:
         }
 
   styx:
-    image: tidepool/styx:docker-build
+    image: tidepool/styx
     depends_on:
       - hakken
     # build: ${TIDEPOOL_DOCKER_STYX_DIR}
@@ -468,7 +468,7 @@ services:
         }
 
   tide-whisperer:
-    image: tidepool/tide-whisperer:docker-build
+    image: tidepool/tide-whisperer
     depends_on:
       - hakken
     # build:
