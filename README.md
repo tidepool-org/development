@@ -36,7 +36,7 @@ Now, if you just want to get it running as quickly as possible, execute the foll
 
 ```bash
 cd <local-directory>
-docker-compose -d up
+docker-compose up -d
 ```
 
 NOTE: Due to timing issues not seen outside of Docker, the `hydrophone` and `tide-whisperer` services may not properly connect to `shoreline`. We are looking at how to fix this problem. To resolve this problem for now, execute the following commands to restart these containers and services.
@@ -45,13 +45,13 @@ NOTE: Due to timing issues not seen outside of Docker, the `hydrophone` and `tid
 docker-compose restart hydrophone tide-whisperer
 ```
 
-NOTE: Executing `docker-compose -d up` will do nothing if all of the containers are already running. However, if one or more containers are stopped or their associated Docker images have been rebuilt, then it will start or restart those containers as you'd expect. In summary, feel free to run `docker-compose -d up` if you aren't sure if everything is running and up-to-date as there's no harm if there's nothing to be done.
+NOTE: Executing `docker-compose up -d` will do nothing if all of the containers are already running. However, if one or more containers are stopped or their associated Docker images have been rebuilt, then it will start or restart those containers as you'd expect. In summary, feel free to run `docker-compose up -d` if you aren't sure if everything is running and up-to-date as there's no harm if there's nothing to be done.
 
 For more information about `docker-compose`, please see https://docs.docker.com/compose.
 
 # Creating An Account
 
-Once your local Tidepool is running, open your Chrome browser and browse to http://localhost:3000. You should see the Tidepool login page running from your local computer, assuming everything worked as expected. Go ahead and signup for a new account. Remember, all accounts and data created via this local Tidepool are *ONLY* stored on your computer. *No* data is stored on any of the Tidepool servers.
+Once your local Tidepool is running, open your Chrome browser and browse to http://localhost:3000. You should see the Tidepool login page running from your local computer, assuming everything worked as expected. Go ahead and signup for a new account. Remember, all accounts and data created via this local Tidepool are _ONLY_ stored on your computer. _No_ data is stored on any of the Tidepool servers.
 
 NOTE: Since your local Tidepool does not have a configured email server, no emails will be sent at all. This includes the verification email sent during account creation. To get around this when running locally you can add `+skip` to your email address. Your local Tidepool will allow you to login with that email address even without email verification. For example, if the email address you were going to use was `jdoe@mail.com`, use `jdoe+skip@mail.com` instead. You'll need to use this new email address whenever you login.
 
@@ -59,7 +59,7 @@ NOTE: Since your local Tidepool does not have a configured email server, no emai
 
 To upload diabetes device data to your local Tidepool, first make sure the [Tidepool Uploader](https://tidepool.org/products/tidepool-uploader) is installed on your computer. Follow the directions at https://tidepool.org/products/tidepool-uploader.
 
-After installing and launching the Tidepool Uploader, *but before logging in*, right-click on the "Log In" button. From the popup menu displayed, first select "Change server" and then select "Local". This directs the Tidepool Uploader to upload data to the running local Tidepool rather than our production servers. Then, login to the Tidepool Uploader using the account just created.
+After installing and launching the Tidepool Uploader, _but before logging in_, right-click on the "Log In" button. From the popup menu displayed, first select "Change server" and then select "Local". This directs the Tidepool Uploader to upload data to the running local Tidepool rather than our production servers. Then, login to the Tidepool Uploader using the account just created.
 
 NOTE: If you wish to upload to our official, production Tidepool later, you'll have to repeat these instructions, but select the "Production" server instead. Please do not use any server other than "Local" or "Production", unless explicitly instructed to do so by Tidepool staff.
 
@@ -67,7 +67,7 @@ NOTE: The Dexcom API integration will not work as it requires a private develope
 
 # Data Retention
 
-Remember, this is all running on your computer only. This means that all accounts you create and all data you upload to your local Tidepool are *ONLY* stored in a Mongo database located in the `<local-directory>/mongo` directory on your computer. If you delete that directory, then all of the data you uploaded locally is gone, **permanently**. If you are going to run Tidepool locally as a permanent solution, then we very **strongly** suggest regular backups of the `mongo` directory.
+Remember, this is all running on your computer only. This means that all accounts you create and all data you upload to your local Tidepool are _ONLY_ stored in a Mongo database located in the `<local-directory>/mongo` directory on your computer. If you delete that directory, then all of the data you uploaded locally is gone, **permanently**. If you are going to run Tidepool locally as a permanent solution, then we very **strongly** suggest regular backups of the `mongo` directory.
 
 Fortunately, at [Tidepool Web](https://app.tidepool.org), we worry about that for you and make sure all of your data is secure and backed up regularly.
 
@@ -90,7 +90,7 @@ You can now quit the Docker application, if you wish.
 
 Your local Tidepool includes a number of environment variables that specify configuration secrets, hash salts, and a self-signed TLS certificate that can be customized to uniquely secure your installation. The default values for these environment variables were copied from the previous local development setup in order to maintain backwards compatibility. However, if your local Tidepool is to be used for anything more than development purposes, you should change these environment variables for security reasons.
 
-NOTE: Changing some of these environment variables **will** cause existing data in your Mongo database to become unusable. It is highly recommended that you change the above environment variables *only* if you are willing to create a new Mongo database, thus losing all previously created accounts and uploaded data.
+NOTE: Changing some of these environment variables **will** cause existing data in your Mongo database to become unusable. It is highly recommended that you change the above environment variables _only_ if you are willing to create a new Mongo database, thus losing all previously created accounts and uploaded data.
 
 ### Stop Local Tidepool
 
@@ -149,7 +149,7 @@ Set the value of the `TIDEPOOL_DOCKER_MONGO_VOLUME` environment variable in the 
 TIDEPOOL_DOCKER_MONGO_VOLUME=~/MyMongoData
 ```
 
-NOTE: If you previously started Tidepool locally and created an account, then any data for that account will be stored in the *old* Mongo data directory. You can either create a new account after changing the environment variable and restarting your local Tidepool, or you can move the data directory or files manually (which is outside the scope of this document).
+NOTE: If you previously started Tidepool locally and created an account, then any data for that account will be stored in the _old_ Mongo data directory. You can either create a new account after changing the environment variable and restarting your local Tidepool, or you can move the data directory or files manually (which is outside the scope of this document).
 
 ### Start Local Tidepool
 
@@ -202,32 +202,32 @@ First, you'll need to clone the GitHub repository you are interested in to your 
 
 You can choose from the following active repositories:
 
-| Repository Name | Docker Container Name (`<docker-container-name>`) | Description | Language | Git Clone URL (`<git-clone-url>`) | Default Clone Directory (`<default-clone-directory>`) |
-| - | - | - | - | - | - |
-| [blip](https://github.com/tidepool-org/blip) | blip | Web (ie. http://localhost:3000) | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/blip.git | blip |
-| [gatekeeper](https://github.com/tidepool-org/gatekeeper) | gatekeeper | Permissions | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/gatekeeper.git | gatekeeper |
-| [hakken](https://github.com/tidepool-org/hakken) | hakken | Discovery | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/hakken.git | hakken |
-| [highwater](https://github.com/tidepool-org/highwater) | highwater | Metrics | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/highwater.git | highwater |
-| [hydrophone](https://github.com/tidepool-org/hydrophone) | hydrophone | Email, Invitations | [Golang](https://golang.org/) | https://github.com/tidepool-org/hydrophone.git | hydrophone/src/github.com/tidepool-org/hydrophone |
-| [jellyfish](https://github.com/tidepool-org/jellyfish) | jellyfish | Data Ingestion [LEGACY] | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/jellyfish.git | jellyfish |
-| [message-api](https://github.com/tidepool-org/message-api) | message-api | Notes | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/message-api.git | message-api |
-| [platform](https://github.com/tidepool-org/platform) | (see below) | (see below) | [Golang](https://golang.org/) | https://github.com/tidepool-org/platform.git | platform/src/github.com/tidepool-org/platform |
-| [seagull](https://github.com/tidepool-org/seagull) | seagull | Metadata | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/seagull.git | seagull |
-| [shoreline](https://github.com/tidepool-org/shoreline) | shoreline | Authentication | [Golang](https://golang.org/) | https://github.com/tidepool-org/shoreline.git | shoreline/src/github.com/tidepool-org/shoreline |
-| [styx](https://github.com/tidepool-org/styx) | styx | Router | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/styx.git | styx |
-| [tide-whisperer](https://github.com/tidepool-org/tide-whisperer) | tide-whisperer | Download | [Golang](https://golang.org/) | https://github.com/tidepool-org/tide-whisperer.git | tide-whisperer/src/github.com/tidepool-org/tide-whisperer |
+| Repository Name                                                  | Docker Container Name (`<docker-container-name>`) | Description                     | Language                       | Git Clone URL (`<git-clone-url>`)                  | Default Clone Directory (`<default-clone-directory>`)     |
+| ---------------------------------------------------------------- | ------------------------------------------------- | ------------------------------- | ------------------------------ | -------------------------------------------------- | --------------------------------------------------------- |
+| [blip](https://github.com/tidepool-org/blip)                     | blip                                              | Web (ie. http://localhost:3000) | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/blip.git           | blip                                                      |
+| [gatekeeper](https://github.com/tidepool-org/gatekeeper)         | gatekeeper                                        | Permissions                     | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/gatekeeper.git     | gatekeeper                                                |
+| [hakken](https://github.com/tidepool-org/hakken)                 | hakken                                            | Discovery                       | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/hakken.git         | hakken                                                    |
+| [highwater](https://github.com/tidepool-org/highwater)           | highwater                                         | Metrics                         | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/highwater.git      | highwater                                                 |
+| [hydrophone](https://github.com/tidepool-org/hydrophone)         | hydrophone                                        | Email, Invitations              | [Golang](https://golang.org/)  | https://github.com/tidepool-org/hydrophone.git     | hydrophone/src/github.com/tidepool-org/hydrophone         |
+| [jellyfish](https://github.com/tidepool-org/jellyfish)           | jellyfish                                         | Data Ingestion [LEGACY]         | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/jellyfish.git      | jellyfish                                                 |
+| [message-api](https://github.com/tidepool-org/message-api)       | message-api                                       | Notes                           | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/message-api.git    | message-api                                               |
+| [platform](https://github.com/tidepool-org/platform)             | (see below)                                       | (see below)                     | [Golang](https://golang.org/)  | https://github.com/tidepool-org/platform.git       | platform/src/github.com/tidepool-org/platform             |
+| [seagull](https://github.com/tidepool-org/seagull)               | seagull                                           | Metadata                        | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/seagull.git        | seagull                                                   |
+| [shoreline](https://github.com/tidepool-org/shoreline)           | shoreline                                         | Authentication                  | [Golang](https://golang.org/)  | https://github.com/tidepool-org/shoreline.git      | shoreline/src/github.com/tidepool-org/shoreline           |
+| [styx](https://github.com/tidepool-org/styx)                     | styx                                              | Router                          | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/styx.git           | styx                                                      |
+| [tide-whisperer](https://github.com/tidepool-org/tide-whisperer) | tide-whisperer                                    | Download                        | [Golang](https://golang.org/)  | https://github.com/tidepool-org/tide-whisperer.git | tide-whisperer/src/github.com/tidepool-org/tide-whisperer |
 
 Please note that the `platform` repository actually contains source code for multiple Docker containers, specifically:
 
-| Docker Container Name | Description |
-| - | - |
-| platform-auth | Authentication |
-| platform-data | Data Ingestion (next generation) |
-| platform-migrations | Database Migrations |
-| platform-notification | Notifications (TBD) |
-| platform-task | Background Jobs |
-| platform-tools | Tools, Utilities |
-| platform-user | Users |
+| Docker Container Name | Description                      |
+| --------------------- | -------------------------------- |
+| platform-auth         | Authentication                   |
+| platform-data         | Data Ingestion (next generation) |
+| platform-migrations   | Database Migrations              |
+| platform-notification | Notifications (TBD)              |
+| platform-task         | Background Jobs                  |
+| platform-tools        | Tools, Utilities                 |
+| platform-user         | Users                            |
 
 NOTE: The Golang repositories include the extra-long directory hierarchy to ensure a unique, valid GOPATH. Read more about [Golang](https://golang.org/) and [GOPATH](https://golang.org/doc/code.html) for details.
 
@@ -245,7 +245,7 @@ git clone https://github.com/tidepool-org/shoreline.git ~/Tidepool/development/s
 
 ### Alternate Source Repository Directory
 
-You can alternatively clone the source repository to any directory on your computer. To do so, clone the repository to the directory of your choosing and update the value of the `TIDEPOOL_DOCKER_<docker-container-name>_DIR` environment variable in the `.env` file to the absolute or relative (to the `docker-compose.yml` file) path to that directory. Replace `<docker-container-name>` with the *uppercase* Docker Container Name from the above table.
+You can alternatively clone the source repository to any directory on your computer. To do so, clone the repository to the directory of your choosing and update the value of the `TIDEPOOL_DOCKER_<docker-container-name>_DIR` environment variable in the `.env` file to the absolute or relative (to the `docker-compose.yml` file) path to that directory. Replace `<docker-container-name>` with the _uppercase_ Docker Container Name from the above table.
 
 Note: Due to environment variable limitations, any dash in the Docker Container Name needs to be replaced with an underscore. So, `message-api` becomes `MESSAGE_API` and `tide-whisperer` becomes `TIDE_WHISPERER`.
 
@@ -343,7 +343,7 @@ The workflow is as follows:
 
 1. Edit any files in the cloned respository using your favorite text editor.
 1. Rebuild the associated Docker image using `docker-compose build <docker-container-name>`. See [Building](#building) instructions.
-1. Restart the associated Docker containers using `docker-compose -d up`. See [Starting](#starting) instructions.
+1. Restart the associated Docker containers using `docker-compose up -d`. See [Starting](#starting) instructions.
 1. Repeat steps 1-3 as you go.
 
 Obviously, the cycle from editing code to being able to use it can be time consuming due to the rebuild and restart steps. This works perfectly fine if you are just trying things out or making small changes, but can get a bit clunky when you are making frequent or significant changes, or if it was your full-time job.
@@ -417,7 +417,7 @@ Note that the `volumes:` section in the second example is uncommented.
 
 If the repository language is Golang, then it uses a multi-target `Dockerfile` to build the Docker images. This means there is a `development` target, which includes all of the necessary development tools, and a `release` target, which contains only the final binaries. The default, if no target is specified, is `release` (as it is the last target specified in the `Dockerfile`).
 
-Set the value of the `TIDEPOOL_DOCKER_<docker-container-name>_BUILD_TARGET` environment variable in the `.env` file to `development`. Replace `<docker-container-name>` with the *uppercase* Docker Container Name. The dash to underscore replacement applies here, as mentioned above.
+Set the value of the `TIDEPOOL_DOCKER_<docker-container-name>_BUILD_TARGET` environment variable in the `.env` file to `development`. Replace `<docker-container-name>` with the _uppercase_ Docker Container Name. The dash to underscore replacement applies here, as mentioned above.
 
 For example, if you wanted to develop the `tide-whisperer` service, update the `.env` file with the following environment variable.
 
@@ -451,26 +451,26 @@ You'll need to determine what host the proxy will run on that is accessible from
 
 Each container and its contained service have their own standard port where clients will sends requests.
 
-| Service | Standard Port(s) |
-| - | - |
-| [blip](https://github.com/tidepool-org/blip) | N/A (see below) |
-| [gatekeeper](https://github.com/tidepool-org/gatekeeper) | 9123 |
-| [hakken](https://github.com/tidepool-org/hakken) | 8000 |
-| [highwater](https://github.com/tidepool-org/highwater) | 9191 |
-| [hydrophone](https://github.com/tidepool-org/hydrophone) | 9157 |
-| [jellyfish](https://github.com/tidepool-org/jellyfish) | 9122 |
-| [message-api](https://github.com/tidepool-org/message-api) | 9119 |
-| [platform-auth](https://github.com/tidepool-org/platform) | 9222 |
-| [platform-data](https://github.com/tidepool-org/platform) | 9220 |
-| [platform-migrations](https://github.com/tidepool-org/platform) | N/A (see below) |
-| [platform-notification](https://github.com/tidepool-org/platform) | 9223 |
-| [platform-task](https://github.com/tidepool-org/platform) | 9224 |
-| [platform-tools](https://github.com/tidepool-org/platform) | N/A (see below) |
-| [platform-user](https://github.com/tidepool-org/platform) | 9221 |
-| [seagull](https://github.com/tidepool-org/seagull) | 9120 |
-| [shoreline](https://github.com/tidepool-org/shoreline) | 9107 |
-| [styx](https://github.com/tidepool-org/styx) | 8009, 8010 (see below) |
-| [tide-whisperer](https://github.com/tidepool-org/tide-whisperer) | 9127 |
+| Service                                                           | Standard Port(s)       |
+| ----------------------------------------------------------------- | ---------------------- |
+| [blip](https://github.com/tidepool-org/blip)                      | N/A (see below)        |
+| [gatekeeper](https://github.com/tidepool-org/gatekeeper)          | 9123                   |
+| [hakken](https://github.com/tidepool-org/hakken)                  | 8000                   |
+| [highwater](https://github.com/tidepool-org/highwater)            | 9191                   |
+| [hydrophone](https://github.com/tidepool-org/hydrophone)          | 9157                   |
+| [jellyfish](https://github.com/tidepool-org/jellyfish)            | 9122                   |
+| [message-api](https://github.com/tidepool-org/message-api)        | 9119                   |
+| [platform-auth](https://github.com/tidepool-org/platform)         | 9222                   |
+| [platform-data](https://github.com/tidepool-org/platform)         | 9220                   |
+| [platform-migrations](https://github.com/tidepool-org/platform)   | N/A (see below)        |
+| [platform-notification](https://github.com/tidepool-org/platform) | 9223                   |
+| [platform-task](https://github.com/tidepool-org/platform)         | 9224                   |
+| [platform-tools](https://github.com/tidepool-org/platform)        | N/A (see below)        |
+| [platform-user](https://github.com/tidepool-org/platform)         | 9221                   |
+| [seagull](https://github.com/tidepool-org/seagull)                | 9120                   |
+| [shoreline](https://github.com/tidepool-org/shoreline)            | 9107                   |
+| [styx](https://github.com/tidepool-org/styx)                      | 8009, 8010 (see below) |
+| [tide-whisperer](https://github.com/tidepool-org/tide-whisperer)  | 9127                   |
 
 NOTE: There is no need to capture network traffic to the `blip` container since you can already do this from within your Chrome browser when browsing to http://localhost:3000.
 
@@ -494,7 +494,7 @@ For example, if you wanted to route `shoreline` traffic through a reverse proxy 
 
 ## Set Host and Port Prefix Environment Variables
 
-Now, set the values for the `TIDEPOOL_DOCKER_<docker-container-name>_HOST` and `TIDEPOOL_DOCKER_<docker-container-name>_PORT_PREFIX` environment variables in the `.env` files.  Replace `<docker-container-name>` with the *uppercase* Docker Container name. The dash to underscore replacement applies here, as mentioned above.
+Now, set the values for the `TIDEPOOL_DOCKER_<docker-container-name>_HOST` and `TIDEPOOL_DOCKER_<docker-container-name>_PORT_PREFIX` environment variables in the `.env` files. Replace `<docker-container-name>` with the _uppercase_ Docker Container name. The dash to underscore replacement applies here, as mentioned above.
 
 For example, if you wanted to route `tide-whisperer` traffic through a reverse proxy available at `docker.for.mac.host.internal` that was routing traffic from port `9127` to port `29127` (the standard `tide-whisperer` port), then you'd need to set the environment variables to:
 
@@ -511,7 +511,7 @@ Now all network traffic directed to your chosen service will first route through
 
 # Environment Variables Overview
 
-All environment variables use a `TIDEPOOL_DOCKER_` prefix, followed by an *uppercase* Docker container name with underscore replacing all dashes, followed by one of the following suffix.
+All environment variables use a `TIDEPOOL_DOCKER_` prefix, followed by an _uppercase_ Docker container name with underscore replacing all dashes, followed by one of the following suffix.
 
 `_BUILD_TARGET` - Specifies which target to build in a multi-target `Dockerfile`. Only applies to Golang containers. See [Developing](#developing).
 
