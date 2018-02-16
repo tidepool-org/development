@@ -511,7 +511,7 @@ services:
         }
 
   # viz:
-  #   image: tidepool/viz:docker-build
+  #   image: tidepool/viz
   #   volumes:
   #     - ${TIDEPOOL_DOCKER_VIZ_DIR}:/app:cached
   #     - /app/node_modules
