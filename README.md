@@ -145,7 +145,6 @@ For those contributing back to this repo, it also ensures you won't accidentally
 
 See [Docker's Multiple Compose files documentation](https://docs.docker.com/compose/extends/#multiple-compose-files) for details on how to structure your override files.
 
-
 ## Alternate Mongo Directory
 
 If you wish to store your local data in a Mongo directory other than the default `<local-directory>/mongo`, then you'll need to update an environment variable.
