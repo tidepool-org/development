@@ -433,6 +433,176 @@ Start your local Tidepool again, per [Starting](#starting) instructions. If alre
 
 Go ahead and edit the source files as you wish. Note the above caveats regarding automatic rebuild in the [Mount Local Volume](mount-local-volume) instructions.
 
+## Developing for Front End services
+
+When developing the front end services `blip` (our primary web application) and `viz` (our visualization library), there are a few extra steps needed in addition to the generalized development instructions above.
+
+### Mounting Local Volumes
+
+This is far recommended over rebuilding the images when making changes, as full container builds will be quite time-consuming due to the `yarn install`'s being called.
+
+The main difference to the mounting instructions above is that when volume mounting, we don't have the `build` block uncommented in the service - just the `volumes` block:
+
+```bash
+  blip:
+      image: tidepool/blip
+      depends_on:
+        - hakken
+      # build: ${TIDEPOOL_DOCKER_BLIP_DIR}
+      volumes:
+        - ${TIDEPOOL_DOCKER_BLIP_DIR}:/app:cached
+        - /app/node_modules
+        - /app/dist
+        # - ${TIDEPOOL_DOCKER_PLATFORM_CLIENT_DIR}:/tidepool-platform-client:cached
+        # - /tidepool-platform-client/node_modules
+        # - ${TIDEPOOL_DOCKER_TIDELINE_DIR}:/tideline:cached
+        # - /tideline/node_modules
+        # - ${TIDEPOOL_DOCKER_VIZ_DIR}:/@tidepool/viz:cached
+        # - viz-dist:/@tidepool/viz/dist:ro
+      ports:
+        - '3000:3000'
+      environment:
+        API_HOST: http://${TIDEPOOL_DOCKER_API_HOST}:8009
+        DEV_TOOLS: ${DEV_TOOLS:-true}
+        DISCOVERY_HOST: ${TIDEPOOL_DOCKER_HAKKEN_HOST}:8000
+        NODE_ENV: development
+        PORT: '3000'
+        PUBLISH_HOST: ${TIDEPOOL_DOCKER_HAKKEN_HOST}
+        WEBPACK_DEVTOOL: cheap-module-eval-source-map
+```
+
+Also note that in the case above, we only uncommented the primary container volumes (those whose mounted paths are within the `/app` directory).  In the case of the `blip` service, there are other frontend repos that need to be volume-mounted if they're to be developed. More on this below.
+
+### Working with node package managers in Docker (`npm`, `yarn`)
+
+Running your development environment in Docker is great for a number of reasons, but it does complicate package management when working with Node.js projects.
+
+The main issue is that you can't manage your node packages in the container using your local installation of `npm` or `yarn` (which we use) because the `node_modules` folder does not get volume-mounted into the containers.
+
+This is for performance reasons, but also because we want the packages to be compiled for and running in the same environment/operating system (`linux` in our case).
+
+This results in us having to issue our `yarn` commands from **_within_** the containers, instead of from our native operating system.
+
+Docker Compose provides a couple ways for us to get _into_ the service containers to run our commands. Here are a couple of examples of how to run a `yarn install` for the `blip` service:
+
+#### Using `docker-compose exec` to enter an interactive prompt within the container
+
+```bash
+# Shell into the container from your local terminal
+docker-compose exec blip sh
+
+# You will now be 'inside' the container in the /app directory
+yarn install
+# The node_modules folder will now be updated with the latest packages, and the yarn.lock file updated
+
+# Now we exit the container and return to our local terminal shell
+exit
+```
+
+This is overkill when just doing a simple command (streamlined alternative outlined below), but it's very hand when you need to perform multiple operations or simply poke around the container's file system.
+
+#### Using `docker-compose exec` to issue a one-off command in the container with the `sh -c` flag
+
+```bash
+# From your local terminal
+docker-compose exec blip sh -c "yarn install"
+```
+
+### Linking other node packages into `blip`
+
+When you need develop other supporting front end tidepool Node.js packages in `blip`, you'll need to `yarn link` them so that the changes you make are picked up and compiled in your running blip instance.
+
+For example, if you need to make some changes to the `tideline` (our legacy visualization provider) and `viz` packages, you would first need to volume mount the source code for those packages into the `blip` service:
+```bash
+  blip:
+      # ...
+      volumes:
+        - ${TIDEPOOL_DOCKER_BLIP_DIR}:/app:cached
+        - /app/node_modules
+        - /app/dist
+        # - ${TIDEPOOL_DOCKER_PLATFORM_CLIENT_DIR}:/tidepool-platform-client:cached
+        # - /tidepool-platform-client/node_modules
+        - ${TIDEPOOL_DOCKER_TIDELINE_DIR}:/tideline:cached
+        - /tideline/node_modules
+        - ${TIDEPOOL_DOCKER_VIZ_DIR}:/@tidepool/viz:cached
+        - viz-dist:/@tidepool/viz/dist:ro
+      # ...
+```
+
+Next, we need to `exec` into the container and link the packages
+
+
+```bash
+# Shell into the container from your local terminal
+docker-compose exec blip sh
+
+# Navigate to the directories we mounted the packages to and register them as linked packages
+cd /tideline && yarn link
+cd /@tidepool/viz && yarn link
+
+# Navigate to the main app directory and link the registered packages
+cd /app && yarn link tideline @tidepool/viz
+
+# Now we exit the container and return to our local terminal shell
+exit
+
+# Restart the blip service from your local terminal
+docker-compose stop blip && docker-compose start blip
+```
+
+You may have noticed that I used separate stop and start commands, instead of the more obvious `docker-compose restart`. I've found that there are times (possibly due to `yarn` caching) that the full stop and start is required for the linking to take effect.
+
+As with the `yarn install` example earlier, this can be run as a one-off command, though it's fairly verbose:
+
+```bash
+docker-compose run blip /bin/sh -c "cd /@tidepool/viz && yarn link && cd /tideline && yarn link && cd /app && yarn link tideline @tidepool/viz
+```
+
+Again, we want to follow up with a restart:
+
+```bash
+docker-compose stop blip && docker-compose start blip
+```
+
+### Unlinking previously linked node packages in `blip`
+
+To unlink a linked node package, we simply reverse our linking with `yarn unlink`:
+
+```bash
+# Shell into the container from your local terminal
+docker-compose exec blip sh
+
+# You will be in the /app directory by default after exec-ing into the container
+yarn unlink tideline @tidepool/viz
+
+# Navigate to the directories we mounted the packages to and deregister them as linked packages
+cd /tideline && yarn unlink
+cd /@tidepool/viz && yarn unlink
+
+# We now should remove the node_modules directory and force a reinstall.
+# Otherwise, we may end up with the previously linked packages still used from the yarn cache
+cd /app && rm -rf node_modules
+yarn install --force
+
+# Now we exit the container and return to our local terminal shell
+exit
+
+# Restart the blip service from your local terminal
+docker-compose stop blip && docker-compose start blip
+```
+
+And the one-liner:
+
+```bash
+docker-compose run blip /bin/sh -c "yarn unlink tideline @tidepool/viz && cd /@tidepool/viz && yarn unlink && cd /tideline && yarn unlink && cd /app && rm -rf node_modules && yarn install --force"
+```
+
+Again, we want to follow up with a restart:
+
+```bash
+docker-compose stop blip && docker-compose start blip
+```
+
 # Tracing
 
 If you want to capture some or all of the network traffic that flows into and between the various Tidepool services, then all it requires is setting up a reverse proxy and a few environment variable changes.
@@ -532,7 +702,7 @@ Note: Rather than modifying the `.env` file you can set all the same environment
 
 The following need more documentation in this README.
 
-## Blip
+## Blip (Tidepool Web)
 
 TBD: Describe how to work with `viz` container.
 
