@@ -133,6 +133,18 @@ Replace all newlines in the resulting TLS certificate and private key files with
 
 Start your local Tidepool again, per [Starting](#starting) instructions.
 
+## Custom Compose File Overrides
+
+Throughout this documentation, you'll find references to changes that can be made to to the `docker-compose.yml` file supplied in this repo.
+
+Changes can be made directly to this file, but if you prefer to leave this file untouched, Docker Compose allows you to maintain your own `docker-compose.override.yml` file which will be automatically read when running `docker-compose` commands so long as it is placed alongside the `docker-compose.yml` file.
+
+The primary advantage of using a compose override file for your changes is that all of your customizations will be kept outside of version control (it's listed in the `.gitignore` file), which avoids having to deal with any potential merge conflicts when pulling in updates.
+
+For those contributing back to this repo, it also ensures you won't accidentally commit any local keys or secrets.
+
+See [Docker's Multiple Compose files documentation](https://docs.docker.com/compose/extends/#multiple-compose-files) for details on how to structure your override files.
+
 ## Alternate Mongo Directory
 
 If you wish to store your local data in a Mongo directory other than the default `<local-directory>/mongo`, then you'll need to update an environment variable.
