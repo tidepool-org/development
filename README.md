@@ -549,7 +549,7 @@ For example, if you need to make some changes to the `tideline` (our legacy visu
       # ...
 ```
 
-**NOTE:** The above example is somewhat incomplete.  When choosing to mount and link the `@tidepool/viz` package, we need to also run the `viz` service, which is commented out completely in the `docker-compose.yml` by default. See `Running the viz service` below for details.
+**NOTE:** The above example is somewhat incomplete.  When choosing to mount and link the `@tidepool/viz` package, we need to also run the `viz` service, which is commented out completely in the `docker-compose.yml` by default. See [Running the viz service](#running-the-viz-service) below for details.
 
 Next, we need to `exec` into the container and link the packages
 
