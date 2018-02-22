@@ -34,6 +34,8 @@ USAGE: tidepool command [service] [...additional args]
                                     file for this to have any effect.
 
     exec service [...cmds]          run arbitrary shell commands in the currently running service container
+                                      example: 'tp exec blip sh'
+                                               (to enter a shell inside the blip container)
                                       example: 'tp exec blip "ls -lR /app/node_modules/ | grep ^l | uniq"'
                                                (to list all symlinked npm packages, such as after yarn linking)
 
@@ -68,7 +70,7 @@ EOF
 
 restart() { (cd $TIDEPOOL_DOCKER_DEVELOPMENT_DIR && docker-compose stop $1 && docker-compose start $1); }
 
-run-exec() { args="${@:2}" && (cd $TIDEPOOL_DOCKER_DEVELOPMENT_DIR && docker-compose exec $1 /bin/sh -c ${args}) }
+run-exec() { args="${@:2}" && (cd $TIDEPOOL_DOCKER_DEVELOPMENT_DIR && docker-compose exec $1 /bin/sh -c "${args}") }
 
 case $1 in
   up) (cd $TIDEPOOL_DOCKER_DEVELOPMENT_DIR && docker-compose up -d $2);;
