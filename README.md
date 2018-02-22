@@ -453,37 +453,29 @@ When developing the front end services `blip` (our primary web application) and 
 
 This is far recommended over rebuilding the images when making changes, as full container builds will be quite time-consuming due to the `yarn install`'s being called.
 
-The main difference to the mounting instructions above is that when volume mounting, we don't have the `build` block uncommented in the service - just the `volumes` block:
+Note that in the case of the `blip` service, we only need the primary container volumes (those whose mounted paths are within the `/app` directory).
+
+The other commented-out paths are for supporting frontend repos that only need to be volume-mounted if they're to be developed via `yarn link`. See [Linking other node packages into blip](#linking-other-node-packages-into-blip).
 
 ```bash
   blip:
-      image: tidepool/blip
-      depends_on:
-        - hakken
-      # build: ${TIDEPOOL_DOCKER_BLIP_DIR}
-      volumes:
-        - ${TIDEPOOL_DOCKER_BLIP_DIR}:/app:cached
-        - /app/node_modules
-        - /app/dist
-        # - ${TIDEPOOL_DOCKER_PLATFORM_CLIENT_DIR}:/tidepool-platform-client:cached
-        # - /tidepool-platform-client/node_modules
-        # - ${TIDEPOOL_DOCKER_TIDELINE_DIR}:/tideline:cached
-        # - /tideline/node_modules
-        # - ${TIDEPOOL_DOCKER_VIZ_DIR}:/@tidepool/viz:cached
-        # - viz-dist:/@tidepool/viz/dist:ro
-      ports:
-        - '3000:3000'
-      environment:
-        API_HOST: http://${TIDEPOOL_DOCKER_API_HOST}:8009
-        DEV_TOOLS: ${DEV_TOOLS:-true}
-        DISCOVERY_HOST: ${TIDEPOOL_DOCKER_HAKKEN_HOST}:8000
-        NODE_ENV: development
-        PORT: '3000'
-        PUBLISH_HOST: ${TIDEPOOL_DOCKER_HAKKEN_HOST}
-        WEBPACK_DEVTOOL: cheap-module-eval-source-map
-```
+    image: tidepool/blip
+    depends_on:
+      - hakken
+    # build: ${TIDEPOOL_DOCKER_BLIP_DIR}
+    volumes:
+      - ${TIDEPOOL_DOCKER_BLIP_DIR}:/app:cached
+      - /app/node_modules
+      - /app/dist
+      # - ${TIDEPOOL_DOCKER_PLATFORM_CLIENT_DIR}:/tidepool-platform-client:cached
+      # - /tidepool-platform-client/node_modules
+      # - ${TIDEPOOL_DOCKER_TIDELINE_DIR}:/tideline:cached
+      # - /tideline/node_modules
+      # - ${TIDEPOOL_DOCKER_VIZ_DIR}:/@tidepool/viz:cached
+      # - viz-dist:/@tidepool/viz/dist:ro
 
-Also note that in the case above, we only uncommented the primary container volumes (those whose mounted paths are within the `/app` directory).  In the case of the `blip` service, there are other frontend repos that need to be volume-mounted if they're to be developed. More on this below.
+    # ...
+```
 
 ### Working with node package managers in Docker (`npm`, `yarn`)
 
@@ -523,9 +515,6 @@ docker-compose exec blip sh -c "yarn install"
 
 # Run an npm script, such as a test-watch
 docker-compose exec blip sh -c "yarn run test-watch"
-
-# Or a storybook in the viz service
-docker-compose exec viz sh -c "yarn run stories"
 ```
 
 ### Linking other node packages into `blip`
@@ -603,7 +592,8 @@ cd /@tidepool/viz && yarn unlink
 
 # We now should remove the node_modules directory and force a reinstall.
 # Otherwise, we may end up with the previously linked packages still used from the yarn cache
-cd /app && rm -rf node_modules
+cd /app
+rm -rf node_modules
 yarn install --force
 
 # Now we exit the container and return to our local terminal shell
@@ -631,7 +621,7 @@ Unlike the other frontend Node.js services that blip uses, `viz` can also be run
 
 In fact, it **_must_** be running if you are planning to link it into `blip`, as the webpack bundling needs to run (which it does when the service container starts, and when mounted files change).
 
-There are times, however, where you may want ot run it on it's own without linking into `blip`, such as if you're working on new prototypes in `viz`'s Storybooks.
+There are times, however, where you may want to run it on it's own without linking into `blip`, such as if you're working on new prototypes in `viz`'s Storybooks.
 
 The `viz` service is commented out by default. To run it, simply uncomment it in the `docker-compose.yml` file.
 
