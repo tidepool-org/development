@@ -4,11 +4,12 @@ shopt -s extglob
 if [ -z "$TIDEPOOL_DOCKER_DEVELOPMENT_DIR" ]; then
   cat <<EOF
 =====================================================================
-You need to set the TIDEPOOL_DOCKER_DEVELOPMENT_DIR environment variable to the location
-of your docker-compose.yml file for the tidepool stack.
+TIP: You may want to set a TIDEPOOL_DOCKER_DEVELOPMENT_DIR environment variable to the location
+of your docker-compose.yml file for the tidepool stack. This will allow you to run the tidepool
+commands from anywhere in your filesystem, instead of having to run from within that directory.
 
 EOF
-  exit 1
+  TIDEPOOL_DOCKER_DEVELOPMENT_DIR=`pwd`
 fi
 
 NODE_SERVICES='@(blip|viz|hakken|gatekeeper|highwater|jellyfish|message-api|seagull|styx)'
@@ -32,9 +33,6 @@ USAGE: tidepool command [service] [...additional args]
                                     NOTE: the service(s) must have a 'build' property in the 'docker-compose.yml'
                                     file for this to have any effect.
 
-    run service [...cmds]           run arbitrary shell commands in a new service container
-                                      example: 'tidepool run blip sh' (to enter the container's shell)
-
     exec service [...cmds]          run arbitrary shell commands in the currently running service container
                                       example: 'tp exec blip "ls -lR /app/node_modules/ | grep ^l | uniq"'
                                                (to list all symlinked npm packages, such as after yarn linking)
@@ -51,8 +49,6 @@ USAGE: tidepool command [service] [...additional args]
                                         - will link the package mounted at /tideline and unlink
                                           the "tideline" package in blip
 
-    list                            list running services in the tidepool stack
-
     [node_service] [...cmds]        shortcut to run yarn commands against the specified nodeJS-based service
                                     frontend node services are one of: [blip|viz|tideline|tidepool-platform-client]
                                     NOTE: tideline and tidepool-platform-client are optional volume mounts
@@ -67,18 +63,10 @@ USAGE: tidepool command [service] [...additional args]
 
     help                            show this help text
 
-
-ADDITIONAL TIPS:
-  If you also have a docker-compose.override.yml file in the TIDEPOOL_DOCKER_DEVELOPMENT_DIR directory,
-  it will be overlayed atop the main compose file, allowing you to
-  make local changes without modifying the main docker-compose.yml file.
-
 EOF
 }
 
 restart() { (cd $TIDEPOOL_DOCKER_DEVELOPMENT_DIR && docker-compose stop $1 && docker-compose start $1); }
-
-run() { args="${@:2}" && (cd $TIDEPOOL_DOCKER_DEVELOPMENT_DIR && docker-compose run --rm $1 /bin/sh -c ${args}) }
 
 run-exec() { args="${@:2}" && (cd $TIDEPOOL_DOCKER_DEVELOPMENT_DIR && docker-compose exec $1 /bin/sh -c ${args}) }
 
@@ -90,11 +78,9 @@ case $1 in
   pull) (cd $TIDEPOOL_DOCKER_DEVELOPMENT_DIR && docker-compose pull $2);;
   logs) (cd $TIDEPOOL_DOCKER_DEVELOPMENT_DIR && docker-compose logs --tail=20 -f $2);;
   rebuild) (cd $TIDEPOOL_DOCKER_DEVELOPMENT_DIR && docker-compose build $2 && docker-compose up -d $2);;
-  run) run $2 ${@:3};;
   exec) run-exec $2 ${@:3};;
   link) (cd $TIDEPOOL_DOCKER_DEVELOPMENT_DIR && docker-compose exec $2 /bin/sh -c "cd /${3} && yarn link && cd /app && yarn link ${3}") && restart $2;;
   unlink) (cd $TIDEPOOL_DOCKER_DEVELOPMENT_DIR && docker-compose exec $2 /bin/sh -c "yarn unlink ${3}; cd /${3} && yarn unlink; cd /app && rm -f node_modules/${3} && yarn install --force") && restart $2;;
-  list) (cd $TIDEPOOL_DOCKER_DEVELOPMENT_DIR && docker-compose ps);;
   $NODE_SERVICES) run-exec $1 "yarn ${@:2}";;
   $BLIP_MOUNTED_NODE_SERVICES) run-exec blip "cd /${1} && yarn ${@:2}";;
   *|help) usage;;
