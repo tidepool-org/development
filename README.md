@@ -646,7 +646,6 @@ NOTE: the storybooks don't run by default. You need to start them manually:
 ```bash
 # Run the general UI storybook on http://localhost:8081
 docker-compose exec viz sh -c "yarn run stories"
-```bash
 
 # Run the stories for diabetes data type visualizations on http://localhost:8082
 docker-compose exec viz sh -c "yarn run typestories"
