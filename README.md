@@ -445,6 +445,72 @@ Start your local Tidepool again, per [Starting](#starting) instructions. If alre
 
 Go ahead and edit the source files as you wish. Note the above caveats regarding automatic rebuild in the [Mount Local Volume](mount-local-volume) instructions.
 
+# Tidepool Helper Script
+
+Included in the `bin` directory of this repo is a bash script named `tidepool`.
+
+It's intended to provide a streamlined interface for managing the docker stack and services.
+
+This is especially helpful for working with the Node.js services, as common tasks such as running NPM scripts and various other `yarn` commands can be a quite verbose and time-consuming when working in a docker stack.
+
+You can run the script from the root directory of this repo from your terminal with:
+
+```bash
+# Show the help text
+./bin/tidepool help
+```
+
+It's recommended, however, to add the `bin` directory to your $PATH so that you can run the script from anywhere as `tidepool`.
+
+In order to run from any directory, you'll also need to set the `TIDEPOOL_DOCKER_DEVELOPMENT_DIR` environment variable in your shell (e.g. in `~/.bashrc`).
+
+```bash
+export TIDEPOOL_DOCKER_DEVELOPMENT_DIR='/path/to/this/repo'
+export PATH=$PATH:$TIDEPOOL_DOCKER_DEVELOPMENT_DIR/bin
+```
+
+You can now easily manage your stack and services from anywhere
+
+```bash
+# Provision and start the stack
+tidepool up
+
+# Link or unlink supporting packages in `blip`
+tidepool link blip @tidepool/viz
+tidepool link blip tideline
+tidepool unlink blip @tidepool/viz
+
+# Run npm (yarn) scripts in a service
+tidepool blip install
+tidepool tideline run test-watch
+tidepool viz run stories
+
+# Tail logs for the `blip` service
+tidepool logs blip
+
+# Stop the stack
+tidepool stop
+```
+
+This script will only work in a Linux or MacOS environment (though Windows users may be able to get it working in [GitBash](https://git-for-windows.github.io/) or the new [Bash integration in Windows 10](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide))
+
+The following commands are provided:
+
+| Command                             | Description                                                                                                                                                 |
+|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `tidepool up [service]`             | start and/or (re)build the entire tidepool stack or the specified service                                                                                   |
+| `tidepool down`                     | shut down and remove the entire tidepool stack                                                                                                              |
+| `tidepool stop`                     | shut down the entire tidepool stack or the specified service                                                                                                |
+| `tidepool restart [service]`        | restart the entire tidepool stack or the specified service                                                                                                  |
+| `tidepool pull [service]`           | pull the latest images for the entire tidepool stack or the specified service                                                                               |
+| `tidepool logs [service]`           | tail logs for the entire tidepool stack or the specified service                                                                                            |
+| `tidepool rebuild [service]`        | rebuild and run image for all services in the tidepool stack or the specified service                                                                       |
+| `tidepool exec service [...cmds]`   | run arbitrary shell commands in the currently running service container                                                                                     |
+| `tidepool link service package`     | yarn link a mounted package and restart the service (package must be mounted into a root directory that matches it's name)                                  |
+| `tidepool unlink service package`   | yarn unlink a mounted package, reinstall the remote package, and restart the service (package must be mounted into a root directory that matches it's name) |
+| `tidepool [node_service] [...cmds]` | shortcut to run yarn commands against the specified service                                                                                                 |
+| `tidepool help`                     | show more detailed usage text than what's listed here                                                                                                       |
+
 # Tracing
 
 If you want to capture some or all of the network traffic that flows into and between the various Tidepool services, then all it requires is setting up a reverse proxy and a few environment variable changes.
