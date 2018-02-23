@@ -491,22 +491,22 @@ tidepool_docker stop
 
 This script will only work in a Linux or MacOS environment (though Windows users may be able to get it working in [GitBash](https://git-for-windows.github.io/) or the new [Bash integration in Windows 10](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide))
 
-The following commands are provided:
+The following commands are provided (note that some commands only apply to Node.js services):
 
-| Command                                    | Description                                                                                                                                                 |
-|--------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `tidepool_docker up [service]`             | start and/or (re)build the entire tidepool stack or the specified service                                                                                   |
-| `tidepool_docker down`                     | shut down and remove the entire tidepool stack                                                                                                              |
-| `tidepool_docker stop`                     | shut down the entire tidepool stack or the specified service                                                                                                |
-| `tidepool_docker restart [service]`        | restart the entire tidepool stack or the specified service                                                                                                  |
-| `tidepool_docker pull [service]`           | pull the latest images for the entire tidepool stack or the specified service                                                                               |
-| `tidepool_docker logs [service]`           | tail logs for the entire tidepool stack or the specified service                                                                                            |
-| `tidepool_docker rebuild [service]`        | rebuild and run image for all services in the tidepool stack or the specified service                                                                       |
-| `tidepool_docker exec service [...cmds]`   | run arbitrary shell commands in the currently running service container                                                                                     |
-| `tidepool_docker link service package`     | yarn link a mounted package and restart the service (package must be mounted into a root directory that matches it's name)                                  |
-| `tidepool_docker unlink service package`   | yarn unlink a mounted package, reinstall the remote package, and restart the service (package must be mounted into a root directory that matches it's name) |
-| `tidepool_docker [node_service] [...cmds]` | shortcut to run yarn commands against the specified service                                                                                                 |
-| `tidepool_docker help`                     | show more detailed usage text than what's listed here                                                                                                       |
+| Command                                       | Description                                                                                                                                                         |
+|-----------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `tidepool_docker up [service]`                | start and/or (re)build the entire tidepool stack or the specified service                                                                                           |
+| `tidepool_docker down`                        | shut down and remove the entire tidepool stack                                                                                                                      |
+| `tidepool_docker stop`                        | shut down the entire tidepool stack or the specified service                                                                                                        |
+| `tidepool_docker restart [service]`           | restart the entire tidepool stack or the specified service                                                                                                          |
+| `tidepool_docker pull [service]`              | pull the latest images for the entire tidepool stack or the specified service                                                                                       |
+| `tidepool_docker logs [service]`              | tail logs for the entire tidepool stack or the specified service                                                                                                    |
+| `tidepool_docker rebuild [service]`           | rebuild and run image for all services in the tidepool stack or the specified service                                                                               |
+| `tidepool_docker exec service [...cmds]`      | run arbitrary shell commands in the currently running service container                                                                                             |
+| `tidepool_docker link node_service package`   | yarn link a mounted package and restart the Node.js service (package must be mounted into a root directory that matches it's name)                                  |
+| `tidepool_docker unlink node_service package` | yarn unlink a mounted package, reinstall the remote package, and restart the Node.js service (package must be mounted into a root directory that matches it's name) |
+| `tidepool_docker yarn node_service [...cmds]` | shortcut to run yarn commands against the specified Node.js service                                                                                                 |
+| `tidepool_docker help`                        | show more detailed usage text than what's listed here                                                                                                               |
 
 # Tracing
 
