@@ -650,6 +650,68 @@ docker-compose exec viz sh -c "yarn run stories"
 # Run the stories for diabetes data type visualizations on http://localhost:8082
 docker-compose exec viz sh -c "yarn run typestories"
 ```
+# Tidepool Helper Script
+
+Included in the `bin` directory of this repo is a bash script named `tidepool_docker`.
+
+It's intended to provide a streamlined interface for managing the docker stack and services.
+
+This is especially helpful for working with the Node.js services, as common tasks such as running NPM scripts and various other `yarn` commands can be a quite verbose and time-consuming when working in a docker stack.
+
+You can run the script from the root directory of this repo from your terminal with:
+
+```bash
+# Show the help text
+bin/tidepool_docker help
+```
+
+It's recommended, however, to add the `bin` directory to your $PATH (e.g. in `~/.bashrc`) so that you can run the script from anywhere as `tidepool_docker`.
+
+```bash
+export PATH=$PATH:/path/to/this/repo/bin
+```
+
+You can now easily manage your stack and services from anywhere
+
+```bash
+# Provision and start the stack
+tidepool_docker up
+
+# Link or unlink supporting packages in `blip`
+tidepool_docker link blip @tidepool/viz
+tidepool_docker link blip tideline
+tidepool_docker unlink blip @tidepool/viz
+
+# Run npm (yarn) scripts in a service
+tidepool_docker yarn blip install
+tidepool_docker yarn tideline test-watch
+tidepool_docker yarn viz stories
+
+# Tail logs for the `blip` service
+tidepool_docker logs blip
+
+# Stop the stack
+tidepool_docker stop
+```
+
+This script will only work in a Linux or MacOS environment (though Windows users may be able to get it working in [GitBash](https://git-for-windows.github.io/) or the new [Bash integration in Windows 10](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide))
+
+The following commands are provided (note that some commands only apply to Node.js services):
+
+| Command                       | Description                                                                                                                                                         |
+|-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `up [service]`                | start and/or (re)build the entire tidepool stack or the specified service                                                                                           |
+| `down`                        | shut down and remove the entire tidepool stack                                                                                                                      |
+| `stop`                        | shut down the entire tidepool stack or the specified service                                                                                                        |
+| `restart [service]`           | restart the entire tidepool stack or the specified service                                                                                                          |
+| `pull [service]`              | pull the latest images for the entire tidepool stack or the specified service                                                                                       |
+| `logs [service]`              | tail logs for the entire tidepool stack or the specified service                                                                                                    |
+| `rebuild [service]`           | rebuild and run image for all services in the tidepool stack or the specified service                                                                               |
+| `exec service [...cmds]`      | run arbitrary shell commands in the currently running service container                                                                                             |
+| `link node_service package`   | yarn link a mounted package and restart the Node.js service (package must be mounted into a root directory that matches it's name)                                  |
+| `unlink node_service package` | yarn unlink a mounted package, reinstall the remote package, and restart the Node.js service (package must be mounted into a root directory that matches it's name) |
+| `yarn node_service [...cmds]` | shortcut to run yarn commands against the specified Node.js service                                                                                                 |
+| `help`                        | show more detailed usage text than what's listed here                                                                                                               |
 
 # Tracing
 

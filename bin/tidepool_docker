@@ -1,0 +1,87 @@
+#!/bin/sh -eu
+shopt -s extglob
+
+DIR=$(cd $(dirname $(dirname ${0})); pwd)
+
+usage() {
+  cat <<EOF
+=======================================================
+USAGE: tidepool_docker command [service] [...additional args]
+
+  commands:
+    up [service]                    start and/or (re)build the entire tidepool stack or the specified service
+    down                            shut down and remove the entire tidepool stack
+    stop [service]                  shut down the entire tidepool stack or the specified service
+    restart [service]               restart the entire tidepool stack or the specified service
+    pull [service]                  pull the latest images for the entire tidepool stack or the specified service
+    logs [service]                  tail logs for the entire tidepool stack or the specified service
+
+    rebuild [service]               rebuild and run image for all services in the tidepool stack
+                                    or the specified service
+                                    NOTE: the service(s) must have a 'build' property in the 'docker-compose.yml'
+                                    file for this to have any effect.
+
+    exec service [...cmds]          run arbitrary shell commands in the currently running service container
+                                      example: 'tidepool_docker exec blip sh'
+                                               (to enter a shell inside the blip container)
+                                      example: 'tidepool_docker exec blip "ls -lR /app/node_modules/ | grep ^l | uniq"'
+                                               (to list all symlinked npm packages, such as after yarn linking)
+
+    link [node_service] package     yarn link a mounted package and restart the service
+                                    NOTE: the package must be mounted into a root directory that matches it's name
+                                      example: 'tidepool_docker link blip @tidepool/viz'
+                                        - will link the package mounted at /@tidepool/viz and link the
+                                          "@tidepool/viz" package in blip.
+
+    unlink [node_service] package   yarn unlink a mounted package, reinstall the remote package, and restart
+                                    NOTE: the package must be mounted into a root directory that matches it's name
+                                      example: 'tidepool_docker unlink blip tideline'
+                                        - will link the package mounted at /tideline and unlink
+                                          the "tideline" package in blip
+
+    yarn [node_service] [...cmds]   shortcut to run yarn commands against the specified Node.js-based service
+                                    frontend node services are one of: [blip|viz|tideline|tidepool-platform-client]
+                                    NOTE: tideline and tidepool-platform-client are optional volume mounts
+                                    within the blip service
+                                      example: 'tidepool_docker tideline install'
+                                        ('install' is default yarn command, so it can be skipped here)
+                                      example: 'tidepool_docker viz run stories'
+                                        ('run' is implied in yarn scrips, so 'tidepool_docker viz stories' works too)
+                                      example: 'tidepool_docker tidepool-platform-client run test'
+
+    help                            show this help text
+
+EOF
+}
+
+restart() { (cd ${DIR} && docker-compose stop ${1} && docker-compose start ${1}); }
+
+run_exec() { args="${@:2}" && (cd ${DIR} && docker-compose exec ${1} /bin/sh -c "${args}") }
+
+run_yarn() {
+  NODE_SERVICES='@(blip|viz)'
+  BLIP_MOUNTED_NODE_SERVICES='@(tideline|tidepool-platform-client)'
+
+  if [[ ${BLIP_MOUNTED_NODE_SERVICES} =~ ${1} ]]; then
+    run_exec blip "cd /${1} && yarn ${@:2}"
+  elif [[ ${NODE_SERVICES} =~ ${1} ]]; then
+    run_exec ${1} "yarn ${@:2}"
+  else
+    printf "The yarn command can only be run on Node.js services\n\n"
+  fi
+}
+
+case ${1-help} in
+  up) (cd ${DIR} && docker-compose up -d ${2-});;
+  down) (cd ${DIR} && docker-compose down ${2-});;
+  stop) (cd ${DIR} && docker-compose stop ${2-});;
+  restart) restart ${2-};;
+  pull) (cd ${DIR} && docker-compose pull ${2-});;
+  logs) (cd ${DIR} && docker-compose logs --tail=20 -f ${2-});;
+  rebuild) (cd ${DIR} && docker-compose build ${2} && docker-compose up -d ${2-});;
+  exec) run_exec ${2} ${@:3};;
+  link) (cd ${DIR} && docker-compose exec ${2} /bin/sh -c "cd /${3} && yarn link && cd /app && yarn link ${3}") && restart ${2};;
+  unlink) (cd ${DIR} && docker-compose exec ${2} /bin/sh -c "yarn unlink ${3}; cd /${3} && yarn unlink; cd /app && rm -f node_modules/${3} && yarn install --force") && restart ${2};;
+  yarn) run_yarn ${2} "${@:3}";;
+  *|help) usage;;
+esac
