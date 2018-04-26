@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -eu
 shopt -s extglob
 
 DIR=$(cd $(dirname $(dirname ${0})); pwd)
@@ -54,38 +54,34 @@ USAGE: tidepool_docker command [service] [...additional args]
 EOF
 }
 
-restart() { (cd $DIR && docker-compose stop $1 && docker-compose start $1); }
+restart() { (cd ${DIR} && docker-compose stop ${1} && docker-compose start ${1}); }
 
-run_exec() { args="${@:2}" && (cd $DIR && docker-compose exec $1 /bin/sh -c "${args}") }
+run_exec() { args="${@:2}" && (cd ${DIR} && docker-compose exec ${1} /bin/sh -c "${args}") }
 
 run_yarn() {
   NODE_SERVICES='@(blip|viz)'
-  BLIP_MOUNTED_NODE_SERVICES='@(tideline|tidepool\-platform\-client)'
+  BLIP_MOUNTED_NODE_SERVICES='@(tideline|tidepool-platform-client)'
 
-  if [[ ${BLIP_MOUNTED_NODE_SERVICES[*]} =~ $1 ]]
-  then
+  if [[ ${BLIP_MOUNTED_NODE_SERVICES} =~ ${1} ]]; then
     run_exec blip "cd /${1} && yarn ${@:2}"
+  elif [[ ${NODE_SERVICES} =~ ${1} ]]; then
+    run_exec ${1} "yarn ${@:2}"
   else
-    if [[ ${NODE_SERVICES[*]} =~ $1 ]]
-    then
-      run_exec $1 "yarn ${@:2}"
-    else
-      printf "The yarn command can only be run on Node.js services\n\n"
-    fi
+    printf "The yarn command can only be run on Node.js services\n\n"
   fi
 }
 
-case $1 in
-  up) (cd $DIR && docker-compose up -d $2);;
-  down) (cd $DIR && docker-compose down $2);;
-  stop) (cd $DIR && docker-compose stop $2);;
-  restart) restart $2;;
-  pull) (cd $DIR && docker-compose pull $2);;
-  logs) (cd $DIR && docker-compose logs --tail=20 -f $2);;
-  rebuild) (cd $DIR && docker-compose build $2 && docker-compose up -d $2);;
-  exec) run_exec $2 ${@:3};;
-  link) (cd $DIR && docker-compose exec $2 /bin/sh -c "cd /${3} && yarn link && cd /app && yarn link ${3}") && restart $2;;
-  unlink) (cd $DIR && docker-compose exec $2 /bin/sh -c "yarn unlink ${3}; cd /${3} && yarn unlink; cd /app && rm -f node_modules/${3} && yarn install --force") && restart $2;;
-  yarn) run_yarn $2 "${@:3}";;
+case ${1-help} in
+  up) (cd ${DIR} && docker-compose up -d ${2-});;
+  down) (cd ${DIR} && docker-compose down ${2-});;
+  stop) (cd ${DIR} && docker-compose stop ${2-});;
+  restart) restart ${2-};;
+  pull) (cd ${DIR} && docker-compose pull ${2-});;
+  logs) (cd ${DIR} && docker-compose logs --tail=20 -f ${2-});;
+  rebuild) (cd ${DIR} && docker-compose build ${2} && docker-compose up -d ${2-});;
+  exec) run_exec ${2} ${@:3};;
+  link) (cd ${DIR} && docker-compose exec ${2} /bin/sh -c "cd /${3} && yarn link && cd /app && yarn link ${3}") && restart ${2};;
+  unlink) (cd ${DIR} && docker-compose exec ${2} /bin/sh -c "yarn unlink ${3}; cd /${3} && yarn unlink; cd /app && rm -f node_modules/${3} && yarn install --force") && restart ${2};;
+  yarn) run_yarn ${2} "${@:3}";;
   *|help) usage;;
 esac
