@@ -445,6 +445,211 @@ Start your local Tidepool again, per [Starting](#starting) instructions. If alre
 
 Go ahead and edit the source files as you wish. Note the above caveats regarding automatic rebuild in the [Mount Local Volume](mount-local-volume) instructions.
 
+## Developing for Front End services
+
+When developing the front end services `blip` (our primary web application) and `viz` (our visualization library), there are a few extra steps needed in addition to the generalized development instructions above.
+
+### Mounting Local Volumes
+
+This is far recommended over rebuilding the images when making changes, as full container builds will be quite time-consuming due to the `yarn install`'s being called.
+
+Note that in the case of the `blip` service, we only need the primary container volumes (those whose mounted paths are within the `/app` directory).
+
+The other commented-out paths are for supporting frontend repos that only need to be volume-mounted if they're to be developed via `yarn link`. See [Linking other node packages into blip](#linking-other-node-packages-into-blip).
+
+```bash
+  blip:
+    image: tidepool/blip
+    depends_on:
+      - hakken
+    # build: ${TIDEPOOL_DOCKER_BLIP_DIR}
+    volumes:
+      - ${TIDEPOOL_DOCKER_BLIP_DIR}:/app:cached
+      - /app/node_modules
+      - /app/dist
+      # - ${TIDEPOOL_DOCKER_PLATFORM_CLIENT_DIR}:/tidepool-platform-client:cached
+      # - /tidepool-platform-client/node_modules
+      # - ${TIDEPOOL_DOCKER_TIDELINE_DIR}:/tideline:cached
+      # - /tideline/node_modules
+      # - ${TIDEPOOL_DOCKER_VIZ_DIR}:/@tidepool/viz:cached
+      # - viz-dist:/@tidepool/viz/dist:ro
+
+    # ...
+```
+
+### Working with node package managers in Docker (`npm`, `yarn`)
+
+Running your development environment in Docker is great for a number of reasons, but it does complicate package management when working with Node.js projects.
+
+The main issue is that you can't manage your node packages in the container using your local installation of `npm` or `yarn` (which we use) because the `node_modules` folder does not get volume-mounted into the containers.
+
+This is for performance reasons, but also because we want the packages to be compiled for and running in the same environment/operating system (`linux` in our case).
+
+This results in us having to issue our `yarn` commands from **_within_** the containers, instead of from our native operating system.
+
+Docker Compose provides a couple ways for us to get _into_ the service containers to run our commands. Here are a couple of examples of how to run a `yarn install` for the `blip` service:
+
+#### Using `docker-compose exec` to enter an interactive prompt within the container
+
+```bash
+# Shell into the container from your local terminal
+docker-compose exec blip sh
+
+# You will now be 'inside' the container in the /app directory
+yarn install
+# The node_modules folder will now be updated with the latest packages, and the yarn.lock file updated
+
+# Now we exit the container and return to our local terminal shell
+exit
+```
+
+This is overkill when just doing a simple command (streamlined alternative outlined below), but it's very hand when you need to perform multiple operations or simply poke around the container's file system.
+
+#### Using `docker-compose exec` to issue a one-off command in the container with the `sh -c` flag
+
+```bash
+# Examples (from your local terminal)
+
+# Perform an install
+docker-compose exec blip sh -c "yarn install"
+
+# Run an npm script, such as a test-watch
+docker-compose exec blip sh -c "yarn run test-watch"
+```
+
+### Linking other node packages into `blip`
+
+When you need develop other supporting front end tidepool Node.js packages in `blip`, you'll need to `yarn link` them so that the changes you make are picked up and compiled in your running blip instance.
+
+For example, if you need to make some changes to the `tideline` (our legacy visualization provider) and `viz` packages, you would first need to volume mount the source code for those packages into the `blip` service:
+```bash
+  blip:
+      # ...
+      volumes:
+        - ${TIDEPOOL_DOCKER_BLIP_DIR}:/app:cached
+        - /app/node_modules
+        - /app/dist
+        # - ${TIDEPOOL_DOCKER_PLATFORM_CLIENT_DIR}:/tidepool-platform-client:cached
+        # - /tidepool-platform-client/node_modules
+        - ${TIDEPOOL_DOCKER_TIDELINE_DIR}:/tideline:cached
+        - /tideline/node_modules
+        - ${TIDEPOOL_DOCKER_VIZ_DIR}:/@tidepool/viz:cached
+        - viz-dist:/@tidepool/viz/dist:ro
+      # ...
+```
+
+**NOTE:** The above example is somewhat incomplete.  When choosing to mount and link the `@tidepool/viz` package, we need to also run the `viz` service, which is commented out completely in the `docker-compose.yml` by default. See [Running the viz service](#running-the-viz-service) below for details.
+
+Next, we need to `exec` into the container and link the packages
+
+```bash
+# Shell into the container from your local terminal
+docker-compose exec blip sh
+
+# Navigate to the directories we mounted the packages to and register them as linked packages
+# NOTE: we only need to run the yarn install if this is the first time (or the package.json dependancies have changed)
+cd /tideline && yarn install && yarn link
+cd /@tidepool/viz && yarn install && yarn link
+
+# Navigate to the main app directory and link the registered packages
+cd /app && yarn link tideline @tidepool/viz
+
+# Now we exit the container and return to our local terminal shell
+exit
+
+# Restart the blip service from your local terminal
+docker-compose stop blip && docker-compose start blip
+```
+
+You may have noticed that I used separate stop and start commands, instead of the more obvious `docker-compose restart`. I've found that there are times (possibly due to `yarn` caching) that the full stop and start is required for the linking to take effect.
+
+As with the `yarn install` example earlier, this can be run as a one-off command, though it's fairly verbose:
+
+```bash
+docker-compose run blip /bin/sh -c "cd /@tidepool/viz && yarn link && cd /tideline && yarn link && cd /app && yarn link tideline @tidepool/viz
+```
+
+Again, we want to follow up with a restart:
+
+```bash
+docker-compose stop blip && docker-compose start blip
+```
+
+### Unlinking previously linked node packages in `blip`
+
+To unlink a linked node package, we simply reverse our linking with `yarn unlink`:
+
+```bash
+# Shell into the container from your local terminal
+docker-compose exec blip sh
+
+# You will be in the /app directory by default after exec-ing into the container
+yarn unlink tideline @tidepool/viz
+
+# Navigate to the directories we mounted the packages to and deregister them as linked packages
+cd /tideline && yarn unlink
+cd /@tidepool/viz && yarn unlink
+
+# We now should remove the node_modules directory and force a reinstall.
+# Otherwise, we may end up with the previously linked packages still used from the yarn cache
+cd /app
+rm -rf node_modules
+yarn install --force
+
+# Now we exit the container and return to our local terminal shell
+exit
+
+# Restart the blip service from your local terminal
+docker-compose stop blip && docker-compose start blip
+```
+
+And the one-liner:
+
+```bash
+docker-compose run blip /bin/sh -c "yarn unlink tideline @tidepool/viz && cd /@tidepool/viz && yarn unlink && cd /tideline && yarn unlink && cd /app && rm -rf node_modules && yarn install --force"
+```
+
+Again, we want to follow up with a restart:
+
+```bash
+docker-compose stop blip && docker-compose start blip
+```
+
+### Running the `viz` service
+
+Unlike the other frontend Node.js services that blip uses, `viz` can also be run as a standalone service.
+
+In fact, it **_must_** be running if you are planning to link it into `blip`, as the webpack bundling needs to run (which it does when the service container starts, and when mounted files change).
+
+There are times, however, where you may want to run it on it's own without linking into `blip`, such as if you're working on new prototypes in `viz`'s Storybooks.
+
+The `viz` service is commented out by default. To run it, simply uncomment it in the `docker-compose.yml` file.
+
+```bash
+  viz:
+    image: tidepool/viz
+    volumes:
+      - ${TIDEPOOL_DOCKER_VIZ_DIR}:/app:cached
+      - /app/node_modules
+      - viz-dist:/app/dist
+    environment:
+      NODE_ENV: development
+    ports:
+      - '8081:8081'
+      - '8082:8082'
+```
+
+The open ports are for running the storybooks in the browser.
+
+NOTE: the storybooks don't run by default. You need to start them manually:
+
+```bash
+# Run the general UI storybook on http://localhost:8081
+docker-compose exec viz sh -c "yarn run stories"
+
+# Run the stories for diabetes data type visualizations on http://localhost:8082
+docker-compose exec viz sh -c "yarn run typestories"
+```
 # Tidepool Helper Script
 
 Included in the `bin` directory of this repo is a bash script named `tidepool_docker`.
@@ -478,9 +683,9 @@ tidepool_docker link blip tideline
 tidepool_docker unlink blip @tidepool/viz
 
 # Run npm (yarn) scripts in a service
-tidepool_docker blip install
-tidepool_docker tideline run test-watch
-tidepool_docker viz run stories
+tidepool_docker yarn blip install
+tidepool_docker yarn tideline test-watch
+tidepool_docker yarn viz stories
 
 # Tail logs for the `blip` service
 tidepool_docker logs blip
@@ -493,8 +698,8 @@ This script will only work in a Linux or MacOS environment (though Windows users
 
 The following commands are provided (note that some commands only apply to Node.js services):
 
-| Command                                       | Description                                                                                                                                                         |
-|-----------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Command                       | Description                                                                                                                                                         |
+|-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `up [service]`                | start and/or (re)build the entire tidepool stack or the specified service                                                                                           |
 | `down`                        | shut down and remove the entire tidepool stack                                                                                                                      |
 | `stop`                        | shut down the entire tidepool stack or the specified service                                                                                                        |
@@ -602,13 +807,3 @@ being directed back to a container, say to a reverse proxy for tracing). See [Se
 Note: All environment variables found in the `docker-compose.yml` file must be defined (if only to an empty string as it the case with the default `PORT_PREFIX`) to avoid warnings from Docker.
 
 Note: Rather than modifying the `.env` file you can set all the same environment variables in your shell (e.g. in `~/.bashrc`) where they will take precedence over those found in the `.env` file.
-
-# To Be Documented
-
-The following need more documentation in this README.
-
-## Blip
-
-TBD: Describe how to work with `viz` container.
-
-TBD: Describe how to work with `platform-client` and `tideline` repos.
