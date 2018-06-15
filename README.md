@@ -108,6 +108,7 @@ In the `.env` file, the following environment variables should have new, random 
 * `TIDEPOOL_DOCKER_HIGHWATER_SALT`
 * `TIDEPOOL_DOCKER_JELLYFISH_SALT`
 * `TIDEPOOL_DOCKER_PLATFORM_AUTH_SERVICE_SECRET`
+* `TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_SECRET`
 * `TIDEPOOL_DOCKER_PLATFORM_DATA_SERVICE_SECRET`
 * `TIDEPOOL_DOCKER_PLATFORM_NOTIFICATION_SERVICE_SECRET`
 * `TIDEPOOL_DOCKER_PLATFORM_TASK_SERVICE_SECRET`
@@ -234,6 +235,7 @@ Please note that the `platform` repository actually contains source code for mul
 | Docker Container Name | Description                      |
 | --------------------- | -------------------------------- |
 | platform-auth         | Authentication                   |
+| platform-blob         | Blob Storage                     |
 | platform-data         | Data Ingestion (next generation) |
 | platform-migrations   | Database Migrations              |
 | platform-notification | Notifications (TBD)              |
@@ -741,6 +743,7 @@ Each container and its contained service have their own standard port where clie
 | [jellyfish](https://github.com/tidepool-org/jellyfish)            | 9122                   |
 | [message-api](https://github.com/tidepool-org/message-api)        | 9119                   |
 | [platform-auth](https://github.com/tidepool-org/platform)         | 9222                   |
+| [platform-blob](https://github.com/tidepool-org/platform)         | 9225                   |
 | [platform-data](https://github.com/tidepool-org/platform)         | 9220                   |
 | [platform-migrations](https://github.com/tidepool-org/platform)   | N/A (see below)        |
 | [platform-notification](https://github.com/tidepool-org/platform) | 9223                   |
