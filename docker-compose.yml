@@ -507,6 +507,11 @@ services:
     environment:
       TIDEPOOL_TIDE_WHISPERER_ENV: |
         {
+            "auth": {
+              "address": "http://${TIDEPOOL_DOCKER_PLATFORM_AUTH_HOST}:9222",
+              "serviceSecret": "${TIDEPOOL_DOCKER_PLATFORM_AUTH_SERVICE_SECRET}",
+              "userAgent": "Tidepool-TideWhisperer"
+            },
             "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://${TIDEPOOL_DOCKER_GATEKEEPER_HOST}:9123"]}},
             "hakken": {"host": "${TIDEPOOL_DOCKER_HAKKEN_HOST}:8000"},
             "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://${TIDEPOOL_DOCKER_SEAGULL_HOST}:9120"]}},
