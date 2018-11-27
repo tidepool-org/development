@@ -32,6 +32,7 @@ services:
       NODE_ENV: development
       PORT: '3000'
       PUBLISH_HOST: ${TIDEPOOL_DOCKER_HAKKEN_HOST}
+      SERVICE_NAME: blip
       WEBPACK_DEVTOOL: cheap-module-eval-source-map
 
   gatekeeper:
@@ -231,8 +232,10 @@ services:
       TIDEPOOL_USER_STORE_PASSWORD_SALT: '${TIDEPOOL_DOCKER_SHORELINE_SALT}'
       TIDEPOOL_AUTH_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_AUTH_HOST}:9222
       TIDEPOOL_DATA_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220
+      TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220
       TIDEPOOL_METRIC_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
       TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_NOTIFICATION_HOST}:9223
+      TIDEPOOL_PERMISSION_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_GATEKEEPER_HOST}:9123
       TIDEPOOL_TASK_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_TASK_HOST}:9224
       TIDEPOOL_USER_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
       TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
@@ -440,6 +443,7 @@ services:
               {"type": "pathPrefix", "prefix": "/confirm",                                                "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_HYDROPHONE_HOST}:9157"}]}},
               {"type": "pathPrefix", "prefix": "/data/",                                                  "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_TIDE_WHISPERER_HOST}:9127"}]}},
               {"type": "pathPrefix", "prefix": "/dataservices",                                           "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
+              {"type": "pathPrefix", "prefix": "/export",                           "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_EXPORT_HOST}:9300"}]}},
               {"type": "pathPrefix", "prefix": "/message",                                                "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_MESSAGE_API_HOST}:9119"}]}},
               {"type": "pathPrefix", "prefix": "/metadata",                                               "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_SEAGULL_HOST}:9120"}]}},
               {"type": "pathPrefix", "prefix": "/metrics",                                                "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_HIGHWATER_HOST}:9191"}]}},
@@ -482,6 +486,11 @@ services:
     environment:
       TIDEPOOL_TIDE_WHISPERER_ENV: |
         {
+            "auth": {
+              "address": "http://${TIDEPOOL_DOCKER_PLATFORM_AUTH_HOST}:9222",
+              "serviceSecret": "${TIDEPOOL_DOCKER_PLATFORM_AUTH_SERVICE_SECRET}",
+              "userAgent": "Tidepool-TideWhisperer"
+            },
             "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://${TIDEPOOL_DOCKER_GATEKEEPER_HOST}:9123"]}},
             "hakken": {"host": "${TIDEPOOL_DOCKER_HAKKEN_HOST}:8000"},
             "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://${TIDEPOOL_DOCKER_SEAGULL_HOST}:9120"]}},
@@ -521,6 +530,18 @@ services:
   #   ports:
   #     - '8081:8081'
   #     - '8082:8082'
+
+  # data-export-service:
+  #   image: tidepool/data-export-service
+  #   ports:
+  #     - '9300-9301:9300-9301'
+  #   environment:
+  #     HTTPS_CONFIG: '{"cert": "${TIDEPOOL_DOCKER_STYX_TLS_CERTIFICATE}", "key": "${TIDEPOOL_DOCKER_STYX_TLS_PRIVATE_KEY}"}'
+  #     HTTPS_PORT: '${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9301'
+  #     API_HOST: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
+  #     HTTP_PORT: '${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300'
+  #     SESSION_SECRET: 'session-secret'
+  #     DEBUG_LEVEL: 'debug'
 
 volumes:
   mongo:
