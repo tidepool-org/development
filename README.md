@@ -189,6 +189,34 @@ Comment out the entire `mongo:` section in the `docker-compose.yml` file. For ex
   #     - '27017:27017'
 ```
 
+### Running a Mongo replica set
+Replace the `mongo:` section in the `docker-compose.yml` file with the configuration for a full replica set. For example,
+
+```bash
+  mongo:
+    image: mongo:3.2
+    volumes:
+      - ${TIDEPOOL_DOCKER_MONGO_VOLUME}:/data/db
+    ports:
+      - '27017:27017'
+    # Don't need "mongod" at beginning of command. ENTRYPOINT handles it.
+    command: --replSet rs0 --oplogSize 128 --bind_ip localhost,mongo
+
+  mongo-2:
+    image: mongo:3.2
+    volumes:
+      - /data/db
+    # Don't need "mongod" at beginning of command. ENTRYPOINT handles it.
+    command: --replSet rs0 --oplogSize 128 --bind_ip localhost,mongo-2
+
+  mongo-3:
+    image: mongo:3.2
+    volumes:
+      - /data/db
+    # Don't need "mongod" at beginning of command. ENTRYPOINT handles it.
+    command: --replSet rs0 --oplogSize 128 --bind_ip localhost,mongo-3
+```
+
 ### Set Mongo Host Environment Variable
 
 Set the value of the `TIDEPOOL_DOCKER_MONGO_HOST` environment variable in the `.env` file to the address of the alternate Mongo host.
