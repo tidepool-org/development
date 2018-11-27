@@ -231,6 +231,7 @@ services:
       TIDEPOOL_USER_STORE_DATABASE: user
       TIDEPOOL_USER_STORE_PASSWORD_SALT: '${TIDEPOOL_DOCKER_SHORELINE_SALT}'
       TIDEPOOL_AUTH_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_AUTH_HOST}:9222
+      TIDEPOOL_BLOB_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_BLOB_HOST}:9225
       TIDEPOOL_DATA_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220
       TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220
       TIDEPOOL_METRIC_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
@@ -241,12 +242,18 @@ services:
       TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
       TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET: '${TIDEPOOL_DOCKER_SERVER_SECRET}'
       TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_AUTH_PORT_PREFIX}9222
+      TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_BLOB_PORT_PREFIX}9225
       TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_DATA_PORT_PREFIX}9220
       TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_NOTIFICATION_PORT_PREFIX}9223
       TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_TASK_PORT_PREFIX}9224
       TIDEPOOL_USER_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_USER_PORT_PREFIX}9221
       TIDEPOOL_AUTH_SERVICE_DOMAIN: ${TIDEPOOL_DOCKER_API_HOST}
+      TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE}
+      TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY}
+      TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET}
+      TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX}
       TIDEPOOL_AUTH_SERVICE_SECRET: '${TIDEPOOL_DOCKER_PLATFORM_AUTH_SERVICE_SECRET}'
+      TIDEPOOL_BLOB_SERVICE_SECRET: '${TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_SECRET}'
       TIDEPOOL_DATA_SERVICE_SECRET: '${TIDEPOOL_DOCKER_PLATFORM_DATA_SERVICE_SECRET}'
       TIDEPOOL_NOTIFICATION_SERVICE_SECRET: '${TIDEPOOL_DOCKER_PLATFORM_NOTIFICATION_SERVICE_SECRET}'
       TIDEPOOL_TASK_SERVICE_SECRET: '${TIDEPOOL_DOCKER_PLATFORM_TASK_SERVICE_SECRET}'
@@ -259,6 +266,20 @@ services:
       TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL: http://${TIDEPOOL_DOCKER_API_HOST}:8009/v1/oauth/dexcom/redirect
       TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES: offline_access
       TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT: '${TIDEPOOL_DOCKER_SERVICE_PROVIDER_DEXCOM_STATE_SALT}'
+
+  platform-blob:
+    image: tidepool/platform-blob
+    # build:
+    #   context: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_DIR}
+    #   dockerfile: Dockerfile.blob
+    #   target: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_BUILD_TARGET}
+    # volumes:
+    #   - ${TIDEPOOL_DOCKER_PLATFORM_BLOB_DIR}:/go/src/github.com/tidepool-org/platform:cached
+    #   - /go/src/github.com/tidepool-org/platform/_bin
+    #   - /go/src/github.com/tidepool-org/platform/_data
+    ports:
+      - '${TIDEPOOL_DOCKER_PLATFORM_BLOB_PORT_PREFIX}9225:${TIDEPOOL_DOCKER_PLATFORM_BLOB_PORT_PREFIX}9225'
+    environment: *platform-environment
 
   platform-data:
     image: tidepool/platform-data
@@ -454,6 +475,9 @@ services:
               {"type": "pathMatch",  "match":  "/v1/users/[^/]+/data_sets",                               "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
               {"type": "pathMatch",  "match":  "/v1/users/[^/]+/datasets",                                "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
               {"type": "pathMatch",  "match":  "/v1/users/[^/]+/data",                                    "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
+              {"type": "pathMatch",  "match":  "/v1/users/[^/]+/blobs",                                   "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_BLOB_HOST}:9225"}]}},
+              {"type": "pathPrefix", "prefix": "/v1/users",                         "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_USER_HOST}:9221"}]}},
+              {"type": "pathPrefix", "prefix": "/v1/time",                          "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
               {"type": "pathPrefix", "prefix": "/v1/tasks",                         "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_TASK_HOST}:9224"}]}},
               {"type": "pathPrefix", "prefix": "/v1/restricted_tokens",             "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_AUTH_HOST}:9222"}]}},
               {"type": "pathPrefix", "prefix": "/v1/provider_sessions",             "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_AUTH_HOST}:9222"}]}},
@@ -461,6 +485,7 @@ services:
               {"type": "pathPrefix", "prefix": "/v1/data_sets",                     "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
               {"type": "pathPrefix", "prefix": "/v1/datasets",                      "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
               {"type": "pathMatch",  "match":  "/v1/data",                                                "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
+              {"type": "pathPrefix", "prefix": "/v1/blobs",                         "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_BLOB_HOST}:9225"}]}},
               {"type": "pathPrefix", "prefix": "/v1/oauth",                         "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_AUTH_HOST}:9222"}]}}
             ]
           },
