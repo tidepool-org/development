@@ -556,17 +556,19 @@ services:
   #     - '8081:8081'
   #     - '8082:8082'
 
-  # data-export-service:
-  #   image: tidepool/data-export-service
+  # export:
+  #   image: tidepool/export
+  #   # build: ${TIDEPOOL_DOCKER_EXPORT_DIR}
+  #   # volumes:
+  #   #   - ${TIDEPOOL_DOCKER_EXPORT_DIR}:/app:cached
+  #   #   - /app/node_modules
   #   ports:
-  #     - '9300-9301:9300-9301'
+  #     - '${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300:${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300'
   #   environment:
-  #     HTTPS_CONFIG: '{"cert": "${TIDEPOOL_DOCKER_STYX_TLS_CERTIFICATE}", "key": "${TIDEPOOL_DOCKER_STYX_TLS_PRIVATE_KEY}"}'
-  #     HTTPS_PORT: '${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9301'
   #     API_HOST: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
   #     HTTP_PORT: '${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300'
-  #     SESSION_SECRET: 'session-secret'
-  #     DEBUG_LEVEL: 'debug'
+  #     SESSION_SECRET: '${TIDEPOOL_DOCKER_EXPORT_SESSION_SECRET}'
+  #     DEBUG_LEVEL: debug
 
 volumes:
   mongo:
