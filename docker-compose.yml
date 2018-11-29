@@ -32,6 +32,7 @@ services:
       NODE_ENV: development
       PORT: '3000'
       PUBLISH_HOST: ${TIDEPOOL_DOCKER_HAKKEN_HOST}
+      SERVICE_NAME: blip
       WEBPACK_DEVTOOL: cheap-module-eval-source-map
 
   gatekeeper:
@@ -463,6 +464,7 @@ services:
               {"type": "pathPrefix", "prefix": "/confirm",                                                "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_HYDROPHONE_HOST}:9157"}]}},
               {"type": "pathPrefix", "prefix": "/data/",                                                  "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_TIDE_WHISPERER_HOST}:9127"}]}},
               {"type": "pathPrefix", "prefix": "/dataservices",                                           "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
+              {"type": "pathPrefix", "prefix": "/export",                           "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_EXPORT_HOST}:9300"}]}},
               {"type": "pathPrefix", "prefix": "/message",                                                "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_MESSAGE_API_HOST}:9119"}]}},
               {"type": "pathPrefix", "prefix": "/metadata",                                               "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_SEAGULL_HOST}:9120"}]}},
               {"type": "pathPrefix", "prefix": "/metrics",                                                "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_HIGHWATER_HOST}:9191"}]}},
@@ -553,6 +555,20 @@ services:
   #   ports:
   #     - '8081:8081'
   #     - '8082:8082'
+
+  # export:
+  #   image: tidepool/export
+  #   # build: ${TIDEPOOL_DOCKER_EXPORT_DIR}
+  #   # volumes:
+  #   #   - ${TIDEPOOL_DOCKER_EXPORT_DIR}:/app:cached
+  #   #   - /app/node_modules
+  #   ports:
+  #     - '${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300:${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300'
+  #   environment:
+  #     API_HOST: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
+  #     DEBUG_LEVEL: debug
+  #     HTTP_PORT: '${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300'
+  #     SESSION_SECRET: '${TIDEPOOL_DOCKER_EXPORT_SESSION_SECRET}'
 
 volumes:
   mongo:
