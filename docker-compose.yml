@@ -35,6 +35,20 @@ services:
       SERVICE_NAME: blip
       WEBPACK_DEVTOOL: cheap-module-eval-source-map
 
+  # export:
+  #   image: tidepool/export
+  #   # build: ${TIDEPOOL_DOCKER_EXPORT_DIR}
+  #   # volumes:
+  #   #   - ${TIDEPOOL_DOCKER_EXPORT_DIR}:/app:cached
+  #   #   - /app/node_modules
+  #   ports:
+  #     - '${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300:${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300'
+  #   environment:
+  #     API_HOST: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
+  #     DEBUG_LEVEL: debug
+  #     HTTP_PORT: '${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300'
+  #     SESSION_SECRET: '${TIDEPOOL_DOCKER_EXPORT_SESSION_SECRET}'
+
   gatekeeper:
     image: tidepool/gatekeeper
     depends_on:
@@ -234,6 +248,7 @@ services:
       TIDEPOOL_BLOB_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_BLOB_HOST}:9225
       TIDEPOOL_DATA_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220
       TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220
+      TIDEPOOL_IMAGE_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_IMAGE_HOST}:9226
       TIDEPOOL_METRIC_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
       TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_NOTIFICATION_HOST}:9223
       TIDEPOOL_PERMISSION_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_GATEKEEPER_HOST}:9123
@@ -244,6 +259,7 @@ services:
       TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_AUTH_PORT_PREFIX}9222
       TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_BLOB_PORT_PREFIX}9225
       TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_DATA_PORT_PREFIX}9220
+      TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_IMAGE_PORT_PREFIX}9226
       TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_NOTIFICATION_PORT_PREFIX}9223
       TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_TASK_PORT_PREFIX}9224
       TIDEPOOL_USER_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_USER_PORT_PREFIX}9221
@@ -252,9 +268,14 @@ services:
       TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY}
       TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET}
       TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX}
+      TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE: ${TIDEPOOL_DOCKER_PLATFORM_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE}
+      TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY: ${TIDEPOOL_DOCKER_PLATFORM_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY}
+      TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET: ${TIDEPOOL_DOCKER_PLATFORM_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET}
+      TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX: ${TIDEPOOL_DOCKER_PLATFORM_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX}
       TIDEPOOL_AUTH_SERVICE_SECRET: '${TIDEPOOL_DOCKER_PLATFORM_AUTH_SERVICE_SECRET}'
       TIDEPOOL_BLOB_SERVICE_SECRET: '${TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_SECRET}'
       TIDEPOOL_DATA_SERVICE_SECRET: '${TIDEPOOL_DOCKER_PLATFORM_DATA_SERVICE_SECRET}'
+      TIDEPOOL_IMAGE_SERVICE_SECRET: '${TIDEPOOL_DOCKER_PLATFORM_IMAGE_SERVICE_SECRET}'
       TIDEPOOL_NOTIFICATION_SERVICE_SECRET: '${TIDEPOOL_DOCKER_PLATFORM_NOTIFICATION_SERVICE_SECRET}'
       TIDEPOOL_TASK_SERVICE_SECRET: '${TIDEPOOL_DOCKER_PLATFORM_TASK_SERVICE_SECRET}'
       TIDEPOOL_USER_SERVICE_SECRET: '${TIDEPOOL_DOCKER_PLATFORM_USER_SERVICE_SECRET}'
@@ -292,6 +313,20 @@ services:
     #   - /go/src/github.com/tidepool-org/platform/_bin
     ports:
       - '${TIDEPOOL_DOCKER_PLATFORM_DATA_PORT_PREFIX}9220:${TIDEPOOL_DOCKER_PLATFORM_DATA_PORT_PREFIX}9220'
+    environment: *platform-environment
+
+  platform-image:
+    image: tidepool/platform-image
+    # build:
+    #   context: ${TIDEPOOL_DOCKER_PLATFORM_IMAGE_DIR}
+    #   dockerfile: Dockerfile.image
+    #   target: ${TIDEPOOL_DOCKER_PLATFORM_IMAGE_BUILD_TARGET}
+    # volumes:
+    #   - ${TIDEPOOL_DOCKER_PLATFORM_IMAGE_DIR}:/go/src/github.com/tidepool-org/platform:cached
+    #   - /go/src/github.com/tidepool-org/platform/_bin
+    #   - /go/src/github.com/tidepool-org/platform/_data
+    ports:
+      - '${TIDEPOOL_DOCKER_PLATFORM_IMAGE_PORT_PREFIX}9226:${TIDEPOOL_DOCKER_PLATFORM_IMAGE_PORT_PREFIX}9226'
     environment: *platform-environment
 
   platform-migrations:
@@ -476,6 +511,8 @@ services:
               {"type": "pathMatch",  "match":  "/v1/users/[^/]+/datasets",                                "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
               {"type": "pathMatch",  "match":  "/v1/users/[^/]+/data",                                    "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
               {"type": "pathMatch",  "match":  "/v1/users/[^/]+/blobs",                                   "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_BLOB_HOST}:9225"}]}},
+              {"type": "pathMatch",  "match":  "/v1/users/[^/]+/images",                                  "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_IMAGE_HOST}:9226"}]}},
+              {"type": "pathMatch",  "match":  "/v1/users/[^/]+/images/.+",                               "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_IMAGE_HOST}:9226"}]}},
               {"type": "pathPrefix", "prefix": "/v1/users",                         "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_USER_HOST}:9221"}]}},
               {"type": "pathPrefix", "prefix": "/v1/time",                          "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
               {"type": "pathPrefix", "prefix": "/v1/tasks",                         "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_TASK_HOST}:9224"}]}},
@@ -486,6 +523,7 @@ services:
               {"type": "pathPrefix", "prefix": "/v1/datasets",                      "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
               {"type": "pathMatch",  "match":  "/v1/data",                                                "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220"}]}},
               {"type": "pathPrefix", "prefix": "/v1/blobs",                         "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_BLOB_HOST}:9225"}]}},
+              {"type": "pathPrefix", "prefix": "/v1/images",                        "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_IMAGE_HOST}:9226"}]}},
               {"type": "pathPrefix", "prefix": "/v1/oauth",                         "stripPrefix": false, "rule": {"type": "staticService", "hosts": [{"protocol": "http", "host": "${TIDEPOOL_DOCKER_PLATFORM_AUTH_HOST}:9222"}]}}
             ]
           },
@@ -555,20 +593,6 @@ services:
   #   ports:
   #     - '8081:8081'
   #     - '8082:8082'
-
-  # export:
-  #   image: tidepool/export
-  #   # build: ${TIDEPOOL_DOCKER_EXPORT_DIR}
-  #   # volumes:
-  #   #   - ${TIDEPOOL_DOCKER_EXPORT_DIR}:/app:cached
-  #   #   - /app/node_modules
-  #   ports:
-  #     - '${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300:${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300'
-  #   environment:
-  #     API_HOST: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
-  #     DEBUG_LEVEL: debug
-  #     HTTP_PORT: '${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300'
-  #     SESSION_SECRET: '${TIDEPOOL_DOCKER_EXPORT_SESSION_SECRET}'
 
 volumes:
   mongo:
