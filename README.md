@@ -652,6 +652,28 @@ docker-compose exec viz sh -c "yarn run stories"
 # Run the stories for diabetes data type visualizations on http://localhost:8082
 docker-compose exec viz sh -c "yarn run typestories"
 ```
+
+### Troubleshooting Webpack Dev Server issues in blip or viz with Docker For Mac
+
+From time to time, the Webpack Dev Server started by the `blip` or `viz` npm `start` scripts will stop detecting file changes, which will stop the live recompiling.  It is unclear why this occurs, but the following steps seem to fix it:
+
+Examples for `blip`.  Simply replace with `viz` as needed.
+
+```bash
+# First, try a simple restart of the service
+docker-compose restart blip
+
+# This will often do it.  If not, try bringing down the full stack and restarting
+docker-compose down
+docker-compose up
+
+# If this doesn't work, try restarting Docker For Mac and bring up the stack as per ussual.
+# On very rare occasions, there is a corrupted volume mount.
+# To fix this, remove the container and it's volumes, and restart the service
+docker-compose rm -fsv blip
+docker-compose up blip
+```
+
 # Tidepool Helper Script
 
 Included in the `bin` directory of this repo is a bash script named `tidepool_docker`.
@@ -705,6 +727,7 @@ The following commands are provided (note that some commands only apply to Node.
 | `up [service]`                | start and/or (re)build the entire tidepool stack or the specified service                                                                                           |
 | `down`                        | shut down and remove the entire tidepool stack                                                                                                                      |
 | `stop`                        | shut down the entire tidepool stack or the specified service                                                                                                        |
+| `rm [service]`                | stops and removes the all service containers or the specified service containers                                                                                    |
 | `restart [service]`           | restart the entire tidepool stack or the specified service                                                                                                          |
 | `pull [service]`              | pull the latest images for the entire tidepool stack or the specified service                                                                                       |
 | `logs [service]`              | tail logs for the entire tidepool stack or the specified service                                                                                                    |
