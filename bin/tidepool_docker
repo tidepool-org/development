@@ -73,7 +73,7 @@ run_yarn() {
 }
 
 case ${1-help} in
-  up) (cd ${DIR} && docker-compose up -dV ${2-});;
+  up) (cd ${DIR} && docker-compose up -d ${2-});;
   down) (cd ${DIR} && docker-compose down -v);;
   stop) (cd ${DIR} && docker-compose stop ${2-});;
   rm) (cd ${DIR} && docker-compose rm -fsv ${2-});;
