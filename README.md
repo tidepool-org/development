@@ -727,7 +727,7 @@ The following commands are provided (note that some commands only apply to Node.
 | `up [service]`                | start and/or (re)build the entire tidepool stack or the specified service                                                                                           |
 | `down`                        | shut down and remove the entire tidepool stack                                                                                                                      |
 | `stop`                        | shut down the entire tidepool stack or the specified service                                                                                                        |
-| `rm [service]`                | stops and removes the all service containers or the specified service containers                                                                                    |
+| `rm [service]`                | stops and removes containers and volumes for the entire tidepool stack or the specified service                                                                     |
 | `restart [service]`           | restart the entire tidepool stack or the specified service                                                                                                          |
 | `pull [service]`              | pull the latest images for the entire tidepool stack or the specified service                                                                                       |
 | `logs [service]`              | tail logs for the entire tidepool stack or the specified service                                                                                                    |
