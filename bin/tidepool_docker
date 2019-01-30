@@ -12,6 +12,7 @@ USAGE: tidepool_docker command [service] [...additional args]
     up [service]                    start and/or (re)build the entire tidepool stack or the specified service
     down                            shut down and remove the entire tidepool stack
     stop [service]                  shut down the entire tidepool stack or the specified service
+    rm [service]                    stops and removes containers and volumes for the entire tidepool stack or the specified service
     restart [service]               restart the entire tidepool stack or the specified service
     pull [service]                  pull the latest images for the entire tidepool stack or the specified service
     logs [service]                  tail logs for the entire tidepool stack or the specified service
@@ -73,12 +74,13 @@ run_yarn() {
 
 case ${1-help} in
   up) (cd ${DIR} && docker-compose up -d ${2-});;
-  down) (cd ${DIR} && docker-compose down ${2-});;
+  down) (cd ${DIR} && docker-compose down -v);;
   stop) (cd ${DIR} && docker-compose stop ${2-});;
+  rm) (cd ${DIR} && docker-compose rm -fsv ${2-});;
   restart) restart ${2-};;
   pull) (cd ${DIR} && docker-compose pull ${2-});;
   logs) (cd ${DIR} && docker-compose logs --tail=20 -f ${2-});;
-  rebuild) (cd ${DIR} && docker-compose build ${2} && docker-compose up -d ${2-});;
+  rebuild) (cd ${DIR} && docker-compose build ${2-} && docker-compose up -d ${2-});;
   exec) run_exec ${2} ${@:3};;
   link) (cd ${DIR} && docker-compose exec ${2} /bin/sh -c "cd /${3} && yarn link && cd /app && yarn link ${3}") && restart ${2};;
   unlink) (cd ${DIR} && docker-compose exec ${2} /bin/sh -c "yarn unlink ${3}; cd /${3} && yarn unlink; cd /app && rm -f node_modules/${3} && yarn install --force") && restart ${2};;
