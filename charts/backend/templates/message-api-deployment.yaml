@@ -43,7 +43,10 @@ spec:
         - name: SERVER_NAME
           value: message-api
         - name: SERVER_SECRET
-          value: '{{.Values.server.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
         - name: SERVICE_NAME
           value: message-api
         - name: USER_API_SERVICE

@@ -23,6 +23,11 @@ spec:
       {{ include "charts.init.mongo" .}}
       containers:
       - env:
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
         - name: TIDEPOOL_HYDROPHONE_ENV
           value: |
             {

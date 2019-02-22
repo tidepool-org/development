@@ -36,7 +36,10 @@ spec:
         - name: PUBLISH_HOST
           value: '{{.Values.hakken.host}}'
         - name: SERVER_SECRET
-          value: '{{.Values.server.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
         - name: SERVICE_NAME
           value: gatekeeper
         - name: USER_API_SERVICE

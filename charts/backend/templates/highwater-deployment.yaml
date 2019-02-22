@@ -35,7 +35,10 @@ spec:
         - name: SALT_DEPLOY
           value: '{{.Values.highwater.salt}}'
         - name: SERVER_SECRET
-          value: '{{.Values.server.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
         - name: SERVICE_NAME
           value: highwater
         - name: USER_API_SERVICE

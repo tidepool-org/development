@@ -35,12 +35,16 @@ Create chart name and version as used by the chart label.
 Create environment variables used by all platform services.
 */}}
 {{- define "charts.platform.env" -}}
+
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://{{.Values.platform.auth.host}}:{{.Values.platform.auth.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
           value: http://{{.Values.api.host}}:{{.Values.api.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
-          value: '{{.Values.server.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
           value: '{{.Values.api.host}}'
         - name: TIDEPOOL_AUTH_SERVICE_SECRET

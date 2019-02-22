@@ -40,7 +40,10 @@ spec:
         - name: SALT_DEPLOY
           value: '{{.Values.seagull.salt}}'
         - name: SERVER_SECRET
-          value: '{{.Values.server.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
         - name: SERVICE_NAME
           value: seagull
         - name: USER_API_SERVICE
