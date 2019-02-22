@@ -1,3 +1,4 @@
+---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
@@ -17,11 +18,11 @@ spec:
       imagePullPolicy: IfNotPresent
     environment: production
     external:
-      api: 
+      api:
         host: localhost
         port: 8009
     shoreline:
-      image: "tidepool/shoreline:dev-quiet-0.0.1"
+      image: "tidepool/shoreline:noHakken"
     tide-whisperer:
       image: "tidepool/tide-whisperer:noHakken"
     hakken:
@@ -32,14 +33,14 @@ spec:
     hydrophone:
       image: "tidepool/hydrophone:noHakken"
     message-api:
-      image: "tidepool/message-api:quiet" 
+      image: "tidepool/message-api:quiet"
     platform:
       auth:
         image: "tidepool/platform-auth:quiet"
       blob:
         image: "tidepool/platform-blob:quiet"
       data:
-        image: "tidepool/platform-data:quiet" 
+        image: "tidepool/platform-data:quiet"
       migrations:
         image: "tidepool/platform-migrations:quiet"
       notification:
