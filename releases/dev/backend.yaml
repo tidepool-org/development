@@ -15,11 +15,11 @@ spec:
     ref: master
   values:
     environment: production
-    externalapi: 
+    externalapi:
       host: localhost
       port: 8009
     shoreline:
-      image: "tidepool/shoreline:dev-quiet-0.0.1"
+      image: "tidepool/shoreline:noHakken"
     tidewhisperer:
       image: "tidepool/tide-whisperer:noHakken"
     hakken:
@@ -30,7 +30,7 @@ spec:
     hydrophone:
       image: "tidepool/hydrophone:noHakken"
     messageapi:
-      image: "tidepool/message-api:quiet" 
+      image: "tidepool/message-api:quiet"
     platform:
       auth:
         image: "tidepool/platform-auth:quiet"
