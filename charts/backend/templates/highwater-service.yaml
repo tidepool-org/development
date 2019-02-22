@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      name:  highwater-metrics
+      prefix: /metrics/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      rewrite: "/"
+      path_redirect: "false"
+      service: highwater:{{.Values.highwater.port}}
+  creationTimestamp: null
+  labels:
+    io.kompose.service: highwater
+  name: highwater
+spec:
+  ports:
+  - name: "{{.Values.highwater.port}}"
+    port: {{.Values.highwater.port}}
+    targetPort: {{.Values.highwater.port}}
+  selector:
+    io.kompose.service: highwater
+status:
+  loadBalancer: {}

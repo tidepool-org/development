@@ -1,0 +1,86 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: hydrophone
+  name: hydrophone
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: hydrophone
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: hydrophone
+    spec:
+      {{ include "charts.init.mongo" .}}
+      containers:
+      - env:
+        - name: TIDEPOOL_HYDROPHONE_ENV
+          value: |
+            {
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://{{.Values.gatekeeper.host}}:{{.Values.gatekeeper.port}}"]}},
+                "hakken": {
+                  "host": "{{.Values.hakken.host}}:{{.Values.hakken.port}}",
+                  "skipHakken": {{.Values.hakken.skip}}
+                },
+                "highwater": {
+                    "metricsSource": "hydrophone",
+                    "metricsVersion": "v0.0.1",
+                    "name": "highwater",
+                    "serviceSpec": {"type": "static", "hosts": ["http://{{.Values.highwater.host}}:{{.Values.highwater.port}}"]}
+                },
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://{{.Values.seagull.host}}:{{.Values.seagull.port}}"]}},
+                "shoreline": {
+                    "name": "hydrophone",
+                    "secret": "{{.Values.server.secret}}",
+                    "serviceSpec": {"type": "static", "hosts": ["http://{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"]},
+                    "tokenRefreshInterval": "1h"
+                }
+            }
+        - name: TIDEPOOL_HYDROPHONE_SERVICE
+          value: |
+            {
+                "hydrophone": {
+                    "assetUrl": "{{.Values.hydrophone.assetUrl}}",
+                    "serverSecret": "{{.Values.server.secret}}",
+                    "webUrl": "http://{{.Values.api.host}}:{{.Values.blip.port}}"
+                },
+                "mongo": {
+                    "connectionString": "mongodb://{{.Values.mongo.host}}:{{.Values.mongo.port}}/confirm?ssl={{.Values.mongo.tls}}"
+                },
+                "service": {
+                    "certFile": "config/cert.pem",
+                    "host": "localhost:{{.Values.hydrophone.port}}",
+                    "keyFile": "config/key.pem",
+                    "protocol": "http",
+                    "service": "hydrophone"
+                },
+                "sesEmail": {
+                    "accessKey": "{{.Values.hydrophone.ses.accessKey}}",
+                    "fromAddress": "{{.Values.hydrophone.ses.fromAddress}}",
+                    "secretKey": "{{.Values.hydrophone.ses.secretKey}}",
+                    "serverEndpoint": "{{.Values.hydrophone.ses.serverEndpoint}}"
+                }
+            }
+        image: "{{ .Values.hydrophone.image }}"
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: {{.Values.hydrophone.port}}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: hydrophone
+        ports:
+        - containerPort: {{.Values.hydrophone.port}}
+        resources: {}
+      restartPolicy: Always
+status: {}

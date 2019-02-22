@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-auth
+  name: platform-auth
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-auth
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-auth
+    spec:
+      containers:
+      - env:
+        {{ include "charts.platform.env" .}}
+        image: "{{ .Values.platform.auth.image }}"
+        {{ template "charts.platform.probes" .Values.platform.auth}}
+        name: platform-auth
+        ports:
+        - containerPort: {{.Values.platform.auth.port}}
+        resources: {}
+      restartPolicy: Always
+status: {}

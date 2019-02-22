@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      name:  hydrophone-confirm
+      prefix: /confirm/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      rewrite: "/"
+      path_redirect: "false"
+      service: hydrophone:{{.Values.hydrophone.port}}
+  creationTimestamp: null
+  labels:
+    io.kompose.service: hydrophone
+  name: hydrophone
+spec:
+  ports:
+  - name: "{{.Values.hydrophone.port}}"
+    port: {{.Values.hydrophone.port}}
+    targetPort: {{.Values.hydrophone.port}}
+  selector:
+    io.kompose.service: hydrophone
+status:
+  loadBalancer: {}

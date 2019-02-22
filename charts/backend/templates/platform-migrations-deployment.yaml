@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-migrations
+  name: platform-migrations
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-migrations
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-migrations
+    spec:
+      containers:
+      - env:
+        {{ include "charts.platform.env" .}}
+        image: "{{ .Values.platform.migrations.image }}"
+        name: platform-migrations
+        resources: {}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,56 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: highwater
+  name: highwater
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: highwater
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: highwater
+    spec:
+      containers:
+      - env:
+        - name: DISCOVERY_HOST
+          value: '{{.Values.hakken.host}}:{{.Values.hakken.port}}'
+        - name: METRICS_APIKEY
+        - name: METRICS_UCSF_APIKEY
+        - name: NODE_ENV
+          value: '{{.Values.environment}}'
+        - name: PORT
+          value: "{{.Values.highwater.port}}"
+        - name: PUBLISH_HOST
+          value: '{{.Values.hakken.host}}'
+        - name: SALT_DEPLOY
+          value: '{{.Values.highwater.salt}}'
+        - name: SERVER_SECRET
+          value: '{{.Values.server.secret}}'
+        - name: SERVICE_NAME
+          value: highwater
+        - name: USER_API_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"}]}'
+        image: "{{ .Values.highwater.image }}"
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: {{.Values.highwater.port}}
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        name: highwater
+        ports:
+        - containerPort: {{.Values.highwater.port}}
+        resources: {}
+      restartPolicy: Always
+status: {}

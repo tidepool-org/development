@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-tools
+  name: platform-tools
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-tools
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-tools
+    spec:
+      containers:
+      - env:
+        {{ include "charts.platform.env" .}}
+        image: "{{ .Values.platform.tools.image }}"
+        name: platform-tools
+        resources: {}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: export
+  name: export
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: export
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: export
+    spec:
+      containers:
+      - env:
+        - name: API_HOST
+          value: http://{{ .Values.api.host }}:{{ .Values.api.port }}
+        - name: DEBUG_LEVEL
+          value: debug
+        - name: HTTP_PORT
+          value: "{{ .Values.export.port }}"
+        - name: SESSION_SECRET
+          value: '{{ .Values.export.session.secret }}'
+        image: "{{ .Values.export.image }}"
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        livenessProbe:
+          httpGet:
+            path: /export/status
+            port: {{.Values.export.port}}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: export
+        ports:
+        - containerPort: {{.Values.export.port}}
+        resources: {}
+      restartPolicy: Always
+status: {}

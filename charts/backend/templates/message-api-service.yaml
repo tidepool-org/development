@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      name:  message-api-message
+      prefix: /message/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      path_redirect: "false"
+      rewrite: "/"
+      service: message-api:{{.Values.message.api.port}}
+  creationTimestamp: null
+  labels:
+    io.kompose.service: message-api
+  name: message-api
+spec:
+  ports:
+  - name: "{{.Values.message.api.port}}"
+    port: {{.Values.message.api.port}}
+    targetPort: {{.Values.message.api.port}}
+  selector:
+    io.kompose.service: message-api
+status:
+  loadBalancer: {}

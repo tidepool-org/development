@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-notification
+  name: platform-notification
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-notification
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-notification
+    spec:
+      containers:
+      - env:
+        {{ include "charts.platform.env" .}}
+        image: "{{ .Values.platform.notification.image }}"
+        {{ template "charts.platform.probes" .Values.platform.notification}}
+        name: platform-notification
+        ports:
+        - containerPort: {{.Values.platform.notification.port}}
+        resources: {}
+      restartPolicy: Always
+status: {}

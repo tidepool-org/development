@@ -1,0 +1,50 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: blip
+  name: blip
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: blip
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: blip
+    spec:
+      containers:
+      - env:
+        - name: API_HOST
+          value: http://{{.Values.external-api.host}}:{{.Values.external-api.port}}
+        - name: DEV_TOOLS
+          value: "true"
+        - name: DISCOVERY_HOST
+          value: '{{.Values.hakken.host}}:{{.Values.hakken.port}}'
+        - name: NODE_ENV
+          value: '{{.Values.environment}}'
+        - name: PORT
+          value: "{{.Values.blip.port}}"
+        - name: PUBLISH_HOST
+          value: '{{.Values.hakken.host}}'
+        - name: SERVICE_NAME
+          value: blip
+        - name: WEBPACK_DEVTOOL
+          value: cheap-module-eval-source-map
+        image: "{{ .Values.blip.image }}"
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        name: blip
+        command: ["/bin/sh"]
+        args: ["-c", "yarn build && yarn server"]
+        ports:
+        - containerPort: {{.Values.blip.port}}
+        resources: {}
+      restartPolicy: Always
+status: {}

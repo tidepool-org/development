@@ -1,0 +1,77 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: tide-whisperer
+  name: tide-whisperer
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: tide-whisperer
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: tide-whisperer
+    spec:
+      {{ include "charts.init.mongo" .}}
+      containers:
+      - env:
+        - name: TIDEPOOL_TIDE_WHISPERER_ENV
+          value: |
+            {
+                "auth": {
+                  "address": "http://{{.Values.platform.auth.host}}:{{.Values.platform.auth.port}}",
+                  "serviceSecret": "{{.Values.platform.auth.service.secret}}",
+                  "userAgent": "Tidepool-TideWhisperer"
+                },
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://{{.Values.gatekeeper.host}}:{{.Values.gatekeeper.port}}"]}},
+                "hakken": {
+                  "host": "{{.Values.hakken.host}}:{{.Values.hakken.port}}",
+                  "skipHakken": {{.Values.hakken.skip}}
+                  },
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://{{.Values.seagull.host}}:{{.Values.seagull.port}}"]}},
+                "shoreline": {
+                    "name": "tide-whisperer",
+                    "secret": "{{.Values.server.secret}}",
+                    "serviceSpec": {"type": "static", "hosts": ["http://{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"]},
+                    "tokenRefreshInterval": "1h"
+                }
+            }
+        - name: TIDEPOOL_TIDE_WHISPERER_SERVICE
+          value: |
+            {
+                "mongo": {
+                    "connectionString": "mongodb://{{.Values.mongo.host}}:{{.Values.mongo.port}}/data?ssl={{.Values.mongo.tls}}"
+                },
+                "schemaVersion": {
+                    "maximum": 99,
+                    "minimum": 1
+                },
+                "service": {
+                    "certFile": "config/cert.pem",
+                    "host": "localhost:{{.Values.tide-whisperer.port}}",
+                    "keyFile": "config/key.pem",
+                    "protocol": "http",
+                    "service": "tide-whisperer"
+                }
+            }
+        image: "{{ .Values.tide-whisperer.image }}"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: {{.Values.tide-whisperer.port}}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: tide-whisperer
+        ports:
+        - containerPort: {{.Values.tide-whisperer.port}}
+        resources: {}
+      restartPolicy: Always
+status: {}

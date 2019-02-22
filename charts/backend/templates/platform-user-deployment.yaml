@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-user
+  name: platform-user
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-user
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-user
+    spec:
+      containers:
+      - env:
+        {{ include "charts.platform.env" .}}
+        image: "{{ .Values.platform.user.image }}"
+        {{ template "charts.platform.probes" .Values.platform.user }}
+        name: platform-user
+        ports:
+        - containerPort: {{.Values.platform.user.port}}
+        resources: {}
+      restartPolicy: Always
+status: {}

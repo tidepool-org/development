@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: gatekeeper
+  name: gatekeeper
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: gatekeeper
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: gatekeeper
+    spec:
+      {{ include "charts.init.mongo" .}}
+      containers:
+      - env:
+        - name: DISCOVERY_HOST
+          value: '{{.Values.hakken.host}}:{{.Values.hakken.port}}'
+        - name: GATEKEEPER_SECRET
+          value: '{{.Values.gatekeeper.secret}}'
+        - name: MONGO_CONNECTION_STRING
+          value: mongodb://{{.Values.mongo.host}}:{{.Values.mongo.port}}/gatekeeper?ssl={{.Values.mongo.tls}}
+        - name: NODE_ENV
+          value: '{{.Values.environment}}'
+        - name: PORT
+          value: "{{.Values.gatekeeper.port}}"
+        - name: PUBLISH_HOST
+          value: '{{.Values.hakken.host}}'
+        - name: SERVER_SECRET
+          value: '{{.Values.server.secret}}'
+        - name: SERVICE_NAME
+          value: gatekeeper
+        - name: USER_API_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"}]}'
+        image: "{{ .Values.gatekeeper.image }}"
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        livenessProbe:
+           httpGet:
+             path: /status
+             port: {{.Values.gatekeeper.port}}
+           initialDelaySeconds: 3
+           periodSeconds: 10
+        name: gatekeeper
+        ports:
+        - containerPort: {{.Values.gatekeeper.port}}
+        resources: {}
+      restartPolicy: Always
+status: {}
