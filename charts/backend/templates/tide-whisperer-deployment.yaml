@@ -56,22 +56,22 @@ spec:
                 },
                 "service": {
                     "certFile": "config/cert.pem",
-                    "host": "localhost:{{.Values.tide-whisperer.port}}",
+                    "host": "localhost:{{.Values.tidewhisperer.port}}",
                     "keyFile": "config/key.pem",
                     "protocol": "http",
                     "service": "tide-whisperer"
                 }
             }
-        image: "{{ .Values.tide-whisperer.image }}"
+        image: "{{ .Values.tidewhisperer.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.tide-whisperer.port}}
+            port: {{.Values.tidewhisperer.port}}
           initialDelaySeconds: 30
           periodSeconds: 10
         name: tide-whisperer
         ports:
-        - containerPort: {{.Values.tide-whisperer.port}}
+        - containerPort: {{.Values.tidewhisperer.port}}
         resources: {}
       restartPolicy: Always
 status: {}

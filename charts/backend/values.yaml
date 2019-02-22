@@ -1,5 +1,7 @@
+global:
+  imagePullPolicy: IfNotPresent
 environment: production
-external-api: 
+externalapi: 
   host: a3548f01f2bfa11e99f1a024a6da1447-1766565264.us-west-2.elb.amazonaws.com
   port: 8009
 api: 
@@ -51,7 +53,7 @@ jellyfish:
   dir: jellyfish
   port: '9122'
   salt: 'itNkczadZ1EeC9fUWR3LnbKFagtYYLOk'
-message-api: 
+messageapi: 
   image: tidepool/message-api:latest
   dir: message-api
   host: message-api
@@ -161,7 +163,7 @@ styx:
   tls:
     certificate: '-----BEGIN CERTIFICATE-----\nMIICATCCAWoCCQCEhHIXfnYl8zANBgkqhkiG9w0BAQUFADBFMQswCQYDVQQGEwJB\nVTETMBEGA1UECBMKU29tZS1TdGF0ZTEhMB8GA1UEChMYSW50ZXJuZXQgV2lkZ2l0\ncyBQdHkgTHRkMB4XDTE0MDcwMzIyMjczNFoXDTE0MDgwMjIyMjczNFowRTELMAkG\nA1UEBhMCQVUxEzARBgNVBAgTClNvbWUtU3RhdGUxITAfBgNVBAoTGEludGVybmV0\nIFdpZGdpdHMgUHR5IEx0ZDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAswaT\nM4cUb45rHcQmeCzBNNhgIqV5KQyYUACRkIvfG7bCUBARvOReKA+ail486OH022b4\nIgBNQIuRD1V9O0iu6HME6QHw3iF9hmw8vUISR8UuJ34fpvwGstBZ6L+eyQJ80kio\nvFGJEotUCsGtneh/WZNvV+hFV2qr60gDtxtvxHECAwEAATANBgkqhkiG9w0BAQUF\nAAOBgQAWYwoMyoHTIEw8aZ14LWrKZsmd0ED0JdzWHavk5fq6dRolAbS3L7inzFCj\n3MUu82qBEpqQSVHW+wrheefbKvCrP840GeIg9TX4viSSmpg5AXrJ7GfWT19LK6/c\nQTj/nnrXXGQCEUlISOSQpDdNZqJx6ChiSMj5JPJJBFuYP3gNfA==\n-----END CERTIFICATE-----'
     private: {key: '-----BEGIN RSA PRIVATE KEY-----\nMIICXgIBAAKBgQCzBpMzhxRvjmsdxCZ4LME02GAipXkpDJhQAJGQi98btsJQEBG8\n5F4oD5qKXjzo4fTbZvgiAE1Ai5EPVX07SK7ocwTpAfDeIX2GbDy9QhJHxS4nfh+m\n/Aay0Fnov57JAnzSSKi8UYkSi1QKwa2d6H9Zk29X6EVXaqvrSAO3G2/EcQIDAQAB\nAoGBAIdz6BhKkgm95goFiV3P7vc+564PKVcHso6Ff52wVsSvSOIu5lzXJO6Gr9UV\nbFx/6jW++Osw80Js1vqVIkWivsLZBtegEHfquazDm/AmfYVeB7sxEb6gzF70ZuCj\n+Cgcnoccs5/JnmugynN8wyWaBYR0Mdv9JMQ1tTGk67DKwwqJAkEA43H0+0Kyqh9K\npcBNw0s6bHoBm70xPXzhiT286HOmvt3/DGJj/VGmk7tIPKXeJBIR7474KVq6OL9w\npOhyGy06TwJBAMmAbQlFhV/hNGgY25Hpki0NWpzL1+/bq0FcD15luwlB5aZYRH9i\n5V47UrAyqPPGGOiPXprTMFdYruoeToTPJT8CQEvDny6/phJjgBM8vuqqOZj+/2Ao\noqlv2xVDepUYSVhVTOuMLvCobUvS3BpPynLLjiv1vRbRgSz8IILeZ3xEEaMCQQC4\na0bf/nXUS9xYDbAfukMj4p309Ye7qjPyDNywC7GEBoC1nwGKCSxd8zN5udPx0HOJ\nnXX7g6AxwSPNeFFqsd+nAkEAmv2PsY0ndQJkJK1pJ5F5iFD/CUfOXweOkWnAWBOJ\n40tYvfFvjaNNIC5Dc8R5icsGw1cB/K2Ir4EQ3lU5CYOP0g==\n-----END RSA PRIVATE KEY-----'}
-tide-whisperer:
+tidewhisperer:
   image: tidepool/tide-whisperer:latest
   build: {target: release}
   dir: tide-whisperer/src/github.com/tidepool-org/tide-whisperer

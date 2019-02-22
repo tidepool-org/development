@@ -14,16 +14,16 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: message-api:{{.Values.message.api.port}}
+      service: message-api:{{.Values.messageapi.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: message-api
   name: message-api
 spec:
   ports:
-  - name: "{{.Values.message.api.port}}"
-    port: {{.Values.message.api.port}}
-    targetPort: {{.Values.message.api.port}}
+  - name: "{{.Values.messageapi.port}}"
+    port: {{.Values.messageapi.port}}
+    targetPort: {{.Values.messageapi.port}}
   selector:
     io.kompose.service: message-api
 status:

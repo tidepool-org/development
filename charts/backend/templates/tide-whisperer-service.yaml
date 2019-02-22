@@ -14,16 +14,16 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: tide-whisperer:{{.Values.tide.whisperer.port}}
+      service: tide-whisperer:{{.Values.tidewhisperer.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: tide-whisperer
   name: tide-whisperer
 spec:
   ports:
-  - name: "{{ .Values.tide.whisperer.port}}"
-    port: {{.Values.tide.whisperer.port}}
-    targetPort: {{.Values.tide.whisperer.port}}
+  - name: "{{ .Values.tidewhisperer.port}}"
+    port: {{.Values.tidewhisperer.port}}
+    targetPort: {{.Values.tidewhisperer.port}}
   selector:
     io.kompose.service: tide-whisperer
 status:

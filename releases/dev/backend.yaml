@@ -13,16 +13,13 @@ spec:
     path: charts/backend
     ref: master
   values:
-    global:
-      imagePullPolicy: IfNotPresent
     environment: production
-    external:
-      api: 
-        host: localhost
-        port: 8009
+    externalapi: 
+      host: localhost
+      port: 8009
     shoreline:
       image: "tidepool/shoreline:dev-quiet-0.0.1"
-    tide-whisperer:
+    tidewhisperer:
       image: "tidepool/tide-whisperer:noHakken"
     hakken:
       image: "tidepool/hakken:noHakken"
@@ -31,7 +28,7 @@ spec:
       image: "seagull:noHakken"
     hydrophone:
       image: "tidepool/hydrophone:noHakken"
-    message-api:
+    messageapi:
       image: "tidepool/message-api:quiet" 
     platform:
       auth:

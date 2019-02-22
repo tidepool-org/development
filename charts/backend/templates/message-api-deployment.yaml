@@ -35,7 +35,7 @@ spec:
         - name: NODE_ENV
           value: '{{.Values.environment}}'
         - name: PORT
-          value: "{{.Values.message-api.port}}"
+          value: "{{.Values.messageapi.port}}"
         - name: PUBLISH_HOST
           value: '{{.Values.hakken.host}}'
         - name: SEAGULL_SERVICE
@@ -50,17 +50,17 @@ spec:
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"}]}'
         - name: SKIP_HAKKEN
           value: "{{.Values.hakken.skip}}"
-        image: "{{ .Values.message-api.image }}" 
+        image: "{{ .Values.messageapi.image }}" 
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.message-api.port}}
+            port: {{.Values.messageapi.port}}
           initialDelaySeconds: 3
           periodSeconds: 10
         name: message-api
         ports:
-        - containerPort: {{.Values.message-api.port}}
+        - containerPort: {{.Values.messageapi.port}}
         resources: {}
       restartPolicy: Always
 status: {}

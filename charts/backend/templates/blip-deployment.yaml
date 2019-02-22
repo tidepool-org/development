@@ -23,7 +23,7 @@ spec:
       containers:
       - env:
         - name: API_HOST
-          value: http://{{.Values.external-api.host}}:{{.Values.external-api.port}}
+          value: http://{{.Values.externalapi.host}}:{{.Values.externalapi.port}}
         - name: DEV_TOOLS
           value: "true"
         - name: DISCOVERY_HOST
