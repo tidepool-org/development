@@ -26,7 +26,7 @@ spec:
       image: "tidepool/hakken:noHakken"
       skipHakken: true
     seagull:
-      image: "seagull:noHakken"
+      image: "tidepool/seagull:noHakken"
     hydrophone:
       image: "tidepool/hydrophone:noHakken"
     messageapi:
