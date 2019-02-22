@@ -1,3 +1,4 @@
+---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
@@ -36,7 +37,7 @@ spec:
       blob:
         image: "tidepool/platform-blob:quiet"
       data:
-        image: "tidepool/platform-data:quiet" 
+        image: "tidepool/platform-data:quiet"
       migrations:
         image: "tidepool/platform-migrations:quiet"
       notification:
