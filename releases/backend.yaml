@@ -21,7 +21,7 @@ spec:
         host: localhost
         port: 8009
     shoreline:
-      image: "tidepool/shoreline:noHakken"
+      image: "tidepool/shoreline:dev-quiet-0.0.1"
     tide-whisperer:
       image: "tidepool/tide-whisperer:noHakken"
     hakken:
