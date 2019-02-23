@@ -14,7 +14,7 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: platform-user:{{.Values.platform.user.port}}
+      service: platform-user:{{.Values.platformUser.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -23,16 +23,16 @@ metadata:
       method: "GET|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-user:{{.Values.platform.user.port}}
+      service: platform-user:{{.Values.platformUser.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: platform-user
   name: platform-user
 spec:
   ports:
-  - name: "{{.Values.platform.user.port}}"
-    port: {{.Values.platform.user.port}}
-    targetPort: {{.Values.platform.user.port}}
+  - name: "{{.Values.platformUser.port}}"
+    port: {{.Values.platformUser.port}}
+    targetPort: {{.Values.platformUser.port}}
   selector:
     io.kompose.service: platform-user
 status:

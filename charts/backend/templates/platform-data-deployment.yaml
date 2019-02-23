@@ -23,11 +23,11 @@ spec:
       containers:
       - env:
         {{ include "charts.platform.env" .}}
-        image: "{{ .Values.platform.data.image }}"
-        {{ template "charts.platform.probes" .Values.platform.data}}
+        image: "{{ .Values.platformData.image }}"
+        {{ template "charts.platform.probes" .Values.platformData}}
         name: platform-data
         ports:
-        - containerPort: {{.Values.platform.data.port}}
+        - containerPort: {{.Values.platformData.port}}
         resources: {}
       restartPolicy: Always
 status: {}

@@ -32,8 +32,8 @@ spec:
           value: |
             {
                 "auth": {
-                  "address": "http://{{.Values.platform.auth.host}}:{{.Values.platform.auth.port}}",
-                  "serviceSecret": "{{.Values.platform.auth.service.secret}}",
+                  "address": "http://{{.Values.platformAuth.host}}:{{.Values.platformAuth.port}}",
+                  "serviceSecret": "{{.Values.platformAuth.service.secret}}",
                   "userAgent": "Tidepool-TideWhisperer"
                 },
                 "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://{{.Values.gatekeeper.host}}:{{.Values.gatekeeper.port}}"]}},

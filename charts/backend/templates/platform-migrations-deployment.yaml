@@ -23,7 +23,7 @@ spec:
       containers:
       - env:
         {{ include "charts.platform.env" .}}
-        image: "{{ .Values.platform.migrations.image }}"
+        image: "{{ .Values.platformMigrations.image }}"
         name: platform-migrations
         resources: {}
       restartPolicy: Always

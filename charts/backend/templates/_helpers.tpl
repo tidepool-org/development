@@ -37,7 +37,7 @@ Create environment variables used by all platform services.
 {{- define "charts.platform.env" -}}
 
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
-          value: http://{{.Values.platform.auth.host}}:{{.Values.platform.auth.port}}
+          value: http://{{.Values.platformAuth.host}}:{{.Values.platformAuth.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
           value: http://{{.Values.api.host}}:{{.Values.api.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
@@ -48,33 +48,33 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
           value: '{{.Values.api.host}}'
         - name: TIDEPOOL_AUTH_SERVICE_SECRET
-          value: '{{.Values.platform.auth.service.secret}}'
+          value: '{{.Values.platformAuth.service.secret}}'
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.platform.auth.port}}
+          value: :{{.Values.platformAuth.port}}
         - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
-          value: http://{{.Values.platform.blob.host}}:{{.Values.platform.blob.port}}
+          value: http://{{.Values.platformBlob.host}}:{{.Values.platformBlob.port}}
         - name: TIDEPOOL_BLOB_SERVICE_SECRET
-          value: '{{.Values.platform.blob.service.secret}}'
+          value: '{{.Values.platformBlob.service.secret}}'
         - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.platform.blob.port}}
+          value: :{{.Values.platformBlob.port}}
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.platform.blob.service.unstructured.store.file.directory}}'
+          value: '{{.Values.platformBlob.service.unstructured.store.file.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
-          value: '{{.Values.platform.blob.service.unstructured.store.s3.bucket}}'
+          value: '{{.Values.platformBlob.service.unstructured.store.s3.bucket}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.platform.blob.service.unstructured.store.s3.prefix}}'
+          value: '{{.Values.platformBlob.service.unstructured.store.s3.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.platform.blob.service.unstructured.store.type}}'
+          value: '{{.Values.platformBlob.service.unstructured.store.type}}'
         - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
           value: confirm
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
-          value: http://{{.Values.platform.data.host}}:{{.Values.platform.data.port}}
+          value: http://{{.Values.platformData.host}}:{{.Values.platformData.port}}
         - name: TIDEPOOL_DATA_SERVICE_SECRET
-          value: '{{.Values.platform.data.service.secret}}'
+          value: '{{.Values.platformData.service.secret}}'
         - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.platform.data.port}}
+          value: :{{.Values.platformData.port}}
         - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
-          value: http://{{.Values.platform.data.host}}:{{.Values.platform.data.port}}
+          value: http://{{.Values.platformData.host}}:{{.Values.platformData.port}}
         - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
           value: data
         - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
@@ -88,11 +88,11 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
           value: http://{{.Values.api.host}}:{{.Values.api.port}}
         - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
-          value: http://{{.Values.platform.notification.host}}:{{.Values.platform.notification.port}}
+          value: http://{{.Values.platformNotification.host}}:{{.Values.platformNotification.port}}
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
-          value: '{{.Values.platform.notification.service.secret}}'
+          value: '{{.Values.platformNotification.service.secret}}'
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.platform.notification.port}}
+          value: :{{.Values.platformNotification.port}}
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
           value: http://{{.Values.gatekeeper.host}}:{{.Values.gatekeeper.port}}
         - name: TIDEPOOL_PERMISSION_STORE_DATABASE
@@ -128,21 +128,21 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS
-          value: http://{{.Values.platform.task.host}}:{{.Values.platform.task.port}}
+          value: http://{{.Values.platformTask.host}}:{{.Values.platformTask.port}}
         - name: TIDEPOOL_TASK_QUEUE_DELAY
           value: "5"
         - name: TIDEPOOL_TASK_QUEUE_WORKERS
           value: "5"
         - name: TIDEPOOL_TASK_SERVICE_SECRET
-          value: '{{.Values.platform.task.service.secret}}'
+          value: '{{.Values.platformTask.service.secret}}'
         - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.platform.task.port}}
+          value: :{{.Values.platformTask.port}}
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
           value: http://{{.Values.api.host}}:{{.Values.api.port}}
         - name: TIDEPOOL_USER_SERVICE_SECRET
-          value: '{{.Values.platform.user.service.secret}}'
+          value: '{{.Values.platformUser.service.secret}}'
         - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.platform.user.port}}
+          value: :{{.Values.platformUser.port}}
         - name: TIDEPOOL_USER_STORE_DATABASE
           value: user
         - name: TIDEPOOL_USER_STORE_PASSWORD_SALT

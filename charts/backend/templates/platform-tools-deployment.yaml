@@ -23,7 +23,7 @@ spec:
       containers:
       - env:
         {{ include "charts.platform.env" .}}
-        image: "{{ .Values.platform.tools.image }}"
+        image: "{{ .Values.platformTools.image }}"
         name: platform-tools
         resources: {}
       restartPolicy: Always

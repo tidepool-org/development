@@ -23,11 +23,11 @@ spec:
       containers:
       - env:
         {{ include "charts.platform.env" .}}
-        image: "{{ .Values.platform.notification.image }}"
-        {{ template "charts.platform.probes" .Values.platform.notification}}
+        image: "{{ .Values.plaformNotification.image }}"
+        {{ template "charts.platform.probes" .Values.plaformNotification}}
         name: platform-notification
         ports:
-        - containerPort: {{.Values.platform.notification.port}}
+        - containerPort: {{.Values.plaformNotification.port}}
         resources: {}
       restartPolicy: Always
 status: {}

@@ -14,7 +14,7 @@ metadata:
       method_regex: true
       prefix_regex: true
       rewrite: ""
-      service: platform-blob:{{.Values.platform.blob.port}}
+      service: platform-blob:{{.Values.platformBlob.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -23,7 +23,7 @@ metadata:
       method: "GET|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-blob:{{.Values.platform.blob.port}}
+      service: platform-blob:{{.Values.platformBlob.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -32,16 +32,16 @@ metadata:
       method: "GET"
       method_regex: true
       rewrite: ""
-      service: platform-blob:{{.Values.platform.blob.port}}
+      service: platform-blob:{{.Values.platformBlob.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: platform-blob
   name: platform-blob
 spec:
   ports:
-  - name: "{{.Values.platform.blob.port}}"
-    port: {{.Values.platform.blob.port}}
-    targetPort: {{.Values.platform.blob.port}}
+  - name: "{{.Values.platformBlob.port}}"
+    port: {{.Values.platformBlob.port}}
+    targetPort: {{.Values.platformBlob.port}}
   selector:
     io.kompose.service: platform-blob
 status:

@@ -14,7 +14,7 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: platform-data:{{.Values.platform.data.port}}
+      service: platform-data:{{.Values.platformData.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -24,7 +24,7 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: platform-data:{{.Values.platform.data.port}}
+      service: platform-data:{{.Values.platformData.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -34,7 +34,7 @@ metadata:
       method_regex: true
       prefix_regex: true
       rewrite: ""
-      service: platform-data:{{.Values.platform.data.port}}
+      service: platform-data:{{.Values.platformData.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -44,7 +44,7 @@ metadata:
       method_regex: true
       prefix_regex: true
       rewrite: ""
-      service: platform-data:{{.Values.platform.data.port}}
+      service: platform-data:{{.Values.platformData.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -54,7 +54,7 @@ metadata:
       method_regex: true
       prefix_regex: true
       rewrite: ""
-      service: platform-data:{{.Values.platform.data.port}}
+      service: platform-data:{{.Values.platformData.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -64,7 +64,7 @@ metadata:
       method_regex: true
       prefix_regex: true
       rewrite: ""
-      service: platform-data:{{.Values.platform.data.port}}
+      service: platform-data:{{.Values.platformData.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -73,7 +73,7 @@ metadata:
       method: "GET"
       method_regex: true
       rewrite: ""
-      service: platform-data:{{.Values.platform.data.port}}
+      service: platform-data:{{.Values.platformData.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -82,7 +82,7 @@ metadata:
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-data:{{.Values.platform.data.port}}
+      service: platform-data:{{.Values.platformData.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -91,7 +91,7 @@ metadata:
       method: "GET"
       method_regex: true
       rewrite: ""
-      service: platform-data:{{.Values.platform.data.port}}
+      service: platform-data:{{.Values.platformData.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -100,16 +100,16 @@ metadata:
       method: "POST|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-data:{{.Values.platform.data.port}}
+      service: platform-data:{{.Values.platformData.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: platform-data
   name: platform-data
 spec:
   ports:
-  - name: "{{.Values.platform.data.port}}"
-    port: {{.Values.platform.data.port}}
-    targetPort: {{.Values.platform.data.port}}
+  - name: "{{.Values.platformData.port}}"
+    port: {{.Values.platformData.port}}
+    targetPort: {{.Values.platformData.port}}
   selector:
     io.kompose.service: platform-data
 status:

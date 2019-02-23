@@ -13,7 +13,7 @@ metadata:
       method: "GET|POST"
       method_regex: true
       rewrite: ""
-      service: platform-task:{{.Values.platform.task.port}}
+      service: platform-task:{{.Values.platformTask.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -22,16 +22,16 @@ metadata:
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-task:{{.Values.platform.task.port}}
+      service: platform-task:{{.Values.platformTask.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: platform-task
   name: platform-task
 spec:
   ports:
-  - name: "{{.Values.platform.task.port}}"
-    port: {{.Values.platform.task.port}}
-    targetPort: {{.Values.platform.task.port}}
+  - name: "{{.Values.platformTask.port}}"
+    port: {{.Values.platformTask.port}}
+    targetPort: {{.Values.platformTask.port}}
   selector:
     io.kompose.service: platform-task
 status:

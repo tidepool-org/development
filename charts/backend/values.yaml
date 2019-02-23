@@ -72,64 +72,65 @@ mongo:
   volume: mongo
 
 platform:
-  auth:
-    image: tidepool/platform-auth:1.30.1
-    build: {target: release}
-    dir: platform/src/github.com/tidepool-org/platform
-    host: platform-auth
-    port: '9222'
-    service: {secret: 'Service secret used for interservice requests with the auth service'}
-  blob:
-    image: tidepool/platform-blob:1.30.1
-    build: {target: release}
-    dir: platform/src/github.com/tidepool-org/platform
-    host: platform-blob
-    port: '9225'
-    service:
-      secret: 'Service secret used for interservice requests with the blob service'
-      unstructured:
-        store:
-          file: {directory: "_data/blobs"}
-          s3: {bucket: "", prefix: ""}
-          type: file
   client: {dir: platform-client}
-  data:
-    image: tidepool/platform-data:1.30.1
-    build: {target: release}
-    dir: platform/src/github.com/tidepool-org/platform
-    host: platform-data
-    port: '9220'
-    service: {secret: 'Service secret used for interservice requests with the data service'}
-  migrations:
-    image: tidepool/platform-migrations:1.30.1
-    build: {target: release}
-    dir: platform/src/github.com/tidepool-org/platform
-  notification:
-    image: tidepool/platform-notification:1.30.1
-    build: {target: release}
-    dir: platform/src/github.com/tidepool-org/platform
-    host: platform-notification
-    port: '9223'
-    service: {secret: 'Service secret used for interservice requests with the notification service'}
-  task:
-    image: tidepool/platform-task:1.30.1
-    build: {target: release}
-    dir: platform/src/github.com/tidepool-org/platform
-    host: platform-task
-    port: '9224'
-    service: {secret: 'Service secret used for interservice requests with the task service'}
-  tools:
-    image: tidepool/platform-tools:1.30.1
-    build: {target: release}
-    dir: platform/src/github.com/tidepool-org/platform
-  user:
-    image: tidepool/platform-user:1.30.1
-    build: {target: release}
-    dir: platform/src/github.com/tidepool-org/platform
-    host: platform-user
-    port: '9221'
-    service: {secret: 'Service secret used for interservice requests with the user
-        service'}
+
+platformAuth:
+  image: tidepool/platform-auth:1.30.1
+  build: {target: release}
+  dir: platform/src/github.com/tidepool-org/platform
+  host: platform-auth
+  port: '9222'
+  service: {secret: 'Service secret used for interservice requests with the auth service'}
+platformBlob:
+  image: tidepool/platform-blob:1.30.1
+  build: {target: release}
+  dir: platform/src/github.com/tidepool-org/platform
+  host: platform-blob
+  port: '9225'
+  service:
+    secret: 'Service secret used for interservice requests with the blob service'
+    unstructured:
+      store:
+        file: {directory: "_data/blobs"}
+        s3: {bucket: "", prefix: ""}
+        type: file
+platformData:
+  image: tidepool/platform-data:1.30.1
+  build: {target: release}
+  dir: platform/src/github.com/tidepool-org/platform
+  host: platform-data
+  port: '9220'
+  service: {secret: 'Service secret used for interservice requests with the data service'}
+platformMigrations:
+  image: tidepool/platform-migrations:1.30.1
+  build: {target: release}
+  dir: platform/src/github.com/tidepool-org/platform
+platformNotification:
+  image: tidepool/platform-notification:1.30.1
+  build: {target: release}
+  dir: platform/src/github.com/tidepool-org/platform
+  host: platform-notification
+  port: '9223'
+  service: {secret: 'Service secret used for interservice requests with the notification service'}
+platformTask:
+  image: tidepool/platform-task:1.30.1
+  build: {target: release}
+  dir: platform/src/github.com/tidepool-org/platform
+  host: platform-task
+  port: '9224'
+  service: {secret: 'Service secret used for interservice requests with the task service'}
+platformTools:
+  image: tidepool/platform-tools:1.30.1
+  build: {target: release}
+  dir: platform/src/github.com/tidepool-org/platform
+platformUser:
+  image: tidepool/platform-user:1.30.1
+  build: {target: release}
+  dir: platform/src/github.com/tidepool-org/platform
+  host: platform-user
+  port: '9221'
+  service: {secret: 'Service secret used for interservice requests with the user
+      service'}
 seagull: 
   image: tidepool/seagull:v0.7.1
   dir: seagull

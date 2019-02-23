@@ -23,11 +23,11 @@ spec:
       containers:
       - env:
         {{ include "charts.platform.env" .}}
-        image: "{{ .Values.platform.auth.image }}"
-        {{ template "charts.platform.probes" .Values.platform.auth}}
+        image: "{{ .Values.platformAuth.image }}"
+        {{ template "charts.platform.probes" .Values.platformAuth}}
         name: platform-auth
         ports:
-        - containerPort: {{.Values.platform.auth.port}}
+        - containerPort: {{.Values.platformAuth.port}}
         resources: {}
       restartPolicy: Always
 status: {}
