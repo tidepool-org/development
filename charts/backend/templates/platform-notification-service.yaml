@@ -10,9 +10,9 @@ metadata:
   name: platform-notification
 spec:
   ports:
-  - name: "{{.Values.plaformNotification.port}}"
-    port: {{.Values.plaformNotification.port}}
-    targetPort: {{.Values.plaformNotification.port}}
+  - name: "{{.Values.platformNotification.port}}"
+    port: {{.Values.platformNotification.port}}
+    targetPort: {{.Values.platformNotification.port}}
   selector:
     io.kompose.service: platform-notification
 status:
