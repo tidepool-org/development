@@ -1,0 +1,46 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: ambassador-dev
+  namespace: dev
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: ambassador-dev
+  chart:
+    git: git@github.com:helm/charts
+    path: stable/ambassador
+    ref: master
+  values:
+    service:
+      enableHttp: true 
+      enableHttps: true 
+    
+      targetPorts:
+        http: 80
+        https: 80
+    
+      httpPort: 80
+      httpsPort: 443 
+    
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:iam::118346523422:server-certificate/wildcard.tidepool.org-2020-11-15-digicert"
+        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+        service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+        getambassador.io/config: |
+          --- 
+          apiVersion: ambassador/v1
+          kind:  Module
+          name:  ambassador
+          config:
+            use_proxy_proto: false
+            use_remote_address: false
+            x_forwarded_proto_redirect: true
+            cors:
+              origins: "*"
+              methods: "GET, POST, PUT, PATCH, DELETE"
+              headers:  "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session"
+              credentials: true
+              exposed_headers: "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session"
+              max_age: "0"

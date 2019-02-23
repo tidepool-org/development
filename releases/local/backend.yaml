@@ -1,0 +1,46 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: backend-local
+  namespace: local
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: backend-local
+  chart:
+    git: git@github.com:tidepool-org/dev-ops
+    path: charts/backend
+    ref: master
+  values:
+    environment: production
+    externalapi:
+      host: localhost
+      port: 8009
+    shoreline:
+      image: "tidepool/shoreline:noHakken"
+    tidewhisperer:
+      image: "tidepool/tide-whisperer:noHakken"
+    hakken:
+      image: "tidepool/hakken:noHakken"
+      skipHakken: true
+    seagull:
+      image: "tidepool/seagull:noHakken"
+    hydrophone:
+      image: "tidepool/hydrophone:noHakken"
+    messageapi:
+      image: "tidepool/message-api:quiet"
+    platformAuth:
+      image: "tidepool/platform-auth:quiet"
+    platformBlob:
+      image: "tidepool/platform-blob:quiet"
+    platformData:
+      image: "tidepool/platform-data:quiet"
+    platformMigrations:
+      image: "tidepool/platform-migrations:quiet"
+    platformNotification:
+      image: "tidepool/platform-notification:quiet"
+    platformTask:
+      image: "tidepool/platform-task:quiet"
+    platformUser:
+      image: "tidepool/platform-user:quiet"
