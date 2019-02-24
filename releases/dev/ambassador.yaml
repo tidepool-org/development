@@ -24,6 +24,7 @@ spec:
       httpsPort: 443 
     
       annotations:
+        sidecar.istio.io/inject: "false"
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:iam::118346523422:server-certificate/wildcard.tidepool.org-2020-11-15-digicert"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
