@@ -30,7 +30,6 @@ spec:
     environment: production
     externalapi:
       host: localhost
-      port: 8009
     shoreline:
       image: "tidepool/shoreline:noHakken"
     tidewhisperer:
