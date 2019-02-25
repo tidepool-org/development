@@ -22,6 +22,7 @@ metadata:
     flux.weave.works/tag.platformUser: glob:quiet*
 spec:
   releaseName: backend-dev
+  skipDepUpdate: true
   chart:
     git: git@github.com:tidepool-org/dev-ops
     path: charts/backend

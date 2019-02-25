@@ -6,6 +6,7 @@ metadata:
   namespace: dev
 spec:
   releaseName: api-entry-dev
+  skipDepUpdate: true
   chart:
     git: git@github.com:tidepool-org/dev-ops
     path: charts/api-entry
