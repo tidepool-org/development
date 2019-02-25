@@ -20,6 +20,7 @@ metadata:
       kind:  Mapping
       name:  platform-user-users
       prefix: "/v1/users/[^/*]"
+      prefix_regex: true
       method: "GET|DELETE"
       method_regex: true
       rewrite: ""

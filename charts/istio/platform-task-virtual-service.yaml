@@ -1,0 +1,32 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: platform-task
+  namespace: '{{ .Values.namespace }}'
+spec:
+  gateway:
+  - primary-gateway
+  hosts:
+  - '{{ .Values.api.host }}'
+  - '{{ .Values.externalapi.host }}'
+  http:
+  - match:
+    - method:
+        regex: GET|POST
+      uri:
+        prefix: /v1/tasks
+    route:
+      destination:
+        host: platform-task.{{- .Values.namespace -}}.svc.cluster.local
+        port:
+          number: 9224
+  - match:
+    - method:
+        regex: GET|PUT|DELETE
+      uri:
+        regex: /v1/tasks/[^/*]
+    route:
+      destination:
+        host: platform-task.{{- .Values.namespace -}}.svc.cluster.local
+        port:
+          number: 9224

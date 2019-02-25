@@ -1,0 +1,14 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: istio-init
+  namespace: istio-system
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: istio-init
+  chart:
+    git: git@github.com:istio/istio
+    path: install/kubernetes/helm/istio-init
+    ref: master
+

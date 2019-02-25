@@ -1,0 +1,29 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: primary-gateway
+spec:
+  selector:
+    app: primary-gateway-controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - '{{ .Values.api.host }}'
+    - '{{ .Values.externalapi.host }}'
+    tls:
+      httpsRedirect: false 
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - '{{ .Values.api.host }}'
+    - '{{ .Values.externalapi.host }}'
+    tls:
+      mode: SIMPLE
+      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+      privateKey: /etc/istio/ingressgateway-certs/tls.key
+

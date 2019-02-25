@@ -30,9 +30,9 @@ metadata:
       kind:  Mapping
       name:  platform-data-user_data_sources
       prefix: "/v1/users/[^/]+/data_sources"
+      prefix_regex: true
       method: "GET|POST|DELETE"
       method_regex: true
-      prefix_regex: true
       rewrite: ""
       service: platform-data:{{.Values.platformData.port}}
       ---
@@ -40,9 +40,8 @@ metadata:
       kind:  Mapping
       name:  platform-data-user_data_sets
       prefix: "/v1/users/[^/]+/data_sets"
-      method: "GET"
-      method_regex: true
       prefix_regex: true
+      method: "GET"
       rewrite: ""
       service: platform-data:{{.Values.platformData.port}}
       ---
@@ -50,9 +49,9 @@ metadata:
       kind:  Mapping
       name:  platform-data-user_datasets
       prefix: "/v1/users/[^/]+/datasets"
+      prefix_regex: true
       method: "GET|POST"
       method_regex: true
-      prefix_regex: true
       rewrite: ""
       service: platform-data:{{.Values.platformData.port}}
       ---
@@ -60,9 +59,8 @@ metadata:
       kind:  Mapping
       name:  platform-data-user_data
       prefix: "/v1/users/[^/]+/data"
-      method: "DELETE"
-      method_regex: true
       prefix_regex: true
+      method: "DELETE"
       rewrite: ""
       service: platform-data:{{.Values.platformData.port}}
       ---
@@ -71,7 +69,6 @@ metadata:
       name:  platform-data-time
       prefix: "/v1/time"
       method: "GET"
-      method_regex: true
       rewrite: ""
       service: platform-data:{{.Values.platformData.port}}
       ---
@@ -79,6 +76,7 @@ metadata:
       kind:  Mapping
       name:  platform-data-data_sources
       prefix: "/v1/data_sources/[^/]+"
+      prefix_regex: true
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""
@@ -89,7 +87,6 @@ metadata:
       name:  platform-data-data_sets
       prefix: "/v1/data_sets"
       method: "GET"
-      method_regex: true
       rewrite: ""
       service: platform-data:{{.Values.platformData.port}}
       ---

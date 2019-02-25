@@ -19,6 +19,7 @@ metadata:
       kind:  Mapping
       name:  platform-task-tasks-id
       prefix: "/v1/tasks/[^/*]"
+      prefix_regex: true
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""

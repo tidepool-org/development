@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: gatekeeper
+  namespace: '{{ .Values.namespace }}'
+spec:
+  gateway:
+  - primary-gateway
+  hosts:
+  - '{{ .Values.api.host }}'
+  - '{{ .Values.externalapi.host }}'
+  http:
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /access/
+    route:
+      destination:
+        host: gatekeeper.{{- .Values.namespace -}}.svc.cluster.local
+        port:
+          number: 9123

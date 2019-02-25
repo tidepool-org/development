@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: export
+  namespace: '{{ .Values.namespace }}'
+spec:
+  gateway:
+  - primary-gateway
+  hosts:
+  - '{{ .Values.api.host }}'
+  - '{{ .Values.externalapi.host }}'
+  http:
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /export/
+    rewrite:
+      uri: /
+    route:
+      destination:
+        host: export.{{- .Values.namespace -}}.svc.cluster.local
+        port:
+          number: 9300

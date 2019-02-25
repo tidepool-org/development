@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: blip
+  namespace: '{{ .Values.namespace }}'
+spec:
+  gateway:
+  - primary-gateway
+  hosts:
+  - '{{ .Values.api.host }}'
+  - '{{ .Values.externalapi.host }}'
+  http:
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /
+    route:
+      destination:
+        host: blip.{{- .Values.namespace -}}.svc.cluster.local
+        port:
+          number: 3000

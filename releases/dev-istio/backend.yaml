@@ -1,9 +1,8 @@
----
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
-  name: backend-dev
-  namespace: dev
+  name: backend-dev-istio
+  namespace: dev-istio
   annotations:
     flux.weave.works/automated: "true"
     flux.weave.works/tag.shoreline: glob:*
@@ -21,7 +20,7 @@ metadata:
     flux.weave.works/tag.platformTask: glob:*
     flux.weave.works/tag.platformUser: glob:*
 spec:
-  releaseName: backend-dev
+  releaseName: backend
   chart:
     git: git@github.com:tidepool-org/dev-ops
     path: charts/backend

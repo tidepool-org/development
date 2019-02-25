@@ -1,0 +1,12 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: api-entry-dev
+  namespace: dev
+spec:
+  releaseName: api-entry-dev
+  chart:
+    git: git@github.com:tidepool-org/dev-ops
+    path: charts/api-entry
+    ref: master

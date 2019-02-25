@@ -1,0 +1,72 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: platform-auth
+  namespace: '{{ .Values.namespace }}'
+spec:
+  gateway:
+  - primary-gateway
+  hosts:
+  - '{{ .Values.api.host }}'
+  - '{{ .Values.externalapi.host }}'
+  http:
+  - match:
+    - method:
+        regex: GET|POST|DELETE
+      uri:
+        regex: /v1/users/[^/]+/restricted_tokens
+    route:
+      destination:
+        host: platform-auth.{{- .Values.namespace -}}.svc.cluster.local
+        port:
+          number: 9222
+  - match:
+    - method:
+        regex: GET|POST|DELETE
+      uri:
+        regex: /v1/users/[^/]+/provider_sessions
+    route:
+      destination:
+        host: platform-auth.{{- .Values.namespace -}}.svc.cluster.local
+        port:
+          number: 9222
+  - match:
+    - method:
+        regex: GET|PUT|DELETE
+      uri:
+        prefix: /v1/restricted_tokens
+    route:
+      destination:
+        host: platform-auth.{{- .Values.namespace -}}.svc.cluster.local
+        port:
+          number: 9222
+  - match:
+    - method:
+        regex: GET|PUT|DELETE
+      uri:
+        regex: /v1/provider_sessions/[^/]+
+    route:
+      destination:
+        host: platform-auth.{{- .Values.namespace -}}.svc.cluster.local
+        port:
+          number: 9222
+  - match:
+    - method:
+        regex: GET|DELETE
+      uri:
+        regex: /v1/oauth/[^/]+/authorize
+    route:
+      destination:
+        host: platform-auth.{{- .Values.namespace -}}.svc.cluster.local
+        port:
+          number: 9222
+  - match:
+    - method:
+        exact: GET
+      uri:
+        regex: /v1/oauth/[^/]+/redirect
+    route:
+      destination:
+        host: platform-auth.{{- .Values.namespace -}}.svc.cluster.local
+        port:
+          number: 9222
