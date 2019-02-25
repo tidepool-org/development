@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: platform-data
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   gateway:
   - primary-gateway
@@ -19,7 +19,7 @@ spec:
       uri: /
     route:
       destination:
-        host: platform-data.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
   - match:
@@ -31,7 +31,7 @@ spec:
       uri: /
     route:
       destination:
-        host: platform-data.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
   - match:
@@ -41,7 +41,7 @@ spec:
         regex: /v1/users/[^/]+/data_sources
     route:
       destination:
-        host: platform-data.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
   - match:
@@ -51,7 +51,7 @@ spec:
         regex: /v1/users/[^/]+/data_sets
     route:
       destination:
-        host: platform-data.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
   - match:
@@ -61,7 +61,7 @@ spec:
         regex: /v1/users/[^/]+/datasets
     route:
       destination:
-        host: platform-data.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
   - match:
@@ -71,7 +71,7 @@ spec:
         regex: /v1/users/[^/]+/data
     route:
       destination:
-        host: platform-data.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
   - match:
@@ -81,7 +81,7 @@ spec:
         prefix: /v1/time
     route:
       destination:
-        host: platform-data.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
   - match:
@@ -91,7 +91,7 @@ spec:
         regex: /v1/data_sources/[^/]+
     route:
       destination:
-        host: platform-data.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
   - match:
@@ -101,7 +101,7 @@ spec:
         prefix: /v1/data_sets
     route:
       destination:
-        host: platform-data.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
   - match:
@@ -111,6 +111,6 @@ spec:
         prefix: /v1/datasets
     route:
       destination:
-        host: platform-data.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220

@@ -1,8 +1,8 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: message-api
-  namespace: '{{ .Values.namespace }}'
+  name: export
+  namespace: '{{ .Release.Namespace }}'
 spec:
   gateway:
   - primary-gateway
@@ -14,11 +14,11 @@ spec:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
       uri:
-        prefix: /message/
+        prefix: /export/
     rewrite:
       uri: /
     route:
       destination:
-        host: message-api.{{- .Values.namespace -}}.svc.cluster.local
+        host: export.{{- .Release.Namespace -}}.svc.cluster.local
         port:
-          number: 9119
+          number: 9300

@@ -1,8 +1,8 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: highwater
-  namespace: '{{ .Values.namespace }}'
+  name: hydrophone
+  namespace: '{{ .Release.Namespace }}'
 spec:
   gateway:
   - primary-gateway
@@ -14,11 +14,11 @@ spec:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
       uri:
-        prefix: /metrics/
+        prefix: /confirm/
     rewrite:
       uri: /
     route:
       destination:
-        host: highwater.{{- .Values.namespace -}}.svc.cluster.local
+        host: hydrophone.{{- .Release.Namespace -}}.svc.cluster.local
         port:
-          number: 9191
+          number: 9157

@@ -16,6 +16,15 @@ spec:
     tls:
       httpsRedirect: false 
   - port:
+      number: {{ .Values.api.externalapi.port }}
+      name: http
+      protocol: HTTP
+    hosts:
+    - '{{ .Values.api.host }}'
+    - '{{ .Values.externalapi.host }}'
+    tls:
+      httpsRedirect: false 
+  - port:
       number: 443
       name: https
       protocol: HTTPS

@@ -1,8 +1,8 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: gatekeeper
-  namespace: '{{ .Values.namespace }}'
+  name: highwater
+  namespace: '{{ .Release.Namespace }}'
 spec:
   gateway:
   - primary-gateway
@@ -14,9 +14,11 @@ spec:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
       uri:
-        prefix: /access/
+        prefix: /metrics/
+    rewrite:
+      uri: /
     route:
       destination:
-        host: gatekeeper.{{- .Values.namespace -}}.svc.cluster.local
+        host: highwater.{{- .Release.Namespace -}}.svc.cluster.local
         port:
-          number: 9123
+          number: 9191

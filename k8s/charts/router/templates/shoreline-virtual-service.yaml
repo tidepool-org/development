@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: shoreline
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   gateway:
   - primary-gateway
@@ -17,6 +17,6 @@ spec:
         prefix: /auth/
     route:
       destination:
-        host: shoreline.{{- .Values.namespace -}}.svc.cluster.local
+        host: shoreline.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9107

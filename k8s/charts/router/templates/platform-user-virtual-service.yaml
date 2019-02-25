@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: platform-user
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   gateway:
   - primary-gateway
@@ -19,7 +19,7 @@ spec:
       uri: /
     route:
       destination:
-        host: platform-user.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-user.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9221
   - match:
@@ -29,6 +29,6 @@ spec:
         regex: /v1/users/[^/*]
     route:
       destination:
-        host: platform-user.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-user.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9221

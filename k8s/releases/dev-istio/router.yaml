@@ -1,0 +1,20 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: router-dev-istio
+  namespace: dev-istio
+  annotations:
+    flux.weave.works/automated: "true"
+spec:
+  releaseName: router
+  chart:
+    git: git@github.com:tidepool-org/dev-ops
+    path: charts/router
+    ref: master
+  values:
+    externalapi:
+      host: localhost
+      port: 8009
+    api:
+      host:
+

@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: platform-task
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   gateway:
   - primary-gateway
@@ -17,7 +17,7 @@ spec:
         prefix: /v1/tasks
     route:
       destination:
-        host: platform-task.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-task.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9224
   - match:
@@ -27,6 +27,6 @@ spec:
         regex: /v1/tasks/[^/*]
     route:
       destination:
-        host: platform-task.{{- .Values.namespace -}}.svc.cluster.local
+        host: platform-task.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9224

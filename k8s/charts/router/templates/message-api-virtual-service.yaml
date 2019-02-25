@@ -1,8 +1,8 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: hydrophone
-  namespace: '{{ .Values.namespace }}'
+  name: message-api
+  namespace: '{{ .Release.Namespace }}'
 spec:
   gateway:
   - primary-gateway
@@ -14,11 +14,11 @@ spec:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
       uri:
-        prefix: /confirm/
+        prefix: /message/
     rewrite:
       uri: /
     route:
       destination:
-        host: hydrophone.{{- .Values.namespace -}}.svc.cluster.local
+        host: message-api.{{- .Release.Namespace -}}.svc.cluster.local
         port:
-          number: 9157
+          number: 9119

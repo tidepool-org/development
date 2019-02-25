@@ -1,8 +1,8 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: seagull
-  namespace: '{{ .Values.namespace }}'
+  name: tide-whisperer
+  namespace: '{{ .Release.Namespace }}'
 spec:
   gateway:
   - primary-gateway
@@ -14,11 +14,11 @@ spec:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
       uri:
-        prefix: /metadata/
+        prefix: /data/
     rewrite:
       uri: /
     route:
       destination:
-        host: seagull.{{- .Values.namespace -}}.svc.cluster.local
+        host: tide-whisperer.{{- .Release.Namespace -}}.svc.cluster.local
         port:
-          number: 9120
+          number: 9127

@@ -22,7 +22,7 @@ def process_service(service):
     metadata = metadata_from_service(service)
     name = name_from_metadata(metadata)
     if vs is not None:
-        with open( "/Users/derrickburns/go/src/github.com/tidepool-org/dev-ops/charts/istio/"
+        with open( "/Users/derrickburns/go/src/github.com/tidepool-org/dev-ops/charts/router/templates/"
  + name + '-virtual-service.yaml', 'w') as outfile:
             yaml.dump(vs, outfile, default_flow_style=False)
 
@@ -52,7 +52,7 @@ def annotation_from_metadata(metadata):
 def virtual_service_from_service(service):
     metadata = metadata_from_service(service)
     name = name_from_metadata(metadata)
-    dest = name + ".{{- .Values.namespace -}}." + "svc.cluster.local"
+    dest = name + ".{{- .Release.Namespace -}}." + "svc.cluster.local"
     annotation_string = annotation_from_metadata(metadata)
     docs = []
     if annotation_string is None:
@@ -70,7 +70,7 @@ def virtual_service_from_service(service):
         virtual_service["metadata"] = dict()
         virtual_service["metadata"]
         virtual_service["metadata"]["name"] = name
-        virtual_service["metadata"]["namespace"] = "{{ .Values.namespace }}"
+        virtual_service["metadata"]["namespace"] = "{{ .Release.Namespace }}"
         virtual_service["spec"] = dict()
         virtual_service["spec"]["hosts"] = list()
         virtual_service["spec"]["hosts"].append("{{ .Values.api.host }}")
@@ -131,7 +131,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: bookinfo-rule
-  namespace: {{.Values.namespace}}
+  namespace: {{.Release.Namespace}}
 spec:
   hosts:
   - reviews.prod.svc.cluster.local
@@ -150,7 +150,7 @@ spec:
     - destination:
         port:
           number: 7777
-        host: reviews.{{.Values.namespace}}.svc.cluster.local
+        host: reviews.{{.Release.Namespace}}.svc.cluster.local
   - match:
       uri:
         prefix: /reviews/
@@ -160,7 +160,7 @@ spec:
     - destination:
         port:
           number: 9080 # can be omitted if its the only port for reviews
-        host: reviews.{{.Values.namespace}}.svc.cluster.local
+        host: reviews.{{.Release.Namespace}}.svc.cluster.local
 """
 
 
