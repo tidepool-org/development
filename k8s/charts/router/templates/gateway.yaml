@@ -11,17 +11,15 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - '{{ .Values.api.host }}'
-    - '{{ .Values.externalapi.host }}'
+    - "*"
     tls:
       httpsRedirect: false 
   - port:
-      number: {{ .Values.api.externalapi.port }}
+      number: {{ .Values.port }}
       name: http
       protocol: HTTP
     hosts:
-    - '{{ .Values.api.host }}'
-    - '{{ .Values.externalapi.host }}'
+    - "*"
     tls:
       httpsRedirect: false 
   - port:
@@ -29,8 +27,7 @@ spec:
       name: https
       protocol: HTTPS
     hosts:
-    - '{{ .Values.api.host }}'
-    - '{{ .Values.externalapi.host }}'
+    - "*"
     tls:
       mode: SIMPLE
       serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
