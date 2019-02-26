@@ -9,7 +9,7 @@ spec:
   skipDepUpdate: true
   chart:
     git: git@github.com:tidepool-org/dev-ops
-    path: charts/api-entry
+    path: k8s/charts/api-entry
     ref: master
   values:
     none: none

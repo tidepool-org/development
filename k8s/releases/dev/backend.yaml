@@ -1,4 +1,3 @@
----
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
@@ -21,9 +20,10 @@ metadata:
     flux.weave.works/tag.platformTask: "glob:quiet*"
     flux.weave.works/tag.platformUser: "glob:quiet*"
 spec:
+  releaseName: backend-dev
   chart:
     git: git@github.com:tidepool-org/dev-ops
-    path: charts/backend
+    path: k8s/charts/backend
     ref: master
   values:
     environment: production
