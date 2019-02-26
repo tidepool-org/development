@@ -1,12 +1,11 @@
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
-  name: ambassador-dev
+  name: ambassador
   namespace: dev
   annotations:
     flux.weave.works/automated: "false"
 spec:
-  releaseName: ambassador-dev
   chart:
     git: git@github.com:helm/charts
     path: stable/ambassador
