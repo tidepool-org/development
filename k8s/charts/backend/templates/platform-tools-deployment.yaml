@@ -8,6 +8,7 @@ metadata:
   labels:
     io.kompose.service: platform-tools
   name: platform-tools
+  namespace: {{.Release.Namespace}}
 spec:
   selector:
     matchLabels:

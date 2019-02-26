@@ -18,6 +18,7 @@ metadata:
   labels:
     io.kompose.service: shoreline
   name: shoreline
+  namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "{{.Values.shoreline.port}}"

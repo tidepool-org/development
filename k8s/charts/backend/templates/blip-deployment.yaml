@@ -8,6 +8,7 @@ metadata:
   labels:
     io.kompose.service: blip
   name: blip
+  namespace: {{.Release.Namespace}}
 spec:
   selector:
     matchLabels:

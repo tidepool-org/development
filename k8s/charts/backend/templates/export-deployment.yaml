@@ -8,6 +8,7 @@ metadata:
   labels:
     io.kompose.service: export
   name: export
+  namespace: {{.Release.Namespace}}
 spec:
   selector:
     matchLabels:

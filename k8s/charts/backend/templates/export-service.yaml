@@ -19,6 +19,7 @@ metadata:
   labels:
     io.kompose.service: export
   name: export
+  namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "{{.Values.export.port}}"

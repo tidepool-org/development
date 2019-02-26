@@ -102,6 +102,7 @@ metadata:
   labels:
     io.kompose.service: platform-data
   name: platform-data
+  namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "{{.Values.platformData.port}}"

@@ -5,6 +5,7 @@ metadata:
   labels:
     io.kompose.service: mailhog
   name: mailhog
+  namespace: {{.Release.Namespace}}
 spec:
   accessModes:
   - ReadWriteOnce

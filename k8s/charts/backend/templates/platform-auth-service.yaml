@@ -67,6 +67,7 @@ metadata:
   labels:
     io.kompose.service: platform-auth
   name: platform-auth
+  namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "{{.Values.platformAuth.port}}"

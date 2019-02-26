@@ -8,6 +8,7 @@ metadata:
   labels:
     io.kompose.service: platform-notification
   name: platform-notification
+  namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "{{.Values.platformNotification.port}}"

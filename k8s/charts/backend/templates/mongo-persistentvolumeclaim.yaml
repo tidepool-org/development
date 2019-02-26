@@ -5,6 +5,7 @@ metadata:
   labels:
     io.kompose.service: mongo
   name: mongo
+  namespace: {{.Release.Namespace}}
 spec:
   accessModes:
   - ReadWriteOnce

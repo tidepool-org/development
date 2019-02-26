@@ -8,6 +8,7 @@ metadata:
   labels:
     io.kompose.service: tide-whisperer
   name: tide-whisperer
+  namespace: {{.Release.Namespace}}
 spec:
   selector:
     matchLabels:
