@@ -1,0 +1,32 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: istio
+  namespace: istio-system
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: istio
+  chart:
+    git: git@github.com:istio/istio
+    path: install/kubernetes/helm/istio
+    ref: master
+  values:
+    rbacEnabled: true
+    mtls:
+      enabled: false
+    ingress:
+      enabled: true
+    ingressgateway:
+      enabled: true
+    egressgateway:
+      enabled: true
+    sidecarInjectorWebhook:
+      enabled: true
+    servicegraph:
+      enabled: false
+    tracing:
+      enabled: false
+    prometheus:
+      enabled: false
+
