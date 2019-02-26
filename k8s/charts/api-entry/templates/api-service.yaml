@@ -12,7 +12,7 @@ spec:
   externalTrafficPolicy: Local
   ports:
    - port: {{.Values.entryport}}
-     targetPort: 80
+     targetPort: 8009
   selector:
     service: ambassador
 
