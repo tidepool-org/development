@@ -3,9 +3,9 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: backend
-  namespace: dev
+  namespace: default
   annotations:
-    flux.weave.works/automated: "true"
+    flux.weave.works/automated: "false"
     flux.weave.works/tag.shoreline: glob:noHakken*
     flux.weave.works/tag.tidewhisperer: glob:noHakken*
     flux.weave.works/tag.hakken: glob:noHakken*
@@ -21,7 +21,6 @@ metadata:
     flux.weave.works/tag.platformTask: glob:quiet*
     flux.weave.works/tag.platformUser: glob:quiet*
 spec:
-  skipDepUpdate: true
   chart:
     git: git@github.com:tidepool-org/dev-ops
     path: charts/backend
