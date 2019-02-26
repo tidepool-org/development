@@ -2,7 +2,7 @@
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
-  name: backend-dev
+  name: backend
   namespace: dev
   annotations:
     flux.weave.works/automated: "true"
@@ -21,7 +21,6 @@ metadata:
     flux.weave.works/tag.platformTask: glob:quiet*
     flux.weave.works/tag.platformUser: glob:quiet*
 spec:
-  releaseName: backend-dev
   skipDepUpdate: true
   chart:
     git: git@github.com:tidepool-org/dev-ops
