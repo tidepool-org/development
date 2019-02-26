@@ -6,20 +6,20 @@ metadata:
   namespace: default
   annotations:
     flux.weave.works/automated: "false"
-    flux.weave.works/tag.shoreline: glob:noHakken*
-    flux.weave.works/tag.tidewhisperer: glob:noHakken*
-    flux.weave.works/tag.hakken: glob:noHakken*
-    flux.weave.works/tag.blip: glob:*
-    flux.weave.works/tag.seagull: glob:noHakken*
-    flux.weave.works/tag.hydrophone: glob:noHakken*
-    flux.weave.works/tag.messageapi: glob:quiet*
-    flux.weave.works/tag.platformAuth: glob:quiet*
-    flux.weave.works/tag.platformBlob: glob:quiet*
-    flux.weave.works/tag.platformData: glob:quiet*
-    flux.weave.works/tag.platformMigrations: glob:quiet*
-    flux.weave.works/tag.platformNotification: glob:quiet*
-    flux.weave.works/tag.platformTask: glob:quiet*
-    flux.weave.works/tag.platformUser: glob:quiet*
+    flux.weave.works/tag.shoreline: "glob:noHakken*"
+    flux.weave.works/tag.tidewhisperer: "glob:noHakken*"
+    flux.weave.works/tag.hakken: "glob:noHakken*"
+    flux.weave.works/tag.blip: "glob:*"
+    flux.weave.works/tag.seagull: "glob:noHakken*"
+    flux.weave.works/tag.hydrophone: "glob:noHakken*"
+    flux.weave.works/tag.messageapi: "glob:quiet*"
+    flux.weave.works/tag.platformAuth: "glob:quiet*"
+    flux.weave.works/tag.platformBlob: "glob:quiet*"
+    flux.weave.works/tag.platformData: "glob:quiet*"
+    flux.weave.works/tag.platformMigrations: "glob:quiet*"
+    flux.weave.works/tag.platformNotification: "glob:quiet*"
+    flux.weave.works/tag.platformTask: "glob:quiet*"
+    flux.weave.works/tag.platformUser: "glob:quiet*"
 spec:
   chart:
     git: git@github.com:tidepool-org/dev-ops
@@ -56,3 +56,4 @@ spec:
       image: "tidepool/platform-task:quiet"
     platformUser:
       image: "tidepool/platform-user:quiet"
+
