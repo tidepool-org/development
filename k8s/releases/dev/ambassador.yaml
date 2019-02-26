@@ -12,6 +12,7 @@ spec:
     ref: master
   values:
     service:
+      replicaCount: 1
       enableHttp: true 
       enableHttps: true 
     
