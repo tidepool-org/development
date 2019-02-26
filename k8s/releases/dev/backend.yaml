@@ -4,7 +4,7 @@ metadata:
   name: backend
   namespace: dev
   annotations:
-    flux.weave.works/automated: "false"
+    flux.weave.works/automated: "true"
     flux.weave.works/tag.shoreline: "glob:noHakken*"
     flux.weave.works/tag.tidewhisperer: "glob:noHakken*"
     flux.weave.works/tag.hakken: "glob:noHakken*"
