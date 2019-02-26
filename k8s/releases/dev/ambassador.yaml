@@ -13,15 +13,10 @@ spec:
   values:
     replicaCount: 1
     service:
-      enableHttp: true 
-      enableHttps: true 
-    
-      targetPorts:
-        http: 80
-        https: 80
-    
-      httpPort: 8009
-      httpsPort: 8010
+      http:
+        targetPort: 8009
+      https:
+        targetPort: 8010
     
       annotations:
         sidecar.istio.io/inject: "false"

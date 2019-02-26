@@ -1,8 +1,2 @@
-helm install --name flux \
---set rbac.create=true \
---set helmOperator.create=true \
---set git.url=git@github.com:tidepool-org/dev-ops \
---set git-poll-interval=1m \
---set update-chart-deps=false \
---namespace flux \
-weaveworks/flux
+#!/bin/bash
+helm install --namespace flux -f values.yaml --repo https://weaveworks.github.io/flux flux
