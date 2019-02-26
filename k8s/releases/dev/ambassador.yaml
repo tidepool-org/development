@@ -30,6 +30,7 @@ spec:
           kind:  Module
           name:  ambassador
           config:
+            service_port: 8009
             use_proxy_proto: false
             use_remote_address: false
             x_forwarded_proto_redirect: true
