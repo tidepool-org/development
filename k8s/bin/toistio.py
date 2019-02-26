@@ -112,7 +112,7 @@ def yaml_docs_from_metadata_string(metadata):
 def istio_http_routes_from_ambassador_docs(docs, dest):
     """Return the HTTPRoute(s) from an Ambasaddor doc."""
     http_routes = list()
-    if len(docs) > 0:
+    if docs and len(docs) > 0:
         for doc in docs:
             print(doc)
             http_route = dict()
