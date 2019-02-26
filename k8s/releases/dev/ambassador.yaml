@@ -11,6 +11,8 @@ spec:
     path: stable/ambassador
     ref: master
   values:
+    securityContext:
+      runAsNonRoot: false
     replicaCount: 1
     service:
       http:
