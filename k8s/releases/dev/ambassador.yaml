@@ -19,8 +19,8 @@ spec:
         http: 80
         https: 80
     
-      httpPort: 80
-      httpsPort: 443 
+      httpPort: 8009
+      httpsPort: 8010
     
       annotations:
         sidecar.istio.io/inject: "false"
