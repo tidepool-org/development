@@ -28,7 +28,7 @@ spec:
   values:
     environment: production
     externalapi:
-      host: localhost
+      host: aa960112b397b11e99f1a024a6da1447-1790766771.us-west-2.elb.amazonaws.com
     shoreline:
       image: "tidepool/shoreline:noHakken"
     tidewhisperer:
