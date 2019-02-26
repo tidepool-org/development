@@ -2,7 +2,7 @@
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
-  name: api-entry-dev
+  name: api-entry
   namespace: dev
 spec:
   skipDepUpdate: true
