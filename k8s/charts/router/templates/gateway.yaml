@@ -2,6 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: primary-gateway
+  namespace: {{.Release.Namespace}}
 spec:
   selector:
     app: primary-gateway-controller
