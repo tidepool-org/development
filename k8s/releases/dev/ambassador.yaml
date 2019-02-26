@@ -11,8 +11,8 @@ spec:
     path: stable/ambassador
     ref: master
   values:
+    replicaCount: 1
     service:
-      replicaCount: 1
       enableHttp: true 
       enableHttps: true 
     
