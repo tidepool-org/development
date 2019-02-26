@@ -1,10 +1,14 @@
 #!/usr/local/bin/python3
 import yaml
 import os
+import subprocess
+import sys
 
 GATEWAY="primary-gateway"
+CHARTSDIR="/Users/derrickburns/go/src/github.com/tidepool-org/dev-ops/k8s/charts/"
 
-def services_from(docs):
+def ambassador_services_from(docs):
+    """Return the services from a set of K8s Manifests."""
     services = []
     for doc in docs:
         if doc is not None:
@@ -13,20 +17,28 @@ def services_from(docs):
                     services.append(doc)
     return services
 
-def process_services(services):
+def istio_http_routes_from_services(services):
+    """Return the Istio http routes from a set of Services with Ambassador annotations."""
+    http_routes = list()
     for service in services:
-        process_service(service);
+        ambassador_metadata = metadata_from_ambassador_service(service)
+        if ambassador_metadata:
+            docs = yaml_docs_from_metadata_string(ambassador_metadata)
+            name = ambassador_metadata["name"]
+            dest = dest_from_name(name)
+            http_routes.extend(istio_http_routes_from_ambassador_docs(docs, dest))
+    return http_routes
 
-def process_service(service):
-    vs = virtual_service_from_service(service)
-    metadata = metadata_from_service(service)
-    name = name_from_metadata(metadata)
+def write_istio_virtual_service(vs, filename):
+    """Write a file containing an Istio virtual service."""
     if vs is not None:
-        with open( "/Users/derrickburns/go/src/github.com/tidepool-org/dev-ops/charts/router/templates/"
- + name + '-virtual-service.yaml', 'w') as outfile:
+        with open(filename, 'w') as outfile:
             yaml.dump(vs, outfile, default_flow_style=False)
+    else:
+        print("no virtual service defined")
 
-def metadata_from_service(service):
+def metadata_from_ambassador_service(service):
+    """Return the metadata from object or None if it does not exist."""
     if "metadata" in service:
         metadata=service["metadata"]
         return metadata
@@ -34,54 +46,76 @@ def metadata_from_service(service):
         return None
 
 def name_from_metadata(metadata):
+    """Return the name from object or None if it does not exist."""
     if "name" in metadata:
         return metadata["name"]
     else:
         return None
 
 def annotation_from_metadata(metadata):
+    """Return the Ambassador annotation string from a document."""
     if "annotations" in metadata:
         annotations = metadata["annotations"]
         if "getambassador.io/config" in annotations:
-            annotation=annotations["getambassador.io/config"]
-
-            return annotation
+            return annotations["getambassador.io/config"]
     else:
         return None
 
-def virtual_service_from_service(service):
-    metadata = metadata_from_service(service)
-    name = name_from_metadata(metadata)
-    dest = name + ".{{- .Release.Namespace -}}." + "svc.cluster.local"
-    annotation_string = annotation_from_metadata(metadata)
-    docs = []
-    if annotation_string is None:
-        return None
-    for raw_doc in annotation_string.split('\n---'):
-        try:
-            docs.append(yaml.load(raw_doc))
-        except SyntaxError:
-            docs.append(raw_doc)
-    
-    if len(docs) > 0:
+def ordered_http_routes(http_routes):
+    """TBB. Return a sorted list of http routes from least general to most general."""
+    # sort by length of prefix/regex
+    return http_routes
+
+def virtual_service_name():
+    """Return the Istio virtual service name."""
+    return "backend" + ".{{- .Release.Namespace -}}." + "svc.cluster.local"    
+
+def virtual_service_from_http_routes(gateway, ordered, vsname):
+    """Return a virtual service object from a gateway, list of HTTPRoutes, and Istio virtual service name."""
+    if len(ordered) > 0:
         virtual_service = dict()
         virtual_service["apiVersion"] = "networking.istio.io/v1alpha3"
         virtual_service["kind"] = "VirtualService"
         virtual_service["metadata"] = dict()
         virtual_service["metadata"]
-        virtual_service["metadata"]["name"] = name
+        virtual_service["metadata"]["name"] = vsname
         virtual_service["metadata"]["namespace"] = "{{ .Release.Namespace }}"
         virtual_service["spec"] = dict()
         virtual_service["spec"]["hosts"] = list()
-        virtual_service["spec"]["hosts"].append("{{ .Values.api.host }}")
-        virtual_service["spec"]["hosts"].append("{{ .Values.externalapi.host }}")
+        virtual_service["spec"]["hosts"].append("\"*\"")
 
         virtual_service["spec"]["http"] = list()
         virtual_service["spec"]["gateway"] = list()
         virtual_service["spec"]["gateway"].append(GATEWAY)
+        virtual_service["spec"]["http"] = ordered
+        return virtual_service
+    else:
+        return None
+
+def dest_from_name(name):
+    """Return the target host for a routing rule."""
+    return name + ".{{- .Release.Namespace -}}." + "svc.cluster.local"
+
+def yaml_docs_from_metadata_string(metadata):
+    """Return a list of YAML objects from a YAML string."""
+    annotation_string = annotation_from_metadata(metadata)
+    if annotation_string is None:
+        return None
+    docs = list()
+    for raw_doc in annotation_string.split('\n---'):
+        try:
+            docs.append(yaml.load(raw_doc))
+        except SyntaxError:
+            docs.append(raw_doc)
+    return docs
+
+def istio_http_routes_from_ambassador_docs(docs, dest):
+    """Return the HTTPRoute(s) from an Ambasaddor doc."""
+    http_routes = list()
+    if len(docs) > 0:
         for doc in docs:
             print(doc)
-            combo = dict()
+            http_route = dict()
 
             match = dict()
             match["uri"] = dict()
@@ -95,12 +129,12 @@ def virtual_service_from_service(service):
                 match["method"]["regex"] = doc["method"]
             else:
                 match["method"]["exact"] = doc["method"]
-            combo["match"] = list()
-            combo["match"].append(match)
+            http_route["match"] = list()
+            http_route["match"].append(match)
 
             if "rewrite" in doc and doc["rewrite"] != "":
-                combo["rewrite"] = dict()
-                combo["rewrite"]["uri"] = doc["rewrite"]
+                http_route["rewrite"] = dict()
+                http_route["rewrite"]["uri"] = doc["rewrite"]
 
             if "service" in doc:
                 s = doc["service"]
@@ -114,19 +148,15 @@ def virtual_service_from_service(service):
                 route["destination"]["port"] = dict()
                 route["destination"]["port"]["number"] = int(port)
                 route["destination"]["host"] = dest
-                combo["route"] = route
+                http_route["route"] = route
 
-            if combo["match"]:
-                virtual_service["spec"]["http"].append( combo )
-
-        if virtual_service["spec"]["http"]:
-            return virtual_service
-        else:
-            return None
-    else:
-        return None
+            if http_route["match"]:
+                http_routes.append( http_route )
+    return http_routes
 
 """
+Example output:
+
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -162,9 +192,13 @@ spec:
           number: 9080 # can be omitted if its the only port for reviews
         host: reviews.{{.Release.Namespace}}.svc.cluster.local
 """
-
-
-stream = open("/Users/derrickburns/go/src/github.com/tidepool-org/dev-ops/charts/all", "r")
-docs = yaml.load_all(stream)
-services = services_from(docs)
-process_services(services)
+input_dir=CHARTSDIR + 'backend'
+output_file=CHARTSDIR + 'router/templates/backend-virtual-service.yaml'
+helm = subprocess.Popen(['helm', 'template', input_dir], stdout=subprocess.PIPE)
+docs = yaml.load_all(helm.stdout)
+ambassador_services = ambassador_services_from(docs)
+istio_http_routes = istio_http_routes_from_services(ambassador_services)
+ordered_http_routes = ordered_http_routes(istio_http_routes)
+vsname = virtual_service_name()
+virtual_service = virtual_service_from_http_routes(GATEWAY, ordered_http_routes, vsname)
+write_istio_virtual_service(virtual_service, output_file)
