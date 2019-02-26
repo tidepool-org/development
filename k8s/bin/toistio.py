@@ -61,10 +61,21 @@ def annotation_from_metadata(metadata):
     else:
         return None
 
+def sort_key(http_route):
+    uri = http_route["match"][0]["uri"]
+    if "regex" in uri:
+        return len(uri["regex"])
+    elif "prefix" in uri:
+        return len(uri["prefix"])
+    elif "exact" in uri:
+        return len(uri["exact"])
+    else:
+        return 0
+
 def ordered_http_routes(http_routes):
     """TBB. Return a sorted list of http routes from least general to most general."""
-    # sort by length of prefix/regex
-    return http_routes
+    # sort by length of prefix/regex from longest to 
+    return sorted(http_routes, key=sort_key, reverse=True) 
 
 def virtual_service_name():
     """Return the Istio virtual service name."""
@@ -82,7 +93,7 @@ def virtual_service_from_http_routes(gateway, ordered, vsname):
         virtual_service["metadata"]["namespace"] = "{{ .Release.Namespace }}"
         virtual_service["spec"] = dict()
         virtual_service["spec"]["hosts"] = list()
-        virtual_service["spec"]["hosts"].append("\"*\"")
+        virtual_service["spec"]["hosts"].append("*")
 
         virtual_service["spec"]["http"] = list()
         virtual_service["spec"]["gateway"] = list()
