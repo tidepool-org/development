@@ -13,6 +13,7 @@ metadata:
       path_redirect: "false"
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
       method_regex: true
+      rewrite: "/"
       service: shoreline:{{.Values.shoreline.port}}
   creationTimestamp: null
   labels:
