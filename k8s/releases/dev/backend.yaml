@@ -1,3 +1,4 @@
+---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
@@ -27,26 +28,26 @@ spec:
     ref: master
   values:
     environment: production
-    blip: 
-      image: tidepool/blip:v1.14.1
+    blip:
+      image: tidepool/blip:v1.16.0-release.2
     export:
       image: tidepool/export:v1.3.2
-    gatekeeper: 
-      image: tidepool/gatekeeper:latest
-    hakken: 
+    gatekeeper:
+      image: tidepool/gatekeeper:OAuth
+    hakken:
       image: tidepool/hakken:noHakken
-    highwater: 
-      image: tidepool/highwater:latest
+    highwater:
+      image: tidepool/highwater:OAuth
     hydrophone:
       image: tidepool/hydrophone:noHakken
-    jellyfish: 
-      image: tidepool/jellyfish:latest
-    messageapi: 
-      image: tidepool/message-api:latest
+    jellyfish:
+      image: tidepool/jellyfish:OAuth
+    messageapi:
+      image: tidepool/message-api:quiet
     mailhog:
-      image: mailhog/mailhog:latest
-    mongo: 
-      image: mongo:3.2
+      image: mailhog/mailhog:v1.0.0
+    mongo:
+      image: mongo:4.1
     platformAuth:
       image: tidepool/platform-auth:quiet
     platformBlob:
@@ -60,13 +61,13 @@ spec:
     platformTask:
       image: tidepool/platform-task:quiet
     platformTools:
-      image: tidepool/platform-tools:quiet
+      image: tidepool/platform-tools:1.31.0-release.1
     platformUser:
       image: tidepool/platform-user:quiet
-    seagull: 
+    seagull:
       image: tidepool/seagull:noHakken
     shoreline:
       image: tidepool/shoreline:noHakken
     tidewhisperer:
       image: tidepool/tide-whisperer:noHakken
-    
+
