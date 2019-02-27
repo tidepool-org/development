@@ -18,17 +18,17 @@ spec:
     ingress:
       enabled: true
     ingressgateway:
-      enabled: true
+      enabled: false
     egressgateway:
-      enabled: true
+      enabled: false
     sidecarInjectorWebhook:
       enabled: true
     servicegraph:
-      enabled: true
+      enabled: false
     tracing:
-      enabled: true
+      enabled: false
     prometheus:
-      enabled: true
+      enabled: false
     kiali:
-      enabled: true
+      enabled: false
 
