@@ -11,4 +11,6 @@ spec:
     git: git@github.com:istio/istio
     path: install/kubernetes/helm/istio-init
     ref: master
+  values:
+    none: none
 
