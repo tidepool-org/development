@@ -8,3 +8,4 @@ helmOperator:
 git:
   url: git@github.com:tidepool-org/dev-ops
   pollInterval: 1m
+  timeout: 40s
