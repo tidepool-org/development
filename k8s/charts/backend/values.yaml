@@ -2,7 +2,7 @@ global:
   imagePullPolicy: IfNotPresent
 environment: production
 externalapi: 
-  host: a3548f01f2bfa11e99f1a024a6da1447-1766565264.us-west-2.elb.amazonaws.com
+  host: localhost
   port: 8009
 api: 
   host: ambassador-api
