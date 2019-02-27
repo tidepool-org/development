@@ -5,4 +5,4 @@ kind: Namespace
 metadata:
   name: dev
   labels:
-      istio-injection: disabled
+      istio-injection: enabled
