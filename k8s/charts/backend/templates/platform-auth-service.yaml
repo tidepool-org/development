@@ -47,7 +47,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
-      name:  platform-auth-oauth
+      name:  platform-auth-authorize
       prefix: "/v1/oauth/[^/]+/authorize"
       prefix_regex: true
       method: "GET|DELETE"
@@ -57,7 +57,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
-      name:  platform-auth-oauth
+      name:  platform-auth-redirect
       prefix: "/v1/oauth/[^/]+/redirect"
       prefix_regex: true
       method: "GET"
