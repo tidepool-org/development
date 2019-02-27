@@ -143,7 +143,10 @@ def istio_http_routes_from_ambassador_docs(docs, dest):
             http_route["match"] = list()
             http_route["match"].append(match)
 
-            if "rewrite" in doc and doc["rewrite"] != "":
+            if "rewrite" not in doc:
+                http_route["rewrite"] = dict()
+                http_route["rewrite"]["uri"] = "/"
+            elif doc["rewrite"] != "":
                 http_route["rewrite"] = dict()
                 http_route["rewrite"]["uri"] = doc["rewrite"]
 
