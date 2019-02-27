@@ -11,4 +11,4 @@ spec:
     path: k8s/charts/api-entry
     ref: master
   values:
-    none: none
+    none: a9b4dda0539f811e99f1a024a6da1447-905884705.us-west-2.elb.amazonaws.com
