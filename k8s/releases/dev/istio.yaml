@@ -29,4 +29,6 @@ spec:
       enabled: true
     prometheus:
       enabled: true
+    kiali:
+      enabled: true
 
