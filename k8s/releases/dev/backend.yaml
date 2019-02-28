@@ -10,7 +10,7 @@ metadata:
     flux.weave.works/tag.tidewhisperer: "glob:noHakken*"
     flux.weave.works/tag.hakken: "glob:noHakken*"
     flux.weave.works/tag.blip: "glob:v1.*"
-    flux.weave.works/tag.export:"glob:v1.3.*"
+    flux.weave.works/tag.export: "glob:v1.3.*"
     flux.weave.works/tag.mongo: "regexp:mongo:3\.2"
     flux.weave.works/tag.seagull: "glob:noHakken*"
     flux.weave.works/tag.hydrophone: "glob:noHakken*"
