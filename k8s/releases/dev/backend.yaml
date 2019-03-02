@@ -31,7 +31,7 @@ spec:
   values:
     environment: production
     blip:
-      image: tidepool/blip:v1.17.0-rc.3
+      image: tidepool/blip:v1.16.1
     export:
       image: tidepool/export:v1.3.2
     gatekeeper:
