@@ -1,0 +1,14 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: kube-state-metrics
+  namespace: kube-system
+  annotations:
+    flux.weave.works/automated: "true"
+spec:
+  chart:
+    git: git@github.com:helm/charts
+    path: stable/kube-state-metrics
+    ref: master
+  values:
+    none: none
