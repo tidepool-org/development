@@ -5,4 +5,5 @@ kind: Namespace
 metadata:
   name: dev
   labels:
-      istio-injection: enabled
+      istio-injection: disables
+      linkerd.io/inject: enabled
