@@ -10,6 +10,10 @@ metadata:
     flux.weave.works/tag.tidewhisperer: "glob:noHakken*"
     flux.weave.works/tag.hakken: "glob:noHakken*"
     flux.weave.works/tag.blip: "glob:*"
+    flux.weave.works/tag.gatekeeper: "glob:*"
+    flux.weave.works/tag.highwater: "glob:*"
+    flux.weave.works/tag.jellyfish: "glob:*"
+    flux.weave.works/tag.mailhog: "semver:1.*"
     flux.weave.works/tag.export: "glob:v1.3.*"
     flux.weave.works/tag.mongo: "regexp:mongo:3.2"
     flux.weave.works/tag.seagull: "glob:noHakken*"
@@ -21,6 +25,7 @@ metadata:
     flux.weave.works/tag.platformMigrations: "glob:quiet*"
     flux.weave.works/tag.platformNotification: "glob:quiet*"
     flux.weave.works/tag.platformTask: "glob:quiet*"
+    flux.weave.works/tag.platformTools: "glob:*"
     flux.weave.works/tag.platformUser: "glob:quiet*"
 spec:
   skipDepUpdate: true
