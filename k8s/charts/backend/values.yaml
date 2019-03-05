@@ -5,7 +5,7 @@ externalapi:
   host: localhost
   port: 8009
 api: 
-  host: ambassador-api
+  host: api-entry
   port: 8009
 blip: 
   dir: blip 
