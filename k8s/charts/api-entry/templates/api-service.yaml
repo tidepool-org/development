@@ -11,9 +11,10 @@ metadata:
     "service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled": "true"
 spec:
   type: LoadBalancer
-  externalTrafficPolicy: Local
+  externalTrafficPolicy: Cluster
   ports:
    - port: {{.Values.entryport}}
      targetPort: 80
   selector:
-    service: ambassador
+    app.kubernetes.io/name: ambassador
+    app.kubernetes.io/instance: {{.Release.Namespace -}}-ambassador
