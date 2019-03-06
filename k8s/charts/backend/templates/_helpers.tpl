@@ -176,5 +176,5 @@ Create liveness and readiness probes for platform services.
       initContainers:
       - name: init-shoreline
         image: busybox
-        command: ['sh', '-c', 'until nc -zvv {{.Values.shoreline.host}} {{.Values.shoreline.port}}; do echo waiting for mongo; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -zvv {{.Values.shoreline.host}} {{.Values.shoreline.port}}; do echo waiting for shoreline; sleep 2; done;']
 {{- end -}} 
