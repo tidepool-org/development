@@ -74,7 +74,7 @@ spec:
     seagull:
       image: tidepool/seagull:noHakken
     shoreline:
-      image: tidepool/shoreline:noHakken-7b1f21b
+      image: tidepool/shoreline:noHakken-bec1d1e
     tidewhisperer:
       image: tidepool/tide-whisperer:noHakken-726e678
 
