@@ -16,13 +16,11 @@ export:
   host: export
   image: tidepool/export:v1.3.2
   port: '9300'
-  session: {secret: 'Sign the export service session with this secret'}
 gatekeeper: 
   image: tidepool/gatekeeper:latest
   dir: gatekeeper
   host: gatekeeper
   port: '9123'
-  secret: 'This secret is used to encrypt the groupId stored in the DB for gatekeeper'
 hakken: 
   image: tidepool/hakken:noHakken
   dir: hakken
@@ -80,7 +78,6 @@ platformAuth:
   dir: platform/src/github.com/tidepool-org/platform
   host: platform-auth
   port: '9222'
-  service: {secret: 'Service secret used for interservice requests with the auth service'}
 platformBlob:
   image: tidepool/platform-blob:quiet
   build: {target: release}
@@ -88,7 +85,6 @@ platformBlob:
   host: platform-blob
   port: '9225'
   service:
-    secret: 'Service secret used for interservice requests with the blob service'
     unstructured:
       store:
         file: {directory: "_data/blobs"}
@@ -100,7 +96,6 @@ platformData:
   dir: platform/src/github.com/tidepool-org/platform
   host: platform-data
   port: '9220'
-  service: {secret: 'Service secret used for interservice requests with the data service'}
 platformMigrations:
   image: tidepool/platform-migrations:quiet
   build: {target: release}
@@ -111,14 +106,12 @@ platformNotification:
   dir: platform/src/github.com/tidepool-org/platform
   host: platform-notification
   port: '9223'
-  service: {secret: 'Service secret used for interservice requests with the notification service'}
 platformTask:
   image: tidepool/platform-task:quiet
   build: {target: release}
   dir: platform/src/github.com/tidepool-org/platform
   host: platform-task
   port: '9224'
-  service: {secret: 'Service secret used for interservice requests with the task service'}
 platformTools:
   image: tidepool/platform-tools:quiet
   build: {target: release}
@@ -129,15 +122,12 @@ platformUser:
   dir: platform/src/github.com/tidepool-org/platform
   host: platform-user
   port: '9221'
-  service: {secret: 'Service secret used for interservice requests with the user
-      service'}
 seagull: 
   image: tidepool/seagull:noHakken
   dir: seagull
   host: seagull
   port: '9120'
   salt: KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
-server: {secret: 'This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy'}
 service:
   provider:
     dexcom:
@@ -147,7 +137,6 @@ service:
       state: {salt: 'Encryption salt to generate state parameter during OAuth workflow'}
 shoreline:
   image: tidepool/shoreline:noHakken
-  api: {secret: 'This is a local API secret for everyone. BsscSHqSHiwrBMJsEGqbvXiuIUPAjQXU'}
   build: {target: release}
   dir: shoreline/src/github.com/tidepool-org/shoreline
   host: shoreline
