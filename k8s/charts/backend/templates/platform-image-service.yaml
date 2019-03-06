@@ -9,9 +9,29 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       name:  platform-image
-      prefix: "/v1/image"
+      prefix: "/v1/images"
       prefix_regex: false
-      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method: "GET|PUT|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-image:{{.Values.platformImage.port}}
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      name:  platform-users-user-images
+      prefix: "/v1/users/[^/]+/images"
+      prefix_regex: true
+      method: "GET|POST|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-image:{{.Values.platformImage.port}}
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      name:  platform-users-user-images
+      prefix: "/v1/users/[^/]+/images/.+"
+      prefix_regex: true
+      method: "GET|POST|DELETE"
       method_regex: true
       rewrite: ""
       service: platform-image:{{.Values.platformImage.port}}
