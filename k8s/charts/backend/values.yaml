@@ -29,7 +29,6 @@ hakken:
   skip: true
 highwater: 
   image: tidepool/highwater:latest
-  dir: highwater
   host: highwater
   port: '9191'
   salt: gf78fSEI7tOQQP9xfXMO9HfRyMnW4Sx88Q
@@ -42,18 +41,15 @@ hydrophone:
     fromAddress: ''
     serverEndpoint: 'https://email.us-west-2.amazonaws.com'
   build: {target: release}
-  dir: hydrophone/src/github.com/tidepool-org/hydrophone
   from: {address: ''}
   host: hydrophone
   port: '9157'
 jellyfish: 
   image: tidepool/jellyfish:latest
-  dir: jellyfish
   port: '9122'
   salt: 'itNkczadZ1EeC9fUWR3LnbKFagtYYLOk'
 messageapi: 
   image: tidepool/message-api:latest
-  dir: message-api
   host: message-api
   port: '9119'
 mailhog:
@@ -68,20 +64,12 @@ mongo:
   port: '27017'
   tls: 'false'
   volume: mongo
-
-platform:
-  client: {dir: platform-client}
-
 platformAuth:
   image: tidepool/platform-auth:quiet
-  build: {target: release}
-  dir: platform/src/github.com/tidepool-org/platform
   host: platform-auth
   port: '9222'
 platformBlob:
   image: tidepool/platform-blob:quiet
-  build: {target: release}
-  dir: platform/src/github.com/tidepool-org/platform
   host: platform-blob
   port: '9225'
   service:
@@ -92,39 +80,30 @@ platformBlob:
         type: file
 platformData:
   image: tidepool/platform-data:quiet
-  build: {target: release}
-  dir: platform/src/github.com/tidepool-org/platform
   host: platform-data
   port: '9220'
+platformImage:
+  image: tidepool/platform-image:latest
+  host: platform-image
+  port: '9226'
 platformMigrations:
   image: tidepool/platform-migrations:quiet
-  build: {target: release}
-  dir: platform/src/github.com/tidepool-org/platform
 platformNotification:
   image: tidepool/platform-notification:quiet
-  build: {target: release}
-  dir: platform/src/github.com/tidepool-org/platform
   host: platform-notification
   port: '9223'
 platformTask:
   image: tidepool/platform-task:quiet
-  build: {target: release}
-  dir: platform/src/github.com/tidepool-org/platform
   host: platform-task
   port: '9224'
 platformTools:
   image: tidepool/platform-tools:quiet
-  build: {target: release}
-  dir: platform/src/github.com/tidepool-org/platform
 platformUser:
   image: tidepool/platform-user:quiet
-  build: {target: release}
-  dir: platform/src/github.com/tidepool-org/platform
   host: platform-user
   port: '9221'
 seagull: 
   image: tidepool/seagull:noHakken
-  dir: seagull
   host: seagull
   port: '9120'
   salt: KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
@@ -137,8 +116,6 @@ service:
       state: {salt: 'Encryption salt to generate state parameter during OAuth workflow'}
 shoreline:
   image: tidepool/shoreline:noHakken
-  build: {target: release}
-  dir: shoreline/src/github.com/tidepool-org/shoreline
   host: shoreline
   long:
     term: {key: abcdefghijklmnopqrstuvwxyz}
@@ -147,10 +124,6 @@ shoreline:
   verification: {secret: +skip}
 tidewhisperer:
   image: tidepool/tide-whisperer:noHakken
-  build: {target: release}
-  dir: tide-whisperer/src/github.com/tidepool-org/tide-whisperer
   host: tide-whisperer
   port: '9127'
-tideline: {dir: tideline}
-viz: {dir: viz}
 
