@@ -33,7 +33,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: server-secret
-              key: shoreline
+              key: api
         - name: TIDEPOOL_SHORELINE_ENV
           value: |
             {
