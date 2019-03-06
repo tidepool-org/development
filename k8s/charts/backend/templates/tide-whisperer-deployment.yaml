@@ -45,7 +45,6 @@ spec:
                 "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://{{.Values.seagull.host}}:{{.Values.seagull.port}}"]}},
                 "shoreline": {
                     "name": "tide-whisperer",
-                    "secret": "{{.Values.server.secret}}",
                     "serviceSpec": {"type": "static", "hosts": ["http://{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"]},
                     "tokenRefreshInterval": "1h"
                 }

@@ -46,7 +46,6 @@ spec:
                 "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://{{.Values.seagull.host}}:{{.Values.seagull.port}}"]}},
                 "shoreline": {
                     "name": "hydrophone",
-                    "secret": "{{.Values.server.secret}}",
                     "serviceSpec": {"type": "static", "hosts": ["http://{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"]},
                     "tokenRefreshInterval": "1h"
                 }
@@ -56,7 +55,6 @@ spec:
             {
                 "hydrophone": {
                     "assetUrl": "{{.Values.hydrophone.assetUrl}}",
-                    "serverSecret": "{{.Values.server.secret}}",
                     "webUrl": "http://{{.Values.api.host}}:{{.Values.api.port}}"
                 },
                 "mongo": {
