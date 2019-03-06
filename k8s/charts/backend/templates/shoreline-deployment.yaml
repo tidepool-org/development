@@ -68,7 +68,7 @@ spec:
                 "user": {
                     "clinicDemoUserId": "",
                     "longTermDaysDuration": 30,
-                    "longTermKey": "{{.Values.shoreline.long.term.key}}",
+                    "longTermKey": "{{.Values.shoreline.longtermkey}}",
                     "salt": "{{.Values.shoreline.salt}}",
                     "tokenDurationSecs": 2592000,
                     "verificationSecret": "{{.Values.shoreline.verification.secret}}"

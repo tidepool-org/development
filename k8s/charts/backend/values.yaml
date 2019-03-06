@@ -8,22 +8,18 @@ api:
   host: ambassador
   port: 80
 blip: 
-  dir: blip 
   port: '3000'
   image: tidepool/blip:v1.14.1
 export:
-  dir: export
   host: export
   image: tidepool/export:v1.3.2
   port: '9300'
 gatekeeper: 
   image: tidepool/gatekeeper:latest
-  dir: gatekeeper
   host: gatekeeper
   port: '9123'
 hakken: 
   image: tidepool/hakken:noHakken
-  dir: hakken
   host: hakken
   port: '8000'
   skip: true
@@ -40,7 +36,6 @@ hydrophone:
     secretKey: ''
     fromAddress: ''
     serverEndpoint: 'https://email.us-west-2.amazonaws.com'
-  build: {target: release}
   from: {address: ''}
   host: hydrophone
   port: '9157'
@@ -117,8 +112,7 @@ service:
 shoreline:
   image: tidepool/shoreline:noHakken
   host: shoreline
-  long:
-    term: {key: abcdefghijklmnopqrstuvwxyz}
+  longtermkey: abcdefghijklmnopqrstuvwxyz
   port: '9107'
   salt: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
   verification: {secret: +skip}
