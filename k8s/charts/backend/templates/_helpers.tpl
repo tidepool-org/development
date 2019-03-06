@@ -172,3 +172,9 @@ Create liveness and readiness probes for platform services.
         image: busybox
         command: ['sh', '-c', 'until nc -zvv {{.Values.mongo.host}} {{.Values.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
 {{- end -}} 
+{{- define "charts.init.shoreline" -}}
+      initContainers:
+      - name: init-shoreline
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv {{.Values.shoreline.host}} {{.Values.shoreline.port}}; do echo waiting for mongo; sleep 2; done;']
+{{- end -}} 

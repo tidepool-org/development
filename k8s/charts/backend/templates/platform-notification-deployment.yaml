@@ -10,6 +10,7 @@ metadata:
   name: platform-notification
   namespace: {{.Release.Namespace}}
 spec:
+  {{ include "charts.init.shoreline" .}}
   selector:
     matchLabels:
       io.kompose.service: platform-notification
