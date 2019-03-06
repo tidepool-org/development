@@ -1,0 +1,4339 @@
+apiVersion: v1
+items:
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:38Z
+    generation: 2
+    labels:
+      io.kompose.service: blip
+    name: blip
+    namespace: dev
+    resourceVersion: "3592343"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/blip
+    uid: 2ede5dec-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: blip
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: blip
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: blip
+      spec:
+        containers:
+        - args:
+          - -c
+          - yarn build && yarn server
+          command:
+          - /bin/sh
+          env:
+          - name: API_HOST
+            value: http://localhost:8009
+          - name: DEV_TOOLS
+            value: "true"
+          - name: DISCOVERY_HOST
+            value: hakken:8000
+          - name: NODE_ENV
+            value: production
+          - name: PORT
+            value: "3000"
+          - name: PUBLISH_HOST
+            value: hakken
+          - name: SERVICE_NAME
+            value: blip
+          - name: WEBPACK_DEVTOOL
+            value: cheap-module-eval-source-map
+          image: tidepool/blip:v1.16.1
+          imagePullPolicy: IfNotPresent
+          name: blip
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: blip.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:38Z
+      lastUpdateTime: 2019-03-04T01:09:38Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:38Z
+      lastUpdateTime: 2019-03-04T01:09:52Z
+      message: ReplicaSet "blip-775bc85d8" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:38Z
+    generation: 2
+    labels:
+      io.kompose.service: export
+    name: export
+    namespace: dev
+    resourceVersion: "3592290"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/export
+    uid: 2edfe568-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: export
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: export
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: export
+      spec:
+        containers:
+        - env:
+          - name: API_HOST
+            value: http://ambassador-api:8009
+          - name: DEBUG_LEVEL
+            value: debug
+          - name: HTTP_PORT
+            value: "9300"
+          - name: SESSION_SECRET
+            value: Sign the export service session with this secret
+          image: tidepool/export:v1.3.2
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /export/status
+              port: 9300
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: export
+          ports:
+          - containerPort: 9300
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: export.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:38Z
+      lastUpdateTime: 2019-03-04T01:09:38Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:38Z
+      lastUpdateTime: 2019-03-04T01:09:44Z
+      message: ReplicaSet "export-bbdc74f88" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:38Z
+    generation: 2
+    labels:
+      io.kompose.service: gatekeeper
+    name: gatekeeper
+    namespace: dev
+    resourceVersion: "3592638"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/gatekeeper
+    uid: 2ee1c12b-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: gatekeeper
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: gatekeeper
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: gatekeeper
+      spec:
+        containers:
+        - env:
+          - name: DISCOVERY_HOST
+            value: hakken:8000
+          - name: GATEKEEPER_SECRET
+            value: This secret is used to encrypt the groupId stored in the DB for
+              gatekeeper
+          - name: MONGO_CONNECTION_STRING
+            value: mongodb://mongo:27017/gatekeeper?ssl=false
+          - name: NODE_ENV
+            value: production
+          - name: PORT
+            value: "9123"
+          - name: PUBLISH_HOST
+            value: hakken
+          - name: SERVER_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: SERVICE_NAME
+            value: gatekeeper
+          - name: USER_API_SERVICE
+            value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:9107"}]}'
+          image: tidepool/gatekeeper:OAuth
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9123
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: gatekeeper
+          ports:
+          - containerPort: 9123
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: gatekeeper.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;
+          image: busybox
+          imagePullPolicy: Always
+          name: init-mongo
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:38Z
+      lastUpdateTime: 2019-03-04T01:09:38Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:38Z
+      lastUpdateTime: 2019-03-04T01:11:56Z
+      message: ReplicaSet "gatekeeper-5fc998dd8d" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:38Z
+    generation: 2
+    labels:
+      io.kompose.service: highwater
+    name: highwater
+    namespace: dev
+    resourceVersion: "3592295"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/highwater
+    uid: 2ee3d947-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: highwater
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: highwater
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: highwater
+      spec:
+        containers:
+        - env:
+          - name: DISCOVERY_HOST
+            value: hakken:8000
+          - name: METRICS_APIKEY
+          - name: METRICS_UCSF_APIKEY
+          - name: NODE_ENV
+            value: production
+          - name: PORT
+            value: "9191"
+          - name: PUBLISH_HOST
+            value: hakken
+          - name: SALT_DEPLOY
+            value: gf78fSEI7tOQQP9xfXMO9HfRyMnW4Sx88Q
+          - name: SERVER_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: SERVICE_NAME
+            value: highwater
+          - name: USER_API_SERVICE
+            value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:9107"}]}'
+          image: tidepool/highwater:OAuth
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9191
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: highwater
+          ports:
+          - containerPort: 9191
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: highwater.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:38Z
+      lastUpdateTime: 2019-03-04T01:09:38Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:38Z
+      lastUpdateTime: 2019-03-04T01:09:44Z
+      message: ReplicaSet "highwater-586657c6cc" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:38Z
+    generation: 2
+    labels:
+      io.kompose.service: hydrophone
+    name: hydrophone
+    namespace: dev
+    resourceVersion: "3592662"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/hydrophone
+    uid: 2ee5d1f7-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: hydrophone
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: hydrophone
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: hydrophone
+      spec:
+        containers:
+        - env:
+          - name: SERVER_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: TIDEPOOL_HYDROPHONE_ENV
+            value: |
+              {
+                  "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:9123"]}},
+                  "hakken": {
+                    "host": "hakken:8000",
+                    "skipHakken": true
+                  },
+                  "highwater": {
+                      "metricsSource": "hydrophone",
+                      "metricsVersion": "v0.0.1",
+                      "name": "highwater",
+                      "serviceSpec": {"type": "static", "hosts": ["http://highwater:9191"]}
+                  },
+                  "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:9120"]}},
+                  "shoreline": {
+                      "name": "hydrophone",
+                      "secret": "This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy",
+                      "serviceSpec": {"type": "static", "hosts": ["http://shoreline:9107"]},
+                      "tokenRefreshInterval": "1h"
+                  }
+              }
+          - name: TIDEPOOL_HYDROPHONE_SERVICE
+            value: |
+              {
+                  "hydrophone": {
+                      "assetUrl": "https://s3-us-west-2.amazonaws.com/tidepool-dev-asset",
+                      "serverSecret": "This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy",
+                      "webUrl": "http://ambassador-api:3000"
+                  },
+                  "mongo": {
+                      "connectionString": "mongodb://mongo:27017/confirm?ssl=false"
+                  },
+                  "service": {
+                      "certFile": "config/cert.pem",
+                      "host": "localhost:9157",
+                      "keyFile": "config/key.pem",
+                      "protocol": "http",
+                      "service": "hydrophone"
+                  },
+                  "sesEmail": {
+                      "accessKey": "",
+                      "fromAddress": "",
+                      "secretKey": "",
+                      "serverEndpoint": "https://email.us-west-2.amazonaws.com"
+                  }
+              }
+          image: tidepool/hydrophone:noHakken
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9157
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: hydrophone
+          ports:
+          - containerPort: 9157
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: hydrophone.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;
+          image: busybox
+          imagePullPolicy: Always
+          name: init-mongo
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:38Z
+      lastUpdateTime: 2019-03-04T01:09:38Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:38Z
+      lastUpdateTime: 2019-03-04T01:11:57Z
+      message: ReplicaSet "hydrophone-79d954d98c" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:38Z
+    generation: 2
+    labels:
+      io.kompose.service: jellyfish
+    name: jellyfish
+    namespace: dev
+    resourceVersion: "3592642"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/jellyfish
+    uid: 2ee8410e-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: jellyfish
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: jellyfish
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: jellyfish
+      spec:
+        containers:
+        - env:
+          - name: DISCOVERY_HOST
+            value: hakken:8000
+          - name: GATEKEEPER_SERVICE
+            value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:9123"}]}'
+          - name: MINIMUM_UPLOADER_VERSION
+            value: 0.251.0
+          - name: MONGO_CONNECTION_STRING
+            value: mongodb://mongo:27017/data?ssl=false
+          - name: NODE_ENV
+            value: production
+          - name: PORT
+            value: "9122"
+          - name: PUBLISH_HOST
+            value: hakken
+          - name: SALT_DEPLOY
+            value: itNkczadZ1EeC9fUWR3LnbKFagtYYLOk
+          - name: SCHEMA_VERSION
+            value: "3"
+          - name: SEAGULL_SERVICE
+            value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:9120"}]}'
+          - name: SERVER_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: SERVE_STATIC
+            value: dist
+          - name: SERVICE_NAME
+            value: jellyfish
+          - name: USER_API_SERVICE
+            value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:9107"}]}'
+          image: tidepool/jellyfish:OAuth
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9122
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: jellyfish
+          ports:
+          - containerPort: 9122
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: jellyfish.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;
+          image: busybox
+          imagePullPolicy: Always
+          name: init-mongo
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:39Z
+      lastUpdateTime: 2019-03-04T01:09:39Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:38Z
+      lastUpdateTime: 2019-03-04T01:11:56Z
+      message: ReplicaSet "jellyfish-79688744b7" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+    creationTimestamp: 2019-03-04T01:09:38Z
+    generation: 2
+    labels:
+      io.kompose.service: mailhog
+    name: mailhog
+    namespace: dev
+    resourceVersion: "3592369"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/mailhog
+    uid: 2eeae3e9-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: mailhog
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: mailhog
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: mailhog
+      spec:
+        containers:
+        - image: mailhog/mailhog:v1.0.0
+          imagePullPolicy: IfNotPresent
+          name: mailhog
+          ports:
+          - containerPort: 1025
+            protocol: TCP
+          - containerPort: 8025
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /maildir
+            name: mailhog
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: mailhog.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: mailhog
+          persistentVolumeClaim:
+            claimName: mailhog
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:57Z
+      lastUpdateTime: 2019-03-04T01:09:57Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:39Z
+      lastUpdateTime: 2019-03-04T01:09:57Z
+      message: ReplicaSet "mailhog-788864b54f" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:38Z
+    generation: 2
+    labels:
+      io.kompose.service: message-api
+    name: message-api
+    namespace: dev
+    resourceVersion: "3592666"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/message-api
+    uid: 2eecf749-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: message-api
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: message-api
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: message-api
+      spec:
+        containers:
+        - env:
+          - name: DISCOVERY_HOST
+            value: hakken:8000
+          - name: GATEKEEPER_SERVICE
+            value: '{ "type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:9123"}]}'
+          - name: METRICS_SERVICE
+            value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater:9191"}]}'
+          - name: MONGO_CONNECTION_STRING
+            value: mongodb://mongo:27017/messages?ssl=false
+          - name: NODE_ENV
+            value: production
+          - name: PORT
+            value: "9119"
+          - name: PUBLISH_HOST
+            value: hakken
+          - name: SEAGULL_SERVICE
+            value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:9120"}]}'
+          - name: SERVER_NAME
+            value: message-api
+          - name: SERVER_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: SERVICE_NAME
+            value: message-api
+          - name: USER_API_SERVICE
+            value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:9107"}]}'
+          - name: SKIP_HAKKEN
+            value: "true"
+          image: tidepool/message-api:quiet
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9119
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: message-api
+          ports:
+          - containerPort: 9119
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: message-api.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;
+          image: busybox
+          imagePullPolicy: Always
+          name: init-mongo
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:40Z
+      lastUpdateTime: 2019-03-04T01:09:40Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:39Z
+      lastUpdateTime: 2019-03-04T01:11:58Z
+      message: ReplicaSet "message-api-767b8d97bf" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:38Z
+    generation: 2
+    labels:
+      io.kompose.service: mongo
+    name: mongo
+    namespace: dev
+    resourceVersion: "3592379"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/mongo
+    uid: 2eee9c4f-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: mongo
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: mongo
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: mongo
+      spec:
+        containers:
+        - image: mongo:3.2
+          imagePullPolicy: IfNotPresent
+          name: mongo
+          ports:
+          - containerPort: 27017
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data/db
+            name: mongo
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: mongo.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: mongo
+          persistentVolumeClaim:
+            claimName: mongo
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:58Z
+      lastUpdateTime: 2019-03-04T01:09:58Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:39Z
+      lastUpdateTime: 2019-03-04T01:09:58Z
+      message: ReplicaSet "mongo-657dc7d788" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:38Z
+    generation: 2
+    labels:
+      io.kompose.service: platform-auth
+    name: platform-auth
+    namespace: dev
+    resourceVersion: "3592434"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/platform-auth
+    uid: 2ef032cb-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: platform-auth
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: platform-auth
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: platform-auth
+      spec:
+        containers:
+        - env:
+          - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+            value: http://platform-auth:9222
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+            value: ambassador-api
+          - name: TIDEPOOL_AUTH_SERVICE_SECRET
+            value: Service secret used for interservice requests with the auth service
+          - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+            value: :9222
+          - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+            value: http://platform-blob:9225
+          - name: TIDEPOOL_BLOB_SERVICE_SECRET
+            value: Service secret used for interservice requests with the blob service
+          - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+            value: :9225
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+            value: _data/blobs
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+            value: file
+          - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+            value: confirm
+          - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DATA_SERVICE_SECRET
+            value: Service secret used for interservice requests with the data service
+          - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+            value: :9220
+          - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+            value: https://api.dexcom.com
+          - name: TIDEPOOL_ENV
+            value: local
+          - name: TIDEPOOL_LOGGER_LEVEL
+            value: debug
+          - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+            value: messages
+          - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+            value: http://platform-notification:9223
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+            value: Service secret used for interservice requests with the notification
+              service
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+            value: :9223
+          - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+            value: http://gatekeeper:9123
+          - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+            value: gatekeeper
+          - name: TIDEPOOL_PERMISSION_STORE_SECRET
+            value: This secret is used to encrypt the groupId stored in the DB for
+              gatekeeper
+          - name: TIDEPOOL_PROFILE_STORE_DATABASE
+            value: seagull
+          - name: TIDEPOOL_SERVER_TLS
+            value: "false"
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+            value: https://api.dexcom.com/v1/oauth2/login
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+            value: http://ambassador-api:8009/v1/oauth/dexcom/redirect
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+            value: offline_access
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+            value: Encryption salt to generate state parameter during OAuth workflow
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+            value: https://api.dexcom.com/v1/oauth2/token
+          - name: TIDEPOOL_SESSION_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_STORE_ADDRESSES
+            value: mongo:27017
+          - name: TIDEPOOL_STORE_DATABASE
+            value: tidepool
+          - name: TIDEPOOL_STORE_TLS
+            value: "false"
+          - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+            value: http://platform-task:9224
+          - name: TIDEPOOL_TASK_QUEUE_DELAY
+            value: "5"
+          - name: TIDEPOOL_TASK_QUEUE_WORKERS
+            value: "5"
+          - name: TIDEPOOL_TASK_SERVICE_SECRET
+            value: Service secret used for interservice requests with the task service
+          - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+            value: :9224
+          - name: TIDEPOOL_USER_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_USER_SERVICE_SECRET
+            value: Service secret used for interservice requests with the user service
+          - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+            value: :9221
+          - name: TIDEPOOL_USER_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+            value: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+          image: tidepool/platform-auth:quiet
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9222
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: platform-auth
+          ports:
+          - containerPort: 9222
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9222
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: platform-auth.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:40Z
+      lastUpdateTime: 2019-03-04T01:09:40Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:39Z
+      lastUpdateTime: 2019-03-04T01:10:08Z
+      message: ReplicaSet "platform-auth-7456dfc445" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:38Z
+    generation: 2
+    labels:
+      io.kompose.service: platform-blob
+    name: platform-blob
+    namespace: dev
+    resourceVersion: "3592430"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/platform-blob
+    uid: 2efb4cb9-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: platform-blob
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: platform-blob
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: platform-blob
+      spec:
+        containers:
+        - env:
+          - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+            value: http://platform-auth:9222
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+            value: ambassador-api
+          - name: TIDEPOOL_AUTH_SERVICE_SECRET
+            value: Service secret used for interservice requests with the auth service
+          - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+            value: :9222
+          - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+            value: http://platform-blob:9225
+          - name: TIDEPOOL_BLOB_SERVICE_SECRET
+            value: Service secret used for interservice requests with the blob service
+          - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+            value: :9225
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+            value: _data/blobs
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+            value: file
+          - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+            value: confirm
+          - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DATA_SERVICE_SECRET
+            value: Service secret used for interservice requests with the data service
+          - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+            value: :9220
+          - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+            value: https://api.dexcom.com
+          - name: TIDEPOOL_ENV
+            value: local
+          - name: TIDEPOOL_LOGGER_LEVEL
+            value: debug
+          - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+            value: messages
+          - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+            value: http://platform-notification:9223
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+            value: Service secret used for interservice requests with the notification
+              service
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+            value: :9223
+          - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+            value: http://gatekeeper:9123
+          - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+            value: gatekeeper
+          - name: TIDEPOOL_PERMISSION_STORE_SECRET
+            value: This secret is used to encrypt the groupId stored in the DB for
+              gatekeeper
+          - name: TIDEPOOL_PROFILE_STORE_DATABASE
+            value: seagull
+          - name: TIDEPOOL_SERVER_TLS
+            value: "false"
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+            value: https://api.dexcom.com/v1/oauth2/login
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+            value: http://ambassador-api:8009/v1/oauth/dexcom/redirect
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+            value: offline_access
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+            value: Encryption salt to generate state parameter during OAuth workflow
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+            value: https://api.dexcom.com/v1/oauth2/token
+          - name: TIDEPOOL_SESSION_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_STORE_ADDRESSES
+            value: mongo:27017
+          - name: TIDEPOOL_STORE_DATABASE
+            value: tidepool
+          - name: TIDEPOOL_STORE_TLS
+            value: "false"
+          - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+            value: http://platform-task:9224
+          - name: TIDEPOOL_TASK_QUEUE_DELAY
+            value: "5"
+          - name: TIDEPOOL_TASK_QUEUE_WORKERS
+            value: "5"
+          - name: TIDEPOOL_TASK_SERVICE_SECRET
+            value: Service secret used for interservice requests with the task service
+          - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+            value: :9224
+          - name: TIDEPOOL_USER_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_USER_SERVICE_SECRET
+            value: Service secret used for interservice requests with the user service
+          - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+            value: :9221
+          - name: TIDEPOOL_USER_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+            value: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+          image: tidepool/platform-blob:quiet
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9225
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: platform-blob
+          ports:
+          - containerPort: 9225
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9225
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: platform-blob.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:40Z
+      lastUpdateTime: 2019-03-04T01:09:40Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:39Z
+      lastUpdateTime: 2019-03-04T01:10:08Z
+      message: ReplicaSet "platform-blob-55b994bbb7" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:39Z
+    generation: 2
+    labels:
+      io.kompose.service: platform-data
+    name: platform-data
+    namespace: dev
+    resourceVersion: "3592417"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/platform-data
+    uid: 2f1a408f-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: platform-data
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: platform-data
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: platform-data
+      spec:
+        containers:
+        - env:
+          - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+            value: http://platform-auth:9222
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+            value: ambassador-api
+          - name: TIDEPOOL_AUTH_SERVICE_SECRET
+            value: Service secret used for interservice requests with the auth service
+          - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+            value: :9222
+          - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+            value: http://platform-blob:9225
+          - name: TIDEPOOL_BLOB_SERVICE_SECRET
+            value: Service secret used for interservice requests with the blob service
+          - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+            value: :9225
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+            value: _data/blobs
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+            value: file
+          - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+            value: confirm
+          - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DATA_SERVICE_SECRET
+            value: Service secret used for interservice requests with the data service
+          - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+            value: :9220
+          - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+            value: https://api.dexcom.com
+          - name: TIDEPOOL_ENV
+            value: local
+          - name: TIDEPOOL_LOGGER_LEVEL
+            value: debug
+          - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+            value: messages
+          - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+            value: http://platform-notification:9223
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+            value: Service secret used for interservice requests with the notification
+              service
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+            value: :9223
+          - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+            value: http://gatekeeper:9123
+          - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+            value: gatekeeper
+          - name: TIDEPOOL_PERMISSION_STORE_SECRET
+            value: This secret is used to encrypt the groupId stored in the DB for
+              gatekeeper
+          - name: TIDEPOOL_PROFILE_STORE_DATABASE
+            value: seagull
+          - name: TIDEPOOL_SERVER_TLS
+            value: "false"
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+            value: https://api.dexcom.com/v1/oauth2/login
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+            value: http://ambassador-api:8009/v1/oauth/dexcom/redirect
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+            value: offline_access
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+            value: Encryption salt to generate state parameter during OAuth workflow
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+            value: https://api.dexcom.com/v1/oauth2/token
+          - name: TIDEPOOL_SESSION_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_STORE_ADDRESSES
+            value: mongo:27017
+          - name: TIDEPOOL_STORE_DATABASE
+            value: tidepool
+          - name: TIDEPOOL_STORE_TLS
+            value: "false"
+          - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+            value: http://platform-task:9224
+          - name: TIDEPOOL_TASK_QUEUE_DELAY
+            value: "5"
+          - name: TIDEPOOL_TASK_QUEUE_WORKERS
+            value: "5"
+          - name: TIDEPOOL_TASK_SERVICE_SECRET
+            value: Service secret used for interservice requests with the task service
+          - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+            value: :9224
+          - name: TIDEPOOL_USER_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_USER_SERVICE_SECRET
+            value: Service secret used for interservice requests with the user service
+          - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+            value: :9221
+          - name: TIDEPOOL_USER_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+            value: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+          image: tidepool/platform-data:quiet
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9220
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: platform-data
+          ports:
+          - containerPort: 9220
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9220
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: platform-data.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:44Z
+      lastUpdateTime: 2019-03-04T01:09:44Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:40Z
+      lastUpdateTime: 2019-03-04T01:10:05Z
+      message: ReplicaSet "platform-data-69569fc9d5" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:39Z
+    generation: 2
+    labels:
+      io.kompose.service: platform-migrations
+    name: platform-migrations
+    namespace: dev
+    resourceVersion: "3592271"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/platform-migrations
+    uid: 2f38613f-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: platform-migrations
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: platform-migrations
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: platform-migrations
+      spec:
+        containers:
+        - env:
+          - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+            value: http://platform-auth:9222
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+            value: ambassador-api
+          - name: TIDEPOOL_AUTH_SERVICE_SECRET
+            value: Service secret used for interservice requests with the auth service
+          - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+            value: :9222
+          - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+            value: http://platform-blob:9225
+          - name: TIDEPOOL_BLOB_SERVICE_SECRET
+            value: Service secret used for interservice requests with the blob service
+          - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+            value: :9225
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+            value: _data/blobs
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+            value: file
+          - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+            value: confirm
+          - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DATA_SERVICE_SECRET
+            value: Service secret used for interservice requests with the data service
+          - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+            value: :9220
+          - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+            value: https://api.dexcom.com
+          - name: TIDEPOOL_ENV
+            value: local
+          - name: TIDEPOOL_LOGGER_LEVEL
+            value: debug
+          - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+            value: messages
+          - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+            value: http://platform-notification:9223
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+            value: Service secret used for interservice requests with the notification
+              service
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+            value: :9223
+          - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+            value: http://gatekeeper:9123
+          - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+            value: gatekeeper
+          - name: TIDEPOOL_PERMISSION_STORE_SECRET
+            value: This secret is used to encrypt the groupId stored in the DB for
+              gatekeeper
+          - name: TIDEPOOL_PROFILE_STORE_DATABASE
+            value: seagull
+          - name: TIDEPOOL_SERVER_TLS
+            value: "false"
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+            value: https://api.dexcom.com/v1/oauth2/login
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+            value: http://ambassador-api:8009/v1/oauth/dexcom/redirect
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+            value: offline_access
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+            value: Encryption salt to generate state parameter during OAuth workflow
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+            value: https://api.dexcom.com/v1/oauth2/token
+          - name: TIDEPOOL_SESSION_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_STORE_ADDRESSES
+            value: mongo:27017
+          - name: TIDEPOOL_STORE_DATABASE
+            value: tidepool
+          - name: TIDEPOOL_STORE_TLS
+            value: "false"
+          - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+            value: http://platform-task:9224
+          - name: TIDEPOOL_TASK_QUEUE_DELAY
+            value: "5"
+          - name: TIDEPOOL_TASK_QUEUE_WORKERS
+            value: "5"
+          - name: TIDEPOOL_TASK_SERVICE_SECRET
+            value: Service secret used for interservice requests with the task service
+          - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+            value: :9224
+          - name: TIDEPOOL_USER_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_USER_SERVICE_SECRET
+            value: Service secret used for interservice requests with the user service
+          - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+            value: :9221
+          - name: TIDEPOOL_USER_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+            value: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+          image: tidepool/platform-migrations:quiet
+          imagePullPolicy: IfNotPresent
+          name: platform-migrations
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: platform-migrations.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:43Z
+      lastUpdateTime: 2019-03-04T01:09:43Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:40Z
+      lastUpdateTime: 2019-03-04T01:09:43Z
+      message: ReplicaSet "platform-migrations-8484fc474" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:39Z
+    generation: 2
+    labels:
+      io.kompose.service: platform-notification
+    name: platform-notification
+    namespace: dev
+    resourceVersion: "3592424"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/platform-notification
+    uid: 2f56dd2f-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: platform-notification
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: platform-notification
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: platform-notification
+      spec:
+        containers:
+        - env:
+          - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+            value: http://platform-auth:9222
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+            value: ambassador-api
+          - name: TIDEPOOL_AUTH_SERVICE_SECRET
+            value: Service secret used for interservice requests with the auth service
+          - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+            value: :9222
+          - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+            value: http://platform-blob:9225
+          - name: TIDEPOOL_BLOB_SERVICE_SECRET
+            value: Service secret used for interservice requests with the blob service
+          - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+            value: :9225
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+            value: _data/blobs
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+            value: file
+          - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+            value: confirm
+          - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DATA_SERVICE_SECRET
+            value: Service secret used for interservice requests with the data service
+          - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+            value: :9220
+          - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+            value: https://api.dexcom.com
+          - name: TIDEPOOL_ENV
+            value: local
+          - name: TIDEPOOL_LOGGER_LEVEL
+            value: debug
+          - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+            value: messages
+          - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+            value: http://platform-notification:9223
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+            value: Service secret used for interservice requests with the notification
+              service
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+            value: :9223
+          - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+            value: http://gatekeeper:9123
+          - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+            value: gatekeeper
+          - name: TIDEPOOL_PERMISSION_STORE_SECRET
+            value: This secret is used to encrypt the groupId stored in the DB for
+              gatekeeper
+          - name: TIDEPOOL_PROFILE_STORE_DATABASE
+            value: seagull
+          - name: TIDEPOOL_SERVER_TLS
+            value: "false"
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+            value: https://api.dexcom.com/v1/oauth2/login
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+            value: http://ambassador-api:8009/v1/oauth/dexcom/redirect
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+            value: offline_access
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+            value: Encryption salt to generate state parameter during OAuth workflow
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+            value: https://api.dexcom.com/v1/oauth2/token
+          - name: TIDEPOOL_SESSION_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_STORE_ADDRESSES
+            value: mongo:27017
+          - name: TIDEPOOL_STORE_DATABASE
+            value: tidepool
+          - name: TIDEPOOL_STORE_TLS
+            value: "false"
+          - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+            value: http://platform-task:9224
+          - name: TIDEPOOL_TASK_QUEUE_DELAY
+            value: "5"
+          - name: TIDEPOOL_TASK_QUEUE_WORKERS
+            value: "5"
+          - name: TIDEPOOL_TASK_SERVICE_SECRET
+            value: Service secret used for interservice requests with the task service
+          - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+            value: :9224
+          - name: TIDEPOOL_USER_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_USER_SERVICE_SECRET
+            value: Service secret used for interservice requests with the user service
+          - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+            value: :9221
+          - name: TIDEPOOL_USER_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+            value: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+          image: tidepool/platform-notification:quiet
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9223
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: platform-notification
+          ports:
+          - containerPort: 9223
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9223
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: platform-notification.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:44Z
+      lastUpdateTime: 2019-03-04T01:09:44Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:40Z
+      lastUpdateTime: 2019-03-04T01:10:07Z
+      message: ReplicaSet "platform-notification-797f449fd9" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:39Z
+    generation: 2
+    labels:
+      io.kompose.service: platform-task
+    name: platform-task
+    namespace: dev
+    resourceVersion: "3592411"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/platform-task
+    uid: 2f756557-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: platform-task
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: platform-task
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: platform-task
+      spec:
+        containers:
+        - env:
+          - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+            value: http://platform-auth:9222
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+            value: ambassador-api
+          - name: TIDEPOOL_AUTH_SERVICE_SECRET
+            value: Service secret used for interservice requests with the auth service
+          - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+            value: :9222
+          - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+            value: http://platform-blob:9225
+          - name: TIDEPOOL_BLOB_SERVICE_SECRET
+            value: Service secret used for interservice requests with the blob service
+          - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+            value: :9225
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+            value: _data/blobs
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+            value: file
+          - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+            value: confirm
+          - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DATA_SERVICE_SECRET
+            value: Service secret used for interservice requests with the data service
+          - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+            value: :9220
+          - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+            value: https://api.dexcom.com
+          - name: TIDEPOOL_ENV
+            value: local
+          - name: TIDEPOOL_LOGGER_LEVEL
+            value: debug
+          - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+            value: messages
+          - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+            value: http://platform-notification:9223
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+            value: Service secret used for interservice requests with the notification
+              service
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+            value: :9223
+          - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+            value: http://gatekeeper:9123
+          - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+            value: gatekeeper
+          - name: TIDEPOOL_PERMISSION_STORE_SECRET
+            value: This secret is used to encrypt the groupId stored in the DB for
+              gatekeeper
+          - name: TIDEPOOL_PROFILE_STORE_DATABASE
+            value: seagull
+          - name: TIDEPOOL_SERVER_TLS
+            value: "false"
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+            value: https://api.dexcom.com/v1/oauth2/login
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+            value: http://ambassador-api:8009/v1/oauth/dexcom/redirect
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+            value: offline_access
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+            value: Encryption salt to generate state parameter during OAuth workflow
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+            value: https://api.dexcom.com/v1/oauth2/token
+          - name: TIDEPOOL_SESSION_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_STORE_ADDRESSES
+            value: mongo:27017
+          - name: TIDEPOOL_STORE_DATABASE
+            value: tidepool
+          - name: TIDEPOOL_STORE_TLS
+            value: "false"
+          - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+            value: http://platform-task:9224
+          - name: TIDEPOOL_TASK_QUEUE_DELAY
+            value: "5"
+          - name: TIDEPOOL_TASK_QUEUE_WORKERS
+            value: "5"
+          - name: TIDEPOOL_TASK_SERVICE_SECRET
+            value: Service secret used for interservice requests with the task service
+          - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+            value: :9224
+          - name: TIDEPOOL_USER_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_USER_SERVICE_SECRET
+            value: Service secret used for interservice requests with the user service
+          - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+            value: :9221
+          - name: TIDEPOOL_USER_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+            value: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+          image: tidepool/platform-task:quiet
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9224
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: platform-task
+          ports:
+          - containerPort: 9224
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9224
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: platform-task.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:44Z
+      lastUpdateTime: 2019-03-04T01:09:44Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:40Z
+      lastUpdateTime: 2019-03-04T01:10:04Z
+      message: ReplicaSet "platform-task-84dcb86788" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:39Z
+    generation: 2
+    labels:
+      io.kompose.service: platform-tools
+    name: platform-tools
+    namespace: dev
+    resourceVersion: "3592307"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/platform-tools
+    uid: 2f93e844-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: platform-tools
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: platform-tools
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: platform-tools
+      spec:
+        containers:
+        - env:
+          - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+            value: http://platform-auth:9222
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+            value: ambassador-api
+          - name: TIDEPOOL_AUTH_SERVICE_SECRET
+            value: Service secret used for interservice requests with the auth service
+          - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+            value: :9222
+          - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+            value: http://platform-blob:9225
+          - name: TIDEPOOL_BLOB_SERVICE_SECRET
+            value: Service secret used for interservice requests with the blob service
+          - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+            value: :9225
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+            value: _data/blobs
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+            value: file
+          - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+            value: confirm
+          - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DATA_SERVICE_SECRET
+            value: Service secret used for interservice requests with the data service
+          - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+            value: :9220
+          - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+            value: https://api.dexcom.com
+          - name: TIDEPOOL_ENV
+            value: local
+          - name: TIDEPOOL_LOGGER_LEVEL
+            value: debug
+          - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+            value: messages
+          - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+            value: http://platform-notification:9223
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+            value: Service secret used for interservice requests with the notification
+              service
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+            value: :9223
+          - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+            value: http://gatekeeper:9123
+          - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+            value: gatekeeper
+          - name: TIDEPOOL_PERMISSION_STORE_SECRET
+            value: This secret is used to encrypt the groupId stored in the DB for
+              gatekeeper
+          - name: TIDEPOOL_PROFILE_STORE_DATABASE
+            value: seagull
+          - name: TIDEPOOL_SERVER_TLS
+            value: "false"
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+            value: https://api.dexcom.com/v1/oauth2/login
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+            value: http://ambassador-api:8009/v1/oauth/dexcom/redirect
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+            value: offline_access
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+            value: Encryption salt to generate state parameter during OAuth workflow
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+            value: https://api.dexcom.com/v1/oauth2/token
+          - name: TIDEPOOL_SESSION_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_STORE_ADDRESSES
+            value: mongo:27017
+          - name: TIDEPOOL_STORE_DATABASE
+            value: tidepool
+          - name: TIDEPOOL_STORE_TLS
+            value: "false"
+          - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+            value: http://platform-task:9224
+          - name: TIDEPOOL_TASK_QUEUE_DELAY
+            value: "5"
+          - name: TIDEPOOL_TASK_QUEUE_WORKERS
+            value: "5"
+          - name: TIDEPOOL_TASK_SERVICE_SECRET
+            value: Service secret used for interservice requests with the task service
+          - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+            value: :9224
+          - name: TIDEPOOL_USER_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_USER_SERVICE_SECRET
+            value: Service secret used for interservice requests with the user service
+          - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+            value: :9221
+          - name: TIDEPOOL_USER_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+            value: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+          image: tidepool/platform-tools:1.31.0-release.1
+          imagePullPolicy: IfNotPresent
+          name: platform-tools
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: platform-tools.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:44Z
+      lastUpdateTime: 2019-03-04T01:09:44Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:41Z
+      lastUpdateTime: 2019-03-04T01:09:44Z
+      message: ReplicaSet "platform-tools-b9fc75dc6" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:40Z
+    generation: 2
+    labels:
+      io.kompose.service: platform-user
+    name: platform-user
+    namespace: dev
+    resourceVersion: "3592438"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/platform-user
+    uid: 2fb26e43-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: platform-user
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: platform-user
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: platform-user
+      spec:
+        containers:
+        - env:
+          - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+            value: http://platform-auth:9222
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+            value: ambassador-api
+          - name: TIDEPOOL_AUTH_SERVICE_SECRET
+            value: Service secret used for interservice requests with the auth service
+          - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+            value: :9222
+          - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+            value: http://platform-blob:9225
+          - name: TIDEPOOL_BLOB_SERVICE_SECRET
+            value: Service secret used for interservice requests with the blob service
+          - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+            value: :9225
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+            value: _data/blobs
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+            value: file
+          - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+            value: confirm
+          - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DATA_SERVICE_SECRET
+            value: Service secret used for interservice requests with the data service
+          - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+            value: :9220
+          - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+            value: http://platform-data:9220
+          - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+            value: https://api.dexcom.com
+          - name: TIDEPOOL_ENV
+            value: local
+          - name: TIDEPOOL_LOGGER_LEVEL
+            value: debug
+          - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+            value: messages
+          - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+            value: http://platform-notification:9223
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+            value: Service secret used for interservice requests with the notification
+              service
+          - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+            value: :9223
+          - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+            value: http://gatekeeper:9123
+          - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+            value: gatekeeper
+          - name: TIDEPOOL_PERMISSION_STORE_SECRET
+            value: This secret is used to encrypt the groupId stored in the DB for
+              gatekeeper
+          - name: TIDEPOOL_PROFILE_STORE_DATABASE
+            value: seagull
+          - name: TIDEPOOL_SERVER_TLS
+            value: "false"
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+            value: https://api.dexcom.com/v1/oauth2/login
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+            value: http://ambassador-api:8009/v1/oauth/dexcom/redirect
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+            value: offline_access
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+            value: Encryption salt to generate state parameter during OAuth workflow
+          - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+            value: https://api.dexcom.com/v1/oauth2/token
+          - name: TIDEPOOL_SESSION_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_STORE_ADDRESSES
+            value: mongo:27017
+          - name: TIDEPOOL_STORE_DATABASE
+            value: tidepool
+          - name: TIDEPOOL_STORE_TLS
+            value: "false"
+          - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+            value: data
+          - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+            value: http://platform-task:9224
+          - name: TIDEPOOL_TASK_QUEUE_DELAY
+            value: "5"
+          - name: TIDEPOOL_TASK_QUEUE_WORKERS
+            value: "5"
+          - name: TIDEPOOL_TASK_SERVICE_SECRET
+            value: Service secret used for interservice requests with the task service
+          - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+            value: :9224
+          - name: TIDEPOOL_USER_CLIENT_ADDRESS
+            value: http://ambassador-api:8009
+          - name: TIDEPOOL_USER_SERVICE_SECRET
+            value: Service secret used for interservice requests with the user service
+          - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+            value: :9221
+          - name: TIDEPOOL_USER_STORE_DATABASE
+            value: user
+          - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+            value: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+          image: tidepool/platform-user:quiet
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9221
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: platform-user
+          ports:
+          - containerPort: 9221
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9221
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: platform-user.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:45Z
+      lastUpdateTime: 2019-03-04T01:09:45Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:44Z
+      lastUpdateTime: 2019-03-04T01:10:09Z
+      message: ReplicaSet "platform-user-54cf8d787f" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:40Z
+    generation: 2
+    labels:
+      io.kompose.service: seagull
+    name: seagull
+    namespace: dev
+    resourceVersion: "3592691"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/seagull
+    uid: 2fd0e99d-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: seagull
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: seagull
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: seagull
+      spec:
+        containers:
+        - env:
+          - name: DISCOVERY_HOST
+            value: hakken:8000
+          - name: GATEKEEPER_SERVICE
+            value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:9123"}]}'
+          - name: METRICS_SERVICE
+            value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater:9191"}]}'
+          - name: MONGO_CONNECTION_STRING
+            value: mongodb://mongo:27017/seagull?ssl=false
+          - name: NODE_ENV
+            value: production
+          - name: PORT
+            value: "9120"
+          - name: PUBLISH_HOST
+            value: hakken
+          - name: SALT_DEPLOY
+            value: KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
+          - name: SERVER_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: SERVICE_NAME
+            value: seagull
+          - name: USER_API_SERVICE
+            value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:9107"}]}'
+          - name: SKIP_HAKKEN
+            value: "true"
+          image: tidepool/seagull:noHakken
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9120
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: seagull
+          ports:
+          - containerPort: 9120
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: seagull.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;
+          image: busybox
+          imagePullPolicy: Always
+          name: init-mongo
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:45Z
+      lastUpdateTime: 2019-03-04T01:09:45Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:44Z
+      lastUpdateTime: 2019-03-04T01:12:03Z
+      message: ReplicaSet "seagull-5b6f877657" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:40Z
+    generation: 2
+    labels:
+      io.kompose.service: shoreline
+    name: shoreline
+    namespace: dev
+    resourceVersion: "3592670"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/shoreline
+    uid: 2fef76cc-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: shoreline
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: shoreline
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: shoreline
+      spec:
+        containers:
+        - env:
+          - name: SERVER_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: TIDEPOOL_SHORELINE_ENV
+            value: |
+              {
+                  "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:9123"]}},
+                  "hakken": {
+                    "host": "hakken:8000",
+                    "skipHakken": true
+                  },
+                  "highwater": {
+                      "metricsSource": "shoreline",
+                      "metricsVersion": "v0.0.1",
+                      "name": "highwater",
+                      "serviceSpec": {"type": "static", "hosts": ["http://highwater:9191"]}
+                  }
+              }
+          - name: TIDEPOOL_SHORELINE_SERVICE
+            value: |
+              {
+                  "mongo": {
+                      "connectionString": "mongodb://mongo:27017/user?ssl=false"
+                  },
+                  "oauth2": {
+                      "expireDays": 14
+                  },
+                  "service": {
+                      "certFile": "config/cert.pem",
+                      "host": "localhost:9107",
+                      "keyFile": "config/key.pem",
+                      "protocol": "http",
+                      "service": "shoreline"
+                  },
+                  "user": {
+                      "apiSecret": "This is a local API secret for everyone. BsscSHqSHiwrBMJsEGqbvXiuIUPAjQXU",
+                      "clinicDemoUserId": "",
+                      "longTermDaysDuration": 30,
+                      "longTermKey": "abcdefghijklmnopqrstuvwxyz",
+                      "salt": "ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ",
+                      "serverSecret": "This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy",
+                      "tokenDurationSecs": 2592000,
+                      "verificationSecret": "+skip"
+                  }
+              }
+          image: tidepool/shoreline:noHakken
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9107
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: shoreline
+          ports:
+          - containerPort: 9107
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: shoreline.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;
+          image: busybox
+          imagePullPolicy: Always
+          name: init-mongo
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:45Z
+      lastUpdateTime: 2019-03-04T01:09:45Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:44Z
+      lastUpdateTime: 2019-03-04T01:11:58Z
+      message: ReplicaSet "shoreline-b5db66dff" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      flux.weave.works/antecedent: dev:helmrelease/backend
+      kompose.cmd: kompose -f docker-compose.yml convert
+      kompose.version: 1.17.0 (a74acad)
+    creationTimestamp: 2019-03-04T01:09:40Z
+    generation: 2
+    labels:
+      io.kompose.service: tide-whisperer
+    name: tide-whisperer
+    namespace: dev
+    resourceVersion: "3592679"
+    selfLink: /apis/extensions/v1beta1/namespaces/dev/deployments/tide-whisperer
+    uid: 300df86a-3e1a-11e9-99ad-0ac4ed00b102
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        io.kompose.service: tide-whisperer
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          linkerd.io/created-by: linkerd/cli stable-2.2.1
+          linkerd.io/proxy-version: stable-2.2.1
+        creationTimestamp: null
+        labels:
+          io.kompose.service: tide-whisperer
+          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/proxy-deployment: tide-whisperer
+      spec:
+        containers:
+        - env:
+          - name: SERVER_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: secret
+                name: server-secret
+          - name: TIDEPOOL_TIDE_WHISPERER_ENV
+            value: |
+              {
+                  "auth": {
+                    "address": "http://platform-auth:9222",
+                    "serviceSecret": "Service secret used for interservice requests with the auth service",
+                    "userAgent": "Tidepool-TideWhisperer"
+                  },
+                  "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:9123"]}},
+                  "hakken": {
+                    "host": "hakken:8000",
+                    "skipHakken": true
+                    },
+                  "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:9120"]}},
+                  "shoreline": {
+                      "name": "tide-whisperer",
+                      "secret": "This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy",
+                      "serviceSpec": {"type": "static", "hosts": ["http://shoreline:9107"]},
+                      "tokenRefreshInterval": "1h"
+                  }
+              }
+          - name: TIDEPOOL_TIDE_WHISPERER_SERVICE
+            value: |
+              {
+                  "mongo": {
+                      "connectionString": "mongodb://mongo:27017/data?ssl=false"
+                  },
+                  "schemaVersion": {
+                      "maximum": 99,
+                      "minimum": 1
+                  },
+                  "service": {
+                      "certFile": "config/cert.pem",
+                      "host": "localhost:9127",
+                      "keyFile": "config/key.pem",
+                      "protocol": "http",
+                      "service": "tide-whisperer"
+                  }
+              }
+          image: tidepool/tide-whisperer:noHakken
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 9127
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: tide-whisperer
+          ports:
+          - containerPort: 9127
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - env:
+          - name: LINKERD2_PROXY_LOG
+            value: warn,linkerd2_proxy=info
+          - name: LINKERD2_PROXY_CONTROL_URL
+            value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
+          - name: LINKERD2_PROXY_CONTROL_LISTENER
+            value: tcp://0.0.0.0:4190
+          - name: LINKERD2_PROXY_METRICS_LISTENER
+            value: tcp://0.0.0.0:4191
+          - name: LINKERD2_PROXY_OUTBOUND_LISTENER
+            value: tcp://127.0.0.1:4140
+          - name: LINKERD2_PROXY_INBOUND_LISTENER
+            value: tcp://0.0.0.0:4143
+          - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+            value: .
+          - name: LINKERD2_PROXY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: LINKERD2_PROXY_INBOUND_ACCEPT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_OUTBOUND_CONNECT_KEEPALIVE
+            value: 10000ms
+          - name: LINKERD2_PROXY_ID
+            value: tide-whisperer.deployment.$LINKERD2_PROXY_POD_NAMESPACE.linkerd-managed.linkerd.svc.cluster.local
+          image: gcr.io/linkerd-io/proxy:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          name: linkerd-proxy
+          ports:
+          - containerPort: 4143
+            name: linkerd-proxy
+          - containerPort: 4191
+            name: linkerd-metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 4191
+            initialDelaySeconds: 10
+          resources: {}
+          securityContext:
+            runAsUser: 2102
+          terminationMessagePolicy: FallbackToLogsOnError
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;
+          image: busybox
+          imagePullPolicy: Always
+          name: init-mongo
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - args:
+          - --incoming-proxy-port
+          - "4143"
+          - --outgoing-proxy-port
+          - "4140"
+          - --proxy-uid
+          - "2102"
+          - --inbound-ports-to-ignore
+          - 4190,4191
+          image: gcr.io/linkerd-io/proxy-init:stable-2.2.1
+          imagePullPolicy: IfNotPresent
+          name: linkerd-init
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            privileged: false
+            runAsNonRoot: false
+            runAsUser: 0
+          terminationMessagePolicy: FallbackToLogsOnError
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2019-03-04T01:09:44Z
+      lastUpdateTime: 2019-03-04T01:09:44Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: 2019-03-04T01:09:41Z
+      lastUpdateTime: 2019-03-04T01:11:59Z
+      message: ReplicaSet "tide-whisperer-7d5dc5544" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata: {}
+---

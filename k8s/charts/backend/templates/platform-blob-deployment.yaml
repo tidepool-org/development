@@ -10,7 +10,6 @@ metadata:
   name: platform-blob
   namespace: {{.Release.Namespace}}
 spec:
-  {{ include "charts.init.shoreline" .}}
   selector:
     matchLabels:
       io.kompose.service: platform-blob
@@ -22,6 +21,7 @@ spec:
       labels:
         io.kompose.service: platform-blob
     spec:
+      {{ include "charts.init.shoreline" .}}
       containers:
       - env:
         {{ include "charts.platform.env" .}}
