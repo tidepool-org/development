@@ -30,7 +30,10 @@ spec:
         - name: HTTP_PORT
           value: "{{ .Values.export.port }}"
         - name: SESSION_SECRET
-          value: '{{ .Values.export.session.secret }}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: session
         image: "{{ .Values.export.image }}"
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         livenessProbe:

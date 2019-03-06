@@ -29,6 +29,11 @@ spec:
             secretKeyRef:
               name: server-secret
               key: secret
+        - name: API_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: shoreline
         - name: TIDEPOOL_SHORELINE_ENV
           value: |
             {
@@ -61,7 +66,6 @@ spec:
                     "service": "shoreline"
                 },
                 "user": {
-                    "apiSecret": "{{.Values.shoreline.api.secret}}",
                     "clinicDemoUserId": "",
                     "longTermDaysDuration": 30,
                     "longTermKey": "{{.Values.shoreline.long.term.key}}",

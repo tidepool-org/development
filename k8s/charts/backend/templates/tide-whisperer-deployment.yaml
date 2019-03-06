@@ -29,12 +29,16 @@ spec:
             secretKeyRef:
               name: server-secret
               key: secret
+        - name: AUTH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: auth
         - name: TIDEPOOL_TIDE_WHISPERER_ENV
           value: |
             {
                 "auth": {
                   "address": "http://{{.Values.platformAuth.host}}:{{.Values.platformAuth.port}}",
-                  "serviceSecret": "{{.Values.platformAuth.service.secret}}",
                   "userAgent": "Tidepool-TideWhisperer"
                 },
                 "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://{{.Values.gatekeeper.host}}:{{.Values.gatekeeper.port}}"]}},

@@ -48,13 +48,19 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
           value: '{{.Values.api.host}}'
         - name: TIDEPOOL_AUTH_SERVICE_SECRET
-          value: '{{.Values.platformAuth.service.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: auth
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
           value: :{{.Values.platformAuth.port}}
         - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
           value: http://{{.Values.platformBlob.host}}:{{.Values.platformBlob.port}}
         - name: TIDEPOOL_BLOB_SERVICE_SECRET
-          value: '{{.Values.platformBlob.service.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: blob
         - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
           value: :{{.Values.platformBlob.port}}
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
@@ -70,7 +76,10 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
           value: http://{{.Values.platformData.host}}:{{.Values.platformData.port}}
         - name: TIDEPOOL_DATA_SERVICE_SECRET
-          value: '{{.Values.platformData.service.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: data
         - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
           value: :{{.Values.platformData.port}}
         - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
@@ -90,7 +99,10 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
           value: http://{{.Values.platformNotification.host}}:{{.Values.platformNotification.port}}
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
-          value: '{{.Values.platformNotification.service.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: notification
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
           value: :{{.Values.platformNotification.port}}
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
@@ -98,7 +110,10 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_PERMISSION_STORE_DATABASE
           value: gatekeeper
         - name: TIDEPOOL_PERMISSION_STORE_SECRET
-          value: '{{.Values.gatekeeper.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: gatekeeper
         - name: TIDEPOOL_PROFILE_STORE_DATABASE
           value: seagull
         - name: TIDEPOOL_SERVER_TLS
@@ -134,13 +149,19 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_TASK_QUEUE_WORKERS
           value: "5"
         - name: TIDEPOOL_TASK_SERVICE_SECRET
-          value: '{{.Values.platformTask.service.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: task
         - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
           value: :{{.Values.platformTask.port}}
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
           value: http://{{.Values.api.host}}:{{.Values.api.port}}
         - name: TIDEPOOL_USER_SERVICE_SECRET
-          value: '{{.Values.platformUser.service.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: user
         - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
           value: :{{.Values.platformUser.port}}
         - name: TIDEPOOL_USER_STORE_DATABASE

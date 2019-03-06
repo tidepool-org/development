@@ -27,7 +27,10 @@ spec:
         - name: DISCOVERY_HOST
           value: '{{.Values.hakken.host}}:{{.Values.hakken.port}}'
         - name: GATEKEEPER_SECRET
-          value: '{{.Values.gatekeeper.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: gatekeeper
         - name: MONGO_CONNECTION_STRING
           value: mongodb://{{.Values.mongo.host}}:{{.Values.mongo.port}}/gatekeeper?ssl={{.Values.mongo.tls}}
         - name: NODE_ENV
