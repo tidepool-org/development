@@ -6,7 +6,7 @@ externalapi:
   port: 8009
 api: 
   host: ambassador
-  port: 8009
+  port: 80
 blip: 
   dir: blip 
   port: '3000'
