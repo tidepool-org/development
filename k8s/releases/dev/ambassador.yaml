@@ -6,6 +6,7 @@ metadata:
   annotations:
     flux.weave.works/automated: "false"
 spec:
+  name: ambassador
   chart:
     git: git@github.com:helm/charts
     path: stable/ambassador

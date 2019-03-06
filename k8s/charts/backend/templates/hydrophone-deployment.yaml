@@ -57,7 +57,7 @@ spec:
                 "hydrophone": {
                     "assetUrl": "{{.Values.hydrophone.assetUrl}}",
                     "serverSecret": "{{.Values.server.secret}}",
-                    "webUrl": "http://{{.Values.api.host}}:{{.Values.blip.port}}"
+                    "webUrl": "http://{{.Values.api.host}}:{{.Values.api.port}}"
                 },
                 "mongo": {
                     "connectionString": "mongodb://{{.Values.mongo.host}}:{{.Values.mongo.port}}/confirm?ssl={{.Values.mongo.tls}}"
