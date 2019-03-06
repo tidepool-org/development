@@ -76,5 +76,5 @@ spec:
     shoreline:
       image: tidepool/shoreline:noHakken-7b1f21b
     tidewhisperer:
-      image: tidepool/tide-whisperer:noHakken-563c07e
+      image: tidepool/tide-whisperer:noHakken-726e678
 
