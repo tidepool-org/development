@@ -41,8 +41,6 @@ spec:
           value: '{{.Values.environment}}'
         - name: PORT
           value: "{{.Values.blip.port}}"
-        - name: PUBLISH_HOST
-          value: '{{.Values.hakken.host}}'
         - name: SERVICE_NAME
           value: blip
         - name: WEBPACK_DEVTOOL
