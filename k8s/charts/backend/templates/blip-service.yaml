@@ -32,6 +32,6 @@ spec:
   selector:
     io.kompose.service: blip
     app.kubernetes.io/name: {{ include "charts.name" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 status:
   loadBalancer: {}
