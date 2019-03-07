@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-  name: mongo
+  name: mongo1
   namespace: {{.Release.Namespace}}
 spec:
   accessModes:

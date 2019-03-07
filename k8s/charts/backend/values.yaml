@@ -54,13 +54,13 @@ mailhog:
   ports:
     smtp: '1025'
     http: '8025'
-  volume: mailhog
+  volume: mailhog1
 mongo: 
   image: mongo:3.2
   host: 'mongo'
   port: '27017'
   tls: 'false'
-  volume: mongo
+  volume: mongo1
 platformAuth:
   image: tidepool/platform-auth:quiet
   host: platform-auth

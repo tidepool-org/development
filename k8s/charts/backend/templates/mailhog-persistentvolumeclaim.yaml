@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-  name: mailhog
+  name: mailhog1
   namespace: {{.Release.Namespace}}
 spec:
   accessModes:
