@@ -25,7 +25,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: platform-
+        io.kompose.service: platform-notification
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
