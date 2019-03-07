@@ -18,7 +18,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
-      name:  platform-users-user-images
+      name:  platform-image-users-images
       prefix: "/v1/users/[^/]+/images"
       prefix_regex: true
       method: "GET|POST|DELETE"
@@ -28,7 +28,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
-      name:  platform-users-user-images
+      name:  platform-image-users-images-regex
       prefix: "/v1/users/[^/]+/images/.+"
       prefix_regex: true
       method: "GET|POST|DELETE"
