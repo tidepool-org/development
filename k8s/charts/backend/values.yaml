@@ -80,7 +80,7 @@ platformData:
   host: platform-data
   port: '9220'
 platformImage:
-  image: tidepool/platform-image:latest
+  image: tidepool/platform-image:1.31.0-release.1
   host: platform-image
   port: '9226'
 platformMigrations:
