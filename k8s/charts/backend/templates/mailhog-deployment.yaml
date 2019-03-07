@@ -3,12 +3,18 @@ kind: Deployment
 metadata:
   labels:
     io.kompose.service: mailhog
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
   name: mailhog
   namespace: {{.Release.Namespace}}
 spec:
   selector:
     matchLabels:
       io.kompose.service: mailhog
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: 1
   strategy:
     type: Recreate
@@ -17,6 +23,8 @@ spec:
       creationTimestamp: null
       labels:
         io.kompose.service: mailhog
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
       - image: "{{ .Values.mailhog.image }}"

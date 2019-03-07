@@ -18,6 +18,10 @@ metadata:
   creationTimestamp: null
   labels:
     io.kompose.service: export
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
   name: export
   namespace: {{.Release.Namespace}}
 spec:
@@ -27,5 +31,7 @@ spec:
     targetPort: {{.Values.export.port}}
   selector:
     io.kompose.service: export
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 status:
   loadBalancer: {}

@@ -7,6 +7,10 @@ metadata:
   creationTimestamp: null
   labels:
     io.kompose.service: platform-notification
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
   name: platform-notification
   namespace: {{.Release.Namespace}}
 spec:
@@ -16,5 +20,7 @@ spec:
     targetPort: {{.Values.platformNotification.port}}
   selector:
     io.kompose.service: platform-notification
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 status:
   loadBalancer: {}

@@ -38,6 +38,10 @@ metadata:
   creationTimestamp: null
   labels:
     io.kompose.service: platform-image
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
   name: platform-image
   namespace: {{.Release.Namespace}}
 spec:
@@ -47,5 +51,7 @@ spec:
     targetPort: {{.Values.platformImage.port}}
   selector:
     io.kompose.service: platform-image
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 status:
   loadBalancer: {}

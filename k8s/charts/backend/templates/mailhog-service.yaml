@@ -3,6 +3,10 @@ kind: Service
 metadata:
   labels:
     io.kompose.service: mailhog
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
   name: mailhog
   namespace: {{.Release.Namespace}}
 spec:
@@ -15,5 +19,7 @@ spec:
     targetPort: {{.Values.mailhog.ports.http}}
   selector:
     io.kompose.service: mailhog
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 status:
   loadBalancer: {}

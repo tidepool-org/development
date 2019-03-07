@@ -7,6 +7,10 @@ metadata:
   creationTimestamp: null
   labels:
     io.kompose.service: jellyfish
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
   name: jellyfish
   namespace: {{.Release.Namespace}}
 spec:
@@ -16,5 +20,7 @@ spec:
     targetPort: {{.Values.jellyfish.port}}
   selector:
     io.kompose.service: jellyfish
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 status:
   loadBalancer: {}

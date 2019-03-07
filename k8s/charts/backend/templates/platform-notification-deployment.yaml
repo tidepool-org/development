@@ -7,19 +7,27 @@ metadata:
   creationTimestamp: null
   labels:
     io.kompose.service: platform-notification
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
   name: platform-notification
   namespace: {{.Release.Namespace}}
 spec:
   selector:
     matchLabels:
       io.kompose.service: platform-notification
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: 1
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: platform-notification
+        io.kompose.service: platform-
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       {{ include "charts.init.shoreline" .}}
       containers:
