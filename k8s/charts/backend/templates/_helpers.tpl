@@ -173,6 +173,8 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: server-secret
               key: image 
+        - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
+          value: :{{.Values.platformImage.port}}
         - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
           value: http://{{.Values.platformImage.host}}:{{.Values.platformImage.port}}
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
