@@ -34,6 +34,9 @@ spec:
     path: k8s/charts/backend
     ref: master
   values:
+    externalapi: 
+      host: qa1-app.tidepool.org
+      port: 80
     environment: production
     blip:
       image: tidepool/blip:v1.17.0
