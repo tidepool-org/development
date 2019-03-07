@@ -83,6 +83,12 @@ platformImage:
   image: tidepool/platform-image:1.31.0-release.1
   host: platform-image
   port: '9226'
+  service:
+    unstructured:
+      store:
+        file: {directory: "_data/image"}
+        s3: {bucket: "", prefix: ""}
+        type: file
 platformMigrations:
   image: tidepool/platform-migrations:quiet
 platformNotification:

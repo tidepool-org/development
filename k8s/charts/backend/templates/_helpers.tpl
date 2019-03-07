@@ -168,6 +168,21 @@ Create environment variables used by all platform services.
           value: user
         - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
           value: '{{.Values.shoreline.salt}}'
+        - name: TIDEPOOL_IMAGE_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: image 
+        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
+          value: http://{{.Values.platformImage.host}}:{{.Values.platformImage.port}}
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: '{{.Values.platformImage.service.unstructured.store.type}}'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '{{.Values.platformImage.service.unstructured.store.file.directory}}'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: '{{.Values.platformImage.service.unstructured.store.s3.bucket}}'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: '{{.Values.platformImage.service.unstructured.store.s3.prefix}}'
 {{- end -}}        
 
 {{/*
