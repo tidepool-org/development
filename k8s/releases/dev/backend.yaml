@@ -30,9 +30,9 @@ metadata:
 spec:
   skipDepUpdate: true
   chart:
-    git: git@github.com:tidepool-org/dev-ops
+    git: git@github.com:tidepool-org/development
     path: k8s/charts/backend
-    ref: master
+    ref: k8s
   values:
     externalapi: 
       host: qa1-app.tidepool.org
