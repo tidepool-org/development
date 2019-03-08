@@ -3,7 +3,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: backend
-  namespace: dev
+  namespace: qa1
   annotations:
     flux.weave.works/automated: "true"
     flux.weave.works/tag.shoreline: "glob:noHakken*"
