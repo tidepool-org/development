@@ -3,6 +3,8 @@ fullnameOverride: ""
 hostnameOverride: "localhost"
 environment: production
 includeSecrets: true
+ambassador:
+  enabled: true
 externalapi: 
   port: 80
 api: 
