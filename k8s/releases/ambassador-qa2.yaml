@@ -2,7 +2,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: ambassador
-  namespace: dev
+  namespace: qa2
   annotations:
     flux.weave.works/automated: "false"
 spec:

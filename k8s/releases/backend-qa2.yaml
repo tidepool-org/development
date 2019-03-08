@@ -3,7 +3,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: backend
-  namespace: qa1
+  namespace: qa2
   annotations:
     flux.weave.works/automated: "true"
     flux.weave.works/tag.shoreline: "glob:noHakken*"
@@ -34,7 +34,6 @@ spec:
     path: k8s/charts/backend
     ref: k8s
   values:
-    hostnameOverride: qa1-app.tidepool.org
     ambassador:
       enabled: false
     blip:
