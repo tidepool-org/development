@@ -1,0 +1,79 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: jellyfish
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: jellyfish
+  namespace: {{.Release.Namespace}}
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: jellyfish
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: jellyfish
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{ include "charts.init.mongo" .}}
+      containers:
+      - env:
+        - name: DISCOVERY_HOST
+          value: '{{.Values.hakken.host}}:{{.Values.hakken.port}}'
+        - name: GATEKEEPER_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.gatekeeper.host}}:{{.Values.gatekeeper.port}}"}]}'
+        - name: MINIMUM_UPLOADER_VERSION
+          value: 0.251.0
+        - name: MONGO_CONNECTION_STRING
+          value: mongodb://{{.Values.mongo.host}}:{{.Values.mongo.port}}/data?ssl={{.Values.mongo.tls}}
+        - name: NODE_ENV
+          value: '{{.Values.environment}}'
+        - name: PORT
+          value: "{{.Values.jellyfish.port}}"
+        - name: PUBLISH_HOST
+          value: '{{.Values.hakken.host}}'
+        - name: SALT_DEPLOY
+          value: '{{.Values.jellyfish.salt}}'
+        - name: SCHEMA_VERSION
+          value: "3"
+        - name: SEAGULL_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.seagull.host}}:{{.Values.seagull.port}}"}]}'
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: SERVE_STATIC
+          value: dist
+        - name: SERVICE_NAME
+          value: jellyfish
+        - name: USER_API_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"}]}'
+        image: "{{ .Values.jellyfish.image }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}}}
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: {{.Values.jellyfish.port}}
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        name: jellyfish
+        ports:
+        - containerPort: {{.Values.jellyfish.port}}
+        resources: {}
+      restartPolicy: Always
+status: {}
