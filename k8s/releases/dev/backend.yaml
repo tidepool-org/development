@@ -34,6 +34,7 @@ spec:
     path: k8s/charts/backend
     ref: k8s
   values:
+    ambassador.enabled: false
     externalapi: 
       host: qa1-app.tidepool.org
       port: 80
