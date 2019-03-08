@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      host: {{ include "charts.hostname" . }}
+      name:  platform-blob-user-blobs
+      prefix: "/v1/users/[^/]+/blobs"
+      prefix_regex: true
+      method: "GET|POST|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-blob:{{.Values.platformBlob.port}}
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      host: {{ include "charts.hostname" . }}
+      name:  platform-blob-blobs
+      prefix: "/v1/blobs/[^/]+"
+      prefix_regex: true
+      method: "GET|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-blob:{{.Values.platformBlob.port}}
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      host: {{ include "charts.hostname" . }}
+      name:  platform-blob-blobs-content
+      prefix: "/v1/blobs/[^/]+/content"
+      prefix_regex: true
+      method: "GET"
+      rewrite: ""
+      service: platform-blob:{{.Values.platformBlob.port}}
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-blob
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: platform-blob
+  namespace: {{.Release.Namespace}}
+spec:
+  ports:
+  - name: "{{.Values.platformBlob.port}}"
+    port: {{.Values.platformBlob.port}}
+    targetPort: {{.Values.platformBlob.port}}
+  selector:
+    io.kompose.service: platform-blob
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+status:
+  loadBalancer: {}
