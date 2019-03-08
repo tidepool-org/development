@@ -2,11 +2,10 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: ambassador
-  namespace: qa2
+  namespace: default
   annotations:
     flux.weave.works/automated: "false"
 spec:
-  releaseName: ambassador
   chart:
     git: git@github.com:helm/charts
     path: stable/ambassador
@@ -16,11 +15,6 @@ spec:
       runAsNonRoot: false
     replicaCount: 1
     service:
-      http:
-        targetPort: 8009
-      https:
-        targetPort: 8010
-    
       annotations:
         sidecar.istio.io/inject: "false"
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:iam::118346523422:server-certificate/wildcard.tidepool.org-2020-11-15-digicert"
@@ -33,7 +27,6 @@ spec:
           kind:  Module
           name:  ambassador
           config:
-            service_port: 8009
             use_proxy_proto: false
             use_remote_address: false
             x_forwarded_proto_redirect: true
