@@ -35,7 +35,8 @@ spec:
     ref: k8s
   values:
     hostnameOverride: qa1-app.tidepool.org
-    ambassador.enabled: false
+    ambassador:
+      enabled: false
     blip:
       image: tidepool/blip:v1.17.0
     export:
