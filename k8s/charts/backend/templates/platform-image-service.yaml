@@ -9,7 +9,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       host: {{ include "charts.hostname" . }}
-      name:  platform-image
+      name: {{ .Release.Namespace -}}-platform-image
       prefix: "/v1/images"
       prefix_regex: false
       method: "GET|PUT|DELETE"
@@ -20,7 +20,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       host: {{ include "charts.hostname" . }}
-      name:  platform-image-users-images
+      name: {{ .Release.Namespace -}}-platform-image-users-images
       prefix: "/v1/users/[^/]+/images"
       prefix_regex: true
       method: "GET|POST|DELETE"
@@ -31,7 +31,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       host: {{ include "charts.hostname" . }}
-      name:  platform-image-users-images-regex
+      name: {{ .Release.Namespace -}}-platform-image-users-images-regex
       prefix: "/v1/users/[^/]+/images/.+"
       prefix_regex: true
       method: "GET|POST|DELETE"

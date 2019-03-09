@@ -9,7 +9,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       host: {{ include "charts.hostname" . }}
-      name:  shoreline-auth
+      name: {{ .Release.Namespace -}}-shoreline-auth
       prefix: /auth/
       path_redirect: "false"
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"

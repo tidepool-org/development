@@ -9,7 +9,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       host: {{ include "charts.hostname" . }}
-      name:  platform-user-userservices
+      name: {{ .Release.Namespace -}}-platform-user-userservices
       prefix: /userservices/
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
       method_regex: true
@@ -20,7 +20,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       host: {{ include "charts.hostname" . }}
-      name:  platform-user-users
+      name: {{ .Release.Namespace -}}-platform-user-users
       prefix: "/v1/users/[^/*]"
       prefix_regex: true
       method: "GET|DELETE"

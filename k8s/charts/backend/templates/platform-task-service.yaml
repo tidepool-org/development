@@ -9,7 +9,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       host: {{ include "charts.hostname" . }}
-      name:  platform-task-tasks
+      name: {{ .Release.Namespace -}}-platform-task-tasks
       prefix: "/v1/tasks"
       method: "GET|POST"
       method_regex: true
@@ -19,7 +19,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       host: {{ include "charts.hostname" . }}
-      name:  platform-task-tasks-id
+      name: {{ .Release.Namespace -}}-platform-task-tasks-id
       prefix: "/v1/tasks/[^/*]"
       prefix_regex: true
       method: "GET|PUT|DELETE"

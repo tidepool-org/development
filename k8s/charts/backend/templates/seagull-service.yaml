@@ -9,7 +9,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       host: {{ include "charts.hostname" . }}
-      name:  seagull
+      name: {{ .Release.Namespace -}}-seagull
       prefix: /metadata/
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
       method_regex: true
