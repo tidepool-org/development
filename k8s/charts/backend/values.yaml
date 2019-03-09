@@ -11,7 +11,7 @@ externalapi:
   port: 80
 api: 
   host: ambassador.default.svc.cluster.local
-  port: 80
+  port: 8080
 blip: 
   port: '3000'
   image: tidepool/blip:v1.14.1
