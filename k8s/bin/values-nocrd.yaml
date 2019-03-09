@@ -8,6 +8,7 @@ helmOperator:
   updateChartDeps: false
 git:
   url: git@github.com:tidepool-org/dev-ops
+  path: k8s
   branch: qa
   pollInterval: 1m
   timeout: 40s
