@@ -8,6 +8,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-platform-blob-user-blobs
       prefix: "/v1/users/[^/]+/blobs"
@@ -19,6 +20,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-platform-blob-blobs
       prefix: "/v1/blobs/[^/]+"
@@ -30,6 +32,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-platform-blob-blobs-content
       prefix: "/v1/blobs/[^/]+/content"

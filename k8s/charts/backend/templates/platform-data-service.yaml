@@ -8,6 +8,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-platform-data-dataservices
       prefix: /dataservices/
@@ -19,6 +20,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-platform-data-data
       prefix: "/v1/data/"
@@ -30,6 +32,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-platform-data-user_data_sources
       prefix: "/v1/users/[^/]+/data_sources"
@@ -41,6 +44,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-platform-data-user_data_sets
       prefix: "/v1/users/[^/]+/data_sets"
@@ -51,6 +55,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-platform-data-user_datasets
       prefix: "/v1/users/[^/]+/datasets"
@@ -62,6 +67,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-platform-data-user_data
       prefix: "/v1/users/[^/]+/data"
@@ -72,6 +78,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-platform-data-time
       prefix: "/v1/time"
@@ -81,6 +88,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-platform-data-data_sources
       prefix: "/v1/data_sources/[^/]+"
@@ -92,6 +100,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-platform-data-data_sets
       prefix: "/v1/data_sets"
@@ -101,6 +110,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-platform-data-datasets
       prefix: "/v1/datasets"
