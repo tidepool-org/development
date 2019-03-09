@@ -8,7 +8,7 @@ ambassador:
 externalapi: 
   port: 80
 api: 
-  host: ambassador
+  host: ambassador.default.svc.cluster.local
   port: 80
 blip: 
   port: '3000'
