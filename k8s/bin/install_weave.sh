@@ -1,2 +1,3 @@
 #!/bin/bash
-helm install --namespace flux -f values.yaml --repo https://weaveworks.github.io/flux flux
+VALUESFILE=${1:-values.yaml}
+helm install --namespace flux -f ${VALUESFILE} --repo https://weaveworks.github.io/flux flux
