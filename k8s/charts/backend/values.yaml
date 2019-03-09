@@ -7,6 +7,7 @@ image:
   pullPolicy: IfNotPresent
 ambassador:
   enabled: true
+  id: default
 externalapi: 
   port: 80
 api: 

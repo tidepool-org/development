@@ -8,6 +8,7 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
+      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.hostname" . }}
       name: {{ .Release.Namespace -}}-hydrophone-confirm
       prefix: /confirm/
