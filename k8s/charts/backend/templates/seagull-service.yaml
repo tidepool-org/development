@@ -15,7 +15,7 @@ metadata:
       method_regex: true
       rewrite: "/"
       path_redirect: "false"
-      service: seagull:{{.Values.seagull.port}}
+      service: seagull.{{ .Release.Namespace }}:{{.Values.seagull.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: seagull

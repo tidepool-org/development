@@ -15,7 +15,7 @@ metadata:
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
       method_regex: true
       rewrite: "/"
-      service: shoreline:{{.Values.shoreline.port}}
+      service: shoreline.{{ .Release.Namespace }}:{{.Values.shoreline.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: shoreline

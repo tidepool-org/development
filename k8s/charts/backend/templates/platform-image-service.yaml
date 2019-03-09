@@ -15,7 +15,7 @@ metadata:
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-image:{{.Values.platformImage.port}}
+      service: platform-image.{{ .Release.Namespace }}:{{.Values.platformImage.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -26,7 +26,7 @@ metadata:
       method: "GET|POST|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-image:{{.Values.platformImage.port}}
+      service: platform-image.{{ .Release.Namespace }}:{{.Values.platformImage.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -37,7 +37,7 @@ metadata:
       method: "GET|POST|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-image:{{.Values.platformImage.port}}
+      service: platform-image.{{ .Release.Namespace }}:{{.Values.platformImage.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: platform-image

@@ -15,7 +15,7 @@ metadata:
       method_regex: true
       rewrite: "/"
       path_redirect: "false"
-      service: highwater:{{.Values.highwater.port}}
+      service: highwater.{{ .Release.Namespace }}:{{.Values.highwater.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: highwater
