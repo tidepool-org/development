@@ -46,7 +46,7 @@ spec:
         - name: WEBPACK_DEVTOOL
           value: cheap-module-eval-source-map
         image: "{{ .Values.blip.image }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}}}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: blip
         command: ["/bin/sh"]
         args: ["-c", "yarn build && yarn server"]

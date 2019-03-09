@@ -43,7 +43,7 @@ spec:
               name: server-secret
               key: session
         image: "{{ .Values.export.image }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}}}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         livenessProbe:
           httpGet:
             path: /export/status
