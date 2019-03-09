@@ -1,0 +1,13 @@
+rbac:
+  create: true
+helmOperator:
+  create: true
+  createCRD: false
+  chartsSyncInterval: 1m
+  replicaCount: 1
+  updateChartDeps: false
+git:
+  url: git@github.com:tidepool-org/dev-ops
+  branch: qa
+  pollInterval: 1m
+  timeout: 40s
