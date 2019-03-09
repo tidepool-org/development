@@ -1,0 +1,81 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: backend
+  namespace: default
+  annotations:
+    flux.weave.works/automated: "true"
+    flux.weave.works/tag.shoreline: "glob:noHakken*"
+    flux.weave.works/tag.tidewhisperer: "glob:noHakken*"
+    flux.weave.works/tag.hakken: "glob:noHakken*"
+    flux.weave.works/tag.blip: "glob:*"
+    flux.weave.works/tag.gatekeeper: "glob:*"
+    flux.weave.works/tag.highwater: "glob:*"
+    flux.weave.works/tag.jellyfish: "glob:*"
+    flux.weave.works/tag.mailhog: "semver:1.*"
+    flux.weave.works/tag.export: "glob:v1.3.*"
+    flux.weave.works/tag.mongo: "regexp:mongo:3.2"
+    flux.weave.works/tag.seagull: "glob:noHakken*"
+    flux.weave.works/tag.hydrophone: "glob:noHakken*"
+    flux.weave.works/tag.messageapi: "glob:quiet*"
+    flux.weave.works/tag.platformAuth: "glob:quiet*"
+    flux.weave.works/tag.platformBlob: "glob:quiet*"
+    flux.weave.works/tag.platformData: "glob:quiet*"
+    flux.weave.works/tag.platformMigrations: "glob:quiet*"
+    flux.weave.works/tag.platformNotification: "glob:quiet*"
+    flux.weave.works/tag.platformTask: "glob:quiet*"
+    flux.weave.works/tag.platformTools: "glob:*"
+    flux.weave.works/tag.platformUser: "glob:quiet*"
+spec:
+  skipDepUpdate: true
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: k8s/charts/backend
+    ref: k8s
+  values:
+    ambassador:
+      enabled: true
+    blip:
+      image: tidepool/blip:v1.17.0
+    export:
+      image: tidepool/export:v1.3.2
+    gatekeeper:
+      image: tidepool/gatekeeper:OAuth
+    hakken:
+      image: tidepool/hakken:noHakken
+    highwater:
+      image: tidepool/highwater:OAuth
+    hydrophone:
+      image: tidepool/hydrophone:noHakken-5d5a6e
+    jellyfish:
+      image: tidepool/jellyfish:OAuth
+    messageapi:
+      image: tidepool/message-api:quiet
+    mailhog:
+      image: mailhog/mailhog:v1.0.0
+    mongo:
+      image: mongo:3.2
+    platformAuth:
+      image: tidepool/platform-auth:quiet
+    platformBlob:
+      image: tidepool/platform-blob:quiet
+    platformData:
+      image: tidepool/platform-data:quiet
+    platformMigrations:
+      image: tidepool/platform-migrations:quiet
+    platformNotification:
+      image: tidepool/platform-notification:quiet
+    platformTask:
+      image: tidepool/platform-task:quiet
+    platformTools:
+      image: tidepool/platform-tools:1.31.0-release.1
+    platformUser:
+      image: tidepool/platform-user:quiet
+    seagull:
+      image: tidepool/seagull:noHakken
+    shoreline:
+      image: tidepool/shoreline:noHakken-bec1d1e
+    tidewhisperer:
+      image: tidepool/tide-whisperer:noHakken-726e678
+
