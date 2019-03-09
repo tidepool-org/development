@@ -14,7 +14,7 @@ metadata:
       rewrite: ""
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
       method_regex: true
-      service: blip:{{.Values.blip.port}}
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: blip

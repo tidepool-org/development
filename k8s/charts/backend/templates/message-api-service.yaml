@@ -15,7 +15,7 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: message-api:{{.Values.messageapi.port}}
+      service: message-api.{{ .Release.Namespace }}:{{.Values.messageapi.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: message-api

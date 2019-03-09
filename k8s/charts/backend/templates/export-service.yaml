@@ -15,7 +15,7 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: export:{{.Values.export.port}}
+      service: export.{{ .Release.Namespace }}:{{.Values.export.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: export

@@ -15,7 +15,7 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: tide-whisperer:{{.Values.tidewhisperer.port}}
+      service: tide-whisperer.{{ .Release.Namespace }}:{{.Values.tidewhisperer.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: tide-whisperer

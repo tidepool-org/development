@@ -15,7 +15,7 @@ metadata:
       method_regex: true
       rewrite: "/"
       path_redirect: "false"
-      service: hydrophone:{{.Values.hydrophone.port}}
+      service: hydrophone.{{ .Release.Namespace }}:{{.Values.hydrophone.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: hydrophone

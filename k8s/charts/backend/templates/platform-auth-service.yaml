@@ -15,7 +15,7 @@ metadata:
       method: "GET|POST|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-auth:{{.Values.platformAuth.port}}   
+      service: platform-auth.{{ .Release.Namespace }}:{{.Values.platformAuth.port}}   
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -26,7 +26,7 @@ metadata:
       method: "GET|POST|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-auth:{{.Values.platformAuth.port}}   
+      service: platform-auth.{{ .Release.Namespace }}:{{.Values.platformAuth.port}}   
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -36,7 +36,7 @@ metadata:
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-auth:{{.Values.platformAuth.port}}   
+      service: platform-auth.{{ .Release.Namespace }}:{{.Values.platformAuth.port}}   
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -47,7 +47,7 @@ metadata:
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-auth:{{.Values.platformAuth.port}}   
+      service: platform-auth.{{ .Release.Namespace }}:{{.Values.platformAuth.port}}   
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -58,7 +58,7 @@ metadata:
       method: "GET|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-auth:{{.Values.platformAuth.port}}
+      service: platform-auth.{{ .Release.Namespace }}:{{.Values.platformAuth.port}}
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
@@ -68,7 +68,7 @@ metadata:
       prefix_regex: true
       method: "GET"
       rewrite: ""
-      service: platform-auth:{{.Values.platformAuth.port}}   
+      service: platform-auth.{{ .Release.Namespace }}:{{.Values.platformAuth.port}}   
   creationTimestamp: null
   labels:
     io.kompose.service: platform-auth
