@@ -63,7 +63,7 @@ spec:
         - name: SKIP_HAKKEN
           value: "{{.Values.hakken.skip}}"
         image: "{{ .Values.messageapi.image }}" 
-        imagePullPolicy: {{ .Values.image.pullPolicy }}}}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         livenessProbe:
           httpGet:
             path: /status

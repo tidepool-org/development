@@ -53,7 +53,7 @@ spec:
         - name: USER_API_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"}]}'
         image: "{{ .Values.highwater.image }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}}}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         livenessProbe:
           httpGet:
             path: /status
