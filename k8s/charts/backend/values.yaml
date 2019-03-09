@@ -3,6 +3,8 @@ fullnameOverride: ""
 hostnameOverride: "localhost"
 environment: production
 includeSecrets: true
+image:
+  pullPolicy: IfNotPresent
 ambassador:
   enabled: true
 externalapi: 
