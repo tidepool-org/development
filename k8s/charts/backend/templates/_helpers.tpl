@@ -8,6 +8,7 @@ Expand the name of the chart.
 {{- else -}}
 {{.Release.Namespace}}-app.tidepool.org
 {{- end -}}
+{{- end -}}
 
 {{- define "charts.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
