@@ -9,7 +9,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       host: {{ include "charts.hostname" . }}
-      name:  blip
+      name: {{ .Release.Namespace -}}-blip
       prefix: /
       rewrite: ""
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"

@@ -9,7 +9,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       host: {{ include "charts.hostname" . }}
-      name:  hydrophone-confirm
+      name: {{ .Release.Namespace -}}-hydrophone-confirm
       prefix: /confirm/
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
       method_regex: true

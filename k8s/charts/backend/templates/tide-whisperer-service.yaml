@@ -9,7 +9,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       host: {{ include "charts.hostname" . }}
-      name:  tide-whisperer-data
+      name: {{ .Release.Namespace -}}-tide-whisperer-data
       prefix: /data/
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
       method_regex: true

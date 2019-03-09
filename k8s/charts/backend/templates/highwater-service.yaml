@@ -9,7 +9,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       host: {{ include "charts.hostname" . }}
-      name:  highwater-metrics
+      name: {{ .Release.Namespace -}}-highwater-metrics
       prefix: /metrics/
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
       method_regex: true
