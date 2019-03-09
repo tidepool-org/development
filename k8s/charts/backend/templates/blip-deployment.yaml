@@ -32,7 +32,7 @@ spec:
       containers:
       - env:
         - name: API_HOST
-          value: {{ include "charts.hostname" . }}:{{.Values.externalapi.port}}
+          value: {{ include "charts.hostname" . }}
         - name: DEV_TOOLS
           value: "true"
         - name: DISCOVERY_HOST
