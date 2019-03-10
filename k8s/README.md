@@ -5,7 +5,7 @@ There are a number of useful client tools for interacting with a Kubernetes clus
 
 Get the client tools and install them onto your local machine. We recommend that you use the `brew` tool for this on a Mac.
 
-Install [kubectl](kubectl), the Kubernetes CLI tool. This tool will allow you to manipulate your Kubernetes cluster.
+Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/), the Kubernetes CLI tool. This tool will allow you to manipulate your Kubernetes cluster.
 ```
 brew install kubernetes-cli
 ```
@@ -33,7 +33,7 @@ Install [aws-iam-authenticator](https://docs.aws.amazon.com/eks/latest/userguide
 ```
 brew install aws-iam-authenticator
 ```
-Install [eksctl](https://aws.amazon.com/blogs/opensource/kubernetes-ingress-aws-alb-ingress-controller/) client, to create Kubernetes clusters on Amazon EKS
+Install [eksctl](https://eksctl.io/) client, to create Kubernetes clusters on Amazon EKS
 ```
 brew tap weaveworks/tap
 brew install weaveworks/tap/eksctl
