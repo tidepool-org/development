@@ -39,12 +39,11 @@ brew tap weaveworks/tap
 brew install weaveworks/tap/eksctl
 ```
 
-
 ### How to Create a Local Kubernetes Cluster
 
 There are several ways to run Kubernetes on your local machine ([docker desktop](https://rominirani.com/tutorial-getting-started-with-kubernetes-with-docker-on-mac-7f58467203fd), [k3s](https://k3s.io/), [minikube](https://kubernetes.io/docs/setup/minikube/), [kind](https://github.com/kubernetes-sigs/kind), etc.) and several [opinions](https://medium.com/containers-101/local-kubernetes-for-mac-minikube-vs-docker-desktop-f2789b3cad3a) on which is best.  Any one will probably do. 
 
-However, we choose to document minikube because it offers the opportunity to select a particular version of Kubernetes and it runs on all manner of desktops, including MacOSX, Linux, and Windows.
+However, we choose to document `minikube` because it offers the opportunity to select a particular version of Kubernetes and it runs on all manner of desktops, including MacOSX, Linux, and Windows.
 
 *   Install [minikube](https://github.com/kubernetes/minikube) (see [this excellent tutorial](https://codefresh.io/kubernetes-tutorial/local-kubernetes-mac-minikube-vs-docker-desktop/))
 ```
@@ -58,7 +57,7 @@ sudo chown root:wheel /usr/local/opt/docker-machine-driver-hyperkit/bin/docker-m
 sudo chmod u+s /usr/local/opt/docker-machine-driver-hyperkit/bin/docker-machine-driver-hyperkit
 minikube config set vm-driver hyperkit
 ```
-*   Configure minikube (to use the same version of K8s that we will use remotely)
+*   Configure minikube (to use the same version of K8s that Tidepool uses)
 ```
 minikube config set kubernetes-version v1.11.5
 minikube config set memory 8192
@@ -157,9 +156,9 @@ helm install --name flux --set rbac.create=true --set helmOperator.create=true -
 ```
 
 
-N.B. Weave flux will install ALL kubernetes manifests that it discovers in the branch of your` CONFIG_REPO. `It will also look for files with valid` HelmRelease `manifest file and install the helm releases according to the files found.
+N.B. Weave flux will install ALL kubernetes manifests that it discovers in the branch of your` CONFIG_REPO`. It will also look for files with valid `HelmRelease` manifest file and install the helm releases according to the files found.
 
-The `HelmRelease` manifest file for your Tidepool backed is stored at `k8s/release/backend.yaml. `To configure Weave Flux to watch for new Docker images posted to Docker Hub, modify that file`. `See the [Flux documentation](https://github.com/weaveworks/flux) for details.
+The `HelmRelease` manifest file for your Tidepool backed is stored at `k8s/release/backend.yaml`. To configure Weave Flux to watch for new Docker images posted to Docker Hub, modify that file. See the [Flux documentation](https://github.com/weaveworks/flux) for details.
 
 In order to allow Flux to install new Docker images, Flux will need write access to your Git repo. Your provide that by getting the Flux public key from Flux and adding it to your Git Repo as a "deploy key".  
 
@@ -183,7 +182,7 @@ Once you have installed the Tidepool services in your cluster, they will start a
 ```
 kubectl port-forward svc/blip 3000:3000 &
 ```
-Open` localhost:3000`
+Open `localhost:3000`
 
 At present, you must also forward traffic from the API Gateway to the Tidepool backend.` `_This is needed to inform the Tidepool web app where the Tidepool API server is located. The default config is localhost.  In production, this would be replaced with the DNS name of the Api server.  Now, we just manually forward to the internal service.
 
@@ -200,7 +199,7 @@ There are a number of other optional services that you may choose to run in your
 
 
 
-*   Web Services \
+*   Web Services 
 Given private access (`kubectl`) to a Kubernetes cluster, you may look at Kubernetes web services by forwarding the port of a service to a local port.
     *   Ambassador Admin Console in browse
         *   `kubectl port-forward deployment/ambassador 8877 &`
