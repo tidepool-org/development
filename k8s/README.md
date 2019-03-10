@@ -9,10 +9,6 @@ Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/), the 
 ```
 brew install kubernetes-cli
 ```
-Install [helm](https://kubernetes.io/docs/setup/minikube/#quickstart) client, the Kubernetes package manager. This tool will allow  you to install packages on your Kubernetes cluster.
-```
-brew install kubernetes-helm
-```
 Install [kail](https://github.com/boz/kail), the Kubernetes log tailer (optional). This tool will allow you to aggregate log messages from various the many sources within Kubernetes.
 ```
 brew tap boz/repo
@@ -118,7 +114,7 @@ As an unmanaged alternative to `eksctl`, you may use [kops](https://github.com/k
 
 The Tidepool backend requires a small set of basic services to run within your Kubernetes cluster that you must install manually. 
 
-To run the helm package manager, you must install the server-side component of Helm called Tiller. These instructions create 
+The Tidepool Kubernetes manifests are created and installed using the [helm](https://helm.sh/) package manager.  To run the Helm package manager, you must install the server-side component of Helm called Tiller: 
 ```
 kubectl -n kube-system create sa tiller
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
@@ -135,17 +131,26 @@ You may install the Tidepool service manually into your Kubernetes cluster using
 
 #### Manual Update
 
-The Tidepool Kubernetes manifests are created and installed using the helm package manager.  The helm chart for Tidepool is stored in the public GitHub development repo in the _k8s_ branch. at present. You may install it directly into your cluster with this helm command, where `RELEASE_NAME` is a name of your choosing:
+The Tidepool Kubernetes manifests are created and installed using the [helm](https://helm.sh/) package manager. 
+
+Helm consists of two parts, the Helm client called `helm` and a service component called `tiller.`
+
+To manually install the Tidepool services into your Kubernetes cluster, you use the Helm client.  This tool will allow  you to install packages on your Kubernetes cluster:
+```
+brew install kubernetes-helm
+```
+Helm packages are call `charts`.  The [Helm chart for Tidepool](https://github.com/tidepool-org/development/tree/k8s/k8s/charts/backend) is stored in the public GitHub development repo in the _k8s_ branch at present. When you install a Helm package into a cluster, the installation itself is given a name, called the release name. 
+
+You may install it directly into your cluster (into the <code>default</code> namespace) with this Helm command, where `RELEASE_NAME` is a name of your choosing:
 
 ```
 helm install https://github.com/tidepool-org/development/tree/k8s/k8s/charts/backend --name ${RELEASE_NAME}
 ```
+The Kubernetes Deployment manifests make reference to the specific Docker images used for the Tidepool services. With Helm, these manifests are templated to allow for variable substitution and other manipulations. 
 
-This will install the tidepool services into the <code>default</code> namespace.
+In our Tidepool Helm [template files](https://github.com/tidepool-org/development/tree/k8s/k8s/charts/backend/templates), we have variable for each Docker image.  The default values are provided in the [values.yaml](https://github.com/tidepool-org/development/blob/k8s/k8s/charts/backend/values.yaml). file. 
 
-This will install the Tidepool services and the [Ambassador API Gateway](https://www.getambassador.io/) into your cluster. The Docker images used for each tidepool service are listed in the `values.yaml `file. 
-
-To change the Docker images while the cluster is running, first create a local file (`values-override.yaml`) with the image name and tags to change.  Then, upgrade you helm release with the   `helm upgrade` command and provide a set of new values in a local file:
+To change the Docker images while the cluster is running, first create a local file (`values-override.yaml`) with the image name and tags to change.  Then, upgrade your helm release with the   `helm upgrade` command and provide a set of new values in a local file:
 
 ```
 helm upgrade ${RELEASE_NAME} https://github.com/tidepool-org/development/tree/k8s/k8s/charts/backend -f values-override.yaml
@@ -153,7 +158,7 @@ helm upgrade ${RELEASE_NAME} https://github.com/tidepool-org/development/tree/k8
 
 #### GitOps
 
-As an alternative to manually running helm to upgrade your Tidepool services on each change of a Docker image used, you may use the [Weave Flux](https://www.weave.works/oss/flux/) product to watch for new images on Docker Hub.  
+As an alternative to manually running Helm to upgrade your Tidepool services on each change of a Docker image used, you may use the [Weave Flux](https://www.weave.works/oss/flux/) product to watch for new images on Docker Hub.  
 
 Weave Flux does this by reference to a GitHub repo that you provide that stores a copy of the Helm release configurations and any other non-Helm Kubernetes manifest files that you want to run on your Kubernetes cluster. Let's call this your <code>config</code> repo.
 
@@ -161,11 +166,15 @@ The workflow is simple.
 
 First, you install Weave Flux itself into your Kubernetes cluster.  When you install it, you configure Weave Flux with the URL to the GitHub repo with your Helm release configurations and Kubernetes manifests.  
 
-Then, Weave Flux will poll the `CONFIG_REPO`. It will compare the contents of the config repo with what it has previously installed in your cluster.  If the two have diverged, it was make them identical by changing the Kubernetes resources in your cluster to match what is in your `CONFIG_REPO`.
+Then, Weave Flux will poll the your GitHub `CONFIG_REPO`. It will compare the contents of the config repo with what it has previously installed in your cluster.  If the two have diverged, it was make them identical by changing the Kubernetes resources in your cluster to match what is in your `CONFIG_REPO`.
 
-To do this, first clone the development repo.  We will use this clone as your private `CONFIG_REPO`. 
-
+To do this, first fork and clone the development repo.  We will use this clone as your private `CONFIG_REPO`:
+```
+git clone git@github.com:tidepool-org/development.git
+```
 Then, you can modify your clone as you like and watch how Weave Flux keeps your Kubernetes cluster in sync.
+
+**Remember to start with the `k8s` branch until the Kubernetes work is merged into the `master` branch!** 
 
 Finally, using helm, install the Weave Flux operator into your cluster:
 
