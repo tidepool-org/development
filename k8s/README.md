@@ -33,11 +33,6 @@ Install [aws-iam-authenticator](https://docs.aws.amazon.com/eks/latest/userguide
 ```
 brew install aws-iam-authenticator
 ```
-Install [eksctl](https://eksctl.io/) client, to create Kubernetes clusters on Amazon EKS
-```
-brew tap weaveworks/tap
-brew install weaveworks/tap/eksctl
-```
 
 ### How to Create a Local Kubernetes Cluster
 
@@ -79,33 +74,58 @@ minikube stop
 ```
 
 ### How to Create Your Own Private Remote K8S Cluster
+If you have access to AWS, you can create your own managed Kubernetes cluster using [Amazon Elastic Container Service for Kubernetes (Amazon EKS)](https://aws.amazon.com/eks/). 
 
-Here is what you need to know to create your own Kubernetes cluster in the Amazon Cloud (EKS) to use your local client tools to interact with that cluster; and to install the basic services into the cluster.
+For convenience, our partners at WeaveWorks have created [eksctl](https://eksctl.io/), a terrific tool to create and manage an EKS managed Kubernetres cluster.
 
-*   Set up cluster on Amazon - do once for each cluster you want to set up
-    *   Create K8s cluster in Amazon EKS using GUI
-        *   `eksctl create cluster --auto-kubeconfig --region=us-west-2 --nodes=3`
-    *   Save the cluster name in an environment variable for later
-        *   <code>export <strong>CLUSTER_NAME</strong>=$(eksctl get cluster --region=us-west-2 -o json | jq ".[0].name" | sed -e "s/\"//g")</code>
-    *   Configure the K8s CLI to talk to your cluster
-        *   Set <code>KUBECONFIG</code> env variable so that <code>kubectl</code> can manage that new cluster
-        *   <code>export KUBECONFIG="~/.kube/eksctl/clusters/${CLUSTER_NAME}"</code>
-*   Adjust cluster resources - do when necessary
-    *   Scale your nodegroup	
-        *   <code>export <strong>NODE_GROUP</strong>=$(eksctl get nodegroup --region=us-west-2 --cluster ${CLUSTER_NAME} -o json| jq '.[0].Name' | sed -e 's/"//g')</code>
-        *   <code>eksctl scale nodegroup --region=us-west-2 --cluster ${CLUSTER_NAME} --nodes=4 ${NODE_GROUP}</code>
-*   Delete your cluster when done
-    *   <code>eksctl delete cluster --name=$(CLUSTER_NAME)</code>
+On a Mac, install the EKS client using Brew as follows:
+```
+brew tap weaveworks/tap
+brew install weaveworks/tap/eksctl
+```
+
+Then, you may set up your cluster on EKS:
+```
+eksctl create cluster --auto-kubeconfig --region=us-west-2 --nodes=3
+```
+This will create a cluster with a generated name and will create a new `KUBECONFIG` file for you.
+
+Save the cluster name in an environment variable for later. Here is a script that uses `jq` to extract the name from eksctl:
+```
+export CLUSTER_NAME=$(eksctl get cluster --region=us-west-2 -o json | jq ".[0].name" | sed -e "s/\"//g")
+```
+Save the KUBECONFIG file name as well:
+```
+export KUBECONFIG="~/.kube/eksctl/clusters/${CLUSTER_NAME}"
+```
+With `eksctl` you may also adjust the cluster resources as needed:
+
+To scale your nodegroup:	
+```
+export NODE_GROUP=$(eksctl get nodegroup --region=us-west-2 --cluster ${CLUSTER_NAME} -o json| jq '.[0].Name' | sed -e 's/"//g')
+
+eksctl scale nodegroup --region=us-west-2 --cluster ${CLUSTER_NAME} --nodes=4 ${NODE_GROUP}
+```
+To delete your cluster when done:
+```
+eksctl delete cluster --name=$(CLUSTER_NAME)
+```
+These are just a few examples of what you do with `eksctl`.
+
+As an unmanaged alternative to `eksctl`, you may use [kops](https://github.com/kubernetes/kops) to create your own Kubernetes cluster directly on Amazon EC2. This avoids the management fee of Amazon EKS, but places responsibility on you for maintaining the control plan of your Kubernetes cluster.
 
 ### How to Bootstrap Your Cluster
 
-The tidepool backend requires a small set of basic services to run without your Kubernetes cluster that you must install manually.  
+The Tidepool backend requires a small set of basic services to run within your Kubernetes cluster that you must install manually. 
 
-*   Install Tiller, the service-side component of the Helm package manager, create a service account for Tiller, and install the Kubernetes dashboard.
+To run the helm package manager, you must install the server-side component of Helm called Tiller. These instructions create 
 ```
-kubectl -n kube-system create sa tiller`
+kubectl -n kube-system create sa tiller
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 helm init --skip-refresh --upgrade --service-account tiller
+```
+To see what is running in your cluster, we use the Kubernetes dashboard which provides safe, authenticated access to the cluster:
+```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml
 ```
 
@@ -154,8 +174,6 @@ helm repo add weaveworks https://weaveworks.github.io/flux
 
 helm install --name flux --set rbac.create=true --set helmOperator.create=true --set git.url=${CONFIG_REPO} --set git.branch=${YOUR_BRANCH_NAME} --set git.pollInterval=1m --set helmOperator.replicaCount=1 weaveworks/flux
 ```
-
-
 N.B. Weave flux will install ALL kubernetes manifests that it discovers in the branch of your` CONFIG_REPO`. It will also look for files with valid `HelmRelease` manifest file and install the helm releases according to the files found.
 
 The `HelmRelease` manifest file for your Tidepool backed is stored at `k8s/release/backend.yaml`. To configure Weave Flux to watch for new Docker images posted to Docker Hub, modify that file. See the [Flux documentation](https://github.com/weaveworks/flux) for details.
@@ -189,16 +207,11 @@ At present, you must also forward traffic from the API Gateway to the Tidepool b
 ```
 kubectl port-forward deployment/default-ambassador 8009 &
 ```
-
-
 ### How to Inspect Your Cluster
 
 There are several ways to inspect what is happening inside your cluster.  Foremost is inspecting the Kubernetes dashboard that you installed above.  From the dashboard, you may inspect the logs of any running Kubernetes.  You may also inspect the logs from the command line.
 
 There are a number of other optional services that you may choose to run in your cluster, including [Istio](https://istio.io/) (service mesh), [Prometheus](https://prometheus.io/) (metrics), [Grafana](https://grafana.com/) (analytics and monitoring), [Kiali](https://www.kiali.io/) (service mesh observability), and Jaeger (distributed tracing).  Each offers its own web interface.  Follow the instructions below to inspect those services.
-
-
-
 *   Web Services 
 Given private access (`kubectl`) to a Kubernetes cluster, you may look at Kubernetes web services by forwarding the port of a service to a local port.
     *   Ambassador Admin Console in browse
@@ -238,3 +251,36 @@ Given private access (`kubectl`) to a Kubernetes cluster, you may look at Kubern
         *   <code>fluxctl list-controllers -n dev</code>
     *   See what images are available to deploy
         *   <code>fluxctl list-images</code>
+
+### How To Debug Your Kubernetes Services
+
+Debugging Kubernetes services can be as easy as debugging services running locally with [Telepresence](https://www.telepresence.io/discussion/overview) or [Squash](https://squash.solo.io/). 
+
+#### Telepresence
+With Telepresence, you run and debug *one* service locally that *appears to Kubernetes to be running in your Kubernetes cluster*.
+
+From the developer:
+
+>Presence is an open source tool that lets you run a single service locally, while connecting that service to a remote Kubernetes cluster. This lets developers working on multi-service applications to:
+>
+> * Do fast local development of a single service, even if that service depends on other services in your cluster. Make a change to your service, save, and you can immediately see the new service in action.
+>
+> * Use any tool installed locally to test/debug/edit your service. For example, you can use a debugger or IDE!
+>
+> * Make your local development machine operate as if it's part of your Kubernetes cluster. If you've got an application on your machine that you want to run against a service in the cluster -- it's easy to do.
+
+#### Squash
+With Squash, all services run in your Kubernetes, but *appear to your debugger to run locally*.
+
+From the developer:
+
+>Squash brings the power of modern debuggers to developers of microservice apps. Squash bridges between the apps running in a Kubernetes environment (without modifying them) and the IDE. Users are free to choose which containers, pods, services or images they are interested in debugging, and are allowed to set breakpoints in their codes, follow values of their variables on the fly, step through the code while jumping between microservices, and change these values during run time.
+>
+>With Squash, you can:
+> * Debug running microservices
+> * Debug container in a pod
+> * Debug a service
+> * Set breakpoints
+> * Step through code
+> * View and modify values of variables
+> …anything you could do with a regular debugger, and more!
