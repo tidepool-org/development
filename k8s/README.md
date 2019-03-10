@@ -1,29 +1,46 @@
 
-# How To Install Client Tools
+### How To Install Client Tools
 
 There are a number of useful client tools for interacting with a Kubernetes cluster.  These instructions assume that you are on MacOSX.
 
-*   Get client tools - do once on your local (Mac) machine
-    *   Install [kubectl](kubectl), the Kubernetes CLI tool 
-        *   `brew install kubernetes-cli`
-    *   Install [helm](https://kubernetes.io/docs/setup/minikube/#quickstart) client, the Kubernetes package manager 
-        *   `brew install kubernetes-helm`
-    *   Install [kail](https://github.com/boz/kail), the Kubernetes log tailer (optional)
-        *   `brew tap boz/repo`
-        *   `brew install boz/repo/kail`
-    *   Install [flux](https://github.com/weaveworks/flux) client, the GitOps Kubernetes operator (optional)
-        *   `brew install fluxctl`
-    *   Install [linkerd](https://linkerd.io/), the service mesh cli tool (optional)
-        *   `brew install linkerd`
-*   And, if you will be using an Amazon hosted Kubernetes cluster:
-    *   Install [aws-iam-authenticator](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html), a tool to use AWS IAM credentials to authenticate to a Kubernetes cluster
-        *   `brew install aws-iam-authenticator`
-    *   Install [eksctl](https://aws.amazon.com/blogs/opensource/kubernetes-ingress-aws-alb-ingress-controller/) client, to create Kubernetes clusters on Amazon EKS
-        *   `brew tap weaveworks/tap`
-        *   `brew install weaveworks/tap/eksctl`
+Get the client tools and install them onto your local machine. We recommend that you use the `brew` tool for this on a Mac.
+
+Install [kubectl](kubectl), the Kubernetes CLI tool. This tool will allow you to manipulate your Kubernetes cluster.
+```
+brew install kubernetes-cli
+```
+Install [helm](https://kubernetes.io/docs/setup/minikube/#quickstart) client, the Kubernetes package manager. This tool will allow  you to install packages on your Kubernetes cluster.
+```
+brew install kubernetes-helm
+```
+Install [kail](https://github.com/boz/kail), the Kubernetes log tailer (optional). This tool will allow you to aggregate log messages from various the many sources within Kubernetes.
+```
+brew tap boz/repo
+brew install boz/repo/kail
+```
+Install [flux](https://github.com/weaveworks/flux) client, the GitOps Kubernetes operator (optional). This tool will allow you to update the Docker images running in your cluster merely by modifying a GitHub repo.
+```
+brew install fluxctl
+```
+Install [linkerd](https://linkerd.io/), the service mesh cli tool (optional):
+```
+brew install linkerd
+```
+
+If you will be using an Amazon hosted Kubernetes cluster, then your will want to install two Amazon-specific tools.
+
+Install [aws-iam-authenticator](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html), a tool to use AWS IAM credentials to authenticate to a Kubernetes cluster
+```
+brew install aws-iam-authenticator
+```
+Install [eksctl](https://aws.amazon.com/blogs/opensource/kubernetes-ingress-aws-alb-ingress-controller/) client, to create Kubernetes clusters on Amazon EKS
+```
+brew tap weaveworks/tap
+brew install weaveworks/tap/eksctl
+```
 
 
-# How to Create a Local Kubernetes Cluster
+### How to Create a Local Kubernetes Cluster
 
 There are several ways to run Kubernetes on your local machine ([docker desktop](https://rominirani.com/tutorial-getting-started-with-kubernetes-with-docker-on-mac-7f58467203fd), [k3s](https://k3s.io/), [minikube](https://kubernetes.io/docs/setup/minikube/), [kind](https://github.com/kubernetes-sigs/kind), etc.) and several [opinions](https://medium.com/containers-101/local-kubernetes-for-mac-minikube-vs-docker-desktop-f2789b3cad3a) on which is best.  Any one will probably do. 
 
@@ -56,17 +73,16 @@ minikube ssh -- sudo ip link set docker0 promisc on
 ```
 eval $(minikube docker-env)
 ```
-*   Stop your cluster \
+*   Stop your cluster
 Kubernetes can be a heavy resource consumer.  So, you may want to (non-destructively) stop the virtual machine running your cluster when you are not using it.  You may restart it later with the `minikube start `command above.
 ```
 minikube stop
 ```
 
-# How to Create Your Own Private Remote K8S Cluster
+### How to Create Your Own Private Remote K8S Cluster
 
-Here is what you need to know to create your own Kubernetes cluster in the Amazon Cloud (EKS)
-*  To use your local client tools to interact with that cluster; and,
-*  To install the basic services into the cluster.
+Here is what you need to know to create your own Kubernetes cluster in the Amazon Cloud (EKS) to use your local client tools to interact with that cluster; and to install the basic services into the cluster.
+
 *   Set up cluster on Amazon - do once for each cluster you want to set up
     *   Create K8s cluster in Amazon EKS using GUI
         *   `eksctl create cluster --auto-kubeconfig --region=us-west-2 --nodes=3`
@@ -82,7 +98,7 @@ Here is what you need to know to create your own Kubernetes cluster in the Amazo
 *   Delete your cluster when done
     *   <code>eksctl delete cluster --name=$(CLUSTER_NAME)</code>
 
-# How to Bootstrap Your Cluster
+### How to Bootstrap Your Cluster
 
 The tidepool backend requires a small set of basic services to run without your Kubernetes cluster that you must install manually.  
 
@@ -94,11 +110,11 @@ helm init --skip-refresh --upgrade --service-account tiller
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml
 ```
 
-# How to Install the Tidepool Services
+### How to Install the Tidepool Services
 
 You may install the Tidepool service manually into your Kubernetes cluster using the [Helm package manager](https://helm.sh/) with a single command.
 
-## Manual Update
+#### Manual Update
 
 The Tidepool Kubernetes manifests are created and installed using the helm package manager.  The helm chart for Tidepool is stored in the public GitHub development repo in the _k8s_ branch. at present. You may install it directly into your cluster with this helm command, where `RELEASE_NAME` is a name of your choosing:
 
@@ -116,7 +132,7 @@ To change the Docker images while the cluster is running, first create a local f
 helm upgrade ${RELEASE_NAME} https://github.com/tidepool-org/development/tree/k8s/k8s/charts/backend -f values-override.yaml
 ```
 
-## GitOps
+#### GitOps
 
 As an alternative to manually running helm to upgrade your Tidepool services on each change of a Docker image used, you may use the [Weave Flux](https://www.weave.works/oss/flux/) product to watch for new images on Docker Hub.  
 
@@ -160,7 +176,7 @@ fluxctl identity
 
 Then, open GitHub, navigate to your fork, go to `Setting > Deploy` keys click on `Add deploy key,` check` Allow write access`, paste the Flux public key and click `Add key`.
 
-# How To Access the Tidepool Services
+### How To Access the Tidepool Services
 
 Once you have installed the Tidepool services in your cluster, they will start and run.  To access the Tidepool Web portal, you need to forward a local port to the port that provides the Tidepool Web application:
 
@@ -169,16 +185,14 @@ kubectl port-forward svc/blip 3000:3000 &
 ```
 Open` localhost:3000`
 
-_At present, you must also forward traffic from the API Gateway to the Tidepool backend.` `_This is needed to inform the Tidepool web app where the Tidepool API server is located. The default config is localhost.  In production, this would be replaced with the DNS name of the Api server.  Now, we just manually forward to the internal service.
-
-
+At present, you must also forward traffic from the API Gateway to the Tidepool backend.` `_This is needed to inform the Tidepool web app where the Tidepool API server is located. The default config is localhost.  In production, this would be replaced with the DNS name of the Api server.  Now, we just manually forward to the internal service.
 
 ```
 kubectl port-forward deployment/default-ambassador 8009 &
 ```
 
 
-# How to Inspect Your Cluster
+### How to Inspect Your Cluster
 
 There are several ways to inspect what is happening inside your cluster.  Foremost is inspecting the Kubernetes dashboard that you installed above.  From the dashboard, you may inspect the logs of any running Kubernetes.  You may also inspect the logs from the command line.
 
