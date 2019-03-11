@@ -13,7 +13,7 @@ brew install kubernetes-cli
 ```
 #### Install [kail](https://github.com/boz/kail), the Kubernetes log tailer (Recommended) 
 
-This tool will allow you to aggregate log messages from various the many sources within Kubernetes.
+This tool will allow you to aggregate log messages from the many sources within Kubernetes.
 ```
 brew tap boz/repo
 brew install boz/repo/kail
