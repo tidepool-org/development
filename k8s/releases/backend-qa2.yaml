@@ -38,7 +38,7 @@ spec:
     ambassador:
       enabled: false
     blip:
-      image: tidepool/blip:v1.17.0
+      image: tidepool/blip:v1.18.0-export-units.2
     export:
       image: tidepool/export:v1.3.2
     gatekeeper:
