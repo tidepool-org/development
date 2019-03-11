@@ -5,29 +5,18 @@ There are a number of useful client tools for interacting with a Kubernetes clus
 
 Get the client tools and install them onto your local machine. We recommend that you use the `brew` tool for this on a Mac.
 
-Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/), the Kubernetes CLI tool. This tool will allow you to manipulate your Kubernetes cluster.
+#### Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/), the Kubernetes CLI tool
+
+This tool will allow you to manipulate your Kubernetes cluster.
 ```
 brew install kubernetes-cli
 ```
-Install [kail](https://github.com/boz/kail), the Kubernetes log tailer (optional). This tool will allow you to aggregate log messages from various the many sources within Kubernetes.
+#### Install [kail](https://github.com/boz/kail), the Kubernetes log tailer (Recommended) 
+
+This tool will allow you to aggregate log messages from various the many sources within Kubernetes.
 ```
 brew tap boz/repo
 brew install boz/repo/kail
-```
-Install [flux](https://github.com/weaveworks/flux) client, the GitOps Kubernetes operator (optional). This tool will allow you to update the Docker images running in your cluster merely by modifying a GitHub repo.
-```
-brew install fluxctl
-```
-Install [linkerd](https://linkerd.io/), the service mesh cli tool (optional):
-```
-brew install linkerd
-```
-
-If you will be using an Amazon hosted Kubernetes cluster, then your will want to install two Amazon-specific tools.
-
-Install [aws-iam-authenticator](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html), a tool to use AWS IAM credentials to authenticate to a Kubernetes cluster
-```
-brew install aws-iam-authenticator
 ```
 
 ### How to Create a Local Kubernetes Cluster
@@ -36,11 +25,11 @@ There are several ways to run Kubernetes on your local machine ([docker desktop]
 
 However, we choose to document `minikube` because it offers the opportunity to select a particular version of Kubernetes and it runs on all manner of desktops, including MacOSX, Linux, and Windows.
 
-*   Install [minikube](https://github.com/kubernetes/minikube) (see [this excellent tutorial](https://codefresh.io/kubernetes-tutorial/local-kubernetes-mac-minikube-vs-docker-desktop/))
+Install [minikube](https://github.com/kubernetes/minikube) (see [this excellent tutorial](https://codefresh.io/kubernetes-tutorial/local-kubernetes-mac-minikube-vs-docker-desktop/))
 ```
 brew cask install minikube
 ```
-*   If you are using a Mac, you can install the hyperkit driver vm:
+If you are using a Mac, you can install the hyperkit driver vm:
 
 ```
 brew install docker-machine-driver-hyperkit
@@ -48,22 +37,25 @@ sudo chown root:wheel /usr/local/opt/docker-machine-driver-hyperkit/bin/docker-m
 sudo chmod u+s /usr/local/opt/docker-machine-driver-hyperkit/bin/docker-machine-driver-hyperkit
 minikube config set vm-driver hyperkit
 ```
-*   Configure minikube (to use the same version of K8s that Tidepool uses)
+#### Configure minikube
+(to use the same version of K8s that Tidepool uses)
 ```
 minikube config set kubernetes-version v1.11.5
 minikube config set memory 8192
 minikube config set cpus 4
 ```
-*   Start minikube and modify networking 
+#### Start minikube and modify networking 
 ```
 minikube start --extra-config=apiserver.authorization-mode=RBAC
 minikube ssh -- sudo ip link set docker0 promisc on
 ```
-*   Configure CLI tools to talk to your local cluster. In **each and every window** that you will use the Docker cli, you must set environment variables to use the Docker daemon in the minikube VM:
+#### Configure CLI tools to talk to your local cluster. 
+
+In **each and every window** that you will use the Docker cli, you must set environment variables to use the Docker daemon in the minikube VM:
 ```
 eval $(minikube docker-env)
 ```
-*   Stop your cluster
+#### Stop your cluster
 Kubernetes can be a heavy resource consumer.  So, you may want to (non-destructively) stop the virtual machine running your cluster when you are not using it.  You may restart it later with the `minikube start `command above.
 ```
 minikube stop
@@ -74,13 +66,14 @@ If you have access to AWS, you can create your own managed Kubernetes cluster us
 
 For convenience, our partners at WeaveWorks have created [eksctl](https://eksctl.io/), a terrific tool to create and manage an EKS managed Kubernetres cluster.
 
-On a Mac, install the EKS client using Brew as follows:
+#### Install the `eksctl` client
+
 ```
 brew tap weaveworks/tap
 brew install weaveworks/tap/eksctl
 ```
 
-Then, you may set up your cluster on EKS:
+#### Create Your EKS Cluster
 ```
 eksctl create cluster --auto-kubeconfig --region=us-west-2 --nodes=3
 ```
@@ -94,15 +87,23 @@ Save the KUBECONFIG file name as well:
 ```
 export KUBECONFIG="~/.kube/eksctl/clusters/${CLUSTER_NAME}"
 ```
-With `eksctl` you may also adjust the cluster resources as needed:
+With `eksctl` you may also adjust the cluster resources as needed.
 
-To scale your nodegroup:	
+#### Authenticate with AWS IAM Credentials
+You may use your Amazon IAM credentials to authenticate to a Kubernetes cluster using [aws-iam-authenticator](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html).
+```
+brew install aws-iam-authenticator
+```
+
+#### Scale Your Nodegroup	
+Virtual machines in Kubernetes that run your services are called nodes. They are organized into node groups that you can scale up or down in size:
 ```
 export NODE_GROUP=$(eksctl get nodegroup --region=us-west-2 --cluster ${CLUSTER_NAME} -o json| jq '.[0].Name' | sed -e 's/"//g')
 
 eksctl scale nodegroup --region=us-west-2 --cluster ${CLUSTER_NAME} --nodes=4 ${NODE_GROUP}
 ```
-To delete your cluster when done:
+#### Delete Your Cluster
+When you have no more use for you EKS cluster, you may delete it from Amazon EKS:
 ```
 eksctl delete cluster --name=$(CLUSTER_NAME)
 ```
@@ -114,12 +115,16 @@ As an unmanaged alternative to `eksctl`, you may use [kops](https://github.com/k
 
 The Tidepool backend requires a small set of basic services to run within your Kubernetes cluster that you must install manually. 
 
+#### Install Helm Service (Tiller)
+
 The Tidepool Kubernetes manifests are created and installed using the [helm](https://helm.sh/) package manager.  To run the Helm package manager, you must install the server-side component of Helm called Tiller: 
 ```
 kubectl -n kube-system create sa tiller
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 helm init --skip-refresh --upgrade --service-account tiller
 ```
+
+#### Install Kubernetes Dashboard
 To see what is running in your cluster, we use the Kubernetes dashboard which provides safe, authenticated access to the cluster:
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml
@@ -135,10 +140,12 @@ The Tidepool Kubernetes manifests are created and installed using the [helm](htt
 
 Helm consists of two parts, the Helm client called `helm` and a service component called `tiller.`
 
+#### Install Helm Client
 To manually install the Tidepool services into your Kubernetes cluster, you use the Helm client.  This tool will allow  you to install packages on your Kubernetes cluster:
 ```
 brew install kubernetes-helm
 ```
+#### Install Tidepool Helm Chart
 Helm packages are call `charts`.  The [Helm chart for Tidepool](https://github.com/tidepool-org/development/tree/k8s/k8s/charts/backend) is stored in the public GitHub development repo in the _k8s_ branch at present. When you install a Helm package into a cluster, the installation itself is given a name, called the release name. 
 
 You may install it directly into your cluster (into the <code>default</code> namespace) with this Helm command, where `RELEASE_NAME` is a name of your choosing:
@@ -146,6 +153,7 @@ You may install it directly into your cluster (into the <code>default</code> nam
 ```
 helm install https://github.com/tidepool-org/development/tree/k8s/k8s/charts/backend --name ${RELEASE_NAME}
 ```
+#### Changing Docker Images for Tidepool Services
 The Kubernetes Deployment manifests make reference to the specific Docker images used for the Tidepool services. With Helm, these manifests are templated to allow for variable substitution and other manipulations. 
 
 In our Tidepool Helm [template files](https://github.com/tidepool-org/development/tree/k8s/k8s/charts/backend/templates), we have variable for each Docker image.  The default values are provided in the [values.yaml](https://github.com/tidepool-org/development/blob/k8s/k8s/charts/backend/values.yaml). file. 
@@ -162,11 +170,16 @@ As an alternative to manually running Helm to upgrade your Tidepool services on 
 
 Weave Flux does this by reference to a GitHub repo that you provide that stores a copy of the Helm release configurations and any other non-Helm Kubernetes manifest files that you want to run on your Kubernetes cluster. Let's call this your <code>config</code> repo.
 
+#### Weave Workflow
 The workflow is simple.  
 
-First, you install Weave Flux itself into your Kubernetes cluster.  When you install it, you configure Weave Flux with the URL to the GitHub repo with your Helm release configurations and Kubernetes manifests.  
+First, you install Weave Flux itself into your Kubernetes cluster.  When you install it, you configure Weave Flux with the URL to the GitHub repo with your Helm release configurations and Kubernetes manifests. 
 
 Then, Weave Flux will poll the your GitHub `CONFIG_REPO`. It will compare the contents of the config repo with what it has previously installed in your cluster.  If the two have diverged, it was make them identical by changing the Kubernetes resources in your cluster to match what is in your `CONFIG_REPO`.
+
+Finally, using helm, install the Weave Flux operator into your cluster:
+
+#### Clone Config Repo
 
 To do this, first fork and clone the development repo.  We will use this clone as your private `CONFIG_REPO`:
 ```
@@ -176,7 +189,8 @@ Then, you can modify your clone as you like and watch how Weave Flux keeps your 
 
 **Remember to start with the `k8s` branch until the Kubernetes work is merged into the `master` branch!** 
 
-Finally, using helm, install the Weave Flux operator into your cluster:
+#### Install Weave Flux
+Weave Flux runs as a service inside your Kubernetes cluster. You install it with Helm using the Weave Flux Helm chart.
 
 ```
 helm repo add weaveworks https://weaveworks.github.io/flux
@@ -187,31 +201,41 @@ N.B. Weave flux will install ALL kubernetes manifests that it discovers in the b
 
 The `HelmRelease` manifest file for your Tidepool backed is stored at `k8s/release/backend.yaml`. To configure Weave Flux to watch for new Docker images posted to Docker Hub, modify that file. See the [Flux documentation](https://github.com/weaveworks/flux) for details.
 
-In order to allow Flux to install new Docker images, Flux will need write access to your Git repo. Your provide that by getting the Flux public key from Flux and adding it to your Git Repo as a "deploy key".  
+#### Enable Weave Flux to Update Your GitHub Repo
+In order to allow  Flux to install new Docker images, Flux will need write access to your Git repo. You provide that by getting the Flux public key from the Flux server using the Flux client and by adding the key to your Git Repo as a "deploy key". 
 
+
+#### Install the [Weave Flux Client](https://github.com/weaveworks/flux) 
 To retrieve the key, you may use the Flux CLI tool `fluxctl`.
+client, the GitOps Kubernetes operator (optional).
 
-Install [flux](https://github.com/weaveworks/flux) client:
+This tool will allow you to update the Docker images running in your cluster merely by modifying a GitHub repo.
 ```
 brew install fluxctl
 ```
-Get key
+
+#### Retrieve Flux Public Key
+The flux client has a command to retrieve the key from the server:
 ```
 fluxctl identity
 ```
-
+#### Post the Flux Public Key to GitHub
 Then, open GitHub, navigate to your fork, go to `Setting > Deploy` keys click on `Add deploy key,` check` Allow write access`, paste the Flux public key and click `Add key`.
 
 ### How To Access the Tidepool Services
 
-Once you have installed the Tidepool services in your cluster, they will start and run.  To access the Tidepool Web portal, you need to forward a local port to the port that provides the Tidepool Web application:
+Once you have installed the Tidepool services in your cluster, they will start and run.  
+
+#### Connect to Blip, the Tidepool Frontend
+To access the Tidepool Web portal, you need to forward a local port to the port that provides the Tidepool Web application
 
 ```
 kubectl port-forward svc/blip 3000:3000 &
 ```
 Open `localhost:3000`
 
-At present, you must also forward traffic from the API Gateway to the Tidepool backend.` `_This is needed to inform the Tidepool web app where the Tidepool API server is located. The default config is localhost.  In production, this would be replaced with the DNS name of the Api server.  Now, we just manually forward to the internal service.
+#### Forward API Requests to API Gateway
+At present, you must also forward traffic from the API Gateway to the Tidepool backend.` `This is needed to inform the Tidepool web app where the Tidepool API server is located. The default config is localhost.  In production, this would be replaced with the DNS name of the Api server.  Now, we just manually forward to the internal service.
 
 ```
 kubectl port-forward deployment/default-ambassador 8009 &
