@@ -151,7 +151,9 @@ Helm packages are call `charts`.  The [Helm chart for Tidepool](https://github.c
 You may install it directly into your cluster (into the <code>default</code> namespace) with this Helm command, where `RELEASE_NAME` is a name of your choosing:
 
 ```
-helm install https://github.com/tidepool-org/development/tree/k8s/k8s/charts/tidepool --name ${RELEASE_NAME}
+git clone git@github.com:tidepool-org/development.git
+git checkout k8s
+helm install k8s/charts/tidepool --name ${RELEASE_NAME}
 ```
 #### Changing Docker Images for Tidepool Services
 The Kubernetes Deployment manifests make reference to the specific Docker images used for the Tidepool services. With Helm, these manifests are templated to allow for variable substitution and other manipulations. 
