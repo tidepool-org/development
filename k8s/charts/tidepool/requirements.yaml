@@ -1,6 +1,6 @@
 dependencies:
   - name: ambassador
-    repository: https://github.com/helm/charts/tree/master/stable/ambassador
+    repository: https://kubernetes-charts.storage.googleapis.com/
     version: 1.1.5
     condition: ambassador.enabled
     tags:
