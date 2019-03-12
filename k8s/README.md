@@ -181,7 +181,7 @@ Finally, using helm, install the Weave Flux operator into your cluster:
 
 #### Clone Config Repo
 
-To do this, first fork and clone the development repo.  We will use this clone as your private `CONFIG_REPO`:
+To do this, first [fork and clone the development repo](https://medium.com/@bilalbayasut/github-how-to-make-a-fork-of-public-repository-private-6ee8cacaf9d3).  We will use this clone as your private `CONFIG_REPO`:
 ```
 git clone git@github.com:tidepool-org/development.git
 ```
