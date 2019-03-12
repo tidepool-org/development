@@ -146,22 +146,22 @@ To manually install the Tidepool services into your Kubernetes cluster, you use 
 brew install kubernetes-helm
 ```
 #### Install Tidepool Helm Chart
-Helm packages are call `charts`.  The [Helm chart for Tidepool](https://github.com/tidepool-org/development/tree/k8s/k8s/charts/backend) is stored in the public GitHub development repo in the _k8s_ branch at present. When you install a Helm package into a cluster, the installation itself is given a name, called the release name. 
+Helm packages are call `charts`.  The [Helm chart for Tidepool](https://github.com/tidepool-org/development/tree/k8s/k8s/charts/tidepool) is stored in the public GitHub development repo in the _k8s_ branch at present. When you install a Helm package into a cluster, the installation itself is given a name, called the release name. 
 
 You may install it directly into your cluster (into the <code>default</code> namespace) with this Helm command, where `RELEASE_NAME` is a name of your choosing:
 
 ```
-helm install https://github.com/tidepool-org/development/tree/k8s/k8s/charts/backend --name ${RELEASE_NAME}
+helm install https://github.com/tidepool-org/development/tree/k8s/k8s/charts/tidepool --name ${RELEASE_NAME}
 ```
 #### Changing Docker Images for Tidepool Services
 The Kubernetes Deployment manifests make reference to the specific Docker images used for the Tidepool services. With Helm, these manifests are templated to allow for variable substitution and other manipulations. 
 
-In our Tidepool Helm [template files](https://github.com/tidepool-org/development/tree/k8s/k8s/charts/backend/templates), we have variable for each Docker image.  The default values are provided in the [values.yaml](https://github.com/tidepool-org/development/blob/k8s/k8s/charts/backend/values.yaml). file. 
+In our Tidepool Helm [template files](https://github.com/tidepool-org/development/tree/k8s/k8s/charts/tidepool/templates), we have variable for each Docker image.  The default values are provided in the [values.yaml](https://github.com/tidepool-org/development/blob/k8s/k8s/charts/tidepool/values.yaml). file. 
 
 To change the Docker images while the cluster is running, first create a local file (`values-override.yaml`) with the image name and tags to change.  Then, upgrade your helm release with the   `helm upgrade` command and provide a set of new values in a local file:
 
 ```
-helm upgrade ${RELEASE_NAME} https://github.com/tidepool-org/development/tree/k8s/k8s/charts/backend -f values-override.yaml
+helm upgrade ${RELEASE_NAME} https://github.com/tidepool-org/development/tree/k8s/k8s/charts/tidepool -f values-override.yaml
 ```
 
 #### GitOps
@@ -199,7 +199,7 @@ helm install --name flux --set rbac.create=true --set helmOperator.create=true -
 ```
 N.B. Weave flux will install ALL kubernetes manifests that it discovers in the branch of your` CONFIG_REPO`. It will also look for files with valid `HelmRelease` manifest file and install the helm releases according to the files found.
 
-The `HelmRelease` manifest file for your Tidepool backed is stored at `k8s/release/backend.yaml`. To configure Weave Flux to watch for new Docker images posted to Docker Hub, modify that file. See the [Flux documentation](https://github.com/weaveworks/flux) for details.
+The `HelmRelease` manifest file for your Tidepool backend is stored at `k8s/release/backend.yaml`. To configure Weave Flux to watch for new Docker images posted to Docker Hub, modify that file. See the [Flux documentation](https://github.com/weaveworks/flux) for details.
 
 #### Enable Weave Flux to Update Your GitHub Repo
 In order to allow  Flux to install new Docker images, Flux will need write access to your Git repo. You provide that by getting the Flux public key from the Flux server using the Flux client and by adding the key to your Git Repo as a "deploy key". 
