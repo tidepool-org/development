@@ -237,7 +237,10 @@ kubectl port-forward svc/blip 3000:3000 &
 Open `localhost:3000`
 
 #### Forward API Requests to API Gateway
-At present, you must also forward traffic from the API Gateway to the Tidepool backend.` `This is needed to inform the Tidepool web app where the Tidepool API server is located. The default config is localhost.  In production, this would be replaced with the DNS name of the Api server.  Now, we just manually forward to the internal service.
+At present, you must also forward traffic from the API Gateway to the Tidepool backend.` `This is needed to inform the Tidepool web app where the Tidepool API server is located. The default config is localhost.  In production, this would be replaced with the DNS name of the Api server.  Now, we just manually forward to the internal service. 
+
+(make sure to include the name of your service if you did not use default, e.g. ```mydeploy-amabassador```
+
 
 ```
 kubectl port-forward deployment/default-ambassador 8009 &
