@@ -31,7 +31,7 @@ spec:
   skipDepUpdate: true
   chart:
     git: git@github.com:tidepool-org/development
-    path: k8s/charts/backend
+    path: k8s/charts/tidepool
     ref: k8s
   values:
     ambassador:
