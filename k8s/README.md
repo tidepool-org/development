@@ -1,4 +1,13 @@
 
+### Running Tidepool on Kubernetes
+Tidepool can be run on Kubernetes. Here are the instructions on: 
+* [How To Install Client Tools](#How-To-Install-Client-Tools)
+* [How to Create A Kubernetes Cluster](#How-to-Create-A-Kubernetes-Cluster)
+* [How to Bootstrap Your Cluster](#How-to-Bootstrap-Your-Cluster)
+* [How to Install the Tidepool Services](#How-to-Install-the-Tidepool-Services)
+* [How To Access the Tidepool Services](#How-To-Access-the-Tidepool-Services)
+* [How to Inspect Your Cluster](#How-to-Inspect-Your-Cluster)
+
 ### How To Install Client Tools
 
 There are a number of useful client tools for interacting with a Kubernetes cluster.  These instructions assume that you are on MacOSX.
@@ -19,7 +28,11 @@ brew tap boz/repo
 brew install boz/repo/kail
 ```
 
-### How to Create a Local Kubernetes Cluster
+### How to Create A Kubernetes Cluster
+You may create a Kubernetes cluster on your local machine, on machines in your data center ("on prem"), or on a cloud service.  In each case, there are several ways to do so.  
+
+Here we provide instructions for creating a single node "cluster" on your local machine and for a multi-node cluster using the Amazon EKS service.  
+#### Creating a Local Kubernetes Cluster
 
 There are several ways to run Kubernetes on your local machine ([docker desktop](https://rominirani.com/tutorial-getting-started-with-kubernetes-with-docker-on-mac-7f58467203fd), [k3s](https://k3s.io/), [minikube](https://kubernetes.io/docs/setup/minikube/), [kind](https://github.com/kubernetes-sigs/kind), etc.) and several [opinions](https://medium.com/containers-101/local-kubernetes-for-mac-minikube-vs-docker-desktop-f2789b3cad3a) on which is best.  Any one will probably do. 
 
@@ -37,43 +50,43 @@ sudo chown root:wheel /usr/local/opt/docker-machine-driver-hyperkit/bin/docker-m
 sudo chmod u+s /usr/local/opt/docker-machine-driver-hyperkit/bin/docker-machine-driver-hyperkit
 minikube config set vm-driver hyperkit
 ```
-#### Configure minikube
+##### Configure minikube
 (to use the same version of K8s that Tidepool uses)
 ```
 minikube config set kubernetes-version v1.11.5
 minikube config set memory 8192
 minikube config set cpus 4
 ```
-#### Start minikube and modify networking 
+##### Start minikube and modify networking 
 ```
 minikube start --extra-config=apiserver.authorization-mode=RBAC
 minikube ssh -- sudo ip link set docker0 promisc on
 ```
-#### Configure CLI tools to talk to your local cluster. 
+##### Configure CLI tools to talk to your local cluster. 
 
 In **each and every window** that you will use the Docker cli, you must set environment variables to use the Docker daemon in the minikube VM:
 ```
 eval $(minikube docker-env)
 ```
-#### Stop your cluster
+##### Stop your cluster
 Kubernetes can be a heavy resource consumer.  So, you may want to (non-destructively) stop the virtual machine running your cluster when you are not using it.  You may restart it later with the `minikube start `command above.
 ```
 minikube stop
 ```
 
-### How to Create Your Own Private Remote K8S Cluster
+#### Creating Your Own Private Remote K8S Cluster
 If you have access to AWS, you can create your own managed Kubernetes cluster using [Amazon Elastic Container Service for Kubernetes (Amazon EKS)](https://aws.amazon.com/eks/). 
 
 For convenience, our partners at WeaveWorks have created [eksctl](https://eksctl.io/), a terrific tool to create and manage an EKS managed Kubernetres cluster.
 
-#### Install the `eksctl` client
+##### Install the `eksctl` client
 
 ```
 brew tap weaveworks/tap
 brew install weaveworks/tap/eksctl
 ```
 
-#### Create Your EKS Cluster
+##### Create Your EKS Cluster
 ```
 eksctl create cluster --auto-kubeconfig --region=us-west-2 --nodes=3
 ```
@@ -89,20 +102,20 @@ export KUBECONFIG="~/.kube/eksctl/clusters/${CLUSTER_NAME}"
 ```
 With `eksctl` you may also adjust the cluster resources as needed.
 
-#### Authenticate with AWS IAM Credentials
+##### Authenticate with AWS IAM Credentials
 You may use your Amazon IAM credentials to authenticate to a Kubernetes cluster using [aws-iam-authenticator](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html).
 ```
 brew install aws-iam-authenticator
 ```
 
-#### Scale Your Nodegroup	
+##### Scale Your Nodegroup	
 Virtual machines in Kubernetes that run your services are called nodes. They are organized into node groups that you can scale up or down in size:
 ```
 export NODE_GROUP=$(eksctl get nodegroup --region=us-west-2 --cluster ${CLUSTER_NAME} -o json| jq '.[0].Name' | sed -e 's/"//g')
 
 eksctl scale nodegroup --region=us-west-2 --cluster ${CLUSTER_NAME} --nodes=4 ${NODE_GROUP}
 ```
-#### Delete Your Cluster
+##### Delete Your Cluster
 When you have no more use for you EKS cluster, you may delete it from Amazon EKS:
 ```
 eksctl delete cluster --name=$(CLUSTER_NAME)
