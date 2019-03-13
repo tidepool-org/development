@@ -286,7 +286,7 @@ Given private access (`kubectl`) to a Kubernetes cluster, you may look at Kubern
         *   <code>kail -n kube-system --svc tiller</code>
 *   GitOps
     *   Set what version of Tidepool containers are deployed
-        *   <code>fluxctl list-controllers -n dev</code>
+        *   <code>fluxctl list-controllers</code>
     *   See what images are available to deploy
         *   <code>fluxctl list-images</code>
 
