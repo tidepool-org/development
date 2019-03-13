@@ -154,8 +154,7 @@ A token is needed to access the k8s dashboard, retrieve the token as follows:
 ```kubectl get secret ${SECRET_NAME} -o jsonpath='{.data.token}' -n kube-system | base64 -D```
 
 ### How to Install the Tidepool Services
-We install the Tidepool services using the 
-[Helm package manager](https://helm.sh/).
+We install the Tidepool services using the [Helm package manager](https://helm.sh/).
 
 You have a choice in how you use helm. You may install the Tidepool services into your cluster manually using the helm CLI or you may use another tool called Weave Flux to install the Tidepool services using helm on your behalf.  
 
@@ -176,21 +175,21 @@ export REPO_DIR=$(pwd)
 git checkout k8s
 git checkout -b ${YOUR_BRANCH_NAME}
 ```
-Now you have a your own clone of the repo and a branch to work in. 
+Now you have your own clone of the repo and a branch to work in. 
 
 #### Manual Update
 
 To perform manual updates using Helm, you will need the Helm CLI tool. 
 
 #### Install Helm Client
-To manually install the Tidepool services into your Kubernetes cluster, you use the Helm client.  This tool will allow  you to install packages on your Kubernetes cluster:
+To manually install the Tidepool services into your Kubernetes cluster, you use the Helm client.  This tool will allow  you to install packages on your Kubernetes cluster.
 ```
 brew install kubernetes-helm
 ```
 #### Install Tidepool Helm Chart
 Helm packages are called `charts`.  The [Helm chart for Tidepool](https://github.com/tidepool-org/development/tree/k8s/k8s/charts/tidepool) is stored in the public GitHub development repo in the _k8s_ branch at present. When you install a Helm package into a cluster, the installation itself is given a name, called the *release name*. 
 
-You may install the Tidepool services directly into your cluster (into the <code>default</code> namespace) with this Helm command, where `RELEASE_NAME` is a name of your choosing:
+You may install the Tidepool services directly into the default namespace of your cluster with this Helm command, where `RELEASE_NAME` is a name of your choosing:
 
 ```
 helm install ${REPO_DIR}/k8s/charts/tidepool --name ${RELEASE_NAME}
@@ -274,7 +273,7 @@ To access the Tidepool Web portal, you need to forward a local port to the port 
 ```
 kubectl port-forward svc/blip 3000:3000 &
 ```
-Open `localhost:3000`
+Open [localhost:3000](localhost:3000)
 
 #### Forward API Requests to API Gateway
 At present, you must also forward traffic from the API Gateway to the Tidepool backend.` `This is needed to inform the Tidepool web app where the Tidepool API server is located. The default config is localhost.  In production, this would be replaced with the DNS name of the Api server.  Now, we just manually forward to the internal service. 
@@ -294,25 +293,25 @@ There are a number of other optional services that you may choose to run in your
 Given private access (`kubectl`) to a Kubernetes cluster, you may look at Kubernetes web services by forwarding the port of a service to a local port.
     *   Ambassador Admin Console in browse
         *   `kubectl port-forward deployment/ambassador 8877 &`
-        *   Open<code> [http://localhost:8877/ambassador/v0/diag/](http://localhost:8877/ambassador/v0/diag/)</code>
+        *   Open [http://localhost:8877/ambassador/v0/diag/](http://localhost:8877/ambassador/v0/diag/)
     *   Kubernetes Dashboard
         *   <code>kubectl proxy</code>
         *   Get token to authenticate
             *   <code>SECRET_NAME=$(kubectl get serviceaccount default -n kube-system -o jsonpath='{.secrets[].name}')</code>
             *   <code>kubectl get secret ${SECRET_NAME} -o jsonpath='{.data.token}' -n kube-system | base64 -D</code>
-        *   Open<code> [http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login) </code>
+        *   Open [http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login)
     *   [Service Graph](https://istio.io/docs/tasks/telemetry/servicegraph/) (if installed)
         *   <code>kubectl port-forward -n istio-system svc/servicegraph 8088:8088 &</code>
-        *   Open<code> [http://localhost:8088/force/forcegraph.html](http://localhost:8088/force/forcegraph.html) </code>
+        *   Open [http://localhost:8088/force/forcegraph.html](http://localhost:8088/force/forcegraph.html) 
     *   [Kiali](https://www.kiali.io/) (if installed)
         *   <code>kubectl port-forward -n istio-system svc/kiali 20001:20001 &</code>
-        *   Open<code> [http://localhost:20001/kiali](http://localhost:20001/kiali)</code>
+        *   Open [http://localhost:20001/kiali](http://localhost:20001/kiali)
     *   [Prometheus](https://istio.io/docs/tasks/telemetry/querying-metrics/) (if installed)
         *   <code>kubectl port-forward -n istio-system svc/prometheus 9090:9090 &</code>
-        *   Open<code> [http://localhost:9090/graph](http://localhost:9090/graph) </code>
+        *   Open [http://localhost:9090/graph](http://localhost:9090/graph)
     *   [Jaeger](https://istio.io/docs/tasks/telemetry/distributed-tracing/)  (if installed)
         *   <code>kubectl port-forward -n istio-system svc/jaeger 16686:16686 &</code>
-        *   Open<code> [http://localhost:16686](http://localhost:16686/)</code>
+        *   Open [http://localhost:16686](http://localhost:16686/)
 *   Logs
     *   All services
         *   <code>kail</code>
