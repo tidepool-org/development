@@ -125,7 +125,7 @@ helm init --skip-refresh --upgrade --service-account tiller
 ```
 
 #### Install Kubernetes Dashboard
-To see what is running in your cluster, we use the Kubernetes dashboard which provides safe, authenticated access to the cluster:
+To see what is running in your cluster, we use the [Kubernetes dashboard](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login) which provides safe, authenticated access to the cluster:
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml
 ```
