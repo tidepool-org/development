@@ -143,15 +143,20 @@ To see what is running in your cluster, we use the [Kubernetes dashboard](http:/
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml
 ```
 
-### To access the k8s dashboard:
+#### Accessing Your Kubernetes dashboard
 
-run ```kubectl proxy``` to forward the connection
+Run ```kubectl proxy``` to forward the connection.
 
 A token is needed to access the k8s dashboard, retrieve the token as follows:
 
-```SECRET_NAME=$(kubectl get serviceaccount default -n kube-system -o jsonpath='{.secrets[].name}')```
+```
+SECRET_NAME=$(kubectl get serviceaccount default -n kube-system -o jsonpath='{.secrets[].name}')
 
-```kubectl get secret ${SECRET_NAME} -o jsonpath='{.data.token}' -n kube-system | base64 -D```
+kubectl get secret ${SECRET_NAME} -o jsonpath='{.data.token}' -n kube-system | base64 -D
+```
+
+Open the [dashboard](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login) and provide the token (if requested).
+
 
 ### How to Install the Tidepool Services
 We install the Tidepool services using the [Helm package manager](https://helm.sh/).
@@ -240,7 +245,7 @@ helm install --name flux --set rbac.create=true --set helmOperator.create=true -
 ```
 N.B. Weave flux will install ALL kubernetes manifests that it discovers in the branch of your` CONFIG_REPO`. It will also look for files with valid `HelmRelease` manifest file and install the helm releases according to the files found.
 
-The `HelmRelease` manifest file for your Tidepool backend is stored at `k8s/release/backend.yaml`. To configure Weave Flux to watch for new Docker images posted to Docker Hub, modify that file. See the [Flux documentation](https://github.com/weaveworks/flux) for details.
+The [HelmRelease manifest file](https://github.com/tidepool-org/development/blob/k8s/k8s/release/backend.yaml) for your Tidepool backend is stored at `${REPO_DIR}/k8s/release/backend.yaml`. To configure Weave Flux to watch for new Docker images posted to Docker Hub, modify that file. See the [Flux documentation](https://github.com/weaveworks/flux) for details.
 
 #### Enable Weave Flux to Update Your GitHub Repo
 In order to allow  Flux to install new Docker images, Flux will need write access to your Git repo. You provide that by getting the Flux public key from the Flux server using the Flux client and by adding the key to your Git Repo as a "deploy key". 
