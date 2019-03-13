@@ -11,6 +11,7 @@ spec:
     path: stable/ambassador
     ref: master
   values:
+    nameOverride: ambassador
     securityContext:
       runAsNonRoot: false
     replicaCount: 1
