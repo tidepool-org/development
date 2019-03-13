@@ -204,13 +204,22 @@ Then, Weave Flux will poll the your GitHub `CONFIG_REPO`. It will compare the co
 
 Finally, using helm, install the Weave Flux operator into your cluster:
 
-#### Clone Config Repo
+#### Clone and Modify Config Repo
 
-To do this, first [fork and clone the development repo](https://medium.com/@bilalbayasut/github-how-to-make-a-fork-of-public-repository-private-6ee8cacaf9d3).  We will use this clone as your private `CONFIG_REPO`:
+To do this, first clone the development repo.  We will use this clone as your private `CONFIG_REPO`:
 ```
+export CONFIG_REPO="git@github.com:${YOUR-GITHUB-ID}/development.git"
+export YOUR_BRANCH_NAME=my_config
 git clone git@github.com:tidepool-org/development.git
+cd development
+git checkout k8s
+git checkout -b ${YOUR_BRANCH_NAME}
+[make your changes]
+git commit -m "Description of your changes"
+git remote add origin ${CONFIG_REPO}
+git push origin ${YOUR_BRANCH_NAME}
 ```
-Then, you can modify your clone as you like and watch how Weave Flux keeps your Kubernetes cluster in sync.
+Then watch how Weave Flux keeps your Kubernetes cluster in sync.
 
 **Remember to start with the `k8s` branch until the Kubernetes work is merged into the `master` branch!** 
 
