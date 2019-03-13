@@ -163,7 +163,7 @@ In our Tidepool Helm [template files](https://github.com/tidepool-org/developmen
 To change the Docker images while the cluster is running, first create a local file (`values-override.yaml`) with the image name and tags to change.  Then, upgrade your helm release with the   `helm upgrade` command and provide a set of new values in a local file:
 
 ```
-helm upgrade ${RELEASE_NAME} https://github.com/tidepool-org/development/tree/k8s/k8s/charts/tidepool -f values-override.yaml
+helm upgrade ${RELEASE_NAME} k8s/charts/tidepool -f values-override.yaml
 ```
 
 #### GitOps
