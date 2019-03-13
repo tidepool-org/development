@@ -1,14 +1,14 @@
 
 ### Running Tidepool on Kubernetes
 Tidepool can be run on Kubernetes. Here are the instructions on: 
-* [How To Install Client Tools](#How-To-Install-Client-Tools)
+* [How to Install Client Tools](#How-to-Install-Client-Tools)
 * [How to Create A Kubernetes Cluster](#How-to-Create-A-Kubernetes-Cluster)
 * [How to Bootstrap Your Cluster](#How-to-Bootstrap-Your-Cluster)
 * [How to Install the Tidepool Services](#How-to-Install-the-Tidepool-Services)
-* [How To Access the Tidepool Services](#How-To-Access-the-Tidepool-Services)
+* [How to Access the Tidepool Services](#How-to-Access-the-Tidepool-Services)
 * [How to Inspect Your Cluster](#How-to-Inspect-Your-Cluster)
 
-### How To Install Client Tools
+### How to Install Client Tools
 
 There are a number of useful client tools for interacting with a Kubernetes cluster.  These instructions assume that you are on MacOSX.
 
@@ -256,7 +256,7 @@ fluxctl identity
 #### Post the Flux Public Key to GitHub
 Then, open GitHub, navigate to your fork, go to `Setting > Deploy` keys click on `Add deploy key,` check` Allow write access`, paste the Flux public key and click `Add key`.
 
-### How To Access the Tidepool Services
+### How to Access the Tidepool Services
 
 Once you have installed the Tidepool services in your cluster, they will start and run.  
 
@@ -322,7 +322,7 @@ Given private access (`kubectl`) to a Kubernetes cluster, you may look at Kubern
     *   See what images are available to deploy
         *   <code>fluxctl list-images</code>
 
-### How To Debug Your Kubernetes Services
+### How to Debug Your Kubernetes Services
 
 Debugging Kubernetes services can be as easy as debugging services running locally with [Telepresence](https://www.telepresence.io/discussion/overview) or [Squash](https://squash.solo.io/). 
 
