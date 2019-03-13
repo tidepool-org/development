@@ -170,6 +170,7 @@ So, let use start off by cloning the Tidepool repo with the helm chart.
 export CONFIG_REPO="git@github.com:${YOUR-GITHUB-ID}/development.git"
 export YOUR_BRANCH_NAME=my_config
 git clone git@github.com:tidepool-org/development.git
+git remote add origin ${CONFIG_REPO}
 cd development
 export REPO_DIR=$(pwd)
 git checkout k8s
@@ -225,7 +226,6 @@ In order to use Weave Flux, you must publish your repo to GitHub:
 
 ```
 cd ${REPO_DIR}
-git remote add origin ${CONFIG_REPO}
 git push origin ${YOUR_BRANCH_NAME}
 ```
 Then watch how Weave Flux keeps your Kubernetes cluster in sync.
