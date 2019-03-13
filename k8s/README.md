@@ -130,6 +130,16 @@ To see what is running in your cluster, we use the [Kubernetes dashboard](http:/
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml
 ```
 
+### To access the k8s dashboard:
+
+run ```kubectl proxy``` to forward the connection
+
+A token is needed to access the k8s dashboard, retrieve the token as follows:
+
+```SECRET_NAME=$(kubectl get serviceaccount default -n kube-system -o jsonpath='{.secrets[].name}')```
+
+```kubectl get secret ${SECRET_NAME} -o jsonpath='{.data.token}' -n kube-system | base64 -D```
+
 ### How to Install the Tidepool Services
 
 You may install the Tidepool service manually into your Kubernetes cluster using the [Helm package manager](https://helm.sh/) with a single command.
