@@ -28,6 +28,8 @@ spec:
           kind:  Module
           name:  ambassador
           config:
+            server:
+              redirect_cleartext_from: 8080
             service_port: 8443
             use_proxy_proto: false
             use_remote_address: false
