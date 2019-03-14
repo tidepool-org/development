@@ -6,7 +6,7 @@ metadata:
 spec:
   virtualHost:
     domains:
-    - 'qa1-app.tidepool.org'
+    - '*'
     name: gloo-system.qa1
     routes:
     - matcher:
