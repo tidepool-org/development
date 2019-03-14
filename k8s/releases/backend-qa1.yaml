@@ -6,8 +6,8 @@ metadata:
   namespace: qa1
   annotations:
     flux.weave.works/automated: "true"
-    flux.weave.works/tag.shoreline: "glob:noHakken*"
-    flux.weave.works/tag.tidewhisperer: "glob:noHakken*"
+    flux.weave.works/tag.shoreline: "noHakken-402756"
+    flux.weave.works/tag.tidewhisperer: "noHakken-726e678"
     flux.weave.works/tag.hakken: "glob:noHakken*"
     flux.weave.works/tag.blip: "glob:*"
     flux.weave.works/tag.gatekeeper: "glob:*"
@@ -17,7 +17,7 @@ metadata:
     flux.weave.works/tag.export: "glob:v1.3.*"
     flux.weave.works/tag.mongo: "regexp:mongo:3.2"
     flux.weave.works/tag.seagull: "glob:noHakken*"
-    flux.weave.works/tag.hydrophone: "glob:noHakken*"
+    flux.weave.works/tag.hydrophone: "noHakken-5d5a6e"
     flux.weave.works/tag.messageapi: "glob:quiet*"
     flux.weave.works/tag.platformAuth: "glob:quiet*"
     flux.weave.works/tag.platformBlob: "glob:quiet*"
