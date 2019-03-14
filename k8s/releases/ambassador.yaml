@@ -20,7 +20,7 @@ spec:
         sidecar.istio.io/inject: "false"
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:iam::118346523422:server-certificate/wildcard.tidepool.org-2020-11-15-digicert"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
-        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "https"
+        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
         service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
         getambassador.io/config: |
           --- 
@@ -28,9 +28,6 @@ spec:
           kind:  Module
           name:  ambassador
           config:
-            server:
-              redirect_cleartext_from: 8080
-            service_port: 8443
             use_proxy_proto: false
             use_remote_address: false
             x_forwarded_proto_redirect: true
