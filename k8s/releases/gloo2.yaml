@@ -1,20 +1,20 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: qa1
+  name: qa2
   namespace: gloo-system
 spec:
   virtualHost:
     domains:
-    - 'qa1-app.tidepool.org'
-    name: gloo-system.qa1
+    - 'qa2-app.tidepool.org'
+    name: gloo-system.qa2
     routes:
     - matcher:
         prefix: /userservices/
       routeAction:
         single:
           upstream:
-            name: qa1-platform-user-9221
+            name: qa2-platform-user-9221
             namespace: gloo-system
     - matcher:
         methods:
@@ -24,7 +24,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-task-9224
+            name: qa2-platform-task-9224
             namespace: gloo-system
     - matcher:
         methods:
@@ -35,7 +35,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-image-9226
+            name: qa2-platform-image-9226
             namespace: gloo-system
     - matcher:
         methods:
@@ -46,14 +46,14 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-image-9226
+            name: qa2-platform-image-9226
             namespace: gloo-system
     - matcher:
         prefix: /dataservices/
       routeAction:
         single:
           upstream:
-            name: qa1-platform-data-9220
+            name: qa2-platform-data-9220
             namespace: gloo-system
       routePlugins:
         prefixRewrite:
@@ -63,7 +63,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-data-9220
+            name: qa2-platform-data-9220
             namespace: gloo-system
       routePlugins:
         prefixRewrite:
@@ -77,7 +77,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-data-9220
+            name: qa2-platform-data-9220
             namespace: gloo-system
     - matcher:
         methods:
@@ -86,7 +86,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-data-9220
+            name: qa2-platform-data-9220
             namespace: gloo-system
     - matcher:
         methods:
@@ -96,7 +96,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-data-9220
+            name: qa2-platform-data-9220
             namespace: gloo-system
     - matcher:
         methods:
@@ -105,7 +105,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-data-9220
+            name: qa2-platform-data-9220
             namespace: gloo-system
     - matcher:
         methods:
@@ -114,7 +114,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-data-9220
+            name: qa2-platform-data-9220
             namespace: gloo-system
     - matcher:
         methods:
@@ -125,7 +125,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-data-9220
+            name: qa2-platform-data-9220
             namespace: gloo-system
     - matcher:
         methods:
@@ -134,7 +134,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-data-9220
+            name: qa2-platform-data-9220
             namespace: gloo-system
     - matcher:
         methods:
@@ -145,7 +145,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-blob-9225
+            name: qa2-platform-blob-9225
             namespace: gloo-system
     - matcher:
         methods:
@@ -155,7 +155,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-blob-9225
+            name: qa2-platform-blob-9225
             namespace: gloo-system
     - matcher:
         methods:
@@ -166,7 +166,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-auth-9222
+            name: qa2-platform-auth-9222
             namespace: gloo-system
     - matcher:
         methods:
@@ -177,7 +177,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-auth-9222
+            name: qa2-platform-auth-9222
             namespace: gloo-system
     - matcher:
         methods:
@@ -188,7 +188,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-auth-9222
+            name: qa2-platform-auth-9222
             namespace: gloo-system
     - matcher:
         methods:
@@ -199,7 +199,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-auth-9222
+            name: qa2-platform-auth-9222
             namespace: gloo-system
     - matcher:
         methods:
@@ -209,14 +209,14 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-auth-9222
+            name: qa2-platform-auth-9222
             namespace: gloo-system
     - matcher:
         prefix: /data/
       routeAction:
         single:
           upstream:
-            name: qa1-tide-whisperer-9127
+            name: qa2-tide-whisperer-9127
             namespace: gloo-system
       routePlugins:
         prefixRewrite:
@@ -226,7 +226,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-shoreline-9107
+            name: qa2-shoreline-9107
             namespace: gloo-system
       routePlugins:
         prefixRewrite:
@@ -236,7 +236,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-seagull-9120
+            name: qa2-seagull-9120
             namespace: gloo-system
       routePlugins:
         prefixRewrite:
@@ -249,7 +249,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-user-9221
+            name: qa2-platform-user-9221
             namespace: gloo-system
     - matcher:
         methods:
@@ -260,7 +260,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-task-9224
+            name: qa2-platform-task-9224
             namespace: gloo-system
     - matcher:
         methods:
@@ -271,7 +271,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-image-9226
+            name: qa2-platform-image-9226
             namespace: gloo-system
     - matcher:
         methods:
@@ -282,28 +282,28 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-platform-data-9220
+            name: qa2-platform-data-9220
             namespace: gloo-system
     - matcher:
         regex: /v1/blobs/[^/]+/content
       routeAction:
         single:
           upstream:
-            name: qa1-platform-blob-9225
+            name: qa2-platform-blob-9225
             namespace: gloo-system
     - matcher:
         regex: /v1/oauth/[^/]+/redirect
       routeAction:
         single:
           upstream:
-            name: qa1-platform-auth-9222
+            name: qa2-platform-auth-9222
             namespace: gloo-system
     - matcher:
         prefix: /message/
       routeAction:
         single:
           upstream:
-            name: qa1-message-api-9119
+            name: qa2-message-api-9119
             namespace: gloo-system
       routePlugins:
         prefixRewrite:
@@ -313,7 +313,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-hydrophone-9157
+            name: qa2-hydrophone-9157
             namespace: gloo-system
       routePlugins:
         prefixRewrite:
@@ -323,7 +323,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-highwater-9191
+            name: qa2-highwater-9191
             namespace: gloo-system
       routePlugins:
         prefixRewrite:
@@ -333,14 +333,14 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-gatekeeper-9123
+            name: qa2-gatekeeper-9123
             namespace: gloo-system
     - matcher:
         prefix: /export/
       routeAction:
         single:
           upstream:
-            name: qa1-export-9300
+            name: qa2-export-9300
             namespace: gloo-system
       routePlugins:
         prefixRewrite:
@@ -350,5 +350,5 @@ spec:
       routeAction:
         single:
           upstream:
-            name: qa1-blip-3000
+            name: qa2-blip-3000
             namespace: gloo-system
