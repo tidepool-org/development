@@ -34,6 +34,8 @@ spec:
     path: k8s/charts/tidepool
     ref: k8s
   values:
+    api:
+      host: gateway-proxy.gloo-system
     hostnameOverride: ""
     ambassador:
       enabled: false
