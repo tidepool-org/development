@@ -14,6 +14,10 @@ spec:
     fullnameOverride: ambassador
     replicaCount: 1
     service:
+      http:
+        port: 8080
+      https:
+        port: 8443
       annotations:
         sidecar.istio.io/inject: "false"
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:iam::118346523422:server-certificate/wildcard.tidepool.org-2020-11-15-digicert"
