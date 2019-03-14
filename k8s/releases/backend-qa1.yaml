@@ -48,7 +48,7 @@ spec:
     highwater:
       image: tidepool/highwater:OAuth
     hydrophone:
-      image: tidepool/hydrophone:noHakken-5d5a6e
+      image: tidepool/hydrophone:noHakken
     jellyfish:
       image: tidepool/jellyfish:OAuth
     messageapi:
@@ -78,5 +78,5 @@ spec:
     shoreline:
       image: tidepool/shoreline:noHakken-402756
     tidewhisperer:
-      image: tidepool/tide-whisperer:noHakken-726e678
+      image: tidepool/tide-whisperer:noHakken
 
