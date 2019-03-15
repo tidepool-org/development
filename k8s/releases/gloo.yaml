@@ -4,6 +4,10 @@ metadata:
   name: qa1
   namespace: gloo-system
 spec:
+  sslConfig:
+    secretRef: 
+      name: tidepool-org
+      namespace: gloo-system
   virtualHost:
     domains:
     - '*'

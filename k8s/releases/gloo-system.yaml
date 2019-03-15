@@ -64,8 +64,7 @@ spec:
         httpPort: 80
         httpsPort: 443
         extraAnnotations:
-          service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:iam::118346523422:server-certificate/wildcard.tidepool.org-2020-11-15-digicert
-          service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+          service.beta.kubernetes.io/aws-load-balancer-backend-protocol: https
       configMap:
         data:
     
