@@ -2,7 +2,7 @@
 ### Running Tidepool on Kubernetes
 Tidepool can be run on Kubernetes. Here are the instructions on: 
 * [How to Install Client Tools](#How-to-Install-Client-Tools)
-* [How to Create A Kubernetes Cluster](#How-to-Create-A-Kubernetes-Cluster)
+* [How to Create A Local Kubernetes Cluster](#How-to-Create-A-Kubernetes-Cluster)
 * [How to Bootstrap Your Cluster](#How-to-Bootstrap-Your-Cluster)
 * [How to Install the Tidepool Services](#How-to-Install-the-Tidepool-Services)
 * [How to Access the Tidepool Services](#How-to-Access-the-Tidepool-Services)
@@ -31,8 +31,7 @@ brew install boz/repo/kail
 ### How to Create A Kubernetes Cluster
 You may create a Kubernetes cluster on your local machine, on machines in your data center ("on prem"), or on a cloud service.  In each case, there are several ways to do so.  
 
-Here we provide instructions for creating a single node "cluster" on your local machine and for a multi-node cluster using the Amazon EKS service.  
-#### Creating a Local Kubernetes Cluster
+Here we provide instructions for creating a single node "cluster" on your local machine.  
 
 There are several ways to run Kubernetes on your local machine ([docker desktop](https://rominirani.com/tutorial-getting-started-with-kubernetes-with-docker-on-mac-7f58467203fd), [k3s](https://k3s.io/), [minikube](https://kubernetes.io/docs/setup/minikube/), [kind](https://github.com/kubernetes-sigs/kind), etc.) and several [opinions](https://medium.com/containers-101/local-kubernetes-for-mac-minikube-vs-docker-desktop-f2789b3cad3a) on which is best.  Any one will probably do. 
 
@@ -50,79 +49,29 @@ sudo chown root:wheel /usr/local/opt/docker-machine-driver-hyperkit/bin/docker-m
 sudo chmod u+s /usr/local/opt/docker-machine-driver-hyperkit/bin/docker-machine-driver-hyperkit
 minikube config set vm-driver hyperkit
 ```
-##### Configure minikube
+#### Configure minikube
 (to use the same version of K8s that Tidepool uses)
 ```
 minikube config set kubernetes-version v1.11.5
 minikube config set memory 8192
 minikube config set cpus 4
 ```
-##### Start minikube and modify networking 
+#### Start minikube and modify networking 
 ```
 minikube start --extra-config=apiserver.authorization-mode=RBAC
 minikube ssh -- sudo ip link set docker0 promisc on
 ```
-##### Configure CLI tools to talk to your local cluster. 
+#### Configure CLI tools to talk to your local cluster. 
 
 In **each and every window** that you will use the Docker cli, you must set environment variables to use the Docker daemon in the minikube VM:
 ```
 eval $(minikube docker-env)
 ```
-##### Stop your cluster
+#### Stop your cluster
 Kubernetes can be a heavy resource consumer.  So, you may want to (non-destructively) stop the virtual machine running your cluster when you are not using it.  You may restart it later with the `minikube start `command above.
 ```
 minikube stop
 ```
-
-#### Creating Your Own Private Remote K8S Cluster
-If you have access to AWS, you can create your own managed Kubernetes cluster using [Amazon Elastic Container Service for Kubernetes (Amazon EKS)](https://aws.amazon.com/eks/). 
-
-For convenience, our partners at WeaveWorks have created [eksctl](https://eksctl.io/), a terrific tool to create and manage an EKS managed Kubernetres cluster.
-
-##### Install the `eksctl` client
-
-```
-brew tap weaveworks/tap
-brew install weaveworks/tap/eksctl
-```
-
-##### Create Your EKS Cluster
-```
-eksctl create cluster --auto-kubeconfig --region=us-west-2 --nodes=3
-```
-This will create a cluster with a generated name and will create a new `KUBECONFIG` file for you.
-
-Save the cluster name in an environment variable for later. Here is a script that uses `jq` to extract the name from eksctl:
-```
-export CLUSTER_NAME=$(eksctl get cluster --region=us-west-2 -o json | jq ".[0].name" | sed -e "s/\"//g")
-```
-Save the KUBECONFIG file name as well:
-```
-export KUBECONFIG="~/.kube/eksctl/clusters/${CLUSTER_NAME}"
-```
-With `eksctl` you may also adjust the cluster resources as needed.
-
-##### Authenticate with AWS IAM Credentials
-You may use your Amazon IAM credentials to authenticate to a Kubernetes cluster using [aws-iam-authenticator](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html).
-```
-brew install aws-iam-authenticator
-```
-
-##### Scale Your Nodegroup	
-Virtual machines in Kubernetes that run your services are called nodes. They are organized into node groups that you can scale up or down in size:
-```
-export NODE_GROUP=$(eksctl get nodegroup --region=us-west-2 --cluster ${CLUSTER_NAME} -o json| jq '.[0].Name' | sed -e 's/"//g')
-
-eksctl scale nodegroup --region=us-west-2 --cluster ${CLUSTER_NAME} --nodes=4 ${NODE_GROUP}
-```
-##### Delete Your Cluster
-When you have no more use for you EKS cluster, you may delete it from Amazon EKS:
-```
-eksctl delete cluster --name=$(CLUSTER_NAME)
-```
-These are just a few examples of what you do with `eksctl`.
-
-As an unmanaged alternative to `eksctl`, you may use [kops](https://github.com/kubernetes/kops) to create your own Kubernetes cluster directly on Amazon EC2. This avoids the management fee of Amazon EKS, but places responsibility on you for maintaining the control plan of your Kubernetes cluster.
 
 ### How to Bootstrap Your Cluster
 
@@ -305,18 +254,7 @@ Given private access (`kubectl`) to a Kubernetes cluster, you may look at Kubern
             *   <code>SECRET_NAME=$(kubectl get serviceaccount default -n kube-system -o jsonpath='{.secrets[].name}')</code>
             *   <code>kubectl get secret ${SECRET_NAME} -o jsonpath='{.data.token}' -n kube-system | base64 -D</code>
         *   Open [http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login)
-    *   [Service Graph](https://istio.io/docs/tasks/telemetry/servicegraph/) (if installed)
-        *   <code>kubectl port-forward -n istio-system svc/servicegraph 8088:8088 &</code>
-        *   Open [http://localhost:8088/force/forcegraph.html](http://localhost:8088/force/forcegraph.html) 
-    *   [Kiali](https://www.kiali.io/) (if installed)
-        *   <code>kubectl port-forward -n istio-system svc/kiali 20001:20001 &</code>
-        *   Open [http://localhost:20001/kiali](http://localhost:20001/kiali)
-    *   [Prometheus](https://istio.io/docs/tasks/telemetry/querying-metrics/) (if installed)
-        *   <code>kubectl port-forward -n istio-system svc/prometheus 9090:9090 &</code>
-        *   Open [http://localhost:9090/graph](http://localhost:9090/graph)
-    *   [Jaeger](https://istio.io/docs/tasks/telemetry/distributed-tracing/)  (if installed)
-        *   <code>kubectl port-forward -n istio-system svc/jaeger 16686:16686 &</code>
-        *   Open [http://localhost:16686](http://localhost:16686/)
+
 *   Logs
     *   All services
         *   <code>kail</code>
@@ -334,35 +272,3 @@ Given private access (`kubectl`) to a Kubernetes cluster, you may look at Kubern
     *   See what images are available to deploy
         *   <code>fluxctl list-images</code>
 
-### How to Debug Your Kubernetes Services
-
-Debugging Kubernetes services can be as easy as debugging services running locally with [Telepresence](https://www.telepresence.io/discussion/overview) or [Squash](https://squash.solo.io/). 
-
-#### Telepresence
-With Telepresence, you run and debug *one* service locally that *appears to Kubernetes to be running in your Kubernetes cluster*.
-
-From the developer:
-
->Presence is an open source tool that lets you run a single service locally, while connecting that service to a remote Kubernetes cluster. This lets developers working on multi-service applications to:
->
-> * Do fast local development of a single service, even if that service depends on other services in your cluster. Make a change to your service, save, and you can immediately see the new service in action.
->
-> * Use any tool installed locally to test/debug/edit your service. For example, you can use a debugger or IDE!
->
-> * Make your local development machine operate as if it's part of your Kubernetes cluster. If you've got an application on your machine that you want to run against a service in the cluster -- it's easy to do.
-
-#### Squash
-With Squash, all services run in your Kubernetes, but *appear to your debugger to run locally*.
-
-From the developer:
-
->Squash brings the power of modern debuggers to developers of microservice apps. Squash bridges between the apps running in a Kubernetes environment (without modifying them) and the IDE. Users are free to choose which containers, pods, services or images they are interested in debugging, and are allowed to set breakpoints in their codes, follow values of their variables on the fly, step through the code while jumping between microservices, and change these values during run time.
->
->With Squash, you can:
-> * Debug running microservices
-> * Debug container in a pod
-> * Debug a service
-> * Set breakpoints
-> * Step through code
-> * View and modify values of variables
-> …anything you could do with a regular debugger, and more!
