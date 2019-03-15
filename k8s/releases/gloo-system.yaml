@@ -64,7 +64,7 @@ spec:
         httpPort: 80
         httpsPort: 443
         extraAnnotations:
-          service.beta.kubernetes.io/aws-load-balancer-backend-protocol: https
+          service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
       configMap:
         data:
     
