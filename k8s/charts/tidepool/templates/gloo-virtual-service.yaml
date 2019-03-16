@@ -1,0 +1,360 @@
+{{ if .Values.gloo.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: {{.Release.Namespace}}
+  namespace: gloo-system
+spec:
+  sslConfig:
+    secretRef: 
+      name: tidepool-org
+      namespace: gloo-system
+  virtualHost:
+    domains:
+    - {{ include "charts.hostname" . }}
+    name: gloo-system.{{.Release.Namespace}}
+    routes:
+    - matcher:
+        prefix: /userservices/
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-user-{{ .Values.platformUser.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - POST
+        prefix: /v1/tasks
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-task-{{ .Values.platformTask.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - PUT
+        - DELETE
+        regex: /v1/images
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-image-{{ .Values.platformImage.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - POST
+        - GET
+        - DELETE
+        regex: /v1/users/[^/]+/images
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-image-{{ .Values.platformImage.port }}
+            namespace: gloo-system
+    - matcher:
+        prefix: /dataservices/
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-data-{{ .Values.platformData.port }}
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /v1/data/
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-data-{{ .Values.platformData.port }}
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - POST
+        - DELETE
+        regex: /v1/users/[^/]+/data_sources
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-data-{{ .Values.platformData.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        regex: /v1/users/[^/]+/data_sets
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-data-{{ .Values.platformData.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - POST
+        regex: /v1/users/[^/]+/datasets
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-data-{{ .Values.platformData.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - DELETE
+        regex: /v1/users/[^/]+/data
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-data-{{ .Values.platformData.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        prefix: /v1/time
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-data-{{ .Values.platformData.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - PUT
+        - DELETE
+        regex: /v1/data_sources/[^/]+
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-data-{{ .Values.platformData.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        prefix: /v1/data_sets
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-data-{{ .Values.platformData.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - POST
+        - DELETE
+        regex: /v1/users/[^/]+/blobs
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-blob-{{ .Values.platformBlob.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        regex: /v1/blobs/[^/]+
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-blob-{{ .Values.platformBlob.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        - PUT
+        regex: /v1/users/[^/]+/restricted_tokens
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-auth-{{ .Values.platformAuth.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        - PUT
+        regex: /v1/users/[^/]+/provider_sessions
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-auth-{{ .Values.platformAuth.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        - PUT
+        regex: /v1/restricted_tokens
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-auth-{{ .Values.platformAuth.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        - PUT
+        regex: /v1/provider_sessions/[^/]+
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-auth-{{ .Values.platformAuth.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        regex: /v1/oauth/[^/]+/authorize
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-auth-{{ .Values.platformAuth.port }}
+            namespace: gloo-system
+    - matcher:
+        prefix: /data/
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-tide-whisperer-{{ .Values.tidewhisperer.port }}
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /auth/
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-shoreline-{{ .Values.shoreline.port }}
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /metadata/
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-seagull-{{ .Values.seagull.port }}
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        regex: /v1/users/[^/*]
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-user-{{ .Values.platformUser.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - POST
+        - PUT
+        - DELETE
+        regex: /v1/tasks/[^/*]
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-task-{{ .Values.platformTask.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - POST
+        - PUT
+        - DELETE
+        regex: /v1/users/[^/]+/images/.+s
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-image-{{ .Values.platformImage.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - POST
+        - PUT
+        - DELETE
+        prefix: /v1/datasets
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-data-{{ .Values.platformData.port }}
+            namespace: gloo-system
+    - matcher:
+        regex: /v1/blobs/[^/]+/content
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-blob-{{ .Values.platformBlob.port }}
+            namespace: gloo-system
+    - matcher:
+        regex: /v1/oauth/[^/]+/redirect
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-auth-{{ .Values.platformAuth.port }}
+            namespace: gloo-system
+    - matcher:
+        prefix: /message/
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-message-api-{{ .Values.messageapi.port }}
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /confirm/
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-hydrophone-{{ .Values.hydrophone.port }}
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /metrics/
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-highwater-{{ .Values.highwater.port }}
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /access/
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-gatekeeper-{{ .Values.gatekeeper.port }}
+            namespace: gloo-system
+    - matcher:
+        prefix: /export/
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-export-{{ .Values.export.port }}
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-blip-{{ .Values.blip.port }}
+            namespace: gloo-system
+{{-- end --}}

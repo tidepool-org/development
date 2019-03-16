@@ -5,8 +5,10 @@ environment: production
 includeSecrets: true
 image:
   pullPolicy: IfNotPresent
-ambassador:
+gloo:
   enabled: true
+ambassador:
+  enabled: false
   id: default
 externalapi: 
   port: 80
