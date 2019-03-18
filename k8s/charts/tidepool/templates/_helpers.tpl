@@ -56,7 +56,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://{{.Values.platformAuth.host}}:{{.Values.platformAuth.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: https://{{- include "charts.apihost" . -}}:{{.Values.api.port}}
+          value: http://{{- include "charts.apihost" . -}}:{{.Values.api.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
@@ -112,7 +112,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_MESSAGE_STORE_DATABASE
           value: messages
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
-          value: https://{{- include "charts.apihost" . -}}:{{.Values.api.port}}
+          value: http://{{- include "charts.apihost" . -}}:{{.Values.api.port}}
         - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
           value: http://{{.Values.platformNotification.host}}:{{.Values.platformNotification.port}}
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
