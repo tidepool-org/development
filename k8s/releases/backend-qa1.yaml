@@ -1,3 +1,4 @@
+---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
@@ -28,7 +29,7 @@ spec:
     highwater:
       image: tidepool/highwater:OAuth
     hydrophone:
-      image: tidepool/hydrophone:noHakken-5d5a6e
+      image: tidepool/hydrophone:noHakken
     jellyfish:
       image: tidepool/jellyfish:OAuth
     messageapi:
@@ -36,7 +37,7 @@ spec:
     mailhog:
       image: mailhog/mailhog:v1.0.0
     mongo:
-      image: mongo:3.2
+      image: mongo:4.1
     platformAuth:
       image: tidepool/platform-auth:quiet
     platformBlob:
@@ -58,5 +59,5 @@ spec:
     shoreline:
       image: tidepool/shoreline:noHakken-402756
     tidewhisperer:
-      image: tidepool/tide-whisperer:noHakken-726e678
+      image: tidepool/tide-whisperer:noHakken
 
