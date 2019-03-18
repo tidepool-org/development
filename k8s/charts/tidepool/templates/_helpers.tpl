@@ -17,7 +17,7 @@ Expand the name of the chart.
 {{- define "charts.apihost" -}}
 {{ if .Values.gloo.enabled }}
 gateway-proxy.gloo-system
-{{-- else -}}
+{{- else -}}
 ambassador.default.svc.cluster.local
 {{- end -}}
 
