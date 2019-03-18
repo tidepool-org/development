@@ -20,6 +20,7 @@ gateway-proxy.gloo-system
 {{- else -}}
 ambassador.default.svc.cluster.local
 {{- end -}}
+{{- end -}}
 
 
 {{/*
