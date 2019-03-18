@@ -32,10 +32,10 @@ spec:
       containers:
       - env:
         - name: API_HOST
-          value: http://{{ include "charts.hostname" . }}
+          value: https://{{ include "charts.hostname" . }}
         - name: DEV_TOOLS
           value: "true"
-        - name: DISCOVERY_HOST
+        - name: DISCOVVERY_HOST
           value: '{{.Values.hakken.host}}:{{.Values.hakken.port}}'
         - name: NODE_ENV
           value: '{{.Values.environment}}'
