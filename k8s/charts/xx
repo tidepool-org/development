@@ -1,0 +1,4576 @@
+---
+# Source: tidepool/templates/server-secret.yaml
+
+apiVersion: v1
+data:
+  secret: VGhpcyBuZWVkcyB0byBiZSB0aGUgc2FtZSBzZWNyZXQgZXZlcnl3aGVyZS4gWWFIdXQ3NU5zSzFmOVVLVVh1V3F4Tk4wUlV3SEZCQ3k=
+  gatekeeper: VGhpcyBzZWNyZXQgaXMgdXNlZCB0byBlbmNyeXB0IHRoZSBncm91cElkIHN0b3JlZCBpbiB0aGUgREIgZm9yIGdhdGVrZWVwZXI=
+  session: U2lnbiB0aGUgZXhwb3J0IHNlcnZpY2Ugc2Vzc2lvbiB3aXRoIHRoaXMgc2VjcmV0
+  auth: U2VydmljZSBzZWNyZXQgdXNlZCBmb3IgaW50ZXJzZXJ2aWNlIHJlcXVlc3RzIHdpdGggdGhlIGF1dGggc2VydmljZQ==
+  blob: U2VydmljZSBzZWNyZXQgdXNlZCBmb3IgaW50ZXJzZXJ2aWNlIHJlcXVlc3RzIHdpdGggdGhlIGJsb2Igc2VydmljZQ==
+  data: U2VydmljZSBzZWNyZXQgdXNlZCBmb3IgaW50ZXJzZXJ2aWNlIHJlcXVlc3RzIHdpdGggdGhlIGRhdGEgc2VydmljZQ==
+  image: U2VydmljZSBzZWNyZXQgdXNlZCBmb3IgaW50ZXJzZXJ2aWNlIHJlcXVlc3RzIHdpdGggdGhlIGltYWdlIHNlcnZpY2U=
+  notification: U2VydmljZSBzZWNyZXQgdXNlZCBmb3IgaW50ZXJzZXJ2aWNlIHJlcXVlc3RzIHdpdGggdGhlIG5vdGlmaWNhdGlvbiBzZXJ2aWNl
+  task: U2VydmljZSBzZWNyZXQgdXNlZCBmb3IgaW50ZXJzZXJ2aWNlIHJlcXVlc3RzIHdpdGggdGhlIHRhc2sgc2VydmljZQ==
+  user: U2VydmljZSBzZWNyZXQgdXNlZCBmb3IgaW50ZXJzZXJ2aWNlIHJlcXVlc3RzIHdpdGggdGhlIHVzZXIgc2VydmljZQ==
+  api: VGhpcyBpcyBhIGxvY2FsIEFQSSBzZWNyZXQgZm9yIGV2ZXJ5b25lLiBCc3NjU0hxU0hpd3JCTUpzRUdxYnZYaXVJVVBBalFYVQ==
+kind: Secret
+type: Opaque
+metadata:
+  name: server-secret
+  namespace: default
+  labels:
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+
+---
+# Source: tidepool/charts/gloo/templates/9-gateway-proxy-configmap.yaml
+
+# config_map
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-envoy-config
+  namespace: default
+  labels:
+    app: gloo
+data:
+
+  envoy.yaml: |
+    node:
+      cluster: gateway
+      id: "{{.PodName}}.{{.PodNamespace}}"
+      metadata:
+        # this line must match !
+        role: "{{.PodNamespace}}~gateway-proxy"
+    static_resources:
+      clusters:
+      - name: xds_cluster
+        connect_timeout: 5.000s
+        load_assignment:
+          cluster_name: xds_cluster
+          endpoints:
+          - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: gloo
+                    port_value: 9977
+        http2_protocol_options: {}
+        type: STRICT_DNS
+    dynamic_resources:
+      ads_config:
+        api_type: GRPC
+        grpc_services:
+        - envoy_grpc: {cluster_name: xds_cluster}
+      cds_config:
+        ads: {}
+      lds_config:
+        ads: {}
+    admin:
+      access_log_path: /dev/null
+      address:
+        socket_address:
+          address: 127.0.0.1
+          port_value: 19000
+---
+# Source: tidepool/templates/mailhog-persistentvolumeclaim.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mailhog
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: mailhog1
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+
+---
+# Source: tidepool/templates/mongo-persistentvolumeclaim.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongo
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: mongo1
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+
+---
+# Source: tidepool/charts/gloo/templates/100-gloo-crds.yaml
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: settings.gloo.solo.io
+  annotations:
+    "helm.sh/hook": crd-install
+  labels:
+    gloo: settings
+spec:
+  group: gloo.solo.io
+  names:
+    kind: Settings
+    listKind: SettingsList
+    plural: settings
+    shortNames:
+      - st
+  scope: Namespaced
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: gateways.gateway.solo.io
+  annotations:
+    "helm.sh/hook": crd-install
+spec:
+  group: gateway.solo.io
+  names:
+    kind: Gateway
+    listKind: GatewayList
+    plural: gateways
+    shortNames:
+      - gw
+    singular: gateway
+  scope: Namespaced
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: virtualservices.gateway.solo.io
+  annotations:
+    "helm.sh/hook": crd-install
+spec:
+  group: gateway.solo.io
+  names:
+    kind: VirtualService
+    listKind: VirtualServiceList
+    plural: virtualservices
+    shortNames:
+      - vs
+    singular: virtualservice
+  scope: Namespaced
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: proxies.gloo.solo.io
+  annotations:
+    "helm.sh/hook": crd-install
+spec:
+  group: gloo.solo.io
+  names:
+    kind: Proxy
+    listKind: ProxyList
+    plural: proxies
+    shortNames:
+      - px
+    singular: proxy
+  scope: Namespaced
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: upstreams.gloo.solo.io
+  annotations:
+    "helm.sh/hook": crd-install
+spec:
+  group: gloo.solo.io
+  names:
+    kind: Upstream
+    listKind: UpstreamList
+    plural: upstreams
+    shortNames:
+      - us
+    singular: upstream
+  scope: Namespaced
+  version: v1
+---
+---
+# Source: tidepool/charts/gloo/templates/1-namespace-clusterrole.yaml
+
+
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+    name: gloo-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "secrets", "endpoints", "configmaps"]
+  verbs: ["*"]
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["get", "create"]
+- apiGroups: ["gloo.solo.io"]
+  resources: ["settings", "upstreams", "proxies","virtualservices"]
+  verbs: ["*"]
+- apiGroups: ["gateway.solo.io"]
+  resources: ["virtualservices", "gateways"]
+  verbs: ["*"]
+---
+# Source: tidepool/charts/gloo/templates/2-namespace-clusterrolebinding.yaml
+
+
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: gloo-role-binding
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: gloo-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: tidepool/charts/gloo/templates/4-gloo-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: gloo
+    gloo: gloo
+  name: gloo
+  namespace: default
+spec:
+  ports:
+  - name: grpc
+    port: 9977
+    protocol: TCP
+  selector:
+    gloo: gloo
+
+---
+# Source: tidepool/charts/gloo/templates/8-gateway-proxy-service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: gloo
+    gloo: gateway-proxy
+  name: gateway-proxy
+  namespace: default
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  - port: 443
+    targetPort: 8443
+    protocol: TCP
+    name: https
+  selector:
+    gloo: gateway-proxy
+  type: LoadBalancer
+
+---
+# Source: tidepool/templates/blip-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-blip
+      prefix: /
+      rewrite: ""
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      service: blip.default:3000
+  creationTimestamp: null
+  labels:
+    io.kompose.service: blip
+    app.kubernetes.io/name: tidepool
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/managed-by: Tiller
+  name: blip
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+  - name: "3000"
+    port: 3000
+    targetPort: 3000
+  selector:
+    io.kompose.service: blip
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/export-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-export
+      prefix: /export/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      path_redirect: "false"
+      rewrite: "/"
+      service: export.default:9300
+  creationTimestamp: null
+  labels:
+    io.kompose.service: export
+    app.kubernetes.io/name: tidepool
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/managed-by: Tiller
+  name: export
+  namespace: default
+spec:
+  ports:
+  - name: "9300"
+    port: 9300
+    targetPort: 9300
+  selector:
+    io.kompose.service: export
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/gatekeeper-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-gatekeeper-access
+      prefix: /access/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: gatekeeper.default:9123
+  creationTimestamp: null
+  labels:
+    io.kompose.service: gatekeeper
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: gatekeeper
+  namespace: default
+spec:
+  ports:
+  - name: "9123"
+    port: 9123
+    targetPort: 9123
+  selector:
+    io.kompose.service: gatekeeper
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+
+---
+# Source: tidepool/templates/highwater-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-highwater-metrics
+      prefix: /metrics/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      rewrite: "/"
+      path_redirect: "false"
+      service: highwater.default:9191
+  creationTimestamp: null
+  labels:
+    io.kompose.service: highwater
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: highwater
+  namespace: default
+spec:
+  ports:
+  - name: "9191"
+    port: 9191
+    targetPort: 9191
+  selector:
+    io.kompose.service: highwater
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/hydrophone-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-hydrophone-confirm
+      prefix: /confirm/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      rewrite: "/"
+      path_redirect: "false"
+      service: hydrophone.default:9157
+  creationTimestamp: null
+  labels:
+    io.kompose.service: hydrophone
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: hydrophone
+  namespace: default
+spec:
+  ports:
+  - name: "9157"
+    port: 9157
+    targetPort: 9157
+  selector:
+    io.kompose.service: hydrophone
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/jellyfish-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: jellyfish
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: jellyfish
+  namespace: default
+spec:
+  ports:
+  - name: "9122"
+    port: 9122
+    targetPort: 9122
+  selector:
+    io.kompose.service: jellyfish
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/mailhog-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: mailhog
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: mailhog
+  namespace: default
+spec:
+  ports:
+  - name: smtp
+    port: 1025
+    targetPort: 1025
+  - name: http
+    port: 8025
+    targetPort: 8025
+  selector:
+    io.kompose.service: mailhog
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/message-api-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-message-api-message
+      prefix: /message/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      path_redirect: "false"
+      rewrite: "/"
+      service: message-api.default:9119
+  creationTimestamp: null
+  labels:
+    io.kompose.service: message-api
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: message-api
+  namespace: default
+spec:
+  ports:
+  - name: "9119"
+    port: 9119
+    targetPort: 9119
+  selector:
+    io.kompose.service: message-api
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/mongo-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongo
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: mongo
+  namespace: default
+spec:
+  ports:
+  - name: "27017"
+    port: 27017
+    targetPort: 27017
+  selector:
+    io.kompose.service: mongo
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/platform-auth-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-auth-user-restricted-tokens
+      prefix: "/v1/users/[^/]+/restricted_tokens"
+      prefix_regex: true
+      method: "GET|POST|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-auth.default:9222
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-auth-user-provider-sessions
+      prefix: "/v1/users/[^/]+/provider_sessions"
+      prefix_regex: true
+      method: "GET|POST|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-auth.default:9222
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-auth-restricted-tokens
+      prefix: "/v1/restricted_tokens"
+      method: "GET|PUT|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-auth.default:9222
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-auth-provider-sessions
+      prefix: "/v1/provider_sessions/[^/]+"
+      prefix_regex: true
+      method: "GET|PUT|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-auth.default:9222
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-auth-authorize
+      prefix: "/v1/oauth/[^/]+/authorize"
+      prefix_regex: true
+      method: "GET|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-auth.default:9222
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-auth-redirect
+      prefix: "/v1/oauth/[^/]+/redirect"
+      prefix_regex: true
+      method: "GET"
+      rewrite: ""
+      service: platform-auth.default:9222
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-auth
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-auth
+  namespace: default
+spec:
+  ports:
+  - name: "9222"
+    port: 9222
+    targetPort: 9222
+  selector:
+    io.kompose.service: platform-auth
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/platform-blob-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-blob-user-blobs
+      prefix: "/v1/users/[^/]+/blobs"
+      prefix_regex: true
+      method: "GET|POST|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-blob.default:9225
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-blob-blobs
+      prefix: "/v1/blobs/[^/]+"
+      prefix_regex: true
+      method: "GET|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-blob.default:9225
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-blob-blobs-content
+      prefix: "/v1/blobs/[^/]+/content"
+      prefix_regex: true
+      method: "GET"
+      rewrite: ""
+      service: platform-blob.default:9225
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-blob
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-blob
+  namespace: default
+spec:
+  ports:
+  - name: "9225"
+    port: 9225
+    targetPort: 9225
+  selector:
+    io.kompose.service: platform-blob
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/platform-data-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-data-dataservices
+      prefix: /dataservices/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      path_redirect: "false"
+      rewrite: "/"
+      service: platform-data.default:9220
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-data-data
+      prefix: "/v1/data/"
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      path_redirect: "false"
+      rewrite: "/"
+      service: platform-data.default:9220
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-data-user_data_sources
+      prefix: "/v1/users/[^/]+/data_sources"
+      prefix_regex: true
+      method: "GET|POST|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-data.default:9220
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-data-user_data_sets
+      prefix: "/v1/users/[^/]+/data_sets"
+      prefix_regex: true
+      method: "GET"
+      rewrite: ""
+      service: platform-data.default:9220
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-data-user_datasets
+      prefix: "/v1/users/[^/]+/datasets"
+      prefix_regex: true
+      method: "GET|POST"
+      method_regex: true
+      rewrite: ""
+      service: platform-data.default:9220
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-data-user_data
+      prefix: "/v1/users/[^/]+/data"
+      prefix_regex: true
+      method: "DELETE"
+      rewrite: ""
+      service: platform-data.default:9220
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-data-time
+      prefix: "/v1/time"
+      method: "GET"
+      rewrite: ""
+      service: platform-data.default:9220
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-data-data_sources
+      prefix: "/v1/data_sources/[^/]+"
+      prefix_regex: true
+      method: "GET|PUT|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-data.default:9220
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-data-data_sets
+      prefix: "/v1/data_sets"
+      method: "GET"
+      rewrite: ""
+      service: platform-data.default:9220
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-data-datasets
+      prefix: "/v1/datasets"
+      method: "POST|PUT|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-data.default:9220
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-data
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-data
+  namespace: default
+spec:
+  ports:
+  - name: "9220"
+    port: 9220
+    targetPort: 9220
+  selector:
+    io.kompose.service: platform-data
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/platform-image-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-image
+      prefix: "/v1/images"
+      prefix_regex: false
+      method: "GET|PUT|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-image.default:9226
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-image-users-images
+      prefix: "/v1/users/[^/]+/images"
+      prefix_regex: true
+      method: "GET|POST|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-image.default:9226
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-image-users-images-regex
+      prefix: "/v1/users/[^/]+/images/.+"
+      prefix_regex: true
+      method: "GET|POST|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-image.default:9226
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-image
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-image
+  namespace: default
+spec:
+  ports:
+  - name: "9226"
+    port: 9226
+    targetPort: 9226
+  selector:
+    io.kompose.service: platform-image
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/platform-notification-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-notification
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-notification
+  namespace: default
+spec:
+  ports:
+  - name: "9223"
+    port: 9223
+    targetPort: 9223
+  selector:
+    io.kompose.service: platform-notification
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/platform-task-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-task-tasks
+      prefix: "/v1/tasks"
+      method: "GET|POST"
+      method_regex: true
+      rewrite: ""
+      service: platform-task.default:9224
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-task-tasks-id
+      prefix: "/v1/tasks/[^/*]"
+      prefix_regex: true
+      method: "GET|PUT|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-task.default:9224
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-task
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-task
+  namespace: default
+spec:
+  ports:
+  - name: "9224"
+    port: 9224
+    targetPort: 9224
+  selector:
+    io.kompose.service: platform-task
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/platform-user-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-user-userservices
+      prefix: /userservices/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      path_redirect: "false"
+      rewrite: "/"
+      service: platform-user.default:9221
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-platform-user-users
+      prefix: "/v1/users/[^/*]"
+      prefix_regex: true
+      method: "GET|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-user.default:9221
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-user
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-user
+  namespace: default
+spec:
+  ports:
+  - name: "9221"
+    port: 9221
+    targetPort: 9221
+  selector:
+    io.kompose.service: platform-user
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/seagull-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-seagull
+      prefix: /metadata/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      rewrite: "/"
+      path_redirect: "false"
+      service: seagull.default:9120
+  creationTimestamp: null
+  labels:
+    io.kompose.service: seagull
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: seagull
+  namespace: default
+spec:
+  ports:
+  - name: "9120"
+    port: 9120
+    targetPort: 9120
+  selector:
+    io.kompose.service: seagull
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/shoreline-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-shoreline-auth
+      prefix: /auth/
+      path_redirect: "false"
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      rewrite: "/"
+      service: shoreline.default:9107
+  creationTimestamp: null
+  labels:
+    io.kompose.service: shoreline
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: shoreline
+  namespace: default
+spec:
+  ports:
+  - name: "9107"
+    port: 9107
+    targetPort: 9107
+  selector:
+    io.kompose.service: shoreline
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/templates/tide-whisperer-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      ambassador_id: default
+      host: localhost
+      name: default-tide-whisperer-data
+      prefix: /data/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      path_redirect: "false"
+      rewrite: "/"
+      service: tide-whisperer.default:9127
+  creationTimestamp: null
+  labels:
+    io.kompose.service: tide-whisperer
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: tide-whisperer
+  namespace: default
+spec:
+  ports:
+  - name: "9127"
+    port: 9127
+    targetPort: 9127
+  selector:
+    io.kompose.service: tide-whisperer
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+status:
+  loadBalancer: {}
+
+---
+# Source: tidepool/charts/gloo/templates/3-gloo-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: gloo
+    gloo: gloo
+  name: gloo
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      gloo: gloo
+  template:
+    metadata:
+      labels:
+        gloo: gloo
+    spec:
+      containers:
+      - image: "quay.io/solo-io/gloo:0.10.5"
+        imagePullPolicy: Always
+        name: gloo
+        ports:
+        - containerPort: 9977
+          name: grpc
+          protocol: TCP
+        env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+
+
+---
+# Source: tidepool/charts/gloo/templates/5-discovery-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: gloo
+    gloo: discovery
+  name: discovery
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      gloo: discovery
+  template:
+    metadata:
+      labels:
+        gloo: discovery
+    spec:
+      containers:
+      - image: "quay.io/solo-io/discovery:0.10.5"
+        imagePullPolicy: Always
+        name: discovery
+        env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+
+
+---
+# Source: tidepool/charts/gloo/templates/6-gateway-deployment.yaml
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: gloo
+    gloo: gateway
+  name: gateway
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      gloo: gateway
+  template:
+    metadata:
+      labels:
+        gloo: gateway
+    spec:
+      containers:
+      - image: "quay.io/solo-io/gateway:0.10.5"
+        imagePullPolicy: Always
+        name: gateway
+        env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+---
+# Source: tidepool/charts/gloo/templates/7-gateway-proxy-deployment.yaml
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: gloo
+    gloo: gateway-proxy
+  name: gateway-proxy
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      gloo: gateway-proxy
+  template:
+    metadata:
+      labels:
+        gloo: gateway-proxy
+    spec:
+      containers:
+      - args: ["--disable-hot-restart"]
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        image: quay.io/solo-io/gloo-envoy-wrapper:0.10.5
+        imagePullPolicy: Always
+        name: gateway-proxy
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8443
+          name: https
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/envoy
+          name: envoy-config
+      volumes:
+      - configMap:
+          name: gateway-envoy-config
+        name: envoy-config
+---
+# Source: tidepool/templates/blip-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: blip
+    app.kubernetes.io/name: tidepool
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/managed-by: Tiller
+  name: blip
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: blip
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: blip
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      containers:
+      - env:
+        - name: API_HOST
+          value: https://localhost
+        - name: DEV_TOOLS
+          value: "true"
+        - name: DISCOVVERY_HOST
+          value: 'hakken:8000'
+        - name: NODE_ENV
+          value: 'production'
+        - name: PORT
+          value: "3000"
+        - name: SERVICE_NAME
+          value: blip
+        - name: WEBPACK_DEVTOOL
+          value: cheap-module-eval-source-map
+        image: "tidepool/blip:v1.14.1"
+        imagePullPolicy: IfNotPresent
+        name: blip
+        command: ["/bin/sh"]
+        args: ["-c", "yarn build && yarn server"]
+        ports:
+        - containerPort: 3000
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/export-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: export
+    app.kubernetes.io/name: tidepool
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/managed-by: Tiller
+  name: export
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: export
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: export
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      containers:
+      - env:
+        - name: API_HOST
+          value: http://gateway-proxy.gloo-system:80
+        - name: DEBUG_LEVEL
+          value: debug
+        - name: HTTP_PORT
+          value: "9300"
+        - name: SESSION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: session
+        image: "tidepool/export:v1.3.2"
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /export/status
+            port: 9300
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: export
+        ports:
+        - containerPort: 9300
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/gatekeeper-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: gatekeeper
+    app.kubernetes.io/name: tidepool
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/managed-by: Tiller
+  name: gatekeeper
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: gatekeeper
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: gatekeeper
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-mongo
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;']
+      containers:
+      - env:
+        - name: DISCOVERY_HOST
+          value: 'hakken:8000'
+        - name: GATEKEEPER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: gatekeeper
+        - name: MONGO_CONNECTION_STRING
+          value: mongodb://mongo:27017/gatekeeper?ssl=false
+        - name: NODE_ENV
+          value: 'production'
+        - name: PORT
+          value: "9123"
+        - name: PUBLISH_HOST
+          value: 'hakken'
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: SERVICE_NAME
+          value: gatekeeper
+        - name: USER_API_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:9107"}]}'
+        image: "tidepool/gatekeeper:latest"
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+           httpGet:
+             path: /status
+             port: 9123
+           initialDelaySeconds: 3
+           periodSeconds: 10
+        name: gatekeeper
+        ports:
+        - containerPort: 9123
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/highwater-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: highwater
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: highwater
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: highwater
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: highwater
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      containers:
+      - env:
+        - name: DISCOVERY_HOST
+          value: 'hakken:8000'
+        - name: METRICS_APIKEY
+        - name: METRICS_UCSF_APIKEY
+        - name: NODE_ENV
+          value: 'production'
+        - name: PORT
+          value: "9191"
+        - name: PUBLISH_HOST
+          value: 'hakken'
+        - name: SALT_DEPLOY
+          value: 'gf78fSEI7tOQQP9xfXMO9HfRyMnW4Sx88Q'
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: SERVICE_NAME
+          value: highwater
+        - name: USER_API_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:9107"}]}'
+        image: "tidepool/highwater:latest"
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9191
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        name: highwater
+        ports:
+        - containerPort: 9191
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/hydrophone-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: hydrophone
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: hydrophone
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: hydrophone
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: hydrophone
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-mongo
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;']
+      containers:
+      - env:
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: TIDEPOOL_HYDROPHONE_ENV
+          value: |
+            {
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:9123"]}},
+                "hakken": {
+                  "host": "hakken:8000",
+                  "skipHakken": true
+                },
+                "highwater": {
+                    "metricsSource": "hydrophone",
+                    "metricsVersion": "v0.0.1",
+                    "name": "highwater",
+                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:9191"]}
+                },
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:9120"]}},
+                "shoreline": {
+                    "name": "hydrophone",
+                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:9107"]},
+                    "tokenRefreshInterval": "1h"
+                }
+            }
+        - name: TIDEPOOL_HYDROPHONE_SERVICE
+          value: |
+            {
+                "hydrophone": {
+                    "assetUrl": "https://s3-us-west-2.amazonaws.com/tidepool-dev-asset",
+                    "webUrl": "https://gateway-proxy.gloo-system:80"
+                },
+                "mongo": {
+                    "connectionString": "mongodb://mongo:27017/confirm?ssl=false"
+                },
+                "service": {
+                    "certFile": "config/cert.pem",
+                    "host": "localhost:9157",
+                    "keyFile": "config/key.pem",
+                    "protocol": "http",
+                    "service": "hydrophone"
+                },
+                "sesEmail": {
+                    "accessKey": "",
+                    "fromAddress": "",
+                    "secretKey": "",
+                    "serverEndpoint": "https://email.us-west-2.amazonaws.com"
+                }
+            }
+        image: "tidepool/hydrophone:noHakken-5d5a6e"
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9157
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: hydrophone
+        ports:
+        - containerPort: 9157
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/jellyfish-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: jellyfish
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: jellyfish
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: jellyfish
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: jellyfish
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-mongo
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;']
+      containers:
+      - env:
+        - name: DISCOVERY_HOST
+          value: 'hakken:8000'
+        - name: GATEKEEPER_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:9123"}]}'
+        - name: MINIMUM_UPLOADER_VERSION
+          value: 0.251.0
+        - name: MONGO_CONNECTION_STRING
+          value: mongodb://mongo:27017/data?ssl=false
+        - name: NODE_ENV
+          value: 'production'
+        - name: PORT
+          value: "9122"
+        - name: PUBLISH_HOST
+          value: 'hakken'
+        - name: SALT_DEPLOY
+          value: 'itNkczadZ1EeC9fUWR3LnbKFagtYYLOk'
+        - name: SCHEMA_VERSION
+          value: "3"
+        - name: SEAGULL_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:9120"}]}'
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: SERVE_STATIC
+          value: dist
+        - name: SERVICE_NAME
+          value: jellyfish
+        - name: USER_API_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:9107"}]}'
+        image: "tidepool/jellyfish:latest"
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9122
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        name: jellyfish
+        ports:
+        - containerPort: 9122
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/mailhog-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: mailhog
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: mailhog
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: mailhog
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mailhog
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      containers:
+      - image: "mailhog/mailhog:latest"
+        name: mailhog
+        ports:
+        - containerPort: 1025
+        - containerPort: 8025
+        resources: {}
+        volumeMounts:
+        - mountPath: /maildir
+          name: mailhog1
+      restartPolicy: Always
+      volumes:
+      - name: 'mailhog1'
+        persistentVolumeClaim:
+          claimName: mailhog1
+status: {}
+
+---
+# Source: tidepool/templates/message-api-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: message-api
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: message-api
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: message-api
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: message-api
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-mongo
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;']
+      containers:
+      - env:
+        - name: DISCOVERY_HOST
+          value: 'hakken:8000'
+        - name: GATEKEEPER_SERVICE
+          value: '{
+                  "type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:9123"}]}'
+        - name: METRICS_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater:9191"}]}'
+        - name: MONGO_CONNECTION_STRING
+          value: mongodb://mongo:27017/messages?ssl=false
+        - name: NODE_ENV
+          value: 'production'
+        - name: PORT
+          value: "9119"
+        - name: PUBLISH_HOST
+          value: 'hakken'
+        - name: SEAGULL_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:9120"}]}'
+        - name: SERVER_NAME
+          value: message-api
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: SERVICE_NAME
+          value: message-api
+        - name: USER_API_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:9107"}]}'
+        - name: SKIP_HAKKEN
+          value: "true"
+        image: "tidepool/message-api:latest" 
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9119
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        name: message-api
+        ports:
+        - containerPort: 9119
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/mongo-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongo
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: mongo
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: mongo
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mongo
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      containers:
+      - image: "mongo:3.2"
+        name: mongo
+        ports:
+        - containerPort: 27017
+        resources: {}
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongo1
+      restartPolicy: Always
+      volumes:
+      - name: 'mongo1'
+        persistentVolumeClaim:
+          claimName: mongo1
+status: {}
+
+---
+# Source: tidepool/templates/platform-auth-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-auth
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-auth
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-auth
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-auth
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-shoreline
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv shoreline 9107; do echo waiting for shoreline; sleep 2; done;']
+      containers:
+      - env:
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: http://platform-auth:9222
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+          value: 'gateway-proxy.gloo-system'
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: auth
+        - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+          value: :9222
+        - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+          value: http://platform-blob:9225
+        - name: TIDEPOOL_BLOB_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: blob
+        - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+          value: :9225
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/blobs'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+          value: confirm
+        - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DATA_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: data
+        - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+          value: :9220
+        - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+          value: 'https://api.dexcom.com'
+        - name: TIDEPOOL_ENV
+          value: local
+        - name: TIDEPOOL_LOGGER_LEVEL
+          value: debug
+        - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+          value: messages
+        - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+          value: http://platform-notification:9223
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: notification
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+          value: :9223
+        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+          value: http://gatekeeper:9123
+        - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+          value: gatekeeper
+        - name: TIDEPOOL_PERMISSION_STORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: gatekeeper
+        - name: TIDEPOOL_PROFILE_STORE_DATABASE
+          value: seagull
+        - name: TIDEPOOL_SERVER_TLS
+          value: "false"
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+          value: 'https://api.dexcom.com/v1/oauth2/login'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+          value: http://gateway-proxy.gloo-system:80/v1/oauth/dexcom/redirect
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+          value: offline_access
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+          value: 'Encryption salt to generate state parameter during OAuth workflow'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          value: 'https://api.dexcom.com/v1/oauth2/token'
+        - name: TIDEPOOL_SESSION_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_STORE_ADDRESSES
+          value: 'mongo:27017'
+        - name: TIDEPOOL_STORE_DATABASE
+          value: tidepool
+        - name: TIDEPOOL_STORE_TLS
+          value: 'false'
+        - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+          value: http://platform-task:9224
+        - name: TIDEPOOL_TASK_QUEUE_DELAY
+          value: "5"
+        - name: TIDEPOOL_TASK_QUEUE_WORKERS
+          value: "5"
+        - name: TIDEPOOL_TASK_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: task
+        - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+          value: :9224
+        - name: TIDEPOOL_USER_CLIENT_ADDRESS
+          value: http://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_USER_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: user
+        - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+          value: :9221
+        - name: TIDEPOOL_USER_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+          value: 'ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ'
+        - name: TIDEPOOL_IMAGE_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: image 
+        - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
+          value: :9226
+        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
+          value: http://platform-image:9226
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/image'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        image: "tidepool/platform-auth:quiet"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9222
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 9222
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        name: platform-auth
+        ports:
+        - containerPort: 9222
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/platform-blob-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-blob
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-blob
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-blob
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-blob
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-shoreline
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv shoreline 9107; do echo waiting for shoreline; sleep 2; done;']
+      containers:
+      - env:
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: http://platform-auth:9222
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+          value: 'gateway-proxy.gloo-system'
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: auth
+        - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+          value: :9222
+        - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+          value: http://platform-blob:9225
+        - name: TIDEPOOL_BLOB_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: blob
+        - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+          value: :9225
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/blobs'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+          value: confirm
+        - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DATA_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: data
+        - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+          value: :9220
+        - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+          value: 'https://api.dexcom.com'
+        - name: TIDEPOOL_ENV
+          value: local
+        - name: TIDEPOOL_LOGGER_LEVEL
+          value: debug
+        - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+          value: messages
+        - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+          value: http://platform-notification:9223
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: notification
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+          value: :9223
+        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+          value: http://gatekeeper:9123
+        - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+          value: gatekeeper
+        - name: TIDEPOOL_PERMISSION_STORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: gatekeeper
+        - name: TIDEPOOL_PROFILE_STORE_DATABASE
+          value: seagull
+        - name: TIDEPOOL_SERVER_TLS
+          value: "false"
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+          value: 'https://api.dexcom.com/v1/oauth2/login'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+          value: http://gateway-proxy.gloo-system:80/v1/oauth/dexcom/redirect
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+          value: offline_access
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+          value: 'Encryption salt to generate state parameter during OAuth workflow'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          value: 'https://api.dexcom.com/v1/oauth2/token'
+        - name: TIDEPOOL_SESSION_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_STORE_ADDRESSES
+          value: 'mongo:27017'
+        - name: TIDEPOOL_STORE_DATABASE
+          value: tidepool
+        - name: TIDEPOOL_STORE_TLS
+          value: 'false'
+        - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+          value: http://platform-task:9224
+        - name: TIDEPOOL_TASK_QUEUE_DELAY
+          value: "5"
+        - name: TIDEPOOL_TASK_QUEUE_WORKERS
+          value: "5"
+        - name: TIDEPOOL_TASK_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: task
+        - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+          value: :9224
+        - name: TIDEPOOL_USER_CLIENT_ADDRESS
+          value: http://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_USER_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: user
+        - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+          value: :9221
+        - name: TIDEPOOL_USER_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+          value: 'ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ'
+        - name: TIDEPOOL_IMAGE_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: image 
+        - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
+          value: :9226
+        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
+          value: http://platform-image:9226
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/image'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        image: "tidepool/platform-blob:quiet"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9225
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 9225
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        name: platform-blob
+        ports:
+        - containerPort: 9225
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/platform-data-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-data
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-data
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-data
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-data
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-shoreline
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv shoreline 9107; do echo waiting for shoreline; sleep 2; done;']
+      containers:
+      - env:
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: http://platform-auth:9222
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+          value: 'gateway-proxy.gloo-system'
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: auth
+        - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+          value: :9222
+        - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+          value: http://platform-blob:9225
+        - name: TIDEPOOL_BLOB_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: blob
+        - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+          value: :9225
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/blobs'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+          value: confirm
+        - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DATA_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: data
+        - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+          value: :9220
+        - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+          value: 'https://api.dexcom.com'
+        - name: TIDEPOOL_ENV
+          value: local
+        - name: TIDEPOOL_LOGGER_LEVEL
+          value: debug
+        - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+          value: messages
+        - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+          value: http://platform-notification:9223
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: notification
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+          value: :9223
+        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+          value: http://gatekeeper:9123
+        - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+          value: gatekeeper
+        - name: TIDEPOOL_PERMISSION_STORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: gatekeeper
+        - name: TIDEPOOL_PROFILE_STORE_DATABASE
+          value: seagull
+        - name: TIDEPOOL_SERVER_TLS
+          value: "false"
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+          value: 'https://api.dexcom.com/v1/oauth2/login'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+          value: http://gateway-proxy.gloo-system:80/v1/oauth/dexcom/redirect
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+          value: offline_access
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+          value: 'Encryption salt to generate state parameter during OAuth workflow'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          value: 'https://api.dexcom.com/v1/oauth2/token'
+        - name: TIDEPOOL_SESSION_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_STORE_ADDRESSES
+          value: 'mongo:27017'
+        - name: TIDEPOOL_STORE_DATABASE
+          value: tidepool
+        - name: TIDEPOOL_STORE_TLS
+          value: 'false'
+        - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+          value: http://platform-task:9224
+        - name: TIDEPOOL_TASK_QUEUE_DELAY
+          value: "5"
+        - name: TIDEPOOL_TASK_QUEUE_WORKERS
+          value: "5"
+        - name: TIDEPOOL_TASK_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: task
+        - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+          value: :9224
+        - name: TIDEPOOL_USER_CLIENT_ADDRESS
+          value: http://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_USER_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: user
+        - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+          value: :9221
+        - name: TIDEPOOL_USER_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+          value: 'ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ'
+        - name: TIDEPOOL_IMAGE_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: image 
+        - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
+          value: :9226
+        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
+          value: http://platform-image:9226
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/image'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        image: "tidepool/platform-data:quiet"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9220
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 9220
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        name: platform-data
+        ports:
+        - containerPort: 9220
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/platform-image-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-image
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-image
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-image
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-image
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-shoreline
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv shoreline 9107; do echo waiting for shoreline; sleep 2; done;']
+      containers:
+      - env:
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: http://platform-auth:9222
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+          value: 'gateway-proxy.gloo-system'
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: auth
+        - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+          value: :9222
+        - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+          value: http://platform-blob:9225
+        - name: TIDEPOOL_BLOB_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: blob
+        - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+          value: :9225
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/blobs'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+          value: confirm
+        - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DATA_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: data
+        - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+          value: :9220
+        - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+          value: 'https://api.dexcom.com'
+        - name: TIDEPOOL_ENV
+          value: local
+        - name: TIDEPOOL_LOGGER_LEVEL
+          value: debug
+        - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+          value: messages
+        - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+          value: http://platform-notification:9223
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: notification
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+          value: :9223
+        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+          value: http://gatekeeper:9123
+        - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+          value: gatekeeper
+        - name: TIDEPOOL_PERMISSION_STORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: gatekeeper
+        - name: TIDEPOOL_PROFILE_STORE_DATABASE
+          value: seagull
+        - name: TIDEPOOL_SERVER_TLS
+          value: "false"
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+          value: 'https://api.dexcom.com/v1/oauth2/login'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+          value: http://gateway-proxy.gloo-system:80/v1/oauth/dexcom/redirect
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+          value: offline_access
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+          value: 'Encryption salt to generate state parameter during OAuth workflow'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          value: 'https://api.dexcom.com/v1/oauth2/token'
+        - name: TIDEPOOL_SESSION_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_STORE_ADDRESSES
+          value: 'mongo:27017'
+        - name: TIDEPOOL_STORE_DATABASE
+          value: tidepool
+        - name: TIDEPOOL_STORE_TLS
+          value: 'false'
+        - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+          value: http://platform-task:9224
+        - name: TIDEPOOL_TASK_QUEUE_DELAY
+          value: "5"
+        - name: TIDEPOOL_TASK_QUEUE_WORKERS
+          value: "5"
+        - name: TIDEPOOL_TASK_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: task
+        - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+          value: :9224
+        - name: TIDEPOOL_USER_CLIENT_ADDRESS
+          value: http://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_USER_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: user
+        - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+          value: :9221
+        - name: TIDEPOOL_USER_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+          value: 'ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ'
+        - name: TIDEPOOL_IMAGE_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: image 
+        - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
+          value: :9226
+        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
+          value: http://platform-image:9226
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/image'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        image: "tidepool/platform-image:1.31.0-release.1"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9226
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 9226
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        name: platform-image
+        ports:
+        - containerPort: 9226
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/platform-migrations-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-migrations
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-migrations
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-migrations
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-migrations
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-shoreline
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv shoreline 9107; do echo waiting for shoreline; sleep 2; done;']
+      containers:
+      - env:
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: http://platform-auth:9222
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+          value: 'gateway-proxy.gloo-system'
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: auth
+        - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+          value: :9222
+        - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+          value: http://platform-blob:9225
+        - name: TIDEPOOL_BLOB_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: blob
+        - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+          value: :9225
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/blobs'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+          value: confirm
+        - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DATA_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: data
+        - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+          value: :9220
+        - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+          value: 'https://api.dexcom.com'
+        - name: TIDEPOOL_ENV
+          value: local
+        - name: TIDEPOOL_LOGGER_LEVEL
+          value: debug
+        - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+          value: messages
+        - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+          value: http://platform-notification:9223
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: notification
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+          value: :9223
+        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+          value: http://gatekeeper:9123
+        - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+          value: gatekeeper
+        - name: TIDEPOOL_PERMISSION_STORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: gatekeeper
+        - name: TIDEPOOL_PROFILE_STORE_DATABASE
+          value: seagull
+        - name: TIDEPOOL_SERVER_TLS
+          value: "false"
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+          value: 'https://api.dexcom.com/v1/oauth2/login'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+          value: http://gateway-proxy.gloo-system:80/v1/oauth/dexcom/redirect
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+          value: offline_access
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+          value: 'Encryption salt to generate state parameter during OAuth workflow'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          value: 'https://api.dexcom.com/v1/oauth2/token'
+        - name: TIDEPOOL_SESSION_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_STORE_ADDRESSES
+          value: 'mongo:27017'
+        - name: TIDEPOOL_STORE_DATABASE
+          value: tidepool
+        - name: TIDEPOOL_STORE_TLS
+          value: 'false'
+        - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+          value: http://platform-task:9224
+        - name: TIDEPOOL_TASK_QUEUE_DELAY
+          value: "5"
+        - name: TIDEPOOL_TASK_QUEUE_WORKERS
+          value: "5"
+        - name: TIDEPOOL_TASK_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: task
+        - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+          value: :9224
+        - name: TIDEPOOL_USER_CLIENT_ADDRESS
+          value: http://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_USER_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: user
+        - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+          value: :9221
+        - name: TIDEPOOL_USER_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+          value: 'ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ'
+        - name: TIDEPOOL_IMAGE_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: image 
+        - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
+          value: :9226
+        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
+          value: http://platform-image:9226
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/image'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        image: "tidepool/platform-migrations:quiet"
+        name: platform-migrations
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/platform-notification-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-notification
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-notification
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-notification
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-notification
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-shoreline
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv shoreline 9107; do echo waiting for shoreline; sleep 2; done;']
+      containers:
+      - env:
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: http://platform-auth:9222
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+          value: 'gateway-proxy.gloo-system'
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: auth
+        - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+          value: :9222
+        - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+          value: http://platform-blob:9225
+        - name: TIDEPOOL_BLOB_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: blob
+        - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+          value: :9225
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/blobs'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+          value: confirm
+        - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DATA_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: data
+        - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+          value: :9220
+        - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+          value: 'https://api.dexcom.com'
+        - name: TIDEPOOL_ENV
+          value: local
+        - name: TIDEPOOL_LOGGER_LEVEL
+          value: debug
+        - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+          value: messages
+        - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+          value: http://platform-notification:9223
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: notification
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+          value: :9223
+        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+          value: http://gatekeeper:9123
+        - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+          value: gatekeeper
+        - name: TIDEPOOL_PERMISSION_STORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: gatekeeper
+        - name: TIDEPOOL_PROFILE_STORE_DATABASE
+          value: seagull
+        - name: TIDEPOOL_SERVER_TLS
+          value: "false"
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+          value: 'https://api.dexcom.com/v1/oauth2/login'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+          value: http://gateway-proxy.gloo-system:80/v1/oauth/dexcom/redirect
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+          value: offline_access
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+          value: 'Encryption salt to generate state parameter during OAuth workflow'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          value: 'https://api.dexcom.com/v1/oauth2/token'
+        - name: TIDEPOOL_SESSION_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_STORE_ADDRESSES
+          value: 'mongo:27017'
+        - name: TIDEPOOL_STORE_DATABASE
+          value: tidepool
+        - name: TIDEPOOL_STORE_TLS
+          value: 'false'
+        - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+          value: http://platform-task:9224
+        - name: TIDEPOOL_TASK_QUEUE_DELAY
+          value: "5"
+        - name: TIDEPOOL_TASK_QUEUE_WORKERS
+          value: "5"
+        - name: TIDEPOOL_TASK_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: task
+        - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+          value: :9224
+        - name: TIDEPOOL_USER_CLIENT_ADDRESS
+          value: http://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_USER_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: user
+        - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+          value: :9221
+        - name: TIDEPOOL_USER_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+          value: 'ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ'
+        - name: TIDEPOOL_IMAGE_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: image 
+        - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
+          value: :9226
+        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
+          value: http://platform-image:9226
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/image'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        image: "tidepool/platform-notification:quiet"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9223
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 9223
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        name: platform-notification
+        ports:
+        - containerPort: 9223
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/platform-task-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-task
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-task
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-task
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-task
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-shoreline
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv shoreline 9107; do echo waiting for shoreline; sleep 2; done;']
+      containers:
+      - env:
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: http://platform-auth:9222
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+          value: 'gateway-proxy.gloo-system'
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: auth
+        - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+          value: :9222
+        - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+          value: http://platform-blob:9225
+        - name: TIDEPOOL_BLOB_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: blob
+        - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+          value: :9225
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/blobs'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+          value: confirm
+        - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DATA_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: data
+        - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+          value: :9220
+        - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+          value: 'https://api.dexcom.com'
+        - name: TIDEPOOL_ENV
+          value: local
+        - name: TIDEPOOL_LOGGER_LEVEL
+          value: debug
+        - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+          value: messages
+        - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+          value: http://platform-notification:9223
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: notification
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+          value: :9223
+        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+          value: http://gatekeeper:9123
+        - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+          value: gatekeeper
+        - name: TIDEPOOL_PERMISSION_STORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: gatekeeper
+        - name: TIDEPOOL_PROFILE_STORE_DATABASE
+          value: seagull
+        - name: TIDEPOOL_SERVER_TLS
+          value: "false"
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+          value: 'https://api.dexcom.com/v1/oauth2/login'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+          value: http://gateway-proxy.gloo-system:80/v1/oauth/dexcom/redirect
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+          value: offline_access
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+          value: 'Encryption salt to generate state parameter during OAuth workflow'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          value: 'https://api.dexcom.com/v1/oauth2/token'
+        - name: TIDEPOOL_SESSION_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_STORE_ADDRESSES
+          value: 'mongo:27017'
+        - name: TIDEPOOL_STORE_DATABASE
+          value: tidepool
+        - name: TIDEPOOL_STORE_TLS
+          value: 'false'
+        - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+          value: http://platform-task:9224
+        - name: TIDEPOOL_TASK_QUEUE_DELAY
+          value: "5"
+        - name: TIDEPOOL_TASK_QUEUE_WORKERS
+          value: "5"
+        - name: TIDEPOOL_TASK_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: task
+        - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+          value: :9224
+        - name: TIDEPOOL_USER_CLIENT_ADDRESS
+          value: http://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_USER_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: user
+        - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+          value: :9221
+        - name: TIDEPOOL_USER_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+          value: 'ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ'
+        - name: TIDEPOOL_IMAGE_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: image 
+        - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
+          value: :9226
+        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
+          value: http://platform-image:9226
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/image'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        image: "tidepool/platform-task:quiet"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9224
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 9224
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        name: platform-task
+        ports:
+        - containerPort: 9224
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/platform-tools-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-tools
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-tools
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-tools
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-tools
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-shoreline
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv shoreline 9107; do echo waiting for shoreline; sleep 2; done;']
+      containers:
+      - env:
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: http://platform-auth:9222
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+          value: 'gateway-proxy.gloo-system'
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: auth
+        - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+          value: :9222
+        - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+          value: http://platform-blob:9225
+        - name: TIDEPOOL_BLOB_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: blob
+        - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+          value: :9225
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/blobs'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+          value: confirm
+        - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DATA_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: data
+        - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+          value: :9220
+        - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+          value: 'https://api.dexcom.com'
+        - name: TIDEPOOL_ENV
+          value: local
+        - name: TIDEPOOL_LOGGER_LEVEL
+          value: debug
+        - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+          value: messages
+        - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+          value: http://platform-notification:9223
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: notification
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+          value: :9223
+        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+          value: http://gatekeeper:9123
+        - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+          value: gatekeeper
+        - name: TIDEPOOL_PERMISSION_STORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: gatekeeper
+        - name: TIDEPOOL_PROFILE_STORE_DATABASE
+          value: seagull
+        - name: TIDEPOOL_SERVER_TLS
+          value: "false"
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+          value: 'https://api.dexcom.com/v1/oauth2/login'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+          value: http://gateway-proxy.gloo-system:80/v1/oauth/dexcom/redirect
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+          value: offline_access
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+          value: 'Encryption salt to generate state parameter during OAuth workflow'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          value: 'https://api.dexcom.com/v1/oauth2/token'
+        - name: TIDEPOOL_SESSION_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_STORE_ADDRESSES
+          value: 'mongo:27017'
+        - name: TIDEPOOL_STORE_DATABASE
+          value: tidepool
+        - name: TIDEPOOL_STORE_TLS
+          value: 'false'
+        - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+          value: http://platform-task:9224
+        - name: TIDEPOOL_TASK_QUEUE_DELAY
+          value: "5"
+        - name: TIDEPOOL_TASK_QUEUE_WORKERS
+          value: "5"
+        - name: TIDEPOOL_TASK_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: task
+        - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+          value: :9224
+        - name: TIDEPOOL_USER_CLIENT_ADDRESS
+          value: http://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_USER_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: user
+        - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+          value: :9221
+        - name: TIDEPOOL_USER_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+          value: 'ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ'
+        - name: TIDEPOOL_IMAGE_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: image 
+        - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
+          value: :9226
+        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
+          value: http://platform-image:9226
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/image'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        image: "tidepool/platform-tools:quiet"
+        name: platform-tools
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/platform-user-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: platform-user
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: platform-user
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: platform-user
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: platform-user
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-shoreline
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv shoreline 9107; do echo waiting for shoreline; sleep 2; done;']
+      containers:
+      - env:
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: http://platform-auth:9222
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+          value: 'gateway-proxy.gloo-system'
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: auth
+        - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+          value: :9222
+        - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+          value: http://platform-blob:9225
+        - name: TIDEPOOL_BLOB_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: blob
+        - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
+          value: :9225
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/blobs'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
+          value: confirm
+        - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DATA_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: data
+        - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+          value: :9220
+        - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+          value: http://platform-data:9220
+        - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+          value: 'https://api.dexcom.com'
+        - name: TIDEPOOL_ENV
+          value: local
+        - name: TIDEPOOL_LOGGER_LEVEL
+          value: debug
+        - name: TIDEPOOL_MESSAGE_STORE_DATABASE
+          value: messages
+        - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+          value: https://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+          value: http://platform-notification:9223
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: notification
+        - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
+          value: :9223
+        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+          value: http://gatekeeper:9123
+        - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+          value: gatekeeper
+        - name: TIDEPOOL_PERMISSION_STORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: gatekeeper
+        - name: TIDEPOOL_PROFILE_STORE_DATABASE
+          value: seagull
+        - name: TIDEPOOL_SERVER_TLS
+          value: "false"
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+          value: 'https://api.dexcom.com/v1/oauth2/login'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          value: ''
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+          value: http://gateway-proxy.gloo-system:80/v1/oauth/dexcom/redirect
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+          value: offline_access
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+          value: 'Encryption salt to generate state parameter during OAuth workflow'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          value: 'https://api.dexcom.com/v1/oauth2/token'
+        - name: TIDEPOOL_SESSION_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_STORE_ADDRESSES
+          value: 'mongo:27017'
+        - name: TIDEPOOL_STORE_DATABASE
+          value: tidepool
+        - name: TIDEPOOL_STORE_TLS
+          value: 'false'
+        - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+          value: http://platform-task:9224
+        - name: TIDEPOOL_TASK_QUEUE_DELAY
+          value: "5"
+        - name: TIDEPOOL_TASK_QUEUE_WORKERS
+          value: "5"
+        - name: TIDEPOOL_TASK_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: task
+        - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+          value: :9224
+        - name: TIDEPOOL_USER_CLIENT_ADDRESS
+          value: http://gateway-proxy.gloo-system:80
+        - name: TIDEPOOL_USER_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: user
+        - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
+          value: :9221
+        - name: TIDEPOOL_USER_STORE_DATABASE
+          value: user
+        - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
+          value: 'ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ'
+        - name: TIDEPOOL_IMAGE_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: image 
+        - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
+          value: :9226
+        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
+          value: http://platform-image:9226
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
+          value: 'file'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
+          value: '_data/image'
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
+          value: ''
+        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
+          value: ''
+        image: "tidepool/platform-user:quiet"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9221
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 9221
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        name: platform-user
+        ports:
+        - containerPort: 9221
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/seagull-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: seagull
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: seagull
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: seagull
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: seagull
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-mongo
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;']
+      containers:
+      - env:
+        - name: DISCOVERY_HOST
+          value: 'hakken:8000'
+        - name: GATEKEEPER_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:9123"}]}'
+        - name: METRICS_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater:9191"}]}'
+        - name: MONGO_CONNECTION_STRING
+          value: mongodb://mongo:27017/seagull?ssl=false
+        - name: NODE_ENV
+          value: 'production'
+        - name: PORT
+          value: "9120"
+        - name: PUBLISH_HOST
+          value: 'hakken'
+        - name: SALT_DEPLOY
+          value: 'KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f'
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: SERVICE_NAME
+          value: seagull
+        - name: USER_API_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:9107"}]}'
+        - name: SKIP_HAKKEN
+          value: "true"
+        image: "tidepool/seagull:noHakken"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9120
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: seagull
+        ports:
+        - containerPort: 9120
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/shoreline-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: shoreline
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: shoreline
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: shoreline
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: shoreline
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-mongo
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;']
+      containers:
+      - env:
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: API_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: api
+        - name: TIDEPOOL_SHORELINE_ENV
+          value: |
+            {
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:9123"]}},
+                "hakken": {
+                  "host": "hakken:8000",
+                  "skipHakken": true
+                },
+                "highwater": {
+                    "metricsSource": "shoreline",
+                    "metricsVersion": "v0.0.1",
+                    "name": "highwater",
+                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:9191"]}
+                }
+            }
+        - name: TIDEPOOL_SHORELINE_SERVICE
+          value: |
+            {
+                "mongo": {
+                    "connectionString": "mongodb://mongo:27017/user?ssl=false"
+                },
+                "oauth2": {
+                    "expireDays": 14
+                },
+                "service": {
+                    "certFile": "config/cert.pem",
+                    "host": "localhost:9107",
+                    "keyFile": "config/key.pem",
+                    "protocol": "http",
+                    "service": "shoreline"
+                },
+                "user": {
+                    "clinicDemoUserId": "",
+                    "longTermDaysDuration": 30,
+                    "longTermKey": "abcdefghijklmnopqrstuvwxyz",
+                    "salt": "ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ",
+                    "tokenDurationSecs": 2592000,
+                    "verificationSecret": "+skip"
+                }
+            }
+        image: "tidepool/shoreline:noHakken-402756"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9107
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        name: shoreline
+        ports:
+        - containerPort: 9107
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/templates/tide-whisperer-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: tide-whisperer
+    helm.sh/chart: tidepool-0.2.3
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: tidepool
+    app.kubernetes.io/instance: release-name
+  name: tide-whisperer
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: tide-whisperer
+      app.kubernetes.io/name: tidepool
+      app.kubernetes.io/instance: release-name
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: tide-whisperer
+        app.kubernetes.io/name: tidepool
+        app.kubernetes.io/instance: release-name
+    spec:
+      initContainers:
+      - name: init-mongo
+        image: busybox
+        command: ['sh', '-c', 'until nc -zvv mongo 27017; do echo waiting for mongo; sleep 2; done;']
+      containers:
+      - env:
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: AUTH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: auth
+        - name: TIDEPOOL_TIDE_WHISPERER_ENV
+          value: |
+            {
+                "auth": {
+                  "address": "http://platform-auth:9222",
+                  "userAgent": "Tidepool-TideWhisperer"
+                },
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:9123"]}},
+                "hakken": {
+                  "host": "hakken:8000",
+                  "skipHakken": true
+                  },
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:9120"]}},
+                "shoreline": {
+                    "name": "tide-whisperer",
+                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:9107"]},
+                    "tokenRefreshInterval": "1h"
+                }
+            }
+        - name: TIDEPOOL_TIDE_WHISPERER_SERVICE
+          value: |
+            {
+                "mongo": {
+                    "connectionString": "mongodb://mongo:27017/data?ssl=false"
+                },
+                "schemaVersion": {
+                    "maximum": 99,
+                    "minimum": 1
+                },
+                "service": {
+                    "certFile": "config/cert.pem",
+                    "host": "localhost:9127",
+                    "keyFile": "config/key.pem",
+                    "protocol": "http",
+                    "service": "tide-whisperer"
+                }
+            }
+        image: "tidepool/tide-whisperer:noHakken-726e678"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9127
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: tide-whisperer
+        ports:
+        - containerPort: 9127
+        resources: {}
+      restartPolicy: Always
+status: {}
+
+---
+# Source: tidepool/charts/gloo/templates/0-namespace.yaml
+
+---
+# Source: tidepool/charts/gloo/templates/10-ingress-deployment.yaml
+
+---
+# Source: tidepool/charts/gloo/templates/101-knative-crds-0.3.0.yaml
+
+---
+# Source: tidepool/charts/gloo/templates/11-ingress-proxy-deployment.yaml
+
+---
+# Source: tidepool/charts/gloo/templates/12-ingress-proxy-configmap.yaml
+
+---
+# Source: tidepool/charts/gloo/templates/13-ingress-proxy-service.yaml
+
+---
+# Source: tidepool/charts/gloo/templates/14-clusteringress-proxy-deployment.yaml
+
+
+---
+# Source: tidepool/charts/gloo/templates/15-clusteringress-proxy-configmap.yaml
+
+---
+# Source: tidepool/charts/gloo/templates/16-clusteringress-proxy-service.yaml
+
+---
+# Source: tidepool/charts/gloo/templates/17-knative-no-istio-0.3.0.yaml
+
+---
+# Source: tidepool/charts/gloo/templates/18-settings.yaml
+
+
+---
+# Source: tidepool/templates/gloo-virtual-service.yaml
+
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: default
+  namespace: gloo-system
+spec:
+  sslConfig:
+    secretRef: 
+      name: tidepool-org
+      namespace: gloo-system
+  virtualHost:
+    domains:
+    - localhost
+    name: gloo-system.default
+    routes:
+    - matcher:
+        prefix: /userservices/
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-user-9221
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - POST
+        prefix: /v1/tasks
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-task-9224
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - PUT
+        - DELETE
+        regex: /v1/images
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-image-9226
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - POST
+        - GET
+        - DELETE
+        regex: /v1/users/[^/]+/images
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-image-9226
+            namespace: gloo-system
+    - matcher:
+        prefix: /dataservices/
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-data-9220
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /v1/data/
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-data-9220
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - POST
+        - DELETE
+        regex: /v1/users/[^/]+/data_sources
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-data-9220
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        regex: /v1/users/[^/]+/data_sets
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-data-9220
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - POST
+        regex: /v1/users/[^/]+/datasets
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-data-9220
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - DELETE
+        regex: /v1/users/[^/]+/data
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-data-9220
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        prefix: /v1/time
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-data-9220
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - PUT
+        - DELETE
+        regex: /v1/data_sources/[^/]+
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-data-9220
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        prefix: /v1/data_sets
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-data-9220
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - POST
+        - DELETE
+        regex: /v1/users/[^/]+/blobs
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-blob-9225
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        regex: /v1/blobs/[^/]+
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-blob-9225
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        - PUT
+        regex: /v1/users/[^/]+/restricted_tokens
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-auth-9222
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        - PUT
+        regex: /v1/users/[^/]+/provider_sessions
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-auth-9222
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        - PUT
+        regex: /v1/restricted_tokens
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-auth-9222
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        - PUT
+        regex: /v1/provider_sessions/[^/]+
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-auth-9222
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        regex: /v1/oauth/[^/]+/authorize
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-auth-9222
+            namespace: gloo-system
+    - matcher:
+        prefix: /data/
+      routeAction:
+        single:
+          upstream:
+            name: default-tide-whisperer-9127
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /auth/
+      routeAction:
+        single:
+          upstream:
+            name: default-shoreline-9107
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /metadata/
+      routeAction:
+        single:
+          upstream:
+            name: default-seagull-9120
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        regex: /v1/users/[^/*]
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-user-9221
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - POST
+        - PUT
+        - DELETE
+        regex: /v1/tasks/[^/*]
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-task-9224
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - POST
+        - PUT
+        - DELETE
+        regex: /v1/users/[^/]+/images/.+s
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-image-9226
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - POST
+        - PUT
+        - DELETE
+        prefix: /v1/datasets
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-data-9220
+            namespace: gloo-system
+    - matcher:
+        regex: /v1/blobs/[^/]+/content
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-blob-9225
+            namespace: gloo-system
+    - matcher:
+        regex: /v1/oauth/[^/]+/redirect
+      routeAction:
+        single:
+          upstream:
+            name: default-platform-auth-9222
+            namespace: gloo-system
+    - matcher:
+        prefix: /message/
+      routeAction:
+        single:
+          upstream:
+            name: default-message-api-9119
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /confirm/
+      routeAction:
+        single:
+          upstream:
+            name: default-hydrophone-9157
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /metrics/
+      routeAction:
+        single:
+          upstream:
+            name: default-highwater-9191
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /access/
+      routeAction:
+        single:
+          upstream:
+            name: default-gatekeeper-9123
+            namespace: gloo-system
+    - matcher:
+        prefix: /export/
+      routeAction:
+        single:
+          upstream:
+            name: default-export-9300
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: default-blip-3000
+            namespace: gloo-system
