@@ -63,7 +63,7 @@ spec:
             {
                 "hydrophone": {
                     "assetUrl": "{{.Values.hydrophone.assetUrl}}",
-                    "webUrl": "http://{{- include "charts.apihost" . -}}:{{.Values.api.port}}"
+                    "webUrl": "https://{{- include "charts.apihost" . -}}:{{.Values.api.port}}"
                 },
                 "mongo": {
                     "connectionString": "mongodb://{{.Values.mongo.host}}:{{.Values.mongo.port}}/confirm?ssl={{.Values.mongo.tls}}"
