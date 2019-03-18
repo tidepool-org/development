@@ -19,7 +19,7 @@ Expand the name of the chart.
 gateway-proxy.gloo-system
 {{-- else -}}
 ambassador.default.svc.cluster.local
-{{- end -}}}}
+{{- end -}}
 
 
 {{/*

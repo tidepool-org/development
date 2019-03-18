@@ -357,4 +357,4 @@ spec:
           upstream:
             name: {{.Release.Namespace}}-blip-{{ .Values.blip.port }}
             namespace: gloo-system
-{{-- end --}}
+{{- end -}}
