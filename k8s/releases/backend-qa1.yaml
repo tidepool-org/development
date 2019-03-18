@@ -39,6 +39,8 @@ spec:
     hostnameOverride: ""
     ambassador:
       enabled: false
+    gloo:
+      enabled: false
     blip:
       image: tidepool/blip:v1.18.0-export-units.2
     export:
