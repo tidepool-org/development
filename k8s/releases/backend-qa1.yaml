@@ -60,7 +60,7 @@ spec:
     mailhog:
       image: mailhog/mailhog:v1.0.0
     mongo:
-      image: mongo:4.1
+      image: mongo:3.2
     platformAuth:
       image: tidepool/platform-auth:quiet
     platformBlob:
