@@ -17,7 +17,7 @@ metadata:
     flux.weave.works/tag.export: "glob:v1.3.*"
     flux.weave.works/tag.mongo: "regexp:mongo:3.2"
     flux.weave.works/tag.seagull: "glob:noHakken*"
-    flux.weave.works/tag.hydrophone: "noHakken-5d5a6e"
+    flux.weave.works/tag.hydrophone: "noHakken-35a8c19"
     flux.weave.works/tag.messageapi: "glob:quiet*"
     flux.weave.works/tag.platformAuth: "glob:quiet*"
     flux.weave.works/tag.platformBlob: "glob:quiet*"
@@ -52,7 +52,10 @@ spec:
     highwater:
       image: tidepool/highwater:OAuth
     hydrophone:
-      image: tidepool/hydrophone:noHakken-5d5a6e
+      image: tidepool/hydrophone:noHakken-35a8c19
+      ses:
+        fromAddress: "Tidepool <noreply@tidepool.org>"
+        serverEndpoint: "https://email.us-west-2.amazonaws.com"
     jellyfish:
       image: tidepool/jellyfish:OAuth
     messageapi:
