@@ -11,10 +11,10 @@ ambassador:
   enabled: false
   id: default
 externalapi: 
-  port: 80
+  port: 443
 api: 
   host: ambassador.default.svc.cluster.local
-  port: 80
+  port: 443
 blip: 
   port: '3000'
   image: tidepool/blip:v1.14.1
