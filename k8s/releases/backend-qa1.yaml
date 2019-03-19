@@ -37,6 +37,7 @@ spec:
     api:
       host: gateway-proxy.gloo-system
     hostnameOverride: ""
+    includeSecrets: false
     ambassador:
       enabled: false
     gloo:
