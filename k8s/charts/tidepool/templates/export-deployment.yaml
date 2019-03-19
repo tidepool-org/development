@@ -32,7 +32,7 @@ spec:
       containers:
       - env:
         - name: API_HOST
-          value: https://{{- include "charts.apihost" . -}}:{{ .Values.api.port }}
+          value: https://{{- include "charts.hostname" . -}}
         - name: DEBUG_LEVEL
           value: debug
         - name: HTTP_PORT
