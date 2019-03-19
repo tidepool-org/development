@@ -14,7 +14,23 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "charts.apihost" -}}
+{{- define "charts.host.api" -}}
+{{- if .Values.hostnameOverride -}}
+{{.Values.hostnameOverride}}
+{{- else -}}
+{{.Release.Namespace}}-api.tidepool.org
+{{- end -}}
+{{- end -}}
+
+{{- define "charts.host.uploads" -}}
+{{- if .Values.hostnameOverride -}}
+{{.Values.hostnameOverride}}
+{{- else -}}
+{{.Release.Namespace}}-uploads.tidepool.org
+{{- end -}}
+{{- end -}}
+
+{{- define "charts.host.app" -}}
 {{- if .Values.hostnameOverride -}}
 {{.Values.hostnameOverride}}
 {{- else -}}
@@ -56,7 +72,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://{{.Values.platformAuth.host}}:{{.Values.platformAuth.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: https://{{- include "charts.apihost" . -}}:{{.Values.api.port}}
+          value: https://{{- include "charts.host.api" . -}}:{{.Values.api.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
