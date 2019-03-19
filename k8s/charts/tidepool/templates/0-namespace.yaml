@@ -1,3 +1,4 @@
+{{ if .Values.gloo.enabled -}}
 {{ if .Values.namespace.create -}}
 ---
 apiVersion: v1
@@ -7,4 +8,5 @@ metadata:
     istio-injection: disabled
     linkerd.io/inject: disabled
   name: gloo-system
+{{- end -}}
 {{- end -}}
