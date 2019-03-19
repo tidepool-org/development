@@ -65,7 +65,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://{{.Values.platformAuth.host}}:{{.Values.platformAuth.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: https://{{- include "charts.host.api" . -}}:{{.Values.api.port}}
+          value: https://{{- include "charts.host.api" . -}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
