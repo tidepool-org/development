@@ -3,6 +3,8 @@ fullnameOverride: ""
 hostnameOverride: "localhost"
 environment: production
 includeSecrets: true
+namespace:
+  create: true
 image:
   pullPolicy: IfNotPresent
 gloo:

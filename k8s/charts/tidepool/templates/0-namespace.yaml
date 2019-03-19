@@ -1,0 +1,10 @@
+{{ if .Values.namespace.create -}}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    istio-injection: disabled
+    linkerd.io/inject: disabled
+  name: gloo-system
+{{- end -}}
