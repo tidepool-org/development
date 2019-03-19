@@ -15,10 +15,10 @@ Expand the name of the chart.
 {{- end -}}
 
 {{- define "charts.apihost" -}}
-{{- if .Values.gloo.enabled -}}
-gateway-proxy.gloo-system
+{{- if .Values.hostnameOverride -}}
+{{.Values.hostnameOverride}}
 {{- else -}}
-ambassador.default.svc.cluster.local
+{{.Release.Namespace}}-app.tidepool.org
 {{- end -}}
 {{- end -}}
 
