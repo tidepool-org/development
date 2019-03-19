@@ -8,28 +8,13 @@ Expand the name of the chart.
 {{- end -}}
 
 {{- define "charts.host.api" -}}
-{{- if .Values.hostnameOverride -}}
-{{.Values.hostnameOverride}}
-{{- else -}}
-{{.Release.Namespace}}-api.tidepool.org
-{{- end -}}
-{{- end -}}
+{{if .Values.hostnameOverride}}{{ .Values.hostnameOverride }}{{ else }}{{ .Release.Namespace }}-api.tidepool.org{{ end }}{{ end }}
 
 {{- define "charts.host.uploads" -}}
-{{- if .Values.hostnameOverride -}}
-{{.Values.hostnameOverride}}
-{{- else -}}
-{{.Release.Namespace}}-uploads.tidepool.org
-{{- end -}}
-{{- end -}}
+{{if .Values.hostnameOverride}}{{ .Values.hostnameOverride }}{{ else }}{{ .Release.Namespace }}-uploads.tidepool.org{{ end }}{{ end }}
 
 {{- define "charts.host.app" -}}
-{{- if .Values.hostnameOverride -}}
-{{.Values.hostnameOverride}}
-{{- else -}}
-{{.Release.Namespace}}-app.tidepool.org
-{{- end -}}
-{{- end -}}
+{{if .Values.hostnameOverride}}{{ .Values.hostnameOverride }}{{ else }}{{ .Release.Namespace }}-app.tidepool.org{{ end }}{{ end }}
 
 
 {{/*
@@ -65,14 +50,14 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://{{.Values.platformAuth.host}}:{{.Values.platformAuth.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: https://{{- include "charts.host.api" . -}}
+          value: https://{{include "charts.host.api" .}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
               name: server-secret
               key: secret
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
-          value: '{{- include "charts.host.api" . -}}'
+          value: {{include "charts.host.api" .}}
         - name: TIDEPOOL_AUTH_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
@@ -121,7 +106,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_MESSAGE_STORE_DATABASE
           value: messages
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
-          value: https://{{- include "charts.host.api" . -}}
+          value: https://{{include "charts.host.api" . }}
         - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
           value: http://{{.Values.platformNotification.host}}:{{.Values.platformNotification.port}}
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
@@ -151,7 +136,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
           value: '{{.Values.service.provider.dexcom.client.secret}}'
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
-          value: https://{{- include "charts.host.api" . -}}/v1/oauth/dexcom/redirect
+          value: https://{{include "charts.host.api" . -}}/v1/oauth/dexcom/redirect
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
           value: offline_access
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
@@ -182,7 +167,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
           value: :{{.Values.platformTask.port}}
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
-          value: https://{{- include "charts.host.api" . -}}
+          value: https://{{include "charts.host.api" .}}
         - name: TIDEPOOL_USER_SERVICE_SECRET
           valueFrom:
             secretKeyRef:

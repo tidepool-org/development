@@ -9,7 +9,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       ambassador_id: {{ .Values.ambassador.id }}
-      host: {{ include "charts.host.api" . }}
+      host: '{{ include "charts.host.api" . }}'
       name: {{ .Release.Namespace -}}-export
       prefix: /export/
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
