@@ -2,7 +2,7 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: {{.Release.Namespace}}
+  name: api-vs-{{.Release.Namespace}}
   namespace: gloo-system
 spec:
   sslConfig:
@@ -11,7 +11,7 @@ spec:
       namespace: gloo-system
   virtualHost:
     domains:
-    - {{ include "charts.hostname" . }}
+    - {{ include "charts.host.api" . }}
     name: gloo-system.{{.Release.Namespace}}
     routes:
     - matcher:
@@ -350,11 +350,4 @@ spec:
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
-    - matcher:
-        prefix: /
-      routeAction:
-        single:
-          upstream:
-            name: {{.Release.Namespace}}-blip-{{ .Values.blip.port }}
-            namespace: gloo-system
 {{- end -}}

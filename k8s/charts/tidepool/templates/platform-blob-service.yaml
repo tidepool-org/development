@@ -9,7 +9,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       ambassador_id: {{ .Values.ambassador.id }}
-      host: {{ include "charts.hostname" . }}
+      host: {{ include "charts.host.api" . }}
       name: {{ .Release.Namespace -}}-platform-blob-user-blobs
       prefix: "/v1/users/[^/]+/blobs"
       prefix_regex: true
@@ -21,7 +21,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       ambassador_id: {{ .Values.ambassador.id }}
-      host: {{ include "charts.hostname" . }}
+      host: {{ include "charts.host.api" . }}
       name: {{ .Release.Namespace -}}-platform-blob-blobs
       prefix: "/v1/blobs/[^/]+"
       prefix_regex: true
@@ -33,7 +33,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       ambassador_id: {{ .Values.ambassador.id }}
-      host: {{ include "charts.hostname" . }}
+      host: {{ include "charts.host.api" . }}
       name: {{ .Release.Namespace -}}-platform-blob-blobs-content
       prefix: "/v1/blobs/[^/]+/content"
       prefix_regex: true
