@@ -37,6 +37,7 @@ spec:
     gloo:
       namespace:
         create: false
+      loadAsDependency: false
     hostnameOverride: ""
     includeSecrets: false
     blip:
