@@ -14,7 +14,7 @@ spec:
   virtualHost:
     domains: 
     - {{ include "charts.host.uploads" . }}
-    name: gloo-system.{{.Release.Namespace}}
+    name: uploads.gloo-system.{{.Release.Namespace}}
     routes:
     - matcher:
         prefix: /

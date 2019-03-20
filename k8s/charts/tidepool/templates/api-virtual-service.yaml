@@ -13,7 +13,7 @@ spec:
   virtualHost:
     domains:
     - {{ include "charts.host.api" . }}
-    name: gloo-system.{{.Release.Namespace}}
+    name: api.gloo-system.{{.Release.Namespace}}
     routes:
     - matcher:
         prefix: /userservices/
