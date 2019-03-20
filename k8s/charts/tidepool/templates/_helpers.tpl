@@ -16,7 +16,7 @@ Expand the name of the chart.
 {{- define "charts.host.app" -}}
 {{if .Values.hostnameOverride}}{{ .Values.hostnameOverride }}{{ else }}{{ .Release.Namespace }}-app.tidepool.org{{ end }}{{ end }}
 
-{{- define charts.protocol" -}}
+{{- define "charts.protocol" -}}
 {{ if .Values.gloo.usessl }}https {{- else -}} http {{- end -}} {{- end -}}
 
 
