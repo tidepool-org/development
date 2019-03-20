@@ -34,8 +34,6 @@ hydrophone:
   image: tidepool/hydrophone:noHakken-5d5a6e
   assetUrl: 'https://s3-us-west-2.amazonaws.com/tidepool-dev-asset'
   ses:
-    accessKey: ''
-    secretKey: ''
     fromAddress: ''
     serverEndpoint: 'https://email.us-west-2.amazonaws.com'
   from: {address: ''}
