@@ -42,6 +42,7 @@ hydrophone:
   host: hydrophone
   port: '9157'
 jellyfish: 
+  enabled: false
   image: tidepool/jellyfish:latest
   port: '9122'
   salt: 'itNkczadZ1EeC9fUWR3LnbKFagtYYLOk'
