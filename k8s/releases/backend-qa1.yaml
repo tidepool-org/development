@@ -34,6 +34,7 @@ spec:
     path: k8s/charts/tidepool
     ref: k8s
   values:
+    domain: "tidepool.org"
     gloo:
       usessl: true
       namespace:
