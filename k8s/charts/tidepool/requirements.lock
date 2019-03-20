@@ -1,9 +1,6 @@
 dependencies:
-- name: ambassador
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 1.1.5
 - name: gloo
   repository: https://storage.googleapis.com/solo-public-helm/
   version: 0.10.5
-digest: sha256:abe65d0862e4b42cd189627edad3e8ad10a84ff5cdf7ba2bbde56bdf35aff96b
-generated: 2019-03-18T09:28:47.98553-07:00
+digest: sha256:ec109a8f7c825fa89a971441d4c5d2a72ce1752b552398f8813909ebd825d63d
+generated: 2019-03-19T17:06:42.80128-07:00
