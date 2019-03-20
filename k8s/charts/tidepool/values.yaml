@@ -3,15 +3,11 @@ fullnameOverride: ""
 hostnameOverride: "localhost"
 environment: production
 includeSecrets: true
-namespace:
-  create: true
+gloo:
+  namespace:
+    create: true
 image:
   pullPolicy: IfNotPresent
-gloo:
-  enabled: true
-ambassador:
-  enabled: false
-  id: default
 blip: 
   port: '3000'
   image: tidepool/blip:v1.14.1
