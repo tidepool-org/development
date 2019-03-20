@@ -6,6 +6,7 @@ includeSecrets: true
 gloo:
   namespace:
     create: true
+  usessl: false
 image:
   pullPolicy: IfNotPresent
 blip: 

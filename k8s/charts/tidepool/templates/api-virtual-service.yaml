@@ -4,10 +4,12 @@ metadata:
   name: api-vs-{{.Release.Namespace}}
   namespace: gloo-system
 spec:
+{{ if .Values.gloo.usessl }}
   sslConfig:
     secretRef: 
       name: tidepool-org
       namespace: gloo-system
+{{ end }}
   virtualHost:
     domains:
     - {{ include "charts.host.api" . }}
