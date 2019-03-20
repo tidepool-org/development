@@ -34,16 +34,11 @@ spec:
     path: k8s/charts/tidepool
     ref: k8s
   values:
-    namespace:
-      create: false
-    api:
-      host: gateway-proxy.gloo-system
+    gloo:
+      namespace:
+        create: false
     hostnameOverride: ""
     includeSecrets: false
-    ambassador:
-      enabled: false
-    gloo:
-      enabled: true
     blip:
       image: tidepool/blip:v1.18.0-export-units.2
     export:
