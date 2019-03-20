@@ -57,6 +57,7 @@ spec:
         fromAddress: "Tidepool <noreply@tidepool.org>"
         serverEndpoint: "https://email.us-west-2.amazonaws.com"
     jellyfish:
+      enabled: true
       image: tidepool/jellyfish:OAuth
     messageapi:
       image: tidepool/message-api:quiet
