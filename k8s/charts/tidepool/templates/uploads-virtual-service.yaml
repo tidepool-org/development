@@ -7,6 +7,8 @@ metadata:
 spec:
 {{ if .Values.gloo.usessl }}
   sslConfig:
+    sniDomains:
+    - {{ include "charts.host.uploads" . }}
     secretRef: 
       name: tidepool-org
       namespace: gloo-system
