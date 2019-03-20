@@ -35,6 +35,7 @@ spec:
     ref: k8s
   values:
     gloo:
+      usessl: true
       namespace:
         create: false
       loadAsDependency: false
