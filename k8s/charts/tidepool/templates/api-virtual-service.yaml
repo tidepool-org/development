@@ -1,7 +1,7 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: api.virtual-service.{{.Release.Namespace}}
+  name: api-vs-{{.Release.Namespace}}
   namespace: gloo-system
 spec:
 {{ if .Values.gloo.usessl }}
@@ -13,7 +13,7 @@ spec:
   virtualHost:
     domains:
     - {{ include "charts.host.api" . }}
-    name: api.virtual-host.gloo-system.{{.Release.Namespace}}
+    name: api.gloo-system.{{.Release.Namespace}}
     routes:
     - matcher:
         prefix: /userservices/
