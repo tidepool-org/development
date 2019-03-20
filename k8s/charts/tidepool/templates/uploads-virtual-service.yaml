@@ -10,7 +10,7 @@ spec:
     secretRef: 
       name: tidepool-org
       namespace: gloo-system
-}}
+{{ end }}
   virtualHost:
     domains: 
     - {{ include "charts.host.uploads" . }}
