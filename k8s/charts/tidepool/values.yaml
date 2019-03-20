@@ -1,6 +1,6 @@
 nameOverride: ""
 fullnameOverride: ""
-hostnameOverride: "localhost"
+domain: "local"
 environment: production
 includeSecrets: true
 gloo:

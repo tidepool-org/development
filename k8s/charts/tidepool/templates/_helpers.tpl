@@ -7,14 +7,9 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "charts.host.api" -}}
-{{if .Values.hostnameOverride}}{{ .Values.hostnameOverride }}{{ else }}{{ .Release.Namespace }}-api.tidepool.org{{ end }}{{ end }}
-
-{{- define "charts.host.uploads" -}}
-{{if .Values.hostnameOverride}}{{ .Values.hostnameOverride }}{{ else }}{{ .Release.Namespace }}-uploads.tidepool.org{{ end }}{{ end }}
-
-{{- define "charts.host.app" -}}
-{{if .Values.hostnameOverride}}{{ .Values.hostnameOverride }}{{ else }}{{ .Release.Namespace }}-app.tidepool.org{{ end }}{{ end }}
+{{- define "charts.host.api" -}} {{ .Release.Namespace }}-api.{{ .Values.domain }}{{ end }}
+{{- define "charts.host.uploads" -}} {{ .Release.Namespace }}-uploads.{{ .Values.domain }}{{ end }}
+{{- define "charts.host.app" -}} {{ .Release.Namespace }}-app.{{ .Values.domain }}{{ end }}
 
 {{- define "charts.protocol" -}}
 {{ if .Values.gloo.usessl }}https {{- else -}} http {{- end -}} {{- end -}}
