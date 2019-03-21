@@ -1,8 +1,11 @@
 dependencies:
+  - name: -mongo
+    version: 0.1.2
+    condition: mongo.enabled
   - name: gloo
     repository: https://storage.googleapis.com/solo-public-helm/
     version: 0.10.5
-    condition: gloo.loadAsDependency
+    condition: gloo.enabled
     tags:
       - front-end
   - name: ambassador
