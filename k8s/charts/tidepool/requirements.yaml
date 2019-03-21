@@ -1,10 +1,10 @@
 dependencies:
-  - name: gloo
-    repository: https://storage.googleapis.com/solo-public-helm/
-    version: 0.10.5
-    condition: gloo.enabled
-    tags:
-      - front-end
+        #- name: gloo
+        #repository: https://storage.googleapis.com/solo-public-helm/
+        #version: 0.10.5
+        #condition: gloo.enabled
+        #tags:
+        #- front-end
   - name: ambassador
     repository: https://kubernetes-charts.storage.googleapis.com/
     version: 1.1.5
