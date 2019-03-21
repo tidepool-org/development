@@ -74,7 +74,7 @@ highwater:
   port: '9191'
   salt: gf78fSEI7tOQQP9xfXMO9HfRyMnW4Sx88Q
 hydrophone:
-  image: tidepool/hydrophone:noHakken-5d5a6e
+  image: tidepool/hydrophone:develop-2e69bbc
   assetUrl: 'https://s3-us-west-2.amazonaws.com/tidepool-dev-asset'
   ses:
     fromAddress: ''
@@ -146,7 +146,7 @@ platformUser:
   host: platform-user
   port: '9221'
 seagull: 
-  image: tidepool/seagull:noHakken
+  image: tidepool/seagull:master-74b9e66
   host: seagull
   port: '9120'
   salt: KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
@@ -158,14 +158,14 @@ service:
       client: {id: '', secret: '', address: "https://api.dexcom.com" }
       state: {salt: 'Encryption salt to generate state parameter during OAuth workflow'}
 shoreline:
-  image: tidepool/shoreline:noHakken-402756
+  image: tidepool/shoreline:develop-ba7f1a7
   host: shoreline
   longtermkey: abcdefghijklmnopqrstuvwxyz
   port: '9107'
   salt: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
   verification: {secret: +skip}
 tidewhisperer:
-  image: tidepool/tide-whisperer:noHakken-726e678
+  image: tidepool/tide-whisperer:develop-a572827
   host: tide-whisperer
   port: '9127'
 
