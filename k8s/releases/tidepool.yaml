@@ -33,6 +33,8 @@ spec:
     path: k8s/charts/tidepool
     ref: k8s
   values:
+    ambassador:
+      enabled: true
     mongo: 
       enabled: false
     domain: "tidepool.org"
