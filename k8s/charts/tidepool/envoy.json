@@ -1,0 +1,2025 @@
+{
+    "@type": "/envoy.config.bootstrap.v2.Bootstrap",
+    "static_resources": {
+        "clusters": [
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_127_0_0_1_8877",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "127.0.0.1",
+                                                "port_value": 8877,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_127_0_0_1_8877",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_blip_qa1_3000",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "blip.qa1",
+                                                "port_value": 3000,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_blip_qa1_3000",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_export_qa1_9300",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "export.qa1",
+                                                "port_value": 9300,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_export_qa1_9300",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_gatekeeper_qa1_9123",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "gatekeeper.qa1",
+                                                "port_value": 9123,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_gatekeeper_qa1_9123",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_highwater_qa1_9191",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "highwater.qa1",
+                                                "port_value": 9191,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_highwater_qa1_9191",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_hydrophone_qa1_9157",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "hydrophone.qa1",
+                                                "port_value": 9157,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_hydrophone_qa1_9157",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_message_api_qa1_9119",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "message-api.qa1",
+                                                "port_value": 9119,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_message_api_qa1_9119",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_platform_auth_qa1_9222",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "platform-auth.qa1",
+                                                "port_value": 9222,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_platform_auth_qa1_9222",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_platform_blob_qa1_9225",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "platform-blob.qa1",
+                                                "port_value": 9225,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_platform_blob_qa1_9225",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_platform_data_qa1_9220",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "platform-data.qa1",
+                                                "port_value": 9220,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_platform_data_qa1_9220",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_platform_image_qa1_9226",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "platform-image.qa1",
+                                                "port_value": 9226,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_platform_image_qa1_9226",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_platform_task_qa1_9224",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "platform-task.qa1",
+                                                "port_value": 9224,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_platform_task_qa1_9224",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_platform_user_qa1_9221",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "platform-user.qa1",
+                                                "port_value": 9221,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_platform_user_qa1_9221",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_seagull_qa1_9120",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "seagull.qa1",
+                                                "port_value": 9120,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_seagull_qa1_9120",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_shoreline_qa1_9107",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "shoreline.qa1",
+                                                "port_value": 9107,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_shoreline_qa1_9107",
+                "type": "STRICT_DNS"
+            },
+            {
+                "connect_timeout": "3s",
+                "dns_lookup_family": "V4_ONLY",
+                "lb_policy": "ROUND_ROBIN",
+                "load_assignment": {
+                    "cluster_name": "cluster_tide_whisperer_qa1_9127",
+                    "endpoints": [
+                        {
+                            "lb_endpoints": [
+                                {
+                                    "endpoint": {
+                                        "address": {
+                                            "socket_address": {
+                                                "address": "tide-whisperer.qa1",
+                                                "port_value": 9127,
+                                                "protocol": "TCP"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "name": "cluster_tide_whisperer_qa1_9127",
+                "type": "STRICT_DNS"
+            }
+        ],
+        "listeners": [
+            {
+                "address": {
+                    "socket_address": {
+                        "address": "0.0.0.0",
+                        "port_value": 8443,
+                        "protocol": "TCP"
+                    }
+                },
+                "filter_chains": [
+                    {
+                        "filters": [
+                            {
+                                "config": {
+                                    "access_log": [
+                                        {
+                                            "config": {
+                                                "format": "ACCESS [%START_TIME%] \"%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%\" %RESPONSE_CODE% %RESPONSE_FLAGS% %BYTES_RECEIVED% %BYTES_SENT% %DURATION% %RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)% \"%REQ(X-FORWARDED-FOR)%\" \"%REQ(USER-AGENT)%\" \"%REQ(X-REQUEST-ID)%\" \"%REQ(:AUTHORITY)%\" \"%UPSTREAM_HOST%\"\n",
+                                                "path": "/dev/fd/1"
+                                            },
+                                            "name": "envoy.file_access_log"
+                                        }
+                                    ],
+                                    "http_filters": [
+                                        {
+                                            "name": "envoy.cors"
+                                        },
+                                        {
+                                            "name": "envoy.router"
+                                        }
+                                    ],
+                                    "route_config": {
+                                        "virtual_hosts": [
+                                            {
+                                                "domains": [
+                                                    "*"
+                                                ],
+                                                "name": "backend",
+                                                "routes": [
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|POST|DELETE"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/users/[^/]+/restricted_tokens"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_auth_qa1_9222",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|POST|DELETE"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/users/[^/]+/provider_sessions"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_auth_qa1_9222",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|POST|DELETE"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/users/[^/]+/data_sources"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_data_qa1_9220",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|PUT|DELETE"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/provider_sessions/[^/]+"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_auth_qa1_9222",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "prefix": "/ambassador/v0/check_ready"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "prefix_rewrite": "/ambassador/v0/check_ready",
+                                                            "priority": null,
+                                                            "timeout": "10.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_127_0_0_1_8877",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "prefix": "/ambassador/v0/check_alive"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "prefix_rewrite": "/ambassador/v0/check_alive",
+                                                            "priority": null,
+                                                            "timeout": "10.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_127_0_0_1_8877",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|POST|DELETE"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/users/[^/]+/images/.+"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_image_qa1_9226",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|DELETE"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/oauth/[^/]+/authorize"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_auth_qa1_9222",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "exact_match": "GET",
+                                                                    "name": ":method"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/users/[^/]+/data_sets"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_data_qa1_9220",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|POST"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/users/[^/]+/datasets"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_data_qa1_9220",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "exact_match": "GET",
+                                                                    "name": ":method"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/oauth/[^/]+/redirect"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_auth_qa1_9222",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "exact_match": "GET",
+                                                                    "name": ":method"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/blobs/[^/]+/content"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_blob_qa1_9225",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|POST|DELETE"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/users/[^/]+/images"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_image_qa1_9226",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|PUT|DELETE"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/data_sources/[^/]+"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_data_qa1_9220",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|POST|DELETE"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/users/[^/]+/blobs"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_blob_qa1_9225",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|PUT|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/v1/restricted_tokens"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_auth_qa1_9222",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "exact_match": "DELETE",
+                                                                    "name": ":method"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/users/[^/]+/data"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_data_qa1_9220",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|PUT|DELETE"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/tasks/[^/*]"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_task_qa1_9224",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|DELETE"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/users/[^/*]"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_user_qa1_9221",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|DELETE"
+                                                                }
+                                                            ],
+                                                            "regex": "/v1/blobs/[^/]+"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_blob_qa1_9225",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "prefix": "/ambassador/v0/"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "prefix_rewrite": "/ambassador/v0/",
+                                                            "priority": null,
+                                                            "timeout": "10.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_127_0_0_1_8877",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/userservices/"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "prefix_rewrite": "/",
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_user_qa1_9221",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/dataservices/"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "prefix_rewrite": "/",
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_data_qa1_9220",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "exact_match": "GET",
+                                                                    "name": ":method"
+                                                                }
+                                                            ],
+                                                            "prefix": "/v1/data_sets"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_data_qa1_9220",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "POST|PUT|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/v1/datasets"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_data_qa1_9220",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/metadata/"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "prefix_rewrite": "/",
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_seagull_qa1_9120",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|PUT|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/v1/images"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_image_qa1_9226",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/v1/data/"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "prefix_rewrite": "/",
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_data_qa1_9220",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/metrics/"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "prefix_rewrite": "/",
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_highwater_qa1_9191",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/message/"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "prefix_rewrite": "/",
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_message_api_qa1_9119",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/confirm/"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "prefix_rewrite": "/",
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_hydrophone_qa1_9157",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|POST"
+                                                                }
+                                                            ],
+                                                            "prefix": "/v1/tasks"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_task_qa1_9224",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/export/"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "prefix_rewrite": "/",
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_export_qa1_9300",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/access/"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_gatekeeper_qa1_9123",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "exact_match": "GET",
+                                                                    "name": ":method"
+                                                                }
+                                                            ],
+                                                            "prefix": "/v1/time"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_platform_data_qa1_9220",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/data/"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "prefix_rewrite": "/",
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_tide_whisperer_qa1_9127",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/auth/"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "prefix_rewrite": "/",
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_shoreline_qa1_9107",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "match": {
+                                                            "case_sensitive": true,
+                                                            "headers": [
+                                                                {
+                                                                    "exact_match": "qa1-api.tidepool.org",
+                                                                    "name": ":authority"
+                                                                },
+                                                                {
+                                                                    "name": ":method",
+                                                                    "regex_match": "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+                                                                }
+                                                            ],
+                                                            "prefix": "/"
+                                                        },
+                                                        "route": {
+                                                            "cors": {
+                                                                "allow_credentials": true,
+                                                                "allow_headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "allow_methods": "GET, POST, PUT, PATCH, DELETE",
+                                                                "allow_origin": [
+                                                                    "*"
+                                                                ],
+                                                                "enabled": true,
+                                                                "expose_headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                                                                "max_age": "0"
+                                                            },
+                                                            "priority": null,
+                                                            "timeout": "3.000s",
+                                                            "weighted_clusters": {
+                                                                "clusters": [
+                                                                    {
+                                                                        "name": "cluster_blip_qa1_3000",
+                                                                        "weight": 100.0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "stat_prefix": "ingress_http",
+                                    "use_remote_address": true
+                                },
+                                "name": "envoy.http_connection_manager"
+                            }
+                        ],
+                        "tls_context": {
+                            "common_tls_context": {
+                                "tls_certificates": [
+                                    {
+                                        "certificate_chain": {
+                                            "filename": "/ambassador/snapshots/qa1/secrets-decoded/ambassador-certs/tls.crt"
+                                        },
+                                        "private_key": {
+                                            "filename": "/ambassador/snapshots/qa1/secrets-decoded/ambassador-certs/tls.key"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        "use_proxy_proto": false
+                    }
+                ],
+                "name": "ambassador-listener-8443"
+            },
+            {
+                "address": {
+                    "socket_address": {
+                        "address": "0.0.0.0",
+                        "port_value": 8080,
+                        "protocol": "TCP"
+                    }
+                },
+                "filter_chains": [
+                    {
+                        "filters": [
+                            {
+                                "config": {
+                                    "access_log": null,
+                                    "http_filters": [
+                                        {
+                                            "name": "envoy.router"
+                                        }
+                                    ],
+                                    "route_config": {
+                                        "virtual_hosts": [
+                                            {
+                                                "domains": [
+                                                    "*"
+                                                ],
+                                                "name": "backend",
+                                                "require_tls": "ALL",
+                                                "routes": [
+                                                    {
+                                                        "match": {
+                                                            "prefix": "/"
+                                                        },
+                                                        "redirect": {
+                                                            "https_redirect": true,
+                                                            "path_redirect": "/"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "stat_prefix": "ingress_http",
+                                    "use_remote_address": true
+                                },
+                                "name": "envoy.http_connection_manager"
+                            }
+                        ],
+                        "use_proxy_proto": false
+                    }
+                ],
+                "name": "redirect_listener"
+            }
+        ]
+    }
+}
