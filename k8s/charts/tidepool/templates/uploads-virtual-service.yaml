@@ -1,11 +1,11 @@
-{{ if .Values.jellyfish.enabled }}
+{{ if .Values.gloo.enabled }}
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
   name: uploads-vs-{{.Release.Namespace}}
   namespace: gloo-system
 spec:
-{{ if .Values.gloo.usessl }}
+{{ if .Values.usessl }}
   sslConfig:
     sniDomains:
     - {{ include "charts.host.uploads" . }}
@@ -25,4 +25,4 @@ spec:
           upstream:
             name: {{.Release.Namespace}}-jellyfish-{{ .Values.jellyfish.port }}
             namespace: gloo-system
- {{- end -}}
+ {{ end }}

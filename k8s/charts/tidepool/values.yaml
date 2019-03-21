@@ -3,10 +3,15 @@ fullnameOverride: ""
 domain: "local"
 environment: production
 includeSecrets: true
+usessl: false
+ambassador:
+  enabled: true
+  id: default
 gloo:
+  enabled: false
+  loadAsDependency: false
   namespace:
     create: true
-  usessl: false
 image:
   pullPolicy: IfNotPresent
 blip: 
