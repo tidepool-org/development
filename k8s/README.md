@@ -149,6 +149,13 @@ You may install the Tidepool services directly into the default namespace of you
 ```
 helm install ${REPO_DIR}/k8s/charts/tidepool --name ${RELEASE_NAME}
 ```
+
+You will also need to install a version of the Mongo DB that is compatible with Tidepool (3.2 at present).  You may do this as follows, where `MONGO_RELEASE_NAME` is a name of your choosing:
+```
+helm install ${REPO_DIR}/k8s/charts/mongo --name ${MONGO_RELEASE_NAME}
+```
+
+
 #### Changing Docker Images for Tidepool Services
 The Kubernetes Deployment manifests make reference to the specific Docker images used for the Tidepool services. With Helm, these manifests are templated to allow for variable substitution and other manipulations. 
 
