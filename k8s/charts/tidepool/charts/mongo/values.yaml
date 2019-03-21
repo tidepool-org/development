@@ -3,4 +3,4 @@ mongo:
   host: 'mongo'
   port: '27017'
   tls: 'false'
-  volume: mongo1
+  volume: mongo2
