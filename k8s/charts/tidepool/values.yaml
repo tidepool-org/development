@@ -7,7 +7,6 @@ usessl: false
 
 ambassador:
   enabled: true
-  id: default
   fullnameOverride: ambassador
   replicaCount: 1
   service:
