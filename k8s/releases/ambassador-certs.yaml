@@ -5,5 +5,5 @@ data:
 kind: Secret
 metadata:
   name: ambassador-certs
-  namespace: default
+  namespace: qa1
 type: kubernetes.io/tls
