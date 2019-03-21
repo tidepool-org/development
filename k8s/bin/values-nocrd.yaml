@@ -6,6 +6,8 @@ helmOperator:
   chartsSyncInterval: 1m
   replicaCount: 1
   updateChartDeps: true
+  #repository: quay.io/weaveworks/helm-operator
+  #tag: master-48966b9d
 git:
   url: git@github.com:tidepool-org/dev-ops
   path: k8s
