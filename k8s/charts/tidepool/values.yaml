@@ -27,7 +27,6 @@ ambassador:
             server:
               secret: tidepool-org
               enabled: True
-              redirect_cleartext_from: 8080
         --- 
         apiVersion: ambassador/v1
         kind:  Module
