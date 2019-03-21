@@ -28,7 +28,7 @@ ambassador:
         name: tls
         config:
           server:
-            secret: tidepool-org
+            secret: ambassador-certs
             enabled: True
             redirect_cleartext_from: 8080
         --- 
