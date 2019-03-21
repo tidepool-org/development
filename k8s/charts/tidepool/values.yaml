@@ -16,7 +16,6 @@ ambassador:
       port: 443
     securityContext:
       runAsNonRoot: false
-    service_port: 443
     externalTrafficPolicy: Local
     annotations:
       sidecar.istio.io/inject: "false"
@@ -31,13 +30,15 @@ ambassador:
           server:
             secret: tidepool-org
             enabled: True
+            redirect_cleartext_from: 8080
         --- 
         apiVersion: ambassador/v1
         kind:  Module
         name:  ambassador
         config:
+          service_port: 8443
           use_proxy_proto: false
-          use_remote_address: false
+          use_remote_address: true
           x_forwarded_proto_redirect: true
           cors:
             origins: "*"
