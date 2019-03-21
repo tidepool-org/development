@@ -4,6 +4,18 @@ metadata:
   annotations:
     kompose.cmd: kompose -f docker-compose.yml convert
     kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      host: {{ include "charts.host.uploads" . }}
+      name: {{ .Release.Namespace -}}-jellyfish
+      prefix: /
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      rewrite: ""
+      path_redirect: "false"
+      service: jellyfish.{{ .Release.Namespace }}:{{.Values.jellyfish.port}}
   creationTimestamp: null
   labels:
     io.kompose.service: jellyfish
