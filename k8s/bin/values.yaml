@@ -4,9 +4,10 @@ helmOperator:
   create: true
   chartsSyncInterval: 1m
   replicaCount: 1
-  updateChartDeps: false
+  updateChartDeps: true
 git:
   url: git@github.com:tidepool-org/dev-ops
+  path: k8s
   branch: qa
   pollInterval: 1m
   timeout: 40s
