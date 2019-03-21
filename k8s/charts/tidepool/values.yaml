@@ -11,9 +11,12 @@ ambassador:
   replicaCount: 1
   service:
     http:
-      port: 8080
+      port: 80
     https:
-      port: 8443
+      port: 443
+    securityContext:
+    service_port: 443
+    externalTrafficPolicy: Local
     annotations:
       sidecar.istio.io/inject: "false"
       service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
