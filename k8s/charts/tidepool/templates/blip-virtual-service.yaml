@@ -1,4 +1,4 @@
-{{ if .Values.goo.enabled }}
+{{ if .Values.gloo.enabled }}
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
