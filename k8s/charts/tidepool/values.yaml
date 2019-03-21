@@ -48,7 +48,6 @@ ambassador:
             
 gloo:
   enabled: false
-  loadAsDependency: false
   namespace:
     create: true
 image:
@@ -98,6 +97,7 @@ mailhog:
     http: '8025'
   volume: mailhog1
 mongo: 
+  enabled:: true
   host: 'mongo'
   port: '27017'
   tls: 'false'
