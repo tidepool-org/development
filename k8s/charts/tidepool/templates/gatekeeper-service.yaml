@@ -8,7 +8,6 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
-      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.host.api" . }}
       name: {{ .Release.Namespace -}}-gatekeeper-access
       prefix: /access/

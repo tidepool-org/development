@@ -8,7 +8,6 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
-      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.host.api" . }}
       name: {{ .Release.Namespace -}}-platform-task-tasks
       prefix: "/v1/tasks"
@@ -19,7 +18,6 @@ metadata:
       ---
       apiVersion: ambassador/v1
       kind:  Mapping
-      ambassador_id: {{ .Values.ambassador.id }}
       host: {{ include "charts.host.api" . }}
       name: {{ .Release.Namespace -}}-platform-task-tasks-id
       prefix: "/v1/tasks/[^/*]"
