@@ -4,9 +4,48 @@ domain: "local"
 environment: production
 includeSecrets: true
 usessl: false
+
 ambassador:
   enabled: true
   id: default
+  fullnameOverride: ambassador
+  replicaCount: 1
+  service:
+    http:
+      port: 8080
+    https:
+      port: 8443
+    annotations:
+      sidecar.istio.io/inject: "false"
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+      getambassador.io/config: |
+        ---
+        apiVersion: ambassador/v1
+        kind: Module
+        name: tls
+          config:
+            server:
+              secret: tidepool-org
+              enabled: True
+              redirect_cleartext_from: 80
+        --- 
+        apiVersion: ambassador/v1
+        kind:  Module
+        name:  ambassador
+        config:
+          service_port: 8433
+          use_proxy_proto: false
+          use_remote_address: false
+          x_forwarded_proto_redirect: true
+          cors:
+            origins: "*"
+            methods: "GET, POST, PUT, PATCH, DELETE"
+            headers:  "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session"
+            credentials: true
+            exposed_headers: "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session"
+            max_age: "0"
+            
 gloo:
   enabled: false
   loadAsDependency: false
