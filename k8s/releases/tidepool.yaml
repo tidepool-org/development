@@ -39,10 +39,10 @@ spec:
       enabled: false
     domain: "tidepool.org"
     gloo:
+      enabled: false
       usessl: true
       namespace:
         create: false
-      loadAsDependency: false
     hostnameOverride: ""
     includeSecrets: false
     blip:
