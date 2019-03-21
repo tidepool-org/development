@@ -8,9 +8,9 @@ metadata:
 spec:
   skipDepUpdate: true
   chart:
-    repository: https://storage.googleapis.com
-    name: mongo
-    version: 5.13.1
+    git: git@github.com:tidepool-org/development
+    path: k8s/charts/tidepool
+    ref: k8s
   values:
     mongo:
       image: mongo:3.2
