@@ -15,6 +15,7 @@ ambassador:
     https:
       port: 443
     securityContext:
+      runAsNonRoot: false
     service_port: 443
     externalTrafficPolicy: Local
     annotations:
