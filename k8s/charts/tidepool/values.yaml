@@ -23,10 +23,11 @@ ambassador:
         apiVersion: ambassador/v1
         kind: Module
         name: tls
-          config:
-            server:
-              secret: tidepool-org
-              enabled: True
+        config:
+          server:
+            secret: tidepool-org
+            enabled: True
+            redirect_cleartext_from: 8080
         --- 
         apiVersion: ambassador/v1
         kind:  Module
