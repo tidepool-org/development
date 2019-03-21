@@ -1,6 +1,6 @@
 dependencies:
 - name: ambassador
   repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 1.1.5
-digest: sha256:6f413f424d1d9cd0fb5a29a4d85d05f81d6c22b386f9c5f8806977f7b2dfdaaf
-generated: 2019-03-21T12:13:47.976926-07:00
+  version: 2.0.0
+digest: sha256:5073c8126f17ef3648624112728bbdeec28e6ab9cb653af64174aece4725eba5
+generated: 2019-03-21T13:03:11.746204-07:00
