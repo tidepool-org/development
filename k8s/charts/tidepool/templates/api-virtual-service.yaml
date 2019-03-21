@@ -1,10 +1,11 @@
+{{ if .Values.gloo.enabled }}
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
   name: api-vs-{{.Release.Namespace}}
   namespace: gloo-system
 spec:
-{{ if .Values.gloo.usessl }}
+{{ if .Values.usessl }}
   sslConfig:
     sniDomains:
     - {{ include "charts.host.api" . }}
@@ -353,3 +354,4 @@ spec:
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
+{{ end }}

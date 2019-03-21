@@ -5,3 +5,9 @@ dependencies:
     condition: gloo.loadAsDependency
     tags:
       - front-end
+  - name: ambassador
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    version: 1.1.5
+    condition: ambassador.enabled
+    tags:
+      - front-end

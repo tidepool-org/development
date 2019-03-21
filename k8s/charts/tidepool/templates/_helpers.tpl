@@ -12,7 +12,7 @@ Expand the name of the chart.
 {{- define "charts.host.app" -}} {{ .Release.Namespace }}-app.{{ .Values.domain }}{{ end }}
 
 {{- define "charts.protocol" -}}
-{{ if .Values.gloo.usessl }}https {{- else -}} http {{- end -}} {{- end -}}
+{{ if .Values.usessl }}https {{- else -}} http {{- end -}} {{- end -}}
 
 
 {{/*

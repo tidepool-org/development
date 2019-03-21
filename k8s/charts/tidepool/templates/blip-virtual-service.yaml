@@ -1,10 +1,11 @@
+{{ if .Values.goo.enabled }}
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
   name: app-vs-{{.Release.Namespace}}
   namespace: gloo-system
 spec:
-{{ if .Values.gloo.usessl }}
+{{ if .Values.usessl }}
   sslConfig:
     sniDomains:
     - {{ include "charts.host.app" . }}
@@ -24,3 +25,4 @@ spec:
           upstream:
             name: {{.Release.Namespace}}-blip-{{ .Values.blip.port }}
             namespace: gloo-system
+{{ end }}
