@@ -2,7 +2,7 @@
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
-  name: backend
+  name: tidepool
   namespace: qa1
   annotations:
     flux.weave.works/automated: "true"
