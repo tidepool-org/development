@@ -33,6 +33,7 @@ spec:
     path: k8s/charts/tidepool
     ref: k8s
   values:
+    usessl: false
     ambassador:
       enabled: true
     mongo: 
@@ -40,7 +41,6 @@ spec:
     domain: "tidepool.org"
     gloo:
       enabled: false
-      usessl: false
       namespace:
         create: false
     hostnameOverride: ""
