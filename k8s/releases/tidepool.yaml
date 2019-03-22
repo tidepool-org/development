@@ -40,7 +40,7 @@ spec:
     domain: "tidepool.org"
     gloo:
       enabled: false
-      usessl: true
+      usessl: false
       namespace:
         create: false
     hostnameOverride: ""
