@@ -15,7 +15,7 @@ metadata:
     flux.weave.works/tag.jellyfish: "glob:*"
     flux.weave.works/tag.mailhog: "semver:1.*"
     flux.weave.works/tag.export: "glob:v1.3.*"
-    flux.weave.works/tag.seagull: "glob:master-1797f22"
+    flux.weave.works/tag.seagull: "glob:debug"
     flux.weave.works/tag.hydrophone: "glob:develop-2e69bbc"
     flux.weave.works/tag.messageapi: "glob:quiet*"
     flux.weave.works/tag.platformAuth: "glob:quiet*"
@@ -84,7 +84,7 @@ spec:
     platformUser:
       image: tidepool/platform-user:quiet
     seagull:
-      image: tidepool/seagull:master-1797f22
+      image: tidepool/seagull:debug
     shoreline:
       image: tidepool/shoreline:develop-ba7f1a7
     tidewhisperer:
