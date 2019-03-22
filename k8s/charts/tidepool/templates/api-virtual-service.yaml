@@ -82,6 +82,7 @@ spec:
         - GET
         - POST
         - DELETE
+        - OPTIONS
         regex: /v1/users/[^/]+/data_sources
       routeAction:
         single:

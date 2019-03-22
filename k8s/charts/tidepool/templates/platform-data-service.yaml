@@ -34,7 +34,7 @@ metadata:
       name: {{ .Release.Namespace -}}-platform-data-user_data_sources
       prefix: "/v1/users/[^/]+/data_sources"
       prefix_regex: true
-      method: "GET|POST|DELETE"
+      method: "GET|POST|DELETE|OPTIONS"
       method_regex: true
       rewrite: ""
       service: platform-data.{{ .Release.Namespace }}:{{.Values.platformData.port}}
