@@ -7,7 +7,6 @@ metadata:
     getambassador.io/config: |
       ---
       apiVersion: ambassador/v1
-      {{ include "charts.cors" .}}
       kind:  Mapping
       host: '{{ include "charts.host.api" . }}'
       name: {{ .Release.Namespace -}}-export

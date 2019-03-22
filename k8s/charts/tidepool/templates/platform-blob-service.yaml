@@ -29,7 +29,6 @@ metadata:
       service: platform-blob.{{ .Release.Namespace }}:{{.Values.platformBlob.port}}
       ---
       apiVersion: ambassador/v1
-      {{ include "charts.cors" .}}
       kind:  Mapping
       host: {{ include "charts.host.api" . }}
       name: {{ .Release.Namespace -}}-platform-blob-blobs-content
