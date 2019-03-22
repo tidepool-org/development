@@ -14,6 +14,16 @@ Expand the name of the chart.
 {{- define "charts.protocol" -}}
 {{ if .Values.usessl }}https {{- else -}} http {{- end -}} {{- end -}}
 
+{{- define "charts.cors" -}}
+
+      cors: 
+        origins: "*"
+        methods: "GET, POST, PUT, PATCH, DELETE"
+        headers:  "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session"
+        credentials: true
+        exposed_headers: "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session"
+        max_age: "0"
+{{ end }}
 
 {{/*
 Create a default fully qualified app name.

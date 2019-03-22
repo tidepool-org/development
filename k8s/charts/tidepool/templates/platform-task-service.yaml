@@ -17,6 +17,7 @@ metadata:
       service: platform-task.{{ .Release.Namespace }}:{{.Values.platformTask.port}}
       ---
       apiVersion: ambassador/v1
+      {{ include "charts.cors" .}}
       kind:  Mapping
       host: {{ include "charts.host.api" . }}
       name: {{ .Release.Namespace -}}-platform-task-tasks-id
