@@ -40,13 +40,6 @@ ambassador:
           use_proxy_proto: false
           use_remote_address: true
           x_forwarded_proto_redirect: true
-          cors:
-            origins: "*"
-            methods: "GET, POST, PUT, PATCH, DELETE"
-            headers:  "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session"
-            credentials: true
-            exposed_headers: "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session"
-            max_age: "0"
             
 gloo:
   enabled: false
