@@ -61,6 +61,7 @@ metadata:
       service: platform-auth.{{ .Release.Namespace }}:{{.Values.platformAuth.port}}
       ---
       apiVersion: ambassador/v1
+      {{ include "charts.cors" .}}
       kind:  Mapping
       host: {{ include "charts.host.api" . }}
       name: {{ .Release.Namespace -}}-platform-auth-redirect
