@@ -148,7 +148,7 @@ platformUser:
   host: platform-user
   port: '9221'
 seagull: 
-  image: tidepool/seagull:noHakken
+  image: tidepool/seagull:master-1797f22
   host: seagull
   port: '9120'
   salt: KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
