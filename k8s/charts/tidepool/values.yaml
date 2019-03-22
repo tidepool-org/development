@@ -28,15 +28,15 @@ ambassador:
         name: tls
         config:
           server:
-            secret: ambassador-certs
-            enabled: True
-            redirect_cleartext_from: 8080
+            #secret: ambassador-certs
+            #enabled: True
+            #redirect_cleartext_from: 8080
         --- 
         apiVersion: ambassador/v1
         kind:  Module
         name:  ambassador
         config:
-          service_port: 8443
+          #service_port: 8443
           use_proxy_proto: false
           use_remote_address: true
           x_forwarded_proto_redirect: true
