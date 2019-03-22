@@ -1,6 +1,6 @@
 nameOverride: ""
 fullnameOverride: ""
-domain: "local"
+domain: "tidepool.org"
 environment: production
 includeSecrets: true
 usessl: true
@@ -99,7 +99,7 @@ mailhog:
     http: '8025'
   volume: mailhog1
 mongo: 
-  enabled:: true
+  enabled: true
   host: 'mongo'
   port: '27017'
   tls: 'false'
