@@ -9,7 +9,7 @@ metadata:
     flux.weave.works/tag.shoreline: "glob:develop-ba7f1a7"
     flux.weave.works/tag.tidewhisperer: "glob:develop-a572827"
     flux.weave.works/tag.hakken: "glob:noHakken*"
-    flux.weave.works/tag.blip: "glob:*"
+    flux.weave.works/tag.blip: "glob:1.17.0"
     flux.weave.works/tag.gatekeeper: "glob:*"
     flux.weave.works/tag.highwater: "glob:*"
     flux.weave.works/tag.jellyfish: "glob:*"
@@ -46,7 +46,7 @@ spec:
     hostnameOverride: ""
     includeSecrets: false
     blip:
-      image: tidepool/blip:v1.18.0-export-units.2
+      image: tidepool/blip:v1.17.0
     export:
       image: tidepool/export:v1.3.2
     gatekeeper:
