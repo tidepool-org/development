@@ -20,7 +20,7 @@ metadata:
     flux.weave.works/tag.messageapi: "glob:quiet*"
     flux.weave.works/tag.platformAuth: "glob:quiet*"
     flux.weave.works/tag.platformBlob: "glob:quiet*"
-    flux.weave.works/tag.platformData: "glob:quiet*"
+    flux.weave.works/tag.platformData: "glob:debu*s"
     flux.weave.works/tag.platformMigrations: "glob:quiet*"
     flux.weave.works/tag.platformNotification: "glob:quiet*"
     flux.weave.works/tag.platformTask: "glob:quiet*"
@@ -72,7 +72,7 @@ spec:
     platformBlob:
       image: tidepool/platform-blob:quiet
     platformData:
-      image: tidepool/platform-data:quiet
+      image: tidepool/platform-data:debug
     platformMigrations:
       image: tidepool/platform-migrations:quiet
     platformNotification:
