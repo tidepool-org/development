@@ -36,7 +36,7 @@ spec:
     usessl: false
     ambassador:
       enabled: true
-    mongo: 
+    mongo:
       enabled: false
     domain: "tidepool.org"
     gloo:
@@ -72,7 +72,7 @@ spec:
     platformBlob:
       image: tidepool/platform-blob:quiet
     platformData:
-      image: tidepool/platform-data:debug-2
+      image: tidepool/platform-data:debug-3
     platformMigrations:
       image: tidepool/platform-migrations:quiet
     platformNotification:
