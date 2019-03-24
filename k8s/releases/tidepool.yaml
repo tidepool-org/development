@@ -33,7 +33,7 @@ spec:
     path: k8s/charts/tidepool
     ref: k8s
   values:
-    usessl: false
+    usessl: true
     ambassador:
       enabled: true
     mongo:
