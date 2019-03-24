@@ -72,7 +72,7 @@ spec:
     platformBlob:
       image: tidepool/platform-blob:quiet
     platformData:
-      image: tidepool/platform-data:debug-4
+      image: tidepool/platform-data:debug-5
     platformMigrations:
       image: tidepool/platform-migrations:quiet
     platformNotification:
