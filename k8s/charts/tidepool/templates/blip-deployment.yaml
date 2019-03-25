@@ -32,7 +32,7 @@ spec:
       containers:
       - env:
         - name: API_HOST
-          value: https://{{ include "charts.host.api" . }}
+          value: {{include "charts.protocol" .}}://{{ include "charts.host.api" . }}
         - name: DEV_TOOLS
           value: "true"
         - name: DISCOVVERY_HOST
