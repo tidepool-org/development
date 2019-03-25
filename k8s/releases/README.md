@@ -1,7 +1,7 @@
 This directory stores the configuration for two separate instances of the Tidepool backend, `qa1` and `qa2`.
 
 ##### Mongo Storage
-They have separate instances of Mongo.  
+They have separate instances of Mongo.  Neither instance of Mongo is using a Mongo replicaset.  The storage is backed by a Kubernetes Persisent Volume.  Should the Mongo instance be restarted, the volume will continue to exist.
 
 ##### Kubernetes Namespaces
 They live in separate Kubernetes namespaces. 
