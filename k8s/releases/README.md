@@ -1,4 +1,4 @@
-This directory stores the configuration for two separate instanes of the Tidepool backend, `qa1` and `qa2`.
+This directory stores the configuration for two separate instances of the Tidepool backend, `qa1` and `qa2`.
 
 ##### Mongo Storage
 They have separate instances of Mongo.  
