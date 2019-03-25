@@ -52,6 +52,8 @@ spec:
         args: ["-c", "yarn build && yarn server"]
         ports:
         - containerPort: {{.Values.blip.port}}
-        resources: {}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
+
 status: {}

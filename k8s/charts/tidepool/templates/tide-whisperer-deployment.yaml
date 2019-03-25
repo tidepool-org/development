@@ -89,6 +89,7 @@ spec:
         name: tide-whisperer
         ports:
         - containerPort: {{.Values.tidewhisperer.port}}
-        resources: {}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
 status: {}

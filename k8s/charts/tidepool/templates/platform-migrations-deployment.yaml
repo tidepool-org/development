@@ -35,6 +35,7 @@ spec:
         {{ include "charts.platform.env" .}}
         image: "{{ .Values.platformMigrations.image }}"
         name: platform-migrations
-        resources: {}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
 status: {}

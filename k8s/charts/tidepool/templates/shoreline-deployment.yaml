@@ -92,6 +92,7 @@ spec:
         name: shoreline
         ports:
         - containerPort: {{.Values.shoreline.port}}
-        resources: {}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
 status: {}

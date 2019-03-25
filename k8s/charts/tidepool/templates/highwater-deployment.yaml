@@ -63,6 +63,7 @@ spec:
         name: highwater
         ports:
         - containerPort: {{.Values.highwater.port}}
-        resources: {}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
 status: {}
