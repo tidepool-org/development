@@ -12,7 +12,7 @@ spec:
     ref: master
   values:
     fullnameOverride: ambassador
-    replicaCount: 1
+    replicaCount: 2
     service:
       http:
         port: 80
