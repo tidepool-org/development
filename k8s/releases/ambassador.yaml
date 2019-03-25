@@ -15,24 +15,34 @@ spec:
     replicaCount: 1
     service:
       http:
-        port: 8080
+        port: 80
       https:
-        port: 8443
+        port: 443
+      securityContext:
+        runAsNonRoot: false
+      externalTrafficPolicy: Local
       annotations:
         sidecar.istio.io/inject: "false"
-        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:iam::118346523422:server-certificate/wildcard.tidepool.org-2020-11-15-digicert"
-        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
-        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+        service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
         service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
         getambassador.io/config: |
-          --- 
+          ---
+          apiVersion: ambassador/v1
+          kind: Module
+          name: tls
+          config:
+            server:
+              secret: ambassador-certs
+              enabled: True
+              redirect_cleartext_from: 8080
+          ---
           apiVersion: ambassador/v1
           kind:  Module
           name:  ambassador
           config:
-            service_port: 8080
+            service_port: 8443
             use_proxy_proto: false
-            use_remote_address: false
+            use_remote_address: true
             x_forwarded_proto_redirect: true
             cors:
               origins: "*"
@@ -41,3 +51,4 @@ spec:
               credentials: true
               exposed_headers: "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session"
               max_age: "0"
+  

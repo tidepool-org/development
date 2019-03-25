@@ -34,11 +34,11 @@ spec:
     ref: k8s
   values:
     usessl: true
+    domain: "tidepool.org"
     ambassador:
-      enabled: true
+      enabled: false
     mongo:
       enabled: false
-    domain: "tidepool.org"
     gloo:
       enabled: false
       namespace:
