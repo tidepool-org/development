@@ -13,4 +13,4 @@ They share a single API Gateway that performs host-based routing to separate the
 They share a single branch `qa` of the `dev-ops` repo for GitOps.  Changes are reflected in different files: `tidepool-qa1.yaml` and `tidepool-qa2.yaml`.
 
 ##### Weave Configuration
-qa1 will NOT auto update using Weave flux.  qa2 will.
+`qa1` will NOT auto update using Weave flux.  `qa2` will.
