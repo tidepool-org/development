@@ -38,6 +38,7 @@ spec:
         name: platform-image
         ports:
         - containerPort: {{.Values.platformImage.port}}
-        resources: {}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
 status: {}

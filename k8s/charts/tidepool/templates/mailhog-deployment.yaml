@@ -32,7 +32,8 @@ spec:
         ports:
         - containerPort: {{.Values.mailhog.ports.smtp}}
         - containerPort: {{.Values.mailhog.ports.http}}
-        resources: {}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
         volumeMounts:
         - mountPath: /maildir
           name: {{.Values.mailhog.volume}}

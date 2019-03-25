@@ -38,6 +38,7 @@ spec:
         name: platform-auth
         ports:
         - containerPort: {{.Values.platformAuth.port}}
-        resources: {}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
 status: {}

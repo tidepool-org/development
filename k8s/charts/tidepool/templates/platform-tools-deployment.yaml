@@ -35,6 +35,7 @@ spec:
         {{ include "charts.platform.env" .}}
         image: "{{ .Values.platformTools.image }}"
         name: platform-tools
-        resources: {}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
 status: {}

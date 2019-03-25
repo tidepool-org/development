@@ -38,6 +38,7 @@ spec:
         name: platform-blob
         ports:
         - containerPort: {{.Values.platformBlob.port}}
-        resources: {}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
 status: {}

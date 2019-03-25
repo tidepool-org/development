@@ -101,6 +101,7 @@ spec:
         name: hydrophone
         ports:
         - containerPort: {{.Values.hydrophone.port}}
-        resources: {}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
 status: {}

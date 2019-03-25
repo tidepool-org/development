@@ -73,6 +73,7 @@ spec:
         name: message-api
         ports:
         - containerPort: {{.Values.messageapi.port}}
-        resources: {}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
 status: {}
