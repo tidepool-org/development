@@ -36,10 +36,9 @@ spec:
     highwater:
       image: tidepool/highwater:OAuth
     hydrophone:
-      image: tidepool/hydrophone:develop-2e69bbc
+      image: tidepool/hydrophone:goSes
       ses:
         fromAddress: "Tidepool <noreply@tidepool.org>"
-        serverEndpoint: "https://email.us-west-2.amazonaws.com"
     jellyfish:
       enabled: true
       image: tidepool/jellyfish:OAuth
