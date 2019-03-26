@@ -37,16 +37,8 @@ spec:
             secretKeyRef:
               name: server-secret
               key: secret
-        - name: SES_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: ses-secret
-              key: access-key
-        - name: SES_SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: ses-secret
-              key: secret-key            
+        - name: REGION
+          value: us-west-2            
         - name: TIDEPOOL_HYDROPHONE_ENV
           value: |
             {
