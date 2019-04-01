@@ -101,12 +101,15 @@ services:
     # build:
     #   context: ${TIDEPOOL_DOCKER_HYDROPHONE_DIR}
     #   target: ${TIDEPOOL_DOCKER_HYDROPHONE_BUILD_TARGET}
-    # volumes:
+    volumes:
+      - ${USERPROFILE}/.aws:/root/.aws
     #   - ${TIDEPOOL_DOCKER_HYDROPHONE_DIR}:/go/src/github.com/tidepool-org/hydrophone:cached
     #   - /go/src/github.com/tidepool-org/hydrophone/dist
     ports:
       - '${TIDEPOOL_DOCKER_HYDROPHONE_PORT_PREFIX}9157:${TIDEPOOL_DOCKER_HYDROPHONE_PORT_PREFIX}9157'
     environment:
+      AWS_REGION: us-west-2
+      AWS_PROFILE: default
       TIDEPOOL_HYDROPHONE_ENV: |
         {
             "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://${TIDEPOOL_DOCKER_GATEKEEPER_HOST}:9123"]}},
@@ -212,6 +215,8 @@ services:
     ports:
       - '${TIDEPOOL_DOCKER_PLATFORM_AUTH_PORT_PREFIX}9222:${TIDEPOOL_DOCKER_PLATFORM_AUTH_PORT_PREFIX}9222'
     environment: &platform-environment
+      AWS_REGION: us-west-2
+      AWS_PROFILE: default
       TIDEPOOL_ENV: local
       TIDEPOOL_LOGGER_LEVEL: debug
       TIDEPOOL_STORE_ADDRESSES: ${TIDEPOOL_DOCKER_MONGO_HOST}
@@ -273,7 +278,8 @@ services:
     #   context: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_DIR}
     #   dockerfile: Dockerfile.blob
     #   target: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_BUILD_TARGET}
-    # volumes:
+    volumes:
+      - ${USERPROFILE}/.aws:/root/.aws
     #   - ${TIDEPOOL_DOCKER_PLATFORM_BLOB_DIR}:/go/src/github.com/tidepool-org/platform:cached
     #   - /go/src/github.com/tidepool-org/platform/_bin
     #   - /go/src/github.com/tidepool-org/platform/_data
