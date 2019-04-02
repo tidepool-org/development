@@ -102,7 +102,7 @@ services:
     #   context: ${TIDEPOOL_DOCKER_HYDROPHONE_DIR}
     #   target: ${TIDEPOOL_DOCKER_HYDROPHONE_BUILD_TARGET}
     volumes:
-      - ${USERPROFILE}/.aws:/home/tidepool/.aws
+      - ${HOME}/.aws:/home/tidepool/.aws
     #   - ${TIDEPOOL_DOCKER_HYDROPHONE_DIR}:/go/src/github.com/tidepool-org/hydrophone:cached
     #   - /go/src/github.com/tidepool-org/hydrophone/dist
     ports:
@@ -279,7 +279,7 @@ services:
     #   dockerfile: Dockerfile.blob
     #   target: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_BUILD_TARGET}
     volumes:
-      - ${USERPROFILE}/.aws:/home/tidepool/.aws
+      - ${HOME}/.aws:/home/tidepool/.aws
     #   - ${TIDEPOOL_DOCKER_PLATFORM_BLOB_DIR}:/go/src/github.com/tidepool-org/platform:cached
     #   - /go/src/github.com/tidepool-org/platform/_bin
     #   - /go/src/github.com/tidepool-org/platform/_data
