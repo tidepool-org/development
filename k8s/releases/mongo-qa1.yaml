@@ -52,7 +52,7 @@ spec:
     ## Enable authentication
     ## ref: https://docs.mongodb.com/manual/tutorial/enable-authentication/
     #
-    usePassword: true
+    usePassword: false
     # existingSecret: name-of-existing-secret
     
     ## MongoDB admin password
