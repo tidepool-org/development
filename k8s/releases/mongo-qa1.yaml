@@ -13,6 +13,6 @@ spec:
     ref: k8s
   values:
     mongo:
-      image: mongo:3.2
+      image: mongo:3.6
 
 
