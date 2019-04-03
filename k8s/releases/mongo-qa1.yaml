@@ -8,9 +8,9 @@ metadata:
 spec:
   skipDepUpdate: true
   chart:
-    git: git@github.com:helm/charts
-    path: stable/mongodb
-    ref: master
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    name: mongodb
+    version: 5.16.0
   values:
     ## Global Docker image parameters
     ## Please, note that this will override the image parameters, including dependencies, configured to use the global value
