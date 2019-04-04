@@ -1,12 +1,26 @@
 This directory stores the configuration for several separate instances of the Tidepool services.  Each instance is defined in a subdirectory of the `namespaced` directory.
 
-### Authentication
-In order to authenticate yourself to the Kubernetes cluster running in Amazon EKS
-* provide your AWS credentials in the normal way
-* install the aws-iam-authenticator
+### Tools
+* Install the kubernetes CLI, `kubectl`.
+```
+brew install kubernetes-cli
+```
+* Install the kubernetes log tailer, `kail`
+```
+brew tap boz/repo && brew install boz/repo/kail
+```
+* Install the curse-based kubernetes inspector, `k9s`.
+```
+brew tap derailed/k9s && brew install k9s
+```
+* Install the aws iam authenticator, `aws-iam-authenticator`.
 ```
 brew install aws-iam-authenticator
 ```
+
+### Authentication
+In order to authenticate yourself to the Kubernetes cluster running in Amazon EKS
+* provide your AWS credentials in the normal way
 * install the [KUBECONFIG](https://github.com/tidepool-org/dev-ops/blob/qa/k8s/amazing-sculpture-1549406110.yaml) file. Change `you` to your AWS iam name, e.g. `derrick-cli`.
 ```
 apiVersion: v1
@@ -36,6 +50,11 @@ users:
       env: null
 ```
 * set and export the `KUBECONFIG` variable to point to the above file
+
+You know it worked if you can do:
+```
+kubectl get pods
+```
 
 ### GitOps
 To make changes to a Tidepool instance, simply change the manifests in the subdirectory of the `namespaced` directory.  N.B. The directory
