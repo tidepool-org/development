@@ -25,6 +25,7 @@ brew install aws-iam-authenticator
 ### Authentication
 In order to authenticate yourself to the Kubernetes cluster running in Amazon EKS
 * provide your AWS credentials in the normal way
+  * we are in the `us-west-2` region
 * install the [KUBECONFIG](https://github.com/tidepool-org/dev-ops/blob/qa/k8s/amazing-sculpture-1549406110.yaml) file. Change `you` to your AWS iam name, e.g. `derrick-cli`.
 ```
 apiVersion: v1
