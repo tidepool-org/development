@@ -6,7 +6,6 @@ metadata:
   annotations:
     flux.weave.works/automated: "false"
 spec:
-  releaseName: mongodb
   skipDepUpdate: true
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
@@ -21,7 +20,7 @@ spec:
     #   imageRegistry: myRegistryName
     #   imagePullSecrets:
     #     - myRegistryKeySecretName
-    
+    fullnameOverride: mongodb
     image:
       ## Bitnami MongoDB registry
       ##
