@@ -55,6 +55,9 @@ users:
       env: null
 ```
 * set and export the `KUBECONFIG` variable to point to the above file
+```
+export KUBECONFIG=~/.kube/config
+```
 
 You know it worked if you can do:
 ```
