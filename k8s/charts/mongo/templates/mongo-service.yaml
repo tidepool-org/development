@@ -6,12 +6,12 @@ metadata:
     kompose.version: 1.17.0 (a74acad)
   creationTimestamp: null
   labels:
-    io.kompose.service: mongo
+    io.kompose.service: mongodb
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-  name: mongo
+  name: mongodb
   namespace: {{.Release.Namespace}}
 spec:
   ports:
@@ -19,7 +19,7 @@ spec:
     port: {{.Values.mongo.port}}
     targetPort: {{.Values.mongo.port}}
   selector:
-    io.kompose.service: mongo
+    io.kompose.service: mongodb
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 status:

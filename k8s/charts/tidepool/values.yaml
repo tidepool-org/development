@@ -110,7 +110,7 @@ mailhog:
   volume: mailhog1
 mongo: 
   enabled: true
-  host: 'mongo'
+  host: 'mongodb'
   port: '27017'
   tls: 'false'
 platformAuth:
