@@ -15,7 +15,7 @@ Each Tidepool instance lives in separate Kubernetes namespace.
 Each Tidepool instance share a single API Gateway that performs host-based routing to separate the traffic. 
 
 ### Weave - Shared
-Each Tidepool instance requires the Weave Flux service to be running in the cluster.
+Each Tidepool instance requires the [Weave Flux](https://medium.com/@m.k.joerg/gitops-weave-flux-in-detail-77ce36945646) service to be running in the cluster.
 
 ### Usage and Configuration Notes
 
