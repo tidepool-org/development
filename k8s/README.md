@@ -57,7 +57,7 @@ Each Tidepool instance requires the [Weave Flux](https://medium.com/@m.k.joerg/g
 ### Usage and Configuration Notes
 
 ##### QA1
-QA1 is used by Derrick for testing new services.  
+QA1 is used by Derrick for bringing up the overall K8s infrastructure, including shared services like API gateway, Mongo storage, and eventually a service mesh such as Istio. 
 ##### QA2
 ##### QA3
 ##### QA4
