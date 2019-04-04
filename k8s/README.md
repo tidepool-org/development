@@ -1,6 +1,10 @@
 This directory stores the configuration for several separate instances of the Tidepool services.  Each instance is defined in a subdirectory of the `namespaced` directory.
 
 ### Tools
+* Install AWS CLI, `aws`.
+```
+brew install awscli
+```
 * Install the kubernetes CLI, `kubectl`.
 ```
 brew install kubernetes-cli
