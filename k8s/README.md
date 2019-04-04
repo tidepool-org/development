@@ -56,9 +56,9 @@ Each Tidepool instance requires the [Weave Flux](https://medium.com/@m.k.joerg/g
 
 ### Usage and Configuration Notes
 
-#### QA
+##### QA1
 QA1 is used by Derrick for testing new services.  
-#### QA2
-#### QA3
-#### QA4
+##### QA2
+##### QA3
+##### QA4
 
