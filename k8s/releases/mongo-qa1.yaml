@@ -286,7 +286,8 @@ spec:
     #      enabled: true
     #      pathPrefix: /opt/bitnami/mongodb/tmp
     #  # replica set options
-    #  replication:
+    replication:
+      enableMajorityReadConcern: false
     #    replSetName: replicaset
     #  # process management options
     #  processManagement:
