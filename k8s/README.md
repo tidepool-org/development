@@ -49,7 +49,7 @@ Each Tidepool instance has a separate instances of Mongo.  The storage is backed
 Each Tidepool instance lives in separate Kubernetes namespace. 
 
 ### API Gateway - Shared
-Each Tidepool instance share a single API Gateway that performs host-based routing to separate the traffic. 
+The Tidepool instances share a single API Gateway that performs host-based routing to separate the traffic. 
 
 ### Weave - Shared
 Each Tidepool instance requires the [Weave Flux](https://medium.com/@m.k.joerg/gitops-weave-flux-in-detail-77ce36945646) service to be running in the cluster.
