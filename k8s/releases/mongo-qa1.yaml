@@ -6,6 +6,7 @@ metadata:
   annotations:
     flux.weave.works/automated: "false"
 spec:
+  releaseName: mongodb
   skipDepUpdate: true
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
