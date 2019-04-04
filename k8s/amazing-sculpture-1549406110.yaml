@@ -1,0 +1,25 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRFNU1ESXdOVEl5TkRJek5Gb1hEVEk1TURJd01qSXlOREl6TkZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTFRRCkhCSW40V2FycEFNUTlTdWlrNGFrY0h1MnJwRnlOa1JZVHhDaEZLbmh3OUNHSGpHQkhPVXhHU0ZUYlNndG0vWTQKQUFMckJOS1JXRUx4QTZOOXJSaVF1V0J1TlNCUitZU2tqc3EvaXdUMzB0RnB4RjdlVFJDSXJFa0ZLcnFOMXJCNwowU1BxcEZRZS94ZHo1eHBoSGsxOHBrakhmYUgyZ2xob2hKR1NXNCtmcFEwUlJhQ0wwNjg0MytKYnJTTnVGUG0zCnRidENLVFo4aUFjZm1YcUYzek11bzlsRHEwZTJ1ai92UEJxcTlsMVROTjRBUHpBM3V6WkVZVy9yRzdSczlXOGsKTk0zdTRmNU5tWDduSTlwbGFNenlrWW5CcU9DalJESzRGVU9QRHBxZjAyVjVOZWFtcjdrSk9MWDdJekhXc0RZUgorWkh3SnI0VUNGNEVFT3V0ZFA4Q0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFERWRNdHFnVnFTdlVGTk9jQ2lpMTRMU3FOenMKZzNKeWJ6aU1Lb1VuS1JJeGxYbUpsb0k3MFg1WDdlYlVZalM5Vi9iYUwwdjNUVlptZzM3UVM5VEpRbWN1Y2tGNwp0VEdMdXNXaGY1Vm5Qc3ErbTVpcG0vSmt2OWkrZ1NFVnZsL0Z2eExBUGZsRzR6TDRjR0lRRXY3d20wUy9GZXQyCkU0N2NSRkNOZitSM2dQYTBRNHRVd1NqZDdtc1RkWWdxRVBMWks1OFlPblM1OVE3QjZWNEVpZ2xPVzVwWVlzZnIKd0dkNXY5RFJ1TXJUbVdBaEQ1M2tlaTZKUmVDOUdkeWF4aHNCZld1TnNOR0tBaWRqY21WL2xidVord1RTSjBUTQpkYmtXcGl1RG9SbDhhZVBUUWVlZjBrZTJUU1BjcTFHbFQ4RUIvV2prSVl2WWJzK0xoaDlkenY2YXk5QT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    server: https://9290AF532283F930D0B7C6ECB9D47DB6.sk1.us-west-2.eks.amazonaws.com
+  name: amazing-sculpture-1549406110.us-west-2.eksctl.io
+contexts:
+- context:
+    cluster: amazing-sculpture-1549406110.us-west-2.eksctl.io
+    user: you@amazing-sculpture-1549406110.us-west-2.eksctl.io
+  name: you@amazing-sculpture-1549406110.us-west-2.eksctl.io
+current-context: you@amazing-sculpture-1549406110.us-west-2.eksctl.io
+kind: Config
+preferences: {}
+users:
+- name: you@amazing-sculpture-1549406110.us-west-2.eksctl.io
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1alpha1
+      args:
+      - token
+      - -i
+      - amazing-sculpture-1549406110
+      command: aws-iam-authenticator
+      env: null
