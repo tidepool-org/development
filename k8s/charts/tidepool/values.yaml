@@ -166,7 +166,7 @@ service:
   provider:
     dexcom:
       token: { url: 'https://api.dexcom.com/v1/oauth2/token' }
-      authorize: { url: 'https://api.dexcom.com/v1/oauth2/login' }
+      authorize: { url: 'https://api.dexcom.com/v1/oauth2/login?prompt=login' }
       client: { url: "https://api.dexcom.com" }
 shoreline:
   image: tidepool/shoreline:develop-ba7f1a7
