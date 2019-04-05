@@ -167,8 +167,7 @@ service:
     dexcom:
       token: { url: 'https://api.dexcom.com/v1/oauth2/token' }
       authorize: { url: 'https://api.dexcom.com/v1/oauth2/login' }
-      client: {id: '', secret: '', address: "https://api.dexcom.com" }
-      state: {salt: 'Encryption salt to generate state parameter during OAuth workflow'}
+      client: { url: "https://api.dexcom.com" }
 shoreline:
   image: tidepool/shoreline:develop-ba7f1a7
   host: shoreline
