@@ -96,7 +96,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
           value: data
         - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
-          value: '{{.Values.service.provider.dexcom.client.address}}'
+          value: '{{.Values.service.provider.dexcom.client.url}}'
         - name: TIDEPOOL_ENV
           value: local
         - name: TIDEPOOL_LOGGER_LEVEL
@@ -130,15 +130,24 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
           value: '{{.Values.service.provider.dexcom.authorize.url}}'
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
-          value: '{{.Values.service.provider.dexcom.client.id}}'
+          valueFrom:
+            secretKeyRef:
+              name: dexcom-secret
+              key: CLIENT_ID
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
-          value: '{{.Values.service.provider.dexcom.client.secret}}'
+          valueFrom:
+            secretKeyRef:
+              name: dexcom-secret
+              key: CLIENT_SECRET
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
           value: {{include "charts.protocol" .}}://{{include "charts.host.api" .}}/v1/oauth/dexcom/redirect
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
           value: offline_access
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
-          value: '{{.Values.service.provider.dexcom.state.salt}}'
+          valueFrom:
+            secretKeyRef:
+              name: dexcom-secret
+              key: STATE_SALT
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
           value: '{{.Values.service.provider.dexcom.token.url}}'
         - name: TIDEPOOL_SESSION_STORE_DATABASE
