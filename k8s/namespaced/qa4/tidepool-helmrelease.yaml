@@ -1,0 +1,91 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: tidepool
+  namespace: qa4
+  annotations:
+    flux.weave.works/automated: "true"
+    flux.weave.works/tag.shoreline: "glob:v0.*"
+    flux.weave.works/tag.tidewhisperer: "glob:v0.*"
+    flux.weave.works/tag.blip: "glob:1.*"
+    flux.weave.works/tag.gatekeeper: "glob:v0.*"
+    flux.weave.works/tag.highwater: "glob:v0.*"
+    flux.weave.works/tag.jellyfish: "glob:v0.*"
+    flux.weave.works/tag.mailhog: "semver:1.*"
+    flux.weave.works/tag.export: "glob:v1.*"
+    flux.weave.works/tag.seagull: "glob:v0.*"
+    flux.weave.works/tag.hydrophone: "glob:v0.*"
+    flux.weave.works/tag.messageapi: "glob:v0.*"
+    flux.weave.works/tag.platformAuth: "glob:1.*"
+    flux.weave.works/tag.platformBlob: "glob:1.*"
+    flux.weave.works/tag.platformData: "glob:1.*"
+    flux.weave.works/tag.platformMigrations: "glob:1.*"
+    flux.weave.works/tag.platformNotification: "glob:1.*"
+    flux.weave.works/tag.platformTask: "glob:1.*"
+    flux.weave.works/tag.platformTools: "glob:1.*"
+    flux.weave.works/tag.platformUser: "glob:1.*"
+spec:
+  skipDepUpdate: true
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: k8s/charts/tidepool
+    ref: k8s
+  values:
+    usessl: true
+    domain: "tidepool.org"
+    ambassador:
+      enabled: false
+    mongo:
+      enabled: false
+    gloo:
+      enabled: false
+      namespace:
+        create: false
+    hostnameOverride: ""
+    includeSecrets: false
+    blip:
+      image: tidepool/blip:v1.17.0
+    export:
+      image: tidepool/export:v1.3.2
+    gatekeeper:
+      image: tidepool/gatekeeper:OAuth
+    hakken:
+      image: tidepool/hakken:noHakken
+    highwater:
+      image: tidepool/highwater:OAuth
+    hydrophone:
+      image: tidepool/hydrophone:v0.9.0-release.1
+      ses:
+        fromAddress: "Tidepool <noreply@tidepool.org>"
+        serverEndpoint: "https://email.us-west-2.amazonaws.com"
+    jellyfish:
+      enabled: true
+      image: tidepool/jellyfish:v0.12.3-release.2
+    messageapi:
+      image: tidepool/message-api:v0.7.14-release.1
+    mailhog:
+      image: mailhog/mailhog:v1.0.0
+    platformAuth:
+      image: tidepool/platform-auth:1.32.0-release.4
+    platformBlob:
+      image: tidepool/platform-blob:1.32.0-release.4
+    platformData:
+      image: tidepool/platform-data:1.32.0-release.4
+    platformMigrations:
+      image: tidepool/platform-migrations:1.32.0-release.4
+    platformNotification:
+      image: tidepool/platform-notification:1.32.0-release.4
+    platformTask:
+      image: tidepool/platform-task:1.32.0-release.4
+    platformTools:
+      image: tidepool/platform-tools:1.32.0-release.4
+    platformUser:
+      image: tidepool/platform-user:1.32.0-release.4
+    seagull:
+      image: tidepool/seagull:v0.7.2-release.4
+    shoreline:
+      image: tidepool/shoreline:v0.14.2-release.1
+    tidewhisperer:
+      image: tidepool/tide-whisperer:v0.13.0-release.3
+
