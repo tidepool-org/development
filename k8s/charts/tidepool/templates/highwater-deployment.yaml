@@ -34,7 +34,25 @@ spec:
         - name: DISCOVERY_HOST
           value: '{{.Values.hakken.host}}:{{.Values.hakken.port}}'
         - name: METRICS_APIKEY
+          valueFrom:
+            secretKeyRef:
+              name: highwater
+              key: APIKEY
+        - name: METRICS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: highwater
+              key: TOKEN
         - name: METRICS_UCSF_APIKEY
+          valueFrom:
+            secretKeyRef:
+              name: highwater
+              key: UCSF_APIKEY
+        - name: METRICS_UCSF_WHITELIST
+          valueFrom:
+            secretKeyRef:
+              name: highwater
+              key: UCSF_WHITELIST
         - name: NODE_ENV
           value: '{{.Values.environment}}'
         - name: PORT
