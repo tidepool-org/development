@@ -62,7 +62,7 @@ spec:
         serverEndpoint: "https://email.us-west-2.amazonaws.com"
     jellyfish:
       enabled: true
-      image: tidepool/jellyfish:OAuth
+      image: tidepool/jellyfish:v0.12.3-release.1
     messageapi:
       image: tidepool/message-api:quiet
     mailhog:
