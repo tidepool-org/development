@@ -80,7 +80,7 @@ spec:
     platformTask:
       image: tidepool/platform-task:quiet
     platformTools:
-      image: tidepool/platform-tools:1.31.0-release.1
+      image: tidepool/platform-tools:1.32.0-release.2
     platformUser:
       image: tidepool/platform-user:quiet
     seagull:
