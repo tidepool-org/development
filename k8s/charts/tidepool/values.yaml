@@ -2,6 +2,8 @@ nameOverride: ""
 fullnameOverride: ""
 domain: "tidepool.org"
 environment: production
+aws:
+  region: us-west-2
 includeSecrets: true
 usessl: true
 resources:
@@ -90,8 +92,6 @@ hydrophone:
   assetUrl: 'https://s3-us-west-2.amazonaws.com/tidepool-dev-asset'
   ses:
     fromAddress: ''
-    serverEndpoint: 'https://email.us-west-2.amazonaws.com'
-  from: {address: ''}
   host: hydrophone
   port: '9157'
 jellyfish: 
@@ -125,7 +125,7 @@ platformBlob:
     unstructured:
       store:
         file: {directory: "_data/blobs"}
-        s3: {bucket: "", prefix: ""}
+        s3: {bucket: "", prefix: "blobs"}
         type: file
 platformData:
   image: tidepool/platform-data:quiet
@@ -139,7 +139,7 @@ platformImage:
     unstructured:
       store:
         file: {directory: "_data/image"}
-        s3: {bucket: "", prefix: ""}
+        s3: {bucket: "", prefix: "images"}
         type: file
 platformMigrations:
   image: tidepool/platform-migrations:quiet
