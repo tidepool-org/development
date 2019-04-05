@@ -1,4 +1,21 @@
-This directory stores the configuration for several separate instances of the Tidepool services.  Each instance is defined in a subdirectory of the `namespaced` directory.
+## How To Bring Up A New Tidepool Instance
+
+This directory stores the configuration for several separate instances of the Tidepool services.  Each instance is defined in a subdirectory of the `namespaced` directory. 
+
+To bring up a new Tidepool instance, you must 
+
+* create a new sub-directory of the `namespaced` directory with the Kubernetes manifests for the instance
+* set up DNS routes for the new instances.
+
+
+### DNS Routing
+The convention is to name the directory the same as the DNS prefix for the service.  For example, the `qa1` instance is reached via these DNS entries:
+```
+qa1-app.tidepool.org
+qa1-api.tidepool.org
+qa1-uploads.tidepool.org
+```
+These must be created in AWS Route53 and must point to the Elastic Load Balancer attached to the API Gateway (Ambassador) service running in the cluster.  
 
 ### Tools
 * Install AWS CLI, `aws`.
@@ -87,5 +104,6 @@ Each Tidepool instance requires the [Weave Flux](https://medium.com/@m.k.joerg/g
 QA1 is used by Derrick for bringing up the overall K8s infrastructure, including shared services like API gateway, Mongo storage, and eventually a service mesh such as Istio. 
 ##### QA2
 ##### QA3
+QA3 is used by Ben.
 ##### QA4
 
