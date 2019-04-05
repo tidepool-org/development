@@ -38,7 +38,7 @@ spec:
               name: server-secret
               key: secret
         - name: REGION
-          value: us-west-2            
+          value: {{.Values.aws.region}}            
         - name: TIDEPOOL_HYDROPHONE_ENV
           value: |
             {
@@ -64,7 +64,7 @@ spec:
           value: |
             {
                 "hydrophone": {
-                    "assetUrl": "{{.Values.hydrophone.assetUrl}}",
+                    "assetUrl": "{{include "charts.hydrophone.s3.url" .}}",
                     "webUrl": "https://{{- include "charts.host.app" . -}}"
                 },
                 "mongo": {
@@ -78,8 +78,7 @@ spec:
                     "service": "hydrophone"
                 },
                 "sesEmail": {
-                    "fromAddress": "{{.Values.hydrophone.ses.fromAddress}}",
-                    "serverEndpoint": "{{.Values.hydrophone.ses.serverEndpoint}}"
+                    "fromAddress": "{{.Values.hydrophone.ses.fromAddress}}"
                 }
             }
         image: "{{ .Values.hydrophone.image }}"

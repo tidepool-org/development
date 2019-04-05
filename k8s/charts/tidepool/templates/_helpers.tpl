@@ -7,9 +7,39 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "charts.host.api" -}} {{ .Release.Namespace }}-api.{{ .Values.domain }}{{ end }}
-{{- define "charts.host.uploads" -}} {{ .Release.Namespace }}-uploads.{{ .Values.domain }}{{ end }}
-{{- define "charts.host.app" -}} {{ .Release.Namespace }}-app.{{ .Values.domain }}{{ end }}
+{{- define "charts.host.api" -}} {{ .Release.Namespace }}-api.{{ .Values.domain }} {{- end }}
+{{- define "charts.host.uploads" -}} {{ .Release.Namespace }}-uploads.{{ .Values.domain }} {{- end }}
+{{- define "charts.host.app" -}} {{ .Release.Namespace }}-app.{{ .Values.domain }} {{- end }}
+
+{{- define "charts.s3.url" -}} https://s3-{{.Values.aws.region}}.amazonaws.com {{- end }}
+
+{{- define "charts.image.s3.bucket" -}}
+{{- if .Values.platformImage.service.unstructured.store.s3.bucket -}}
+{{- .Values.platformImage.service.unstructured.store.s3.bucket -}}
+{{- else -}}
+tidepool-{{ .Release.Namespace }}-data
+{{- end -}}
+{{- end -}}
+
+{{- define "charts.blob.s3.bucket" -}}
+{{- if .Values.platformBlob.service.unstructured.store.s3.bucket -}}
+{{- .Values.platformBlob.service.unstructured.store.s3.bucket -}}
+{{- else -}}
+tidepool-{{ .Release.Namespace }}-data
+{{- end -}}
+{{- end -}}
+
+{{- define "charts.hydrophone.s3.bucket" -}}
+{{- if .Values.hydrophone.service.unstructured.store.s3.bucket -}}
+{{- .Values.hydrophone.service.unstructured.store.s3.bucket -}}
+{{- else -}}
+tidepool-{{ .Release.Namespace }}-asset
+{{- end -}}
+{{- end -}}
+
+{{- define "charts.image.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.image.s3.bucket" .}} {{- end }}
+{{- define "charts.blob.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.blob.s3.bucket" .}} {{- end }}
+{{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.hydrophone.s3.bucket" .}} {{- end }}
 
 {{- define "charts.protocol" -}}
 {{ if .Values.usessl }}https {{- else -}} http {{- end -}} {{- end -}}
@@ -75,7 +105,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
           value: '{{.Values.platformBlob.service.unstructured.store.file.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
-          value: '{{.Values.platformBlob.service.unstructured.store.s3.bucket}}'
+          value: '{{- define "charts.blob.s3.bucket" -}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
           value: '{{.Values.platformBlob.service.unstructured.store.s3.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
@@ -200,7 +230,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
           value: '{{.Values.platformImage.service.unstructured.store.file.directory}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
-          value: '{{.Values.platformImage.service.unstructured.store.s3.bucket}}'
+          value: '{{- define "charts.blob.s3.bucket" -}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
           value: '{{.Values.platformImage.service.unstructured.store.s3.prefix}}'
 {{- end -}}        
