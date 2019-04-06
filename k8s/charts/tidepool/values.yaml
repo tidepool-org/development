@@ -68,40 +68,39 @@ image:
   pullPolicy: IfNotPresent
 blip: 
   port: '3000'
-  image: tidepool/blip:v1.14.1
+  image: tidepool/blip:v1.17.0
 export:
   host: export
   image: tidepool/export:v1.3.2
   port: '9300'
 gatekeeper: 
-  image: tidepool/gatekeeper:latest
+  image: tidepool/gatekeeper:v0.7.2
   host: gatekeeper
   port: '9123'
 hakken: 
-  image: tidepool/hakken:noHakken
   host: hakken
   port: '8000'
   skip: true
 highwater: 
-  image: tidepool/highwater:latest
+  image: tidepool/highwater:v0.3.5
   host: highwater
   port: '9191'
   salt: gf78fSEI7tOQQP9xfXMO9HfRyMnW4Sx88Q
 hydrophone:
-  image: tidepool/hydrophone:develop-2e69bbc
+  image: tidepool/hydrophone:v0.9.0-release.1
   ses:
     fromAddress: ''
   bucket: ''
   host: hydrophone
   port: '9157'
 jellyfish: 
-  image: tidepool/jellyfish:latest
+  image: tidepool/jellyfish:v0.12.3-release.2
   port: '9122'
   salt: 'itNkczadZ1EeC9fUWR3LnbKFagtYYLOk'
   bucket: ''
   storage: 'local'
 messageapi: 
-  image: tidepool/message-api:latest
+  image: tidepool/message-api:v0.7.14-release.1
   host: message-api
   port: '9119'
   window: 21
@@ -117,11 +116,11 @@ mongo:
   port: '27017'
   tls: 'false'
 platformAuth:
-  image: tidepool/platform-auth:quiet
+  image: tidepool/platform-auth:1.32.0-release.4
   host: platform-auth
   port: '9222'
 platformBlob:
-  image: tidepool/platform-blob:quiet
+  image: tidepool/platform-blob:1.32.0-release.4
   host: platform-blob
   port: '9225'
   service:
@@ -131,11 +130,11 @@ platformBlob:
         s3: {bucket: "", prefix: "blobs"}
         type: file
 platformData:
-  image: tidepool/platform-data:quiet
+  image: tidepool/platform-data:1.32.0-release.4
   host: platform-data
   port: '9220'
 platformImage:
-  image: tidepool/platform-image:1.31.0-release.1
+  image: tidepool/platform-image:1.32.0-release.4
   host: platform-image
   port: '9226'
   service:
@@ -145,23 +144,23 @@ platformImage:
         s3: {bucket: "", prefix: "images"}
         type: file
 platformMigrations:
-  image: tidepool/platform-migrations:quiet
+  image: tidepool/platform-migrations:1.32.0-release.4
 platformNotification:
-  image: tidepool/platform-notification:quiet
+  image: tidepool/platform-notification:1.32.0-release.4
   host: platform-notification
   port: '9223'
 platformTask:
-  image: tidepool/platform-task:quiet
+  image: tidepool/platform-task:1.32.0-release.4
   host: platform-task
   port: '9224'
 platformTools:
-  image: tidepool/platform-tools:quiet
+  image: tidepool/platform-tools:1.32.0-release.4
 platformUser:
-  image: tidepool/platform-user:quiet
+  image: tidepool/platform-user:1.32.0-release.4
   host: platform-user
   port: '9221'
 seagull: 
-  image: tidepool/seagull:master-1797f22
+  image: tidepool/seagull:v0.7.2-release.4
   host: seagull
   port: '9120'
   salt: KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
@@ -172,7 +171,7 @@ service:
       authorize: { url: 'https://api.dexcom.com/v1/oauth2/login?prompt=login' }
       client: { url: "https://api.dexcom.com" }
 shoreline:
-  image: tidepool/shoreline:develop-ba7f1a7
+  image: tidepool/shoreline:v0.14.2-release.1
   host: shoreline
   longtermkey: abcdefghijklmnopqrstuvwxyz
   port: '9107'
@@ -181,7 +180,7 @@ shoreline:
   mailchimp:
      url: https://us7.api.mailchimp.com/3.0
 tidewhisperer:
-  image: tidepool/tide-whisperer:develop-a572827
+  image: tidepool/tide-whisperer:v0.13.0-release.3
   host: tide-whisperer
   port: '9127'
 
