@@ -61,6 +61,10 @@ spec:
           value: dist
         - name: SERVICE_NAME
           value: jellyfish
+        - name: STORAGE_TYPES
+          value: '{"aws/s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.aws.region}}", "bucket": "{{ include "charts.jellyfish.s3.bucket" .}}" }}'
+        - name: STORAGE_DEFAULT
+          value: {{.Values.jellyfish.storage}}
         - name: USER_API_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"}]}'
         image: "{{ .Values.jellyfish.image }}"

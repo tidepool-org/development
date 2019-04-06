@@ -37,6 +37,14 @@ tidepool-{{ .Release.Namespace }}-asset
 {{- end -}}
 {{- end -}}
 
+{{- define "charts.jellyfish.s3.bucket" -}}
+{{- if .Values.jellyfish.bucket -}}
+{{- .Values.jellyfish.bucket -}}
+{{- else -}}
+tidepool-{{ .Release.Namespace }}-data
+{{- end -}}
+{{- end -}}
+
 {{- define "charts.image.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.image.s3.bucket" .}} {{- end }}
 {{- define "charts.blob.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.blob.s3.bucket" .}} {{- end }}
 {{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.hydrophone.s3.bucket" .}} {{- end }}

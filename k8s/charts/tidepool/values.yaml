@@ -89,15 +89,17 @@ highwater:
   salt: gf78fSEI7tOQQP9xfXMO9HfRyMnW4Sx88Q
 hydrophone:
   image: tidepool/hydrophone:develop-2e69bbc
-  assetUrl: 'https://s3-us-west-2.amazonaws.com/tidepool-dev-asset'
   ses:
     fromAddress: ''
+  bucket: ''
   host: hydrophone
   port: '9157'
 jellyfish: 
   image: tidepool/jellyfish:latest
   port: '9122'
   salt: 'itNkczadZ1EeC9fUWR3LnbKFagtYYLOk'
+  bucket: ''
+  storage: 'local'
 messageapi: 
   image: tidepool/message-api:latest
   host: message-api
