@@ -162,12 +162,12 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: dexcom-secret
+              name: dexcom
               key: CLIENT_ID
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: dexcom-secret
+              name: dexcom
               key: CLIENT_SECRET
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
           value: {{include "charts.protocol" .}}://{{include "charts.host.api" .}}/v1/oauth/dexcom/redirect
@@ -176,7 +176,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
           valueFrom:
             secretKeyRef:
-              name: dexcom-secret
+              name: dexcom
               key: STATE_SALT
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
           value: '{{.Values.service.provider.dexcom.token.url}}'
