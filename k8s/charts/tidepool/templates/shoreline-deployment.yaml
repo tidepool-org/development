@@ -42,6 +42,10 @@ spec:
             secretKeyRef:
               name: server-secret
               key: api
+        - name: MAILCHIMP_APIKEY
+            secretKeyRef:
+              name: mailchimp
+              key: apikey
         - name: TIDEPOOL_SHORELINE_ENV
           value: |
             {
@@ -79,7 +83,11 @@ spec:
                     "longTermKey": "{{.Values.shoreline.longtermkey}}",
                     "salt": "{{.Values.shoreline.salt}}",
                     "tokenDurationSecs": 2592000,
-                    "verificationSecret": "{{.Values.shoreline.verification.secret}}"
+                    "verificationSecret": "{{.Values.shoreline.verification.secret}}",
+                    "mailchimp": {
+                      "url": "{{.Values.shoreline.mailchimp.url}}",
+                      "apiKey": ""
+                    }
                 }
             }
         image: "{{ .Values.shoreline.image }}"
