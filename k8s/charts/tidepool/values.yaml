@@ -104,6 +104,7 @@ messageapi:
   image: tidepool/message-api:latest
   host: message-api
   port: '9119'
+  window: 21
 mailhog:
   image: mailhog/mailhog:latest
   ports:
@@ -177,6 +178,8 @@ shoreline:
   port: '9107'
   salt: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
   verification: {secret: +skip}
+  mailchimp:
+     url: https://us7.api.mailchimp.com/3.0
 tidewhisperer:
   image: tidepool/tide-whisperer:develop-a572827
   host: tide-whisperer
