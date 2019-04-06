@@ -30,8 +30,8 @@ tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
 
 {{- define "charts.hydrophone.s3.bucket" -}}
-{{- if .Values.hydrophone.service.unstructured.store.s3.bucket -}}
-{{- .Values.hydrophone.service.unstructured.store.s3.bucket -}}
+{{- if .Values.hydrophone.bucket -}}
+{{- .Values.hydrophone.bucket -}}
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-asset
 {{- end -}}
