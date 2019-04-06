@@ -105,7 +105,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
           value: '{{.Values.platformBlob.service.unstructured.store.file.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
-          value: '{{- define "charts.blob.s3.bucket" -}}'
+          value: '{{include "charts.blob.s3.bucket" .}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
           value: '{{.Values.platformBlob.service.unstructured.store.s3.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
@@ -230,7 +230,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
           value: '{{.Values.platformImage.service.unstructured.store.file.directory}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
-          value: '{{- define "charts.blob.s3.bucket" -}}'
+          value: '{{include "charts.blob.s3.bucket" .}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
           value: '{{.Values.platformImage.service.unstructured.store.s3.prefix}}'
 {{- end -}}        
