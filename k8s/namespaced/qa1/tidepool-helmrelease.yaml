@@ -34,7 +34,7 @@ spec:
     highwater:
       image: tidepool/highwater:v0.3.5
     hydrophone:
-      image: tidepool/hydrophone:v0.9.0-release.1 
+      image: tidepool/hydrophone:v0.9.0-release.1
       ses:
         fromAddress: "Tidepool <noreply@tidepool.org>"
     jellyfish:
@@ -48,8 +48,24 @@ spec:
       image: tidepool/platform-auth:1.32.0-release.4
     platformBlob:
       image: tidepool/platform-blob:1.32.0-release.4
+      service:
+        unstructured:
+          store:
+            type: s3
+            s3:
+              bucket: "" # ensures that the generated bucket name is used
+              prefix: "blobs"
     platformData:
       image: tidepool/platform-data:1.32.0-release.4
+    platformImage:
+      image: tidepool/platform-image:1.31.0-release.4
+      service:
+        unstructured:
+          store:
+            type: s3
+            s3:
+              bucket: ""  # ensures that the generated bucket name is used
+              prefix: "images"
     platformMigrations:
       image: tidepool/platform-migrations:1.32.0-release.4
     platformNotification:
@@ -61,9 +77,9 @@ spec:
     platformUser:
       image: tidepool/platform-user:1.32.0-release.4
     seagull:
-      image: tidepool/seagull:v0.7.2-release.3
+      image: tidepool/seagull:v0.7.2-release.4
     shoreline:
-      image: tidepool/shoreline:v0.14.2-release.1 
+      image: tidepool/shoreline:v0.14.2-release.1
     tidewhisperer:
-      image: tidepool/tide-whisperer:v0.13.0-release.3 
+      image: tidepool/tide-whisperer:v0.13.0-release.3
 
