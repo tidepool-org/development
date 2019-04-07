@@ -1,5 +1,4 @@
-
----
+--
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
@@ -8,5 +7,7 @@ metadata:
 spec:
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
-    name: prometheus-operator
+    name: stable/prometheus-operator
     version: 5.0.7
+  values: 
+    {}
