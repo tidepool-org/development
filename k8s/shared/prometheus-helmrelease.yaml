@@ -6,7 +6,7 @@ metadata:
 spec:
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
-    name: stable/prometheus-operator
+    name: prometheus-operator
     version: 5.0.7
   values: 
     {}
