@@ -43,6 +43,7 @@ spec:
               name: server-secret
               key: api
         - name: MAILCHIMP_APIKEY
+          valueFrom:
             secretKeyRef:
               name: mailchimp
               key: apikey
