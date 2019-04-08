@@ -59,7 +59,7 @@ spec:
         - name: SERVICE_NAME
           value: message-api
         - name: DELETE_TIME_WINDOW
-          value: {{.Values.messageapi.window}}
+          value: '{{.Values.messageapi.window}}'
         - name: USER_API_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"}]}'
         - name: SKIP_HAKKEN
