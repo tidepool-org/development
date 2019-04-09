@@ -31,3 +31,32 @@ spec:
   selector:
     matchLabels:
       service: ambassador-monitor
+ ---
+ apiVersion: monitoring.coreos.com/v1
+ kind: Prometheus
+ metadata:
+   labels:
+     app: ambassador-prometheus
+   name: ambassador-prometheus
+   namespace: default
+ spec:
+   alerting:
+     alertmanagers:
+     - name: default-prometheus-operato-alertmanager
+       namespace: default
+       pathPrefix: /
+       port: web
+   baseImage: quay.io/prometheus/prometheus
+   logLevel: info
+   retention: 10d
+   routePrefix: /
+   ruleNamespaceSelector: {}
+   securityContext:
+     fsGroup: 2000
+     runAsNonRoot: true
+     runAsUser: 1000
+   serviceAccountName: default-prometheus-operato-prometheus
+   serviceMonitorNamespaceSelector: {}
+   serviceMonitorSelector:
+     matchLabels:
+       ambassador: monitoring
