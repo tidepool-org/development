@@ -14,3 +14,5 @@ spec:
   values:
     serviceMonitor:
       create: false
+    image:
+      tag: v1.1.1
