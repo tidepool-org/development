@@ -4,7 +4,7 @@ metadata:
   name: kube-eagle
   namespace: default
   annotations:
-    flux.weave.works/automated: "false"
+    flux.weave.works/automated: "true"
 spec:
   chart:
     git: git@github.com:google-cloud-tools/kube-eagle-helm-chart
