@@ -68,7 +68,7 @@ spec:
     platformAuth:
       image: tidepool/platform-auth:1.32.0-release.1
     platformBlob:
-      image: tidepool/platform-blob:1.32.0-release.4
+      image: tidepool/platform-blob:1.32.0-release.1
       service:
         unstructured:
           store:
