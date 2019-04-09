@@ -63,8 +63,12 @@ metadata:
   labels:
     ambassador: monitoring
 spec:
+  endpoints:
+  - path: /metrics
+    port: prometheus-metrics
+  namespaceSelector:
+    matchNames:
+    - default
   selector:
     matchLabels:
       service: ambassador-monitor
-  endpoints:
-  - port: prometheus-metrics
