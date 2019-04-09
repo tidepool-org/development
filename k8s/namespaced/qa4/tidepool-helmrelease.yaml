@@ -94,7 +94,7 @@ spec:
     platformTask:
       image: tidepool/platform-task:1.32.0-release.1
     platformTools:
-      image: tidepool/platform-tools:1.32.0-release.4
+      image: tidepool/platform-tools:1.32.0-release.1
     platformUser:
       image: tidepool/platform-user:1.32.0-release.1
     seagull:
