@@ -13,10 +13,9 @@ spec:
   values:
     fullnameOverride: ambassador
     replicaCount: 2
+    prometheusExporter:
+      enabled: true
     service:
-      prometheusExporter:
-        enabled:
-          true
       http:
         port: 80
       https:
