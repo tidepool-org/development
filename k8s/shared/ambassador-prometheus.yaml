@@ -13,7 +13,6 @@ spec:
   - name: prometheus-metrics
     port: 9102
     targetPort: 9102
-    protocol: TCP
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
