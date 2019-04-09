@@ -79,7 +79,7 @@ spec:
     platformData:
       image: tidepool/platform-data:1.32.0-release.1
     platformImage:
-      image: tidepool/platform-image:1.31.0-release.4
+      image: tidepool/platform-image:1.32.0-release.1
       service:
         unstructured:
           store:
