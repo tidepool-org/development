@@ -92,7 +92,7 @@ spec:
     platformNotification:
       image: tidepool/platform-notification:1.32.0-release.4
     platformTask:
-      image: tidepool/platform-task:1.32.0-release.4
+      image: tidepool/platform-task:1.32.0-release.1
     platformTools:
       image: tidepool/platform-tools:1.32.0-release.4
     platformUser:
