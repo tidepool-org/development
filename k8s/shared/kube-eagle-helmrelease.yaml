@@ -1,0 +1,15 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: kube-eagle
+  namespace: default
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  chart:
+    git: git@github.com:google-cloud-tools/kube-eagle-helm-chart
+    path: kube-eagle
+    ref: master
+  values:
+    serviceMonitor:
+      create: false
