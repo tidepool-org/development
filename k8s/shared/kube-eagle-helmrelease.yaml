@@ -5,6 +5,7 @@ metadata:
   namespace: default
   annotations:
     flux.weave.works/automated: "true"
+    flux.weave.works/tag: "glob:*"
 spec:
   chart:
     git: git@github.com:google-cloud-tools/kube-eagle-helm-chart
