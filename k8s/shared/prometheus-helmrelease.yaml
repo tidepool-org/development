@@ -9,4 +9,10 @@ spec:
     name: prometheus-operator
     version: 5.0.7
   values: 
-    {}
+    grafana:
+      additionalDataSources:
+        - name: PrometheusAmbassador
+          type: prometheus
+          url: http://prometheus-operated:9090
+          access: proxy
+          isDefault: false
