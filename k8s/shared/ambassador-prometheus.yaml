@@ -8,7 +8,6 @@ spec:
   selector:
     app.kubernetes.io/name: ambassador
   type: ClusterIP
-  clusterIP: None
   ports:
   - name: prometheus-metrics
     port: 9102
