@@ -6,7 +6,7 @@ metadata:
     service: ambassador-monitor
 spec:
   selector:
-    app: statsd-exporter
+    app.kubernetes.io/name: ambassador
   type: ClusterIP
   clusterIP: None
   ports:
