@@ -13,6 +13,6 @@ spec:
       additionalDataSources:
         - name: PrometheusAmbassador
           type: prometheus
-          url: http://prometheus-operated:9090/
+          url: http://prometheus-ambassador-prometheus-0.prometheus-operated.default.svc.cluster.local:9090
           access: proxy
           isDefault: false
