@@ -1,0 +1,13 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: prometheus
+  namespace: default
+spec:
+  chart:
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    name: prometheus
+    version: 8.9.2
+  values: 
+    {}
+  # url: http://ambaddador-prometheus-svc.default.svc.cluster.local:9090/
