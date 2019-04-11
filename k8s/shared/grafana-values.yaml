@@ -237,7 +237,7 @@ datasources: {}
     datasources:
     - name: Prometheus
       type: prometheus
-      url: http://ambaddador-prometheus-svc.default.svc.cluster.local:9090/
+      url: http://prometheus-prometheus-server.prometheus.svc.cluster.local
       access: proxy
       isDefault: true
 
