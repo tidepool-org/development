@@ -7,7 +7,7 @@ spec:
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
     name: grafana
-    version: 8.9.2
+    version: 3.2.0
   values: 
     persistence:
       storageClassName: "gp2" 
