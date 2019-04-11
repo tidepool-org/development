@@ -38,7 +38,7 @@ spec:
     highwater:
       image: tidepool/highwater:v0.3.5
     hydrophone:
-      image: tidepool/hydrophone:v0.10.0-release.1
+      image: tidepool/hydrophone:v0.10.0-release.2
       ses:
         fromAddress: "Tidepool <noreply@tidepool.org>"
     jellyfish:
@@ -85,7 +85,7 @@ spec:
     seagull:
       image: tidepool/seagull:v0.7.2-release.4
     shoreline:
-      image: tidepool/shoreline:v0.15.0-release.1
+      image: tidepool/shoreline:v0.15.0-release.2
     tidewhisperer:
-      image: tidepool/tide-whisperer:v0.14.0-release.1
+      image: tidepool/tide-whisperer:v0.14.0-release.2
 
