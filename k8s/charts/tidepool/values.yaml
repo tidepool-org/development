@@ -113,6 +113,8 @@ mailhog:
 mongo: 
   enabled: true
   host: 'mongodb'
+  username: ''
+  password: ''
   port: '27017'
   tls: 'false'
 platformAuth:

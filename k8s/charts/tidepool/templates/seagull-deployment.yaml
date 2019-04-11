@@ -39,7 +39,7 @@ spec:
         - name: METRICS_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.highwater.host}}:{{.Values.highwater.port}}"}]}'
         - name: MONGO_CONNECTION_STRING
-          value: mongodb://{{.Values.mongo.host}}:{{.Values.mongo.port}}/seagull?ssl={{.Values.mongo.tls}}
+          value: mongodb://{{include "charts.mongo" .}}:{{.Values.mongo.port}}/seagull?ssl={{.Values.mongo.tls}}
         - name: NODE_ENV
           value: '{{.Values.environment}}'
         - name: PORT

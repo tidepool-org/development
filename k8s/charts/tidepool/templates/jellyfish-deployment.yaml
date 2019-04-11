@@ -39,7 +39,7 @@ spec:
         - name: MINIMUM_UPLOADER_VERSION
           value: 0.251.0
         - name: MONGO_CONNECTION_STRING
-          value: mongodb://{{.Values.mongo.host}}:{{.Values.mongo.port}}/data?ssl={{.Values.mongo.tls}}
+          value: mongodb://{{include "charts.mongo" .}}:{{.Values.mongo.port}}/data?ssl={{.Values.mongo.tls}}
         - name: NODE_ENV
           value: '{{.Values.environment}}'
         - name: PORT
