@@ -18,6 +18,6 @@ spec:
          datasources:
            - name: Prometheus 
              type: prometheus 
-             url: http://prometheus-rometheus-server.prometheus.svc.cluster.local 
+             url: http://prometheus-prometheus-server.prometheus.svc.cluster.local 
              access: proxy 
              isDefault: true 
