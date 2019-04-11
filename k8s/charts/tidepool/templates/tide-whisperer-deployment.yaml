@@ -65,7 +65,7 @@ spec:
           value: |
             {
                 "mongo": {
-                    "connectionString": "mongodb://{{.Values.mongo.host}}:{{.Values.mongo.port}}/data?ssl={{.Values.mongo.tls}}"
+                    "connectionString": "mongodb://{{include "charts.mongo" .}}:{{.Values.mongo.port}}/data?ssl={{.Values.mongo.tls}}"
                 },
                 "schemaVersion": {
                     "maximum": 99,

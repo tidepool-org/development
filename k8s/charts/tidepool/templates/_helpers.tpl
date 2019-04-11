@@ -7,6 +7,17 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "charts.mongo" -}}
+{{- if .Values.mongo.username -}}
+{{- .Values.mongo.username -}}
+{{- if .Values.mongo.password -}}
+:{{- .Values.mongo.password -}}
+{{- end -}}
+@
+{{- end -}}
+{{- .Values.mongo.host -}}
+{{- end -}}
+
 {{- define "charts.host.api" -}} {{ .Release.Namespace }}-api.{{ .Values.domain }} {{- end }}
 {{- define "charts.host.uploads" -}} {{ .Release.Namespace }}-uploads.{{ .Values.domain }} {{- end }}
 {{- define "charts.host.app" -}} {{ .Release.Namespace }}-app.{{ .Values.domain }} {{- end }}
@@ -191,7 +202,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_SESSION_STORE_DATABASE
           value: user
         - name: TIDEPOOL_STORE_ADDRESSES
-          value: '{{.Values.mongo.host}}:{{.Values.mongo.port}}'
+          value: '{{include "charts.mongo" .}}:{{.Values.mongo.port}}'
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
         - name: TIDEPOOL_STORE_TLS
