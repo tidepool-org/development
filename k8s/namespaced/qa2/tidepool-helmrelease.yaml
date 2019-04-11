@@ -102,4 +102,4 @@ spec:
     shoreline:
       image: tidepool/shoreline:v0.14.2
     tidewhisperer:
-      image: tidepool/tide-whisperer:v0.13.0-release.4
+      image: tidepool/tide-whisperer:v0.14.0-release.1
