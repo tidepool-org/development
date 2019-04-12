@@ -90,11 +90,11 @@ spec:
     platformMigrations:
       image: tidepool/platform-migrations:1.33.0-release.15
     platformNotification:
-      image: tidepool/platform-notification:1.33.0-release.11
+      image: tidepool/platform-notification:1.33.0-release.15
     platformTask:
       image: tidepool/platform-task:1.33.0-release.15
     platformTools:
-      image: tidepool/platform-tools:1.33.0-release.11
+      image: tidepool/platform-tools:1.33.0-release.15
     platformUser:
       image: tidepool/platform-user:1.33.0-release.15
     seagull:
