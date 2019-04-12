@@ -47,6 +47,8 @@ spec:
           value: "{{.Values.gatekeeper.port}}"
         - name: PUBLISH_HOST
           value: '{{.Values.hakken.host}}'
+        - name: SKIP_HAKKEN
+          value: true
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
