@@ -77,7 +77,7 @@ spec:
               bucket: "" # ensures that the generated bucket name is used
               prefix: "blobs"
     platformData:
-      image: tidepool/platform-data:1.31.0
+      image: tidepool/platform-data:1.33.0-release.11
     platformImage:
       image: tidepool/platform-image:development
       service:
