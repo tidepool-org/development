@@ -51,7 +51,7 @@ spec:
     gatekeeper:
       image: tidepool/gatekeeper:v0.7.3-release.1
     highwater:
-      image: tidepool/highwater:v0.3.5
+      image: tidepool/highwater:v0.3.6-release.1
     hydrophone:
       image: tidepool/hydrophone:v0.9.0
       ses:
