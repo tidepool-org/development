@@ -96,7 +96,7 @@ spec:
     platformTools:
       image: tidepool/platform-tools:1.32.0-release.1
     platformUser:
-      image: tidepool/platform-user:1.32.0-release.1
+      image: tidepool/platform-user:1.31.0
     seagull:
       image: tidepool/seagull:v0.7.2-release.4
     shoreline:
