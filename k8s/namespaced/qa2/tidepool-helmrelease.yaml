@@ -100,6 +100,6 @@ spec:
     seagull:
       image: tidepool/seagull:v0.7.2-release.4
     shoreline:
-      image: tidepool/shoreline:v0.14.2
+      image: tidepool/shoreline:v0.15.0-release.5
     tidewhisperer:
       image: tidepool/tide-whisperer:v0.14.0-release.1
