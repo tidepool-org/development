@@ -79,7 +79,7 @@ spec:
     platformData:
       image: tidepool/platform-data:1.33.0-release.15
     platformImage:
-      image: tidepool/platform-image:1.33.0-release.11
+      image: tidepool/platform-image:1.33.0-release.15
       service:
         unstructured:
           store:
@@ -88,7 +88,7 @@ spec:
               bucket: ""  # ensures that the generated bucket name is used
               prefix: "images"
     platformMigrations:
-      image: tidepool/platform-migrations:1.33.0-release.11
+      image: tidepool/platform-migrations:1.33.0-release.15
     platformNotification:
       image: tidepool/platform-notification:1.33.0-release.11
     platformTask:
