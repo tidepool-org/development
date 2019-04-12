@@ -32,6 +32,8 @@ spec:
       {{ include "charts.init.mongo" .}}
       containers:
       - env:
+        - name: SKIP_HAKKEN
+          value: true
         - name: DISCOVERY_HOST
           value: '{{.Values.hakken.host}}:{{.Values.hakken.port}}'
         - name: GATEKEEPER_SERVICE
