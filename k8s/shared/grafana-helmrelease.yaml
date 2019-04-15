@@ -193,10 +193,10 @@ spec:
     # adminPassword: strongpassword
 
     # Use an existing secret for the admin user.
-    admin:
-      existingSecret: ""
-      userKey: tidepool-admin
-      passwordKey: npqUY41KKhf7lCGZhv0dOU2z5Mk7jQQbM7yrIfm3MUA
+    #admin:
+    #  existingSecret: ""
+    #  userKey: tidepool-admin
+    #  passwordKey: npqUY41KKhf7lCGZhv0dOU2z5Mk7jQQbM7yrIfm3MUA
 
     ## Define command to be executed at startup by grafana container
     ## Needed if using `vault-env` to manage secrets (ref: https://banzaicloud.com/blog/inject-secrets-into-pods-vault/)
