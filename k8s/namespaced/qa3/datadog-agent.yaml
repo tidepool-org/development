@@ -8,7 +8,7 @@ metadata:
     app: "datadog"
 type: Opaque
 data:
-  api-key: "4be3b002f3d6ed9241d0593d575029ca"
+  api-key: "NGJlM2IwMDJmM2Q2ZWQ5MjQxZDA1OTNkNTc1MDI5Y2E="
 ---
 apiVersion: extensions/v1beta1
 kind: DaemonSet
