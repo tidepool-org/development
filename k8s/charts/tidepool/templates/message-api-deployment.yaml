@@ -63,7 +63,7 @@ spec:
         - name: USER_API_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"}]}'
         - name: SKIP_HAKKEN
-          value: "{{.Values.hakken.skip}}"
+          value: true
         image: "{{ .Values.messageapi.image }}" 
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         livenessProbe:
