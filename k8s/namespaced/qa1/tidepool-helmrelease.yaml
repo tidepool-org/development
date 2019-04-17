@@ -19,10 +19,12 @@ spec:
       enabled: false
     mongo:
       enabled: false
-      #username: MasterDocDbuser53FUglmgwKuKsvwr92ugcbbbhjCMX2uY6WonjTKfHg
-      #password: U6UQJkxdCANnWDwufcVp3Dc5BxL5MsHfRkMEYUuDPiE
-      #host: docdb-amazing-testing.cluster-ccgoncr6o4tf.us-west-2.docdb.amazonaws.com
-      tls: false
+      username: MasterDocDbuser53FUglmgwKuKsvwr92ugcbbbhjCMX2uY6WonjTKfHg
+      password: U6UQJkxdCANnWDwufcVp3Dc5BxL5MsHfRkMEYUuDPiE
+      host: docdb-amazing-testing.cluster-ccgoncr6o4tf.us-west-2.docdb.amazonaws.com
+      repliceSetName: rs0
+      tls: true
+      #tls: false
     gloo:
       enabled: false
       namespace:
