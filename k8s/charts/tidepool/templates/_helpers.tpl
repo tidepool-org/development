@@ -7,7 +7,7 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "charts.mongo" -}}
+{{- define "charts.mongo.start" -}}
 {{- if .Values.mongo.username -}}
 {{- .Values.mongo.username -}}
 {{- if .Values.mongo.password -}}
@@ -15,7 +15,14 @@ Expand the name of the chart.
 {{- end -}}
 @
 {{- end -}}
-{{- .Values.mongo.host -}}
+{{- .Values.mongo.host -}}:{{.Values.mongo.port}}
+{{- end -}}
+
+{{- define "charts.mongo.end" -}}
+?tls={{ .Values.mongo.tls}}
+{{- if .Values.mongo.replicaSetName -}}
+&replicaSet={{.Values.mongo.replicaSetName}}
+{{- end -}}
 {{- end -}}
 
 {{- define "charts.host.api" -}} {{ .Release.Namespace }}-api.{{ .Values.domain }} {{- end }}
@@ -202,11 +209,13 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_SESSION_STORE_DATABASE
           value: user
         - name: TIDEPOOL_STORE_ADDRESSES
-          value: '{{include "charts.mongo" .}}:{{.Values.mongo.port}}'
+          value: '{{include "charts.mongo.start" .}}'
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
         - name: TIDEPOOL_STORE_TLS
           value: '{{.Values.mongo.tls}}'
+        - name: TIDEPOOL_STORE_REPLICASETNAME
+          value: '{{.Values.mongo.replicaSetName}}'
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS

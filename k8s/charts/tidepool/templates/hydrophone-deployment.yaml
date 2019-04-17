@@ -68,7 +68,7 @@ spec:
                     "webUrl": "https://{{- include "charts.host.app" . -}}"
                 },
                 "mongo": {
-                    "connectionString": "mongodb://{{include "charts.mongo" .}}:{{.Values.mongo.port}}/confirm?ssl={{.Values.mongo.tls}}"
+                    "connectionString": "mongodb://{{include "charts.mongo.start" .}}/confirm{{include "charts.mongo.end" .}}"
                 },
                 "service": {
                     "certFile": "config/cert.pem",
