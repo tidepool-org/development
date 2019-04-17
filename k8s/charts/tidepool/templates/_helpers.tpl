@@ -19,7 +19,7 @@ Expand the name of the chart.
 {{- end -}}
 
 {{- define "charts.mongo.end" -}}
-?tls={{ .Values.mongo.tls}}
+?ssl={{ .Values.mongo.tls}}
 {{- if .Values.mongo.replicaSetName -}}
 &replicaSet={{.Values.mongo.replicaSetName}}
 {{- end -}}
