@@ -48,7 +48,7 @@ spec:
         - name: PUBLISH_HOST
           value: '{{.Values.hakken.host}}'
         - name: SKIP_HAKKEN
-          value: true
+          value: "true"
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
