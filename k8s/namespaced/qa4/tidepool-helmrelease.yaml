@@ -68,7 +68,7 @@ spec:
     platformAuth:
       image: tidepool/platform-auth:1.33.0-release.1
     platformBlob:
-      image: tidepool/platform-blob:1.33.0-release.16
+      image: tidepool/platform-blob:1.33.0-release.1
       service:
         unstructured:
           store:
@@ -77,7 +77,7 @@ spec:
               bucket: "" # ensures that the generated bucket name is used
               prefix: "blobs"
     platformData:
-      image: tidepool/platform-data:1.33.0-release.16
+      image: tidepool/platform-data:1.33.0-release.1
     platformImage:
       image: tidepool/platform-image:1.33.0-release.16
       service:
