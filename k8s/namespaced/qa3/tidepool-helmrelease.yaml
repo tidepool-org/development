@@ -6,6 +6,25 @@ metadata:
   namespace: qa3
   annotations:
     flux.weave.works/automated: "true"
+    flux.weave.works/tag.shoreline: "glob:v0.*"
+    flux.weave.works/tag.tidewhisperer: "glob:v0.*"
+    flux.weave.works/tag.blip: "glob:1.*"
+    flux.weave.works/tag.gatekeeper: "glob:v0.7.2"
+    flux.weave.works/tag.highwater: "glob:v0.*"
+    flux.weave.works/tag.jellyfish: "glob:v0.*"
+    flux.weave.works/tag.mailhog: "semver:1.*"
+    flux.weave.works/tag.export: "glob:v1.*"
+    flux.weave.works/tag.seagull: "glob:v0.*"
+    flux.weave.works/tag.hydrophone: "glob:v0.*"
+    flux.weave.works/tag.messageapi: "glob:v0.*"
+    flux.weave.works/tag.platformAuth: "glob:1.*"
+    flux.weave.works/tag.platformBlob: "glob:1.*"
+    flux.weave.works/tag.platformData: "glob:1.*"
+    flux.weave.works/tag.platformMigrations: "glob:1.*"
+    flux.weave.works/tag.platformNotification: "glob:1.*"
+    flux.weave.works/tag.platformTask: "glob:1.*"
+    flux.weave.works/tag.platformTools: "glob:1.*"
+    flux.weave.works/tag.platformUser: "glob:1.*"
 spec:
   skipDepUpdate: true
   chart:
@@ -26,15 +45,15 @@ spec:
     hostnameOverride: ""
     includeSecrets: false
     blip:
-      image: tidepool/blip:v1.20.0-rc.1
+      image: tidepool/blip:v1.17.0
     export:
       image: tidepool/export:v1.3.2
     gatekeeper:
-      image: tidepool/gatekeeper:v0.7.3-release.6
+      image: tidepool/gatekeeper:v0.7.2
     highwater:
       image: tidepool/highwater:v0.3.6-release.1
     hydrophone:
-      image: tidepool/hydrophone:development
+      image: tidepool/hydrophone:v0.9.0
       ses:
         fromAddress: "Tidepool <noreply@tidepool.org>"
     jellyfish:
@@ -83,4 +102,4 @@ spec:
     shoreline:
       image: tidepool/shoreline:v0.15.0-release.6
     tidewhisperer:
-      image: tidepool/tide-whisperer:development
+      image: tidepool/tide-whisperer:v0.13.0
