@@ -17,14 +17,14 @@ metadata:
     flux.weave.works/tag.seagull: "glob:v0.*"
     flux.weave.works/tag.hydrophone: "glob:v0.*"
     flux.weave.works/tag.messageapi: "glob:v0.*"
-    flux.weave.works/tag.platformAuth: "glob:1.*"
-    flux.weave.works/tag.platformBlob: "glob:1.*"
-    flux.weave.works/tag.platformData: "glob:1.*"
-    flux.weave.works/tag.platformMigrations: "glob:1.*"
-    flux.weave.works/tag.platformNotification: "glob:1.*"
-    flux.weave.works/tag.platformTask: "glob:1.*"
-    flux.weave.works/tag.platformTools: "glob:1.*"
-    flux.weave.works/tag.platformUser: "glob:1.*"
+    flux.weave.works/tag.platformAuth: "glob:1.33.0-release.1"
+    flux.weave.works/tag.platformBlob: "glob:1.33.0-release.1"
+    flux.weave.works/tag.platformData: "glob:1.33.0-release.1"
+    flux.weave.works/tag.platformMigrations: "glob:1.33.0-release.1"
+    flux.weave.works/tag.platformNotification: "glob:1.33.0-release.1"
+    flux.weave.works/tag.platformTask: "glob:1.33.0-release.1"
+    flux.weave.works/tag.platformTools: "glob:1.33.0-release.1*"
+    flux.weave.works/tag.platformUser: "glob:1.33.0-release.1"
 spec:
   skipDepUpdate: true
   chart:
