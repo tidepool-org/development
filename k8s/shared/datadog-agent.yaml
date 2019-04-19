@@ -60,6 +60,10 @@ spec:
             value: "true"
           - name: DD_PROCESS_AGENT_ENABLED
             value: "true"
+	  - name: DD_LOGS_ENABLED
+	    value: "true"
+	  - name: DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL
+	    value: "true"
         resources:
           requests:
             memory: "256Mi"
@@ -79,6 +83,8 @@ spec:
           - name: passwd
             mountPath: /etc/passwd
             readOnly: true
+	  - name: pointerdir
+	    mountPath: /opt/datadog-agent/run 
         livenessProbe:
           exec:
             command:
@@ -98,3 +104,6 @@ spec:
         - hostPath:
             path: /etc/passwd
           name: passwd
+	- hostPath:
+	    path: /opt/datadog-agent/run
+	    name: pointerdir
