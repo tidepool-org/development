@@ -5,26 +5,7 @@ metadata:
   name: tidepool
   namespace: qa3
   annotations:
-    flux.weave.works/automated: "true"
-    flux.weave.works/tag.shoreline: "glob:v0.*"
-    flux.weave.works/tag.tidewhisperer: "glob:v0.*"
-    flux.weave.works/tag.blip: "glob:1.*"
-    flux.weave.works/tag.gatekeeper: "glob:v0.7.2"
-    flux.weave.works/tag.highwater: "glob:v0.*"
-    flux.weave.works/tag.jellyfish: "glob:v0.*"
-    flux.weave.works/tag.mailhog: "semver:1.*"
-    flux.weave.works/tag.export: "glob:v1.*"
-    flux.weave.works/tag.seagull: "glob:v0.*"
-    flux.weave.works/tag.hydrophone: "glob:v0.*"
-    flux.weave.works/tag.messageapi: "glob:v0.*"
-    flux.weave.works/tag.platformAuth: "glob:1.*"
-    flux.weave.works/tag.platformBlob: "glob:1.*"
-    flux.weave.works/tag.platformData: "glob:1.*"
-    flux.weave.works/tag.platformMigrations: "glob:1.*"
-    flux.weave.works/tag.platformNotification: "glob:1.*"
-    flux.weave.works/tag.platformTask: "glob:1.*"
-    flux.weave.works/tag.platformTools: "glob:1.*"
-    flux.weave.works/tag.platformUser: "glob:1.*"
+    flux.weave.works/automated: "false"
 spec:
   skipDepUpdate: true
   chart:
@@ -38,6 +19,12 @@ spec:
       enabled: false
     mongo:
       enabled: false
+      username: MasterDocDbuser53FUglmgwKuKsvwr92ugcbbbhjCMX2uY6WonjTKfHg
+      password: U6UQJkxdCANnWDwufcVp3Dc5BxL5MsHfRkMEYUuDPiE
+      host: docdb-amazing-testing.cluster-ccgoncr6o4tf.us-west-2.docdb.amazonaws.com
+      replicaSetName: rs0
+      tls: true
+      #tls: false
     gloo:
       enabled: false
       namespace:
@@ -53,7 +40,7 @@ spec:
     highwater:
       image: tidepool/highwater:v0.3.6-release.1
     hydrophone:
-      image: tidepool/hydrophone:v0.9.0
+      image: tidepool/hydrophone:v0.10.0-release.6
       ses:
         fromAddress: "Tidepool <noreply@tidepool.org>"
     jellyfish:
@@ -62,7 +49,7 @@ spec:
       storage: "aws/s3"
       bucket: "" # ensures that the generated bucket name is used
     messageapi:
-      image: tidepool/message-api:v0.7.15-release.1
+      image: tidepool/message-api:v0.7.14-release.1
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
@@ -102,4 +89,5 @@ spec:
     shoreline:
       image: tidepool/shoreline:v0.15.0-release.6
     tidewhisperer:
-      image: tidepool/tide-whisperer:v0.13.0
+      image: tidepool/tide-whisperer:v0.14.0-release.3
+
