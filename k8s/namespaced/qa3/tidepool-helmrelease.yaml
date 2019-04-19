@@ -32,15 +32,15 @@ spec:
     hostnameOverride: ""
     includeSecrets: false
     blip:
-      image: tidepool/blip:v1.17.0
+      image: tidepool/blip:v1.20.0-rc.1
     export:
       image: tidepool/export:v1.3.2
     gatekeeper:
-      image: tidepool/gatekeeper:v0.7.2
+      image: tidepool/gatekeeper:v0.7.3-release.6
     highwater:
       image: tidepool/highwater:v0.3.6-release.1
     hydrophone:
-      image: tidepool/hydrophone:v0.10.0-release.6
+      image: tidepool/hydrophone:development
       ses:
         fromAddress: "Tidepool <noreply@tidepool.org>"
     jellyfish:
@@ -49,7 +49,7 @@ spec:
       storage: "aws/s3"
       bucket: "" # ensures that the generated bucket name is used
     messageapi:
-      image: tidepool/message-api:v0.7.14-release.1
+      image: tidepool/message-api:v0.7.15-release.1
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
@@ -89,5 +89,5 @@ spec:
     shoreline:
       image: tidepool/shoreline:v0.15.0-release.6
     tidewhisperer:
-      image: tidepool/tide-whisperer:v0.14.0-release.3
+      image: tidepool/tide-whisperer:development
 
