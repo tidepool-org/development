@@ -5,7 +5,7 @@ metadata:
   name: tidepool
   namespace: qa3
   annotations:
-    flux.weave.works/automated: "false"
+    flux.weave.works/automated: "true"
 spec:
   skipDepUpdate: true
   chart:
