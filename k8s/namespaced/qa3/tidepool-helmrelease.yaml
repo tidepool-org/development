@@ -64,7 +64,7 @@ spec:
               bucket: "" # ensures that the generated bucket name is used
               prefix: "blobs"
     platformData:
-      image: tidepool/platform-data:1.33.0-release.1
+      image: tidepool/platform-data:optParams-4
     platformImage:
       image: tidepool/platform-image:optParams-4
       service:
@@ -77,7 +77,7 @@ spec:
     platformMigrations:
       image: tidepool/platform-migrations:optParams-4
     platformNotification:
-      image: tidepool/platform-notification:1.33.0-release.1
+      image: tidepool/platform-notification:optParams-4
     platformTask:
       image: tidepool/platform-task:optParams-4
     platformTools:
