@@ -208,14 +208,10 @@ Create environment variables used by all platform services.
           value: '{{.Values.service.provider.dexcom.token.url}}'
         - name: TIDEPOOL_SESSION_STORE_DATABASE
           value: user
-        - name: TIDEPOOL_STORE_ADDRESSES
-          value: '{{include "charts.mongo.start" .}}'
+        - name: TIDEPOOL_STORE_URL
+          value: 'mongodb://{{include "charts.mongo.start" .}}/tidepool{{include "charts.mongo.end" .}}'
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
-        - name: TIDEPOOL_STORE_TLS
-          value: '{{.Values.mongo.tls}}'
-        - name: TIDEPOOL_STORE_REPLICASETNAME
-          value: '{{.Values.mongo.replicaSetName}}'
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS
