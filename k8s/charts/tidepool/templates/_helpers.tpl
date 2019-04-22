@@ -212,6 +212,14 @@ Create environment variables used by all platform services.
           value: 'mongodb://{{include "charts.mongo.start" .}}/tidepool{{include "charts.mongo.end" .}}'
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
+        - name: TIDEPOOL_STORE_USERNAME
+          value: '{{.Values.mongo.username}}'
+        - name: TIDEPOOL_STORE_PASSWORD
+          value: '{{.Values.mongo.password}}'
+        - name: TIDEPOOL_STORE_TLS
+          value: '{{.Values.mongo.tls}}'
+        - name: TIDEPOOL_STORE_OPT_PARAMS
+          value: '{{.Values.mongo.optParams}}'
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS
