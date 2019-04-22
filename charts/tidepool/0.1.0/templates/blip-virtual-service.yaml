@@ -1,0 +1,28 @@
+{{ if .Values.gloo.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: app-vs-{{.Release.Namespace}}
+  namespace: gloo-system
+spec:
+{{ if .Values.usessl }}
+  sslConfig:
+    sniDomains:
+    - {{ include "charts.host.app" . }}
+    secretRef: 
+      name: tidepool-org
+      namespace: gloo-system
+{{ end }}
+  virtualHost:
+    domains: 
+    - {{ include "charts.host.app" . }}
+    name: app.gloo-system.{{.Release.Namespace}}
+    routes:
+    - matcher:
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-blip-{{ .Values.blip.port }}
+            namespace: gloo-system
+{{ end }}
