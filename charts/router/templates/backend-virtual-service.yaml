@@ -1,0 +1,349 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: backend.{{- .Release.Namespace -}}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  gateway:
+  - primary-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - method:
+        regex: GET|POST|DELETE
+      uri:
+        regex: /v1/users/[^/]+/restricted_tokens
+    route:
+      destination:
+        host: platform-auth.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9222
+  - match:
+    - method:
+        regex: GET|POST|DELETE
+      uri:
+        regex: /v1/users/[^/]+/provider_sessions
+    route:
+      destination:
+        host: platform-auth.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9222
+  - match:
+    - method:
+        regex: GET|POST|DELETE
+      uri:
+        regex: /v1/users/[^/]+/data_sources
+    route:
+      destination:
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9220
+  - match:
+    - method:
+        regex: GET|PUT|DELETE
+      uri:
+        regex: /v1/provider_sessions/[^/]+
+    route:
+      destination:
+        host: platform-auth.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9222
+  - match:
+    - method:
+        regex: GET|DELETE
+      uri:
+        regex: /v1/oauth/[^/]+/authorize
+    route:
+      destination:
+        host: platform-auth.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9222
+  - match:
+    - method:
+        exact: GET
+      uri:
+        regex: /v1/users/[^/]+/data_sets
+    route:
+      destination:
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9220
+  - match:
+    - method:
+        exact: GET
+      uri:
+        regex: /v1/oauth/[^/]+/redirect
+    route:
+      destination:
+        host: platform-auth.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9222
+  - match:
+    - method:
+        regex: GET|POST
+      uri:
+        regex: /v1/users/[^/]+/datasets
+    route:
+      destination:
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9220
+  - match:
+    - method:
+        exact: GET
+      uri:
+        regex: /v1/blobs/[^/]+/content
+    route:
+      destination:
+        host: platform-blob.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9225
+  - match:
+    - method:
+        regex: GET|PUT|DELETE
+      uri:
+        regex: /v1/data_sources/[^/]+
+    route:
+      destination:
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9220
+  - match:
+    - method:
+        regex: GET|PUT|DELETE
+      uri:
+        prefix: /v1/restricted_tokens
+    route:
+      destination:
+        host: platform-auth.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9222
+  - match:
+    - method:
+        regex: GET|POST|DELETE
+      uri:
+        regex: /v1/users/[^/]+/blobs
+    route:
+      destination:
+        host: platform-blob.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9225
+  - match:
+    - method:
+        exact: DELETE
+      uri:
+        regex: /v1/users/[^/]+/data
+    route:
+      destination:
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9220
+  - match:
+    - method:
+        regex: GET|DELETE
+      uri:
+        regex: /v1/blobs/[^/]+
+    route:
+      destination:
+        host: platform-blob.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9225
+  - match:
+    - method:
+        regex: GET|PUT|DELETE
+      uri:
+        regex: /v1/tasks/[^/*]
+    route:
+      destination:
+        host: platform-task.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9224
+  - match:
+    - method:
+        regex: GET|DELETE
+      uri:
+        regex: /v1/users/[^/*]
+    route:
+      destination:
+        host: platform-user.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9221
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /dataservices/
+    rewrite:
+      uri: /
+    route:
+      destination:
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9220
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /userservices/
+    rewrite:
+      uri: /
+    route:
+      destination:
+        host: platform-user.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9221
+  - match:
+    - method:
+        exact: GET
+      uri:
+        prefix: /v1/data_sets
+    route:
+      destination:
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9220
+  - match:
+    - method:
+        regex: POST|PUT|DELETE
+      uri:
+        prefix: /v1/datasets
+    route:
+      destination:
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9220
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /metadata/
+    rewrite:
+      uri: /
+    route:
+      destination:
+        host: seagull.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9120
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /metrics/
+    rewrite:
+      uri: /
+    route:
+      destination:
+        host: highwater.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9191
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /confirm/
+    rewrite:
+      uri: /
+    route:
+      destination:
+        host: hydrophone.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9157
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /message/
+    rewrite:
+      uri: /
+    route:
+      destination:
+        host: message-api.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9119
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /v1/data/
+    rewrite:
+      uri: /
+    route:
+      destination:
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9220
+  - match:
+    - method:
+        regex: GET|POST
+      uri:
+        prefix: /v1/tasks
+    route:
+      destination:
+        host: platform-task.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9224
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /export/
+    rewrite:
+      uri: /
+    route:
+      destination:
+        host: export.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9300
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /access/
+    route:
+      destination:
+        host: gatekeeper.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9123
+  - match:
+    - method:
+        exact: GET
+      uri:
+        prefix: /v1/time
+    route:
+      destination:
+        host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9220
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /auth/
+    route:
+      destination:
+        host: shoreline.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9107
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /data/
+    rewrite:
+      uri: /
+    route:
+      destination:
+        host: tide-whisperer.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 9127
+  - match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /
+    route:
+      destination:
+        host: blip.{{- .Release.Namespace -}}.svc.cluster.local
+        port:
+          number: 3000
