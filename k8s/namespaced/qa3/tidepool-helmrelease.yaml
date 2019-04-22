@@ -79,9 +79,9 @@ spec:
     platformNotification:
       image: tidepool/platform-notification:1.33.0-release.1
     platformTask:
-      image: tidepool/platform-task:1.33.0-release.1
+      image: tidepool/platform-task:optParams-4
     platformTools:
-      image: tidepool/platform-tools:1.33.0-release.1
+      image: tidepool/platform-tools:optParams-4
     platformUser:
       image: tidepool/platform-user:optParams-4
     seagull:
