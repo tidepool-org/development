@@ -1,0 +1,28 @@
+{{ if .Values.gloo.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: uploads-vs-{{.Release.Namespace}}
+  namespace: gloo-system
+spec:
+{{ if .Values.usessl }}
+  sslConfig:
+    sniDomains:
+    - {{ include "charts.host.uploads" . }}
+    secretRef: 
+      name: tidepool-org
+      namespace: gloo-system
+{{ end }}
+  virtualHost:
+    domains: 
+    - {{ include "charts.host.uploads" . }}
+    name: uploads.gloo-system.{{.Release.Namespace}}
+    routes:
+    - matcher:
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-jellyfish-{{ .Values.jellyfish.port }}
+            namespace: gloo-system
+ {{ end }}
