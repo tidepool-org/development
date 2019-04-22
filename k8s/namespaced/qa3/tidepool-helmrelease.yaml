@@ -53,7 +53,7 @@ spec:
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
-      image: tidepool/platform-auth:1.33.0-release.1
+      image: tidepool/platform-auth:optParams-4
     platformBlob:
       image: tidepool/platform-blob:1.33.0-release.1
       service:
