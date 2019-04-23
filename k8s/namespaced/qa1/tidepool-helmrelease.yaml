@@ -10,7 +10,7 @@ spec:
   skipDepUpdate: true
   chart:
     git: git@github.com:tidepool-org/development
-    path: k8s/charts/tidepool
+    path: charts/tidepool/0.1.0
     ref: k8s
   values:
     usessl: true
@@ -22,7 +22,7 @@ spec:
       #username: MasterDocDbuser53FUglmgwKuKsvwr92ugcbbbhjCMX2uY6WonjTKfHg
       #password: U6UQJkxdCANnWDwufcVp3Dc5BxL5MsHfRkMEYUuDPiE
       #host: docdb-amazing-testing.cluster-ccgoncr6o4tf.us-west-2.docdb.amazonaws.com
-      #replicaSetName: rs0
+      #optParams: "&replicaSet=rs0"
       #tls: true
       tls: false
     gloo:

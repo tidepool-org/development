@@ -10,7 +10,7 @@ spec:
   skipDepUpdate: true
   chart:
     git: git@github.com:tidepool-org/development
-    path: k8s/charts/tidepool
+    path: charts/tidepool/0.1.0
     ref: k8s
   values:
     usessl: true
@@ -32,15 +32,15 @@ spec:
     hostnameOverride: ""
     includeSecrets: false
     blip:
-      image: tidepool/blip:v1.17.0
+      image: tidepool/blip:v1.19.1-rc.1
     export:
       image: tidepool/export:v1.3.2
     gatekeeper:
-      image: tidepool/gatekeeper:v0.7.2
+      image: tidepool/gatekeeper:v0.7.3-release.6
     highwater:
       image: tidepool/highwater:v0.3.6-release.1
     hydrophone:
-      image: tidepool/hydrophone:v0.10.0-release.6
+      image: tidepool/hydrophone:development
       ses:
         fromAddress: "Tidepool <noreply@tidepool.org>"
     jellyfish:
@@ -49,13 +49,13 @@ spec:
       storage: "aws/s3"
       bucket: "" # ensures that the generated bucket name is used
     messageapi:
-      image: tidepool/message-api:v0.7.14-release.1
+      image: tidepool/message-api:v0.7.15-release.1
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
-      image: tidepool/platform-auth:1.33.0-release.1
+      image: tidepool/platform-auth:optParams-4
     platformBlob:
-      image: tidepool/platform-blob:1.33.0-release.1
+      image: tidepool/platform-blob:optParams-4
       service:
         unstructured:
           store:
@@ -64,9 +64,9 @@ spec:
               bucket: "" # ensures that the generated bucket name is used
               prefix: "blobs"
     platformData:
-      image: tidepool/platform-data:1.33.0-release.1
+      image: tidepool/platform-data:optParams-4
     platformImage:
-      image: tidepool/platform-image:1.33.0-release.1
+      image: tidepool/platform-image:optParams-4
       service:
         unstructured:
           store:
@@ -75,19 +75,19 @@ spec:
               bucket: ""  # ensures that the generated bucket name is used
               prefix: "images"
     platformMigrations:
-      image: tidepool/platform-migrations:1.33.0-release.1
+      image: tidepool/platform-migrations:optParams-4
     platformNotification:
-      image: tidepool/platform-notification:1.33.0-release.1
+      image: tidepool/platform-notification:optParams-4
     platformTask:
-      image: tidepool/platform-task:1.33.0-release.1
+      image: tidepool/platform-task:optParams-4
     platformTools:
-      image: tidepool/platform-tools:1.33.0-release.1
+      image: tidepool/platform-tools:optParams-4
     platformUser:
-      image: tidepool/platform-user:1.33.0-release.1
+      image: tidepool/platform-user:optParams-4
     seagull:
       image: tidepool/seagull:v0.7.2-release.4
     shoreline:
       image: tidepool/shoreline:v0.15.0-release.6
     tidewhisperer:
-      image: tidepool/tide-whisperer:v0.14.0-release.3
+      image: tidepool/tide-whisperer:development
 

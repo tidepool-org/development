@@ -29,7 +29,7 @@ spec:
   skipDepUpdate: true
   chart:
     git: git@github.com:tidepool-org/development
-    path: k8s/charts/tidepool
+    path: charts/tidepool/0.1.0
     ref: k8s
   values:
     usessl: true
@@ -79,7 +79,7 @@ spec:
     platformData:
       image: tidepool/platform-data:1.33.0-release.1
     platformImage:
-      image: tidepool/platform-image:1.33.0-release.1
+      image: tidepool/platform-image:optParams-4
       service:
         unstructured:
           store:
