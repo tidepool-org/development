@@ -5,7 +5,26 @@ metadata:
   name: tidepool
   namespace: qa3
   annotations:
-    flux.weave.works/automated: "false"
+    flux.weave.works/automated: "true"
+    flux.weave.works/tag.shoreline: "glob:v0.*"
+    flux.weave.works/tag.tidewhisperer: "glob:v0.*"
+    flux.weave.works/tag.blip: "glob:1.*"
+    flux.weave.works/tag.gatekeeper: "glob:v0.7.2"
+    flux.weave.works/tag.highwater: "glob:v0.*"
+    flux.weave.works/tag.jellyfish: "glob:v0.*"
+    flux.weave.works/tag.mailhog: "semver:1.*"
+    flux.weave.works/tag.export: "glob:v1.*"
+    flux.weave.works/tag.seagull: "glob:v0.*"
+    flux.weave.works/tag.hydrophone: "glob:v0.*"
+    flux.weave.works/tag.messageapi: "glob:v0.*"
+    flux.weave.works/tag.platformAuth: "glob:1.33.0-release.1"
+    flux.weave.works/tag.platformBlob: "glob:1.33.0-release.1"
+    flux.weave.works/tag.platformData: "glob:1.33.0-release.1"
+    flux.weave.works/tag.platformMigrations: "glob:1.33.0-release.1"
+    flux.weave.works/tag.platformNotification: "glob:1.33.0-release.1"
+    flux.weave.works/tag.platformTask: "glob:1.33.0-release.1"
+    flux.weave.works/tag.platformTools: "glob:1.33.0-release.1*"
+    flux.weave.works/tag.platformUser: "glob:1.33.0-release.1"
 spec:
   skipDepUpdate: true
   chart:
@@ -19,12 +38,6 @@ spec:
       enabled: false
     mongo:
       enabled: false
-      username: MasterDocDbuser53FUglmgwKuKsvwr92ugcbbbhjCMX2uY6WonjTKfHg
-      password: U6UQJkxdCANnWDwufcVp3Dc5BxL5MsHfRkMEYUuDPiE
-      host: docdb-amazing-testing.cluster-ccgoncr6o4tf.us-west-2.docdb.amazonaws.com
-      replicaSetName: rs0
-      #tls: true
-      tls: false
     gloo:
       enabled: false
       namespace:
@@ -32,15 +45,15 @@ spec:
     hostnameOverride: ""
     includeSecrets: false
     blip:
-      image: tidepool/blip:v1.19.1-rc.1
+      image: tidepool/blip:v1.17.0
     export:
       image: tidepool/export:v1.3.2
     gatekeeper:
-      image: tidepool/gatekeeper:v0.7.3-release.6
+      image: tidepool/gatekeeper:v0.7.2
     highwater:
       image: tidepool/highwater:v0.3.6-release.1
     hydrophone:
-      image: tidepool/hydrophone:development
+      image: tidepool/hydrophone:v0.9.0
       ses:
         fromAddress: "Tidepool <noreply@tidepool.org>"
     jellyfish:
@@ -53,9 +66,9 @@ spec:
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
-      image: tidepool/platform-auth:optParams-4
+      image: tidepool/platform-auth:1.33.0-release.1
     platformBlob:
-      image: tidepool/platform-blob:optParams-4
+      image: tidepool/platform-blob:1.33.0-release.1
       service:
         unstructured:
           store:
@@ -64,7 +77,7 @@ spec:
               bucket: "" # ensures that the generated bucket name is used
               prefix: "blobs"
     platformData:
-      image: tidepool/platform-data:optParams-4
+      image: tidepool/platform-data:1.33.0-release.1
     platformImage:
       image: tidepool/platform-image:optParams-4
       service:
@@ -75,19 +88,18 @@ spec:
               bucket: ""  # ensures that the generated bucket name is used
               prefix: "images"
     platformMigrations:
-      image: tidepool/platform-migrations:optParams-4
+      image: tidepool/platform-migrations:1.33.0-release.1
     platformNotification:
-      image: tidepool/platform-notification:optParams-4
+      image: tidepool/platform-notification:1.33.0-release.1
     platformTask:
-      image: tidepool/platform-task:optParams-4
+      image: tidepool/platform-task:1.33.0-release.1
     platformTools:
-      image: tidepool/platform-tools:optParams-4
+      image: tidepool/platform-tools:1.33.0-release.1
     platformUser:
-      image: tidepool/platform-user:optParams-4
+      image: tidepool/platform-user:1.33.0-release.1
     seagull:
       image: tidepool/seagull:v0.7.2-release.4
     shoreline:
       image: tidepool/shoreline:v0.15.0-release.6
     tidewhisperer:
-      image: tidepool/tide-whisperer:development
-
+      image: tidepool/tide-whisperer:v0.13.0
