@@ -5,7 +5,7 @@ metadata:
   name: tidepool
   namespace: qa3
   annotations:
-    flux.weave.works/automated: "true"
+    flux.weave.works/automated: "false"
 spec:
   skipDepUpdate: true
   chart:
@@ -23,8 +23,8 @@ spec:
       password: U6UQJkxdCANnWDwufcVp3Dc5BxL5MsHfRkMEYUuDPiE
       host: docdb-amazing-testing.cluster-ccgoncr6o4tf.us-west-2.docdb.amazonaws.com
       replicaSetName: rs0
-      tls: true
-      #tls: false
+      #tls: true
+      tls: false
     gloo:
       enabled: false
       namespace:
