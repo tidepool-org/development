@@ -10,7 +10,7 @@ spec:
     #git: git@github.com:helm/charts
     #path: stable/ambassador
     #ref: master
-    repository: https://storage.googleapis.com/
+    repository: https://kubernetes-charts.storage.googleapis.com/
     name: ambassador
     version: 2.0.2
   values:
