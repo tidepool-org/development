@@ -208,8 +208,8 @@ Create environment variables used by all platform services.
           value: '{{.Values.service.provider.dexcom.token.url}}'
         - name: TIDEPOOL_SESSION_STORE_DATABASE
           value: user
-        - name: TIDEPOOL_STORE_URL
-          value: 'mongodb://{{include "charts.mongo.start" .}}/tidepool{{include "charts.mongo.end" .}}'
+        - name: TIDEPOOL_STORE_ADDRESSES
+          value: '{{.Values.mongo.host}}:{{.Values.mongo.port}}'
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
         - name: TIDEPOOL_STORE_USERNAME
