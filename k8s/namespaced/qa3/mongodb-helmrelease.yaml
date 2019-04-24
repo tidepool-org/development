@@ -5,6 +5,7 @@ metadata:
   namespace: qa3
   annotations:
     flux.weave.works/automated: "false"
+    ad.datadoghq.com/<container identifier>.logs: '[<LOGS_CONFIG>]'
 spec:
   skipDepUpdate: true
   chart:
