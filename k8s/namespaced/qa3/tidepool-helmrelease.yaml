@@ -79,7 +79,7 @@ spec:
     platformData:
       image: tidepool/platform-data:1.33.0-release.1
     platformImage:
-      image: tidepool/platform-image:ci-changes-e9c7aaa821639d38109fcab33ebbebaeed5222da
+      image: tidepool/platform-image:develop-2df88a25f4a4dba36fc13b768e76af6db7fa62e2
       service:
         unstructured:
           store:
