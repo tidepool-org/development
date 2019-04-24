@@ -5,7 +5,7 @@ metadata:
   namespace: qa3
   annotations:
     flux.weave.works/automated: "false"
-    ad.datadoghq.com/<container identifier>.logs: '[<LOGS_CONFIG>]'
+    ad.datadoghq.com/mongodb.logs: '[{"source":"mongodb","service":"database"}]'
 spec:
   skipDepUpdate: true
   chart:
