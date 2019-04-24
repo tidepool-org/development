@@ -107,3 +107,5 @@ spec:
         - hostPath:
             path: /opt/datadog-agent/run
           name: pointerdir
+annotations:
+  ad.datadoghq.com/<container identifier>.logs: '[<LOGS_CONFIG>]'
