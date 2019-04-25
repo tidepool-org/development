@@ -61,7 +61,7 @@ spec:
       enabled: true
       image: tidepool/jellyfish:v0.12.3
       storage: "aws/s3"
-      bucket: "" # ensures that the generated bucket name is used
+      bucket: "" # ensures that the generated bucket name is definitely used
     messageapi:
       image: tidepool/message-api:v0.7.15-486bf28c4b1266ef05728122a3c696ab0833e51e
     mailhog:
