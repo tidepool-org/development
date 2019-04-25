@@ -29,7 +29,7 @@ spec:
       - image: "{{ .Values.nosqlclient.image }}"
         name: nosqlclient
         ports:
-        - containerPort: '3000'
+        - containerPort: 3000
       - env:
         - name: INSTALL_MONGO
           value: 'false'
