@@ -45,24 +45,24 @@ spec:
     hostnameOverride: ""
     includeSecrets: false
     blip:
-      image: tidepool/blip:v1.17.0
+      image: tidepool/blip:master-943a60bb721f2113b9b1d78c0ce95990ec7e9542
     export:
-      image: tidepool/export:v1.3.2
+      image: tidepool/export:master-17c8de7344eea3d8a404e1c112c2c7f03e88321e
     gatekeeper:
-      image: tidepool/gatekeeper:v0.7.2
+      image: tidepool/gatekeeper:master-ff9239c90d432a251024247380e54123896beb03
     highwater:
-      image: tidepool/highwater:v0.3.6-release.1
+      image: tidepool/highwater:master-1a7a0f9ce2af300a9b366b69043afaf28befdb99
     hydrophone:
-      image: tidepool/hydrophone:v0.9.0
+      image: tidepool/hydrophone:master-5a098f25546a3a2f0e1dfbbc51735589dcf03879
       ses:
         fromAddress: "Tidepool <noreply@tidepool.org>"
     jellyfish:
       enabled: true
-      image: tidepool/jellyfish:v0.12.3-release.3
+      image: tidepool/jellyfish:master-ff4e7872a35960718cadae9381b0c9ee7ba4d166
       storage: "aws/s3"
       bucket: "" # ensures that the generated bucket name is used
     messageapi:
-      image: tidepool/message-api:v0.7.15-release.1
+      image: tidepool/message-api:master-1087d1378392afaadef077b82af64d0904036c20
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
@@ -98,8 +98,8 @@ spec:
     platformUser:
       image: tidepool/platform-user:1.33.0-release.1
     seagull:
-      image: tidepool/seagull:v0.7.2-release.4
+      image: tidepool/seagull:master-5252952843dfe47536bc472e88c6e0017b316eb5
     shoreline:
-      image: tidepool/shoreline:v0.15.0-12763ceaa72fbd9170cb13367b3fbb2f44c6ad79
+      image: tidepool/shoreline:master-c832cadedfe7a804bb42c0cb38d95d7202fc3749
     tidewhisperer:
-      image: tidepool/tide-whisperer:v0.13.0
+      image: tidepool/tide-whisperer:master-1995cc2dd7f5f3ae0621d82c9716748eab108d60
