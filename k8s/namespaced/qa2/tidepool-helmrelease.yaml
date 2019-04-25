@@ -45,15 +45,15 @@ spec:
     hostnameOverride: ""
     includeSecrets: false
     blip:
-      image: tidepool/blip:v1.17.0
+      image: tidepool/blip:develop-5d031301968fa19e35f3ba5c4345cd9579e0a3bc
     export:
-      image: tidepool/export:v1.3.2
+      image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
     gatekeeper:
       image: tidepool/gatekeeper:v0.7.2
     highwater:
-      image: tidepool/highwater:v0.3.6-release.1
+      image: tidepool/highwater:develop-08302b595d1ccf49e2aea7c1b4b8f18eb2b509b2
     hydrophone:
-      image: tidepool/hydrophone:v0.9.0
+      image: tidepool/hydrophone:develop-e330cb0f817fcc889038877c4923a271b9debd91
       ses:
         fromAddress: "Tidepool <noreply@tidepool.org>"
     jellyfish:
@@ -62,13 +62,13 @@ spec:
       storage: "aws/s3"
       bucket: "" # ensures that the generated bucket name is used
     messageapi:
-      image: tidepool/message-api:v0.7.15-release.1
+      image: tidepool/message-api:develop-486bf28c4b1266ef05728122a3c696ab0833e51e
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
-      image: tidepool/platform-auth:1.33.0-release.1
+      image: tidepool/platform-auth:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
     platformBlob:
-      image: tidepool/platform-blob:1.33.0-release.1
+      image: tidepool/platform-blob:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
       service:
         unstructured:
           store:
@@ -77,7 +77,7 @@ spec:
               bucket: "" # ensures that the generated bucket name is used
               prefix: "blobs"
     platformData:
-      image: tidepool/platform-data:1.33.0-release.1
+      image: tidepool/platform-data:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
     platformImage:
       image: tidepool/platform-image:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
       service:
@@ -88,18 +88,18 @@ spec:
               bucket: ""  # ensures that the generated bucket name is used
               prefix: "images"
     platformMigrations:
-      image: tidepool/platform-migrations:1.33.0-release.1
+      image: tidepool/platform-migrations:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
     platformNotification:
-      image: tidepool/platform-notification:1.33.0-release.1
+      image: tidepool/platform-notification:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
     platformTask:
-      image: tidepool/platform-task:1.33.0-release.1
+      image: tidepool/platform-task:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
     platformTools:
-      image: tidepool/platform-tools:1.33.0-release.1
+      image: tidepool/platform-tools:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
     platformUser:
-      image: tidepool/platform-user:1.33.0-release.1
+      image: tidepool/platform-user:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
     seagull:
       image: tidepool/seagull:v0.7.2-release.4
     shoreline:
-      image: tidepool/shoreline:v0.15.0-12763ceaa72fbd9170cb13367b3fbb2f44c6ad79
+      image: tidepool/shoreline:develop-6120cf944c6184e6f7d7e785e020a7213851be76
     tidewhisperer:
-      image: tidepool/tide-whisperer:v0.13.0
+      image: tidepool/tide-whisperer:develop-7504db7c973a3624bc66296626b61be8e5ff5ea7
