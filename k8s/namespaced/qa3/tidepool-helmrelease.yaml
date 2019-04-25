@@ -20,6 +20,7 @@ metadata:
     flux.weave.works/tag.platformAuth: "glob:1.33.0-release.1"
     flux.weave.works/tag.platformBlob: "glob:1.33.0-release.1"
     flux.weave.works/tag.platformData: "glob:1.33.0-release.1"
+    flux.weave.works/tag.platformImage: "glob:1.33.0-release.1"
     flux.weave.works/tag.platformMigrations: "glob:1.33.0-release.1"
     flux.weave.works/tag.platformNotification: "glob:1.33.0-release.1"
     flux.weave.works/tag.platformTask: "glob:1.33.0-release.1"

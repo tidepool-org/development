@@ -20,6 +20,7 @@ metadata:
     flux.weave.works/tag.platformAuth: "glob:develop-*"
     flux.weave.works/tag.platformBlob: "glob:develop-*"
     flux.weave.works/tag.platformData: "glob:develop-*"
+    flux.weave.works/tag.platformImage: "glob:develop-*"
     flux.weave.works/tag.platformMigrations: "glob:develop-*"
     flux.weave.works/tag.platformNotification: "glob:develop-*"
     flux.weave.works/tag.platformTask: "glob:develop-*"
