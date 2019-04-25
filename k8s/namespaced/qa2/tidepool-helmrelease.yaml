@@ -80,7 +80,7 @@ spec:
     platformData:
       image: tidepool/platform-data:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
     platformImage:
-      image: tidepool/platform-image:development
+      image: tidepool/platform-image:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
       service:
         unstructured:
           store:
