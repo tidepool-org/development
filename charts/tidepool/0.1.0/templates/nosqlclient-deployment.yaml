@@ -34,7 +34,7 @@ spec:
         - name: INSTALL_MONGO
           value: 'false'
         - name: MONGO_URL
-          value: "mongodb://{{include "charts.mongo.start" .}}/{{include "charts.mongo.end" .}}"
+          value: "mongodb://{{include "charts.mongo.start" .}}/admin{{include "charts.mongo.end" .}}"
       restartPolicy: Always
 
 
