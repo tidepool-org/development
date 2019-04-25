@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: nosqlclient
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: nosqlclient
+  namespace: {{.Release.Namespace}}
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: nosqlclient
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.service: nosqlclient
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+      - image: "{{ .Values.nosqlclient.image }}"
+        name: nosqlclient
+        ports:
+        - containerPort: '3000'
+      - env:
+        - name: INSTALL_MONGO
+          value: 'false'
+        - name: MONGO_URL
+          value: "mongodb://{{include "charts.mongo.start" .}}/{{include "charts.mongo.end" .}}"
+      restartPolicy: Always
+
+
