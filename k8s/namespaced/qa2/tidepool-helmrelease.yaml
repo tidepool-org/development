@@ -78,7 +78,7 @@ spec:
               bucket: "" # ensures that the generated bucket name is used
               prefix: "blobs"
     platformData:
-      image: tidepool/platform-data:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
+      image: tidepool/platform-data:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
     platformImage:
       image: tidepool/platform-image:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
       service:
@@ -89,13 +89,13 @@ spec:
               bucket: ""  # ensures that the generated bucket name is used
               prefix: "images"
     platformMigrations:
-      image: tidepool/platform-migrations:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
+      image: tidepool/platform-migrations:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
     platformNotification:
       image: tidepool/platform-notification:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
     platformTask:
       image: tidepool/platform-task:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
     platformTools:
-      image: tidepool/platform-tools:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
+      image: tidepool/platform-tools:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
     platformUser:
       image: tidepool/platform-user:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
     seagull:
