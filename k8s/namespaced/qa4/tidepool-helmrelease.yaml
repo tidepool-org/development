@@ -69,7 +69,7 @@ spec:
     platformAuth:
       image: tidepool/platform-auth:master-1826198c77e39e928c293cb0aad31fc773dda614
     platformBlob:
-      image: tidepool/platform-blob:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
+      image: tidepool/platform-blob:master-1826198c77e39e928c293cb0aad31fc773dda614
       service:
         unstructured:
           store:
@@ -93,7 +93,7 @@ spec:
     platformNotification:
       image: tidepool/platform-notification:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
     platformTask:
-      image: tidepool/platform-task:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
+      image: tidepool/platform-task:master-1826198c77e39e928c293cb0aad31fc773dda614
     platformTools:
       image: tidepool/platform-tools:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
     platformUser:

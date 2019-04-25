@@ -69,7 +69,7 @@ spec:
     platformAuth:
       image: tidepool/platform-auth:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
     platformBlob:
-      image: tidepool/platform-blob:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
+      image: tidepool/platform-blob:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
       service:
         unstructured:
           store:
@@ -91,9 +91,9 @@ spec:
     platformMigrations:
       image: tidepool/platform-migrations:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
     platformNotification:
-      image: tidepool/platform-notification:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
+      image: tidepool/platform-notification:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
     platformTask:
-      image: tidepool/platform-task:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
+      image: tidepool/platform-task:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
     platformTools:
       image: tidepool/platform-tools:develop-b67c90b30b65fa81e93ffc9a63b6a2bcba1b2724
     platformUser:
