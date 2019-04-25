@@ -26,11 +26,11 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
-      - image: "{{ .Values.nosqlclient.image }}"
-        name: nosqlclient
+      - name: nosqlclient
+        image: "{{ .Values.nosqlclient.image }}"
         ports:
         - containerPort: 3000
-      - env:
+        env:
         - name: INSTALL_MONGO
           value: 'false'
         - name: MONGO_URL
