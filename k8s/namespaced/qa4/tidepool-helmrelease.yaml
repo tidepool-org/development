@@ -91,7 +91,7 @@ spec:
     platformMigrations:
       image: tidepool/platform-migrations:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
     platformNotification:
-      image: tidepool/platform-notification:1.33.0-release.1
+      image: tidepool/platform-notification:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
     platformTask:
       image: tidepool/platform-task:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
     platformTools:
