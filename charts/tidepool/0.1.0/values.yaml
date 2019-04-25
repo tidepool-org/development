@@ -118,6 +118,10 @@ mongo:
   port: '27017'
   tls: 'false'
   optParams: ''
+nosqlclient:
+  image: 'mongoclient/mongoclient'
+  enabled: 'true'
+  port: '3001'
 platformAuth:
   image: tidepool/platform-auth:1.32.0-release.4
   host: platform-auth
