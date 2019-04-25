@@ -35,6 +35,8 @@ spec:
           value: 'false'
         - name: MONGO_URL
           value: "mongodb://{{include "charts.mongo.start" .}}/admin{{include "charts.mongo.end" .}}"
+        - name: MONGOCLIENT_DEFAULT_CONNECTION_UR
+          value: "mongodb://{{include "charts.mongo.start" .}}/admin{{include "charts.mongo.end" .}}"
       restartPolicy: Always
 
 
