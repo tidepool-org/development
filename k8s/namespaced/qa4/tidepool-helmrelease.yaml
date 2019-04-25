@@ -67,9 +67,9 @@ spec:
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
-      image: tidepool/platform-auth:1.33.0-release.1
+      image: tidepool/platform-auth:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
     platformBlob:
-      image: tidepool/platform-blob:1.33.0-release.1
+      image: tidepool/platform-blob:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
       service:
         unstructured:
           store:
@@ -78,7 +78,7 @@ spec:
               bucket: "" # ensures that the generated bucket name is used
               prefix: "blobs"
     platformData:
-      image: tidepool/platform-data:1.33.0-release.1
+      image: tidepool/platform-data:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
     platformImage:
       image: tidepool/platform-image:development
       service:
@@ -89,7 +89,7 @@ spec:
               bucket: ""  # ensures that the generated bucket name is used
               prefix: "images"
     platformMigrations:
-      image: tidepool/platform-migrations:1.33.0-release.1
+      image: tidepool/platform-migrations:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
     platformNotification:
       image: tidepool/platform-notification:1.33.0-release.1
     platformTask:
