@@ -93,11 +93,11 @@ spec:
     platformNotification:
       image: tidepool/platform-notification:1.33.0-release.1
     platformTask:
-      image: tidepool/platform-task:1.33.0-release.1
+      image: tidepool/platform-task:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
     platformTools:
-      image: tidepool/platform-tools:1.33.0-release.1
+      image: tidepool/platform-tools:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
     platformUser:
-      image: tidepool/platform-user:1.33.0-release.1
+      image: tidepool/platform-user:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
     seagull:
       image: tidepool/seagull:master-5252952843dfe47536bc472e88c6e0017b316eb5
     shoreline:
