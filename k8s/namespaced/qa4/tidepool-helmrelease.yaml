@@ -91,13 +91,13 @@ spec:
     platformMigrations:
       image: tidepool/platform-migrations:master-1826198c77e39e928c293cb0aad31fc773dda614
     platformNotification:
-      image: tidepool/platform-notification:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
+      image: tidepool/platform-notification:master-1826198c77e39e928c293cb0aad31fc773dda614
     platformTask:
       image: tidepool/platform-task:master-1826198c77e39e928c293cb0aad31fc773dda614
     platformTools:
       image: tidepool/platform-tools:master-1826198c77e39e928c293cb0aad31fc773dda614
     platformUser:
-      image: tidepool/platform-user:master-6ebf9599943ca995d5d22d60557c759bc2fa5fdc
+      image: tidepool/platform-user:master-1826198c77e39e928c293cb0aad31fc773dda614
     seagull:
       image: tidepool/seagull:master-5252952843dfe47536bc472e88c6e0017b316eb5
     shoreline:
