@@ -15,7 +15,7 @@ spec:
   ports:
   - name: "{{.Values.nosqlclient.port}}"
     port: {{.Values.nosqlclient.port}}
-    targetPort: '3000'
+    targetPort: 3000
   selector:
     io.kompose.service: nosqlclient
     app.kubernetes.io/name: {{ include "charts.name" . }}
