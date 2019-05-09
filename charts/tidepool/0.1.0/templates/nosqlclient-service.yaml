@@ -4,7 +4,7 @@ metadata:
   annotations:
   creationTimestamp: null
   labels:
-    io.kompose.service: nosqlclient
+    app: nosqlclient
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
@@ -17,6 +17,6 @@ spec:
     port: {{.Values.nosqlclient.port}}
     targetPort: 3000
   selector:
-    io.kompose.service: nosqlclient
+    app: nosqlclient
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
