@@ -50,13 +50,6 @@ spec:
         args: ["-c", "yarn build && yarn server"]
         ports:
         - containerPort: {{.Values.blip.port}}
-        resources:
-          limits:
-            cpu: 200m
-            memory: 256Mi
-          requests:
-            cpu: 200m
-            memory: 256Mi
       restartPolicy: Always
 
 status: {}
