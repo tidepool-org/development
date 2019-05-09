@@ -2,11 +2,9 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose -f docker-compose.yml convert
-    kompose.version: 1.17.0 (a74acad)
   creationTimestamp: null
   labels:
-    io.kompose.service: platform-data
+    app: platform-data
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
@@ -16,7 +14,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      io.kompose.service: platform-data
+      app: platform-data
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: 1
@@ -25,7 +23,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: platform-data
+        app: platform-data
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
