@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+  creationTimestamp: null
+  labels:
+    app: export
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  name: export
+  namespace: {{.Release.Namespace}}
+spec:
+  selector:
+    matchLabels:
+      app: export
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: export
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+      - env:
+        - name: API_HOST
+          value: {{include "charts.protocol" .}}://{{include "charts.host.api" .}}
+        - name: DEBUG_LEVEL
+          value: debug
+        - name: HTTP_PORT
+          value: "{{ .Values.export.port }}"
+        - name: SESSION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: session
+        image: "{{ .Values.export.image }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        livenessProbe:
+          httpGet:
+            path: /export/status
+            port: {{.Values.export.port}}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: export
+        ports:
+        - containerPort: {{.Values.export.port}}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      restartPolicy: Always
+status: {}
