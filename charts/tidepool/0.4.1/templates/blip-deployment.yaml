@@ -29,8 +29,6 @@ spec:
     spec:
       containers:
       - env:
-        - name: HTTPS_PORT
-          value: {{.Values.blip.port}}
         - name: API_HOST
           value: {{include "charts.protocol" .}}://{{ include "charts.host.api" . }}
         - name: DEV_TOOLS
