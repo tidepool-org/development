@@ -97,14 +97,28 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Create name for the external gateway.
+*/}}
+{{- define "charts.gateway.external" -}}
+{{include "charts.protocol" .}}://{{include "charts.host.api" .}}
+{{ end }}
+
+{{/*
+Create name for the internal gateway.
+*/}}
+{{- define "charts.gateway.internal" -}}
+http://styx.{{-.Release.Namespace -}}.svc.cluster.local
+{{ end }}
+
+{{/*
 Create environment variables used by all platform services.
 */}}
-{{- define "charts.platform.env" -}}
 
+{{- define "charts.platform.env" -}}
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://{{.Values.platformAuth.host}}:{{.Values.platformAuth.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: {{include "charts.protocol" .}}://{{include "charts.host.api" .}}
+          value: {{include "charts.gateway.internal"}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
