@@ -101,14 +101,14 @@ Create name for the external gateway.
 */}}
 {{- define "charts.gateway.external" -}}
 {{include "charts.protocol" .}}://{{include "charts.host.api" .}}
-{{ end }}
+{{- end -}}
 
 {{/*
 Create name for the internal gateway.
 */}}
 {{- define "charts.gateway.internal" -}}
 http://styx.{{-.Release.Namespace -}}.svc.cluster.local
-{{ end }}
+{{- end -}}
 
 {{/*
 Create environment variables used by all platform services.
