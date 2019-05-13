@@ -2,12 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: internal-api
+    app: internal-app
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-  name: internal-api
+  name: internal-app
   namespace: {{.Release.Namespace}}
 spec:
   ports:
@@ -15,6 +15,6 @@ spec:
     port: 80
     targetPort: 80
   selector:
-    app: internal-api
+    app: internal-app
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
