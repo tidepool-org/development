@@ -7,10 +7,8 @@ metadata:
 spec:
   gateways:
   - primary-gateway
-  - mesh
   hosts:
   - '{{- .Release.Namespace -}}-uploads.tidepool.org'
-  - styx.{{- .Release.Namespace -}}.svc.cluster.local
   http:
   - corsPolicy:
       allowCredentials: true

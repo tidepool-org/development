@@ -107,7 +107,7 @@ Create name for the external gateway.
 Create name for the internal gateway.
 */}}
 {{- define "charts.gateway.internal" -}}
-http://styx.{{- .Release.Namespace -}}.svc.cluster.local
+http://undefined.{{- .Release.Namespace -}}.svc.cluster.local
 {{- end -}}
 
 {{/*
@@ -118,7 +118,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://{{.Values.platformAuth.host}}:{{.Values.platformAuth.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: {{include "charts.gateway.internal" .}}
+          value: {{include "charts.gateway.external" .}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
