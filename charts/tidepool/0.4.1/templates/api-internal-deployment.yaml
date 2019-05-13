@@ -27,6 +27,9 @@ spec:
     spec:
       containers:
       - name: busybox
-        image: "busybox:latest"
+        image: busybox
+        command:
+        - sleep
+        - "3600"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
       restartPolicy: Always
