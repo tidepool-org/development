@@ -10,3 +10,9 @@ metadata:
   name: styx
   namespace: {{.Release.Namespace}}
   spec:
+  selector:
+    app: export
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+status:
+  loadBalancer: {}
