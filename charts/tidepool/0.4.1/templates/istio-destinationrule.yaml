@@ -1,0 +1,12 @@
+{{- if .Values.istio.gateway.enabled -}}
+apiVersion: "networking.istio.io/v1alpha3"
+kind: "DestinationRule"
+metadata:
+  name: "default"
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  host: "*.{{- .Release.Namespace -}}.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+{{- end -}}

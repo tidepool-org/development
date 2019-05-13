@@ -1,0 +1,10 @@
+{{- if .Values.istio.gateway.enabled -}}
+apiVersion: "authentication.istio.io/v1alpha1"
+kind: "Policy"
+metadata:
+  name: "default"
+  namespace: {{.Release.Namespace}}
+spec:
+  peers:
+  - mtls: {}
+{{- end -}}
