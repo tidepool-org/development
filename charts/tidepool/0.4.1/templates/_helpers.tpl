@@ -107,7 +107,7 @@ Create name for the external gateway.
 Create name for the internal gateway.
 */}}
 {{- define "charts.gateway.internal" -}}
-http://styx.{{-.Release.Namespace -}}.svc.cluster.local
+http://styx.{{- .Release.Namespace -}}.svc.cluster.local
 {{- end -}}
 
 {{/*
