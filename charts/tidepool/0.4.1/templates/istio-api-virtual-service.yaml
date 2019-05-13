@@ -10,7 +10,7 @@ spec:
   - mesh
   hosts:
   - '{{- .Release.Namespace -}}-api.tidepool.org'
-  - api-internal.{{- .Release.Namespace -}}.svc.cluster.local
+  - internal-api.{{- .Release.Namespace -}}.svc.cluster.local
   http:
   - corsPolicy:
       allowCredentials: true
