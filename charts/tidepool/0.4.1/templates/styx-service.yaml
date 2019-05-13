@@ -9,5 +9,4 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   name: styx
   namespace: {{.Release.Namespace}}
-spec:
-  clusterIP: None
+  spec:
