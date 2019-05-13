@@ -7,8 +7,10 @@ metadata:
 spec:
   gateways:
   - primary-gateway
+  - mesh
   hosts:
   - '{{- .Release.Namespace -}}-app.tidepool.org'
+  - api-internal.{{- .Release.Namespace -}}.svc.cluster.local
   http:
   - corsPolicy:
       allowCredentials: true
