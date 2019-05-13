@@ -100,7 +100,7 @@ Create chart name and version as used by the chart label.
 Create name for the external gateway.
 */}}
 {{- define "charts.gateway.external" -}}
-{{include "charts.protocol" .}}://{{include "charts.host.api" .}}
+https://api-ext
 {{- end -}}
 
 {{/*
