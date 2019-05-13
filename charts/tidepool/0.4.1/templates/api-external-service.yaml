@@ -12,4 +12,3 @@ metadata:
 spec:
   type: ExternalName
   externalName: {{.Release.Namespace}}-api.tidepool.org
-  -
