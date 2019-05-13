@@ -9,7 +9,11 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   name: styx
   namespace: {{.Release.Namespace}}
-  spec:
+spec:
+  ports:
+  - name: "{{.Values.export.port}}"
+    port: {{.Values.export.port}}
+    targetPort: {{.Values.export.port}}
   selector:
     app: export
     app.kubernetes.io/name: {{ include "charts.name" . }}
