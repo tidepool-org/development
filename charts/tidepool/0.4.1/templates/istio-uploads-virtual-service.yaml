@@ -1,4 +1,4 @@
-{{ if .Values.istio.gateway.enabled }}
+{{- if .Values.istio.gateway.enabled -}}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -44,4 +44,4 @@ spec:
         host: jellyfish.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9122
-{{ end }}
+{{- end -}}
