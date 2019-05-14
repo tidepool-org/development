@@ -1,4 +1,4 @@
-{{ if .Values.istio.gateway.enabled }}
+{{- if .Values.istio.gateway.enabled -}}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -1120,4 +1120,4 @@ spec:
         host: tide-whisperer.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9127
-{{ end }}
+{{- end -}}
