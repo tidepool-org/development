@@ -2,8 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose -f docker-compose.yml convert
-    kompose.version: 1.17.0 (a74acad)
+    sidecar.istio.io/inject: "false"
   creationTimestamp: null
   labels:
     io.kompose.service: mongo
