@@ -1,9 +1,8 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
-    io.kompose.service: mongo
+    app: mongo
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
@@ -13,7 +12,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      io.kompose.service: mongodb
+      app: mongodb
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: 1
@@ -23,9 +22,8 @@ spec:
     annotations:
       sidecar.istio.io/inject: "false"
     metadata:
-      creationTimestamp: null
       labels:
-        io.kompose.service: mongodb
+        app: mongodb
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:

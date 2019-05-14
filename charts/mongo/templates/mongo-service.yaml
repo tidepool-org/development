@@ -5,7 +5,7 @@ metadata:
     sidecar.istio.io/inject: "false"
   creationTimestamp: null
   labels:
-    io.kompose.service: mongodb
+    app: mongodb
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
@@ -18,7 +18,7 @@ spec:
     port: {{.Values.mongo.port}}
     targetPort: {{.Values.mongo.port}}
   selector:
-    io.kompose.service: mongodb
+    app: mongodb
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 status:
