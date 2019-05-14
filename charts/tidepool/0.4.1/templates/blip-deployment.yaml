@@ -44,13 +44,6 @@ spec:
         - name: WEBPACK_DEVTOOL
           value: cheap-module-eval-source-map
         image: "{{ .Values.blip.image }}"
-        resources:
-          limits:
-            cpu: "100m"
-            memory: "128Mi"
-          requests:
-            cpu: "100m"
-            memory: "128Mi"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: blip
         command: ["/bin/sh"]
