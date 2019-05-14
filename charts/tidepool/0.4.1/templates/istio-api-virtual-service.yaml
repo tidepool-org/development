@@ -12,7 +12,7 @@ spec:
   - '{{- .Release.Namespace -}}-api.tidepool.org'
   - internal-api.{{- .Release.Namespace -}}.svc.cluster.local
   http:
-  - corsPolicy:
+  - corsPolicy: &id001
       allowCredentials: true
       allowHeaders:
       - authorization
@@ -44,28 +44,7 @@ spec:
         host: platform-auth.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9222
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|POST|DELETE
@@ -76,28 +55,7 @@ spec:
         host: platform-auth.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9222
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|POST|DELETE|OPTIONS
@@ -108,28 +66,7 @@ spec:
         host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|PUT|DELETE
@@ -140,28 +77,7 @@ spec:
         host: platform-auth.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9222
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|DELETE
@@ -172,28 +88,7 @@ spec:
         host: platform-auth.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9222
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         exact: GET
@@ -204,28 +99,7 @@ spec:
         host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|POST|DELETE
@@ -236,28 +110,7 @@ spec:
         host: platform-image.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9226
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         exact: GET
@@ -268,28 +121,7 @@ spec:
         host: platform-auth.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9222
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|POST
@@ -300,28 +132,7 @@ spec:
         host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         exact: GET
@@ -332,28 +143,7 @@ spec:
         host: platform-blob.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9225
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|PUT|DELETE
@@ -364,28 +154,7 @@ spec:
         host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|POST|DELETE
@@ -396,28 +165,7 @@ spec:
         host: platform-image.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9226
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|PUT|DELETE
@@ -428,28 +176,7 @@ spec:
         host: platform-auth.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9222
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|POST|DELETE
@@ -460,28 +187,7 @@ spec:
         host: platform-blob.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9225
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         exact: DELETE
@@ -492,28 +198,7 @@ spec:
         host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|DELETE
@@ -524,28 +209,7 @@ spec:
         host: platform-blob.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9225
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|PUT|DELETE
@@ -556,28 +220,7 @@ spec:
         host: platform-task.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9224
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|DELETE
@@ -588,28 +231,7 @@ spec:
         host: platform-user.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9221
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
@@ -622,28 +244,7 @@ spec:
         host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
@@ -656,28 +257,7 @@ spec:
         host: platform-user.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9221
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         exact: GET
@@ -688,28 +268,7 @@ spec:
         host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: POST|PUT|DELETE
@@ -720,28 +279,7 @@ spec:
         host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|PUT|DELETE
@@ -752,28 +290,7 @@ spec:
         host: platform-image.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9226
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
@@ -786,28 +303,7 @@ spec:
         host: seagull.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9120
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
@@ -820,28 +316,7 @@ spec:
         host: highwater.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9191
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
@@ -854,28 +329,7 @@ spec:
         host: hydrophone.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9157
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
@@ -888,28 +342,7 @@ spec:
         host: message-api.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9119
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
@@ -922,28 +355,7 @@ spec:
         host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|POST
@@ -954,28 +366,7 @@ spec:
         host: platform-task.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9224
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
@@ -988,28 +379,7 @@ spec:
         host: export.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9300
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
@@ -1020,28 +390,7 @@ spec:
         host: gatekeeper.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9123
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         exact: GET
@@ -1052,28 +401,7 @@ spec:
         host: platform-data.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9220
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
@@ -1086,28 +414,7 @@ spec:
         host: shoreline.{{- .Release.Namespace -}}.svc.cluster.local
         port:
           number: 9107
-  - corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOrigin:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 300s
+  - corsPolicy: *id001
     match:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
