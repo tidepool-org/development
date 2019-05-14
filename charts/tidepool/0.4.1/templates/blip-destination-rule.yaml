@@ -1,0 +1,10 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: blip-nomtls
+  namespace: {{.Release.Namespace}}
+spec:
+  host: blip.{{.Release.Namespace}}.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: DISABLE
