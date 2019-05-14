@@ -1,0 +1,22 @@
+{{ if .Values.istio.gateway.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: primary-gateway
+  namespace: '{{.Release.Namespace}}'
+servers:
+- hosts:
+  - '{{- .Release.Namespace -}}-app.tidepool.org'
+  - '{{- .Release.Namespace -}}-api.tidepool.org'
+  - '{{- .Release.Namespace -}}-uploads.tidepool.org'
+  port:
+    name: https-443
+    number: 443
+    protocol: HTTPS
+  tls:
+    credentialName: tidepool-org
+    mode: SIMPLE
+spec:
+  selector:
+    istio: ingressgateway
+{{ end }}
