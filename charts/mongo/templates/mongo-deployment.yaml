@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: mongo
+    app: mongodb
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
@@ -20,7 +20,7 @@ spec:
     type: Recreate
   template:
     annotations:
-      sidecar.istio.io/inject: "false"
+      "sidecar.istio.io/inject": "false"
     metadata:
       labels:
         app: mongodb
