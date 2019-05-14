@@ -47,7 +47,7 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: blip
         command: ["/bin/sh"]
-        args: ["-c", "yarn build && yarn server"]
+        args: ["-c", "yarn server"]
         ports:
         - containerPort: {{.Values.blip.port}}
       restartPolicy: Always
