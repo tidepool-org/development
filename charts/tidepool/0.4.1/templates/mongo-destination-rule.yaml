@@ -2,6 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: mongo-nomtls
+  namespace: {{.Release.Namespace}}
 spec:
   host: mongodb.{{.Release.Namespace}}.svc.cluster.local
   trafficPolicy:
