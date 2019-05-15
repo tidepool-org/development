@@ -46,30 +46,30 @@ spec:
     hostnameOverride: ""
     includeSecrets: false
     blip:
-      image: tidepool/blip:develop-664da80725208165245f6b2118191334a7748aa1
+      image: tidepool/blip:develop-e72b445d57f404f091569193a97a6239c36ce82a
     export:
       image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
     gatekeeper:
-      image: tidepool/gatekeeper:develop-03783566fdb5568ad39a9d89cca58a872d8ec017
+      image: tidepool/gatekeeper:develop-9b8e58227a946eae34debbe23f7748d7e9570b79
     highwater:
-      image: tidepool/highwater:develop-08302b595d1ccf49e2aea7c1b4b8f18eb2b509b2
+      image: tidepool/highwater:develop-3f0838c29e726230b616638d97f593ba07607bab
     hydrophone:
-      image: tidepool/hydrophone:develop-e330cb0f817fcc889038877c4923a271b9debd91
+      image: tidepool/hydrophone:develop-3b621eb9873d97d76cafbeab8edaab398217dd3b
       ses:
         fromAddress: "Tidepool <noreply@tidepool.org>"
     jellyfish:
       enabled: true
-      image: tidepool/jellyfish:develop-3409448a4dcd8f5de7167c7525c3cd89cedadf95
+      image: tidepool/jellyfish:develop-942156b4166dc5b158bf53fe8826872be62fe44e
       storage: "aws/s3"
       bucket: "" # ensures that the generated bucket name is used
     messageapi:
-      image: tidepool/message-api:develop-486bf28c4b1266ef05728122a3c696ab0833e51e
+      image: tidepool/message-api:develop-3c23130779e5286a404c439bed49c18186a7711a
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
-      image: tidepool/platform-auth:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
+      image: tidepool/platform-auth:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
     platformBlob:
-      image: tidepool/platform-blob:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
+      image: tidepool/platform-blob:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
       service:
         unstructured:
           store:
@@ -78,9 +78,9 @@ spec:
               bucket: "" # ensures that the generated bucket name is used
               prefix: "blobs"
     platformData:
-      image: tidepool/platform-data:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
+      image: tidepool/platform-data:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
     platformImage:
-      image: tidepool/platform-image:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
+      image: tidepool/platform-image:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
       service:
         unstructured:
           store:
@@ -89,18 +89,18 @@ spec:
               bucket: ""  # ensures that the generated bucket name is used
               prefix: "images"
     platformMigrations:
-      image: tidepool/platform-migrations:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
+      image: tidepool/platform-migrations:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
     platformNotification:
-      image: tidepool/platform-notification:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
+      image: tidepool/platform-notification:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
     platformTask:
-      image: tidepool/platform-task:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
+      image: tidepool/platform-task:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
     platformTools:
-      image: tidepool/platform-tools:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
+      image: tidepool/platform-tools:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
     platformUser:
-      image: tidepool/platform-user:develop-1ae74fdb2e67c8187c4d81b44cc50dea96ee5a0c
+      image: tidepool/platform-user:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
     seagull:
       image: tidepool/seagull:develop-5252952843dfe47536bc472e88c6e0017b316eb5
     shoreline:
-      image: tidepool/shoreline:develop-6120cf944c6184e6f7d7e785e020a7213851be76
+      image: tidepool/shoreline:develop-ad5025eeccb9fa3a3fde346391194ac85de01ce0
     tidewhisperer:
-      image: tidepool/tide-whisperer:develop-7504db7c973a3624bc66296626b61be8e5ff5ea7
+      image: tidepool/tide-whisperer:develop-26174c02c95fe1d5b092fea68b7046fd3fc1e798
