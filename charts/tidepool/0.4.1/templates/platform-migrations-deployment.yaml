@@ -17,7 +17,8 @@ spec:
       app: platform-migrations
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: 1
+  replicas: {{.Values.replicas}}
+  revisionHistoryLimit: {{.Values.revisionHistoryLimit}}
   strategy: {}
   template:
     metadata:

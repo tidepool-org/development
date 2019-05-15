@@ -6,6 +6,8 @@ aws:
   region: us-west-2
 includeSecrets: true
 usessl: true
+replicas: 1
+revisionHistoryLimit: 3
 resources:
   limits:
     cpu: "75m"
