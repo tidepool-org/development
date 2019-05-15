@@ -1,4 +1,4 @@
-{{- if .Values.istio.gateway.enabled -}}
+{{- if .Values.istio.enabled -}}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:

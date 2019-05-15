@@ -1,4 +1,4 @@
-{{- if .Values.istio.gateway.enabled -}}
+{{- if .Values.istio.mtls.enabled -}}
 apiVersion: "networking.istio.io/v1alpha3"
 kind: "DestinationRule"
 metadata:
