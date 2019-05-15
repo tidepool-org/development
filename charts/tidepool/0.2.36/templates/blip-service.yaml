@@ -23,6 +23,7 @@ metadata:
   name: blip
   namespace: {{.Release.Namespace}}
 spec:
+  type: NodePort
   ports:
   - name: "{{.Values.blip.port}}"
     port: {{.Values.blip.port}}
