@@ -1,0 +1,110 @@
+# datadog-agent.yaml
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: datadog-secret
+  labels:
+    app: "datadog"
+type: Opaque
+data:
+  api-key: "NGJlM2IwMDJmM2Q2ZWQ5MjQxZDA1OTNkNTc1MDI5Y2E="
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: datadog-agent
+spec:
+  template:
+    metadata:
+      labels:
+        app: datadog-agent
+      name: datadog-agent
+    spec:
+      serviceAccountName: datadog-agent
+      containers:
+      - image: datadog/agent:latest
+        imagePullPolicy: Always
+        name: datadog-agent
+        ports:
+          - containerPort: 8125
+            # Custom metrics via DogStatsD - uncomment this section to enable custom metrics collection
+            # hostPort: 8125
+            name: dogstatsdport
+            protocol: UDP
+          - containerPort: 8126
+            # Trace Collection (APM) - uncomment this section to enable APM
+            # hostPort: 8126
+            name: traceport
+            protocol: TCP
+        env:
+          - name: DD_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: datadog-secret
+                key: api-key
+          - name: DD_SITE
+            # Set DD_SITE to datadoghq.eu to send your Agent data to the Datadog EU site 
+            value: "datadoghq.com"
+          - name: DD_COLLECT_KUBERNETES_EVENTS
+            value: "true"
+          - name: DD_LEADER_ELECTION
+            value: "true"
+          - name: KUBERNETES
+            value: "true"
+          - name: DD_KUBERNETES_KUBELET_HOST
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          - name: DD_APM_ENABLED
+            value: "true"
+          - name: DD_PROCESS_AGENT_ENABLED
+            value: "true"
+          - name: DD_LOGS_ENABLED
+            value: "true"
+          - name: DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL
+            value: "true"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        volumeMounts:
+          - name: dockersocket
+            mountPath: /var/run/docker.sock
+          - name: procdir
+            mountPath: /host/proc
+            readOnly: true
+          - name: cgroups
+            mountPath: /host/sys/fs/cgroup
+            readOnly: true
+          - name: passwd
+            mountPath: /etc/passwd
+            readOnly: true
+          - name: pointerdir    
+            mountPath: /opt/datadog-agent/run 
+        livenessProbe:
+          exec:
+            command:
+            - ./probe.sh
+          initialDelaySeconds: 15
+          periodSeconds: 5
+      volumes:
+        - hostPath:
+            path: /var/run/docker.sock
+          name: dockersocket
+        - hostPath:
+            path: /proc
+          name: procdir
+        - hostPath:
+            path: /sys/fs/cgroup
+          name: cgroups
+        - hostPath:
+            path: /etc/passwd
+          name: passwd
+        - hostPath:
+            path: /opt/datadog-agent/run
+          name: pointerdir
+          
