@@ -1,5 +1,8 @@
 #!/bin/bash
-matches=$(match_cluster $1)
+# switch to the cluster whose name matches the given prefix
+#
+prefix=$1
+matches=$(match_cluster $prefix)
 matcharray=($matches)
 count=${#matcharray[@]}
 if [ $count -eq 1 ]
