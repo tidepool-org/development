@@ -1,2 +1,7 @@
 #!/bin/bash
+# identify virtual hosts in use
+# assumes blip is the only service exposing hosts
+# assumes blip label
+# assumes Ambassador annotations
+
 kubectl get svc -o yaml --all-namespaces -l io.kompose.service=blip | grep host | sed -e "s/ *host: *//"
