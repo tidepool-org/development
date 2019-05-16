@@ -1,4 +1,6 @@
 #!/bin/bash 
+# Report on whether the virtual services provided by the current K8s cluster are being routed via DNS
+
 echo "current cluster: $(kubectl config current-context)"
 recordSets=$(aws route53 list-resource-record-sets --hosted-zone-id Z2895YZY6K7CA5)
 elb=$(identify_ambassador_loadbalancer)
