@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install of upgrade Weave Flux
+# Install/upgrade Weave Flux
 #
 # If run within the a Git repo, it will use the remote origin repo as the source repo and the current branch as the source branch.
 
