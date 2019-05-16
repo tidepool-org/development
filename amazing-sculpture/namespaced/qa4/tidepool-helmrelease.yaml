@@ -1,0 +1,106 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: tidepool
+  namespace: qa4
+  annotations:
+    flux.weave.works/automated: "true"
+    flux.weave.works/tag.shoreline: "glob:master-*"
+    flux.weave.works/tag.tidewhisperer: "glob:master-*"
+    flux.weave.works/tag.blip: "glob:master-*"
+    flux.weave.works/tag.gatekeeper: "glob:master-*"
+    flux.weave.works/tag.highwater: "glob:master-*"
+    flux.weave.works/tag.jellyfish: "glob:master-*"
+    flux.weave.works/tag.mailhog: "semver:1.*"
+    flux.weave.works/tag.export: "glob:master-*"
+    flux.weave.works/tag.seagull: "glob:master-*"
+    flux.weave.works/tag.hydrophone: "glob:master-*"
+    flux.weave.works/tag.messageapi: "glob:master-*"
+    flux.weave.works/tag.platformAuth: "glob:master-*"
+    flux.weave.works/tag.platformBlob: "glob:master-*"
+    flux.weave.works/tag.platformData: "glob:master-*"
+    flux.weave.works/tag.platformImage: "glob:master-*"
+    flux.weave.works/tag.platformMigrations: "glob:master-*"
+    flux.weave.works/tag.platformNotification: "glob:master-*"
+    flux.weave.works/tag.platformTask: "glob:master-*"
+    flux.weave.works/tag.platformTools: "glob:master-*"
+    flux.weave.works/tag.platformUser: "glob:master-*"
+spec:
+  skipDepUpdate: true
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: charts/tidepool/0.1.0
+    ref: k8s
+  values:
+    usessl: true
+    domain: "tidepool.org"
+    ambassador:
+      enabled: false
+    mongo:
+      enabled: false
+    gloo:
+      enabled: false
+      namespace:
+        create: false
+    hostnameOverride: ""
+    includeSecrets: false
+    blip:
+      image: tidepool/blip:master-1547d4a5bfcaff540544f989f2adb5ce299a6771
+    export:
+      image: tidepool/export:master-17c8de7344eea3d8a404e1c112c2c7f03e88321e
+    gatekeeper:
+      image: tidepool/gatekeeper:master-ff9239c90d432a251024247380e54123896beb03
+    highwater:
+      image: tidepool/highwater:master-1a7a0f9ce2af300a9b366b69043afaf28befdb99
+    hydrophone:
+      image: tidepool/hydrophone:master-5a098f25546a3a2f0e1dfbbc51735589dcf03879
+      ses:
+        fromAddress: "Tidepool <noreply@tidepool.org>"
+    jellyfish:
+      enabled: true
+      image: tidepool/jellyfish:master-3409448a4dcd8f5de7167c7525c3cd89cedadf95
+      storage: "aws/s3"
+      bucket: "" # ensures that the generated bucket name is used
+    messageapi:
+      image: tidepool/message-api:master-1087d1378392afaadef077b82af64d0904036c20
+    mailhog:
+      image: mailhog/mailhog:v1.0.0
+    platformAuth:
+      image: tidepool/platform-auth:master-3468cb7a3d6f0cf5971a281022586a9462668737
+    platformBlob:
+      image: tidepool/platform-blob:master-3468cb7a3d6f0cf5971a281022586a9462668737
+      service:
+        unstructured:
+          store:
+            type: s3
+            s3:
+              bucket: "" # ensures that the generated bucket name is used
+              prefix: "blobs"
+    platformData:
+      image: tidepool/platform-data:master-3468cb7a3d6f0cf5971a281022586a9462668737
+    platformImage:
+      image: tidepool/platform-image:master-3468cb7a3d6f0cf5971a281022586a9462668737
+      service:
+        unstructured:
+          store:
+            type: s3
+            s3:
+              bucket: ""  # ensures that the generated bucket name is used
+              prefix: "images"
+    platformMigrations:
+      image: tidepool/platform-migrations:master-3468cb7a3d6f0cf5971a281022586a9462668737
+    platformNotification:
+      image: tidepool/platform-notification:master-3468cb7a3d6f0cf5971a281022586a9462668737
+    platformTask:
+      image: tidepool/platform-task:master-3468cb7a3d6f0cf5971a281022586a9462668737
+    platformTools:
+      image: tidepool/platform-tools:master-3468cb7a3d6f0cf5971a281022586a9462668737
+    platformUser:
+      image: tidepool/platform-user:master-3468cb7a3d6f0cf5971a281022586a9462668737
+    seagull:
+      image: tidepool/seagull:master-8b9d5288a81f937e16013202876f7167c47a30ac
+    shoreline:
+      image: tidepool/shoreline:master-b6505c04b001d63c89d36d13de568c63a5eeac6c
+    tidewhisperer:
+      image: tidepool/tide-whisperer:master-1995cc2dd7f5f3ae0621d82c9716748eab108d60

@@ -1,0 +1,21 @@
+#!/usr/local/bin/python3
+# creates/updates DNS aliases for the virtual hosts served by the gateway used by Ambassador in the current cluster
+import os
+import subprocess
+import sys
+import json
+import tempfile
+
+input = subprocess.check_output(['get_routes.py']).decode('utf-8')
+hostedZoneId="Z2895YZY6K7CA5" #corresponds to tidepool.org
+tmp=tempfile.NamedTemporaryFile(suffix=".json")
+# Open the file for writing.
+with open(tmp.name, 'w') as f:
+    f.write(input)
+    f.flush()
+    f.seek(0)
+print(input)
+out = subprocess.check_output(['aws', 'route53', 'change-resource-record-sets',  '--hosted-zone-id', hostedZoneId, '--change-batch', 'file://' + tmp.name])
+print(out.decode("utf-8"))
+
+

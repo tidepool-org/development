@@ -1,0 +1,37 @@
+#! set up new cluster running the Tidepool services
+#install cli tools
+brew install eksctl
+brew install fluxctl
+brew install kubernetes-helm
+brew install kubernetes-cli
+#
+# create GitHub access key and store in ~/.secrets/github_access_tken
+
+# create cluster
+eksctl create cluster --nodes-min 5 --nodes-max=6 --region=us-west-2
+
+# install tiller
+kubectl -n kube-system create sa tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+helm init --skip-refresh --upgrade --service-account tiller --history-max 200
+
+#clone weave configuration
+#git clone github.com/tidepool-org/dev-ops
+BRANCH=newbranch
+git checkout -b $BRANCH
+
+#make changes
+
+#create directory for each environment desired
+
+BIN="dev-ops/k8s/bin"
+# install Weave flux
+$BIN/install_weave
+
+# install deploy key into branch w/ write access to that weave can update cluster
+$BIN/push_deploy_key
+# update aws-auth configmap to add tidepool ops users
+$BIN/install_users
+
+# set DNS routes
+$BIN/set_routes

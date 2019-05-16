@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapRoles: |
+    - groups:
+      - system:bootstrappers
+      - system:nodes
+      rolearn: arn:aws:iam::118346523422:role/eksctl-amazing-sculpture-15494061-NodeInstanceRole-1GRK11H8TBRA9
+      username: system:node:{{EC2PrivateDNSName}}
+  mapUsers: |
+    - userarn: arn:aws:iam::118346523422:user/lennartgoedhart-cli
+      username: lennartgoedhart-cli
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::118346523422:user/benderr-cli
+      username: benderr-cli
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::118346523422:user/derrick-cli
+      username: derrick-cli
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::118346523422:user/mikeallgeier-cli
+      username: mikeallgeier-cli
+      groups:
+        - system:masters

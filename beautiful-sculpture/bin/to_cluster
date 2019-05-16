@@ -1,0 +1,19 @@
+#!/bin/bash
+found=none
+for name in amazing-sculpture-1549406110.us-west-2.eksctl.io beautiful-sculpture-1557893686.us-west-2.eksctl.io
+do
+   if [[ $name == "$1"* ]]
+   then
+       if [ "$found" == "none" ]
+       then
+           found=$name
+       else 
+	   echo "Multiple matches."
+	   exit 1
+       fi
+   fi
+done
+if [ $found != "none" ]
+then
+    kubectl config use-context derrick@$found
+fi

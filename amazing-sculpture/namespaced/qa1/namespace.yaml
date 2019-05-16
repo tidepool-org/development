@@ -1,0 +1,10 @@
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: qa1
+  labels:
+      istio-injection: disabled
+      linkerd.io/inject: disabled
+

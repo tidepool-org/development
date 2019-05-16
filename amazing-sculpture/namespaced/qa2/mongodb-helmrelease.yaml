@@ -1,0 +1,18 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: tidepool-mongo
+  namespace: qa2
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  skipDepUpdate: true
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: charts/mongo
+    ref: k8s
+  values:
+    mongo:
+      image: mongo:3.2
+
+
