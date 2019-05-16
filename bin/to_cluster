@@ -1,19 +1,16 @@
 #!/bin/bash
-found=none
-for name in amazing-sculpture-1549406110.us-west-2.eksctl.io beautiful-sculpture-1557893686.us-west-2.eksctl.io
-do
-   if [[ $name == "$1"* ]]
-   then
-       if [ "$found" == "none" ]
-       then
-           found=$name
-       else 
-	   echo "Multiple matches."
-	   exit 1
-       fi
-   fi
-done
-if [ $found != "none" ]
+matches=$(match_cluster $1)
+matcharray=($matches)
+count=${#matcharray[@]}
+if [ $count -eq 1 ]
 then
     kubectl config use-context derrick@$found
+    echo 1
+elif [ $count -eq 0 ]
+then
+    echo "no matching cluster"
+    exit 1
+else
+    echo "multiple matching clusters: $matches"
+    exit 1
 fi

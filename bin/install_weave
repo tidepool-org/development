@@ -18,8 +18,10 @@ else
     INSTALL_CRDS=true
 fi
 
+BASE=$(git rev-parse --show-toplevel)/clusters/
+CURRENT_PATH=$(pwd | sed -e "s#^$BASE##" -e "s#/.*##")/flux
 SOURCE_BRANCH=${2:-${CURRENT_BRANCH}}
-SOURCE_PATH=${3:-k8s}
+SOURCE_PATH=${3:-$CURRENT_PATH}
 SOURCE_REPO=${4:-${CURRENT_REPO}}
 
 read -p "Install weave: install_crds=${INSTALL_CRDS} branch=${SOURCE_BRANCH} path=${SOURCE_PATH} repo=${SOURCE_REPO}? (y|N)  " -n 1 -r

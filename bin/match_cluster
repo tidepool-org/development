@@ -1,0 +1,9 @@
+#!/bin/bash
+clusters=$(kubectl config get-clusters | tail -n +2)
+for name in $clusters
+do
+   if [[ $name == "$1"* ]]
+   then
+       echo $name
+   fi
+done
