@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xv
 # Install/upgrade Weave Flux
 #
 # If run within the a Git repo, it will use the remote origin repo as the source repo and the current branch as the source branch.
@@ -19,17 +19,22 @@ else
 fi
 
 BASE=$(git rev-parse --show-toplevel)/clusters/
-CURRENT_PATH=$(pwd | sed -e "s#^$BASE##" -e "s#/.*##")/flux
+CURRENT_PATH=clusters/$(pwd | sed -e "s#^$BASE##" -e "s#/.*##")/flux
 SOURCE_BRANCH=${2:-${CURRENT_BRANCH}}
 SOURCE_PATH=${3:-$CURRENT_PATH}
 SOURCE_REPO=${4:-${CURRENT_REPO}}
 
+cd /tmp
+rm -rf flux
+git clone https://github.com/weaveworks/flux/
+cd flux
+
 read -p "Install weave: install_crds=${INSTALL_CRDS} branch=${SOURCE_BRANCH} path=${SOURCE_PATH} repo=${SOURCE_REPO}? (y|N)  " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-    helm upgrade  \
-      -i flux \
-      --repo https://weaveworks.github.io/flux \
+    helm repo add weaveworks https://weaveworks.github.io/flux
+    helm install  \
+      --name flux \
       --set rbac.create=true \
       --set helmOperator.create=true \
       --set helmOperator.chartsSyncInterval=1m \
@@ -41,7 +46,8 @@ then
       --set git.branch=${SOURCE_BRANCH} \
       --set git.pollInterval=1m \
       --set git.timeoout=40s \
-      flux
+      --namespace default \
+      chart/flux
 else
 	echo "No action taken."
 fi

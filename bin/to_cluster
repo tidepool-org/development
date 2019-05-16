@@ -4,8 +4,7 @@ matcharray=($matches)
 count=${#matcharray[@]}
 if [ $count -eq 1 ]
 then
-    kubectl config use-context derrick@$found
-    echo 1
+    kubectl config use-context derrick@$matches
 elif [ $count -eq 0 ]
 then
     echo "no matching cluster"
