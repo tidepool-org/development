@@ -1,5 +1,5 @@
 #!/usr/local/bin/python3
-# makes changes to DNS resource records 
+# creates/updates DNS aliases for the virtual hosts served by the gateway used by Ambassador in the current cluster
 import os
 import subprocess
 import sys

@@ -13,5 +13,5 @@ configmap["data"]["mapUsers"]=USERS
 out=json.dumps(configmap)
 process = subprocess.Popen(["kubectl", "apply", "-f", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 process.stdin.write(out.encode("utf-8"))
-print(process.communicate()[0])
+print(process.communicate()[0].decode("utf-8"))
 
