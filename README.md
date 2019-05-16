@@ -110,6 +110,7 @@ In the `.env` file, the following environment variables should have new, random 
 * `TIDEPOOL_DOCKER_PLATFORM_AUTH_SERVICE_SECRET`
 * `TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_SECRET`
 * `TIDEPOOL_DOCKER_PLATFORM_DATA_SERVICE_SECRET`
+* `TIDEPOOL_DOCKER_PLATFORM_IMAGE_SERVICE_SECRET`
 * `TIDEPOOL_DOCKER_PLATFORM_NOTIFICATION_SERVICE_SECRET`
 * `TIDEPOOL_DOCKER_PLATFORM_TASK_SERVICE_SECRET`
 * `TIDEPOOL_DOCKER_PLATFORM_USER_SERVICE_SECRET`
@@ -218,6 +219,7 @@ You can choose from the following active repositories:
 | Repository Name                                                  | Docker Container Name (`<docker-container-name>`) | Description                     | Language                       | Git Clone URL (`<git-clone-url>`)                  | Default Clone Directory (`<default-clone-directory>`)     |
 | ---------------------------------------------------------------- | ------------------------------------------------- | ------------------------------- | ------------------------------ | -------------------------------------------------- | --------------------------------------------------------- |
 | [blip](https://github.com/tidepool-org/blip)                     | blip                                              | Web (ie. http://localhost:3000) | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/blip.git           | blip                                                      |
+| [export](https://github.com/tidepool-org/export)                 | export                                            | Export                          | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/export.git         | export                                                    |
 | [gatekeeper](https://github.com/tidepool-org/gatekeeper)         | gatekeeper                                        | Permissions                     | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/gatekeeper.git     | gatekeeper                                                |
 | [hakken](https://github.com/tidepool-org/hakken)                 | hakken                                            | Discovery                       | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/hakken.git         | hakken                                                    |
 | [highwater](https://github.com/tidepool-org/highwater)           | highwater                                         | Metrics                         | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/highwater.git      | highwater                                                 |
@@ -237,6 +239,7 @@ Please note that the `platform` repository actually contains source code for mul
 | platform-auth         | Authentication                   |
 | platform-blob         | Blob Storage                     |
 | platform-data         | Data Ingestion (next generation) |
+| platform-image        | Images                           |
 | platform-migrations   | Database Migrations              |
 | platform-notification | Notifications (TBD)              |
 | platform-task         | Background Jobs                  |
@@ -759,6 +762,7 @@ Each container and its contained service have their own standard port where clie
 | Service                                                           | Standard Port(s)       |
 | ----------------------------------------------------------------- | ---------------------- |
 | [blip](https://github.com/tidepool-org/blip)                      | N/A (see below)        |
+| [export](https://github.com/tidepool-org/export)                  | 9300                   |
 | [gatekeeper](https://github.com/tidepool-org/gatekeeper)          | 9123                   |
 | [hakken](https://github.com/tidepool-org/hakken)                  | 8000                   |
 | [highwater](https://github.com/tidepool-org/highwater)            | 9191                   |
@@ -768,6 +772,7 @@ Each container and its contained service have their own standard port where clie
 | [platform-auth](https://github.com/tidepool-org/platform)         | 9222                   |
 | [platform-blob](https://github.com/tidepool-org/platform)         | 9225                   |
 | [platform-data](https://github.com/tidepool-org/platform)         | 9220                   |
+| [platform-image](https://github.com/tidepool-org/platform)        | 9226                   |
 | [platform-migrations](https://github.com/tidepool-org/platform)   | N/A (see below)        |
 | [platform-notification](https://github.com/tidepool-org/platform) | 9223                   |
 | [platform-task](https://github.com/tidepool-org/platform)         | 9224                   |
