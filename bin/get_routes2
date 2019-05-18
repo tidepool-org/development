@@ -1,0 +1,13 @@
+#!/bin/bash
+# sets DNS entries for all virtualhosts served by the load balancer in the current K8s cluster
+
+INGRESS_HOST=$(identify_loadbalancers)
+HOSTED_ZONE=tidepool.org.
+ZONEID=$(aws route53 list-hosted-zones|jq -r '.HostedZones[]|select(.Name == "'"$HOSTED_ZONE"'").Id')
+for virtual_host in $(virtual_hosts)
+do
+    RECORD=virtual_host
+    RS='{ "Changes": [{"Action": "UPSERT", "ResourceRecordSet":{"ResourceRecords":[{"Value": "'$INGRESS_HOST'"}],"Type": "A","Name": "'$RECORD'","TTL": 300} } ]}'
+    aws route53 change-resource-record-sets --hosted-zone-id $ZONEID --change-batch "$RS"
+done
+

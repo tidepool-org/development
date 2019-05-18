@@ -2,8 +2,10 @@
 # Report on whether the virtual services provided by the current K8s cluster are being routed via DNS
 # Assumes only one elb is present
 
+ZONEID=$(get_zone_id)
 echo "current cluster: $(kubectl config current-context)"
-recordSets=$(aws route53 list-resource-record-sets --hosted-zone-id Z2895YZY6K7CA5)
+recordSets=$(aws route53 list-resource-record-sets --hosted-zone-id ${ZONEID})
+echo $recordSets
 elb=$(identify_loadbalancers)
 hosts=$(virtual_hosts)
 mismatch=false

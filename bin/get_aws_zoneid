@@ -1,0 +1,5 @@
+#!/bin/bash 
+# Get the Amazon zone id for the given domain.  If no domain given, assume tidepool.org
+
+HOSTED_ZONE=${1:-tidepool.org}.
+aws route53 list-hosted-zones|jq -r '.HostedZones[]|select(.Name == "'"$HOSTED_ZONE"'").Id' | sed -e "s#/hostedzone/##"
