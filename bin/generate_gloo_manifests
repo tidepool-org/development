@@ -295,20 +295,27 @@ def gloo_gateway_labels(base):
     labels["gloo"] = "gateway-proxy"
     return labels
 
-def gloo_gateway_metadata(base):
+def gloo_gateway_metadata(base, useSSL):
     metadata = dict()
     metadata["labels"] = gloo_gateway_labels(base)
-    metadata["name"] = base + "-gateway-proxy"
+    suffix = "-ssl" if useSSL else ""
+    metadata["name"] = base + "-gateway-proxy" + suffix
     metadata["namespace"] = "{{.Release.Namespace}}"
     return metadata
 
-def gloo_gateway_ports():
+def gloo_gateway_ports(useSSL):
     ports = list()
     port = dict()
-    port["name"] = "http"
-    port["port"] = 8080
-    port["protocol"] = "TCP"
-    port["targetPort"] = 8080
+    if useSSL:
+        port["name"] = "https"
+        port["port"] = 443
+        port["protocol"] = "TCP"
+        port["targetPort"] = 8443
+    else:
+        port["name"] = "http"
+        port["port"] = 80
+        port["protocol"] = "TCP"
+        port["targetPort"] = 8080
     ports.append(port)
     return ports
 
@@ -317,19 +324,52 @@ def gloo_gateway_selector():
     selector["gloo"] = "gateway-proxy"
     return selector
 
-def gloo_gateway_spec():
+def gloo_gateway_spec(useSSL):
     spec = dict()
-    spec["externalTrafficPolicy"] = "Cluster"
-    spec["ports"] = gloo_gateway_ports()
+    spec["ports"] = gloo_gateway_ports(useSSL)
     spec["selector"] = gloo_gateway_selector()
+    spec["externalTrafficPolicy"] = "Cluster"
+    spec["type"] = "LoadBalancer"
     return spec
 
-def gloo_gateway_proxy(base):
+def gloo_internal_metadata(base):
+    metadata = dict()
+    metadata["name"] = base + ".gateway-proxy.svc.cluster.local"
+    metadata["namespace"] = "{{.Release.Namespace}}"
+    return metadata
+
+def gloo_internal_port():
+    port = dict()
+    port["port"] = 80
+    return port
+
+def gloo_internal_ports():
+    ports = list()
+    ports.append(gloo_internal_port())
+    return ports
+
+def gloo_internal_spec():
+    spec = dict()
+    spec["type"] = "ExternalName"
+    spec["externalName"] = "gateway-proxy.gloo-system.svc.cluster.local"
+    spec["ports"] = gloo_internal_ports()
+    return spec
+
+def gloo_internal_service(base):
      service = dict()
      service["apiVersion"] = "v1"
      service["kind"] = "Service"
-     service["metadata"] = gloo_gateway_metadata(base)
-     service["spec"] = gloo_gateway_spec()
+     service["metadata"] = gloo_internal_metadata(base)
+     service["spec"] = gloo_internal_spec()
+     return service
+
+def gloo_gateway_proxy(base, useSSL):
+     service = dict()
+     service["apiVersion"] = "v1"
+     service["kind"] = "Service"
+     service["metadata"] = gloo_gateway_metadata(base, useSSL)
+     service["spec"] = gloo_gateway_spec(useSSL)
+     service["ssl"] = useSSL
      return service
 
 def gloo_external_hostname(base):
@@ -339,7 +379,29 @@ def gloo_internal_hostname(base):
     return base + "-gateway-proxy." + "{{.Release.Namespace}}"
 
 """
-Example virtual service output:
+Example output:
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: api.gateway-proxy.svc.cluster.local
+  namespace: qa1
+spec:
+  type: ExternalName
+  externalName: gateway-proxy.gloo-system.svc.cluster.local
+  ports:
+  - port: 80
+---
+apiVersion: gateway.solo.io/v1
+kind: Gateway
+metadata:
+  name: gateway-ssl
+  namespace: gloo-system
+spec:
+  bindAddress: '::'
+  bindPort: 8443
+  ssl: true
+  useProxyProto: false
 ---
 apiVersion: v1
 kind: Service
@@ -419,4 +481,5 @@ for host,routes in gloo_routes_dict(ambassador_services).items():
     internal_virtual_service = gloo_virtual_service(routes, gloo_internal_hostname(base), None, False)
     write_manifest(output_dir, internal_virtual_service, base + "-internal-virtual-service")
     write_manifest(output_dir, external_virtual_service, base + "-external-virtual-service")
-    write_manifest(output_dir, gloo_gateway_proxy(base), base + "-gateway")
+    write_manifest(output_dir, gloo_gateway_proxy(base, True), base + "-gateway-proxy-ssl")
+    write_manifest(output_dir, gloo_internal_service(base), base + "-gateway-proxy-internal")
