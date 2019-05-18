@@ -13,7 +13,6 @@ BASE_STRING = """
             "Name": "qa1-app.tidepool.org",
             "Type": "A",
             "AliasTarget": {
-                "HostedZoneId": "Z18D5FSROUN65G",
                 "DNSName": "",
                 "EvaluateTargetHealth": false 
             }
