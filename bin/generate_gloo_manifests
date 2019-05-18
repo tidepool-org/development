@@ -91,7 +91,7 @@ def virtual_service_basename(host):
 
 def gloo_virtual_service_name(base):
     """Return the Gloo virtual service name."""
-    return base   
+    return "{{.Release.Namespace}}-" + base 
 
 def virtual_service_filename(base):
     """Return the Gloo virtual service name."""
@@ -131,12 +131,28 @@ def gloo_domains():
     domains.append(tidepool_server_name_from_base(base))
     return domains
 
+def gloo_sort_key(route):
+    matcher = route["matcher"]
+    if "regex" in matcher:
+        return len(matcher["regex"])
+    elif "prefix" in matcher:
+        return len(matcher["prefix"])
+    elif "exact" in matcher:
+        return len(matcher["exact"])
+    else:
+        return 0
+
+def gloo_ordered_routes(routes):
+    """Return a sorted list of http routes from least general to most general."""
+    # sort by length of prefix/regex from longest to
+    return sorted(routes, key=gloo_sort_key, reverse=True)
+
 def gloo_virtual_host(routes, base, cors):
     """Return a virtual host"""
     vh = dict()
     vh["domains"] = gloo_domains()
     vh["name"] = tidepool_server_name_from_base(base)
-    vh["routes"] = routes
+    vh["routes"] = gloo_ordered_routes(routes)
     vh["corsPolicy"] = cors
     return vh
 
