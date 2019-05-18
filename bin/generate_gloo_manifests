@@ -1,0 +1,340 @@
+#!/usr/local/bin/python3
+import json
+import os
+import subprocess
+import sys
+
+import yaml
+
+CHARTSDIR="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
+HEADER="{{- if .Values.gloo.enabled -}}\n"
+FOOTER="{{- end -}}\n"
+
+CORS_POLICY_STRING = """
+{
+    "allowCredentials": true,
+    "allowHeaders": [
+        "authorization",
+        "content-type",
+        "x-tidepool-session-token",
+        "x-tidepool-trace-request",
+        "x-tidepool-trace-session"
+    ],
+    "allowMethods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+        "OPTIONS"
+    ],
+    "allowOriginRegex": [
+        "*"
+    ],
+    "exposeHeaders": [
+        "x-tidepool-session-token",
+        "x-tidepool-trace-request",
+        "x-tidepool-trace-session"
+    ],
+    "maxAge": "300s"
+}
+"""
+CORS_POLICY=json.loads(CORS_POLICY_STRING)
+
+def ambassador_services_from(docs):
+    """Return the services from a set of K8s Manifests."""
+    services = []
+    for doc in docs:
+        if doc is not None:
+            for k,v in doc.items():
+                if k == "kind" and v == "Service":
+                    services.append(doc)
+    return services
+
+def write_manifest(dir, manifest, name):
+    """Write a single file containing Gloo manifests."""
+    filename = dir + "/" + "gloo-" + name + ".yaml"
+    with open(filename, 'w') as outfile:
+        outfile.write(HEADER)
+        yaml.dump(manifest, outfile, default_flow_style=False)
+        outfile.write(FOOTER)
+
+def metadata_from_ambassador_service(service):
+    """Return the metadata from object or None if it does not exist."""
+    if "metadata" in service:
+        metadata=service["metadata"]
+        return metadata
+    else:
+        return None
+
+def name_from_metadata(metadata):
+    """Return the name from object or None if it does not exist."""
+    if "name" in metadata:
+        return metadata["name"]
+    else:
+        return None
+
+def annotation_from_metadata(metadata):
+    """Return the Ambassador annotation string from a document."""
+    if "annotations" in metadata and metadata["annotations"]:
+        annotations = metadata["annotations"]
+        if "getambassador.io/config" in annotations:
+            return annotations["getambassador.io/config"]
+        else:
+            return None
+    else:
+        return None
+
+def virtual_service_basename(host):
+    """Return the Gloo virtual service name."""
+    return host.replace("default-", "").replace(".tidepool.org", "")
+
+def gloo_virtual_service_name(base):
+    """Return the Gloo virtual service name."""
+    return base   
+
+def virtual_service_filename(base):
+    """Return the Gloo virtual service name."""
+    return base + "-virtual-service.yaml"
+
+def tidepool_tls_secret():
+    """Return the Kubernetes name and namespace for the secret containing the TLS cert and key
+    for the domain (tidepool-org.org) being served."""
+    secret = dict()
+    secret["name"] = "tidepool-org"
+    secret["namespace"] = "default"
+    return secret
+
+def yaml_docs_from_metadata_string(metadata):
+    """Return a list of YAML objects from a YAML string."""
+    annotation_string = annotation_from_metadata(metadata)
+    if annotation_string is None:
+        return None
+    docs = list()
+    for raw_doc in annotation_string.split('\n---'):
+        try:
+            docs.append(yaml.load(raw_doc))
+        except SyntaxError:
+            docs.append(raw_doc)
+    return docs
+
+def gloo_metadata(base):
+    """Return metadata for virtual service"""
+    metadata = dict()
+    metadata["name"] = gloo_virtual_service_name(base)
+    metadata["namespace"] = "{{- .Release.Namespace -}}"
+    return metadata
+
+def gloo_domains():
+    """Return domains"""
+    domains = list()
+    domains.append(tidepool_server_name_from_base(base))
+    return domains
+
+def gloo_virtual_host(routes, base, cors):
+    """Return a virtual host"""
+    vh = dict()
+    vh["domains"] = gloo_domains()
+    vh["name"] = tidepool_server_name_from_base(base)
+    vh["routes"] = routes
+    vh["corsPolicy"] = cors
+    return vh
+
+def tidepool_server_name_from_base(base):
+    return "{{.Release.Namespace}}-" + base + ".tidepool.org"
+
+def gloo_virtual_service_ssl_domains(base):
+    """Return ssl domains"""
+    domains = list()
+    domains.append(tidepool_server_name_from_base(base))
+    return domains
+
+def gloo_virtual_service_ssl_config(base):
+    """Return the ssl config for the base"""
+    config = dict()
+    config["sniDomains"] = gloo_virtual_service_ssl_domains(base)
+    config["secretRef"] = tidepool_tls_secret()
+    return config
+
+def gloo_virtual_service_spec(routes, base, cors):
+    spec = dict()
+    spec["sslConfig"] = gloo_virtual_service_ssl_config(base)
+    spec["virtualHost"] = gloo_virtual_host(routes, base, cors)
+    return spec
+
+def gloo_virtual_service(routes, base, cors):
+    """Return a Gloo virtual service"""
+    if len(routes) > 0:
+        virtual_service = dict()
+        virtual_service["apiVersion"] = "gateway.solo.io/v1"
+        virtual_service["kind"] = "VirtualService"
+        virtual_service["metadata"] = gloo_metadata(base)
+        virtual_service["spec"] = gloo_virtual_service_spec(routes, base, cors)
+        return virtual_service
+    else:
+        return None
+
+def gloo_methods(doc):
+    methods = list()
+    if "method_regex" in doc and doc[ "method_regex"]:
+        methods = doc["method"].split("|")
+    else:
+        methods.append(doc["method"])
+    return methods
+
+def gloo_matcher(doc):
+    """Return a gloo matcher"""
+    matcher = dict()
+    if "prefix_regex" in doc and doc[ "prefix_regex"]:
+        matcher["regex"] = doc["prefix"]
+    elif "prefix" in doc and doc["prefix"]:
+        matcher["prefix"] = doc["prefix"]
+    matcher["methods"] = gloo_methods(doc)
+    return matcher
+
+def gloo_prefix_rewrite(path):
+    """Return a gloo prefix rewrite rule"""
+    prefix_rewrite = dict()
+    prefix_rewrite["prefixRewrite"] = path
+    return prefix_rewrite
+
+def gloo_route_plugins(doc):
+    """Return a gloo routePlugins"""
+    routePlugins = dict()
+    if "rewrite" not in doc:
+        routePlugins["prefixRewrite"] = gloo_prefix_rewrite("/")
+    elif doc["rewrite"] != "":
+        routePlugins["prefixRewrite"] = gloo_prefix_rewrite(doc["rewrite"])
+    else:  
+        return None
+    return routePlugins
+
+def gloo_upstream(doc):
+    """Return a gloo upstream."""
+    upstream = dict()
+    s = doc["service"]
+    name = doc["name"]
+    if ":" in s:
+        (svc_with_namespace,port) = s.split(":")
+    else:
+        svc_with_namespace = s
+    svc = svc_with_namespace.replace(".default","")
+    
+    upstream["name"] = "{{- .Release.Namespace -}}" + "-" + svc + "-" + port
+    upstream["namespace"] = "{{- .Release.Namespace -}}"
+    return upstream
+
+def gloo_single(doc):
+    """Return a gloo single."""
+    single = dict()
+    single["upstream"] = gloo_upstream(doc)
+    return single
+
+def gloo_route_action(doc):
+    """Return a gloo routeAction"""
+    routeAction = dict()
+    routeAction["single"] = gloo_single(doc)
+    return routeAction
+
+def gloo_route(doc):
+    """Return a gloo route"""
+    route = dict()
+    route["matcher"] = gloo_matcher(doc)
+    route_plugins = gloo_route_plugins(doc)
+    if route_plugins is not None:
+        route["routePlugins"] = route_plugins
+    route["routeAction"] = gloo_route_action(doc)
+    return route
+
+def append_gloo_route(routes_dict, doc, route):
+    """Appends a gloo route to a dictionary of routes whose keys are the virtual hosts."""
+    host = doc["host"]
+    if host not in routes_dict:
+        routes_dict[host] = list()
+    routes_dict[host].append(gloo_route(doc))
+
+def gloo_routes_dict(services):
+    """Return the Gloo http routes from a set of Services with Ambassador annotations."""
+    http_routes_dict = dict()
+    for service in services:
+        ambassador_metadata = metadata_from_ambassador_service(service)
+        if ambassador_metadata:
+            docs = yaml_docs_from_metadata_string(ambassador_metadata)
+            name = ambassador_metadata["name"]
+            gloo_http_routes_from_ambassador_docs(http_routes_dict, docs)
+    return http_routes_dict
+
+def gloo_http_routes_from_ambassador_docs(routes_dict, docs):
+    """Return routes from an Ambasaddor doc."""
+    if docs and len(docs) > 0:
+        for doc in docs:
+            if "service" not in doc:
+                continue
+            if doc["kind"] != "Mapping":
+                continue
+            append_gloo_route(routes_dict, doc, gloo_route(doc))
+    return routes_dict
+
+"""
+Example virtual service output:
+
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: api-vs-{{.Release.Namespace}}
+  namespace: {{.Release.Namespace}}
+spec:
+  sslConfig:
+    sniDomains:
+    - {{ include "charts.host.api" . }}
+    secretRef:
+      name: tidepool-org
+      namespace: default
+  virtualHost:
+    domains:
+    - {{ include "charts.host.api" . }}
+    name: {{.Release.Namespace}}.api
+    routes:
+    - matcher:
+        prefix: /userservices/
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-user-{{ .Values.platformUser.port }}
+            namespace: gloo-system
+    - matcher:
+        methods:
+        - POST
+        - GET
+        - DELETE
+        regex: /v1/users/[^/]+/images
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-image-{{ .Values.platformImage.port }}
+            namespace: gloo-system
+    - matcher:
+        prefix: /dataservices/
+      routeAction:
+        single:
+          upstream:
+            name: {{.Release.Namespace}}-platform-data-{{ .Values.platformData.port }}
+            namespace: gloo-system
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+{{ end }}
+"""
+
+input_dir=CHARTSDIR + 'tidepool/0.1.0'
+output_dir=CHARTSDIR + '/tidepool/0.1.1'
+helm = subprocess.Popen(['helm', 'template', input_dir], stdout=subprocess.PIPE)
+docs = yaml.load_all(helm.stdout)
+ambassador_services = ambassador_services_from(docs)
+
+for host,routes in gloo_routes_dict(ambassador_services).items():
+    base = virtual_service_basename(host)
+    virtual_service = gloo_virtual_service(routes, base, CORS_POLICY)
+    write_manifest(output_dir, virtual_service, base + "-virtual-service")
+#gateway = create_gloo_gateway(routes.keys())
+#write_manifest(output_dir, gateway, "gateway")
