@@ -292,7 +292,7 @@ def gloo_http_routes_from_ambassador_docs(routes_dict, docs):
 def gloo_gateway_labels(base):
     labels = dict()
     labels["app"] = "gloo"
-    labels["gloo"] = "-gateway-proxy"
+    labels["gloo"] = "gateway-proxy"
     return labels
 
 def gloo_gateway_metadata(base):
