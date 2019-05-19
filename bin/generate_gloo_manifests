@@ -289,21 +289,21 @@ def gloo_http_routes_from_ambassador_docs(routes_dict, docs):
             append_gloo_route(routes_dict, doc, gloo_route(doc))
     return routes_dict
 
-def gloo_gateway_labels(base):
+def gloo_gateway_service_labels():
     labels = dict()
     labels["app"] = "gloo"
     labels["gloo"] = "gateway-proxy"
     return labels
 
-def gloo_gateway_metadata(base, useSSL):
+def gloo_gateway_service_metadata(useSSL):
     metadata = dict()
-    metadata["labels"] = gloo_gateway_labels(base)
+    metadata["labels"] = gloo_gateway_service_labels()
     suffix = "-ssl" if useSSL else ""
-    metadata["name"] = base + "-gateway-proxy" + suffix
+    metadata["name"] = "gateway-proxy" + suffix
     metadata["namespace"] = "{{.Release.Namespace}}"
     return metadata
 
-def gloo_gateway_ports(useSSL):
+def gloo_gateway_service_ports(useSSL):
     ports = list()
     port = dict()
     if useSSL:
@@ -319,22 +319,22 @@ def gloo_gateway_ports(useSSL):
     ports.append(port)
     return ports
 
-def gloo_gateway_selector():
+def gloo_gateway_service_selector():
     selector = dict()
     selector["gloo"] = "gateway-proxy"
     return selector
 
-def gloo_gateway_spec(useSSL):
+def gloo_gateway_service_spec(useSSL):
     spec = dict()
-    spec["ports"] = gloo_gateway_ports(useSSL)
-    spec["selector"] = gloo_gateway_selector()
+    spec["ports"] = gloo_gateway_service_ports(useSSL)
+    spec["selector"] = gloo_gateway_service_selector()
     spec["externalTrafficPolicy"] = "Cluster"
     spec["type"] = "LoadBalancer"
     return spec
 
 def gloo_internal_metadata(base):
     metadata = dict()
-    metadata["name"] = base + ".gateway-proxy.svc.cluster.local"
+    metadata["name"] = "{{.Release.Namespace.}}-" + base + ".gateway-proxy.svc.cluster.local"
     metadata["namespace"] = "{{.Release.Namespace}}"
     return metadata
 
@@ -363,20 +363,41 @@ def gloo_internal_service(base):
      service["spec"] = gloo_internal_spec()
      return service
 
-def gloo_gateway_proxy(base, useSSL):
-     service = dict()
-     service["apiVersion"] = "v1"
-     service["kind"] = "Service"
-     service["metadata"] = gloo_gateway_metadata(base, useSSL)
-     service["spec"] = gloo_gateway_spec(useSSL)
-     service["ssl"] = useSSL
-     return service
+def gloo_gateway_metadata(useSSL):
+    metadata = dict()
+    suffix = "-ssl" if useSSL else ""
+    metadata["name"] = "gateway" + suffix
+    metadata["namespace"] = "gloo-system"
+    return metadata
+
+def gloo_gateway(useSSL):
+    gateway = dict()
+    gateway["apiVersion"] = "gateway.solo.io/v1"
+    gateway["kind"] = "Gateway"
+    gateway["metadata"] = gloo_gateway_metadata(useSSL)
+    gateway["bindAddress"] = '::'
+    if useSSL:
+        gateway["bindPort"] = 8443
+        gateway["useProxyProto"] = False # XXX check this
+    else:
+        gateway["bindPort"] = 8080
+        gateway["useProxyProto"] = False # XXX check this
+    gateway["ssl"] = useSSL
+    return gateway
+
+def gloo_gateway_service(useSSL):
+    service = dict()
+    service["apiVersion"] = "v1"
+    service["kind"] = "Service"
+    service["metadata"] = gloo_gateway_service_metadata(useSSL)
+    service["spec"] = gloo_gateway_service_spec(useSSL)
+    return service
 
 def gloo_external_hostname(base):
     return  "{{.Release.Namespace}}-" + base + ".tidepool.org"
 
 def gloo_internal_hostname(base):
-    return base + "-gateway-proxy." + "{{.Release.Namespace}}"
+    return "{{.Release.Namespace}}-" + base + ".svc.cluster.local"
 
 """
 Example output:
@@ -481,5 +502,7 @@ for host,routes in gloo_routes_dict(ambassador_services).items():
     internal_virtual_service = gloo_virtual_service(routes, gloo_internal_hostname(base), None, False)
     write_manifest(output_dir, internal_virtual_service, base + "-internal-virtual-service")
     write_manifest(output_dir, external_virtual_service, base + "-external-virtual-service")
-    write_manifest(output_dir, gloo_gateway_proxy(base, True), base + "-gateway-proxy-ssl")
     write_manifest(output_dir, gloo_internal_service(base), base + "-gateway-proxy-internal")
+write_manifest(output_dir, gloo_gateway(False), "gateway")
+write_manifest(output_dir, gloo_gateway(True), "gateway-ssl")
+write_manifest(output_dir, gloo_gateway_service(True), "gateway-service-ssl")
