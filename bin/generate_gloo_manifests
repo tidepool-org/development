@@ -4,6 +4,7 @@ import os
 import subprocess
 import sys
 import yaml
+from read_ambassador_services import ambassador_mappings_from_directory
 
 CORS_POLICY_STRING = """
 {
@@ -36,50 +37,6 @@ CORS_POLICY_STRING = """
 """
 CORS_POLICY=json.loads(CORS_POLICY_STRING)
 
-def ambassador_services_from(docs):
-    """Return the services from a set of K8s Manifests."""
-    services = []
-    for doc in docs:
-        if doc is not None:
-            for k,v in doc.items():
-                if k == "kind" and v == "Service":
-                    services.append(doc)
-    return services
-
-def write_manifest(dir, manifest, name, header, footer):
-    """Write a single file containing Gloo manifests."""
-    filename = dir + "/" + "gloo-" + name + ".yaml"
-    with open(filename, 'w') as outfile:
-        outfile.write(header)
-        yaml.dump(manifest, outfile, default_flow_style=False)
-        outfile.write(footer)
-
-def metadata_from_ambassador_service(service):
-    """Return the metadata from object or None if it does not exist."""
-    if "metadata" in service:
-        metadata=service["metadata"]
-        return metadata
-    else:
-        return None
-
-def name_from_metadata(metadata):
-    """Return the name from object or None if it does not exist."""
-    if "name" in metadata:
-        return metadata["name"]
-    else:
-        return None
-
-def annotation_from_metadata(metadata):
-    """Return the Ambassador annotation string from a document."""
-    if "annotations" in metadata and metadata["annotations"]:
-        annotations = metadata["annotations"]
-        if "getambassador.io/config" in annotations:
-            return annotations["getambassador.io/config"]
-        else:
-            return None
-    else:
-        return None
-
 def virtual_service_basename(host):
     """Return the Gloo virtual service name."""
     return host.replace("default-", "").replace(".tidepool.org", "") 
@@ -95,19 +52,6 @@ def tidepool_tls_secret():
     secret["name"] = "tidepool-org"
     secret["namespace"] = "default"
     return secret
-
-def yaml_docs_from_metadata_string(metadata):
-    """Return a list of YAML objects from a YAML string."""
-    annotation_string = annotation_from_metadata(metadata)
-    if annotation_string is None:
-        return None
-    docs = list()
-    for raw_doc in annotation_string.split('\n---'):
-        try:
-            docs.append(yaml.full_load(raw_doc))
-        except SyntaxError:
-            docs.append(raw_doc)
-    return docs
 
 def gloo_metadata(hostname):
     """Return metadata for virtual service"""
@@ -255,33 +199,18 @@ def gloo_route(doc):
     route["routeAction"] = gloo_route_action(doc)
     return route
 
-def append_gloo_route(routes_dict, doc, route):
+def append_gloo_route(routes_dict, doc):
     """Appends a gloo route to a dictionary of routes whose keys are the virtual hosts."""
     host = doc["host"]
     if host not in routes_dict:
         routes_dict[host] = list()
     routes_dict[host].append(gloo_route(doc))
 
-def gloo_routes_dict(services):
+def gloo_routes_dict(mappings):
     """Return the Gloo http routes from a set of Services with Ambassador annotations."""
-    http_routes_dict = dict()
-    for service in services:
-        ambassador_metadata = metadata_from_ambassador_service(service)
-        if ambassador_metadata:
-            docs = yaml_docs_from_metadata_string(ambassador_metadata)
-            name = ambassador_metadata["name"]
-            gloo_http_routes_from_ambassador_docs(http_routes_dict, docs)
-    return http_routes_dict
-
-def gloo_http_routes_from_ambassador_docs(routes_dict, docs):
-    """Return routes from an Ambasaddor doc."""
-    if docs and len(docs) > 0:
-        for doc in docs:
-            if "service" not in doc:
-                continue
-            if doc["kind"] != "Mapping":
-                continue
-            append_gloo_route(routes_dict, doc, gloo_route(doc))
+    routes_dict = dict()
+    for mapping in mappings:
+        append_gloo_route(routes_dict, mapping)
     return routes_dict
 
 def gloo_gateway_proxy_service_labels():
@@ -504,9 +433,9 @@ def write_manifests(manifest_dict, output_dir, header, footer):
     for name,manifest in manifest_dict.items():
         write_manifest(output_dir, manifest, name, header, footer)
 
-def gloo_manifests_from_ambassador(ambassador_services):
+def gloo_manifests_from_mappings(mappings):
     gloo_manifest_dict = dict()
-    for host,routes in gloo_routes_dict(ambassador_services).items():
+    for host,routes in gloo_routes_dict(mappings).items():
         base = virtual_service_basename(host)
         external_virtual_service = gloo_virtual_service(routes, gloo_external_hostname(base), CORS_POLICY, True)
         internal_virtual_service = gloo_virtual_service(routes, gloo_internal_hostname(base), None, False)
@@ -524,9 +453,17 @@ def ambassador_services_from_directory(input_dir):
     docs = yaml.load_all(helm.stdout, Loader=yaml.FullLoader)
     return ambassador_services_from(docs)
 
+def write_manifest(dir, manifest, name, header, footer):
+    """Write a single file containing Gloo manifests."""
+    filename = dir + "/" + "gloo-" + name + ".yaml"
+    with open(filename, 'w') as outfile:
+        outfile.write(header)
+        yaml.dump(manifest, outfile, default_flow_style=False)
+        outfile.write(footer)
+
 chartsdir="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
-services = ambassador_services_from_directory(chartsdir + 'tidepool/0.1.0')
-manifests = gloo_manifests_from_ambassador(services)
+mappings = ambassador_mappings_from_directory(chartsdir + 'tidepool/0.1.0')
+manifests = gloo_manifests_from_mappings(mappings)
 
 header="{{- if .Values.gloo.enabled -}}\n"
 footer="{{- end -}}\n"
