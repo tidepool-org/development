@@ -323,12 +323,15 @@ def gloo_gateway_proxy_service_selector():
     selector["gloo"] = "gateway-proxy"
     return selector
 
-def gloo_gateway_proxy_service_spec(useSSL):
+def gloo_gateway_proxy_service_spec(isExternal, useSSL):
     spec = dict()
     spec["ports"] = gloo_gateway_proxy_service_ports(useSSL)
     spec["selector"] = gloo_gateway_proxy_service_selector()
     spec["externalTrafficPolicy"] = "Cluster"
-    spec["type"] = "LoadBalancer"
+    if isExternal:
+        spec["type"] = "LoadBalancer"
+    else:
+        spec["type"] = "ClusterIP"
     return spec
 
 def gloo_internal_metadata(base):
@@ -384,12 +387,12 @@ def gloo_gateway(useSSL):
     gateway["ssl"] = useSSL
     return gateway
 
-def gloo_gateway_proxy_service(useSSL):
+def gloo_gateway_proxy_service(isExternal, useSSL):
     service = dict()
     service["apiVersion"] = "v1"
     service["kind"] = "Service"
     service["metadata"] = gloo_gateway_proxy_service_metadata(useSSL)
-    service["spec"] = gloo_gateway_proxy_service_spec(useSSL)
+    service["spec"] = gloo_gateway_proxy_service_spec(isExternal, useSSL)
     return service
 
 def gloo_external_hostname(base):
@@ -504,6 +507,6 @@ for host,routes in gloo_routes_dict(ambassador_services).items():
     write_manifest(output_dir, gloo_internal_service(base), base + "-gateway-proxy-internal")
 write_manifest(output_dir, gloo_gateway(False), "gateway")
 write_manifest(output_dir, gloo_gateway(True), "gateway-ssl")
-write_manifest(output_dir, gloo_gateway_proxy_service(True), "gateway-proxy-service-ssl")
-write_manifest(output_dir, gloo_gateway_proxy_service(False), "gateway-proxy-service")
+write_manifest(output_dir, gloo_gateway_proxy_service(True, True), "gateway-proxy-service-ssl")
+write_manifest(output_dir, gloo_gateway_proxy_service(False, False), "gateway-proxy-service")
 
