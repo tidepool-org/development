@@ -5,10 +5,6 @@ import subprocess
 import sys
 import yaml
 
-CHARTSDIR="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
-HEADER="{{- if .Values.gloo.enabled -}}\n"
-FOOTER="{{- end -}}\n"
-
 CORS_POLICY_STRING = """
 {
     "allowCredentials": true,
@@ -50,13 +46,13 @@ def ambassador_services_from(docs):
                     services.append(doc)
     return services
 
-def write_manifest(dir, manifest, name):
+def write_manifest(dir, manifest, name, header, footer):
     """Write a single file containing Gloo manifests."""
     filename = dir + "/" + "gloo-" + name + ".yaml"
     with open(filename, 'w') as outfile:
-        outfile.write(HEADER)
+        outfile.write(header)
         yaml.dump(manifest, outfile, default_flow_style=False)
-        outfile.write(FOOTER)
+        outfile.write(footer)
 
 def metadata_from_ambassador_service(service):
     """Return the metadata from object or None if it does not exist."""
@@ -323,15 +319,24 @@ def gloo_gateway_proxy_service_selector():
     selector["gloo"] = "gateway-proxy"
     return selector
 
-def gloo_gateway_proxy_service_spec(isExternal, useSSL):
+def gloo_gateway_proxy_service_spec(service_type, useSSL):
     spec = dict()
     spec["ports"] = gloo_gateway_proxy_service_ports(useSSL)
     spec["selector"] = gloo_gateway_proxy_service_selector()
-    spec["externalTrafficPolicy"] = "Cluster"
-    if isExternal:
+    if service_type == "elb":
+        spec["externalTrafficPolicy"] = "Cluster"
         spec["type"] = "LoadBalancer"
-    else:
+    elif service_type == "nlb":
+        spec["externalTrafficPolicy"] = "Cluster"
+        spec["type"] = "LoadBalancer"
+        annotations = dict()
+        annotations["service.beta.kubernetes.io/aws-load-balancer-type"] = "nlb"
+        spec["annotations"] = annotations
+    elif service_type == "cluster":
         spec["type"] = "ClusterIP"
+    else:
+        print("bad service type")
+        exit()
     return spec
 
 def gloo_internal_metadata(base):
@@ -387,12 +392,12 @@ def gloo_gateway(useSSL):
     gateway["ssl"] = useSSL
     return gateway
 
-def gloo_gateway_proxy_service(isExternal, useSSL):
+def gloo_gateway_proxy_service(service_type, useSSL):
     service = dict()
     service["apiVersion"] = "v1"
     service["kind"] = "Service"
     service["metadata"] = gloo_gateway_proxy_service_metadata(useSSL)
-    service["spec"] = gloo_gateway_proxy_service_spec(isExternal, useSSL)
+    service["spec"] = gloo_gateway_proxy_service_spec(service_type, useSSL)
     return service
 
 def gloo_external_hostname(base):
@@ -492,21 +497,37 @@ spec:
 {{ end }}
 """
 
-input_dir=CHARTSDIR + 'tidepool/0.1.0'
-output_dir=CHARTSDIR + '/tidepool/0.1.1'
-helm = subprocess.Popen(['helm', 'template', input_dir], stdout=subprocess.PIPE)
-docs = yaml.load_all(helm.stdout, Loader=yaml.FullLoader)
-ambassador_services = ambassador_services_from(docs)
+def add_manifest(manifest_dict, manifest, name):
+    manifest_dict[name] = manifest
 
-for host,routes in gloo_routes_dict(ambassador_services).items():
-    base = virtual_service_basename(host)
-    external_virtual_service = gloo_virtual_service(routes, gloo_external_hostname(base), CORS_POLICY, True)
-    internal_virtual_service = gloo_virtual_service(routes, gloo_internal_hostname(base), None, False)
-    write_manifest(output_dir, internal_virtual_service, base + "-internal-virtual-service")
-    write_manifest(output_dir, external_virtual_service, base + "-external-virtual-service")
-    write_manifest(output_dir, gloo_internal_service(base), base + "-gateway-proxy-internal")
-write_manifest(output_dir, gloo_gateway(False), "gateway")
-write_manifest(output_dir, gloo_gateway(True), "gateway-ssl")
-write_manifest(output_dir, gloo_gateway_proxy_service(True, True), "gateway-proxy-service-ssl")
-write_manifest(output_dir, gloo_gateway_proxy_service(False, False), "gateway-proxy-service")
+def write_manifests(manifest_dict, output_dir, header, footer):
+    for name,manifest in manifest_dict.items():
+        write_manifest(output_dir, manifest, name, header, footer)
 
+def gloo_manifests_from_ambassador(ambassador_services):
+    gloo_manifest_dict = dict()
+    for host,routes in gloo_routes_dict(ambassador_services).items():
+        base = virtual_service_basename(host)
+        external_virtual_service = gloo_virtual_service(routes, gloo_external_hostname(base), CORS_POLICY, True)
+        internal_virtual_service = gloo_virtual_service(routes, gloo_internal_hostname(base), None, False)
+        add_manifest(gloo_manifest_dict, internal_virtual_service, base + "-internal-virtual-service")
+        add_manifest(gloo_manifest_dict, external_virtual_service, base + "-external-virtual-service")
+        add_manifest(gloo_manifest_dict, gloo_internal_service(base), base + "-gateway-proxy-internal")
+    add_manifest(gloo_manifest_dict, gloo_gateway(False), "gateway")
+    add_manifest(gloo_manifest_dict, gloo_gateway(True), "gateway-ssl")
+    add_manifest(gloo_manifest_dict, gloo_gateway_proxy_service("elb", True), "gateway-proxy-service-ssl")
+    add_manifest(gloo_manifest_dict, gloo_gateway_proxy_service("cluster", False), "gateway-proxy-service")
+    return gloo_manifest_dict
+
+def ambassador_services_from_directory(input_dir):
+    helm = subprocess.Popen(['helm', 'template', input_dir], stdout=subprocess.PIPE)
+    docs = yaml.load_all(helm.stdout, Loader=yaml.FullLoader)
+    return ambassador_services_from(docs)
+
+chartsdir="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
+services = ambassador_services_from_directory(chartsdir + 'tidepool/0.1.0')
+manifests = gloo_manifests_from_ambassador(services)
+
+header="{{- if .Values.gloo.enabled -}}\n"
+footer="{{- end -}}\n"
+write_manifests(manifests, chartsdir + 'tidepool/0.1.1', header, footer)
