@@ -3,7 +3,6 @@ import json
 import os
 import subprocess
 import sys
-
 import yaml
 
 CHARTSDIR="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
@@ -109,7 +108,7 @@ def yaml_docs_from_metadata_string(metadata):
     docs = list()
     for raw_doc in annotation_string.split('\n---'):
         try:
-            docs.append(yaml.load(raw_doc))
+            docs.append(yaml.full_load(raw_doc))
         except SyntaxError:
             docs.append(raw_doc)
     return docs
@@ -289,21 +288,21 @@ def gloo_http_routes_from_ambassador_docs(routes_dict, docs):
             append_gloo_route(routes_dict, doc, gloo_route(doc))
     return routes_dict
 
-def gloo_gateway_service_labels():
+def gloo_gateway_proxy_service_labels():
     labels = dict()
     labels["app"] = "gloo"
     labels["gloo"] = "gateway-proxy"
     return labels
 
-def gloo_gateway_service_metadata(useSSL):
+def gloo_gateway_proxy_service_metadata(useSSL):
     metadata = dict()
-    metadata["labels"] = gloo_gateway_service_labels()
+    metadata["labels"] = gloo_gateway_proxy_service_labels()
     suffix = "-ssl" if useSSL else ""
     metadata["name"] = "gateway-proxy" + suffix
-    metadata["namespace"] = "{{.Release.Namespace}}"
+    metadata["namespace"] = "gloo-system"
     return metadata
 
-def gloo_gateway_service_ports(useSSL):
+def gloo_gateway_proxy_service_ports(useSSL):
     ports = list()
     port = dict()
     if useSSL:
@@ -319,15 +318,15 @@ def gloo_gateway_service_ports(useSSL):
     ports.append(port)
     return ports
 
-def gloo_gateway_service_selector():
+def gloo_gateway_proxy_service_selector():
     selector = dict()
     selector["gloo"] = "gateway-proxy"
     return selector
 
-def gloo_gateway_service_spec(useSSL):
+def gloo_gateway_proxy_service_spec(useSSL):
     spec = dict()
-    spec["ports"] = gloo_gateway_service_ports(useSSL)
-    spec["selector"] = gloo_gateway_service_selector()
+    spec["ports"] = gloo_gateway_proxy_service_ports(useSSL)
+    spec["selector"] = gloo_gateway_proxy_service_selector()
     spec["externalTrafficPolicy"] = "Cluster"
     spec["type"] = "LoadBalancer"
     return spec
@@ -385,12 +384,12 @@ def gloo_gateway(useSSL):
     gateway["ssl"] = useSSL
     return gateway
 
-def gloo_gateway_service(useSSL):
+def gloo_gateway_proxy_service(useSSL):
     service = dict()
     service["apiVersion"] = "v1"
     service["kind"] = "Service"
-    service["metadata"] = gloo_gateway_service_metadata(useSSL)
-    service["spec"] = gloo_gateway_service_spec(useSSL)
+    service["metadata"] = gloo_gateway_proxy_service_metadata(useSSL)
+    service["spec"] = gloo_gateway_proxy_service_spec(useSSL)
     return service
 
 def gloo_external_hostname(base):
@@ -493,7 +492,7 @@ spec:
 input_dir=CHARTSDIR + 'tidepool/0.1.0'
 output_dir=CHARTSDIR + '/tidepool/0.1.1'
 helm = subprocess.Popen(['helm', 'template', input_dir], stdout=subprocess.PIPE)
-docs = yaml.load_all(helm.stdout)
+docs = yaml.load_all(helm.stdout, Loader=yaml.FullLoader)
 ambassador_services = ambassador_services_from(docs)
 
 for host,routes in gloo_routes_dict(ambassador_services).items():
@@ -505,4 +504,6 @@ for host,routes in gloo_routes_dict(ambassador_services).items():
     write_manifest(output_dir, gloo_internal_service(base), base + "-gateway-proxy-internal")
 write_manifest(output_dir, gloo_gateway(False), "gateway")
 write_manifest(output_dir, gloo_gateway(True), "gateway-ssl")
-write_manifest(output_dir, gloo_gateway_service(True), "gateway-service-ssl")
+write_manifest(output_dir, gloo_gateway_proxy_service(True), "gateway-proxy-service-ssl")
+write_manifest(output_dir, gloo_gateway_proxy_service(False), "gateway-proxy-service")
+
