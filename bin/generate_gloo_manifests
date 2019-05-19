@@ -445,9 +445,6 @@ def ambassador_services_from_directory(input_dir):
     docs = yaml.load_all(helm.stdout, Loader=yaml.FullLoader)
     return ambassador_services_from(docs)
 
-def write_manifest(dir, manifest ):
-    """Write a single file containing manifests."""
-
 def write_manifests(manifests, output_dir, header, footer):
     print(header)
     print(yaml.dump(manifests, explicit_start = True, default_flow_style=False))

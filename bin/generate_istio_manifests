@@ -4,6 +4,7 @@ import subprocess
 import sys
 import json
 import yaml
+from read_ambassador_services import ambassador_mappings_from_directory
 
 GATEWAY="primary-gateway"
 CHARTSDIR="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
@@ -41,61 +42,12 @@ CORS_POLICY_STRING = """
 """
 CORS_POLICY=json.loads(CORS_POLICY_STRING)
 
-def ambassador_services_from(docs):
-    """Return the services from a set of K8s Manifests."""
-    services = []
-    for doc in docs:
-        if doc is not None:
-            for k,v in doc.items():
-                if k == "kind" and v == "Service":
-                    services.append(doc)
-    return services
-
-def istio_http_routes_from_services(services):
-    """Return the Istio http routes from a set of Services with Ambassador annotations."""
+def istio_http_routes_from_mappings(mappings):
+    """Return the Istio http routes from a list of Ambassador mappings."""
     http_routes_dict = dict()
-    for service in services:
-        ambassador_metadata = metadata_from_ambassador_service(service)
-        if ambassador_metadata:
-            docs = yaml_docs_from_metadata_string(ambassador_metadata)
-            name = ambassador_metadata["name"]
-            dest = dest_from_name(name)
-            istio_http_routes_from_ambassador_docs(http_routes_dict, docs, dest)
+    for mapping in mappings:
+        istio_http_routes_from_ambassador_mapping(http_routes_dict, mapping)
     return http_routes_dict
-
-def write_manifest(dir, manifest, name):
-    """Write a single file containing Istio manifests."""
-    filename = dir + "/" + "istio-" + name + ".yaml"
-    with open(filename, 'w') as outfile:
-        outfile.write(HEADER)
-        yaml.dump(manifest, outfile, default_flow_style=False)
-        outfile.write(FOOTER)
-
-def metadata_from_ambassador_service(service):
-    """Return the metadata from object or None if it does not exist."""
-    if "metadata" in service:
-        metadata=service["metadata"]
-        return metadata
-    else:
-        return None
-
-def name_from_metadata(metadata):
-    """Return the name from object or None if it does not exist."""
-    if "name" in metadata:
-        return metadata["name"]
-    else:
-        return None
-
-def annotation_from_metadata(metadata):
-    """Return the Ambassador annotation string from a document."""
-    if "annotations" in metadata and metadata["annotations"]:
-        annotations = metadata["annotations"]
-        if "getambassador.io/config" in annotations:
-            return annotations["getambassador.io/config"]
-        else:
-            return None
-    else:
-        return None
 
 def sort_key(http_route):
     uri = http_route["match"][0]["uri"]
@@ -153,74 +105,57 @@ def dest_from_name(name):
     """Return the target host for a routing rule."""
     return name + ".{{- .Release.Namespace -}}." + "svc.cluster.local"
 
-def yaml_docs_from_metadata_string(metadata):
-    """Return a list of YAML objects from a YAML string."""
-    annotation_string = annotation_from_metadata(metadata)
-    if annotation_string is None:
-        return None
-    docs = list()
-    for raw_doc in annotation_string.split('\n---'):
-        try:
-            docs.append(yaml.load(raw_doc))
-        except SyntaxError:
-            docs.append(raw_doc)
-    return docs
+def istio_http_routes_from_ambassador_mapping(http_routes_dict, doc):
+    """Return the HTTPRoute(s) from an Ambasaddor mapping."""
+    http_route = dict()
+    dest = doc["host"]
+    match = dict()
+    match["uri"] = dict()
+    if "prefix_regex" in doc and doc[ "prefix_regex"]:
+        match["uri"]["regex"] = doc["prefix"]
+    elif "prefix" in doc and doc["prefix"]:
+        match["uri"]["prefix"] = doc["prefix"]
+    else:
+        print("no prefix in", doc)
 
-def istio_http_routes_from_ambassador_docs(http_routes_dict, docs, dest):
-    """Return the HTTPRoute(s) from an Ambasaddor doc."""
-    if docs and len(docs) > 0:
-        for doc in docs:
-            if doc["kind"] != "Mapping":
-                continue
-            http_route = dict()
+    match["method"] = dict()
+    if "method_regex" in doc and doc[ "method_regex"]:
+        match["method"]["regex"] = doc["method"]
+    else:
+        match["method"]["exact"] = doc["method"]
+    http_route["match"] = list()
+    http_route["match"].append(match)
 
-            match = dict()
-            match["uri"] = dict()
-            if "prefix_regex" in doc and doc[ "prefix_regex"]:
-                match["uri"]["regex"] = doc["prefix"]
-            elif "prefix" in doc and doc["prefix"]:
-                match["uri"]["prefix"] = doc["prefix"]
-            else:
-                print("no prefix in", doc)
+    if "rewrite" not in doc:
+        http_route["rewrite"] = dict()
+        http_route["rewrite"]["uri"] = "/"
+    elif doc["rewrite"] != "":
+        http_route["rewrite"] = dict()
+        http_route["rewrite"]["uri"] = doc["rewrite"]
 
-            match["method"] = dict()
-            if "method_regex" in doc and doc[ "method_regex"]:
-                match["method"]["regex"] = doc["method"]
-            else:
-                match["method"]["exact"] = doc["method"]
-            http_route["match"] = list()
-            http_route["match"].append(match)
+    if "service" in doc:
+        s = doc["service"]
+        if ":" in s:
+            (host,port) = s.split(":")
+        else:
+            host = s
+            port = 80
+        routes = list()
+        route = dict()
+        route["destination"] = dict()
+        route["destination"]["port"] = dict()
+        route["destination"]["port"]["number"] = int(port)
+        route["destination"]["host"] = dest
+        routes.append(route)
+        http_route["route"] = routes
+        http_route["corsPolicy"] = CORS_POLICY
 
-            if "rewrite" not in doc:
-                http_route["rewrite"] = dict()
-                http_route["rewrite"]["uri"] = "/"
-            elif doc["rewrite"] != "":
-                http_route["rewrite"] = dict()
-                http_route["rewrite"]["uri"] = doc["rewrite"]
-
-            if "service" in doc:
-                s = doc["service"]
-                if ":" in s:
-                    (host,port) = s.split(":")
-                else:
-                    host = s
-                    port = 80
-                routes = list()
-                route = dict()
-                route["destination"] = dict()
-                route["destination"]["port"] = dict()
-                route["destination"]["port"]["number"] = int(port)
-                route["destination"]["host"] = dest
-                routes.append(route)
-                http_route["route"] = routes
-                http_route["corsPolicy"] = CORS_POLICY
-
-            if http_route["match"]:
-                host = doc["host"]
-                if host not in http_routes_dict:
-                    http_routes_dict[host] = list()
-                http_routes = http_routes_dict[host]
-                http_routes.append( http_route )
+    if http_route["match"]:
+        host = doc["host"]
+        if host not in http_routes_dict:
+            http_routes_dict[host] = list()
+        http_routes = http_routes_dict[host]
+        http_routes.append( http_route )
     return http_routes_dict
 
 def create_istio_gateway(hosts):
@@ -321,17 +256,29 @@ spec:
 {{ end }}
 """
 
+def istio_manifests_from_mappings(mappings):
+    manifests = dict()
+    istio_http_routes_dict = istio_http_routes_from_mappings(mappings)
+    for host,istio_http_routes in istio_http_routes_dict.items():
+        base = virtual_service_basename(host)
+        ordered_routes = ordered_http_routes(istio_http_routes)
+        manifests[base + "-virtual-service"] = virtual_service_from_http_routes(GATEWAY, ordered_routes, base)
+    manifests["gateway"] = create_istio_gateway(istio_http_routes_dict.keys())
+    return manifests
 
-input_dir=CHARTSDIR + 'tidepool/0.4.1'
-output_dir=CHARTSDIR + 'tidepool/0.4.1/templates/'
-helm = subprocess.Popen(['helm', 'template', input_dir], stdout=subprocess.PIPE)
-docs = yaml.load_all(helm.stdout)
-ambassador_services = ambassador_services_from(docs)
-istio_http_routes_dict = istio_http_routes_from_services(ambassador_services)
-for host,istio_http_routes in istio_http_routes_dict.items():
-    ordered_routes = ordered_http_routes(istio_http_routes)
-    base = virtual_service_basename(host)
-    virtual_service = virtual_service_from_http_routes(GATEWAY, ordered_routes, base)
-    write_manifest(output_dir, virtual_service, base + "-virtual-service")
-gateway = create_istio_gateway(istio_http_routes_dict.keys())
-write_manifest(output_dir, gateway, "gateway")
+def write_manifests(manifests, output_dir, header, footer):
+    print(header)
+    print(yaml.dump(manifests, explicit_start = True, default_flow_style=False))
+    print(footer)
+
+def main():
+    chartsdir="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
+    mappings = ambassador_mappings_from_directory(chartsdir + 'tidepool/0.1.0')
+    manifests = istio_manifests_from_mappings(mappings)
+
+    header="{{- if .Values.gloo.enabled -}}"
+    footer="{{- end -}}"
+    write_manifests(list(manifests.values()), chartsdir + 'tidepool/0.1.1', header, footer)
+
+if __name__ == "__main__":
+    main()
