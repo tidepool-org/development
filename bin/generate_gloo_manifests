@@ -41,10 +41,6 @@ def virtual_service_basename(host):
     """Return the Gloo virtual service name."""
     return host.replace("default-", "").replace(".tidepool.org", "") 
 
-def virtual_service_filename(base):
-    """Return the Gloo virtual service name."""
-    return base + "-virtual-service.yaml"
-
 def tidepool_tls_secret():
     """Return the Kubernetes name and namespace for the secret containing the TLS cert and key
     for the domain (tidepool-org.org) being served."""
@@ -429,10 +425,6 @@ spec:
 def add_manifest(manifest_dict, manifest, name):
     manifest_dict[name] = manifest
 
-def write_manifests(manifest_dict, output_dir, header, footer):
-    for name,manifest in manifest_dict.items():
-        write_manifest(output_dir, manifest, name, header, footer)
-
 def gloo_manifests_from_mappings(mappings):
     gloo_manifest_dict = dict()
     for host,routes in gloo_routes_dict(mappings).items():
@@ -453,18 +445,22 @@ def ambassador_services_from_directory(input_dir):
     docs = yaml.load_all(helm.stdout, Loader=yaml.FullLoader)
     return ambassador_services_from(docs)
 
-def write_manifest(dir, manifest, name, header, footer):
-    """Write a single file containing Gloo manifests."""
-    filename = dir + "/" + "gloo-" + name + ".yaml"
-    with open(filename, 'w') as outfile:
-        outfile.write(header)
-        yaml.dump(manifest, outfile, default_flow_style=False)
-        outfile.write(footer)
+def write_manifest(dir, manifest ):
+    """Write a single file containing manifests."""
 
-chartsdir="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
-mappings = ambassador_mappings_from_directory(chartsdir + 'tidepool/0.1.0')
-manifests = gloo_manifests_from_mappings(mappings)
+def write_manifests(manifests, output_dir, header, footer):
+    print(header)
+    print(yaml.dump(manifests, explicit_start = True, default_flow_style=False))
+    print(footer)
 
-header="{{- if .Values.gloo.enabled -}}\n"
-footer="{{- end -}}\n"
-write_manifests(manifests, chartsdir + 'tidepool/0.1.1', header, footer)
+def main():
+    chartsdir="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
+    mappings = ambassador_mappings_from_directory(chartsdir + 'tidepool/0.1.0')
+    manifests = gloo_manifests_from_mappings(mappings)
+
+    header="{{- if .Values.gloo.enabled -}}"
+    footer="{{- end -}}"
+    write_manifests(list(manifests.values()), chartsdir + 'tidepool/0.1.1', header, footer)
+
+if __name__ == "__main__":
+    main()
