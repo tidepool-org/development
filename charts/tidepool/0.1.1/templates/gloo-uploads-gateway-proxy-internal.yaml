@@ -1,0 +1,12 @@
+{{- if .Values.gloo.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: '{{.Release.Namespace.}}-uploads.gateway-proxy.svc.cluster.local'
+  namespace: '{{.Release.Namespace}}'
+spec:
+  externalName: gateway-proxy.gloo-system.svc.cluster.local
+  ports:
+  - port: 80
+  type: ExternalName
+{{- end -}}
