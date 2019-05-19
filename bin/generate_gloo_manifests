@@ -4,7 +4,6 @@ import os
 import subprocess
 import sys
 import yaml
-from read_ambassador_services import ambassador_mappings_from_directory
 
 CORS_POLICY_STRING = """
 {
@@ -452,7 +451,7 @@ def write_manifests(manifests, output_dir, header, footer):
 
 def main():
     chartsdir="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
-    mappings = ambassador_mappings_from_directory(chartsdir + 'tidepool/0.1.0')
+    mappings = yaml.safe_load(sys.stdin)
     manifests = gloo_manifests_from_mappings(mappings)
 
     header="{{- if .Values.gloo.enabled -}}"

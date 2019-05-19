@@ -4,12 +4,8 @@ import subprocess
 import sys
 import json
 import yaml
-from read_ambassador_services import ambassador_mappings_from_directory
 
 GATEWAY="primary-gateway"
-CHARTSDIR="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
-HEADER="{{- if .Values.istio.enabled -}}\n"
-FOOTER="{{- end -}}\n"
 
 CORS_POLICY_STRING = """
 {
@@ -273,11 +269,11 @@ def write_manifests(manifests, output_dir, header, footer):
 
 def main():
     chartsdir="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
-    mappings = ambassador_mappings_from_directory(chartsdir + 'tidepool/0.1.0')
+    mappings = yaml.safe_load(sys.stdin)
     manifests = istio_manifests_from_mappings(mappings)
 
-    header="{{- if .Values.gloo.enabled -}}"
-    footer="{{- end -}}"
+    header="{{- if .Values.istio.enabled -}}\n"
+    footer="{{- end -}}\n"
     write_manifests(list(manifests.values()), chartsdir + 'tidepool/0.1.1', header, footer)
 
 if __name__ == "__main__":
