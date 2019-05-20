@@ -364,10 +364,9 @@ def manifests_from_mappings(protocol, mappings):
     builder.add(gateway(False), "gateway")
     builder.add(gateway(True), "gateway-ssl")
     if use_https:
-        builder.add(gateway_proxy_service("elb", True), "gateway-proxy-service-ssl")
+        # need an additional internal http proxy service
         builder.add(gateway_proxy_service("cluster", False), "gateway-proxy-service")
-    else:
-        builder.add(gateway_proxy_service("elb", False), "gateway-proxy-service")
+    builder.add(gateway_proxy_service("elb", use_https), "gateway-proxy-service")
     return builder.get()
 
 def write_manifests(manifests):
