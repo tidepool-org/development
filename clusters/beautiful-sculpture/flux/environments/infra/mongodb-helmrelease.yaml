@@ -2,7 +2,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: tidepool-mongo
-  namespace: qa2
+  namespace: infra
   annotations:
     flux.weave.works/automated: "false"
 spec:

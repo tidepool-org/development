@@ -3,7 +3,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: tidepool
-  namespace: qa2
+  namespace: infra
   annotations:
     flux.weave.works/automated: "true"
     flux.weave.works/tag.shoreline: "glob:develop-*"

@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: qa2
+  name: infra
   labels:
       istio-injection: disabled
       linkerd.io/inject: disabled
