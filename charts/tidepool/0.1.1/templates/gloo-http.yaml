@@ -1,6 +1,450 @@
 # Auto-generated file by gloo-gateway. Do not edit.
 {{ if and (.Values.gloo.enabled) (.Values.http.enabled) }}
---- #file: api-external-VirtualService
+--- #file: api-internal-virtualservice.yaml
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: '{{.Release.Namespace}}-api.svc.cluster.local'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  virtualHost:
+    domains:
+    - '{{.Release.Namespace}}-api.svc.cluster.local'
+    name: '{{.Release.Namespace}}-api.svc.cluster.local'
+    routes:
+    - matcher:
+        methods:
+        - GET
+        - POST
+        - DELETE
+        regex: /v1/users/[^/]+/restricted_tokens
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - POST
+        - DELETE
+        regex: /v1/users/[^/]+/provider_sessions
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - POST
+        - DELETE
+        - OPTIONS
+        regex: /v1/users/[^/]+/data_sources
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - PUT
+        - DELETE
+        regex: /v1/provider_sessions/[^/]+
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        regex: /v1/oauth/[^/]+/authorize
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        regex: /v1/users/[^/]+/data_sets
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - POST
+        - DELETE
+        regex: /v1/users/[^/]+/images/.+
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-image-9226'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        regex: /v1/oauth/[^/]+/redirect
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - POST
+        regex: /v1/users/[^/]+/datasets
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        regex: /v1/blobs/[^/]+/content
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-blob-9225'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - PUT
+        - DELETE
+        regex: /v1/data_sources/[^/]+
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - POST
+        - DELETE
+        regex: /v1/users/[^/]+/images
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-image-9226'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - PUT
+        - DELETE
+        prefix: /v1/restricted_tokens
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - POST
+        - DELETE
+        regex: /v1/users/[^/]+/blobs
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-blob-9225'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - DELETE
+        regex: /v1/users/[^/]+/data
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        regex: /v1/blobs/[^/]+
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-blob-9225'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - PUT
+        - DELETE
+        regex: /v1/tasks/[^/*]
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-task-9224'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - DELETE
+        regex: /v1/users/[^/*]
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-user-9221'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /dataservices/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            namespace: '{{- .Release.Namespace -}}'
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /userservices/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-user-9221'
+            namespace: '{{- .Release.Namespace -}}'
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        prefix: /v1/data_sets
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - POST
+        - PUT
+        - DELETE
+        prefix: /v1/datasets
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - PUT
+        - DELETE
+        prefix: /v1/images
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-image-9226'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /metadata/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-seagull-9120'
+            namespace: '{{- .Release.Namespace -}}'
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /metrics/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-highwater-9191'
+            namespace: '{{- .Release.Namespace -}}'
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /confirm/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-hydrophone-9157'
+            namespace: '{{- .Release.Namespace -}}'
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /message/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-message-api-9119'
+            namespace: '{{- .Release.Namespace -}}'
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /v1/data/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            namespace: '{{- .Release.Namespace -}}'
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - POST
+        prefix: /v1/tasks
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-task-9224'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /export/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-export-9300'
+            namespace: '{{- .Release.Namespace -}}'
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /access/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-gatekeeper-9123'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /v1/time
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /auth/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-shoreline-9107'
+            namespace: '{{- .Release.Namespace -}}'
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /data/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-tide-whisperer-9127'
+            namespace: '{{- .Release.Namespace -}}'
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+--- #file: api.gateway-proxy-internal-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: '{{.Release.Namespace}}-api.gateway-proxy.svc.cluster.local'
+  namespace: '{{.Release.Namespace}}'
+spec:
+  externalName: gateway-proxy.gloo-system.svc.cluster.local
+  ports:
+  - port: 80
+  type: ExternalName
+--- #file: api.tidepool.org-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
@@ -455,451 +899,44 @@ spec:
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
---- #file: api-gateway-proxy-internal-Service
+--- #file: app-internal-virtualservice.yaml
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: '{{.Release.Namespace}}-app.svc.cluster.local'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  virtualHost:
+    domains:
+    - '{{.Release.Namespace}}-app.svc.cluster.local'
+    name: '{{.Release.Namespace}}-app.svc.cluster.local'
+    routes:
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+--- #file: app.gateway-proxy-internal-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: '{{.Release.Namespace.}}-api.gateway-proxy.svc.cluster.local'
+  name: '{{.Release.Namespace}}-app.gateway-proxy.svc.cluster.local'
   namespace: '{{.Release.Namespace}}'
 spec:
   externalName: gateway-proxy.gloo-system.svc.cluster.local
   ports:
   - port: 80
   type: ExternalName
---- #file: api-internal-VirtualService
-apiVersion: gateway.solo.io/v1
-kind: VirtualService
-metadata:
-  name: '{{.Release.Namespace}}-api.svc.cluster.local'
-  namespace: '{{- .Release.Namespace -}}'
-spec:
-  virtualHost:
-    domains:
-    - '{{.Release.Namespace}}-api.svc.cluster.local'
-    name: '{{.Release.Namespace}}-api.svc.cluster.local'
-    routes:
-    - matcher:
-        methods:
-        - GET
-        - POST
-        - DELETE
-        regex: /v1/users/[^/]+/restricted_tokens
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - POST
-        - DELETE
-        regex: /v1/users/[^/]+/provider_sessions
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - POST
-        - DELETE
-        - OPTIONS
-        regex: /v1/users/[^/]+/data_sources
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - PUT
-        - DELETE
-        regex: /v1/provider_sessions/[^/]+
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - DELETE
-        regex: /v1/oauth/[^/]+/authorize
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        regex: /v1/users/[^/]+/data_sets
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - POST
-        - DELETE
-        regex: /v1/users/[^/]+/images/.+
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-image-9226'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        regex: /v1/oauth/[^/]+/redirect
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - POST
-        regex: /v1/users/[^/]+/datasets
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        regex: /v1/blobs/[^/]+/content
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-blob-9225'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - PUT
-        - DELETE
-        regex: /v1/data_sources/[^/]+
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - POST
-        - DELETE
-        regex: /v1/users/[^/]+/images
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-image-9226'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - PUT
-        - DELETE
-        prefix: /v1/restricted_tokens
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - POST
-        - DELETE
-        regex: /v1/users/[^/]+/blobs
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-blob-9225'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - DELETE
-        regex: /v1/users/[^/]+/data
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - DELETE
-        regex: /v1/blobs/[^/]+
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-blob-9225'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - PUT
-        - DELETE
-        regex: /v1/tasks/[^/*]
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-task-9224'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - DELETE
-        regex: /v1/users/[^/*]
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-user-9221'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /dataservices/
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
-            namespace: '{{- .Release.Namespace -}}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /userservices/
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-user-9221'
-            namespace: '{{- .Release.Namespace -}}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
-    - matcher:
-        methods:
-        - GET
-        prefix: /v1/data_sets
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - POST
-        - PUT
-        - DELETE
-        prefix: /v1/datasets
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - PUT
-        - DELETE
-        prefix: /v1/images
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-image-9226'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /metadata/
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-seagull-9120'
-            namespace: '{{- .Release.Namespace -}}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /metrics/
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-highwater-9191'
-            namespace: '{{- .Release.Namespace -}}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /confirm/
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-hydrophone-9157'
-            namespace: '{{- .Release.Namespace -}}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /message/
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-message-api-9119'
-            namespace: '{{- .Release.Namespace -}}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /v1/data/
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
-            namespace: '{{- .Release.Namespace -}}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
-    - matcher:
-        methods:
-        - GET
-        - POST
-        prefix: /v1/tasks
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-task-9224'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /export/
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-export-9300'
-            namespace: '{{- .Release.Namespace -}}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /access/
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-gatekeeper-9123'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        prefix: /v1/time
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /auth/
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-shoreline-9107'
-            namespace: '{{- .Release.Namespace -}}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /data/
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-tide-whisperer-9127'
-            namespace: '{{- .Release.Namespace -}}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
---- #file: app-external-VirtualService
+--- #file: app.tidepool.org-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
@@ -947,44 +984,7 @@ spec:
           upstream:
             name: '{{- .Release.Namespace -}}-blip-3000'
             namespace: '{{- .Release.Namespace -}}'
---- #file: app-gateway-proxy-internal-Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: '{{.Release.Namespace.}}-app.gateway-proxy.svc.cluster.local'
-  namespace: '{{.Release.Namespace}}'
-spec:
-  externalName: gateway-proxy.gloo-system.svc.cluster.local
-  ports:
-  - port: 80
-  type: ExternalName
---- #file: app-internal-VirtualService
-apiVersion: gateway.solo.io/v1
-kind: VirtualService
-metadata:
-  name: '{{.Release.Namespace}}-app.svc.cluster.local'
-  namespace: '{{- .Release.Namespace -}}'
-spec:
-  virtualHost:
-    domains:
-    - '{{.Release.Namespace}}-app.svc.cluster.local'
-    name: '{{.Release.Namespace}}-app.svc.cluster.local'
-    routes:
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-blip-3000'
-            namespace: '{{- .Release.Namespace -}}'
---- #file: blip-Upstream
+--- #file: blip-3000-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -995,7 +995,7 @@ spec:
     serviceName: blip
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 3000
---- #file: export-Upstream
+--- #file: export-9300-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1006,7 +1006,7 @@ spec:
     serviceName: export
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9300
---- #file: gatekeeper-Upstream
+--- #file: gatekeeper-9123-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1017,7 +1017,7 @@ spec:
     serviceName: gatekeeper
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9123
---- #file: gateway-Gateway
+--- #file: gateway-gateway.yaml
 apiVersion: gateway.solo.io/v1
 bindAddress: '::'
 bindPort: 8080
@@ -1027,7 +1027,7 @@ metadata:
   namespace: gloo-system
 ssl: false
 useProxyProto: false
---- #file: gateway-proxy-Service
+--- #file: gateway-proxy-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -1046,7 +1046,7 @@ spec:
   selector:
     gloo: gateway-proxy
   type: LoadBalancer
---- #file: gateway-ssl-Gateway
+--- #file: gateway-ssl-gateway.yaml
 apiVersion: gateway.solo.io/v1
 bindAddress: '::'
 bindPort: 8443
@@ -1056,7 +1056,7 @@ metadata:
   namespace: gloo-system
 ssl: true
 useProxyProto: false
---- #file: highwater-Upstream
+--- #file: highwater-9191-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1067,7 +1067,7 @@ spec:
     serviceName: highwater
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9191
---- #file: hydrophone-Upstream
+--- #file: hydrophone-9157-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1078,7 +1078,7 @@ spec:
     serviceName: hydrophone
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9157
---- #file: jellyfish-Upstream
+--- #file: jellyfish-9122-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1089,7 +1089,7 @@ spec:
     serviceName: jellyfish
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9122
---- #file: message-api-Upstream
+--- #file: message-api-9119-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1100,7 +1100,7 @@ spec:
     serviceName: message-api
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9119
---- #file: platform-auth-Upstream
+--- #file: platform-auth-9222-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1111,7 +1111,7 @@ spec:
     serviceName: platform-auth
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9222
---- #file: platform-blob-Upstream
+--- #file: platform-blob-9225-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1122,7 +1122,7 @@ spec:
     serviceName: platform-blob
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9225
---- #file: platform-data-Upstream
+--- #file: platform-data-9220-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1133,7 +1133,7 @@ spec:
     serviceName: platform-data
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9220
---- #file: platform-image-Upstream
+--- #file: platform-image-9226-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1144,7 +1144,7 @@ spec:
     serviceName: platform-image
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9226
---- #file: platform-task-Upstream
+--- #file: platform-task-9224-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1155,7 +1155,7 @@ spec:
     serviceName: platform-task
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9224
---- #file: platform-user-Upstream
+--- #file: platform-user-9221-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1166,7 +1166,7 @@ spec:
     serviceName: platform-user
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9221
---- #file: seagull-Upstream
+--- #file: seagull-9120-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1177,7 +1177,7 @@ spec:
     serviceName: seagull
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9120
---- #file: shoreline-Upstream
+--- #file: shoreline-9107-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1188,7 +1188,7 @@ spec:
     serviceName: shoreline
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9107
---- #file: tide-whisperer-Upstream
+--- #file: tide-whisperer-9127-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -1199,7 +1199,44 @@ spec:
     serviceName: tide-whisperer
     serviceNamespace: '{{.Release.Namespace}}'
     servicePort: 9127
---- #file: uploads-external-VirtualService
+--- #file: uploads-internal-virtualservice.yaml
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: '{{.Release.Namespace}}-uploads.svc.cluster.local'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  virtualHost:
+    domains:
+    - '{{.Release.Namespace}}-uploads.svc.cluster.local'
+    name: '{{.Release.Namespace}}-uploads.svc.cluster.local'
+    routes:
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
+--- #file: uploads.gateway-proxy-internal-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: '{{.Release.Namespace}}-uploads.gateway-proxy.svc.cluster.local'
+  namespace: '{{.Release.Namespace}}'
+spec:
+  externalName: gateway-proxy.gloo-system.svc.cluster.local
+  ports:
+  - port: 80
+  type: ExternalName
+--- #file: uploads.tidepool.org-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
@@ -1232,43 +1269,6 @@ spec:
     domains:
     - '{{.Release.Namespace}}-uploads.tidepool.org'
     name: '{{.Release.Namespace}}-uploads.tidepool.org'
-    routes:
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-jellyfish-9122'
-            namespace: '{{- .Release.Namespace -}}'
---- #file: uploads-gateway-proxy-internal-Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: '{{.Release.Namespace.}}-uploads.gateway-proxy.svc.cluster.local'
-  namespace: '{{.Release.Namespace}}'
-spec:
-  externalName: gateway-proxy.gloo-system.svc.cluster.local
-  ports:
-  - port: 80
-  type: ExternalName
---- #file: uploads-internal-VirtualService
-apiVersion: gateway.solo.io/v1
-kind: VirtualService
-metadata:
-  name: '{{.Release.Namespace}}-uploads.svc.cluster.local'
-  namespace: '{{- .Release.Namespace -}}'
-spec:
-  virtualHost:
-    domains:
-    - '{{.Release.Namespace}}-uploads.svc.cluster.local'
-    name: '{{.Release.Namespace}}-uploads.svc.cluster.local'
     routes:
     - matcher:
         methods:
