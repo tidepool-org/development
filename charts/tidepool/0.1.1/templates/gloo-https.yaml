@@ -1,5 +1,5 @@
 # Auto-generated file by gloo-gateway. Do not edit.
-{{ if and (eq .Values.gateway.name gloo) (.Values.https.enabled) }}
+{{ if and (eq .Values.gateway.name "gloo") (.Values.https.enabled) }}
 --- #file: api-internal-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
