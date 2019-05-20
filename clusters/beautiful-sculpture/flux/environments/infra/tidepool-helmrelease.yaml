@@ -39,6 +39,8 @@ spec:
       name: gloo
     https:
       enabled: true
+    http:
+      enabled: false
     mongo:
       enabled: false
     hostnameOverride: ""
