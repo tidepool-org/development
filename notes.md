@@ -10,8 +10,10 @@ brew install kubernetes-cli
 #### *MANUAL*: # create GitHub access key and store in `~/.secrets/github_access_token`
 
 #### install tiller
+```
 kubectl -n kube-system create sa tiller
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+```
 
 #### each time you upgrade the helm client tools, you must upgrade the tiller client as well
 #### this command can be used both for the initial install of helm and subsequent upgrades
