@@ -2,7 +2,7 @@
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
-  name: tidepool
+  name: loadbalancer
   namespace: infra
 spec:
   chart:
