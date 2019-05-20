@@ -1,4 +1,6 @@
 #!/usr/local/bin/python3
+# Generate Istio manifests from Ambassador Mappings
+
 import os
 import subprocess
 import sys

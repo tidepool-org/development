@@ -1,4 +1,6 @@
 #!/usr/local/bin/python3
+# Generate gloo manifests files from Ambassador Mapppings
+
 import json
 import os
 import subprocess
