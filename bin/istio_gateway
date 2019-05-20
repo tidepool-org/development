@@ -1,0 +1,8 @@
+#!/bin/bash
+
+mappings | istio_manifests http  | single_file "# Auto-generated file by istio-gateway. Do not edit.
+{{ if and (.Values.istio.enabled) (.Values.http.enabled) }}" "{{ end }}" > "istio-http.yaml"
+
+mappings | istio_manifests https | single_file "# Auto-generated file by istio-gateway. Do not edit.
+{{ if and (.Values.istio.enabled) (.Values.https.enabled) }}" "{{ end }}" > "istio-https.yaml"
+
