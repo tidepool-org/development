@@ -4,6 +4,7 @@
 
 import yaml
 import sys
+import re
 
 input = yaml.safe_load(sys.stdin)
  
@@ -18,7 +19,8 @@ else:
     footer = None
 
 for name, manifest in input.items():
-    with open(name + "-" + manifest["Kind"] + ".yaml", "w") as out:
+
+    with open(name + ".yaml", "w") as out:
        if header is not None:
             out.write(header + "\n")
        yaml.dump(manifest, out)

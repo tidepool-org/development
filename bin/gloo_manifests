@@ -6,6 +6,7 @@ import os
 import subprocess
 import sys
 import yaml
+import re
 
 CORS_POLICY_STRING = """
 {
@@ -305,7 +306,7 @@ def gateway_proxy_service_spec(service_type, useSSL):
 
 def internal_metadata(base):
     metadata = dict()
-    metadata["name"] = "{{.Release.Namespace.}}-" + base + ".gateway-proxy.svc.cluster.local"
+    metadata["name"] = "{{.Release.Namespace}}-" + base + ".gateway-proxy.svc.cluster.local"
     metadata["namespace"] = "{{.Release.Namespace}}"
     return metadata
 
@@ -371,11 +372,17 @@ def internal_hostname(base):
     return "{{.Release.Namespace}}-" + base + ".svc.cluster.local"
 
 class ManifestBuilder:
+    regex = re.compile(r"\{\{[\s-]*\.Release\.Namespace[\s-]*\}\}[\s-]*")
+
     def __init__(self):
         self.manifest_dict = dict()
     
-    def add(self, manifest, name):
+    def add(self, manifest):
         if manifest is not None:
+            service_name = ManifestBuilder.regex.sub("", manifest["metadata"]["name"])
+            service_name = service_name.replace(".svc.cluster.local","-internal")
+            service_kind = manifest["kind"].lower()
+            name = service_name + "-" + service_kind
             self.manifest_dict[name] = manifest
 
     def get(self):
@@ -392,17 +399,17 @@ def manifests_from_mappings(protocol, mappings):
         ordered = ordered_routes(routes)
         external_virtual_service = virtual_service(ordered, external_hostname(base), cors_policy, use_https)
         internal_virtual_service = virtual_service(ordered, internal_hostname(base), None, False)
-        builder.add(internal_virtual_service, base + "-internal")
-        builder.add(external_virtual_service, base + "-external")
-        builder.add(internal_service(base), base + "-gateway-proxy-internal")
+        builder.add(internal_virtual_service)
+        builder.add(external_virtual_service)
+        builder.add(internal_service(base))
     for ref in upstream_refs(mappings):
-        builder.add(upstream_kind(ref), ref["service"])
-    builder.add(gateway(False), "gateway")
-    builder.add(gateway(True), "gateway-ssl")
+        builder.add(upstream_kind(ref))
+    builder.add(gateway(False))
+    builder.add(gateway(True))
     if use_https:
         # need an additional internal http proxy service
-        builder.add(gateway_proxy_service("cluster", False), "gateway-proxy-internal")
-    builder.add(gateway_proxy_service("elb", use_https), "gateway-proxy")
+        builder.add(gateway_proxy_service("cluster", False))
+    builder.add(gateway_proxy_service("elb", use_https))
     return builder.get()
 
 def write_manifests(manifests):

@@ -20,8 +20,9 @@ else:
 out = sys.stdout
 if header is not None:
     out.write(header + "\n")
+
 for name, manifest in input.items():
-    out.write("--- #file: " + name + "-" + manifest["kind"] +"\n")
+    out.write("--- #file: " + name  +".yaml\n")
     yaml.dump(manifest, out)
 if footer is not None:
     out.write(footer + "\n")
