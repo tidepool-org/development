@@ -33,7 +33,7 @@ CORS_POLICY_STRING = """
         "x-tidepool-trace-request",
         "x-tidepool-trace-session"
     ],
-    "maxAge": "300s"
+    "maxAge": "600s"
 }
 """
 CORS_POLICY=json.loads(CORS_POLICY_STRING)
@@ -122,22 +122,22 @@ def virtual_service(routes, hostname, cors, useSSL):
     else:
         return None
 
-def methods(doc):
+def methods(mapping):
     methods = list()
-    if "method_regex" in doc and doc[ "method_regex"]:
-        methods = doc["method"].split("|")
+    if "method_regex" in mapping and mapping[ "method_regex"]:
+        methods = mapping["method"].split("|")
     else:
-        methods.append(doc["method"])
+        methods.append(mapping["method"])
     return methods
 
-def matcher(doc):
+def matcher(mapping):
     """Return a gloo matcher"""
     matcher = dict()
-    if "prefix_regex" in doc and doc[ "prefix_regex"]:
-        matcher["regex"] = doc["prefix"]
-    elif "prefix" in doc and doc["prefix"]:
-        matcher["prefix"] = doc["prefix"]
-    matcher["methods"] = methods(doc)
+    if "prefix_regex" in mapping and mapping[ "prefix_regex"]:
+        matcher["regex"] = mapping["prefix"]
+    elif "prefix" in mapping and mapping["prefix"]:
+        matcher["prefix"] = mapping["prefix"]
+    matcher["methods"] = methods(mapping)
     return matcher
 
 def prefix_rewrite(path):
@@ -146,52 +146,65 @@ def prefix_rewrite(path):
     prefix_rewrite["prefixRewrite"] = path
     return prefix_rewrite
 
-def route_plugins(doc):
+def route_plugins(mapping):
     """Return a gloo routePlugins"""
     routePlugins = dict()
-    if "rewrite" not in doc:
+    if "rewrite" not in mapping:
         routePlugins["prefixRewrite"] = prefix_rewrite("/")
-    elif doc["rewrite"] != "":
-        routePlugins["prefixRewrite"] = prefix_rewrite(doc["rewrite"])
+    elif mapping["rewrite"] != "":
+        routePlugins["prefixRewrite"] = prefix_rewrite(mapping["rewrite"])
     else:  
         return None
     return routePlugins
 
-def upstream(doc):
-    """Return a gloo upstream."""
-    upstream = dict()
-    s = doc["service"]
-    name = doc["name"]
+def service_and_port(mapping):
+    """Return a service and port"""
+    s = mapping["service"]
+    name = mapping["name"]
     if ":" in s:
         (svc_with_namespace,port) = s.split(":")
     else:
         svc_with_namespace = s
     svc = svc_with_namespace.replace(".default","")
-    
-    upstream["name"] = "{{- .Release.Namespace -}}" + "-" + svc + "-" + port
+    return svc, port
+
+def upstream_refs(mappings):
+    ref_dict = dict()
+    for mapping in mappings:
+        service, port = service_and_port(mapping)
+        name = service + "-" + port 
+        if name not in ref_dict:
+            ref_dict[name] = { "service" : service, "port" : port }
+    return ref_dict.values()     
+
+def upstream_ref(service, port):
+    """Return a gloo upstream."""
+    upstream = dict()
+    upstream["name"] = "{{- .Release.Namespace -}}" + "-" + service + "-" + port
     upstream["namespace"] = "{{- .Release.Namespace -}}"
     return upstream
 
-def single(doc):
+def single(mapping):
     """Return a gloo single."""
     single = dict()
-    single["upstream"] = upstream(doc)
+    service, port = service_and_port(mapping)
+    single["upstream"] = upstream_ref(service, port)
     return single
 
-def route_action(doc):
+def route_action(mapping):
     """Return a gloo routeAction"""
     routeAction = dict()
-    routeAction["single"] = single(doc)
+    routeAction["single"] = single(mapping)
     return routeAction
 
-def route(doc):
+def route(mapping):
     """Return a gloo route"""
     route = dict()
-    route["matcher"] = matcher(doc)
-    plugins = route_plugins(doc)
+    route["matcher"] = matcher(mapping)
+    plugins = route_plugins(mapping)
     if plugins is not None:
         route["routePlugins"] = plugins
-    route["routeAction"] = route_action(doc)
+    route["routeAction"] = route_action(mapping)
     return route
 
 class RoutesDict:
@@ -214,6 +227,49 @@ def routes_dict(mappings):
     for mapping in mappings:
         routes_dict.add(mapping)
     return routes_dict.get()
+
+"""
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  labels:
+    app: productpage
+  name: {{.Release.Namespace}}-productpage-9080
+  namespace: {{.Release.Namespace}}
+spec:
+    kube:
+      selector:
+        app: productpage
+      serviceName: productpage
+      serviceNamespace: default
+      servicePort: 9080
+"""
+
+def kube_selector():
+    #XXXX
+    selector = dict()
+    return selector
+
+def kube_spec(ref):
+    kube = dict()
+    kube["selector"] = kube_selector()
+    kube["serviceName"] = ref["service"]
+    kube["serviceNamespace"] = "{{.Release.Namespace}}"
+    kube["servicePort"] = ref["port"]
+    return kube
+
+def upstream_spec(ref):
+    spec = dict()
+    spec["kube"] = kube_spec(ref)
+    return spec 
+
+def upstream_kind(ref):
+    upstream = dict()
+    upstream["apiVersion"] = "gloo.solo.io/v1"
+    upstream["kind"] = "Upstream"
+    upstream["metadata"] = upstream_ref( ref["service"], ref["port"])
+    upstream["spec"] = upstream_spec(ref)
+    return upstream
 
 def gateway_proxy_service_labels():
     labels = dict()
@@ -342,7 +398,8 @@ class ManifestBuilder:
         self.manifest_dict = dict()
     
     def add(self, manifest, name):
-        self.manifest_dict[name] = manifest
+        if manifest is not None:
+            self.manifest_dict[name] = manifest
 
     def get(self):
         return self.manifest_dict
@@ -361,6 +418,8 @@ def manifests_from_mappings(protocol, mappings):
         builder.add(internal_virtual_service, base + "-internal-virtual-service")
         builder.add(external_virtual_service, base + "-external-virtual-service")
         builder.add(internal_service(base), base + "-gateway-proxy-internal")
+    for ref in upstream_refs(mappings):
+        builder.add(upstream_kind(ref), ref["service"] + "upstream")
     builder.add(gateway(False), "gateway")
     builder.add(gateway(True), "gateway-ssl")
     if use_https:
