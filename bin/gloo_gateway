@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mappings | gloo_manifests http | single_file "# Auto-generated file by gloo-gateway. Do not edit.
-{{ if and (eq .Values.gateway.name "gloo") (.Values.http.enabled) }}" "{{ end }}" > "gloo-http.yaml"
+{{ if and (eq .Values.gateway.name \"gloo\") (.Values.http.enabled) }}" "{{ end }}" > "gloo-http.yaml"
 
 mappings | gloo_manifests https | single_file "# Auto-generated file by gloo-gateway. Do not edit.
-{{ if and (eq .Values.gateway.name "gloo") (.Values.https.enabled) }}" "{{ end }}" > "gloo-https.yaml"
+{{ if and (eq .Values.gateway.name \"gloo\") (.Values.https.enabled) }}" "{{ end }}" > "gloo-https.yaml"

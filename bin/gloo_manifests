@@ -234,11 +234,15 @@ def kube_spec(ref):
     kube["serviceName"] = ref["service"]
     kube["serviceNamespace"] = "{{.Release.Namespace}}"
     kube["servicePort"] = ref["port"]
+    kube["selector"] = dict()
     return kube
+
+dec 
 
 def upstream_spec(ref):
     spec = dict()
-    spec["kube"] = kube_spec(ref)
+    spec["upstreamSpec"] = dict()
+    spec["upstreamSpec"]["kube"] = kube_spec(ref)
     return spec 
 
 def upstream_kind(ref):
