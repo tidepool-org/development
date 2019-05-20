@@ -392,17 +392,17 @@ def manifests_from_mappings(protocol, mappings):
         ordered = ordered_routes(routes)
         external_virtual_service = virtual_service(ordered, external_hostname(base), cors_policy, use_https)
         internal_virtual_service = virtual_service(ordered, internal_hostname(base), None, False)
-        builder.add(internal_virtual_service, base + "-internal-virtual-service")
-        builder.add(external_virtual_service, base + "-external-virtual-service")
+        builder.add(internal_virtual_service, base + "-internal")
+        builder.add(external_virtual_service, base + "-external")
         builder.add(internal_service(base), base + "-gateway-proxy-internal")
     for ref in upstream_refs(mappings):
-        builder.add(upstream_kind(ref), ref["service"] + "-upstream")
+        builder.add(upstream_kind(ref), ref["service"])
     builder.add(gateway(False), "gateway")
     builder.add(gateway(True), "gateway-ssl")
     if use_https:
         # need an additional internal http proxy service
-        builder.add(gateway_proxy_service("cluster", False), "gateway-proxy-service")
-    builder.add(gateway_proxy_service("elb", use_https), "gateway-proxy-service")
+        builder.add(gateway_proxy_service("cluster", False), "gateway-proxy-internal")
+    builder.add(gateway_proxy_service("elb", use_https), "gateway-proxy")
     return builder.get()
 
 def write_manifests(manifests):
