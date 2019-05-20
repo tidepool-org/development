@@ -7,6 +7,7 @@ metadata:
   name: '{{.Release.Namespace}}-api.svc.cluster.local'
   namespace: '{{- .Release.Namespace -}}'
 spec:
+  displayName: '{{.Release.Namespace}}-api.svc.cluster.local'
   virtualHost:
     domains:
     - '{{.Release.Namespace}}-api.svc.cluster.local'
@@ -451,6 +452,7 @@ metadata:
   name: '{{.Release.Namespace}}-api.tidepool.org'
   namespace: '{{- .Release.Namespace -}}'
 spec:
+  displayName: '{{.Release.Namespace}}-api.tidepool.org'
   virtualHost:
     corsPolicy:
       allowCredentials: true
@@ -906,6 +908,7 @@ metadata:
   name: '{{.Release.Namespace}}-app.svc.cluster.local'
   namespace: '{{- .Release.Namespace -}}'
 spec:
+  displayName: '{{.Release.Namespace}}-app.svc.cluster.local'
   virtualHost:
     domains:
     - '{{.Release.Namespace}}-app.svc.cluster.local'
@@ -943,6 +946,7 @@ metadata:
   name: '{{.Release.Namespace}}-app.tidepool.org'
   namespace: '{{- .Release.Namespace -}}'
 spec:
+  displayName: '{{.Release.Namespace}}-app.tidepool.org'
   virtualHost:
     corsPolicy:
       allowCredentials: true
@@ -991,10 +995,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-blip-3000'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: blip
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 3000
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: blip
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 3000
 --- #file: export-9300-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1002,10 +1008,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-export-9300'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: export
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9300
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: export
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9300
 --- #file: gatekeeper-9123-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1013,10 +1021,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-gatekeeper-9123'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: gatekeeper
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9123
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: gatekeeper
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9123
 --- #file: gateway-gateway.yaml
 apiVersion: gateway.solo.io/v1
 bindAddress: '::'
@@ -1063,10 +1073,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-highwater-9191'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: highwater
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9191
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: highwater
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9191
 --- #file: hydrophone-9157-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1074,10 +1086,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-hydrophone-9157'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: hydrophone
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9157
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: hydrophone
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9157
 --- #file: jellyfish-9122-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1085,10 +1099,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-jellyfish-9122'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: jellyfish
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9122
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: jellyfish
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9122
 --- #file: message-api-9119-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1096,10 +1112,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-message-api-9119'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: message-api
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9119
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: message-api
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9119
 --- #file: platform-auth-9222-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1107,10 +1125,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-platform-auth-9222'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: platform-auth
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9222
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: platform-auth
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9222
 --- #file: platform-blob-9225-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1118,10 +1138,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-platform-blob-9225'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: platform-blob
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9225
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: platform-blob
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9225
 --- #file: platform-data-9220-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1129,10 +1151,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-platform-data-9220'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: platform-data
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9220
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: platform-data
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9220
 --- #file: platform-image-9226-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1140,10 +1164,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-platform-image-9226'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: platform-image
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9226
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: platform-image
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9226
 --- #file: platform-task-9224-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1151,10 +1177,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-platform-task-9224'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: platform-task
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9224
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: platform-task
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9224
 --- #file: platform-user-9221-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1162,10 +1190,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-platform-user-9221'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: platform-user
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9221
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: platform-user
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9221
 --- #file: seagull-9120-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1173,10 +1203,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-seagull-9120'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: seagull
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9120
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: seagull
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9120
 --- #file: shoreline-9107-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1184,10 +1216,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-shoreline-9107'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: shoreline
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9107
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: shoreline
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9107
 --- #file: tide-whisperer-9127-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1195,10 +1229,12 @@ metadata:
   name: '{{- .Release.Namespace -}}-tide-whisperer-9127'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  kube:
-    serviceName: tide-whisperer
-    serviceNamespace: '{{.Release.Namespace}}'
-    servicePort: 9127
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: tide-whisperer
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9127
 --- #file: uploads-internal-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
@@ -1206,6 +1242,7 @@ metadata:
   name: '{{.Release.Namespace}}-uploads.svc.cluster.local'
   namespace: '{{- .Release.Namespace -}}'
 spec:
+  displayName: '{{.Release.Namespace}}-uploads.svc.cluster.local'
   virtualHost:
     domains:
     - '{{.Release.Namespace}}-uploads.svc.cluster.local'
@@ -1243,6 +1280,7 @@ metadata:
   name: '{{.Release.Namespace}}-uploads.tidepool.org'
   namespace: '{{- .Release.Namespace -}}'
 spec:
+  displayName: '{{.Release.Namespace}}-uploads.tidepool.org'
   virtualHost:
     corsPolicy:
       allowCredentials: true
