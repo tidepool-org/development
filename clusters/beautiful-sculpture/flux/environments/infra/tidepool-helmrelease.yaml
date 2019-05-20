@@ -35,14 +35,12 @@ spec:
   values:
     usessl: true
     domain: "tidepool.org"
-    ambassador:
-      enabled: false
+    gateway:
+      name: gloo
+    https:
+      enabled: true
     mongo:
       enabled: false
-    gloo:
-      enabled: false
-      namespace:
-        create: false
     hostnameOverride: ""
     includeSecrets: false
     blip:
