@@ -4,6 +4,7 @@ metadata:
   name: prometheus
   namespace: prometheus
 spec:
+  releaseName: prometheus
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
     name: prometheus
