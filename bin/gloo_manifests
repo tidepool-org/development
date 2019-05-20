@@ -396,7 +396,7 @@ def manifests_from_mappings(protocol, mappings):
         builder.add(external_virtual_service, base + "-external-virtual-service")
         builder.add(internal_service(base), base + "-gateway-proxy-internal")
     for ref in upstream_refs(mappings):
-        builder.add(upstream_kind(ref), ref["service"] + "upstream")
+        builder.add(upstream_kind(ref), ref["service"] + "-upstream")
     builder.add(gateway(False), "gateway")
     builder.add(gateway(True), "gateway-ssl")
     if use_https:
