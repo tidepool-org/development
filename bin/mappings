@@ -72,8 +72,11 @@ def ambassador_mappings_from_directory(directory):
     return mappings
 
 def main():
-    chartsdir="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
-    mappings = ambassador_mappings_from_directory(chartsdir + 'tidepool/0.1.0')
+    if len(sys.argv) == 2:
+        chartsdir = sys.argv[1]
+    else:
+        chartsdir="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/tidepool/0.1.0"
+    mappings = ambassador_mappings_from_directory(chartsdir)
     print(yaml.dump(mappings,Dumper=yaml.Dumper))
 
 if __name__ == "__main__":
