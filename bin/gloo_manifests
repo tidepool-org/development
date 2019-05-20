@@ -166,13 +166,13 @@ def service_and_port(mapping):
     else:
         svc_with_namespace = s
     svc = svc_with_namespace.replace(".default","")
-    return svc, port
+    return svc, int(port)
 
 def upstream_refs(mappings):
     ref_dict = dict()
     for mapping in mappings:
         service, port = service_and_port(mapping)
-        name = service + "-" + port 
+        name = service + "-" + str(port) 
         if name not in ref_dict:
             ref_dict[name] = { "service" : service, "port" : port }
     return ref_dict.values()     
@@ -180,7 +180,7 @@ def upstream_refs(mappings):
 def upstream_ref(service, port):
     """Return a gloo upstream."""
     upstream = dict()
-    upstream["name"] = "{{- .Release.Namespace -}}" + "-" + service + "-" + port
+    upstream["name"] = "{{- .Release.Namespace -}}" + "-" + service + "-" + str(port)
     upstream["namespace"] = "{{- .Release.Namespace -}}"
     return upstream
 
