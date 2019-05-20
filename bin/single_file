@@ -1,35 +1,28 @@
 #!/usr/local/bin/python3
+# Generate a single file from a yaml map whose keys are the file names and the values are the file contents
+# Optionally add a header and footer
+
 import yaml
 import sys
 
 input = yaml.safe_load(sys.stdin)
-if len(sys.argv) >= 2:
-    output_dir = sys.argv[1]
-else:
-    output_dir = "."
- 
-if len(sys.argv) >= 3:
-    name = sys.argv[2]
-else:
-    name = "router"
 
-if len(sys.argv) >= 4:
-    header = sys.argv[3]
+if len(sys.argv) >= 2:
+    header = sys.argv[1]
 else:
     header = None
 
-if len(sys.argv) >= 5:
-    footer = sys.argv[4]
+if len(sys.argv) >= 3:
+    footer = sys.argv[2]
 else:
     footer = None
 
-with open(output_dir + "/" + name + ".yaml", "w") as out:
-   if header is not None:
-       out.write(header + "\n")
-   for name, manifest in input.items():
-       out.write("--- #file: " + name + "\n")
-       yaml.dump(manifest, out)
-   if footer is not None:
-       out.write(footer + "\n")
-   out.flush()
-    
+out = sys.stdout
+if header is not None:
+    out.write(header + "\n")
+for name, manifest in input.items():
+    out.write("--- #file: " + name + "\n")
+    yaml.dump(manifest, out)
+if footer is not None:
+    out.write(footer + "\n")
+out.flush()   
