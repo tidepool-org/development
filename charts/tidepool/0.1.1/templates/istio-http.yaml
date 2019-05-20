@@ -1,6 +1,6 @@
 # Auto-generated file by istio-gateway. Do not edit.
-{{ if and (.Values.istio.enabled) (.Values.http.enabled) }}
---- #file: api-virtual-service
+{{ if and (eq .Values.gateway.name "istio") (.Values.http.enabled) }}
+--- #file: api-virtual-service.yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -35,7 +35,7 @@ spec:
       - x-tidepool-session-token
       - x-tidepool-trace-request
       - x-tidepool-trace-session
-      maxAge: 300s
+      maxAge: 600s
     match:
     - method:
         regex: GET|POST|DELETE
@@ -429,7 +429,7 @@ spec:
         host: default-api.tidepool.org
         port:
           number: 9127
---- #file: app-virtual-service
+--- #file: app-virtual-service.yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -464,7 +464,7 @@ spec:
       - x-tidepool-session-token
       - x-tidepool-trace-request
       - x-tidepool-trace-session
-      maxAge: 300s
+      maxAge: 600s
     match:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
@@ -475,7 +475,7 @@ spec:
         host: default-app.tidepool.org
         port:
           number: 3000
---- #file: gateway
+--- #file: gateway.yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
@@ -496,7 +496,7 @@ spec:
     tls:
       credentialName: tidepool-org
       mode: SIMPLE
---- #file: uploads-virtual-service
+--- #file: uploads-virtual-service.yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -531,7 +531,7 @@ spec:
       - x-tidepool-session-token
       - x-tidepool-trace-request
       - x-tidepool-trace-session
-      maxAge: 300s
+      maxAge: 600s
     match:
     - method:
         regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
