@@ -35,7 +35,7 @@ CORS_POLICY_STRING = """
         "x-tidepool-trace-request",
         "x-tidepool-trace-session"
     ],
-    "maxAge": "300s"
+    "maxAge": "600s"
 }
 """
 CORS_POLICY=json.loads(CORS_POLICY_STRING)
@@ -59,7 +59,7 @@ def sort_key(http_route):
         return 0
 
 def ordered_http_routes(http_routes):
-    """TBB. Return a sorted list of http routes from least general to most general."""
+    """Return a sorted list of http routes from least general to most general."""
     # sort by length of prefix/regex from longest to 
     return sorted(http_routes, key=sort_key, reverse=True) 
 
