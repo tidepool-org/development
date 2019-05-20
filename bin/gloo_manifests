@@ -228,31 +228,8 @@ def routes_dict(mappings):
         routes_dict.add(mapping)
     return routes_dict.get()
 
-"""
-apiVersion: gloo.solo.io/v1
-kind: Upstream
-metadata:
-  labels:
-    app: productpage
-  name: {{.Release.Namespace}}-productpage-9080
-  namespace: {{.Release.Namespace}}
-spec:
-    kube:
-      selector:
-        app: productpage
-      serviceName: productpage
-      serviceNamespace: default
-      servicePort: 9080
-"""
-
-def kube_selector():
-    #XXXX
-    selector = dict()
-    return selector
-
 def kube_spec(ref):
     kube = dict()
-    kube["selector"] = kube_selector()
     kube["serviceName"] = ref["service"]
     kube["serviceNamespace"] = "{{.Release.Namespace}}"
     kube["servicePort"] = ref["port"]
