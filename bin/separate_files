@@ -1,0 +1,29 @@
+#!/usr/local/bin/python3
+import yaml
+import sys
+
+input = yaml.safe_load(sys.stdin)
+if len(sys.argv) >= 2:
+    output_dir = sys.argv[1]
+else:
+    output_dir = "."
+ 
+if len(sys.argv) >= 3:
+    header = sys.argv[2]
+else:
+    header = None
+
+if len(sys.argv) >= 4:
+    footer = sys.argv[3]
+else:
+    footer = None
+
+for name, manifest in input.items():
+    with open(output_dir + "/" + name + ".yaml", "w") as out:
+       if header is not None:
+            out.write(header + "\n")
+       yaml.dump(manifest, out)
+       if footer is not None:
+           out.write(footer + "\n")
+       out.flush()
+    

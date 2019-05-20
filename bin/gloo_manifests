@@ -444,19 +444,11 @@ def ambassador_services_from_directory(input_dir):
     docs = yaml.load_all(helm.stdout, Loader=yaml.FullLoader)
     return ambassador_services_from(docs)
 
-def write_manifests(manifests, output_dir, header, footer):
-    print(header)
+def write_manifests(manifests):
     print(yaml.dump(manifests, explicit_start = True, default_flow_style=False))
-    print(footer)
 
 def main():
-    chartsdir="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/"
-    mappings = yaml.safe_load(sys.stdin)
-    manifests = gloo_manifests_from_mappings(mappings)
-
-    header="{{- if .Values.gloo.enabled -}}"
-    footer="{{- end -}}"
-    write_manifests(list(manifests.values()), chartsdir + 'tidepool/0.1.1', header, footer)
+    write_manifests(gloo_manifests_from_mappings(yaml.safe_load(sys.stdin)))
 
 if __name__ == "__main__":
     main()
