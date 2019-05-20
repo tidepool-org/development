@@ -1,0 +1,21 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: tidepool
+  namespace: infra
+spec:
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: charts/loadbalancer/0.1.0
+  values:
+    gateway:
+      name: gloo
+      value: gloo-gateway
+    namespace:
+      name: gloo-system
+      create: true
+    http:
+      enabled: false
+    https:
+      enabled: true

@@ -9,7 +9,7 @@ spec:
   chart:
     repository: https://storage.googleapis.com/solo-public-helm/
     name: gloo
-    version: 0.10.5
+    version: 0.13.29
   values:
     namespace:
       create: false
@@ -59,12 +59,11 @@ spec:
         httpsPort: 8443
         replicas: 1
       service:
-        type: LoadBalancer
+        type: ClusterIP
         # clusterIP: None
         httpPort: 80
         httpsPort: 443
-        extraAnnotations:
-          service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+        extraAnnotations: {}
       configMap:
         data:
     
