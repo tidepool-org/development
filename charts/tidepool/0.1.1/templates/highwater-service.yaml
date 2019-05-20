@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert
+    kompose.version: 1.17.0 (a74acad)
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      host: {{ include "charts.host.api" . }}
+      name: {{ .Release.Namespace -}}-highwater-metrics
+      prefix: /metrics/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      rewrite: "/"
+      path_redirect: "false"
+      service: highwater.{{ .Release.Namespace }}:{{.Values.highwater.port}}
+  creationTimestamp: null
+  labels:
+    io.kompose.service: highwater
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: highwater
+  namespace: {{.Release.Namespace}}
+spec:
+  ports:
+  - name: "{{.Values.highwater.port}}"
+    port: {{.Values.highwater.port}}
+    targetPort: {{.Values.highwater.port}}
+  selector:
+    io.kompose.service: highwater
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+status:
+  loadBalancer: {}

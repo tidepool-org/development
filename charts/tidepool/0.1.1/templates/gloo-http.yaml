@@ -1,5 +1,5 @@
 # Auto-generated file by gloo-gateway. Do not edit.
-{{ if and (.Values.gloo.enabled) (.Values.http.enabled) }}
+{{ if and (eq .Values.gateway.name gloo) (.Values.http.enabled) }}
 --- #file: api-internal-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
@@ -1027,6 +1027,25 @@ metadata:
   namespace: gloo-system
 ssl: false
 useProxyProto: false
+--- #file: gateway-proxy-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: gloo
+    gloo: gateway-proxy
+  name: gateway-proxy
+  namespace: gloo-system
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    gloo: gateway-proxy
+  type: LoadBalancer
 --- #file: gateway-ssl-gateway.yaml
 apiVersion: gateway.solo.io/v1
 bindAddress: '::'
