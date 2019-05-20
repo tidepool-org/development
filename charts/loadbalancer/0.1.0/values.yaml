@@ -1,0 +1,11 @@
+gateway: 
+  name: gloo
+  value: gateway-proxy
+namespace:
+  name: gloo-system
+  create: true
+https:
+  enabled: false
+http:
+  enabled: true
+

@@ -1,0 +1,30 @@
+{{ if .Values.namespace.create }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{.Values.namespace.name}}
+{{ end }}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.gateway.name}}-gateway-loadbalancer
+  namespace: {{.Values.namespace.name}}
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+{{if .Values.https.enabled }}
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8443
+{{ end }}
+{{if .Values.https.enabled }}
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+{{ end }}
+  selector:
+    {{.Values.gateway.name}}: {{ .Values.gateway.value }}
+  type: LoadBalancer
