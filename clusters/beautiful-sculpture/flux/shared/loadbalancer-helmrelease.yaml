@@ -7,7 +7,7 @@ metadata:
 spec:
   chart:
     git: git@github.com:tidepool-org/development
-    path: charts/loadbalancer/0.1.0
+    path: charts/loadbalancer
   values:
     gateway:
       name: gloo
