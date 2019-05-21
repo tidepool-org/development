@@ -56,9 +56,9 @@ def yaml_docs_from_metadata_string(metadata):
             docs.append(raw_doc)
     return docs
 
-def ambassador_mappings(docs):
+def ambassador_mappings(input):
     mappings = list()
-    for service in ambassador_services_from(docs):
+    for service in ambassador_services_from(input):
         ambassador_metadata = metadata_from_ambassador_service(service)
         if ambassador_metadata:
             docs = yaml_docs_from_metadata_string(ambassador_metadata)
@@ -70,7 +70,9 @@ def ambassador_mappings(docs):
 
 def main():
     docs = list(yaml.load_all(sys.stdin, Loader=yaml.FullLoader))
+    print(docs)
     mappings = ambassador_mappings(docs)
+    print(yaml.dump(mappings,Dumper=yaml.Dumper))
 
 if __name__ == "__main__":
     main()
