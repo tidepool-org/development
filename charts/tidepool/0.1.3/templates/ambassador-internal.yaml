@@ -1,35 +1,7 @@
-{{ if (and (eq .Values.gateway.name "ambassador") (eq .Values.https.enabled }}
+{{ if (eq .Values.gateway.name "ambassador") }}
 ---
 apiVersion: getambassador.io/v1
-config:
-  server:
-    enabled: true
-    redirect_cleartext_from: 8080
-    secret: ambassador-certs
-kind: Module
-name: tls
-
----
-apiVersion: getambassador.io/v1
-config:
-  cors:
-    credentials: true
-    exposed_headers: x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session
-    headers: authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request,
-      x-tidepool-trace-session
-    max_age: '600s'
-    methods: GET, POST, PUT, PATCH, DELETE
-    origins: '*'
-  service_port: 8443
-  use_proxy_proto: false
-  use_remote_address: true
-  x_forwarded_proto_redirect: true
-kind: Module
-name: ambassador
-
----
-apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-app.tidepool.org
+host: {{.Release.Namespace}}-app-internal
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
@@ -40,7 +12,7 @@ service: blip.{{.Release.Namespace}}:3000
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
@@ -52,7 +24,7 @@ service: export.{{.Release.Namespace}}:9300
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
@@ -63,7 +35,7 @@ service: gatekeeper.{{.Release.Namespace}}:9123
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
@@ -75,7 +47,7 @@ service: highwater.{{.Release.Namespace}}:9191
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
@@ -87,7 +59,7 @@ service: hydrophone.{{.Release.Namespace}}:9157
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-uploads.tidepool.org
+host: {{.Release.Namespace}}-uploads-internal
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
@@ -99,7 +71,7 @@ service: jellyfish.{{.Release.Namespace}}:9122
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
@@ -111,7 +83,7 @@ service: message-api.{{.Release.Namespace}}:9119
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|POST|DELETE
 method_regex: true
@@ -123,7 +95,7 @@ service: platform-auth.{{.Release.Namespace}}:9222
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|POST|DELETE
 method_regex: true
@@ -135,7 +107,7 @@ service: platform-auth.{{.Release.Namespace}}:9222
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|PUT|DELETE
 method_regex: true
@@ -146,7 +118,7 @@ service: platform-auth.{{.Release.Namespace}}:9222
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|PUT|DELETE
 method_regex: true
@@ -158,7 +130,7 @@ service: platform-auth.{{.Release.Namespace}}:9222
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|DELETE
 method_regex: true
@@ -170,7 +142,7 @@ service: platform-auth.{{.Release.Namespace}}:9222
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET
 name: {{.Release.Namespace}}-platform-auth-redirect
@@ -181,7 +153,7 @@ service: platform-auth.{{.Release.Namespace}}:9222
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|POST|DELETE
 method_regex: true
@@ -193,7 +165,7 @@ service: platform-blob.{{.Release.Namespace}}:9225
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|DELETE
 method_regex: true
@@ -205,7 +177,7 @@ service: platform-blob.{{.Release.Namespace}}:9225
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET
 name: {{.Release.Namespace}}-platform-blob-blobs-content
@@ -216,7 +188,7 @@ service: platform-blob.{{.Release.Namespace}}:9225
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
@@ -228,7 +200,7 @@ service: platform-data.{{.Release.Namespace}}:9220
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
@@ -240,7 +212,7 @@ service: platform-data.{{.Release.Namespace}}:9220
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|POST|DELETE|OPTIONS
 method_regex: true
@@ -252,7 +224,7 @@ service: platform-data.{{.Release.Namespace}}:9220
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET
 name: {{.Release.Namespace}}-platform-data-user_data_sets
@@ -263,7 +235,7 @@ service: platform-data.{{.Release.Namespace}}:9220
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|POST
 method_regex: true
@@ -275,7 +247,7 @@ service: platform-data.{{.Release.Namespace}}:9220
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: DELETE
 name: {{.Release.Namespace}}-platform-data-user_data
@@ -286,7 +258,7 @@ service: platform-data.{{.Release.Namespace}}:9220
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET
 name: {{.Release.Namespace}}-platform-data-time
@@ -296,7 +268,7 @@ service: platform-data.{{.Release.Namespace}}:9220
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|PUT|DELETE
 method_regex: true
@@ -308,7 +280,7 @@ service: platform-data.{{.Release.Namespace}}:9220
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET
 name: {{.Release.Namespace}}-platform-data-data_sets
@@ -318,7 +290,7 @@ service: platform-data.{{.Release.Namespace}}:9220
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: POST|PUT|DELETE
 method_regex: true
@@ -329,7 +301,7 @@ service: platform-data.{{.Release.Namespace}}:9220
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|PUT|DELETE
 method_regex: true
@@ -341,7 +313,7 @@ service: platform-image.{{.Release.Namespace}}:9226
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|POST|DELETE
 method_regex: true
@@ -353,7 +325,7 @@ service: platform-image.{{.Release.Namespace}}:9226
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|POST|DELETE
 method_regex: true
@@ -365,7 +337,7 @@ service: platform-image.{{.Release.Namespace}}:9226
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|POST
 method_regex: true
@@ -376,7 +348,7 @@ service: platform-task.{{.Release.Namespace}}:9224
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|PUT|DELETE
 method_regex: true
@@ -388,7 +360,7 @@ service: platform-task.{{.Release.Namespace}}:9224
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
@@ -400,7 +372,7 @@ service: platform-user.{{.Release.Namespace}}:9221
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|DELETE
 method_regex: true
@@ -412,7 +384,7 @@ service: platform-user.{{.Release.Namespace}}:9221
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
@@ -424,7 +396,7 @@ service: seagull.{{.Release.Namespace}}:9120
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
@@ -436,7 +408,7 @@ service: shoreline.{{.Release.Namespace}}:9107
 
 ---
 apiVersion: getambassador.io/v1
-host: {{.Release.Namespace}}-api.tidepool.org
+host: {{.Release.Namespace}}-api-internal
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true

@@ -1,0 +1,420 @@
+{{ if (eq .Values.gateway.name "ambassador") }}
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-app.tidepool.org
+kind: Mapping
+method: GET|OPTIONS|POST|PUT|PATCH|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-blip
+prefix: /
+rewrite: ''
+service: blip.{{.Release.Namespace}}:3000
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|OPTIONS|POST|PUT|PATCH|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-export
+path_redirect: 'false'
+prefix: /export/
+rewrite: /
+service: export.{{.Release.Namespace}}:9300
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|OPTIONS|POST|PUT|PATCH|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-gatekeeper-access
+prefix: /access/
+rewrite: ''
+service: gatekeeper.{{.Release.Namespace}}:9123
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|OPTIONS|POST|PUT|PATCH|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-highwater-metrics
+path_redirect: 'false'
+prefix: /metrics/
+rewrite: /
+service: highwater.{{.Release.Namespace}}:9191
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|OPTIONS|POST|PUT|PATCH|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-hydrophone-confirm
+path_redirect: 'false'
+prefix: /confirm/
+rewrite: /
+service: hydrophone.{{.Release.Namespace}}:9157
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-uploads.tidepool.org
+kind: Mapping
+method: GET|OPTIONS|POST|PUT|PATCH|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-jellyfish
+path_redirect: 'false'
+prefix: /
+rewrite: ''
+service: jellyfish.{{.Release.Namespace}}:9122
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|OPTIONS|POST|PUT|PATCH|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-message-api-message
+path_redirect: 'false'
+prefix: /message/
+rewrite: /
+service: message-api.{{.Release.Namespace}}:9119
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|POST|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-auth-user-restricted-tokens
+prefix: /v1/users/[^/]+/restricted_tokens
+prefix_regex: true
+rewrite: ''
+service: platform-auth.{{.Release.Namespace}}:9222
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|POST|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-auth-user-provider-sessions
+prefix: /v1/users/[^/]+/provider_sessions
+prefix_regex: true
+rewrite: ''
+service: platform-auth.{{.Release.Namespace}}:9222
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|PUT|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-auth-restricted-tokens
+prefix: /v1/restricted_tokens
+rewrite: ''
+service: platform-auth.{{.Release.Namespace}}:9222
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|PUT|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-auth-provider-sessions
+prefix: /v1/provider_sessions/[^/]+
+prefix_regex: true
+rewrite: ''
+service: platform-auth.{{.Release.Namespace}}:9222
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-auth-authorize
+prefix: /v1/oauth/[^/]+/authorize
+prefix_regex: true
+rewrite: ''
+service: platform-auth.{{.Release.Namespace}}:9222
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET
+name: {{.Release.Namespace}}-platform-auth-redirect
+prefix: /v1/oauth/[^/]+/redirect
+prefix_regex: true
+rewrite: ''
+service: platform-auth.{{.Release.Namespace}}:9222
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|POST|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-blob-user-blobs
+prefix: /v1/users/[^/]+/blobs
+prefix_regex: true
+rewrite: ''
+service: platform-blob.{{.Release.Namespace}}:9225
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-blob-blobs
+prefix: /v1/blobs/[^/]+
+prefix_regex: true
+rewrite: ''
+service: platform-blob.{{.Release.Namespace}}:9225
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET
+name: {{.Release.Namespace}}-platform-blob-blobs-content
+prefix: /v1/blobs/[^/]+/content
+prefix_regex: true
+rewrite: ''
+service: platform-blob.{{.Release.Namespace}}:9225
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|OPTIONS|POST|PUT|PATCH|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-data-dataservices
+path_redirect: 'false'
+prefix: /dataservices/
+rewrite: /
+service: platform-data.{{.Release.Namespace}}:9220
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|OPTIONS|POST|PUT|PATCH|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-data-data
+path_redirect: 'false'
+prefix: /v1/data/
+rewrite: /
+service: platform-data.{{.Release.Namespace}}:9220
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|POST|DELETE|OPTIONS
+method_regex: true
+name: {{.Release.Namespace}}-platform-data-user_data_sources
+prefix: /v1/users/[^/]+/data_sources
+prefix_regex: true
+rewrite: ''
+service: platform-data.{{.Release.Namespace}}:9220
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET
+name: {{.Release.Namespace}}-platform-data-user_data_sets
+prefix: /v1/users/[^/]+/data_sets
+prefix_regex: true
+rewrite: ''
+service: platform-data.{{.Release.Namespace}}:9220
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|POST
+method_regex: true
+name: {{.Release.Namespace}}-platform-data-user_datasets
+prefix: /v1/users/[^/]+/datasets
+prefix_regex: true
+rewrite: ''
+service: platform-data.{{.Release.Namespace}}:9220
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: DELETE
+name: {{.Release.Namespace}}-platform-data-user_data
+prefix: /v1/users/[^/]+/data
+prefix_regex: true
+rewrite: ''
+service: platform-data.{{.Release.Namespace}}:9220
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET
+name: {{.Release.Namespace}}-platform-data-time
+prefix: /v1/time
+rewrite: ''
+service: platform-data.{{.Release.Namespace}}:9220
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|PUT|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-data-data_sources
+prefix: /v1/data_sources/[^/]+
+prefix_regex: true
+rewrite: ''
+service: platform-data.{{.Release.Namespace}}:9220
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET
+name: {{.Release.Namespace}}-platform-data-data_sets
+prefix: /v1/data_sets
+rewrite: ''
+service: platform-data.{{.Release.Namespace}}:9220
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: POST|PUT|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-data-datasets
+prefix: /v1/datasets
+rewrite: ''
+service: platform-data.{{.Release.Namespace}}:9220
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|PUT|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-image
+prefix: /v1/images
+prefix_regex: false
+rewrite: ''
+service: platform-image.{{.Release.Namespace}}:9226
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|POST|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-image-users-images
+prefix: /v1/users/[^/]+/images
+prefix_regex: true
+rewrite: ''
+service: platform-image.{{.Release.Namespace}}:9226
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|POST|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-image-users-images-regex
+prefix: /v1/users/[^/]+/images/.+
+prefix_regex: true
+rewrite: ''
+service: platform-image.{{.Release.Namespace}}:9226
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|POST
+method_regex: true
+name: {{.Release.Namespace}}-platform-task-tasks
+prefix: /v1/tasks
+rewrite: ''
+service: platform-task.{{.Release.Namespace}}:9224
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|PUT|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-task-tasks-id
+prefix: /v1/tasks/[^/*]
+prefix_regex: true
+rewrite: ''
+service: platform-task.{{.Release.Namespace}}:9224
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|OPTIONS|POST|PUT|PATCH|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-user-userservices
+path_redirect: 'false'
+prefix: /userservices/
+rewrite: /
+service: platform-user.{{.Release.Namespace}}:9221
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-platform-user-users
+prefix: /v1/users/[^/*]
+prefix_regex: true
+rewrite: ''
+service: platform-user.{{.Release.Namespace}}:9221
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|OPTIONS|POST|PUT|PATCH|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-seagull
+path_redirect: 'false'
+prefix: /metadata/
+rewrite: /
+service: seagull.{{.Release.Namespace}}:9120
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|OPTIONS|POST|PUT|PATCH|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-shoreline-auth
+path_redirect: 'false'
+prefix: /auth/
+rewrite: /
+service: shoreline.{{.Release.Namespace}}:9107
+
+---
+apiVersion: getambassador.io/v1
+host: {{.Release.Namespace}}-api.tidepool.org
+kind: Mapping
+method: GET|OPTIONS|POST|PUT|PATCH|DELETE
+method_regex: true
+name: {{.Release.Namespace}}-tide-whisperer-data
+path_redirect: 'false'
+prefix: /data/
+rewrite: /
+service: tide-whisperer.{{.Release.Namespace}}:9127
+{{ end }}
