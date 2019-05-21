@@ -3,7 +3,7 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{.Release.Namespace}}-app.svc.cluster.local'
+  name: '{{.Release.Namespace}}-app-internal'
   namespace: '{{- .Release.Namespace -}}'
 spec:
   displayName: '{{.Release.Namespace}}-app.svc.cluster.local'
