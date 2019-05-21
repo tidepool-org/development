@@ -6,7 +6,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-gatekeeper-access
       prefix: /access/
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"

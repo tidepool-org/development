@@ -1001,6 +1001,93 @@ spec:
       serviceName: blip
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 3000
+--- #file: gloo-default-uploads-internal-external-virtualservice.yaml
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: '{{.Release.Namespace}}-default-uploads-internal-external'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  displayName: '{{.Release.Namespace}}-default-uploads-internal.tidepool.org'
+  virtualHost:
+    corsPolicy:
+      allowCredentials: true
+      allowHeaders:
+      - authorization
+      - content-type
+      - x-tidepool-session-token
+      - x-tidepool-trace-request
+      - x-tidepool-trace-session
+      allowMethods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+      allowOriginRegex:
+      - '*'
+      exposeHeaders:
+      - x-tidepool-session-token
+      - x-tidepool-trace-request
+      - x-tidepool-trace-session
+      maxAge: 600s
+    domains:
+    - '{{.Release.Namespace}}-default-uploads-internal.tidepool.org'
+    name: '{{.Release.Namespace}}-default-uploads-internal.tidepool.org'
+    routes:
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
+--- #file: gloo-default-uploads-internal-internal-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: '{{.Release.Namespace}}-default-uploads-internal-internal'
+  namespace: '{{.Release.Namespace}}'
+spec:
+  externalName: gateway-proxy.gloo-system.svc.cluster.local
+  ports:
+  - port: 80
+  type: ExternalName
+--- #file: gloo-default-uploads-internal-internal-virtualservice.yaml
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: '{{.Release.Namespace}}-default-uploads-internal-internal'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  displayName: '{{.Release.Namespace}}-default-uploads-internal-internal'
+  virtualHost:
+    domains:
+    - '{{.Release.Namespace}}-default-uploads-internal-internal'
+    name: '{{.Release.Namespace}}-default-uploads-internal-internal'
+    routes:
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
 --- #file: gloo-export-9300-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1027,26 +1114,6 @@ spec:
       serviceName: gatekeeper
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9123
---- #file: gloo-gateway-gateway.yaml
-apiVersion: gateway.solo.io/v1
-bindAddress: '::'
-bindPort: 8080
-kind: Gateway
-metadata:
-  name: gateway
-  namespace: gloo-system
-ssl: false
-useProxyProto: false
---- #file: gloo-gateway-ssl-gateway.yaml
-apiVersion: gateway.solo.io/v1
-bindAddress: '::'
-bindPort: 8443
-kind: Gateway
-metadata:
-  name: gateway-ssl
-  namespace: gloo-system
-ssl: true
-useProxyProto: false
 --- #file: gloo-highwater-9191-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1216,91 +1283,4 @@ spec:
       serviceName: tide-whisperer
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9127
---- #file: gloo-uploads-external-virtualservice.yaml
-apiVersion: gateway.solo.io/v1
-kind: VirtualService
-metadata:
-  name: '{{.Release.Namespace}}-uploads-external'
-  namespace: '{{- .Release.Namespace -}}'
-spec:
-  displayName: '{{.Release.Namespace}}-uploads.tidepool.org'
-  virtualHost:
-    corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOriginRegex:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 600s
-    domains:
-    - '{{.Release.Namespace}}-uploads.tidepool.org'
-    name: '{{.Release.Namespace}}-uploads.tidepool.org'
-    routes:
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-jellyfish-9122'
-            namespace: '{{- .Release.Namespace -}}'
---- #file: gloo-uploads-internal-service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: '{{.Release.Namespace}}-uploads-internal'
-  namespace: '{{.Release.Namespace}}'
-spec:
-  externalName: gateway-proxy.gloo-system.svc.cluster.local
-  ports:
-  - port: 80
-  type: ExternalName
---- #file: gloo-uploads-internal-virtualservice.yaml
-apiVersion: gateway.solo.io/v1
-kind: VirtualService
-metadata:
-  name: '{{.Release.Namespace}}-uploads-internal'
-  namespace: '{{- .Release.Namespace -}}'
-spec:
-  displayName: '{{.Release.Namespace}}-uploads-internal'
-  virtualHost:
-    domains:
-    - '{{.Release.Namespace}}-uploads-internal'
-    name: '{{.Release.Namespace}}-uploads-internal'
-    routes:
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-jellyfish-9122'
-            namespace: '{{- .Release.Namespace -}}'
 {{ end }}

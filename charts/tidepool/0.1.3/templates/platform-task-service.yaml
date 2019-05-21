@@ -6,7 +6,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-task-tasks
       prefix: "/v1/tasks"
       method: "GET|POST"
@@ -16,7 +16,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-task-tasks-id
       prefix: "/v1/tasks/[^/*]"
       prefix_regex: true
