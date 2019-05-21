@@ -54,7 +54,7 @@ def tidepool_tls_secret():
 def metadata(hostname):
     """Return metadata for virtual service"""
     metadata = dict()
-    metadata["name"] = hostname
+    metadata["name"] = hostname.replace(".svc.cluster.local","-internal").replace(".tidepool.org","-external")
     metadata["namespace"] = "{{- .Release.Namespace -}}"
     return metadata
 
@@ -109,6 +109,7 @@ def virtual_service_spec(routes, hostname, cors, useSSL):
     if useSSL:
         spec["sslConfig"] = virtual_service_ssl_config(hostname)
     spec["virtualHost"] = virtual_host(routes, hostname, cors)
+    spec["displayName"] = hostname
     return spec
 
 def virtual_service(routes, hostname, cors, useSSL):
@@ -237,8 +238,6 @@ def kube_spec(ref):
     kube["selector"] = dict()
     return kube
 
-dec 
-
 def upstream_spec(ref):
     spec = dict()
     spec["upstreamSpec"] = dict()
@@ -310,7 +309,7 @@ def gateway_proxy_service_spec(service_type, useSSL):
 
 def internal_metadata(base):
     metadata = dict()
-    metadata["name"] = "{{.Release.Namespace}}-" + base + ".gateway-proxy.svc.cluster.local"
+    metadata["name"] = "{{.Release.Namespace}}-" + base + "-internal"
     metadata["namespace"] = "{{.Release.Namespace}}"
     return metadata
 
@@ -384,9 +383,8 @@ class ManifestBuilder:
     def add(self, manifest):
         if manifest is not None:
             service_name = ManifestBuilder.regex.sub("", manifest["metadata"]["name"])
-            service_name = service_name.replace(".svc.cluster.local","-internal")
             service_kind = manifest["kind"].lower()
-            name = service_name + "-" + service_kind
+            name = "gloo-" + service_name + "-" + service_kind
             self.manifest_dict[name] = manifest
 
     def get(self):
