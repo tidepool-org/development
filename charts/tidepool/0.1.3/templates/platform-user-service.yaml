@@ -4,7 +4,7 @@ metadata:
   annotations:
     tidepool.org/config: |
       ---
-      apiVersion: tidepool/v1
+      apiVersion: ambassador/v1
       kind:  Mapping
       host: api
       name: {{ .Release.Namespace -}}-platform-user-userservices
@@ -15,7 +15,7 @@ metadata:
       rewrite: "/"
       service: platform-user.{{ .Release.Namespace }}:{{.Values.platformUser.port}}
       ---
-      apiVersion: tidepool/v1
+      apiVersion: ambassador/v1
       kind:  Mapping
       host: api
       name: {{ .Release.Namespace -}}-platform-user-users
