@@ -6,5 +6,5 @@ metadata:
   name: infra
   labels:
       istio-injection: disabled
-      linkerd.io/inject: disabled
+      linkerd.io/inject: enabled
 
