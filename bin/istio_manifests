@@ -142,7 +142,7 @@ def istio_http_routes_from_ambassador_mapping(http_routes_dict, doc):
         route = dict()
         route["destination"] = dict()
         route["destination"]["port"] = dict()
-        route["destination"]["port"]["number"] = int(port)
+        route["destination"]["port"]["number"] = port
         route["destination"]["host"] = dest
         routes.append(route)
         http_route["route"] = routes

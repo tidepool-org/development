@@ -168,7 +168,7 @@ def service_and_port(mapping):
     else:
         svc_with_namespace = s
     svc = svc_with_namespace.replace(".default","")
-    return svc, int(port)
+    return svc, port
 
 def upstream_refs(mappings):
     ref_dict = dict()
@@ -235,8 +235,6 @@ def kube_spec(ref):
     kube["serviceName"] = ref["service"]
     kube["serviceNamespace"] = "{{.Release.Namespace}}"
     kube["servicePort"] = ref["port"]
-    kube["selector"] = dict()
-    return kube
 
 def upstream_spec(ref):
     spec = dict()
@@ -413,9 +411,13 @@ def manifests_from_mappings(protocol, mappings):
 def write_manifests(manifests):
     print(yaml.dump(manifests, explicit_start = True, default_flow_style=False))
 
+def mappings(source):
+    return [ y for y in yaml.safe_load_all(source) if y["Kind"} == "Mapping"  ]
+    
+
 def main():
     protocol = sys.argv[1]
-    write_manifests(manifests_from_mappings(protocol, yaml.safe_load(sys.stdin)))
+    write_manifests(manifests_from_mappings(protocol, mappings(sys.stdin)))
 
 if __name__ == "__main__":
     main()
