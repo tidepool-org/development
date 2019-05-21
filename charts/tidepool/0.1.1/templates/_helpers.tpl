@@ -104,7 +104,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://{{.Values.platformAuth.host}}:{{.Values.platformAuth.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: {{include "charts.protocol" .}}://{{include "charts.host.api" .}}
+          value: {{include "charts.host.api" .}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
@@ -160,7 +160,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_MESSAGE_STORE_DATABASE
           value: messages
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
-          value: {{include "charts.protocol" .}}://{{include "charts.host.api" .}}
+          value: {{include "charts.host.api" .}}
         - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
           value: http://{{.Values.platformNotification.host}}:{{.Values.platformNotification.port}}
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
@@ -196,7 +196,7 @@ Create environment variables used by all platform services.
               name: dexcom
               key: CLIENT_SECRET
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
-          value: {{include "charts.protocol" .}}://{{include "charts.host.api" .}}/v1/oauth/dexcom/redirect
+          value: {{include "charts.host.api" .}}/v1/oauth/dexcom/redirect
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
           value: offline_access
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
@@ -236,7 +236,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
           value: :{{.Values.platformTask.port}}
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
-          value: {{include "charts.protocol" .}}://{{include "charts.host.api" .}}
+          value: {{include "charts.host.api" .}}
         - name: TIDEPOOL_USER_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
