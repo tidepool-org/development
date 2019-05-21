@@ -3,7 +3,7 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{.Release.Namespace}}-uploads.svc.cluster.local'
+  name: '{{.Release.Namespace}}-uploads-internal'
   namespace: '{{- .Release.Namespace -}}'
 spec:
   displayName: '{{.Release.Namespace}}-uploads.svc.cluster.local'
