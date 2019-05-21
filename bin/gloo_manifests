@@ -372,7 +372,7 @@ def external_hostname(base):
     return  "{{.Release.Namespace}}-" + base + ".tidepool.org"
 
 def internal_hostname(base):
-    return "{{.Release.Namespace}}-" + base + ".svc.cluster.local"
+    return "{{.Release.Namespace}}-" + base + "-internal"
 
 class ManifestBuilder:
     regex = re.compile(r"\{\{[\s-]*\.Release\.Namespace[\s-]*\}\}[\s-]*")
@@ -408,10 +408,6 @@ def manifests_from_mappings(protocol, mappings):
         builder.add(upstream_kind(ref))
     builder.add(gateway(False))
     builder.add(gateway(True))
-    if use_https:
-        # need an additional internal http proxy service
-        builder.add(gateway_proxy_service("cluster", False))
-    builder.add(gateway_proxy_service("elb", use_https))
     return builder.get()
 
 def write_manifests(manifests):
