@@ -1037,25 +1037,6 @@ metadata:
   namespace: gloo-system
 ssl: false
 useProxyProto: false
---- #file: gloo-gateway-proxy-service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: gloo
-    gloo: gateway-proxy
-  name: gateway-proxy
-  namespace: gloo-system
-spec:
-  externalTrafficPolicy: Cluster
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 8080
-  selector:
-    gloo: gateway-proxy
-  type: LoadBalancer
 --- #file: gloo-gateway-ssl-gateway.yaml
 apiVersion: gateway.solo.io/v1
 bindAddress: '::'
