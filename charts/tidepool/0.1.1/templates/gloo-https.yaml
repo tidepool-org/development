@@ -1039,26 +1039,6 @@ spec:
       serviceName: gatekeeper
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9123
---- #file: gloo-gateway-gateway.yaml
-apiVersion: gateway.solo.io/v1
-bindAddress: '::'
-bindPort: 8080
-kind: Gateway
-metadata:
-  name: gateway
-  namespace: gloo-system
-ssl: false
-useProxyProto: false
---- #file: gloo-gateway-ssl-gateway.yaml
-apiVersion: gateway.solo.io/v1
-bindAddress: '::'
-bindPort: 8443
-kind: Gateway
-metadata:
-  name: gateway-ssl
-  namespace: gloo-system
-ssl: true
-useProxyProto: false
 --- #file: gloo-highwater-9191-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
