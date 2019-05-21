@@ -1,4 +1,4 @@
-#!/bin/bash -xv
+#!/bin/bash
 
 mappings $1 | ambassador_manifests | single_file "# Auto-generated file by gloo-gateway. Do not edit.
 {{ if (eq .Values.gateway.name \"ambassador\") }}" "{{ end }}" > $1/templates/ambassador-routes.yaml

@@ -1,7 +1,7 @@
 # Auto-generated file by gloo-gateway. Do not edit.
 {{ if (eq .Values.gateway.name "ambassador") }}
 --- #file: default-blip.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-app.tidepool.org|{{.Release.Namespace}}-app-internal'
 host_regex: true
 kind: Mapping
@@ -12,7 +12,7 @@ prefix: /
 rewrite: ''
 service: blip.default:3000
 --- #file: default-export.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -24,7 +24,7 @@ prefix: /export/
 rewrite: /
 service: export.default:9300
 --- #file: default-gatekeeper-access.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -35,7 +35,7 @@ prefix: /access/
 rewrite: ''
 service: gatekeeper.default:9123
 --- #file: default-highwater-metrics.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -47,7 +47,7 @@ prefix: /metrics/
 rewrite: /
 service: highwater.default:9191
 --- #file: default-hydrophone-confirm.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -59,7 +59,7 @@ prefix: /confirm/
 rewrite: /
 service: hydrophone.default:9157
 --- #file: default-jellyfish.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-default-uploads-internal.tidepool.org|{{.Release.Namespace}}-default-uploads-internal-internal'
 host_regex: true
 kind: Mapping
@@ -71,7 +71,7 @@ prefix: /
 rewrite: ''
 service: jellyfish.default:9122
 --- #file: default-message-api-message.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -83,7 +83,7 @@ prefix: /message/
 rewrite: /
 service: message-api.default:9119
 --- #file: default-platform-auth-authorize.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -95,7 +95,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-auth.default:9222
 --- #file: default-platform-auth-provider-sessions.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -107,7 +107,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-auth.default:9222
 --- #file: default-platform-auth-redirect.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -118,7 +118,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-auth.default:9222
 --- #file: default-platform-auth-restricted-tokens.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -129,7 +129,7 @@ prefix: /v1/restricted_tokens
 rewrite: ''
 service: platform-auth.default:9222
 --- #file: default-platform-auth-user-provider-sessions.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -141,7 +141,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-auth.default:9222
 --- #file: default-platform-auth-user-restricted-tokens.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -153,7 +153,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-auth.default:9222
 --- #file: default-platform-blob-blobs.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -165,7 +165,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-blob.default:9225
 --- #file: default-platform-blob-blobs-content.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -176,7 +176,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-blob.default:9225
 --- #file: default-platform-blob-user-blobs.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -188,7 +188,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-blob.default:9225
 --- #file: default-platform-data-data.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -200,7 +200,7 @@ prefix: /v1/data/
 rewrite: /
 service: platform-data.default:9220
 --- #file: default-platform-data-data_sets.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -210,7 +210,7 @@ prefix: /v1/data_sets
 rewrite: ''
 service: platform-data.default:9220
 --- #file: default-platform-data-data_sources.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -222,7 +222,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-data.default:9220
 --- #file: default-platform-data-dataservices.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -234,7 +234,7 @@ prefix: /dataservices/
 rewrite: /
 service: platform-data.default:9220
 --- #file: default-platform-data-datasets.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -245,7 +245,7 @@ prefix: /v1/datasets
 rewrite: ''
 service: platform-data.default:9220
 --- #file: default-platform-data-time.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -255,7 +255,7 @@ prefix: /v1/time
 rewrite: ''
 service: platform-data.default:9220
 --- #file: default-platform-data-user_data.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -266,7 +266,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-data.default:9220
 --- #file: default-platform-data-user_data_sets.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -277,7 +277,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-data.default:9220
 --- #file: default-platform-data-user_data_sources.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -289,7 +289,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-data.default:9220
 --- #file: default-platform-data-user_datasets.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -301,7 +301,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-data.default:9220
 --- #file: default-platform-image.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -313,7 +313,7 @@ prefix_regex: false
 rewrite: ''
 service: platform-image.default:9226
 --- #file: default-platform-image-users-images.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -325,7 +325,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-image.default:9226
 --- #file: default-platform-image-users-images-regex.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -337,7 +337,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-image.default:9226
 --- #file: default-platform-task-tasks.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -348,7 +348,7 @@ prefix: /v1/tasks
 rewrite: ''
 service: platform-task.default:9224
 --- #file: default-platform-task-tasks-id.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -360,7 +360,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-task.default:9224
 --- #file: default-platform-user-users.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -372,7 +372,7 @@ prefix_regex: true
 rewrite: ''
 service: platform-user.default:9221
 --- #file: default-platform-user-userservices.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -384,7 +384,7 @@ prefix: /userservices/
 rewrite: /
 service: platform-user.default:9221
 --- #file: default-seagull.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -396,7 +396,7 @@ prefix: /metadata/
 rewrite: /
 service: seagull.default:9120
 --- #file: default-shoreline-auth.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
@@ -408,7 +408,7 @@ prefix: /auth/
 rewrite: /
 service: shoreline.default:9107
 --- #file: default-tide-whisperer-data.yaml
-apiVersion: tidepool/v1
+apiVersion: ambassador/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
