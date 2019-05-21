@@ -36,8 +36,8 @@ def annotation_from_metadata(metadata):
     """Return the Ambassador annotation string from a document."""
     if "annotations" in metadata and metadata["annotations"]:
         annotations = metadata["annotations"]
-        if "getambassador.io/config" in annotations:
-            return annotations["getambassador.io/config"]
+        if "tidepool.org/config" in annotations:
+            return annotations["tidepool.org/config"]
         else:
             return None
     else:
@@ -77,7 +77,7 @@ def main():
     if len(sys.argv) == 2:
         chartsdir = sys.argv[1]
     else:
-        chartsdir="/Users/derrickburns/go/src/github.com/tidepool-org/development/charts/tidepool/0.1.0"
+        print("usage: mappings chartdir")
     mappings = ambassador_mappings_from_directory(chartsdir)
     print(yaml.dump(mappings,Dumper=yaml.Dumper))
 

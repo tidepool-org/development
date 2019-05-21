@@ -1,5 +1,5 @@
 # Auto-generated file by istio-gateway. Do not edit.
-{{ if and (eq .Values.gateway.name "istio") (.Values.https.enabled) }}
+{{ if and (eq (.Values.gateway.name | default "gloo") "istio") (.Values.https.enabled) }}
 --- #file: api-virtual-service.yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
