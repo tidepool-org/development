@@ -3,8 +3,8 @@ kind: Service
 metadata:
   name: {{.Values.gateway.name}}-gateway-loadbalancer
   namespace: {{.Values.namespace.name}}
-annotations:
-  service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 spec:
   externalTrafficPolicy: Cluster
   ports:
