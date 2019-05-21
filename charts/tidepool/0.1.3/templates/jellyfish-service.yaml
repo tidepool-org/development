@@ -24,7 +24,7 @@ metadata:
   namespace: {{.Release.Namespace}}
 spec:
   ports:
-  - name: "{{.Values.jellyfish.port}}"
+  - name: "http"
     port: {{.Values.jellyfish.port}}
     targetPort: {{.Values.jellyfish.port}}
   selector:

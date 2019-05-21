@@ -45,7 +45,7 @@ metadata:
   namespace: {{.Release.Namespace}}
 spec:
   ports:
-  - name: "{{.Values.platformBlob.port}}"
+  - name: "http"
     port: {{.Values.platformBlob.port}}
     targetPort: {{.Values.platformBlob.port}}
   selector:

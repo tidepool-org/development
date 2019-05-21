@@ -11,7 +11,7 @@ metadata:
   namespace: {{.Release.Namespace}}
 spec:
   ports:
-  - name: "{{.Values.nosqlclient.port}}"
+  - name: "http"
     port: {{.Values.nosqlclient.port}}
     targetPort: 3000
   selector:

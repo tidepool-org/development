@@ -116,7 +116,7 @@ metadata:
   namespace: {{.Release.Namespace}}
 spec:
   ports:
-  - name: "{{.Values.platformData.port}}"
+  - name: "http"
     port: {{.Values.platformData.port}}
     targetPort: {{.Values.platformData.port}}
   selector:

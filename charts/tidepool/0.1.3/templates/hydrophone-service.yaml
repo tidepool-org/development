@@ -24,7 +24,7 @@ metadata:
   namespace: {{.Release.Namespace}}
 spec:
   ports:
-  - name: "{{.Values.hydrophone.port}}"
+  - name: "http"
     port: {{.Values.hydrophone.port}}
     targetPort: {{.Values.hydrophone.port}}
   selector:

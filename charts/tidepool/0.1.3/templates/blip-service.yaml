@@ -24,7 +24,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - name: "{{.Values.blip.port}}"
+  - name: "http"
     port: {{.Values.blip.port}}
     targetPort: {{.Values.blip.port}}
   selector:
