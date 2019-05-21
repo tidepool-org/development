@@ -4,7 +4,7 @@ metadata:
   name: '{{.Release.Namespace}}-api-internal'
   namespace: '{{.Release.Namespace}}'
 spec:
-  externalName: {{- .Values.gateway.proxy.name -}}.{{- .Values.gateway.proxy.namespace -}}.svc.cluster.local
+  externalName: {{ .Values.gateway.proxy.name -}}.{{- .Values.gateway.proxy.namespace -}}.svc.cluster.local
   ports:
   - port: 80
   type: ExternalName
@@ -15,7 +15,7 @@ metadata:
   name: '{{.Release.Namespace}}-app-internal'
   namespace: '{{.Release.Namespace}}'
 spec:
-  externalName: {{- .Values.gateway.proxy.name -}}.{{- .Values.gateway.proxy.namespace -}}.svc.cluster.local
+  externalName: {{ .Values.gateway.proxy.name -}}.{{- .Values.gateway.proxy.namespace -}}.svc.cluster.local
   ports:
   - port: 80
   type: ExternalName
@@ -26,7 +26,7 @@ metadata:
   name: '{{.Release.Namespace}}-uploads-internal'
   namespace: '{{.Release.Namespace}}'
 spec:
-  externalName: {{- .Values.gateway.proxy.name -}}.{{- .Values.gateway.proxy.namespace -}}.svc.cluster.local
+  externalName: {{ .Values.gateway.proxy.name -}}.{{- .Values.gateway.proxy.namespace -}}.svc.cluster.local
   ports:
   - port: 80
   type: ExternalName

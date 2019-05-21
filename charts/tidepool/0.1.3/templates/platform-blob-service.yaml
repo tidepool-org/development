@@ -4,7 +4,7 @@ metadata:
   annotations:
     tidepool.org/config: |
       ---
-      apiVersion: ambassador/v1
+      apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
       name: {{ .Release.Namespace -}}-platform-blob-user-blobs
@@ -15,7 +15,7 @@ metadata:
       rewrite: ""
       service: platform-blob.{{ .Release.Namespace }}:{{.Values.platformBlob.port}}
       ---
-      apiVersion: ambassador/v1
+      apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
       name: {{ .Release.Namespace -}}-platform-blob-blobs
@@ -26,7 +26,7 @@ metadata:
       rewrite: ""
       service: platform-blob.{{ .Release.Namespace }}:{{.Values.platformBlob.port}}
       ---
-      apiVersion: ambassador/v1
+      apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
       name: {{ .Release.Namespace -}}-platform-blob-blobs-content

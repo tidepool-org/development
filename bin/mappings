@@ -56,14 +56,9 @@ def yaml_docs_from_metadata_string(metadata):
             docs.append(raw_doc)
     return docs
 
-def ambassador_services_from_directory(input_dir):
-    helm = subprocess.Popen(['helm', 'template', input_dir], stdout=subprocess.PIPE)
-    docs = yaml.load_all(helm.stdout, Loader=yaml.FullLoader)
-    return ambassador_services_from(docs)
-
-def ambassador_mappings_from_directory(directory):
+def ambassador_mappings(docs):
     mappings = list()
-    for service in ambassador_services_from_directory(directory):
+    for service in ambassador_services_from(docs):
         ambassador_metadata = metadata_from_ambassador_service(service)
         if ambassador_metadata:
             docs = yaml_docs_from_metadata_string(ambassador_metadata)
@@ -74,11 +69,8 @@ def ambassador_mappings_from_directory(directory):
     return mappings
 
 def main():
-    if len(sys.argv) == 2:
-        chartsdir = sys.argv[1]
-    else:
-        print("usage: mappings chartdir")
-    mappings = ambassador_mappings_from_directory(chartsdir)
+    docs = list(yaml.load_all(sys.stdin, Loader=yaml.FullLoader))
+    mappings = ambassador_mappings(docs)
     print(yaml.dump(mappings,Dumper=yaml.Dumper))
 
 if __name__ == "__main__":
