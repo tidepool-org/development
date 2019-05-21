@@ -12,48 +12,21 @@ spec:
     #ref: master
     repository: https://kubernetes-charts.storage.googleapis.com/
     name: ambassador
-    version: 2.0.2
+    version: 2.6.0
   values:
     fullnameOverride: ambassador
     replicaCount: 2
     prometheusExporter:
       enabled: true
     service:
+      type: ClusterIP
       http:
         port: 80
+        enabled: true
       https:
         port: 443
+        enabled: true
       securityContext:
         runAsNonRoot: false
-      externalTrafficPolicy: Local
       annotations:
         sidecar.istio.io/inject: "false"
-        service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-        service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
-        getambassador.io/config: |
-          ---
-          apiVersion: ambassador/v1
-          kind: Module
-          name: tls
-          config:
-            server:
-              secret: ambassador-certs
-              enabled: True
-              redirect_cleartext_from: 8080
-          ---
-          apiVersion: ambassador/v1
-          kind:  Module
-          name:  ambassador
-          config:
-            service_port: 8443
-            use_proxy_proto: false
-            use_remote_address: true
-            x_forwarded_proto_redirect: true
-            cors:
-              origins: "*"
-              methods: "GET, POST, PUT, PATCH, DELETE"
-              headers:  "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session"
-              credentials: true
-              exposed_headers: "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session"
-              max_age: "0"
-  
