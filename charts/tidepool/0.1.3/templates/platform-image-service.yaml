@@ -6,7 +6,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-image
       prefix: "/v1/images"
       prefix_regex: false
@@ -17,7 +17,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-image-users-images
       prefix: "/v1/users/[^/]+/images"
       prefix_regex: true
@@ -28,7 +28,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-image-users-images-regex
       prefix: "/v1/users/[^/]+/images/.+"
       prefix_regex: true

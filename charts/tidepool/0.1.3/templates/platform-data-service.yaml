@@ -6,7 +6,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-data-dataservices
       prefix: /dataservices/
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
@@ -17,7 +17,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-data-data
       prefix: "/v1/data/"
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
@@ -28,7 +28,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-data-user_data_sources
       prefix: "/v1/users/[^/]+/data_sources"
       prefix_regex: true
@@ -39,7 +39,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-data-user_data_sets
       prefix: "/v1/users/[^/]+/data_sets"
       prefix_regex: true
@@ -49,7 +49,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-data-user_datasets
       prefix: "/v1/users/[^/]+/datasets"
       prefix_regex: true
@@ -60,7 +60,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-data-user_data
       prefix: "/v1/users/[^/]+/data"
       prefix_regex: true
@@ -70,7 +70,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-data-time
       prefix: "/v1/time"
       method: "GET"
@@ -79,7 +79,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-data-data_sources
       prefix: "/v1/data_sources/[^/]+"
       prefix_regex: true
@@ -90,7 +90,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-data-data_sets
       prefix: "/v1/data_sets"
       method: "GET"
@@ -99,7 +99,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-data-datasets
       prefix: "/v1/datasets"
       method: "POST|PUT|DELETE"

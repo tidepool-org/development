@@ -6,7 +6,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.app" . }}
+      host: app
       name: {{ .Release.Namespace -}}-blip
       prefix: /
       rewrite: ""

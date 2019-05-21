@@ -6,7 +6,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-user-userservices
       prefix: /userservices/
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
@@ -17,7 +17,7 @@ metadata:
       ---
       apiVersion: tidepool/v1
       kind:  Mapping
-      host: {{ include "charts.host.api" . }}
+      host: api
       name: {{ .Release.Namespace -}}-platform-user-users
       prefix: "/v1/users/[^/*]"
       prefix_regex: true

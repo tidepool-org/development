@@ -40,8 +40,9 @@ CORS_POLICY_STRING = """
 CORS_POLICY=json.loads(CORS_POLICY_STRING)
 
 def virtual_service_basename(host):
-    """Return the Gloo virtual service name."""
-    return host.replace("default-", "").replace(".tidepool.org", "") 
+    """Return the basename of the host: app, api, or uploads."""
+    return host
+
 
 def tidepool_tls_secret():
     """Return the Kubernetes name and namespace for the secret containing the TLS cert and key
@@ -399,10 +400,8 @@ def manifests_from_mappings(protocol, mappings):
     for host,routes in all_routes.items():
         base = virtual_service_basename(host)
         ordered = ordered_routes(routes)
-        external_virtual_service = virtual_service(ordered, external_hostname(base), cors_policy, use_https)
-        internal_virtual_service = virtual_service(ordered, internal_hostname(base), None, False)
-        builder.add(internal_virtual_service)
-        builder.add(external_virtual_service)
+        builder.add(virtual_service(ordered, internal_hostname(base), None, False))
+        builder.add(virtual_service(ordered, external_hostname(base), cors_policy, use_https))
         builder.add(internal_service(base))
     for ref in upstream_refs(mappings):
         builder.add(upstream_kind(ref))
