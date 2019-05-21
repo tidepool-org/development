@@ -4,7 +4,7 @@ metadata:
   annotations:
     tidepool.org/config: |
       ---
-      apiVersion: tidepool/v1
+      apiVersion: ambassador/v1
       kind:  Mapping
       host: api
       name: {{ .Release.Namespace -}}-platform-task-tasks
@@ -14,7 +14,7 @@ metadata:
       rewrite: ""
       service: platform-task.{{ .Release.Namespace }}:{{.Values.platformTask.port}}
       ---
-      apiVersion: tidepool/v1
+      apiVersion: ambassador/v1
       kind:  Mapping
       host: api
       name: {{ .Release.Namespace -}}-platform-task-tasks-id

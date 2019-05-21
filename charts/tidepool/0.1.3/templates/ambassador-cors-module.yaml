@@ -8,7 +8,7 @@ config:
       x-tidepool-trace-session
     max_age: '600s'
     methods: GET, POST, PUT, PATCH, DELETE
-    origins: '*'
+    origins: '*.tidepool.org'
   service_port: 8443
   use_proxy_proto: false
   use_remote_address: true
