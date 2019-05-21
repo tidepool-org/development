@@ -1,0 +1,15 @@
+# Auto-generated file by gloo-gateway. Do not edit.
+{{ if and (eq .Values.gateway.name "gloo") (.Values.https.enabled) }}
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: '{{- .Release.Namespace -}}-tide-whisperer-9127'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: tide-whisperer
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9127
+{{ end }}

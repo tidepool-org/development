@@ -1,0 +1,21 @@
+# Auto-generated file by gloo-gateway. Do not edit.
+{{ if and (eq .Values.gateway.name "gloo") (.Values.https.enabled) }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: gloo
+    gloo: gateway-proxy
+  name: gateway-proxy-ssl
+  namespace: gloo-system
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    gloo: gateway-proxy
+  type: LoadBalancer
+{{ end }}

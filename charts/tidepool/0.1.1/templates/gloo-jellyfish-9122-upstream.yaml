@@ -1,0 +1,15 @@
+# Auto-generated file by gloo-gateway. Do not edit.
+{{ if and (eq .Values.gateway.name "gloo") (.Values.https.enabled) }}
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: '{{- .Release.Namespace -}}-jellyfish-9122'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: jellyfish
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9122
+{{ end }}
