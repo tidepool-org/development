@@ -1,6 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: tidepool/v1
+      kind:  Mapping
+      host: '{{ include "charts.host.api" . }}'
+      name: {{ .Release.Namespace -}}-export
+      prefix: /export/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      path_redirect: "false"
+      rewrite: "/"
+      service: export.{{ .Release.Namespace }}:{{.Values.export.port}}
   labels:
     app: export
     app.kubernetes.io/name: {{ include "charts.name" . }}
