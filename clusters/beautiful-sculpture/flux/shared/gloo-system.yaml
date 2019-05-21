@@ -38,7 +38,7 @@ spec:
         xdsPort: 9977
         replicas: 1
         stats: true
-    
+
     discovery:
       deployment:
         image:
@@ -56,24 +56,21 @@ spec:
         replicas: 1
         stats: true
     
-    gatewayProxy:
-      deployment:
-        image:
-          repository: quay.io/solo-io/gloo-envoy-wrapper
-          pullPolicy: Always
-        httpPort: 8080
-        httpsPort: 8443
-        replicas: 1
-        stats: true
-      service:
-        type: ClusterIP
-        # clusterIP: None
-        httpPort: 80
-        httpsPort: 443
-        extraAnnotations: {}
-      configMap:
-        data:
-    
+    gatewayProxies:
+      gateway-proxy:
+        deployment:
+          image:
+            repository: quay.io/solo-io/gloo-envoy-wrapper
+            pullPolicy: Always
+          stats: true
+          httpPort: 8080
+          httpsPort: 8443
+          replicas: 1
+        service:
+          type: ClusterIP
+          # clusterIP: None
+          httpPort: 80
+          httpsPort: 443
     
     ingress:
       enabled: false
