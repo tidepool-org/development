@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: platform-blob
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: platform-blob
+  namespace: {{.Release.Namespace}}
+spec:
+  ports:
+  - name: "{{.Values.platformBlob.port}}"
+    port: {{.Values.platformBlob.port}}
+    targetPort: {{.Values.platformBlob.port}}
+  selector:
+    app: platform-blob
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+status:
+  loadBalancer: {}

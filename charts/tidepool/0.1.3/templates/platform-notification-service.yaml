@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: platform-notification
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: platform-notification
+  namespace: {{.Release.Namespace}}
+spec:
+  ports:
+  - name: "{{.Values.platformNotification.port}}"
+    port: {{.Values.platformNotification.port}}
+    targetPort: {{.Values.platformNotification.port}}
+  selector:
+    app: platform-notification
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+status:
+  loadBalancer: {}
