@@ -1,10 +1,8 @@
 #!/bin/bash
 
-templates=$(helm template $1)
-
-echo $templates | mappings | istio_manifests http  | single_file "# Auto-generated file by $(basename $0). Do not edit.
+helm template $1 | mappings | istio_manifests http  | single_file "# Auto-generated file by $(basename $0). Do not edit.
 {{ if and (eq .Values.gateway.name \"istio\") (.Values.http.enabled) }}" "{{ end }}"  > $1/templates/istio-http.yaml
 
-echo $templates | mappings | istio_manifests https | single_file "# Auto-generated file by $(basename $0). Do not edit.
+helm template $1 | mappings | istio_manifests https | single_file "# Auto-generated file by $(basename $0). Do not edit.
 {{ if and (eq .Values.gateway.name \"istio\") (.Values.https.enabled) }}" "{{ end }}" > $1/templates/istio-https.yaml
 
