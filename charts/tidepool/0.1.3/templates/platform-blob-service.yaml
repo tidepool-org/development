@@ -1,6 +1,40 @@
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: tidepool/v1
+      kind:  Mapping
+      host: {{ include "charts.host.api" . }}
+      name: {{ .Release.Namespace -}}-platform-blob-user-blobs
+      prefix: "/v1/users/[^/]+/blobs"
+      prefix_regex: true
+      method: "GET|POST|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-blob.{{ .Release.Namespace }}:{{.Values.platformBlob.port}}
+      ---
+      apiVersion: tidepool/v1
+      kind:  Mapping
+      host: {{ include "charts.host.api" . }}
+      name: {{ .Release.Namespace -}}-platform-blob-blobs
+      prefix: "/v1/blobs/[^/]+"
+      prefix_regex: true
+      method: "GET|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: platform-blob.{{ .Release.Namespace }}:{{.Values.platformBlob.port}}
+      ---
+      apiVersion: tidepool/v1
+      kind:  Mapping
+      host: {{ include "charts.host.api" . }}
+      name: {{ .Release.Namespace -}}-platform-blob-blobs-content
+      prefix: "/v1/blobs/[^/]+/content"
+      prefix_regex: true
+      method: "GET"
+      rewrite: ""
+      service: platform-blob.{{ .Release.Namespace }}:{{.Values.platformBlob.port}}
   labels:
     app: platform-blob
     helm.sh/chart: {{ include "charts.chart" . }}
