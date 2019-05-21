@@ -25,9 +25,9 @@ Expand the name of the chart.
 {{- end -}}
 {{- end -}}
 
-{{- define "charts.host.api" -}} {{ .Release.Namespace }}-api.svc.cluster.local {{- end }}
-{{- define "charts.host.uploads" -}} {{ .Release.Namespace }}-uploads.svc.cluster.local {{- end }}
-{{- define "charts.host.app" -}} {{ .Release.Namespace }}-app.svc.cluster.local {{- end }}
+{{- define "charts.host.api" -}} {{ .Release.Namespace }}-api-internal {{- end }}
+{{- define "charts.host.uploads" -}} {{ .Release.Namespace }}-uploads-internal {{- end }}
+{{- define "charts.host.app" -}} {{ .Release.Namespace }}-app-internal {{- end }}
 
 {{- define "charts.s3.url" -}} https://s3-{{.Values.aws.region}}.amazonaws.com {{- end }}
 
