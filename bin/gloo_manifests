@@ -406,8 +406,8 @@ def manifests_from_mappings(protocol, mappings):
         builder.add(internal_service(base))
     for ref in upstream_refs(mappings):
         builder.add(upstream_kind(ref))
-    builder.add(gateway(False))
-    builder.add(gateway(True))
+    #builder.add(gateway(False))
+    #builder.add(gateway(True))
     return builder.get()
 
 def write_manifests(manifests):
