@@ -1,0 +1,8 @@
+{{ .Values.https.enabled}}
+apiVersion: ambassador/v1
+kind: TLSContext
+name: tidepool-org-tlscontext
+hosts:
+- *.tidepool.org
+secret: tidepool-org
+{{ end }}

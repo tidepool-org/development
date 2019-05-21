@@ -1,0 +1,18 @@
+{{ if (eq .Values.gateway.name "ambassador") }}
+apiVersion: getambassador.io/v1
+config:
+  cors:
+    credentials: true
+    exposed_headers: x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session
+    headers: authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request,
+      x-tidepool-trace-session
+    max_age: '600s'
+    methods: GET, POST, PUT, PATCH, DELETE
+    origins: '*'
+  service_port: 8443
+  use_proxy_proto: false
+  use_remote_address: true
+  x_forwarded_proto_redirect: true
+kind: Module
+name: ambassador
+{{ end }}
