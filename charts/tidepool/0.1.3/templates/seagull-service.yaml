@@ -24,7 +24,7 @@ metadata:
   namespace: {{.Release.Namespace}}
 spec:
   ports:
-  - name: "{{.Values.seagull.port}}"
+  - name: "http"
     port: {{.Values.seagull.port}}
     targetPort: {{.Values.seagull.port}}
   selector:

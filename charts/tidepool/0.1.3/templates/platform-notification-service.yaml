@@ -11,7 +11,7 @@ metadata:
   namespace: {{.Release.Namespace}}
 spec:
   ports:
-  - name: "{{.Values.platformNotification.port}}"
+  - name: "http"
     port: {{.Values.platformNotification.port}}
     targetPort: {{.Values.platformNotification.port}}
   selector:

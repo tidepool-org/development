@@ -24,7 +24,7 @@ metadata:
   namespace: {{.Release.Namespace}}
 spec:
   ports:
-  - name: "{{.Values.messageapi.port}}"
+  - name: "http"
     port: {{.Values.messageapi.port}}
     targetPort: {{.Values.messageapi.port}}
   selector:

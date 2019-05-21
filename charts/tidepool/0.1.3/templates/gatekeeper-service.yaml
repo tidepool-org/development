@@ -23,7 +23,7 @@ metadata:
   namespace: {{.Release.Namespace}}
 spec:
   ports:
-  - name: "{{.Values.gatekeeper.port}}"
+  - name: "http"
     port: {{.Values.gatekeeper.port}}
     targetPort: {{.Values.gatekeeper.port}}
   selector:

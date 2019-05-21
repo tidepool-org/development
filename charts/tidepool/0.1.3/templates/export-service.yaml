@@ -24,7 +24,7 @@ metadata:
   namespace: {{.Release.Namespace}}
 spec:
   ports:
-  - name: "{{.Values.export.port}}"
+  - name: "http"
     port: {{.Values.export.port}}
     targetPort: {{.Values.export.port}}
   selector:
