@@ -70,7 +70,6 @@ def ambassador_mappings(input):
 
 def main():
     docs = list(yaml.load_all(sys.stdin, Loader=yaml.FullLoader))
-    print(docs)
     mappings = ambassador_mappings(docs)
     print(yaml.dump(mappings,Dumper=yaml.Dumper))
 
