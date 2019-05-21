@@ -402,7 +402,7 @@ def manifests_from_mappings(protocol, mappings):
         ordered = ordered_routes(routes)
         builder.add(virtual_service(ordered, internal_hostname(base), None, False))
         builder.add(virtual_service(ordered, external_hostname(base), cors_policy, use_https))
-        builder.add(internal_service(base))
+        #builder.add(internal_service(base))
     for ref in upstream_refs(mappings):
         builder.add(upstream_kind(ref))
     #builder.add(gateway(False))
