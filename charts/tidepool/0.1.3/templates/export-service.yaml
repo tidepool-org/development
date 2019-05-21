@@ -4,7 +4,7 @@ metadata:
   annotations:
     tidepool.org/config: |
       ---
-      apiVersion: ambassador/v1
+      apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: 'api'
       name: {{ .Release.Namespace -}}-export

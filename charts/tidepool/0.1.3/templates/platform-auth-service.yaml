@@ -4,7 +4,7 @@ metadata:
   annotations:
     tidepool.org/config: |
       ---
-      apiVersion: ambassador/v1
+      apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
       name: {{ .Release.Namespace -}}-platform-auth-user-restricted-tokens
@@ -15,7 +15,7 @@ metadata:
       rewrite: ""
       service: platform-auth.{{ .Release.Namespace }}:{{.Values.platformAuth.port}}
       ---
-      apiVersion: ambassador/v1
+      apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
       name: {{ .Release.Namespace -}}-platform-auth-user-provider-sessions
@@ -26,7 +26,7 @@ metadata:
       rewrite: ""
       service: platform-auth.{{ .Release.Namespace }}:{{.Values.platformAuth.port}}
       ---
-      apiVersion: ambassador/v1
+      apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
       name: {{ .Release.Namespace -}}-platform-auth-restricted-tokens
@@ -36,7 +36,7 @@ metadata:
       rewrite: ""
       service: platform-auth.{{ .Release.Namespace }}:{{.Values.platformAuth.port}}
       ---
-      apiVersion: ambassador/v1
+      apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
       name: {{ .Release.Namespace -}}-platform-auth-provider-sessions
@@ -47,7 +47,7 @@ metadata:
       rewrite: ""
       service: platform-auth.{{ .Release.Namespace }}:{{.Values.platformAuth.port}}
       ---
-      apiVersion: ambassador/v1
+      apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
       name: {{ .Release.Namespace -}}-platform-auth-authorize
@@ -58,7 +58,7 @@ metadata:
       rewrite: ""
       service: platform-auth.{{ .Release.Namespace }}:{{.Values.platformAuth.port}}
       ---
-      apiVersion: ambassador/v1
+      apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
       name: {{ .Release.Namespace -}}-platform-auth-redirect

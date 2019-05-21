@@ -1,4 +1,5 @@
 #!/bin/bash
 
-mappings $1 | ambassador_manifests | single_file "# Auto-generated file by $0. Do not edit.
-{{ if (eq .Values.gateway.name \"ambassador\") }}" "{{ end }}" > $1/templates/ambassador-routes.yaml
+templates=$(helm template $1)
+echo $templates | mappings | ambassador_manifests | single_file "# Auto-generated file by $(basename $0). Do not edit.
+{{ if (eq .Values.gateway.name \"ambassador\") }}" "{{ end }}" >$1/templates/ambassador-routes.yaml

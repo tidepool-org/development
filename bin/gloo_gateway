@@ -1,7 +1,9 @@
 #!/bin/bash -xv
 
-mappings $1 | gloo_manifests http | single_file "# Auto-generated file by $0. Do not edit.
-{{ if and (eq .Values.gateway.name \"gloo\") (.Values.http.enabled) }}" "{{ end }}" > $1/templates/"gloo-http.yaml"
+templates=$(helm template $1)
 
-mappings  $1 | gloo_manifests https | single_file "# Auto-generated file by $0. Do not edit.
-{{ if and (eq .Values.gateway.name \"gloo\") (.Values.https.enabled) }}" "{{ end }}" > $1/templates/"gloo-https.yaml"
+echo $templates | mappings | gloo_manifests http | single_file "# Auto-generated file by $(basename $0). Do not edit.
+{{ if and (eq .Values.gateway.name \"gloo\") (.Values.http.enabled) }}" "{{ end }}" > $1/templates/gloo-http.yaml
+
+echo $templates | mappings | gloo_manifests https | single_file "# Auto-generated file by $(basename $0). Do not edit.
+{{ if and (eq .Values.gateway.name \"gloo\") (.Values.https.enabled) }}" "{{ end }}" > $1/templates/gloo-https.yaml
