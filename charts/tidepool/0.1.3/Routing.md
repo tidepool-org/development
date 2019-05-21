@@ -31,3 +31,37 @@ Kubernetes cluster, e.g. `qa1-api.gateway-proxy.svc.cluster.local`. In this way,
 Services within Kubernetes, excluding the external gateway, use `http` for communication, with an optional `mTLS` overlay provided by a service mesh.  In this design, the services need not be provisioned with certificates. The service mesh overlay provides secure communication
 with rotating certificated provided by the mesh.  This `zero trust` design provides secure communication, satisfying one of the requirements
 for HIPAA complaince. 
+
+### Adding Routes
+
+To add a route to a service, modify the "tidepool.org/config" annotation of the service manifest.
+We use the notation of [Ambassador Mappings](https://www.getambassador.io/reference/mappings/),
+excect that the annotation key is `tidepool.org/config` and the `apiVersion` is `tidepool/v1`.
+
+For example:
+```
+    tidepool.org/config: |
+      ---
+      apiVersion: tidepool/v1
+      kind:  Mapping
+      host: {{ include "charts.host.api" . }}
+      name: {{ .Release.Namespace -}}-gatekeeper-access
+      prefix: /access/
+      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
+      method_regex: true
+      rewrite: ""
+      service: gatekeeper.{{ .Release.Namespace }}:{{.Values.gatekeeper.port}}
+```
+
+Note the use of Helm templating to get values for host, namespace, and port.  Use of these templates is required in order that the mappings may be properly parameterized.
+
+#### Using Gloo
+To generate an API gateway using Gloo, run the `gloo_gateway` tool to generate an API gateway using Gloo. This tool will produce
+two helm templated files `gloo-http.yaml` and `gloo-https.yaml` that define the API Gateway.  Include these in the definition of the 
+helm template for the Tidepool services in directory `charts/tidepool/$VERSION/templates/`.
+
+#### Using Istio
+To generate an API gateway using Istio, run the `istio_gateway` tool to generate an API gateway using Istio. This tool will produce
+two helm templated files `istio-http.yaml` and `istio-https.yaml` that define the API Gateway.  Include these in the definition of the 
+helm template for the Tidepool services in directory `charts/tidepool/$VERSION/templates/`.
+
