@@ -19,6 +19,9 @@ resources:
   #
 gateway:
   name: gloo
+  proxy:
+    name:  gloo-proxy
+    namespace: gloo-system
 https:
   enabled: true
 http:
