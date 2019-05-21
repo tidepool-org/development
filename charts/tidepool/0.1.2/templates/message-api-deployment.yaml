@@ -1,0 +1,76 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: message-api
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: message-api
+  namespace: {{.Release.Namespace}}
+spec:
+  selector:
+    matchLabels:
+      app: message-api
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: message-api
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{ include "charts.init.mongo" .}}
+      containers:
+      - env:
+        - name: DISCOVERY_HOST
+          value: '{{.Values.hakken.host}}:{{.Values.hakken.port}}'
+        - name: GATEKEEPER_SERVICE
+          value: '{
+                  "type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.gatekeeper.host}}:{{.Values.gatekeeper.port}}"}]}'
+        - name: METRICS_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.highwater.host}}:{{.Values.highwater.port}}"}]}'
+        - name: MONGO_CONNECTION_STRING
+          value: mongodb://{{include "charts.mongo.start" .}}/messages{{include "charts.mongo.end" .}}
+        - name: NODE_ENV
+          value: '{{.Values.environment}}'
+        - name: PORT
+          value: "{{.Values.messageapi.port}}"
+        - name: PUBLISH_HOST
+          value: '{{.Values.hakken.host}}'
+        - name: SEAGULL_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.seagull.host}}:{{.Values.seagull.port}}"}]}'
+        - name: SERVER_NAME
+          value: message-api
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: SERVICE_NAME
+          value: message-api
+        - name: DELETE_TIME_WINDOW
+          value: '{{.Values.messageapi.window}}'
+        - name: USER_API_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"}]}'
+        - name: SKIP_HAKKEN
+          value: "true"
+        image: "{{ .Values.messageapi.image }}" 
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: {{.Values.messageapi.port}}
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        name: message-api
+        ports:
+        - containerPort: {{.Values.messageapi.port}}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      restartPolicy: Always
+status: {}

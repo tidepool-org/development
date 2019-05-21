@@ -1,0 +1,90 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: tide-whisperer
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: tide-whisperer
+  namespace: {{.Release.Namespace}}
+spec:
+  selector:
+    matchLabels:
+      app: tide-whisperer
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: tide-whisperer
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{ include "charts.init.mongo" .}}
+      containers:
+      - env:
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: AUTH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: auth
+        - name: TIDEPOOL_TIDE_WHISPERER_ENV
+          value: |
+            {
+                "auth": {
+                  "address": "http://{{.Values.platformAuth.host}}:{{.Values.platformAuth.port}}",
+                  "userAgent": "Tidepool-TideWhisperer"
+                },
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://{{.Values.gatekeeper.host}}:{{.Values.gatekeeper.port}}"]}},
+                "hakken": {
+                  "host": "{{.Values.hakken.host}}:{{.Values.hakken.port}}",
+                  "skipHakken": {{.Values.hakken.skip}}
+                  },
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://{{.Values.seagull.host}}:{{.Values.seagull.port}}"]}},
+                "shoreline": {
+                    "name": "tide-whisperer",
+                    "serviceSpec": {"type": "static", "hosts": ["http://{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"]},
+                    "tokenRefreshInterval": "1h"
+                }
+            }
+        - name: TIDEPOOL_TIDE_WHISPERER_SERVICE
+          value: |
+            {
+                "mongo": {
+                    "connectionString": "mongodb://{{include "charts.mongo.start" .}}/data{{include "charts.mongo.end" .}}"
+                },
+                "schemaVersion": {
+                    "maximum": 99,
+                    "minimum": 1
+                },
+                "service": {
+                    "certFile": "config/cert.pem",
+                    "host": "localhost:{{.Values.tidewhisperer.port}}",
+                    "keyFile": "config/key.pem",
+                    "protocol": "http",
+                    "service": "tide-whisperer"
+                }
+            }
+        image: "{{ .Values.tidewhisperer.image }}"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: {{.Values.tidewhisperer.port}}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: tide-whisperer
+        ports:
+        - containerPort: {{.Values.tidewhisperer.port}}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,545 @@
+# Auto-generated file by istio-gateway. Do not edit.
+{{ if and (eq .Values.gateway.name "istio") (.Values.https.enabled) }}
+--- #file: api-virtual-service.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: api.{{- .Release.Namespace -}}.svc.cluster.local
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  gateways:
+  - primary-gateway
+  - mesh
+  hosts:
+  - '{{- .Release.Namespace -}}-api.tidepool.org'
+  - internal-api.{{- .Release.Namespace -}}.svc.cluster.local
+  http:
+  - corsPolicy: &id001
+      allowCredentials: true
+      allowHeaders:
+      - authorization
+      - content-type
+      - x-tidepool-session-token
+      - x-tidepool-trace-request
+      - x-tidepool-trace-session
+      allowMethods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+      allowOrigin:
+      - '*'
+      exposeHeaders:
+      - x-tidepool-session-token
+      - x-tidepool-trace-request
+      - x-tidepool-trace-session
+      maxAge: 600s
+    match:
+    - method:
+        regex: GET|POST|DELETE
+      uri:
+        regex: /v1/users/[^/]+/restricted_tokens
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9222
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|POST|DELETE
+      uri:
+        regex: /v1/users/[^/]+/provider_sessions
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9222
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|POST|DELETE|OPTIONS
+      uri:
+        regex: /v1/users/[^/]+/data_sources
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9220
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|PUT|DELETE
+      uri:
+        regex: /v1/provider_sessions/[^/]+
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9222
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|DELETE
+      uri:
+        regex: /v1/oauth/[^/]+/authorize
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9222
+  - corsPolicy: *id001
+    match:
+    - method:
+        exact: GET
+      uri:
+        regex: /v1/users/[^/]+/data_sets
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9220
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|POST|DELETE
+      uri:
+        regex: /v1/users/[^/]+/images/.+
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9226
+  - corsPolicy: *id001
+    match:
+    - method:
+        exact: GET
+      uri:
+        regex: /v1/oauth/[^/]+/redirect
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9222
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|POST
+      uri:
+        regex: /v1/users/[^/]+/datasets
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9220
+  - corsPolicy: *id001
+    match:
+    - method:
+        exact: GET
+      uri:
+        regex: /v1/blobs/[^/]+/content
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9225
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|PUT|DELETE
+      uri:
+        regex: /v1/data_sources/[^/]+
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9220
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|POST|DELETE
+      uri:
+        regex: /v1/users/[^/]+/images
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9226
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|PUT|DELETE
+      uri:
+        prefix: /v1/restricted_tokens
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9222
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|POST|DELETE
+      uri:
+        regex: /v1/users/[^/]+/blobs
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9225
+  - corsPolicy: *id001
+    match:
+    - method:
+        exact: DELETE
+      uri:
+        regex: /v1/users/[^/]+/data
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9220
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|DELETE
+      uri:
+        regex: /v1/blobs/[^/]+
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9225
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|PUT|DELETE
+      uri:
+        regex: /v1/tasks/[^/*]
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9224
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|DELETE
+      uri:
+        regex: /v1/users/[^/*]
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9221
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /dataservices/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9220
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /userservices/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9221
+  - corsPolicy: *id001
+    match:
+    - method:
+        exact: GET
+      uri:
+        prefix: /v1/data_sets
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9220
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: POST|PUT|DELETE
+      uri:
+        prefix: /v1/datasets
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9220
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|PUT|DELETE
+      uri:
+        prefix: /v1/images
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9226
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /metadata/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9120
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /metrics/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9191
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /confirm/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9157
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /message/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9119
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /v1/data/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9220
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|POST
+      uri:
+        prefix: /v1/tasks
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9224
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /export/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9300
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /access/
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9123
+  - corsPolicy: *id001
+    match:
+    - method:
+        exact: GET
+      uri:
+        prefix: /v1/time
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9220
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /auth/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9107
+  - corsPolicy: *id001
+    match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /data/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: default-api.tidepool.org
+        port:
+          number: 9127
+--- #file: app-virtual-service.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: app.{{- .Release.Namespace -}}.svc.cluster.local
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  gateways:
+  - primary-gateway
+  - mesh
+  hosts:
+  - '{{- .Release.Namespace -}}-app.tidepool.org'
+  - internal-app.{{- .Release.Namespace -}}.svc.cluster.local
+  http:
+  - corsPolicy:
+      allowCredentials: true
+      allowHeaders:
+      - authorization
+      - content-type
+      - x-tidepool-session-token
+      - x-tidepool-trace-request
+      - x-tidepool-trace-session
+      allowMethods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+      allowOrigin:
+      - '*'
+      exposeHeaders:
+      - x-tidepool-session-token
+      - x-tidepool-trace-request
+      - x-tidepool-trace-session
+      maxAge: 600s
+    match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /
+    route:
+    - destination:
+        host: default-app.tidepool.org
+        port:
+          number: 3000
+--- #file: gateway.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: primary-gateway
+  namespace: '{{.Release.Namespace}}'
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - '{{- .Release.Namespace -}}-app.tidepool.org'
+    - '{{- .Release.Namespace -}}-api.tidepool.org'
+    - '{{- .Release.Namespace -}}-uploads.tidepool.org'
+    port:
+      name: https-443
+      number: 443
+      protocol: HTTPS
+    tls:
+      credentialName: tidepool-org
+      mode: SIMPLE
+--- #file: uploads-virtual-service.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: uploads.{{- .Release.Namespace -}}.svc.cluster.local
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  gateways:
+  - primary-gateway
+  - mesh
+  hosts:
+  - '{{- .Release.Namespace -}}-uploads.tidepool.org'
+  - internal-uploads.{{- .Release.Namespace -}}.svc.cluster.local
+  http:
+  - corsPolicy:
+      allowCredentials: true
+      allowHeaders:
+      - authorization
+      - content-type
+      - x-tidepool-session-token
+      - x-tidepool-trace-request
+      - x-tidepool-trace-session
+      allowMethods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+      allowOrigin:
+      - '*'
+      exposeHeaders:
+      - x-tidepool-session-token
+      - x-tidepool-trace-request
+      - x-tidepool-trace-session
+      maxAge: 600s
+    match:
+    - method:
+        regex: GET|OPTIONS|POST|PUT|PATCH|DELETE
+      uri:
+        prefix: /
+    route:
+    - destination:
+        host: default-uploads.tidepool.org
+        port:
+          number: 9122
+{{ end }}
