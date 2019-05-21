@@ -14,6 +14,8 @@ def manifests_from_mappings(mappings):
         mapping["host"] = "{{.Release.Namespace}}-" + base + ".tidepool.org|{{.Release.Namespace}}-" + base + "-internal"
         mapping["host_regex"] = True
         mapping["apiVersion"] = "getambassador.io/v1"
+        mapping["service"] = mapping["service"].replace("default", "{{.Release.Namespace}}")
+        mapping["name"] = mapping["name"].replace("default", "{{.Release.Namespace}}")
         result[mapping["name"]] = mapping
     return result
 
