@@ -256,15 +256,15 @@ def upstream_kind(ref):
 def gateway_proxy_service_labels():
     labels = dict()
     labels["app"] = "gloo"
-    labels["gloo"] = "gateway-proxy"
+    labels["gloo"] = "{{.Values.gateway.proxy.name}}"
     return labels
 
 def gateway_proxy_service_metadata(useSSL):
     metadata = dict()
     metadata["labels"] = gateway_proxy_service_labels()
     suffix = "-ssl" if useSSL else ""
-    metadata["name"] = "gateway-proxy" + suffix
-    metadata["namespace"] = "gloo-system"
+    metadata["name"] = "{{.Values.gateway.proxy.name}}" + suffix
+    metadata["namespace"] = "{{.Values.gateway.proxy.namespace}}"
     return metadata
 
 def gateway_proxy_service_ports(useSSL):
@@ -285,7 +285,7 @@ def gateway_proxy_service_ports(useSSL):
 
 def gateway_proxy_service_selector():
     selector = dict()
-    selector["gloo"] = "gateway-proxy"
+    selector["gloo"] = "{{.Values.gateway.proxy.name}}"
     return selector
 
 def gateway_proxy_service_spec(service_type, useSSL):
@@ -327,7 +327,7 @@ def internal_ports():
 def internal_spec():
     spec = dict()
     spec["type"] = "ExternalName"
-    spec["externalName"] = "gateway-proxy.gloo-system.svc.cluster.local"
+    spec["externalName"] = "{{.Values.gateway.proxy.name}}.{{.Values.gateway.proxy.namespace}}.svc.cluster.local"
     spec["ports"] = internal_ports()
     return spec
 
@@ -343,7 +343,7 @@ def gateway_metadata(useSSL):
     metadata = dict()
     suffix = "-ssl" if useSSL else ""
     metadata["name"] = "gateway" + suffix
-    metadata["namespace"] = "gloo-system"
+    metadata["namespace"] = "{{.Values.gateway.proxy.namespace}}"
     return metadata
 
 def gateway(useSSL):
