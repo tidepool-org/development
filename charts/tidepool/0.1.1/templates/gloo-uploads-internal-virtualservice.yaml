@@ -1,0 +1,29 @@
+# Auto-generated file by gloo-gateway. Do not edit.
+{{ if and (eq .Values.gateway.name "gloo") (.Values.https.enabled) }}
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: '{{.Release.Namespace}}-uploads.svc.cluster.local'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  displayName: '{{.Release.Namespace}}-uploads.svc.cluster.local'
+  virtualHost:
+    domains:
+    - '{{.Release.Namespace}}-uploads.svc.cluster.local'
+    name: '{{.Release.Namespace}}-uploads.svc.cluster.local'
+    routes:
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
+{{ end }}

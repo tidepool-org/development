@@ -1,0 +1,29 @@
+# Auto-generated file by gloo-gateway. Do not edit.
+{{ if and (eq .Values.gateway.name "gloo") (.Values.https.enabled) }}
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: '{{.Release.Namespace}}-app.svc.cluster.local'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  displayName: '{{.Release.Namespace}}-app.svc.cluster.local'
+  virtualHost:
+    domains:
+    - '{{.Release.Namespace}}-app.svc.cluster.local'
+    name: '{{.Release.Namespace}}-app.svc.cluster.local'
+    routes:
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+{{ end }}

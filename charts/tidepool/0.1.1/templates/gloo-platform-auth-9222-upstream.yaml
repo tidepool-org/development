@@ -1,0 +1,15 @@
+# Auto-generated file by gloo-gateway. Do not edit.
+{{ if and (eq .Values.gateway.name "gloo") (.Values.https.enabled) }}
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: '{{- .Release.Namespace -}}-platform-auth-9222'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: platform-auth
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9222
+{{ end }}

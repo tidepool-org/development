@@ -1,0 +1,12 @@
+# Auto-generated file by gloo-gateway. Do not edit.
+{{ if and (eq .Values.gateway.name "gloo") (.Values.https.enabled) }}
+apiVersion: gateway.solo.io/v1
+bindAddress: '::'
+bindPort: 8080
+kind: Gateway
+metadata:
+  name: gateway
+  namespace: gloo-system
+ssl: false
+useProxyProto: false
+{{ end }}
