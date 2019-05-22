@@ -6,7 +6,7 @@ metadata:
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 spec:
-  externalTrafficPolicy: Cluster
+  externalTrafficPolicy: Local
   ports:
 {{if .Values.https.enabled }}
   - name: https
