@@ -4,7 +4,7 @@
 # assumes blip label
 # assumes Ambassador annotations
 
-hosts=$(kubectl get svc -o yaml --all-namespaces -l io.kompose.service=blip | grep host | sed -e "s/ *host: *//")
+hosts=$(kubectl get svc -o yaml --all-namespaces -l app=blip | grep host | sed -e "s/ *host: *//")
 for host in $hosts
 do
    echo $host
