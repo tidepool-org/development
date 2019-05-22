@@ -1,11 +1,9 @@
 nameOverride: ""
 fullnameOverride: ""
-domain: "tidepool.org"
 environment: production
 aws:
   region: us-west-2
 includeSecrets: true
-usessl: true
 resources:
   {}
   # If you do want to specify resources, uncomment the following
@@ -18,14 +16,18 @@ resources:
   #  memory: 128Mi
   #
 gateway:
+  domain: "tidepool.org"
   name: gloo
   proxy:
     name:  gateway-proxy
     namespace: gloo-system
-https:
-  enabled: true
-http:
-  enabled: false
+  tlssecret:
+    name: tidepool-org
+    namespace: default
+  https:
+    enabled: true
+  http:
+    enabled: false
 
 ambassador:
   fullnameOverride: ambassador
@@ -42,9 +44,6 @@ ambassador:
       sidecar.istio.io/inject: "false"
       service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
       service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
-gloo:
-  namespace:
-    create: true
 image:
   pullPolicy: IfNotPresent
 blip: 
