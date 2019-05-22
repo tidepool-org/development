@@ -1,7 +1,15 @@
 #!/bin/bash
 
-helm template $1 | mappings | gloo_manifests http | single_file "# Auto-generated file by $(basename $0). Do not edit.
+templates="$(helm template $1)"
+if [ $? -eq 1 ]
+then
+	echo "helm template $1" failed
+	echo "exiting without writing templates"
+	exit 1
+fi
+
+echo "$templates" | mappings | gloo_manifests http | single_file "# Auto-generated file by $(basename $0). Do not edit.
 {{ if (and (eq .Values.gateway.name \"gloo\") (.Values.gatweay.http.enabled)) }}" "{{ end }}" > $1/templates/gloo-http.yaml
 
-helm template $1 | mappings | gloo_manifests https | single_file "# Auto-generated file by $(basename $0). Do not edit.
+echo "$templates" | mappings | gloo_manifests https | single_file "# Auto-generated file by $(basename $0). Do not edit.
 {{ if (and (eq .Values.gateway.name \"gloo\") (.Values.gateway.https.enabled)) }}" "{{ end }}" > $1/templates/gloo-https.yaml

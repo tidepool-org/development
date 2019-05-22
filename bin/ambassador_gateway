@@ -1,4 +1,12 @@
 #!/bin/bash
 
-helm template $1 | mappings | ambassador_manifests | single_file "# Auto-generated file by $(basename $0). Do not edit.
+templates="$(helm template $1)"
+if [ $? -eq 1 ]
+then
+	echo "helm template $1 failed"
+	echo "exiting without writing templates"
+	exit 1
+fi
+
+echo "$templates" | mappings | ambassador_manifests | single_file "# Auto-generated file by $(basename $0). Do not edit.
 {{ if (eq .Values.gateway.name \"ambassador\") }}" "{{ end }}" >$1/templates/ambassador-routes.yaml
