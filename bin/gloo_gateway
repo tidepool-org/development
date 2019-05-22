@@ -8,5 +8,5 @@ then
 	exit 1
 fi
 
-echo "$templates" | mappings | gloo_manifests https | single_file "# Auto-generated file by $(basename $0). Do not edit.
+echo "$templates" | mappings | gloo_manifests | single_file "# Auto-generated file by $(basename $0). Do not edit.
 {{ if (eq .Values.gateway.name \"gloo\") }}" "{{ end }}" > $1/templates/gloo.yaml
