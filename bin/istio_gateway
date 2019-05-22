@@ -1,8 +1,16 @@
 #!/bin/bash
 
-helm template $1 | mappings | istio_manifests http  | single_file "# Auto-generated file by $(basename $0). Do not edit.
+templates="$(helm template $1)"
+if [ $? -eq 1 ]
+then
+	echo "helm template $1" failed
+	echo "exiting without writing templates"
+	exit 1
+fi
+
+echo "$(templates)" | mappings | istio_manifests http  | single_file "# Auto-generated file by $(basename $0). Do not edit.
 {{ if and (eq .Values.gateway.name \"istio\") (.Values.gateway.http.enabled) }}" "{{ end }}"  > $1/templates/istio-http.yaml
 
-helm template $1 | mappings | istio_manifests https | single_file "# Auto-generated file by $(basename $0). Do not edit.
+echo "$(templates)" | mappings | istio_manifests https | single_file "# Auto-generated file by $(basename $0). Do not edit.
 {{ if and (eq .Values.gateway.name \"istio\") (.Values.gateway.https.enabled) }}" "{{ end }}" > $1/templates/istio-https.yaml
 
