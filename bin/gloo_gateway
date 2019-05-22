@@ -8,8 +8,5 @@ then
 	exit 1
 fi
 
-echo "$templates" | mappings | gloo_manifests http | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if (and (eq .Values.gateway.name \"gloo\") (.Values.gatweay.http.enabled)) }}" "{{ end }}" > $1/templates/gloo-http.yaml
-
 echo "$templates" | mappings | gloo_manifests https | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if (and (eq .Values.gateway.name \"gloo\") (.Values.gateway.https.enabled)) }}" "{{ end }}" > $1/templates/gloo-https.yaml
+{{ if (eq .Values.gateway.name \"gloo\") }}" "{{ end }}" > $1/templates/gloo.yaml
