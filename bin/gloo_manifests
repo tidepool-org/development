@@ -71,11 +71,11 @@ def ordered_routes(routes):
     # sort by length of prefix/regex from longest to
     return sorted(routes, key=sort_key, reverse=True)
 
-def virtual_host(base, routes, domains, cors):
+def virtual_host(base, routes, domains, cors, useSSL):
     """Return a virtual host"""
     vh = dict()
     vh["domains"] = domains
-    vh["name"] = internal_hostname(base)
+    vh["name"] = virtual_service_name(base, useSSL)
     vh["routes"] = routes
     if cors is not None:
         vh["corsPolicy"] = cors
@@ -94,6 +94,9 @@ def virtual_service_ssl_config(hostname):
     config["secretRef"] = tls_secret()
     return config
 
+def virtual_service_name(base, useSSL):
+    return "{{.Release.Namespace}}-" + base + ("-ssl" if useSSL else "")
+
 def virtual_service_spec(routes, base, cors, useSSL):
     spec = dict()
     if useSSL:
@@ -101,8 +104,8 @@ def virtual_service_spec(routes, base, cors, useSSL):
         spec["sslConfig"] = virtual_service_ssl_config(external_hostname(base))
     else:
         hostnames = [internal_hostname(base), external_hostname(base)]
-    spec["virtualHost"] = virtual_host(base, routes, hostnames, cors)
-    spec["displayName"] = "{{.Release.Namespace}}-" + base + ("-ssl" if useSSL else "") 
+    spec["virtualHost"] = virtual_host(base, routes, hostnames, cors, useSSL)
+    spec["displayName"] = virtual_service_name(base, useSSL)
     return spec
 
 def virtual_service(routes, base, cors, useSSL):
