@@ -1,4 +1,4 @@
-{{ if  .Values.https.enabled}}
+{{ if  (and (eq .Values.gateway.name "ambassador")  (.Values.https.enabled))}}
 apiVersion: ambassador/v1
 kind: TLSContext
 name: tidepool-org-tlscontext
