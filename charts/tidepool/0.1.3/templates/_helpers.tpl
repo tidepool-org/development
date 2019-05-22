@@ -72,7 +72,7 @@ tidepool-{{ .Release.Namespace }}-data
 {{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.hydrophone.s3.bucket" .}} {{- end }}
 
 {{- define "charts.protocol" -}}
-{{ if .Values.usessl }}https {{- else -}} http {{- end -}} {{- end -}}
+{{ if .Values.https.enabled }}https {{- else -}} http {{- end -}} {{- end -}}
 
 
 {{/*
