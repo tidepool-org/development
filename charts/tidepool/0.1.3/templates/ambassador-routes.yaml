@@ -1,422 +1,422 @@
-# Auto-generated file by gloo-gateway. Do not edit.
+# Auto-generated file by ambassador_gateway. Do not edit.
 {{ if (eq .Values.gateway.name "ambassador") }}
---- #file: default-blip.yaml
+--- #file: {{.Release.Namespace}}-blip.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-app.tidepool.org|{{.Release.Namespace}}-app-internal'
 host_regex: true
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
-name: default-blip
+name: '{{.Release.Namespace}}-blip'
 prefix: /
 rewrite: ''
-service: blip.default:3000
---- #file: default-export.yaml
+service: blip.{{.Release.Namespace}}:3000
+--- #file: {{.Release.Namespace}}-export.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
-name: default-export
+name: '{{.Release.Namespace}}-export'
 path_redirect: 'false'
 prefix: /export/
 rewrite: /
-service: export.default:9300
---- #file: default-gatekeeper-access.yaml
+service: export.{{.Release.Namespace}}:9300
+--- #file: {{.Release.Namespace}}-gatekeeper-access.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
-name: default-gatekeeper-access
+name: '{{.Release.Namespace}}-gatekeeper-access'
 prefix: /access/
 rewrite: ''
-service: gatekeeper.default:9123
---- #file: default-highwater-metrics.yaml
+service: gatekeeper.{{.Release.Namespace}}:9123
+--- #file: {{.Release.Namespace}}-highwater-metrics.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
-name: default-highwater-metrics
+name: '{{.Release.Namespace}}-highwater-metrics'
 path_redirect: 'false'
 prefix: /metrics/
 rewrite: /
-service: highwater.default:9191
---- #file: default-hydrophone-confirm.yaml
+service: highwater.{{.Release.Namespace}}:9191
+--- #file: {{.Release.Namespace}}-hydrophone-confirm.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
-name: default-hydrophone-confirm
+name: '{{.Release.Namespace}}-hydrophone-confirm'
 path_redirect: 'false'
 prefix: /confirm/
 rewrite: /
-service: hydrophone.default:9157
---- #file: default-jellyfish.yaml
+service: hydrophone.{{.Release.Namespace}}:9157
+--- #file: {{.Release.Namespace}}-jellyfish.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-default-uploads-internal.tidepool.org|{{.Release.Namespace}}-default-uploads-internal-internal'
 host_regex: true
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
-name: default-jellyfish
+name: '{{.Release.Namespace}}-jellyfish'
 path_redirect: 'false'
 prefix: /
 rewrite: ''
-service: jellyfish.default:9122
---- #file: default-message-api-message.yaml
+service: jellyfish.{{.Release.Namespace}}:9122
+--- #file: {{.Release.Namespace}}-message-api-message.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
-name: default-message-api-message
+name: '{{.Release.Namespace}}-message-api-message'
 path_redirect: 'false'
 prefix: /message/
 rewrite: /
-service: message-api.default:9119
---- #file: default-platform-auth-authorize.yaml
+service: message-api.{{.Release.Namespace}}:9119
+--- #file: {{.Release.Namespace}}-platform-auth-authorize.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|DELETE
 method_regex: true
-name: default-platform-auth-authorize
+name: '{{.Release.Namespace}}-platform-auth-authorize'
 prefix: /v1/oauth/[^/]+/authorize
 prefix_regex: true
 rewrite: ''
-service: platform-auth.default:9222
---- #file: default-platform-auth-provider-sessions.yaml
+service: platform-auth.{{.Release.Namespace}}:9222
+--- #file: {{.Release.Namespace}}-platform-auth-provider-sessions.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|PUT|DELETE
 method_regex: true
-name: default-platform-auth-provider-sessions
+name: '{{.Release.Namespace}}-platform-auth-provider-sessions'
 prefix: /v1/provider_sessions/[^/]+
 prefix_regex: true
 rewrite: ''
-service: platform-auth.default:9222
---- #file: default-platform-auth-redirect.yaml
+service: platform-auth.{{.Release.Namespace}}:9222
+--- #file: {{.Release.Namespace}}-platform-auth-redirect.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET
-name: default-platform-auth-redirect
+name: '{{.Release.Namespace}}-platform-auth-redirect'
 prefix: /v1/oauth/[^/]+/redirect
 prefix_regex: true
 rewrite: ''
-service: platform-auth.default:9222
---- #file: default-platform-auth-restricted-tokens.yaml
+service: platform-auth.{{.Release.Namespace}}:9222
+--- #file: {{.Release.Namespace}}-platform-auth-restricted-tokens.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|PUT|DELETE
 method_regex: true
-name: default-platform-auth-restricted-tokens
+name: '{{.Release.Namespace}}-platform-auth-restricted-tokens'
 prefix: /v1/restricted_tokens
 rewrite: ''
-service: platform-auth.default:9222
---- #file: default-platform-auth-user-provider-sessions.yaml
+service: platform-auth.{{.Release.Namespace}}:9222
+--- #file: {{.Release.Namespace}}-platform-auth-user-provider-sessions.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|POST|DELETE
 method_regex: true
-name: default-platform-auth-user-provider-sessions
+name: '{{.Release.Namespace}}-platform-auth-user-provider-sessions'
 prefix: /v1/users/[^/]+/provider_sessions
 prefix_regex: true
 rewrite: ''
-service: platform-auth.default:9222
---- #file: default-platform-auth-user-restricted-tokens.yaml
+service: platform-auth.{{.Release.Namespace}}:9222
+--- #file: {{.Release.Namespace}}-platform-auth-user-restricted-tokens.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|POST|DELETE
 method_regex: true
-name: default-platform-auth-user-restricted-tokens
+name: '{{.Release.Namespace}}-platform-auth-user-restricted-tokens'
 prefix: /v1/users/[^/]+/restricted_tokens
 prefix_regex: true
 rewrite: ''
-service: platform-auth.default:9222
---- #file: default-platform-blob-blobs.yaml
+service: platform-auth.{{.Release.Namespace}}:9222
+--- #file: {{.Release.Namespace}}-platform-blob-blobs.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|DELETE
 method_regex: true
-name: default-platform-blob-blobs
+name: '{{.Release.Namespace}}-platform-blob-blobs'
 prefix: /v1/blobs/[^/]+
 prefix_regex: true
 rewrite: ''
-service: platform-blob.default:9225
---- #file: default-platform-blob-blobs-content.yaml
+service: platform-blob.{{.Release.Namespace}}:9225
+--- #file: {{.Release.Namespace}}-platform-blob-blobs-content.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET
-name: default-platform-blob-blobs-content
+name: '{{.Release.Namespace}}-platform-blob-blobs-content'
 prefix: /v1/blobs/[^/]+/content
 prefix_regex: true
 rewrite: ''
-service: platform-blob.default:9225
---- #file: default-platform-blob-user-blobs.yaml
+service: platform-blob.{{.Release.Namespace}}:9225
+--- #file: {{.Release.Namespace}}-platform-blob-user-blobs.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|POST|DELETE
 method_regex: true
-name: default-platform-blob-user-blobs
+name: '{{.Release.Namespace}}-platform-blob-user-blobs'
 prefix: /v1/users/[^/]+/blobs
 prefix_regex: true
 rewrite: ''
-service: platform-blob.default:9225
---- #file: default-platform-data-data.yaml
+service: platform-blob.{{.Release.Namespace}}:9225
+--- #file: {{.Release.Namespace}}-platform-data-data.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
-name: default-platform-data-data
+name: '{{.Release.Namespace}}-platform-data-data'
 path_redirect: 'false'
 prefix: /v1/data/
 rewrite: /
-service: platform-data.default:9220
---- #file: default-platform-data-data_sets.yaml
+service: platform-data.{{.Release.Namespace}}:9220
+--- #file: {{.Release.Namespace}}-platform-data-data_sets.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET
-name: default-platform-data-data_sets
+name: '{{.Release.Namespace}}-platform-data-data_sets'
 prefix: /v1/data_sets
 rewrite: ''
-service: platform-data.default:9220
---- #file: default-platform-data-data_sources.yaml
+service: platform-data.{{.Release.Namespace}}:9220
+--- #file: {{.Release.Namespace}}-platform-data-data_sources.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|PUT|DELETE
 method_regex: true
-name: default-platform-data-data_sources
+name: '{{.Release.Namespace}}-platform-data-data_sources'
 prefix: /v1/data_sources/[^/]+
 prefix_regex: true
 rewrite: ''
-service: platform-data.default:9220
---- #file: default-platform-data-dataservices.yaml
+service: platform-data.{{.Release.Namespace}}:9220
+--- #file: {{.Release.Namespace}}-platform-data-dataservices.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
-name: default-platform-data-dataservices
+name: '{{.Release.Namespace}}-platform-data-dataservices'
 path_redirect: 'false'
 prefix: /dataservices/
 rewrite: /
-service: platform-data.default:9220
---- #file: default-platform-data-datasets.yaml
+service: platform-data.{{.Release.Namespace}}:9220
+--- #file: {{.Release.Namespace}}-platform-data-datasets.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: POST|PUT|DELETE
 method_regex: true
-name: default-platform-data-datasets
+name: '{{.Release.Namespace}}-platform-data-datasets'
 prefix: /v1/datasets
 rewrite: ''
-service: platform-data.default:9220
---- #file: default-platform-data-time.yaml
+service: platform-data.{{.Release.Namespace}}:9220
+--- #file: {{.Release.Namespace}}-platform-data-time.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET
-name: default-platform-data-time
+name: '{{.Release.Namespace}}-platform-data-time'
 prefix: /v1/time
 rewrite: ''
-service: platform-data.default:9220
---- #file: default-platform-data-user_data.yaml
+service: platform-data.{{.Release.Namespace}}:9220
+--- #file: {{.Release.Namespace}}-platform-data-user_data.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: DELETE
-name: default-platform-data-user_data
+name: '{{.Release.Namespace}}-platform-data-user_data'
 prefix: /v1/users/[^/]+/data
 prefix_regex: true
 rewrite: ''
-service: platform-data.default:9220
---- #file: default-platform-data-user_data_sets.yaml
+service: platform-data.{{.Release.Namespace}}:9220
+--- #file: {{.Release.Namespace}}-platform-data-user_data_sets.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET
-name: default-platform-data-user_data_sets
+name: '{{.Release.Namespace}}-platform-data-user_data_sets'
 prefix: /v1/users/[^/]+/data_sets
 prefix_regex: true
 rewrite: ''
-service: platform-data.default:9220
---- #file: default-platform-data-user_data_sources.yaml
+service: platform-data.{{.Release.Namespace}}:9220
+--- #file: {{.Release.Namespace}}-platform-data-user_data_sources.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|POST|DELETE|OPTIONS
 method_regex: true
-name: default-platform-data-user_data_sources
+name: '{{.Release.Namespace}}-platform-data-user_data_sources'
 prefix: /v1/users/[^/]+/data_sources
 prefix_regex: true
 rewrite: ''
-service: platform-data.default:9220
---- #file: default-platform-data-user_datasets.yaml
+service: platform-data.{{.Release.Namespace}}:9220
+--- #file: {{.Release.Namespace}}-platform-data-user_datasets.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|POST
 method_regex: true
-name: default-platform-data-user_datasets
+name: '{{.Release.Namespace}}-platform-data-user_datasets'
 prefix: /v1/users/[^/]+/datasets
 prefix_regex: true
 rewrite: ''
-service: platform-data.default:9220
---- #file: default-platform-image.yaml
+service: platform-data.{{.Release.Namespace}}:9220
+--- #file: {{.Release.Namespace}}-platform-image.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|PUT|DELETE
 method_regex: true
-name: default-platform-image
+name: '{{.Release.Namespace}}-platform-image'
 prefix: /v1/images
 prefix_regex: false
 rewrite: ''
-service: platform-image.default:9226
---- #file: default-platform-image-users-images.yaml
+service: platform-image.{{.Release.Namespace}}:9226
+--- #file: {{.Release.Namespace}}-platform-image-users-images.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|POST|DELETE
 method_regex: true
-name: default-platform-image-users-images
+name: '{{.Release.Namespace}}-platform-image-users-images'
 prefix: /v1/users/[^/]+/images
 prefix_regex: true
 rewrite: ''
-service: platform-image.default:9226
---- #file: default-platform-image-users-images-regex.yaml
+service: platform-image.{{.Release.Namespace}}:9226
+--- #file: {{.Release.Namespace}}-platform-image-users-images-regex.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|POST|DELETE
 method_regex: true
-name: default-platform-image-users-images-regex
+name: '{{.Release.Namespace}}-platform-image-users-images-regex'
 prefix: /v1/users/[^/]+/images/.+
 prefix_regex: true
 rewrite: ''
-service: platform-image.default:9226
---- #file: default-platform-task-tasks.yaml
+service: platform-image.{{.Release.Namespace}}:9226
+--- #file: {{.Release.Namespace}}-platform-task-tasks.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|POST
 method_regex: true
-name: default-platform-task-tasks
+name: '{{.Release.Namespace}}-platform-task-tasks'
 prefix: /v1/tasks
 rewrite: ''
-service: platform-task.default:9224
---- #file: default-platform-task-tasks-id.yaml
+service: platform-task.{{.Release.Namespace}}:9224
+--- #file: {{.Release.Namespace}}-platform-task-tasks-id.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|PUT|DELETE
 method_regex: true
-name: default-platform-task-tasks-id
+name: '{{.Release.Namespace}}-platform-task-tasks-id'
 prefix: /v1/tasks/[^/*]
 prefix_regex: true
 rewrite: ''
-service: platform-task.default:9224
---- #file: default-platform-user-users.yaml
+service: platform-task.{{.Release.Namespace}}:9224
+--- #file: {{.Release.Namespace}}-platform-user-users.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|DELETE
 method_regex: true
-name: default-platform-user-users
+name: '{{.Release.Namespace}}-platform-user-users'
 prefix: /v1/users/[^/*]
 prefix_regex: true
 rewrite: ''
-service: platform-user.default:9221
---- #file: default-platform-user-userservices.yaml
+service: platform-user.{{.Release.Namespace}}:9221
+--- #file: {{.Release.Namespace}}-platform-user-userservices.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
-name: default-platform-user-userservices
+name: '{{.Release.Namespace}}-platform-user-userservices'
 path_redirect: 'false'
 prefix: /userservices/
 rewrite: /
-service: platform-user.default:9221
---- #file: default-seagull.yaml
+service: platform-user.{{.Release.Namespace}}:9221
+--- #file: {{.Release.Namespace}}-seagull.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
-name: default-seagull
+name: '{{.Release.Namespace}}-seagull'
 path_redirect: 'false'
 prefix: /metadata/
 rewrite: /
-service: seagull.default:9120
---- #file: default-shoreline-auth.yaml
+service: seagull.{{.Release.Namespace}}:9120
+--- #file: {{.Release.Namespace}}-shoreline-auth.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
-name: default-shoreline-auth
+name: '{{.Release.Namespace}}-shoreline-auth'
 path_redirect: 'false'
 prefix: /auth/
 rewrite: /
-service: shoreline.default:9107
---- #file: default-tide-whisperer-data.yaml
+service: shoreline.{{.Release.Namespace}}:9107
+--- #file: {{.Release.Namespace}}-tide-whisperer-data.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-api.tidepool.org|{{.Release.Namespace}}-api-internal'
 host_regex: true
 kind: Mapping
 method: GET|OPTIONS|POST|PUT|PATCH|DELETE
 method_regex: true
-name: default-tide-whisperer-data
+name: '{{.Release.Namespace}}-tide-whisperer-data'
 path_redirect: 'false'
 prefix: /data/
 rewrite: /
-service: tide-whisperer.default:9127
+service: tide-whisperer.{{.Release.Namespace}}:9127
 {{ end }}
