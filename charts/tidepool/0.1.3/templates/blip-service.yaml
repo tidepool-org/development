@@ -22,7 +22,6 @@ metadata:
   name: blip
   namespace: {{.Release.Namespace}}
 spec:
-  type: NodePort
   ports:
   - name: "http"
     port: {{.Values.blip.port}}
