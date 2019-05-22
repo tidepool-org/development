@@ -1,8 +1,8 @@
 #!/bin/bash
 
 helm template $1 | mappings | istio_manifests http  | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if and (eq .Values.gateway.name \"istio\") (.Values.http.enabled) }}" "{{ end }}"  > $1/templates/istio-http.yaml
+{{ if and (eq .Values.gateway.name \"istio\") (.Values.gateway.http.enabled) }}" "{{ end }}"  > $1/templates/istio-http.yaml
 
 helm template $1 | mappings | istio_manifests https | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if and (eq .Values.gateway.name \"istio\") (.Values.https.enabled) }}" "{{ end }}" > $1/templates/istio-https.yaml
+{{ if and (eq .Values.gateway.name \"istio\") (.Values.gateway.https.enabled) }}" "{{ end }}" > $1/templates/istio-https.yaml
 
