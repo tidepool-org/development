@@ -43,8 +43,6 @@ spec:
         image: "{{ .Values.blip.image }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: blip
-        command: ["/bin/sh"]
-        args: ["-c", "yarn build && yarn server"]
         ports:
         - containerPort: {{.Values.blip.port}}
         resources:
