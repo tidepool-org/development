@@ -1,0 +1,16 @@
+#!/bin/bash -xv
+
+HOSTS=$(virtual_hosts | paste -sd "," - )
+ROOT=$(git rev-parse --show-toplevel)
+CLUSTER=$1
+git stash
+ed $ROOT/clusters/$CLUSTER/flux/shared/loadbalancer-helmrelease.yaml <<!
+/hostname/
+s/hostname.*/hostnames: $HOSTS/
+w
+q
+!
+git add $ROOT/clusters/$CLUSTER/flux/shared/loadbalancer-helmrelease.yaml
+git commit -m "Updated hostnames for DNS to $HOSTS."
+git push
+git stash apply
