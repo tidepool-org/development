@@ -2,13 +2,13 @@
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
-  name: loadbalancer
-  namespace: infra
+  name: external-dns
+  namespace: gloo-system
 spec:
-  releaseName: loadbalancer
+  releaseName: external-dns
   chart:
     git: git@github.com:tidepool-org/development
-    path: charts/loadbalancer
+    path: charts/external-dns
     ref: k8s
   values:
     gateway:
