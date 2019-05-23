@@ -25,20 +25,7 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
-      - env:
-        - name: DEV_TOOLS
-          value: "true"
-        - name: DISCOVERY_HOST
-          value: ''
-        - name: NODE_ENV
-          value: '{{.Values.environment}}'
-        - name: PORT
-          value: "{{.Values.blip.port}}"
-        - name: SERVICE_NAME
-          value: blip
-        - name: WEBPACK_DEVTOOL
-          value: cheap-module-eval-source-map
-        image: "{{ .Values.blip.image }}"
+      - image: "{{ .Values.blip.image }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: blip
         ports:
