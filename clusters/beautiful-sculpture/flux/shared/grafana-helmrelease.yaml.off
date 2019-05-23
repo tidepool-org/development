@@ -4,6 +4,7 @@ metadata:
   name: grafana
   namespace: grafana
 spec:
+  releaseName: grafana
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
     name: grafana
