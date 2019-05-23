@@ -16,7 +16,8 @@ resources:
   #  memory: 128Mi
   #
 gateway:
-  domain: "tidepool.org"
+  domain:
+    name: "tidepool.org"
   name: gloo
   proxy:
     name:  gateway-proxy
