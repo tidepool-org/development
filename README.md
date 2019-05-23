@@ -451,6 +451,26 @@ Go ahead and edit the source files as you wish. Note the above caveats regarding
 
 When developing the front end services `blip` (our primary web application) and `viz` (our visualization library), there are a few extra steps needed in addition to the generalized development instructions above.
 
+### Using development images
+
+The `blip` service image uses a multistage Dockerfile to allow the option of building development environment images or minimal production-ready images from the same file.  By default, the production-ready image is pulled.
+
+If you need to develop this repo, you need to ensure that you are pulling and running the image with the `develop` tag to be able to run yarn commands and unit tests, package linking, and other development tasks.
+
+```bash
+  blip:
+    image: tidepool/blip
+  # ...
+```
+
+becomes
+
+```bash
+  blip:
+    image: tidepool/blip:develop
+  # ...
+```
+
 ### Mounting Local Volumes
 
 This is far recommended over rebuilding the images when making changes, as full container builds will be quite time-consuming due to the `yarn install`'s being called.
@@ -461,10 +481,12 @@ The other commented-out paths are for supporting frontend repos that only need t
 
 ```bash
   blip:
-    image: tidepool/blip
+    image: tidepool/blip:develop
     depends_on:
       - hakken
-    # build: ${TIDEPOOL_DOCKER_BLIP_DIR}
+    # build:
+    #   context: ${TIDEPOOL_DOCKER_BLIP_DIR}
+    #   target: 'develop'
     volumes:
       - ${TIDEPOOL_DOCKER_BLIP_DIR}:/app:cached
       - /app/node_modules

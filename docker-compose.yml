@@ -553,7 +553,7 @@ services:
         }
 
   # viz:
-  #   image: tidepool/viz
+  #   image: tidepool/viz:develop
   #   build:
   #     context: ${TIDEPOOL_DOCKER_VIZ_DIR}
   #     target: 'develop'
