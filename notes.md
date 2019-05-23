@@ -40,5 +40,5 @@ cd $CLUSTER_NAME
 #### update aws-auth configmap to add tidepool ops users
 `$BIN/install_users`
 
-#### set DNS routes
-`$BIN/set_routes`
+#### set DNS routes in the manifest and upload that to Git.
+`$BIN/set_routes2 $CLUSTER_NAME`
