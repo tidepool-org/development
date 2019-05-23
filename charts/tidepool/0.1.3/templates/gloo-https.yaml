@@ -31,7 +31,7 @@ spec:
       - DELETE
       - OPTIONS
       allowOriginRegex:
-      - '*'
+      - .*
       exposeHeaders:
       - x-tidepool-session-token
       - x-tidepool-trace-request
@@ -927,7 +927,7 @@ spec:
       - DELETE
       - OPTIONS
       allowOriginRegex:
-      - '*'
+      - .*
       exposeHeaders:
       - x-tidepool-session-token
       - x-tidepool-trace-request
@@ -1204,7 +1204,7 @@ spec:
       - DELETE
       - OPTIONS
       allowOriginRegex:
-      - '*'
+      - .*
       exposeHeaders:
       - x-tidepool-session-token
       - x-tidepool-trace-request
