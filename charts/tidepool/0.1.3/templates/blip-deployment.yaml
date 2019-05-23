@@ -26,6 +26,9 @@ spec:
     spec:
       containers:
       - image: "{{ .Values.blip.image }}"
+        env:
+        - name: SKIP_HAKKEN
+          value: "true"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: blip
         ports:
