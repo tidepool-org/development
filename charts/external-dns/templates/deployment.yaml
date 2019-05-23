@@ -20,8 +20,8 @@ spec:
         - --domain-filter={{.Values.domainfilter}}
         - --provider={{.Values.provider}}
         - --policy=upsert-only # would prevent ExternalDNS from deleting any records, omit to enable full synchronization
-{{if .Values.awszonetype -}}
+{{if .Values.awszonetype}}
         - --aws-zone-type={{.Values.awszonetype}}
-{{- end -}}
+{{ end }}
         - --registry=txt
         - --txt-owner-id={{.Values.ownerid}}
