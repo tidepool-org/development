@@ -453,7 +453,9 @@ When developing the front end services `blip` (our primary web application) and 
 
 ### Using development images
 
-The `blip` service image uses a multistage Dockerfile to allow the option of building development environment images or minimal production-ready images from the same file.  By default, the production-ready image is pulled.
+The `blip` service image uses a multistage Dockerfile to allow the option of building development environment images or minimal production-ready images from the same file.
+
+By default, the production-ready image is pulled.
 
 If you need to develop this repo, you need to ensure that you are pulling and running the image with the `develop` tag to be able to run yarn commands and unit tests, package linking, and other development tasks.
 
