@@ -102,13 +102,13 @@ nosqlclient:
   image: 'mongoclient/mongoclient'
   enabled: 'true'
   port: '3001'
-platformAuth:
+auth:
   image: tidepool/platform-auth:1.32.0-release.4
-  host: platform-auth
+  host: auth
   port: '9222'
-platformBlob:
+blob:
   image: tidepool/platform-blob:1.32.0-release.4
-  host: platform-blob
+  host: blob
   port: '9225'
   service:
     unstructured:
@@ -116,13 +116,13 @@ platformBlob:
         file: {directory: "_data/blobs"}
         s3: {bucket: "", prefix: "blobs"}
         type: file
-platformData:
+data:
   image: tidepool/platform-data:1.32.0-release.4
-  host: platform-data
+  host: data
   port: '9220'
-platformImage:
+image:
   image: tidepool/platform-image:1.32.0-release.4
-  host: platform-image
+  host: image
   port: '9226'
   service:
     unstructured:
@@ -130,21 +130,21 @@ platformImage:
         file: {directory: "_data/image"}
         s3: {bucket: "", prefix: "images"}
         type: file
-platformMigrations:
+migrations:
   image: tidepool/platform-migrations:1.32.0-release.4
-platformNotification:
+notification:
   image: tidepool/platform-notification:1.32.0-release.4
-  host: platform-notification
+  host: notification
   port: '9223'
-platformTask:
+task:
   image: tidepool/platform-task:1.32.0-release.4
-  host: platform-task
+  host: task
   port: '9224'
-platformTools:
+tools:
   image: tidepool/platform-tools:1.32.0-release.4
-platformUser:
+user:
   image: tidepool/platform-user:1.32.0-release.4
-  host: platform-user
+  host: user
   port: '9221'
 seagull: 
   image: tidepool/seagull:v0.7.2-release.4

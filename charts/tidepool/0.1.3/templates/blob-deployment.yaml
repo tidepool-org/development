@@ -2,17 +2,17 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: platform-auth
+    app: blob
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-  name: platform-auth
+  name: blob
   namespace: {{.Release.Namespace}}
 spec:
   selector:
     matchLabels:
-      app: platform-auth
+      app: blob
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: 1
@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       labels:
-        app: platform-auth
+        app: blob
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
@@ -28,11 +28,11 @@ spec:
       containers:
       - env:
         {{ include "charts.platform.env" .}}
-        image: "{{ .Values.platformAuth.image }}"
-        {{ template "charts.platform.probes" .Values.platformAuth}}
-        name: platform-auth
+        image: "{{ .Values.blob.image }}"
+        {{ template "charts.platform.probes" .Values.blob}}
+        name: blob
         ports:
-        - containerPort: {{.Values.platformAuth.port}}
+        - containerPort: {{.Values.blob.port}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always

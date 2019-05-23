@@ -50,7 +50,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            name: '{{- .Release.Namespace -}}-auth-9222'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -61,7 +61,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            name: '{{- .Release.Namespace -}}-auth-9222'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -73,7 +73,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -84,7 +84,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            name: '{{- .Release.Namespace -}}-auth-9222'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -94,7 +94,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            name: '{{- .Release.Namespace -}}-auth-9222'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -103,7 +103,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -114,7 +114,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-image-9226'
+            name: '{{- .Release.Namespace -}}-image-9226'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -123,7 +123,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            name: '{{- .Release.Namespace -}}-auth-9222'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -133,7 +133,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -142,7 +142,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-blob-9225'
+            name: '{{- .Release.Namespace -}}-blob-9225'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -153,7 +153,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -164,7 +164,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-image-9226'
+            name: '{{- .Release.Namespace -}}-image-9226'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -175,7 +175,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            name: '{{- .Release.Namespace -}}-auth-9222'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -186,7 +186,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-blob-9225'
+            name: '{{- .Release.Namespace -}}-blob-9225'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -195,7 +195,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -205,7 +205,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-blob-9225'
+            name: '{{- .Release.Namespace -}}-blob-9225'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -216,7 +216,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-task-9224'
+            name: '{{- .Release.Namespace -}}-task-9224'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -226,7 +226,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-user-9221'
+            name: '{{- .Release.Namespace -}}-user-9221'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -240,7 +240,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
       routePlugins:
         prefixRewrite:
@@ -257,7 +257,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-user-9221'
+            name: '{{- .Release.Namespace -}}-user-9221'
             namespace: '{{- .Release.Namespace -}}'
       routePlugins:
         prefixRewrite:
@@ -269,7 +269,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -280,7 +280,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -291,7 +291,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-image-9226'
+            name: '{{- .Release.Namespace -}}-image-9226'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -373,7 +373,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
       routePlugins:
         prefixRewrite:
@@ -386,7 +386,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-task-9224'
+            name: '{{- .Release.Namespace -}}-task-9224'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -426,7 +426,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -485,7 +485,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            name: '{{- .Release.Namespace -}}-auth-9222'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -496,7 +496,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            name: '{{- .Release.Namespace -}}-auth-9222'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -508,7 +508,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -519,7 +519,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            name: '{{- .Release.Namespace -}}-auth-9222'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -529,7 +529,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            name: '{{- .Release.Namespace -}}-auth-9222'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -538,7 +538,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -549,7 +549,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-image-9226'
+            name: '{{- .Release.Namespace -}}-image-9226'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -558,7 +558,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            name: '{{- .Release.Namespace -}}-auth-9222'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -568,7 +568,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -577,7 +577,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-blob-9225'
+            name: '{{- .Release.Namespace -}}-blob-9225'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -588,7 +588,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -599,7 +599,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-image-9226'
+            name: '{{- .Release.Namespace -}}-image-9226'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -610,7 +610,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-auth-9222'
+            name: '{{- .Release.Namespace -}}-auth-9222'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -621,7 +621,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-blob-9225'
+            name: '{{- .Release.Namespace -}}-blob-9225'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -630,7 +630,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -640,7 +640,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-blob-9225'
+            name: '{{- .Release.Namespace -}}-blob-9225'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -651,7 +651,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-task-9224'
+            name: '{{- .Release.Namespace -}}-task-9224'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -661,7 +661,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-user-9221'
+            name: '{{- .Release.Namespace -}}-user-9221'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -675,7 +675,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
       routePlugins:
         prefixRewrite:
@@ -692,7 +692,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-user-9221'
+            name: '{{- .Release.Namespace -}}-user-9221'
             namespace: '{{- .Release.Namespace -}}'
       routePlugins:
         prefixRewrite:
@@ -704,7 +704,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -715,7 +715,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -726,7 +726,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-image-9226'
+            name: '{{- .Release.Namespace -}}-image-9226'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -808,7 +808,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
       routePlugins:
         prefixRewrite:
@@ -821,7 +821,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-task-9224'
+            name: '{{- .Release.Namespace -}}-task-9224'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -861,7 +861,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{- .Release.Namespace -}}-platform-data-9220'
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -1154,82 +1154,82 @@ spec:
       serviceName: message-api
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9119
---- #file: gloo-platform-auth-9222-upstream.yaml
+--- #file: gloo-auth-9222-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{- .Release.Namespace -}}-platform-auth-9222'
+  name: '{{- .Release.Namespace -}}-auth-9222'
   namespace: '{{- .Release.Namespace -}}'
 spec:
   upstreamSpec:
     kube:
       selector: {}
-      serviceName: platform-auth
+      serviceName: auth
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9222
---- #file: gloo-platform-blob-9225-upstream.yaml
+--- #file: gloo-blob-9225-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{- .Release.Namespace -}}-platform-blob-9225'
+  name: '{{- .Release.Namespace -}}-blob-9225'
   namespace: '{{- .Release.Namespace -}}'
 spec:
   upstreamSpec:
     kube:
       selector: {}
-      serviceName: platform-blob
+      serviceName: blob
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9225
---- #file: gloo-platform-data-9220-upstream.yaml
+--- #file: gloo-data-9220-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{- .Release.Namespace -}}-platform-data-9220'
+  name: '{{- .Release.Namespace -}}-data-9220'
   namespace: '{{- .Release.Namespace -}}'
 spec:
   upstreamSpec:
     kube:
       selector: {}
-      serviceName: platform-data
+      serviceName: data
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9220
---- #file: gloo-platform-image-9226-upstream.yaml
+--- #file: gloo-image-9226-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{- .Release.Namespace -}}-platform-image-9226'
+  name: '{{- .Release.Namespace -}}-image-9226'
   namespace: '{{- .Release.Namespace -}}'
 spec:
   upstreamSpec:
     kube:
       selector: {}
-      serviceName: platform-image
+      serviceName: image
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9226
---- #file: gloo-platform-task-9224-upstream.yaml
+--- #file: gloo-task-9224-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{- .Release.Namespace -}}-platform-task-9224'
+  name: '{{- .Release.Namespace -}}-task-9224'
   namespace: '{{- .Release.Namespace -}}'
 spec:
   upstreamSpec:
     kube:
       selector: {}
-      serviceName: platform-task
+      serviceName: task
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9224
---- #file: gloo-platform-user-9221-upstream.yaml
+--- #file: gloo-user-9221-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{- .Release.Namespace -}}-platform-user-9221'
+  name: '{{- .Release.Namespace -}}-user-9221'
   namespace: '{{- .Release.Namespace -}}'
 spec:
   upstreamSpec:
     kube:
       selector: {}
-      serviceName: platform-user
+      serviceName: user
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9221
 --- #file: gloo-seagull-9120-upstream.yaml

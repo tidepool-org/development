@@ -7,38 +7,38 @@ metadata:
       apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
-      name: {{ .Release.Namespace -}}-platform-task-tasks
+      name: {{ .Release.Namespace -}}-task-tasks
       prefix: "/v1/tasks"
       method: "GET|POST"
       method_regex: true
       rewrite: ""
-      service: platform-task.{{ .Release.Namespace }}:{{.Values.platformTask.port}}
+      service: task.{{ .Release.Namespace }}:{{.Values.task.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
-      name: {{ .Release.Namespace -}}-platform-task-tasks-id
+      name: {{ .Release.Namespace -}}-task-tasks-id
       prefix: "/v1/tasks/[^/*]"
       prefix_regex: true
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-task.{{ .Release.Namespace }}:{{.Values.platformTask.port}}
+      service: task.{{ .Release.Namespace }}:{{.Values.task.port}}
   labels:
-    app: platform-task
+    app: task
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-  name: platform-task
+  name: task
   namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "http"
-    port: {{.Values.platformTask.port}}
-    targetPort: {{.Values.platformTask.port}}
+    port: {{.Values.task.port}}
+    targetPort: {{.Values.task.port}}
   selector:
-    app: platform-task
+    app: task
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 status:

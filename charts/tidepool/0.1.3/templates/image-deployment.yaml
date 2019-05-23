@@ -2,17 +2,17 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: platform-notification
+    app: image
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-  name: platform-notification
+  name: image
   namespace: {{.Release.Namespace}}
 spec:
   selector:
     matchLabels:
-      app: platform-notification
+      app: image
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: 1
@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       labels:
-        app: platform-notification
+        app: image
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
@@ -28,11 +28,12 @@ spec:
       containers:
       - env:
         {{ include "charts.platform.env" .}}
-        image: "{{ .Values.platformNotification.image }}"
-        {{ template "charts.platform.probes" .Values.platformNotification}}
-        name: platform-notification
+        image: "{{ .Values.image.image }}"
+        {{ template "charts.platform.probes" .Values.image }}
+        name: image
         ports:
-        - containerPort: {{.Values.platformNotification.port}}
+        - containerPort: {{.Values.image.port}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
+status: {}

@@ -7,50 +7,50 @@ metadata:
       apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
-      name: {{ .Release.Namespace -}}-platform-image
+      name: {{ .Release.Namespace -}}-image
       prefix: "/v1/images"
       prefix_regex: false
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-image.{{ .Release.Namespace }}:{{.Values.platformImage.port}}
+      service: image.{{ .Release.Namespace }}:{{.Values.image.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
-      name: {{ .Release.Namespace -}}-platform-image-users-images
+      name: {{ .Release.Namespace -}}-image-users-images
       prefix: "/v1/users/[^/]+/images"
       prefix_regex: true
       method: "GET|POST|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-image.{{ .Release.Namespace }}:{{.Values.platformImage.port}}
+      service: image.{{ .Release.Namespace }}:{{.Values.image.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
       host: api
-      name: {{ .Release.Namespace -}}-platform-image-users-images-regex
+      name: {{ .Release.Namespace -}}-image-users-images-regex
       prefix: "/v1/users/[^/]+/images/.+"
       prefix_regex: true
       method: "GET|POST|DELETE"
       method_regex: true
       rewrite: ""
-      service: platform-image.{{ .Release.Namespace }}:{{.Values.platformImage.port}}
+      service: image.{{ .Release.Namespace }}:{{.Values.image.port}}
   labels:
-    app: platform-image
+    app: image
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-  name: platform-image
+  name: image
   namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "http"
-    port: {{.Values.platformImage.port}}
-    targetPort: {{.Values.platformImage.port}}
+    port: {{.Values.image.port}}
+    targetPort: {{.Values.image.port}}
   selector:
-    app: platform-image
+    app: image
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 status:

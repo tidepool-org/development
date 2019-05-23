@@ -36,11 +36,11 @@ Expand the name of the chart.
 {{- define "charts.s3.url" -}} https://s3-{{.Values.aws.region}}.amazonaws.com {{- end }}
 
 {{- define "charts.image.s3.bucket" -}}
-{{ default tidepool-{{ .Release.Namespace }}-data .Values.platformImage.service.unstructured.store.s3.bucket -}}
+{{ default tidepool-{{ .Release.Namespace }}-data .Values.image.service.unstructured.store.s3.bucket -}}
 {{- end -}}
 
 {{- define "charts.blob.s3.bucket" -}}
-{{ default tidepool-{{ .Release.Namespace }}-data .Values.platformBlob.service.unstructured.store.s3.bucket -}}
+{{ default tidepool-{{ .Release.Namespace }}-data .Values.blob.service.unstructured.store.s3.bucket -}}
 {{- end -}}
 
 {{- define "charts.hydrophone.s3.bucket" -}}
@@ -90,7 +90,7 @@ Create environment variables used by all platform services.
 {{- define "charts.platform.env" -}}
 
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
-          value: http://{{.Values.platformAuth.host}}:{{.Values.platformAuth.port}}
+          value: http://{{.Values.auth.host}}:{{.Values.auth.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
           value: http://{{include "charts.host.internal.api" .}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
@@ -106,37 +106,37 @@ Create environment variables used by all platform services.
               name: server-secret
               key: auth
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.platformAuth.port}}
+          value: :{{.Values.auth.port}}
         - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
-          value: http://{{.Values.platformBlob.host}}:{{.Values.platformBlob.port}}
+          value: http://{{.Values.blob.host}}:{{.Values.blob.port}}
         - name: TIDEPOOL_BLOB_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
               name: server-secret
               key: blob
         - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.platformBlob.port}}
+          value: :{{.Values.blob.port}}
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.platformBlob.service.unstructured.store.file.directory}}'
+          value: '{{.Values.blob.service.unstructured.store.file.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
           value: '{{include "charts.blob.s3.bucket" .}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.platformBlob.service.unstructured.store.s3.prefix}}'
+          value: '{{.Values.blob.service.unstructured.store.s3.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.platformBlob.service.unstructured.store.type}}'
+          value: '{{.Values.blob.service.unstructured.store.type}}'
         - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
           value: confirm
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
-          value: http://{{.Values.platformData.host}}:{{.Values.platformData.port}}
+          value: http://{{.Values.data.host}}:{{.Values.data.port}}
         - name: TIDEPOOL_DATA_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
               name: server-secret
               key: data
         - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.platformData.port}}
+          value: :{{.Values.data.port}}
         - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
-          value: http://{{.Values.platformData.host}}:{{.Values.platformData.port}}
+          value: http://{{.Values.data.host}}:{{.Values.data.port}}
         - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
           value: data
         - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
@@ -150,14 +150,14 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
           value: http://{{include "charts.host.internal.api" .}}
         - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
-          value: http://{{.Values.platformNotification.host}}:{{.Values.platformNotification.port}}
+          value: http://{{.Values.notification.host}}:{{.Values.notification.port}}
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
               name: server-secret
               key: notification
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.platformNotification.port}}
+          value: :{{.Values.notification.port}}
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
           value: http://{{.Values.gatekeeper.host}}:{{.Values.gatekeeper.port}}
         - name: TIDEPOOL_PERMISSION_STORE_DATABASE
@@ -211,7 +211,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS
-          value: http://{{.Values.platformTask.host}}:{{.Values.platformTask.port}}
+          value: http://{{.Values.task.host}}:{{.Values.task.port}}
         - name: TIDEPOOL_TASK_QUEUE_DELAY
           value: "5"
         - name: TIDEPOOL_TASK_QUEUE_WORKERS
@@ -222,7 +222,7 @@ Create environment variables used by all platform services.
               name: server-secret
               key: task
         - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.platformTask.port}}
+          value: :{{.Values.task.port}}
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
           value: http://{{include "charts.host.internal.api" .}}
         - name: TIDEPOOL_USER_SERVICE_SECRET
@@ -231,7 +231,7 @@ Create environment variables used by all platform services.
               name: server-secret
               key: user
         - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.platformUser.port}}
+          value: :{{.Values.user.port}}
         - name: TIDEPOOL_USER_STORE_DATABASE
           value: user
         - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
@@ -242,17 +242,17 @@ Create environment variables used by all platform services.
               name: server-secret
               key: image 
         - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.platformImage.port}}
+          value: :{{.Values.image.port}}
         - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
-          value: http://{{.Values.platformImage.host}}:{{.Values.platformImage.port}}
+          value: http://{{.Values.image.host}}:{{.Values.image.port}}
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.platformImage.service.unstructured.store.type}}'
+          value: '{{.Values.image.service.unstructured.store.type}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.platformImage.service.unstructured.store.file.directory}}'
+          value: '{{.Values.image.service.unstructured.store.file.directory}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
           value: '{{include "charts.blob.s3.bucket" .}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.platformImage.service.unstructured.store.s3.prefix}}'
+          value: '{{.Values.image.service.unstructured.store.s3.prefix}}'
 {{- end -}}        
 
 {{/*
