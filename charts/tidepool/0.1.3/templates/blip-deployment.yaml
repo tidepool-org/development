@@ -26,12 +26,10 @@ spec:
     spec:
       containers:
       - env:
-        - name: API_HOST
-          value: {{include "charts.protocol" .}}://{{ include "charts.host.external.api" . }}
         - name: DEV_TOOLS
           value: "true"
-        - name: DISCOVVERY_HOST
-          value: '{{.Values.hakken.host}}:{{.Values.hakken.port}}'
+        - name: DISCOVERY_HOST
+          value: ''
         - name: NODE_ENV
           value: '{{.Values.environment}}'
         - name: PORT
