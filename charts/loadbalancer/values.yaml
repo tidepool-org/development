@@ -1,10 +1,11 @@
 gateway: 
   name: gloo
-  value: gateway-proxy
-namespace:
-  name: gloo-system
-https:
-  enabled: false
-http:
-  enabled: true
+  proxy:
+    name: gateway-proxy
+    namespace: gloo-system
+  https:
+    enabled: false
+  http:
+    enabled: true
+  hostnames: # comma-separated list of domains to register
 
