@@ -25,9 +25,9 @@ Expand the name of the chart.
 {{- end -}}
 {{- end -}}
 
-{{- define "charts.host.api" -}} {{ .Release.Namespace }}-api-internal {{- end }}
-{{- define "charts.host.uploads" -}} {{ .Release.Namespace }}-uploads-internal {{- end }}
-{{- define "charts.host.app" -}} {{ .Release.Namespace }}-app-internal {{- end }}
+{{- define "charts.host.internal.api" -}} {{ .Release.Namespace }}-api-internal {{- end }}
+{{- define "charts.host.internal.uploads" -}} {{ .Release.Namespace }}-uploads-internal {{- end }}
+{{- define "charts.host.internal.app" -}} {{ .Release.Namespace }}-app-internal {{- end }}
 
 {{- define "charts.host.external.api" -}} {{ .Release.Namespace }}-api.tidepool.org {{- end }}
 {{- define "charts.host.external.uploads" -}} {{ .Release.Namespace }}-uploads.tidepool.org {{- end }}
@@ -36,35 +36,19 @@ Expand the name of the chart.
 {{- define "charts.s3.url" -}} https://s3-{{.Values.aws.region}}.amazonaws.com {{- end }}
 
 {{- define "charts.image.s3.bucket" -}}
-{{- if .Values.platformImage.service.unstructured.store.s3.bucket -}}
-{{- .Values.platformImage.service.unstructured.store.s3.bucket -}}
-{{- else -}}
-tidepool-{{ .Release.Namespace }}-data
-{{- end -}}
+{{ default tidepool-{{ .Release.Namespace }}-data .Values.platformImage.service.unstructured.store.s3.bucket -}}
 {{- end -}}
 
 {{- define "charts.blob.s3.bucket" -}}
-{{- if .Values.platformBlob.service.unstructured.store.s3.bucket -}}
-{{- .Values.platformBlob.service.unstructured.store.s3.bucket -}}
-{{- else -}}
-tidepool-{{ .Release.Namespace }}-data
-{{- end -}}
+{{ default tidepool-{{ .Release.Namespace }}-data .Values.platformBlob.service.unstructured.store.s3.bucket -}}
 {{- end -}}
 
 {{- define "charts.hydrophone.s3.bucket" -}}
-{{- if .Values.hydrophone.bucket -}}
-{{- .Values.hydrophone.bucket -}}
-{{- else -}}
-tidepool-{{ .Release.Namespace }}-asset
-{{- end -}}
+{{ default tidepool-{{ .Release.Namespace }}-asset .Values.hydrophone.bucket -}}
 {{- end -}}
 
 {{- define "charts.jellyfish.s3.bucket" -}}
-{{- if .Values.jellyfish.bucket -}}
-{{- .Values.jellyfish.bucket -}}
-{{- else -}}
-tidepool-{{ .Release.Namespace }}-data
-{{- end -}}
+{{ default tidepool-{{ .Release.Namespace }}-data .Values.jellyfish.bucket -}}
 {{- end -}}
 
 {{- define "charts.image.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.image.s3.bucket" .}} {{- end }}
@@ -72,7 +56,7 @@ tidepool-{{ .Release.Namespace }}-data
 {{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.hydrophone.s3.bucket" .}} {{- end }}
 
 {{- define "charts.protocol" -}}
-{{ if .Values.https.enabled }}https {{- else -}} http {{- end -}} {{- end -}}
+{{ if .Values.gateway.https.enabled }}https {{- else -}} http {{- end -}} {{- end -}}
 
 
 {{/*
@@ -108,14 +92,14 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://{{.Values.platformAuth.host}}:{{.Values.platformAuth.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: http://{{include "charts.host.api" .}}
+          value: http://{{include "charts.host.internal.api" .}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
               name: server-secret
               key: secret
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
-          value: {{include "charts.host.api" .}}
+          value: {{include "charts.host.internal.api" .}}
         - name: TIDEPOOL_AUTH_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
@@ -164,7 +148,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_MESSAGE_STORE_DATABASE
           value: messages
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
-          value: http://{{include "charts.host.api" .}}
+          value: http://{{include "charts.host.internal.api" .}}
         - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
           value: http://{{.Values.platformNotification.host}}:{{.Values.platformNotification.port}}
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
@@ -200,7 +184,7 @@ Create environment variables used by all platform services.
               name: dexcom
               key: CLIENT_SECRET
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
-          value: http://{{include "charts.host.api" .}}/v1/oauth/dexcom/redirect
+          value: http://{{include "charts.host.internal.api" .}}/v1/oauth/dexcom/redirect
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
           value: offline_access
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
@@ -240,7 +224,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
           value: :{{.Values.platformTask.port}}
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
-          value: http://{{include "charts.host.api" .}}
+          value: http://{{include "charts.host.internal.api" .}}
         - name: TIDEPOOL_USER_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
