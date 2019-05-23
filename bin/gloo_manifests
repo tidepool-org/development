@@ -28,7 +28,7 @@ CORS_POLICY_STRING = """
         "OPTIONS"
     ],
     "allowOriginRegex": [
-        "*.{{.Values.gateway.domain.name}}"
+        "*"
     ],
     "exposeHeaders": [
         "x-tidepool-session-token",
