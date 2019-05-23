@@ -28,7 +28,7 @@ spec:
       containers:
       - env:
         {{ include "charts.platform.env" .}}
-        image: "{{ .Values.platformMigrations.image }}"
+        image: "{{ .Values.migrations.image }}"
         name: migrations
         resources:
           {{- toYaml .Values.resources | nindent 10 }}

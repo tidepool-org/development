@@ -31,7 +31,7 @@ spec:
       - DELETE
       - OPTIONS
       allowOriginRegex:
-      - '*'
+      - '*.{{.Values.gateway.domain.name}}'
       exposeHeaders:
       - x-tidepool-session-token
       - x-tidepool-trace-request
@@ -39,7 +39,7 @@ spec:
       maxAge: 600s
     domains:
     - '{{.Release.Namespace}}-api.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-api-internal'
+    name: '{{.Release.Namespace}}-api-ssl'
     routes:
     - matcher:
         methods:
@@ -318,6 +318,23 @@ spec:
         - PUT
         - PATCH
         - DELETE
+        prefix: /v1/data/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-data-9220'
+            namespace: '{{- .Release.Namespace -}}'
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
         prefix: /metrics/
       routeAction:
         single:
@@ -364,29 +381,21 @@ spec:
     - matcher:
         methods:
         - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /v1/data/
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-data-9220'
-            namespace: '{{- .Release.Namespace -}}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
-    - matcher:
-        methods:
-        - GET
         - POST
         prefix: /v1/tasks
       routeAction:
         single:
           upstream:
             name: '{{- .Release.Namespace -}}-task-9224'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /v1/time
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -418,15 +427,6 @@ spec:
         single:
           upstream:
             name: '{{- .Release.Namespace -}}-gatekeeper-9123'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        prefix: /v1/time
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -474,7 +474,7 @@ spec:
     domains:
     - '{{.Release.Namespace}}-api-internal'
     - '{{.Release.Namespace}}-api.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-api-internal'
+    name: '{{.Release.Namespace}}-api'
     routes:
     - matcher:
         methods:
@@ -753,6 +753,23 @@ spec:
         - PUT
         - PATCH
         - DELETE
+        prefix: /v1/data/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-data-9220'
+            namespace: '{{- .Release.Namespace -}}'
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: /
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
         prefix: /metrics/
       routeAction:
         single:
@@ -799,29 +816,21 @@ spec:
     - matcher:
         methods:
         - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /v1/data/
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-data-9220'
-            namespace: '{{- .Release.Namespace -}}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
-    - matcher:
-        methods:
-        - GET
         - POST
         prefix: /v1/tasks
       routeAction:
         single:
           upstream:
             name: '{{- .Release.Namespace -}}-task-9224'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /v1/time
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -853,15 +862,6 @@ spec:
         single:
           upstream:
             name: '{{- .Release.Namespace -}}-gatekeeper-9123'
-            namespace: '{{- .Release.Namespace -}}'
-    - matcher:
-        methods:
-        - GET
-        prefix: /v1/time
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-data-9220'
             namespace: '{{- .Release.Namespace -}}'
     - matcher:
         methods:
@@ -928,7 +928,7 @@ spec:
       - DELETE
       - OPTIONS
       allowOriginRegex:
-      - '*'
+      - '*.{{.Values.gateway.domain.name}}'
       exposeHeaders:
       - x-tidepool-session-token
       - x-tidepool-trace-request
@@ -936,7 +936,7 @@ spec:
       maxAge: 600s
     domains:
     - '{{.Release.Namespace}}-app.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-app-internal'
+    name: '{{.Release.Namespace}}-app-ssl'
     routes:
     - matcher:
         methods:
@@ -964,7 +964,7 @@ spec:
     domains:
     - '{{.Release.Namespace}}-app-internal'
     - '{{.Release.Namespace}}-app.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-app-internal'
+    name: '{{.Release.Namespace}}-app'
     routes:
     - matcher:
         methods:
@@ -980,6 +980,19 @@ spec:
           upstream:
             name: '{{- .Release.Namespace -}}-blip-3000'
             namespace: '{{- .Release.Namespace -}}'
+--- #file: gloo-auth-9222-upstream.yaml
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: '{{- .Release.Namespace -}}-auth-9222'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: auth
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9222
 --- #file: gloo-blip-3000-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -993,89 +1006,32 @@ spec:
       serviceName: blip
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 3000
---- #file: gloo-default-uploads-internal-ssl-virtualservice.yaml
-apiVersion: gateway.solo.io/v1
-kind: VirtualService
+--- #file: gloo-blob-9225-upstream.yaml
+apiVersion: gloo.solo.io/v1
+kind: Upstream
 metadata:
-  name: '{{.Release.Namespace}}-default-uploads-internal-ssl'
+  name: '{{- .Release.Namespace -}}-blob-9225'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  displayName: '{{.Release.Namespace}}-default-uploads-internal-ssl'
-  sslConfig:
-    secretRef:
-      name: '{{.Values.gateway.tlssecret.name}}'
-      namespace: '{{.Values.gateway.tlssecret.namespace}}'
-    sniDomains:
-    - '{{.Release.Namespace}}-default-uploads-internal.{{.Values.gateway.domain.name}}'
-  virtualHost:
-    corsPolicy:
-      allowCredentials: true
-      allowHeaders:
-      - authorization
-      - content-type
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      allowMethods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      - OPTIONS
-      allowOriginRegex:
-      - '*'
-      exposeHeaders:
-      - x-tidepool-session-token
-      - x-tidepool-trace-request
-      - x-tidepool-trace-session
-      maxAge: 600s
-    domains:
-    - '{{.Release.Namespace}}-default-uploads-internal.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-default-uploads-internal-internal'
-    routes:
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-jellyfish-9122'
-            namespace: '{{- .Release.Namespace -}}'
---- #file: gloo-default-uploads-internal-virtualservice.yaml
-apiVersion: gateway.solo.io/v1
-kind: VirtualService
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: blob
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9225
+--- #file: gloo-data-9220-upstream.yaml
+apiVersion: gloo.solo.io/v1
+kind: Upstream
 metadata:
-  name: '{{.Release.Namespace}}-default-uploads-internal'
+  name: '{{- .Release.Namespace -}}-data-9220'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  displayName: '{{.Release.Namespace}}-default-uploads-internal'
-  virtualHost:
-    domains:
-    - '{{.Release.Namespace}}-default-uploads-internal-internal'
-    - '{{.Release.Namespace}}-default-uploads-internal.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-default-uploads-internal-internal'
-    routes:
-    - matcher:
-        methods:
-        - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /
-      routeAction:
-        single:
-          upstream:
-            name: '{{- .Release.Namespace -}}-jellyfish-9122'
-            namespace: '{{- .Release.Namespace -}}'
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: data
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9220
 --- #file: gloo-export-9300-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1128,6 +1084,19 @@ spec:
       serviceName: hydrophone
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9157
+--- #file: gloo-image-9226-upstream.yaml
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: '{{- .Release.Namespace -}}-image-9226'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: image
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9226
 --- #file: gloo-jellyfish-9122-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1154,84 +1123,6 @@ spec:
       serviceName: message-api
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9119
---- #file: gloo-auth-9222-upstream.yaml
-apiVersion: gloo.solo.io/v1
-kind: Upstream
-metadata:
-  name: '{{- .Release.Namespace -}}-auth-9222'
-  namespace: '{{- .Release.Namespace -}}'
-spec:
-  upstreamSpec:
-    kube:
-      selector: {}
-      serviceName: auth
-      serviceNamespace: '{{.Release.Namespace}}'
-      servicePort: 9222
---- #file: gloo-blob-9225-upstream.yaml
-apiVersion: gloo.solo.io/v1
-kind: Upstream
-metadata:
-  name: '{{- .Release.Namespace -}}-blob-9225'
-  namespace: '{{- .Release.Namespace -}}'
-spec:
-  upstreamSpec:
-    kube:
-      selector: {}
-      serviceName: blob
-      serviceNamespace: '{{.Release.Namespace}}'
-      servicePort: 9225
---- #file: gloo-data-9220-upstream.yaml
-apiVersion: gloo.solo.io/v1
-kind: Upstream
-metadata:
-  name: '{{- .Release.Namespace -}}-data-9220'
-  namespace: '{{- .Release.Namespace -}}'
-spec:
-  upstreamSpec:
-    kube:
-      selector: {}
-      serviceName: data
-      serviceNamespace: '{{.Release.Namespace}}'
-      servicePort: 9220
---- #file: gloo-image-9226-upstream.yaml
-apiVersion: gloo.solo.io/v1
-kind: Upstream
-metadata:
-  name: '{{- .Release.Namespace -}}-image-9226'
-  namespace: '{{- .Release.Namespace -}}'
-spec:
-  upstreamSpec:
-    kube:
-      selector: {}
-      serviceName: image
-      serviceNamespace: '{{.Release.Namespace}}'
-      servicePort: 9226
---- #file: gloo-task-9224-upstream.yaml
-apiVersion: gloo.solo.io/v1
-kind: Upstream
-metadata:
-  name: '{{- .Release.Namespace -}}-task-9224'
-  namespace: '{{- .Release.Namespace -}}'
-spec:
-  upstreamSpec:
-    kube:
-      selector: {}
-      serviceName: task
-      serviceNamespace: '{{.Release.Namespace}}'
-      servicePort: 9224
---- #file: gloo-user-9221-upstream.yaml
-apiVersion: gloo.solo.io/v1
-kind: Upstream
-metadata:
-  name: '{{- .Release.Namespace -}}-user-9221'
-  namespace: '{{- .Release.Namespace -}}'
-spec:
-  upstreamSpec:
-    kube:
-      selector: {}
-      serviceName: user
-      serviceNamespace: '{{.Release.Namespace}}'
-      servicePort: 9221
 --- #file: gloo-seagull-9120-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1258,6 +1149,19 @@ spec:
       serviceName: shoreline
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9107
+--- #file: gloo-task-9224-upstream.yaml
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: '{{- .Release.Namespace -}}-task-9224'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: task
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9224
 --- #file: gloo-tide-whisperer-9127-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -1271,4 +1175,100 @@ spec:
       serviceName: tide-whisperer
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9127
+--- #file: gloo-uploads-ssl-virtualservice.yaml
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: '{{.Release.Namespace}}-uploads-ssl'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  displayName: '{{.Release.Namespace}}-uploads-ssl'
+  sslConfig:
+    secretRef:
+      name: '{{.Values.gateway.tlssecret.name}}'
+      namespace: '{{.Values.gateway.tlssecret.namespace}}'
+    sniDomains:
+    - '{{.Release.Namespace}}-uploads.{{.Values.gateway.domain.name}}'
+  virtualHost:
+    corsPolicy:
+      allowCredentials: true
+      allowHeaders:
+      - authorization
+      - content-type
+      - x-tidepool-session-token
+      - x-tidepool-trace-request
+      - x-tidepool-trace-session
+      allowMethods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+      allowOriginRegex:
+      - '*.{{.Values.gateway.domain.name}}'
+      exposeHeaders:
+      - x-tidepool-session-token
+      - x-tidepool-trace-request
+      - x-tidepool-trace-session
+      maxAge: 600s
+    domains:
+    - '{{.Release.Namespace}}-uploads.{{.Values.gateway.domain.name}}'
+    name: '{{.Release.Namespace}}-uploads-ssl'
+    routes:
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
+--- #file: gloo-uploads-virtualservice.yaml
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: '{{.Release.Namespace}}-uploads'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  displayName: '{{.Release.Namespace}}-uploads'
+  virtualHost:
+    domains:
+    - '{{.Release.Namespace}}-uploads-internal'
+    - '{{.Release.Namespace}}-uploads.{{.Values.gateway.domain.name}}'
+    name: '{{.Release.Namespace}}-uploads'
+    routes:
+    - matcher:
+        methods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
+--- #file: gloo-user-9221-upstream.yaml
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: '{{- .Release.Namespace -}}-user-9221'
+  namespace: '{{- .Release.Namespace -}}'
+spec:
+  upstreamSpec:
+    kube:
+      selector: {}
+      serviceName: user
+      serviceNamespace: '{{.Release.Namespace}}'
+      servicePort: 9221
 {{ end }}
