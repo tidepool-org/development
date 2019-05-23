@@ -7,7 +7,7 @@ namespaces=$(kubectl get svc -o yaml --all-namespaces -l app=blip -o json | jq '
 
 for namespace in $namespaces
 do
-   if [ "$namespace" == "default" ]
+   if [ "$namespace" == "production" ]
    then
 	   prefix=
    else
