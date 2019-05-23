@@ -6,7 +6,7 @@ metadata:
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
-      host: {{ include "charts.host.uploads" . }}
+      host: uploads
       name: {{ .Release.Namespace -}}-jellyfish
       prefix: /
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
