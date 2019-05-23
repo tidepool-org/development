@@ -2,17 +2,17 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: platform-blob
+    app: user
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-  name: platform-blob
+  name: user
   namespace: {{.Release.Namespace}}
 spec:
   selector:
     matchLabels:
-      app: platform-blob
+      app: user
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: 1
@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       labels:
-        app: platform-blob
+        app: user
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
@@ -28,11 +28,11 @@ spec:
       containers:
       - env:
         {{ include "charts.platform.env" .}}
-        image: "{{ .Values.platformBlob.image }}"
-        {{ template "charts.platform.probes" .Values.platformBlob}}
-        name: platform-blob
+        image: "{{ .Values.user.image }}"
+        {{ template "charts.platform.probes" .Values.user }}
+        name: user
         ports:
-        - containerPort: {{.Values.platformBlob.port}}
+        - containerPort: {{.Values.user.port}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
