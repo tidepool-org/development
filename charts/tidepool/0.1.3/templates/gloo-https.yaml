@@ -1,13 +1,13 @@
 # Auto-generated file by gloo_gateway. Do not edit.
-{{ if (eq .Values.gateway.name "gloo") }}
---- #file: gloo-api-ssl-virtualservice.yaml
+{{ if (and (eq .Values.gateway.name "gloo") (.Values.gateway.https.enabled)) }}
+--- #file: gloo-api-external-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{.Release.Namespace}}-api-ssl'
+  name: '{{.Release.Namespace}}-api-external'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  displayName: '{{.Release.Namespace}}-api-ssl'
+  displayName: '{{.Release.Namespace}}-api.{{.Values.gateway.domain.name}}'
   sslConfig:
     secretRef:
       name: '{{.Values.gateway.tlssecret.name}}'
@@ -39,7 +39,7 @@ spec:
       maxAge: 600s
     domains:
     - '{{.Release.Namespace}}-api.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-api-ssl'
+    name: '{{.Release.Namespace}}-api.{{.Values.gateway.domain.name}}'
     routes:
     - matcher:
         methods:
@@ -462,19 +462,18 @@ spec:
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
---- #file: gloo-api-virtualservice.yaml
+--- #file: gloo-api-internal-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{.Release.Namespace}}-api'
+  name: '{{.Release.Namespace}}-api-internal'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  displayName: '{{.Release.Namespace}}-api'
+  displayName: '{{.Release.Namespace}}-api-internal'
   virtualHost:
     domains:
     - '{{.Release.Namespace}}-api-internal'
-    - '{{.Release.Namespace}}-api.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-api'
+    name: '{{.Release.Namespace}}-api-internal'
     routes:
     - matcher:
         methods:
@@ -897,14 +896,14 @@ spec:
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
---- #file: gloo-app-ssl-virtualservice.yaml
+--- #file: gloo-app-external-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{.Release.Namespace}}-app-ssl'
+  name: '{{.Release.Namespace}}-app-external'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  displayName: '{{.Release.Namespace}}-app-ssl'
+  displayName: '{{.Release.Namespace}}-app.{{.Values.gateway.domain.name}}'
   sslConfig:
     secretRef:
       name: '{{.Values.gateway.tlssecret.name}}'
@@ -936,7 +935,7 @@ spec:
       maxAge: 600s
     domains:
     - '{{.Release.Namespace}}-app.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-app-ssl'
+    name: '{{.Release.Namespace}}-app.{{.Values.gateway.domain.name}}'
     routes:
     - matcher:
         methods:
@@ -952,19 +951,18 @@ spec:
           upstream:
             name: '{{- .Release.Namespace -}}-blip-3000'
             namespace: '{{- .Release.Namespace -}}'
---- #file: gloo-app-virtualservice.yaml
+--- #file: gloo-app-internal-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{.Release.Namespace}}-app'
+  name: '{{.Release.Namespace}}-app-internal'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  displayName: '{{.Release.Namespace}}-app'
+  displayName: '{{.Release.Namespace}}-app-internal'
   virtualHost:
     domains:
     - '{{.Release.Namespace}}-app-internal'
-    - '{{.Release.Namespace}}-app.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-app'
+    name: '{{.Release.Namespace}}-app-internal'
     routes:
     - matcher:
         methods:
@@ -1175,14 +1173,14 @@ spec:
       serviceName: tide-whisperer
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9127
---- #file: gloo-uploads-ssl-virtualservice.yaml
+--- #file: gloo-uploads-external-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{.Release.Namespace}}-uploads-ssl'
+  name: '{{.Release.Namespace}}-uploads-external'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  displayName: '{{.Release.Namespace}}-uploads-ssl'
+  displayName: '{{.Release.Namespace}}-uploads.{{.Values.gateway.domain.name}}'
   sslConfig:
     secretRef:
       name: '{{.Values.gateway.tlssecret.name}}'
@@ -1214,7 +1212,7 @@ spec:
       maxAge: 600s
     domains:
     - '{{.Release.Namespace}}-uploads.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-uploads-ssl'
+    name: '{{.Release.Namespace}}-uploads.{{.Values.gateway.domain.name}}'
     routes:
     - matcher:
         methods:
@@ -1230,19 +1228,18 @@ spec:
           upstream:
             name: '{{- .Release.Namespace -}}-jellyfish-9122'
             namespace: '{{- .Release.Namespace -}}'
---- #file: gloo-uploads-virtualservice.yaml
+--- #file: gloo-uploads-internal-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{.Release.Namespace}}-uploads'
+  name: '{{.Release.Namespace}}-uploads-internal'
   namespace: '{{- .Release.Namespace -}}'
 spec:
-  displayName: '{{.Release.Namespace}}-uploads'
+  displayName: '{{.Release.Namespace}}-uploads-internal'
   virtualHost:
     domains:
     - '{{.Release.Namespace}}-uploads-internal'
-    - '{{.Release.Namespace}}-uploads.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-uploads'
+    name: '{{.Release.Namespace}}-uploads-internal'
     routes:
     - matcher:
         methods:
