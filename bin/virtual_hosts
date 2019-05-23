@@ -3,11 +3,17 @@
 # assumes blip is the only service exposing hosts
 # assumes blip label
 # assumes Ambassador annotations
+namespaces=$(kubectl get svc -o yaml --all-namespaces -l app=blip -o json | jq '.items[] | .metadata.namespace' | sed -e 's#"##g' )
 
-hosts=$(kubectl get svc -o yaml --all-namespaces -l app=blip | grep host | sed -e "s/ *host: *//")
-for host in $hosts
+for namespace in $namespaces
 do
-   echo $host
-   echo $host | sed -e "s/app\.tidepool\.org/api.tidepool.org/"
-   echo $host | sed -e "s/app\.tidepool\.org/uploads.tidepool.org/"
+   if [ "$namespace" == "default" ]
+   then
+	   prefix=
+   else
+	   prefix=${namespace}-
+   fi
+   echo ${prefix}app.tidepool.org
+   echo ${prefix}api.tidepool.org
+   echo ${prefix}uploads.tidepool.org
 done
