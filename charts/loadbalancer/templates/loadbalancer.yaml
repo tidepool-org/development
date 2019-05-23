@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{.Values.gateway.name}}-gateway-loadbalancer
-  namespace: {{.Values.proxy.gateway.namespace}}
+  namespace: {{.Values.gateway.proxy.namespace}}
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
     external-dns.alpha.kubernetes.io/alias: true
