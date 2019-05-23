@@ -1,6 +1,9 @@
 #!/bin/bash
 
 templates="$(helm template $1)"
+
+rm -f $1/templates/gloo-http.yaml $1/templates/gloo-http.yaml
+
 if [ $? -eq 1 ]
 then
 	echo "helm template $1" failed
@@ -9,7 +12,7 @@ then
 fi
 
 echo "$templates" | mappings | gloo_manifests http | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if (and (eq .Values.gateway.name \"gloo\") (.Values.gatweay.http.enabled)) }}" "{{ end }}" > $1/templates/gloo-http.yaml
+{{ if (and (eq .Values.gateway.name \"gloo\") (.Values.gateway.http.enabled)) }}" "{{ end }}" > $1/templates/gloo-http.yaml
 
 echo "$templates" | mappings | gloo_manifests https | single_file "# Auto-generated file by $(basename $0). Do not edit.
 {{ if (and (eq .Values.gateway.name \"gloo\") (.Values.gateway.https.enabled)) }}" "{{ end }}" > $1/templates/gloo-https.yaml
