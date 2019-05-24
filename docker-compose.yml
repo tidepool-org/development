@@ -12,7 +12,9 @@ services:
     image: tidepool/blip
     depends_on:
       - hakken
-    # build: ${TIDEPOOL_DOCKER_BLIP_DIR}
+    # build:
+    #   context: ${TIDEPOOL_DOCKER_BLIP_DIR}
+    #   target: 'develop'
     # volumes:
     #   - ${TIDEPOOL_DOCKER_BLIP_DIR}:/app:cached
     #   - /app/node_modules
@@ -589,7 +591,10 @@ services:
         }
 
   # viz:
-  #   image: tidepool/viz
+  #   image: tidepool/viz:develop
+  #   build:
+  #     context: ${TIDEPOOL_DOCKER_VIZ_DIR}
+  #     target: 'develop'
   #   volumes:
   #     - ${TIDEPOOL_DOCKER_VIZ_DIR}:/app:cached
   #     - /app/node_modules
@@ -597,8 +602,8 @@ services:
   #   environment:
   #     NODE_ENV: development
   #   ports:
-  #     - '8081:8081'
-  #     - '8082:8082'
+  #     - "8082:8082"
+  #     - "8083:8083"
 
 volumes:
   mongo:
