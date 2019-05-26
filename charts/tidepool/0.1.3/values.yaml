@@ -4,6 +4,8 @@ environment: production
 aws:
   region: us-west-2
 includeSecrets: true
+namespace:
+  create: true
 resources:
   {}
   # If you do want to specify resources, uncomment the following
