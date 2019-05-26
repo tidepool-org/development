@@ -33,7 +33,6 @@ spec:
       maxAge: 600s
     domains:
     - '{{.Release.Namespace}}-api.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-api.{{.Values.gateway.domain.name}}'
     routes:
     - matcher:
         methods:
@@ -467,7 +466,6 @@ spec:
   virtualHost:
     domains:
     - '{{.Release.Namespace}}-api-internal'
-    name: '{{.Release.Namespace}}-api-internal'
     routes:
     - matcher:
         methods:
@@ -923,7 +921,6 @@ spec:
       maxAge: 600s
     domains:
     - '{{.Release.Namespace}}-app.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-app.{{.Values.gateway.domain.name}}'
     routes:
     - matcher:
         methods:
@@ -950,7 +947,6 @@ spec:
   virtualHost:
     domains:
     - '{{.Release.Namespace}}-app-internal'
-    name: '{{.Release.Namespace}}-app-internal'
     routes:
     - matcher:
         methods:
@@ -1179,7 +1175,6 @@ spec:
       maxAge: 600s
     domains:
     - '{{.Release.Namespace}}-uploads.{{.Values.gateway.domain.name}}'
-    name: '{{.Release.Namespace}}-uploads.{{.Values.gateway.domain.name}}'
     routes:
     - matcher:
         methods:
@@ -1206,7 +1201,6 @@ spec:
   virtualHost:
     domains:
     - '{{.Release.Namespace}}-uploads-internal'
-    name: '{{.Release.Namespace}}-uploads-internal'
     routes:
     - matcher:
         methods:

@@ -79,11 +79,10 @@ def ordered_routes(routes):
     return sorted(routes, key=sort_key, reverse=True)
 
 
-def virtual_host(routes, hostname, cors):
+def virtual_host(base, routes, hostname, cors):
     """Return a virtual host"""
     vh = dict()
     vh["domains"] = domains(hostname)
-    vh["name"] = hostname 
     vh["routes"] = routes
     if cors is not None:
         vh["corsPolicy"] = cors
@@ -108,7 +107,7 @@ def virtual_service_spec(routes, base, isInternal, cors, useSSL):
     hostname = internal_hostname(base) if isInternal else external_hostname(base)
     if useSSL:
         spec["sslConfig"] = virtual_service_ssl_config(hostname)
-    spec["virtualHost"] = virtual_host(routes, hostname, cors)
+    spec["virtualHost"] = virtual_host(base, routes, hostname, cors)
     spec["displayName"] = hostname
     return spec
 
