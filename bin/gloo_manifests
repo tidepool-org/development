@@ -235,7 +235,6 @@ def kube_spec(ref):
     kube["serviceName"] = ref["service"]
     kube["serviceNamespace"] = "{{.Release.Namespace}}"
     kube["servicePort"] = ref["port"]
-    kube["selector"] = dict()
     return kube
 
 def upstream_spec(ref):

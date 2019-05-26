@@ -975,7 +975,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: auth
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9222
@@ -988,7 +987,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: blip
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 3000
@@ -1001,7 +999,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: blob
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9225
@@ -1014,7 +1011,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: data
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9220
@@ -1027,7 +1023,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: export
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9300
@@ -1040,7 +1035,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: gatekeeper
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9123
@@ -1053,7 +1047,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: highwater
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9191
@@ -1066,7 +1059,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: hydrophone
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9157
@@ -1079,7 +1071,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: image
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9226
@@ -1092,7 +1083,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: jellyfish
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9122
@@ -1105,7 +1095,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: message-api
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9119
@@ -1118,7 +1107,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: seagull
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9120
@@ -1131,7 +1119,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: shoreline
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9107
@@ -1144,7 +1131,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: task
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9224
@@ -1157,7 +1143,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: tide-whisperer
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9127
@@ -1246,7 +1231,6 @@ metadata:
 spec:
   upstreamSpec:
     kube:
-      selector: {}
       serviceName: user
       serviceNamespace: '{{.Release.Namespace}}'
       servicePort: 9221
