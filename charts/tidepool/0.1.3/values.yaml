@@ -70,27 +70,23 @@ highwater:
 hydrophone:
   image: tidepool/hydrophone:v0.9.0-release.1
   ses:
-    fromAddress: ''
+    fromAddress: "Tidepool <noreply@tidepool.org>"
   bucket: ''
   host: hydrophone
   port: '9157'
 jellyfish: 
+  enabled: true
   image: tidepool/jellyfish:v0.12.3-release.2
   port: '9122'
   salt: 'itNkczadZ1EeC9fUWR3LnbKFagtYYLOk'
   bucket: ''
-  storage: 'local'
+  storage: 'aws/s3'
+  #storage: 'local'
 messageapi: 
   image: tidepool/message-api:v0.7.14-release.1
   host: message-api
   port: '9119'
   window: 21
-mailhog:
-  image: mailhog/mailhog:latest
-  ports:
-    smtp: '1025'
-    http: '8025'
-  volume: mailhog1
 mongo: 
   enabled: true
   host: 'mongodb'
@@ -114,9 +110,10 @@ blob:
   service:
     unstructured:
       store:
-        file: {directory: "_data/blobs"}
+        #file: {directory: "_data/blobs"}
+        #type: file
         s3: {bucket: "", prefix: "blobs"}
-        type: file
+        type: s3
 data:
   image: tidepool/platform-data:1.32.0-release.4
   host: data
@@ -128,9 +125,10 @@ image:
   service:
     unstructured:
       store:
-        file: {directory: "_data/image"}
+        #file: {directory: "_data/image"}
+        #type: file
         s3: {bucket: "", prefix: "images"}
-        type: file
+        type: s3
 migrations:
   image: tidepool/platform-migrations:1.32.0-release.4
 notification:
