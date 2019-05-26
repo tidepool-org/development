@@ -1,0 +1,8 @@
+nameOverride: ""
+fullnameOverride: ""
+environment: production
+aws:
+  region: us-west-2
+includeSecrets: false
+namespace:
+  create: false
