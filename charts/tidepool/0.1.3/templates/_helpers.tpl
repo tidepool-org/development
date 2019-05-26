@@ -36,19 +36,35 @@ Expand the name of the chart.
 {{- define "charts.s3.url" -}} https://s3-{{.Values.aws.region}}.amazonaws.com {{- end }}
 
 {{- define "charts.image.s3.bucket" -}}
-{{ default "tidepool-{{ .Release.Namespace }}-data" .Values.image.service.unstructured.store.s3.bucket -}}
+{{- if .Values.image.service.unstructured.store.s3.bucket -}}
+.Values.image.service.unstructured.store.s3.bucket
+{{- else -}}
+tidepool-{{ .Release.Namespace }}-data
+{{- end -}}
 {{- end -}}
 
 {{- define "charts.blob.s3.bucket" -}}
-{{ default "tidepool-{{ .Release.Namespace }}-data" .Values.blob.service.unstructured.store.s3.bucket -}}
+{{- if .Values.blob.service.unstructured.store.s3.bucket -}}
+.Values.blob.service.unstructured.store.s3.bucket
+{{- else -}}
+tidepool-{{ .Release.Namespace }}-data
+{{- end -}}
 {{- end -}}
 
 {{- define "charts.hydrophone.s3.bucket" -}}
-{{ default "tidepool-{{ .Release.Namespace }}-asset" .Values.hydrophone.bucket -}}
+{{- if .Values.hydrophone.bucket -}}
+.Values.hydrophone.bucket
+{{- else -}}
+tidepool-{{ .Release.Namespace }}-asset
+{{- end -}}
 {{- end -}}
 
 {{- define "charts.jellyfish.s3.bucket" -}}
-{{ default "tidepool-{{ .Release.Namespace }}-data" .Values.jellyfish.bucket -}}
+{{- if .Values.jellyfish.bucket -}}
+.Values.jellyfish.bucket
+{{- else -}}
+tidepool-{{ .Release.Namespace }}-data
+{{- end -}}
 {{- end -}}
 
 {{- define "charts.image.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.image.s3.bucket" .}} {{- end }}
