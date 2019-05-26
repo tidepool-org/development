@@ -36,7 +36,7 @@ Expand the name of the chart.
 {{- define "charts.s3.url" -}} https://s3-{{.Values.aws.region}}.amazonaws.com {{- end }}
 
 {{- define "charts.image.s3.bucket" -}}
-{{- if and .Values.image.service.unstructured.store.s3.bucket (ne .Values.image.service.unstructured.store.s3.bucket "") -}}
+{{- if (and .Values.image.service.unstructured.store.s3.bucket (ne .Values.image.service.unstructured.store.s3.bucket "")) -}}
 .Values.image.service.unstructured.store.s3.bucket
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
@@ -44,7 +44,7 @@ tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
 
 {{- define "charts.blob.s3.bucket" -}}
-{{- if and .Values.blob.service.unstructured.store.s3.bucket (ne ".Values.blob.service.unstructured.store.s3.bucket" "") -}}
+{{- if (and .Values.blob.service.unstructured.store.s3.bucket (ne .Values.blob.service.unstructured.store.s3.bucket "")) -}}
 .Values.blob.service.unstructured.store.s3.bucket
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
@@ -52,7 +52,7 @@ tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
 
 {{- define "charts.hydrophone.s3.bucket" -}}
-{{- if and .Values.hydrophone.bucket (ne .Values.hydrophone.bucket "") -}}
+{{- if (and .Values.hydrophone.bucket (ne .Values.hydrophone.bucket "")) -}}
 .Values.hydrophone.bucket
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-asset
@@ -60,7 +60,7 @@ tidepool-{{ .Release.Namespace }}-asset
 {{- end -}}
 
 {{- define "charts.jellyfish.s3.bucket" -}}
-{{- if and .Values.jellyfish.bucket (ne .Values.jellyfish.bucket "") -}}
+{{- if (and .Values.jellyfish.bucket (ne .Values.jellyfish.bucket "")) -}}
 .Values.jellyfish.bucket
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
