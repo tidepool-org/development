@@ -61,7 +61,6 @@ tidepool-{{ .Release.Namespace }}-asset
 
 {{- define "charts.jellyfish.s3.bucket" -}}
 {{- if and .Values.jellyfish.bucket (ne .Values.jellyfish.bucket "") -}}
-{{- if .Values.jellyfish.bucket -}}
 .Values.jellyfish.bucket
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
