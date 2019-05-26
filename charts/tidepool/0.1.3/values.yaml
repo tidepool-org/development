@@ -110,7 +110,7 @@ blob:
   service:
     unstructured:
       store:
-        #file: {directory: "_data/blobs"}
+        file: {directory: "_data/blobs"}
         #type: file
         s3: {bucket: "", prefix: "blobs"}
         type: s3
@@ -125,7 +125,7 @@ image:
   service:
     unstructured:
       store:
-        #file: {directory: "_data/image"}
+        file: {directory: "_data/image"}
         #type: file
         s3: {bucket: "", prefix: "images"}
         type: s3
