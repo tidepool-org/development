@@ -44,7 +44,7 @@ tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
 
 {{- define "charts.blob.s3.bucket" -}}
-{{- if and .Values.blob.service.unstructured.store.s3.bucket (ne .Values.blob.service.unstructured.store.s3.bucket "") -}}
+{{- if and .Values.blob.service.unstructured.store.s3.bucket (ne ".Values.blob.service.unstructured.store.s3.bucket" "") -}}
 .Values.blob.service.unstructured.store.s3.bucket
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
