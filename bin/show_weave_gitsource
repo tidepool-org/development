@@ -2,10 +2,11 @@
 # reports the current URL/branch/path that weave is tracking
 #
 weaveargs=$(kubectl get pods -o json | jq '.items[].spec.containers | .[] | select(.name=="flux") | .args')
+echo $weaveargs
 paths=$(echo $weaveargs | jq '.[] | select(startswith("--git-path"))' | sed -e "s/--git-path=//g" -e "s/\"//g")
 branch=$(echo $weaveargs | jq '.[] | select(startswith("--git-branch"))' | sed -e "s/--git-branch=//" -e "s/\"//g")
 repo=$(echo $weaveargs | jq '.[] | select(startswith("--git-url"))' | sed -e "s/--git-url=//" -e "s/\"//g")
 kubectl config current-context
-echo $repo 
-echo $branch
-echo $paths
+#echo $repo 
+#echo $branch
+#echo $paths

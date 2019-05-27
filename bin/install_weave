@@ -19,10 +19,20 @@ else
 fi
 
 BASE=$(git rev-parse --show-toplevel)/clusters/
-CURRENT_PATH=clusters/$(pwd | sed -e "s#^$BASE##" -e "s#/.*##")/flux
+CURRENT_PATH=clusters/$(pwd | sed -e "s#^$BASE##" -e "s#/.*##")
+
 SOURCE_BRANCH=${2:-${CURRENT_BRANCH}}
-SOURCE_PATH=${3:-$CURRENT_PATH}
+SOURCE_PATH=${3:-${CURRENT_PATH}/flux}
 SOURCE_REPO=${4:-${CURRENT_REPO}}
+SOURCE_SECRET=${1:-${SOURCE_PATH}/../flux-git-deploy.yaml}
+
+GIT_SECRET_NAME=$(basename $SOURCE_SECRET | sed -e s/\.yaml$//)
+
+if [ "$GIT_SECRET_NAME" != "flux-git-deploy" ]
+then
+	echo "applying secret for flux identity at ${SOURCE_SECRET}"
+	kubectl apply -f ${SOURCE_SECRET}
+fi
 
 cd /tmp
 rm -rf flux
@@ -32,14 +42,16 @@ cd flux
 read -p "Install weave: install_crds=${INSTALL_CRDS} branch=${SOURCE_BRANCH} path=${SOURCE_PATH} repo=${SOURCE_REPO}? (y|N)  " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-    helm repo add weaveworks https://weaveworks.github.io/flux
-    helm upgrade --install \
+    helm delete flux --purge
+    helm upgrade \
+    --install \
       --set rbac.create=true \
       --set helmOperator.create=true \
       --set helmOperator.chartsSyncInterval=1m \
       --set helmOperator.replicaCount=1 \
       --set helmOperator.updateChartDeps=true \
       --set helmOperator.createCRD=${INSTALL_CRDS} \
+      --set git.secretName=${GIT_SECRET_NAME} \
       --set git.url=${SOURCE_REPO} \
       --set git.path=${SOURCE_PATH} \
       --set git.branch=${SOURCE_BRANCH} \
