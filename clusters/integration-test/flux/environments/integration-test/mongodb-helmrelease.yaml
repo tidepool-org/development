@@ -14,5 +14,6 @@ spec:
   values:
     mongo:
       image: mongo:3.2
+      persistent: false
 
 
