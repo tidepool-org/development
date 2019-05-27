@@ -45,4 +45,3 @@ spec:
         persistentVolumeClaim:
           claimName: {{.Values.mongo.volume}}
 {{ end }}
-status: {}

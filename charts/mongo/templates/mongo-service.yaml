@@ -18,5 +18,3 @@ spec:
     app: mongodb
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-status:
-  loadBalancer: {}
