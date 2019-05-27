@@ -1,0 +1,43 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: gloo-crds
+  namespace: gloo-system
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: gloo-crds
+  chart:
+    repository: https://storage.googleapis.com/solo-public-helm/
+    name: gloo
+    version: 0.13.29
+  values:
+    namespace:
+      create: false
+    rbac:
+      create: true
+    crds:
+      create: true
+    
+    settings:
+      # if this is set to false, default settings will be created by pods upon boot
+      create: false
+      integrations:
+        knative:
+          enabled: false
+      # namespaces that Gloo should watch. this includes watches set for pods, services, as well as CRD configuration objects
+      watchNamespaces: []
+      # the namespace that Gloo should write discovery data (Upstreams)
+      writeNamespace: "gloo-system"
+    
+    gloo:
+      enabled: false
+
+    discovery:
+      enabled: false
+
+    gateway:
+      enabled: false
+
+    ingress:
+      enabled: false
