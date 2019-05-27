@@ -1,0 +1,19 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: external-dns
+  namespace: default
+spec:
+  releaseName: external-dns
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: charts/external-dns
+    ref: k8s
+  values:
+    gateway:
+      http:
+        enabled: false
+      https:
+        enabled: true
+      hostnames: "infra-app.tidepool.org,infra-api.tidepool.org,infra-uploads.tidepool.org"

@@ -1,0 +1,19 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: loadbalancer
+  namespace: infra
+spec:
+  releaseName: loadbalancer
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: charts/loadbalancer
+    ref: k8s
+  values:
+    gateway:
+      http:
+        enabled: false
+      https:
+        enabled: true
+      hostnames: infra-app.tidepool.org,infra-api.tidepool.org,infra-uploads.tidepool.org
