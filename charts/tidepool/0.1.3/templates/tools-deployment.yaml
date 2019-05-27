@@ -1,3 +1,4 @@
+{{ if .Values.tools.enabled }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -33,4 +34,4 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always
-status: {}
+{{ end }}
