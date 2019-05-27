@@ -9,9 +9,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    directory:
-      jsonnet: {}
-      recurse: false
     path: clusters/beautiful-sculpture/flux/argo
     repoURL: https://github.com/tidepool-org/dev-ops.git
     targetRevision: HEAD
