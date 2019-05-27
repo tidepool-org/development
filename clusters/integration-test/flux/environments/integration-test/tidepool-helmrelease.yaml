@@ -27,6 +27,7 @@ metadata:
     flux.weave.works/tag.tools: "glob:develop-*"
     flux.weave.works/tag.user: "glob:develop-*"
 spec:
+  releaseName: tidepool
   chart:
     git: git@github.com:tidepool-org/development
     path: charts/tidepool/0.1.3
