@@ -3,7 +3,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: loadbalancer
-  namespace: infra
+  namespace: integration-test
 spec:
   releaseName: loadbalancer
   chart:
@@ -16,4 +16,4 @@ spec:
         enabled: false
       https:
         enabled: true
-      hostnames: infra-app.tidepool.org,infra-api.tidepool.org,infra-uploads.tidepool.org
+      hostnames: integration-test-app.tidepool.org,integration-test-api.tidepool.org,integration-test-uploads.tidepool.org
