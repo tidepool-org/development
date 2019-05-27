@@ -56,6 +56,7 @@ export:
   host: export
   image: tidepool/export:v1.3.2
   port: '9300'
+  enabled: true
 gatekeeper: 
   image: tidepool/gatekeeper:v0.7.2
   host: gatekeeper
@@ -136,6 +137,7 @@ image:
           prefix: "images"
         type: s3
 migrations:
+  enabled: true
   image: tidepool/platform-migrations:1.32.0-release.4
 notification:
   image: tidepool/platform-notification:1.32.0-release.4
@@ -146,6 +148,7 @@ task:
   host: task
   port: '9224'
 tools:
+  enabled: true
   image: tidepool/platform-tools:1.32.0-release.4
 user:
   image: tidepool/platform-user:1.32.0-release.4
