@@ -4,3 +4,4 @@ mongo:
   port: '27017'
   tls: 'false'
   volume: mongo2
+  persistent: true

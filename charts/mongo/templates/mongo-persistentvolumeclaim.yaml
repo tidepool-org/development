@@ -1,3 +1,4 @@
+{{ if .Values.mongo.persistent }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -16,4 +17,4 @@ spec:
   resources:
     requests:
       storage: 100Mi
-status: {}
+{{ end }}

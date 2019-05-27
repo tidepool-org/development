@@ -33,12 +33,16 @@ spec:
         ports:
         - containerPort: {{.Values.mongo.port}}
         resources: {}
+{{ if .Values.mongo.persistent }}
         volumeMounts:
         - mountPath: /data/db
           name: {{.Values.mongo.volume}}
+{{ end }}
       restartPolicy: Always
+{{ if .Values.mongo.persistent }}
       volumes:
       - name: '{{.Values.mongo.volume}}'
         persistentVolumeClaim:
           claimName: {{.Values.mongo.volume}}
+{{ end }}
 status: {}
