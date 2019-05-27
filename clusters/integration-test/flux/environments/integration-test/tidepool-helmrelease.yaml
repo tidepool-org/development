@@ -38,7 +38,7 @@ spec:
     namespace:
       create: false
     blip:
-      image: tidepool/blip:develop-56a81e00d7c9f518a93df0a89ba158a2af4b3f2d
+      image: tidepool/blip:develop-2b24c4e3424ff7009a0b9a4a5197715600840188
     export:
       image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
     gatekeeper:
