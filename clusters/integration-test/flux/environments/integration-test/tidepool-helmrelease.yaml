@@ -37,9 +37,12 @@ spec:
     includeSecrets: false
     namespace:
       create: false
+    nosqlclient:
+      enabled: false
     blip:
       image: tidepool/blip:develop-2b24c4e3424ff7009a0b9a4a5197715600840188
     export:
+      enabled: false
       image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
     gatekeeper:
       image: tidepool/gatekeeper:develop-9b8e58227a946eae34debbe23f7748d7e9570b79
@@ -62,10 +65,12 @@ spec:
     migrations:
       image: tidepool/platform-migrations:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
     notification:
+      enabled: false
       image: tidepool/platform-notification:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
     task:
       image: tidepool/platform-task:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
     tools:
+      enabled: false
       image: tidepool/platform-tools:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
     user:
       image: tidepool/platform-user:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
