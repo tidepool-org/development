@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo
+  namespace: argocd
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: clusters/beautiful-sculpture/flux/argo
+    repoURL: https://github.com/tidepool-org/dev-ops.git
+    targetRevision: HEAD
