@@ -1,3 +1,4 @@
+{{ if .Values.nosqlclient.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -18,3 +19,4 @@ spec:
     app: nosqlclient
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+{{ end }}
