@@ -10,10 +10,4 @@ spec:
     git: git@github.com:tidepool-org/development
     path: charts/external-dns
     ref: k8s
-  values:
-    gateway:
-      http:
-        enabled: false
-      https:
-        enabled: true
-      hostnames: "integration-test-app.tidepool.org,integration-test-api.tidepool.org,integration-test-uploads.tidepool.org"
+  values: {}
