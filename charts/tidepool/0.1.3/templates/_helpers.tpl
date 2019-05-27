@@ -281,12 +281,14 @@ Create liveness and readiness probes for platform services.
             port: {{.port}}
           initialDelaySeconds: 30
           periodSeconds: 10
+          timeoutSeconds: 5
         readinessProbe:
           httpGet:
             path: /status
             port: {{.port}}
           initialDelaySeconds: 5
           periodSeconds: 10
+          timeoutSeconds: 5
 {{- end -}} 
 {{- define "charts.init.mongo" -}}
       initContainers:
