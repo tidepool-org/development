@@ -1,3 +1,4 @@
+{{ if .Values.nosqlclient.enabled}}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -39,4 +40,4 @@ spec:
           value: "mongodb://{{include "charts.mongo.start" .}}/admin{{include "charts.mongo.end" .}}"
       restartPolicy: Always
 
-
+{{ end }}
