@@ -34,6 +34,8 @@ spec:
     ref: k8s
   values:
     gateway:
+      name:
+        gloo
       https:
         enabled: false
       http:
