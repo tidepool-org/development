@@ -6,12 +6,8 @@ aws:
 includeSecrets: true
 namespace:
   create: true
-api:
-  hostnameOverride: ""
-app:
-  hostnameOverride: ""
-uploads:
-  hostnameOverride: ""
+hostnameOverride: "" #for production, provide the host name, otherwise will get the namespace as a prefix
+singleEnvironment: true
 
 resources:
   {}

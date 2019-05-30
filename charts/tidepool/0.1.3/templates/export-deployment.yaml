@@ -28,7 +28,7 @@ spec:
       containers:
       - env:
         - name: API_HOST
-          value: http://{{include "charts.host.internal.api" .}}
+          value: http://{{include "charts.host.internal.tp" .}}
         - name: DEBUG_LEVEL
           value: debug
         - name: HTTP_PORT

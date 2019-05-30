@@ -7,7 +7,7 @@ metadata:
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
-      host: 'api'
+      host: tp
       name: {{ .Release.Namespace -}}-export
       prefix: /export/
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
