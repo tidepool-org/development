@@ -441,11 +441,6 @@ spec:
     - matcher:
         methods:
         - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
         prefix: /data/
       routeAction:
         single:
@@ -492,11 +487,105 @@ spec:
     - matcher:
         methods:
         - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
+        prefix: /request-password-from-uploader
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /verification-with-password
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /request-password-reset
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /confirm-password-reset
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /email-verification
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /clinician-details
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /browser-warning
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /patients
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /profile
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /signup
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /terms
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
         prefix: /
       routeAction:
         single:
@@ -719,13 +808,44 @@ spec:
     routes:
     - matcher:
         methods:
-        - GET
-        - OPTIONS
         - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /
+        prefix: /v1/device/upload/cl
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /v1/device/data/"
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /v1/synctasks/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - POST
+        prefix: /data/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /info
       routeAction:
         single:
           upstream:
@@ -1162,11 +1282,6 @@ spec:
     - matcher:
         methods:
         - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
         prefix: /data/
       routeAction:
         single:
@@ -1191,11 +1306,105 @@ spec:
     - matcher:
         methods:
         - GET
-        - OPTIONS
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
+        prefix: /request-password-from-uploader
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /verification-with-password
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /request-password-reset
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /confirm-password-reset
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /email-verification
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /clinician-details
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /browser-warning
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /patients
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /profile
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /signup
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /terms
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-blip-3000'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
         prefix: /
       routeAction:
         single:
@@ -1216,13 +1425,44 @@ spec:
     routes:
     - matcher:
         methods:
-        - GET
-        - OPTIONS
         - POST
-        - PUT
-        - PATCH
-        - DELETE
-        prefix: /
+        prefix: /v1/device/upload/cl
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /v1/device/data/"
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /v1/synctasks/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - POST
+        prefix: /data/
+      routeAction:
+        single:
+          upstream:
+            name: '{{- .Release.Namespace -}}-jellyfish-9122'
+            namespace: '{{- .Release.Namespace -}}'
+    - matcher:
+        methods:
+        - GET
+        prefix: /info
       routeAction:
         single:
           upstream:
