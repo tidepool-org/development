@@ -7,7 +7,7 @@ includeSecrets: true
 namespace:
   create: true
 hostnameOverride: "" #for production, provide the host name, otherwise will get the namespace as a prefix
-singleEnvironment: true
+singleEnvironment: true  # set this to true to route all traffic independent of target hostname
 
 resources:
   {}
