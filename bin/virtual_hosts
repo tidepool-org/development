@@ -1,19 +1,15 @@
 #!/bin/bash
 # identify virtual hosts in use
 # assumes blip is the only service exposing hosts
-# assumes blip label
-# assumes Ambassador annotations
 namespaces=$(kubectl get svc -o yaml --all-namespaces -l app=blip -o json | jq '.items[] | .metadata.namespace' | sed -e 's#"##g' )
 
 for namespace in $namespaces
 do
    if [ "$namespace" == "production" ]
    then
-	   prefix=
+	   prefix=app
    else
-	   prefix=${namespace}-
+	   prefix=${namespace}
    fi
-   echo ${prefix}app.tidepool.org
-   echo ${prefix}api.tidepool.org
-   echo ${prefix}uploads.tidepool.org
+   echo ${prefix}.tidepool.org
 done
