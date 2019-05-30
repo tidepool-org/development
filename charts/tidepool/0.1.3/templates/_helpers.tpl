@@ -29,9 +29,29 @@ Expand the name of the chart.
 {{- define "charts.host.internal.uploads" -}} {{ .Release.Namespace }}-uploads-internal {{- end }}
 {{- define "charts.host.internal.app" -}} {{ .Release.Namespace }}-app-internal {{- end }}
 
-{{- define "charts.host.external.api" -}} {{ .Release.Namespace }}-api.{{- .Values.gateway.domain.name -}} {{- end }}
-{{- define "charts.host.external.uploads" -}} {{ .Release.Namespace }}-uploads.{{- .Values.gateway.domain.name -}} {{- end }}
-{{- define "charts.host.external.app" -}} {{ .Release.Namespace }}-app.{{- .Values.gateway.domain.name -}} {{- end }}
+{{- define "charts.host.external.api" -}}
+{{- if .Values.api.hostnameOverride -}}
+.Values.api.hostnameOverride
+{{- else -}}
+{{ .Release.Namespace }}-api.{{- .Values.gateway.domain.name -}}
+{{- end -}}
+{{- end }}
+
+{{- define "charts.host.external.app" -}}
+{{- if .Values.app.hostnameOverride -}}
+.Values.app.hostnameOverride
+{{- else -}}
+{{ .Release.Namespace }}-app.{{- .Values.gateway.domain.name -}}
+{{- end -}}
+{{- end }}
+
+{{- define "charts.host.external.uploads" -}}
+{{- if .Values.uploads.hostnameOverride -}}
+.Values.uploads.hostnameOverride
+{{- else -}}
+{{ .Release.Namespace }}-uploads.{{- .Values.gateway.domain.name -}}
+{{- end -}}
+{{- end }}
 
 {{- define "charts.s3.url" -}} https://s3-{{.Values.aws.region}}.amazonaws.com {{- end }}
 
