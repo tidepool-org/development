@@ -6,7 +6,7 @@ metadata:
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
-      host: api
+      host: tp
       name: {{ .Release.Namespace -}}-hydrophone-confirm
       prefix: /confirm/
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"

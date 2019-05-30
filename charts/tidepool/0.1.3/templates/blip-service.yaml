@@ -6,12 +6,122 @@ metadata:
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
-      host: app
+      host: tp
       name: {{ .Release.Namespace -}}-blip
-      prefix: /
+      prefix: /terms
       rewrite: ""
-      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
-      method_regex: true
+      method: "GET"
+      method_regex: false
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}}
+      ---
+      apiVersion: tidepool/v1alpha
+      kind:  Mapping
+      host: tp
+      name: {{ .Release.Namespace -}}-blip
+      prefix: /signup
+      rewrite: ""
+      method: "GET"
+      method_regex: false
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}}
+      ---
+      apiVersion: tidepool/v1alpha
+      kind:  Mapping
+      host: tp
+      name: {{ .Release.Namespace -}}-blip
+      prefix: /clinician-details
+      rewrite: ""
+      method: "GET"
+      method_regex: false
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}}      
+      ---
+      apiVersion: tidepool/v1alpha
+      kind:  Mapping
+      host: tp
+      name: {{ .Release.Namespace -}}-blip
+      prefix: /email-verification
+      rewrite: ""
+      method: "GET"
+      method_regex: false
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}}
+      ---
+      apiVersion: tidepool/v1alpha
+      kind:  Mapping
+      host: tp
+      name: {{ .Release.Namespace -}}-blip
+      prefix: /profile
+      rewrite: ""
+      method: "GET"
+      method_regex: false
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}}
+      ---
+      apiVersion: tidepool/v1alpha
+      kind:  Mapping
+      host: tp
+      name: {{ .Release.Namespace -}}-blip
+      prefix: /patients
+      rewrite: ""
+      method: "GET"
+      method_regex: false
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}}
+      ---
+      apiVersion: tidepool/v1alpha
+      kind:  Mapping
+      host: tp
+      name: {{ .Release.Namespace -}}-blip
+      prefix: /request-password-reset
+      rewrite: ""
+      method: "GET"
+      method_regex: false
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}}
+      ---
+      apiVersion: tidepool/v1alpha
+      kind:  Mapping
+      host: tp
+      name: {{ .Release.Namespace -}}-blip
+      prefix: /confirm-password-reset
+      rewrite: ""
+      method: "GET"
+      method_regex: false
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}}
+      ---
+      apiVersion: tidepool/v1alpha
+      kind:  Mapping
+      host: tp
+      name: {{ .Release.Namespace -}}-blip
+      prefix: /request-password-from-uploader
+      rewrite: ""
+      method: "GET"
+      method_regex: false
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}}      
+      ---
+      apiVersion: tidepool/v1alpha
+      kind:  Mapping
+      host: tp
+      name: {{ .Release.Namespace -}}-blip
+      prefix: /verification-with-password
+      rewrite: ""
+      method: "GET"
+      method_regex: false
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}} 
+      ---
+      apiVersion: tidepool/v1alpha
+      kind:  Mapping
+      host: tp
+      name: {{ .Release.Namespace -}}-blip
+      prefix: /browser-warning
+      rewrite: ""
+      method: "GET"
+      method_regex: false
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}}
+      ---
+      apiVersion: tidepool/v1alpha
+      kind:  Mapping
+      host: tp
+      name: {{ .Release.Namespace -}}-blip
+      prefix: "/"
+      rewrite: ""
+      method: "GET"
+      method_regex: false
       service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}}
   labels:
     app: blip

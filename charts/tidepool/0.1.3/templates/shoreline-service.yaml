@@ -6,7 +6,7 @@ metadata:
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
-      host: api
+      host: tp
       name: {{ .Release.Namespace -}}-shoreline-auth
       prefix: /auth/
       path_redirect: "false"

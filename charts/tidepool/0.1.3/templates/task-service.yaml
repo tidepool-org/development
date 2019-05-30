@@ -6,7 +6,7 @@ metadata:
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
-      host: api
+      host: tp
       name: {{ .Release.Namespace -}}-task-tasks
       prefix: "/v1/tasks"
       method: "GET|POST"
@@ -16,7 +16,7 @@ metadata:
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
-      host: api
+      host: tp
       name: {{ .Release.Namespace -}}-task-tasks-id
       prefix: "/v1/tasks/[^/*]"
       prefix_regex: true

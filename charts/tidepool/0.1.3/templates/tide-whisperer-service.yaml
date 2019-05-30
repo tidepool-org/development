@@ -6,11 +6,11 @@ metadata:
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
-      host: api
+      host: tp
       name: {{ .Release.Namespace -}}-tide-whisperer-data
       prefix: /data/
-      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
-      method_regex: true
+      method: "GET"
+      method_regex: false
       path_redirect: "false"
       rewrite: "/"
       service: tide-whisperer.{{ .Release.Namespace }}:{{.Values.tidewhisperer.port}}

@@ -6,7 +6,7 @@ metadata:
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
-      host: api
+      host: tp
       name: {{ .Release.Namespace -}}-user-userservices
       prefix: /userservices/
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
@@ -17,7 +17,7 @@ metadata:
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
-      host: api
+      host: tp
       name: {{ .Release.Namespace -}}-user-users
       prefix: "/v1/users/[^/*]"
       prefix_regex: true
