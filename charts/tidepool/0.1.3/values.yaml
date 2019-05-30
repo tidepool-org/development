@@ -6,6 +6,13 @@ aws:
 includeSecrets: true
 namespace:
   create: true
+api:
+  hostnameOverride: ""
+app:
+  hostnameOverride: ""
+uploads:
+  hostnameOverride: ""
+
 resources:
   {}
   # If you do want to specify resources, uncomment the following
