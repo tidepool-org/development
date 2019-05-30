@@ -9,48 +9,61 @@ import sys
 
 import yaml
 
-CORS_POLICY_STRING = """
-{
-    "allowCredentials": true,
-    "allowHeaders": [
-        "authorization",
-        "content-type",
-        "x-tidepool-session-token",
-        "x-tidepool-trace-request",
-        "x-tidepool-trace-session"
-    ],
-    "allowMethods": [
-        "GET",
-        "POST",
-        "PUT",
-        "PATCH",
-        "DELETE",
-        "OPTIONS"
-    ],
-    "allowOriginRegex": [
-        ".*"
-    ],
-    "exposeHeaders": [
-        "x-tidepool-session-token",
-        "x-tidepool-trace-request",
-        "x-tidepool-trace-session"
-    ],
-    "maxAge": "600s"
-}
-"""
-CORS_POLICY=json.loads(CORS_POLICY_STRING)
+# Create Helm template that may be used to instantiate a Gloo API Gateway to serve 
+# one or more instances of the Tidepool services within a single Kubernetes cluster.
+
+# These values must be provided by Helm when the resulting Helm template file is interpreted
+
+"""The hosts served by the API Gateway"""
+HOSTS_SERVED = '{{include "charts.hosts" .}}'
+
+"""The name used for SNI"""
+EXTERNAL_HOST_NAME = '{{include "charts.host.external.tp" .}}'
+
+"""The name of the TLS secret containing the TLS cert"""
+TLS_SECRET_NAME = '{{.Values.gateway.tlssecret.name}}'
+
+"""The namespace of the TLS secret containing the TLS cert"""
+TLS_SECRET_NAMESPACE = '{{.Values.gateway.tlssecret.namespace}}'
+
+"""The name of the Gateway Proxy Service"""
+GATEWAY_PROXY_NAME = '{{.Values.gateway.proxy.name}}'
+
+"""The namespace of the Gateway Proxy Service"""
+GATEWAY_PROXY_NAMESPACE = '{{.Values.gateway.proxy.namespace}}'
+
+"""The environment being instantiated"""
+ENVIRONMENT = '{{.Release.Namespace}}'
+
+"""The name used to access the virtual service from other services"""
+INTERNAL_VS_NAME = '{{include "charts.host.internal.tp" .}}'
+
+"""The name used to access the virtual service from the LoadBalancer."""
+EXTERNAL_VS_NAME = ENVIRONMENT + "-external"
+
+
+# These are the Kubernetes API versions for solo.io resources
+GATEWAY_API_VERSION = 'gateway.solo.io/v1'
+GLOO_API_VERSION = 'gloo.solo.io/v1'
+
+def metadata_spec(name, namespace):
+    return { 
+        "name": name,
+        "namespace":  namespace
+    }
 
 class VirtualServiceBuilder:
     """Builds a Gloo virtual service manifest"""
 
-    def __init__(self, routes, base, isInternal, cors, useSSL):
+    def __init__(self, routes, name, cors, protocol, hosts_served):
+        useSSL = protocol == "https"
         if len(routes) > 0:
-            virtual_service = dict()
-            virtual_service["apiVersion"] = "gateway.solo.io/v1"
-            virtual_service["kind"] = "VirtualService"
-            virtual_service["metadata"] = VirtualServiceBuilder.metadata(base, isInternal)
-            virtual_service["spec"] = VirtualServiceBuilder.spec(routes, base, isInternal, cors, useSSL)
-            self.virtual_service = virtual_service
+            self.virtual_service = {
+                "apiVersion": GATEWAY_API_VERSION,
+                "kind": "VirtualService",
+                "metadata": metadata_spec(name, ENVIRONMENT),
+                "spec": VirtualServiceBuilder.spec(name, routes, cors, useSSL, hosts_served)
+            }
         else:
             self.virtual_service = None
 
@@ -58,164 +71,96 @@ class VirtualServiceBuilder:
         return self.virtual_service
 
     @staticmethod
-    def tls_secret_ref():
-        """Return the Kubernetes name and namespace for the secret containing the TLS cert and key
-        for the domain being served."""
-        secret = dict()
-        secret["name"] = "{{.Values.gateway.tlssecret.name}}"
-        secret["namespace"] = "{{.Values.gateway.tlssecret.namespace}}"
-        return secret
-    
+    def spec(name, routes, cors, useSSL, hosts_served):
+        s = dict()
+        if useSSL:
+            s ["sslConfig"] = VirtualServiceBuilder.ssl_config(EXTERNAL_HOST_NAME)
+        s["virtualHost"] = VirtualServiceBuilder.virtual_host(routes, hosts_served, cors)
+        s["displayName"] = name
+        return s 
+
     @staticmethod
-    def metadata(base, isInternal):
-        """Return metadata for virtual service"""
-        metadata = dict()
-        metadata["name"] = VirtualServiceBuilder.internal_name(base) if isInternal else VirtualServiceBuilder.external_name(base)
-        metadata["namespace"] = "{{- .Release.Namespace -}}"
-        return metadata
-    
-    @staticmethod
-    def virtual_host_domains(hostname):
-        """Return domains"""
-        domains = list()
-        domains.append(hostname)
-        return domains
-    
-    @staticmethod
-    def virtual_host(base, routes, hostname, cors):
+    def virtual_host(routes, hosts_served, cors):
         """Return a virtual host"""
-        vh = dict()
-        vh["domains"] = VirtualServiceBuilder.virtual_host_domains(hostname)
-        vh["routes"] = routes
+        v = dict()
+        v["domains"] = hosts_served
+        v["routes"] = routes
         if cors is not None:
-            vh["corsPolicy"] = cors
-        return vh
-    
-    @staticmethod
-    def ssl_domains(hostname):
-        """Return ssl domains"""
-        domains = list()
-        domains.append(hostname)
-        return domains
+            v["corsPolicy"] = cors
+        return v
     
     @staticmethod
     def ssl_config(hostname):
         """Return the ssl config for the hostname"""
-        config = dict()
-        config["sniDomains"] = VirtualServiceBuilder.ssl_domains(hostname)
-        config["secretRef"] = VirtualServiceBuilder.tls_secret_ref()
-        return config
+        return {
+            "sniDomains": [ hostname ],
+            "secretRef": metadata_spec(TLS_SECRET_NAME, TLS_SECRET_NAMESPACE)
+        }
     
-    @staticmethod
-    def spec(routes, base, isInternal, cors, useSSL):
-        spec = dict()
-        hostname = VirtualServiceBuilder.internal_hostname(base) if isInternal else VirtualServiceBuilder.external_hostname(base)
-        if useSSL:
-            spec["sslConfig"] = VirtualServiceBuilder.ssl_config(hostname)
-        spec["virtualHost"] = VirtualServiceBuilder.virtual_host(base, routes, hostname, cors)
-        spec["displayName"] = hostname
-        return spec
-
-    @staticmethod
-    def prefix(base):
-        return  "{{- .Release.Namespace -}}" + "-" + base
-
-    @staticmethod
-    def internal_hostname(base): 
-        """ Return the internal DNS name of a virtual service that service routes for base from internal clients."""
-        #return VirtualServiceBuilder.prefix(base) + "-internal"
-        return '{{include "charts.host.internal.' + base + '" .}}'
-    
-    @staticmethod
-    def external_hostname(base): #{{- define "charts.host.external.api" -}} 
-        """ Return the external DNS name of a virtual service that service routes for base from external clients."""
-        #return  VirtualServiceBuilder.prefix(base) + ".{{.Values.gateway.domain.name}}"
-        return '{{include "charts.host.external.' + base + '" .}}'
-
-    @staticmethod
-    def external_name(base):
-        """ Return the name of a virtual service that service routes for base from external clients."""
-        return  VirtualServiceBuilder.prefix(base) + "-external"
-
-    @staticmethod
-    def internal_name(base): #{{- define "charts.host.internal.api" -}}
-        """ Return the name of a virtual service that service routes for base from internal clients."""
-        #return VirtualServiceBuilder.prefix(base) ++ "-internal"
-        return '{{include "charts.host.internal.' + base + '" .}}'
-
 class UpstreamBuilder:
     """Builds a Gloo Upstream manifest"""
     def __init__(self, ref):
-        d = dict()
-        d["apiVersion"] = "gloo.solo.io/v1"
-        d["kind"] = "Upstream"
-        d["metadata"] = RoutesBuilder.ref( ref["service"], ref["port"])
-        d["spec"] = UpstreamBuilder.spec(ref)
-        self.d = d
+        self.upstream = {
+            "apiVersion": GLOO_API_VERSION,
+            "kind": "Upstream",
+            "metadata": RoutesBuilder.ref( ref["service"], ref["port"]),
+            "spec": UpstreamBuilder.spec(ref)
+        }
 
     def get(self):
-        return self.d
+        return self.upstream
 
     @staticmethod
     def kube_spec(ref):
-        kube = dict()
-        kube["serviceName"] = ref["service"]
-        kube["serviceNamespace"] = namespace()
-        kube["servicePort"] = ref["port"]
-        return kube
+        return {
+            "serviceName": ref["service"],
+            "serviceNamespace": ENVIRONMENT,
+            "servicePort": ref["port"]
+        }
 
     @staticmethod
     def spec(ref):
-        s = dict()
-        s["upstreamSpec"] = dict()
-        s["upstreamSpec"]["kube"] = UpstreamBuilder.kube_spec(ref)
-        return s
+        return {
+            "upstreamSpec": {
+                "kube" : UpstreamBuilder.kube_spec(ref)
+            }
+        }
 
 class ExternalNameServiceBuilder:
     """Build an ExternalName Service manifest for a given component."""
-    def __init__(base):
-        self.service = dict()
-        self.service["apiVersion"] = "v1"
-        self.service["kind"] = "Service"
-        self.service["metadata"] = ExternalNameServiceBuilder.metadata(base)
-        self.service["spec"] = ExternalNameServiceBuilder.spec()
+    def __init__(self):
+        self.service = {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata":  metadata_spec(INTERNAL_VS_NAME, ENVIRONMENT),
+            "spec": ExternalNameServiceBuilder.spec()
+        }
 
     def get(self):
         return self.service        
 
     @staticmethod
-    def metadata(base):
-        metadata = dict()
-        metadata["name"] = VirtualServiceBuilder.internal_name(base) 
-        metadata["namespace"] = namespace()
-        return metadata
-        
-    @staticmethod
     def spec():
-        spec = dict()
-        spec["type"] = "ExternalName"
-        spec["externalName"] = GatewayProxyServiceBuilder.name() + "." + GatewayProxyServiceBuilder.namespace() + ".svc.cluster.local"
-        spec["ports"] = ExternalNameServiceBuilder.ports()
-        return spec
+        return {
+            "type": "ExternalName",
+            "externalName": GATEWAY_PROXY_NAME + "." + GATEWAY_PROXY_NAMESPACE + ".svc.cluster.local",
+            "ports": ExternalNameServiceBuilder.ports()
+        }
     
     @staticmethod
     def ports():
-        ports = list()
-        ports.append(ExternalNameServiceBuilder.port())
-        return ports
+        return [ ExternalNameServiceBuilder.port() ]
 
     @staticmethod
     def port():
-        port = dict()
-        port["port"] = 80
-        return port       
+        return { "port": 80 }
 
 class GatewayBuilder:
     """Builds a Gloo Gateway manifest."""
 
     def __init__(self, useSSL):
         g = dict()
-        g["apiVersion"] = "gateway.solo.io/v1"
+        g["apiVersion"] = GATEWAY_API_VERSION
         g["kind"] = "Gateway"
         g["metadata"] = GatewayBuilder.metadata(useSSL)
         g["bindAddress"] = '::'
@@ -226,116 +171,86 @@ class GatewayBuilder:
             g["bindPort"] = 8080
             g["useProxyProto"] = False # XXX check this
         g["ssl"] = useSSL
-        self.g = g
+        self.gateway = g
 
     def get(self):
-        return self.g
+        return self.gateway
 
     @staticmethod
     def metadata(useSSL):
-        metadata = dict()
-        suffix = "-ssl" if useSSL else ""
-        metadata["name"] = "gateway" + suffix
-        metadata["namespace"] = GatewayProxyServiceBuilder.namespace()
-        return metadata
+        return metadata_spec("gateway-ssl" if useSSL else "gateway", GATEWAY_PROXY_NAMESPACE)
     
-    @staticmethod
-    def GatewayBuilder(useSSL):
-        GatewayBuilder = dict()
-        GatewayBuilder["apiVersion"] = "gateway.solo.io/v1"
-        GatewayBuilder["kind"] = "Gateway"
-        GatewayBuilder["metadata"] = GatewayBuilder.metadata(useSSL)
-        GatewayBuilder["bindAddress"] = '::'
-        if useSSL:
-            GatewayBuilder["bindPort"] = 8443
-            GatewayBuilder["useProxyProto"] = False # XXX check this
-        else:
-            GatewayBuilder["bindPort"] = 8080
-            GatewayBuilder["useProxyProto"] = False # XXX check this
-        GatewayBuilder["ssl"] = useSSL
-        return GatewayBuilder
-
 class GatewayProxyServiceBuilder:
     """Builds a Gloo Gateway Proxy Service manifest."""
 
-    def __init__(service_type, useSSL):
-        service = dict()
-        service["apiVersion"] = "v1"
-        service["kind"] = "Service"
-        service["metadata"] = GatewayProxyServiceBuilder.metadata(useSSL)
-        service["spec"] = GatewayProxyServiceBuilder.spec(service_type, useSSL)
-        self.service = service
+    def __init__(self, service_type, useSSL):
+        self.service = {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata": GatewayProxyServiceBuilder.metadata(useSSL),
+            "spec": GatewayProxyServiceBuilder.spec(service_type, useSSL)
+        }
 
     def get(self):
         return self.service
 
     @staticmethod
-    def namespace():
-        return "{{.Values.gateway.proxy.namespace}}"
-
-    @staticmethod
-    def name():
-        return  "{{.Values.gateway.proxy.name}}"
-    
-    @staticmethod
     def labels():
-        labels = dict()
-        labels["app"] = "gloo"
-        labels["gloo"] = "{{.Values.gateway.proxy.name}}"
-        return labels
+        return { "app" : "gloo", "gloo": GATEWAY_PROXY_NAME }
     
     @staticmethod
     def metadata(useSSL):
-        metadata = dict()
-        metadata["labels"] = GatewayProxyServiceBuilder.labels()
         suffix = "-ssl" if useSSL else ""
-        metadata["name"] = "{{.Values.gateway.proxy.name}}" + suffix
-        metadata["namespace"] = "{{.Values.gateway.proxy.namespace}}"
-        return metadata
-    
-    @staticmethod
-    def ports(useSSL):
-        ports = list()
-        port = dict()
-        if useSSL:
-            port["name"] = "https"
-            port["port"] = 443
-            port["protocol"] = "TCP"
-            port["targetPort"] = 8443
-        else:
-            port["name"] = "http"
-            port["port"] = 80
-            port["protocol"] = "TCP"
-            port["targetPort"] = 8080
-        ports.append(port)
-        return ports
-    
-    @staticmethod
-    def selector():
-        selector = dict()
-        selector["gloo"] = "{{.Values.gateway.proxy.name}}"
-        return selector
-    
+        m = metadata_spec(GATEWAY_PROXY_NAME + suffix, GATEWAY_PROXY_NAMESPACE)
+        m["labels"] = GatewayProxyServiceBuilder.labels()
+        return m
+
     @staticmethod
     def spec(service_type, useSSL):
-        spec = dict()
-        spec["ports"] = GatewayProxyServiceBuilder.ports(useSSL)
-        spec["selector"] = GatewayProxyServiceBuilder.selector()
+        s = dict()
+        s["ports"] = GatewayProxyServiceBuilder.ports(useSSL)
+        s["selector"] = GatewayProxyServiceBuilder.selector()
         if service_type == "elb":
-            spec["externalTrafficPolicy"] = "Local"
-            spec["type"] = "LoadBalancer"
+            s["externalTrafficPolicy"] = "Local"
+            s["type"] = "LoadBalancer"
         elif service_type == "nlb":
-            spec["externalTrafficPolicy"] = "Local"
-            spec["type"] = "LoadBalancer"
+            s["externalTrafficPolicy"] = "Local"
+            s["type"] = "LoadBalancer"
             annotations = dict()
             annotations["service.beta.kubernetes.io/aws-load-balancer-type"] = "nlb"
-            spec["annotations"] = annotations
+            s["annotations"] = annotations
         elif service_type == "cluster":
-            spec["type"] = "ClusterIP"
+            s["type"] = "ClusterIP"
         else:
             return None
         return spec
 
+    @staticmethod
+    def ports(useSSL):
+        return [ https_port() if useSSL else http_port() ]
+    
+    @staticmethod
+    def https_port():
+        return {
+            "name": "https",
+            "port": 443,
+            "protocol": "TCP",
+            "targetPort": 8443
+        }
+
+    @staticmethod
+    def http_port():
+        return {
+            "name": "http",
+            "port": 80,
+            "protocol": "TCP",
+            "targetPort": 8080
+        }
+    
+    @staticmethod
+    def selector():
+        return { "gloo" : GATEWAY_PROXY_NAME }
+    
 class RoutesBuilder:
     """Return a dict from host to routes for that host."""
 
@@ -360,52 +275,50 @@ class RoutesBuilder:
     @staticmethod
     def route(mapping):
         """Return a Gloo route"""
-        route = dict()
-        route["matcher"] = RoutesBuilder.matcher(mapping)
+        r = dict()
+        r["matcher"] = RoutesBuilder.matcher(mapping)
         plugins = RoutesBuilder.route_plugins(mapping)
         if plugins is not None:
-            route["routePlugins"] = plugins
-        route["routeAction"] = RoutesBuilder.route_action(mapping)
-        return route  
+            r["routePlugins"] = plugins
+        r["routeAction"] = RoutesBuilder.route_action(mapping)
+        return r  
     
     @staticmethod
     def matcher(mapping):
         """Return a gloo matcher"""
-        matcher = dict()
+        m = dict()
         if "prefix_regex" in mapping and mapping[ "prefix_regex"]:
-            matcher["regex"] = mapping["prefix"]
+            m["regex"] = mapping["prefix"]
         elif "prefix" in mapping and mapping["prefix"]:
-            matcher["prefix"] = mapping["prefix"]
-        matcher["methods"] = RoutesBuilder.methods(mapping)
-        return matcher
+            m["prefix"] = mapping["prefix"]
+        m["methods"] = RoutesBuilder.methods(mapping)
+        return m
     
     @staticmethod
     def route_plugins(mapping):
         """Return a gloo routePlugins"""
-        routePlugins = dict()
+        r = dict()
         if "rewrite" not in mapping:
-            routePlugins["prefixRewrite"] = RoutesBuilder.prefix_rewrite("/")
+            r["prefixRewrite"] = RoutesBuilder.prefix_rewrite("/")
         elif mapping["rewrite"] != "":
-            routePlugins["prefixRewrite"] = RoutesBuilder.prefix_rewrite(mapping["rewrite"])
+            r["prefixRewrite"] = RoutesBuilder.prefix_rewrite(mapping["rewrite"])
         else:  
             return None
-        return routePlugins
+        return r
     
     @staticmethod
     def methods(mapping):
-        methods = list()
+        m = list()
         if "method_regex" in mapping and mapping[ "method_regex"]:
-            methods = mapping["method"].split("|")
+            m = mapping["method"].split("|")
         else:
-            methods.append(mapping["method"])
-        return methods
+            m.append(mapping["method"])
+        return m
     
     @staticmethod
     def prefix_rewrite(path):
         """Return a gloo prefix rewrite rule"""
-        prefix_rewrite = dict()
-        prefix_rewrite["prefixRewrite"] = path
-        return prefix_rewrite
+        return { "prefixRewrite" : path }
     
     @staticmethod
     def service_and_port(mapping):
@@ -421,36 +334,33 @@ class RoutesBuilder:
     
     @staticmethod
     def refs(mappings):
-        ref_dict = dict()
+        d = dict()
         for mapping in mappings:
             service, port = RoutesBuilder.service_and_port(mapping)
             name = service + "-" + str(port) 
-            if name not in ref_dict:
-                ref_dict[name] = { "service" : service, "port" : port }
-        return ref_dict.values()     
+            if name not in d:
+                d[name] = { "service" : service, "port" : port }
+        return d.values()     
     
     @staticmethod
     def ref(service, port):
-        """Return a gloo UpstreamBuilder."""
-        u = dict()
-        u["name"] = namespace() + "-" + service + "-" + str(port)
-        u["namespace"] = namespace()
-        return u
+        """Return a gloo Upstream Ref."""
+        return metadata_spec(ENVIRONMENT + "-" + service + "-" + str(port), ENVIRONMENT)
     
     @staticmethod
     def single(mapping):
         """Return a gloo single."""
-        single = dict()
+        s = dict()
         service, port = RoutesBuilder.service_and_port(mapping)
-        single["upstream"] = RoutesBuilder.ref(service, port)
-        return single
+        s["upstream"] = RoutesBuilder.ref(service, port)
+        return s
     
     @staticmethod
     def route_action(mapping):
         """Return a gloo routeAction"""
-        routeAction = dict()
-        routeAction["single"] = RoutesBuilder.single(mapping)
-        return routeAction
+        r = dict()
+        r["single"] = RoutesBuilder.single(mapping)
+        return r
     
     @staticmethod
     def ordered(routes):
@@ -472,19 +382,37 @@ class RoutesBuilder:
             return 0
 
 class ManifestBuilder:
-    """Build all Gloo manifests needed to route to the Tidepool backend for the given protocol."""
+    """Build all Gloo manifests needed to route to the Tidepool backend for the given protocol.
 
-    regex = re.compile(r"\{\{[\s-]*\.Release\.Namespace[\s-]*\}\}[\s-]*")
+       As fas as the API Gateway is concerned, the internal traffic
+       is routed via HTTP.  The external traffic may be HTTP or
+       HTTPS.
+
+       If both the internal traffic and the external traffic come
+       in via HTTP, then the the Gateway Proxy will listen for both
+       on the same port.  The external virtual service may be
+       listening for any host ("*").  Therefore, we cannot have two
+       separate virtual services, since both may match the internal
+       host name which would generate an ambiguity. So, we use a single
+       virtual service that listens for traffic on the external
+       host name and the internal host name. If *should* not be an error
+       for two hostnames for the same virtual service to match the incoming
+       host header.
+
+       If the external traffic is HTTPS, then we create two virtual services. 
+    """
 
     def __init__(self, protocol, mappings):
         self.manifest_dict = dict()
 
         all_routes = RoutesBuilder(mappings).get()
-        cors_policy = CORS_POLICY if len(all_routes.keys()) > 1 else None
         for base,ordered in all_routes.items():
-            self.add(VirtualServiceBuilder(ordered, base, True, None, False).get())
-            self.add(VirtualServiceBuilder(ordered, base, False, cors_policy, protocol == "https").get())
-            #builder.add(ExternalNameServiceBuilder(base).get())
+            if protocol == "http":
+                self.add(VirtualServiceBuilder(ordered, INTERNAL_VS_NAME, None, "http", [ HOSTS_SERVED, INTERNAL_VS_NAME ]).get())
+            else:
+                self.add(VirtualServiceBuilder(ordered, INTERNAL_VS_NAME, None, "http", [INTERNAL_VS_NAME]).get())
+                self.add(VirtualServiceBuilder(ordered, EXTERNAL_VS_NAME, None, "https", [HOSTS_SERVED]).get())
+            #builder.add(ExternalNameServiceBuilder().get())
         for ref in RoutesBuilder.refs(mappings):
             self.add(UpstreamBuilder(ref).get())
         #self.add(GatewayBuilder(False).get())
@@ -492,7 +420,7 @@ class ManifestBuilder:
     
     def add(self, manifest):
         if manifest is not None:
-            service_name = ManifestBuilder.regex.sub("", manifest["metadata"]["name"])
+            service_name = manifest["metadata"]["name"].replace(ENVIRONMENT + "-","").replace(INTERNAL_VS_NAME, "internal")
             service_kind = manifest["kind"].lower()
             name = "gloo-" + service_name + "-" + service_kind
             self.manifest_dict[name] = manifest
@@ -500,15 +428,9 @@ class ManifestBuilder:
     def write(self):
         print(yaml.dump(self.manifest_dict, explicit_start = True, default_flow_style=False))
 
-# ------------- helpers
-
-def namespace():
-    return "{{- .Release.Namespace -}}"
-
-# ------------
-
 def main():
-    ManifestBuilder(sys.argv[1], yaml.safe_load(sys.stdin)).write()
+    protocol = sys.argv[1]
+    ManifestBuilder(protocol, yaml.safe_load(sys.stdin)).write()
 
 if __name__ == "__main__":
     main()
