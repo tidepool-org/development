@@ -13,28 +13,37 @@
 # 5) captures the test results and commits them to the repo; and,
 # 6) returns an exit status code of 1 for test failure and 0 for test success.
 
-# The first two arguments are actually required.  Defaults are given here simply for testing this script.
+# The name of the service to be tested, e.g hydrophone, blip, auth, image.
 SERVICE=${1:-hydrophone}
-TAG=${2:-develop-657ba6265ad38ce7c61be77b5642e99c0ede6945}
-CLUSTER=${3:-intergration-test}
 
-# The environment that we will create within a K8s namespace of the same name
+# The tag of the image to be tested, e.g. "develop-657ba6265ad38ce7c61be77b5642e99c0ede6945"
+TAG=${2:-develop-657ba6265ad38ce7c61be77b5642e99c0ede6945}
+
+# The name of the cluster as represented in the Git repo.
+CLUSTER_GIT_NAME=${3:-integration-test}
+
+# The base environment for the tests.  This determines which versions of the OTHER services are to be used in the test.
+BASE_ENVIRONMENT=${4:-develop} # other options are "master", "released"
+
+# The name of the environment that we will create within a K8s namespace of the same name
 ENVIRONMENT=${SERVICE}-${TAG:0:20}
+
+# The URL at which the test environment can be reached.
+CLUSTER_URL=http://${ENVIRONMENT}.integration-test.tidepool.org
 
 # install yq - http://mikefarah.github.io/yq/
 #brew install yq
 
+# Create declarative description of the test environment for Weave Flux
 cd /tmp
 mkdir ${ENVIRONMENT}
 cd ${ENVIRONMENT}
 git clone git@github.com:tidepool-org/dev-ops
-cd dev-ops/clusters/${CLUSTER}/flux/environments
+cd dev-ops/clusters/${CLUSTER_GIT_NAME}/flux/environments
 subdir=$(date +%F)/${ENVIRONMENT}
 mkdir -p ${subdir}
-
-cp -r integration-test/* ${subdir}/ 
+cp -r ${BASE_ENVIRONMENT}/* ${subdir}/ 
 cd ${subdir}
-
 # Patch the tidepool-helmrelease to add the new test image for the service and to turn off automatic updates of the images
 # The OTHER images will be selected based on the configuration on the base environment
 cat <<! | yq w tidepool-helmrelease.yaml -i -s -
@@ -45,35 +54,36 @@ spec.releaseName: tidepool-${ENVIRONMENT}
 !
 yq d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
 yq w -i mongodb-helmrelease.yaml spec.releaseName tidepool-mongo-${ENVIRONMENT}
-
 # Set the environment/namespace in all of the Kubernetes resource manifests
 for file in $(find . -name \*.yaml -print)
 do
 	yq w -i $file metadata.namespace ${ENVIRONMENT}
 done
 
-# Aave the results to GitHub.  This repo is polled by Weave Flux, which will create the test environment in the cluster.
+# Save the results to GitHub.  This repo is polled by Weave Flux, which will create the test environment in the cluster.
 git add .
 git commit -m "Creating integration test environment ${ENVIRONMENT} to test ${SERVICE}:${TAG}"
 git push
-exit
 
-# Wait for running state @see https://github.com/zlabjp/kubernetes-scripts/blob/master/wait-until-pods-readya to do this reliably. For now, sleep.
+# Wait for running state @see https://github.com/zlabjp/kubernetes-scripts/blob/master/wait-until-pods-readya to do this reliably. 
+# Unfortunately, this method in zlabjp requires direct access to the cluster.  We need another way! For now we sleep.
 sleep 300
 
-# Run ghost inspector
-curl "https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=http://${ENVIRONMENT}.integration-test.tidepool.org > $PWD/ghostinspector.json
+# Run integration test(s)
+curl "https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=${CLUSTER_URL} > ghostinspector.json
+success=$(grep -c '"passing":false' ghostinspector.json)
 
-#clean up cluster by turning off h
-for file in *.yaml
+# Clean up test cluster by renaming manifest files. This causes Weave to free the resources, if weave was started with garbage collection on.
+for file in $(find . -name \*.yaml -print)
 do
 	mv $file $file.off
 done
 git add .
-git commit -m "Turn off ${ENVIRONMENT}."
+git commit -m "Turn off ${ENVIRONMENT} by rename .yaml files to .yaml.off."
 git push
 
+#clean up local file system
+cd
 rm -rf /tmp/${ENVIRONMENT}
 
-if [ $(grep -c '"passing":false' $PWD/ghostinspector.json) -ne 0 ]; then exit 1; fi
-
+if [ ${success} -ne 0 ]; then exit 1; fi
