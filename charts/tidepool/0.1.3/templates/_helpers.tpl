@@ -25,7 +25,7 @@ Expand the name of the chart.
 {{- end -}}
 {{- end -}}
 
-{{- define "charts.host.internal.tp" -}} {{ .Release.Namespace }}-internal {{- end }}
+{{- define "charts.host.internal.tp" -}} {{.Release.Namespace}}-internal {{- end }}
 
 {{- define "charts.host.external.tp" -}}
 {{- if .Values.hostnameOverride -}}

@@ -727,7 +727,7 @@ spec:
   displayName: '{{include "charts.host.internal.tp" .}}'
   virtualHost:
     domains:
-    - '{{include "charts.host.internal.tp" .}}'
+    - '{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}'
     routes:
     - matcher:
         methods:
