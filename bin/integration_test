@@ -1,0 +1,62 @@
+#!/bin/bash -xv
+# This script is used to run smoke tests of a new image of a service 
+#
+# Prior to executing this script, the following must be done:
+#   Set up a wildcard domain in Route53 for all *.integration-test.tidepool.org -> integration test K8s cluster
+#   In K8s cluster, install helm and weave flux. This will install the (unconfigured) API gateway. 
+
+# create docker image of ${SERVICE} with ${TAG} 
+# push image to private repo 
+SERVICE=${1:-hydrophone}
+TAG=${2:-develop-657ba6265ad38ce7c61be77b5642e99c0ede6945}
+
+# select random name for namespace
+export NAMESPACE=${SERVICE}-${TAG:0:20}
+
+# install yq - http://mikefarah.github.io/yq/
+#brew install yq
+
+cd /tmp
+mkdir ${NAMESPACE}
+cd ${NAMESPACE}
+git clone git@github.com:tidepool-org/dev-ops
+cd dev-ops/clusters/integration-test/flux/environments
+subdir=$(date +%F)/${NAMESPACE}
+mkdir -p ${subdir}
+
+cp -r integration-test/* ${subdir}/ 
+cd ${subdir}
+
+# patch the tidepool-helmrelease to add the new image for the service and to turn off automation
+cat <<! | yq w tidepool-helmrelease.yaml -i -s -
+metadata.annotations[flux.weave.works/automated]: false
+spec.values.${SERVICE}.image: tidepool/${SERVICE}:${TAG}
+spec.values.domain: integration-test.tidepool.org
+!
+yq d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
+# change the namespace in all of the files
+for file in $(find . -name \*.yaml -print)
+do
+	yq w -i $file metadata.namespace ${NAMESPACE}
+done
+git add .
+git commit -m "Creating integration test environment ${NAMESPACE} to test ${SERVICE}:${TAG}"
+git push
+exit
+
+#wait for running state @see https://github.com/zlabjp/kubernetes-scripts/blob/master/wait-until-pods-readya
+
+#run ghost inspector
+curl "https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=http://${NAMESPACE}.integration-test.tidepool.org > $PWD/ghostinspector.json
+
+#clean up cluster by turning off h
+for file in *.yaml
+do
+	mv $file $file.off
+done
+git add .
+git commit -m "Turn off ${NAMESPACE}."
+git push
+
+if [ $(grep -c '"passing":false' $PWD/ghostinspector.json) -ne 0 ]; then exit 1; fi
+
