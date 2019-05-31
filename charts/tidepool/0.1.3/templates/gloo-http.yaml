@@ -141,7 +141,7 @@ spec:
       maxAge: 600s
     domains:
     - '{{include "charts.hosts" .}}'
-    - '{{include "charts.host.internal.tp" .}}'
+    - '{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}'
     routes:
     - matcher:
         methods:

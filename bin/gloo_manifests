@@ -439,9 +439,9 @@ class ManifestBuilder:
         all_routes = RoutesBuilder(mappings).get()
         for base,ordered in all_routes.items():
             if protocol == "http":
-                self.add(VirtualServiceBuilder(ordered, INTERNAL_VS_NAME, CORS_POLICY, "http", [ HOSTS_SERVED, INTERNAL_VS_NAME ]).get())
+                self.add(VirtualServiceBuilder(ordered, INTERNAL_VS_NAME, CORS_POLICY, "http", [ HOSTS_SERVED, INTERNAL_VS_NAME + "." + ENVIRONMENT]).get())
             else:
-                self.add(VirtualServiceBuilder(ordered, INTERNAL_VS_NAME, None, "http", [INTERNAL_VS_NAME]).get())
+                self.add(VirtualServiceBuilder(ordered, INTERNAL_VS_NAME, None, "http", [INTERNAL_VS_NAME + "." + ENVIRONMENT]).get())
                 self.add(VirtualServiceBuilder(ordered, EXTERNAL_VS_NAME, CORS_POLICY, "https", [HOSTS_SERVED]).get())
             #builder.add(ExternalNameServiceBuilder().get())
         for ref in RoutesBuilder.refs(mappings):
