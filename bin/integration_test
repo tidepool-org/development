@@ -1,4 +1,4 @@
-#!/bin/bash  -xv
+#!/bin/bash 
 # This script is used to run integration tests of a new image of a service with an existing Kubernetes cluster.
 #
 # Pre-requisites:
