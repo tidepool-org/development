@@ -10,8 +10,7 @@ def manifests_from_mappings(mappings):
     """Generate Ambassador manifests."""
     result = dict()
     for mapping in mappings:
-        base = mapping["host"]
-        mapping["host"] = "{{.Release.Namespace}}-" + base + ".tidepool.org|{{.Release.Namespace}}-" + base + "-internal"
+        mapping["host"] = "{{.Release.Namespace}}-" + ".tidepool.org|{{.Release.Namespace}}-" + "-internal"
         mapping["host_regex"] = True
         mapping["apiVersion"] = "getambassador.io/v1"
         mapping["service"] = mapping["service"].replace("default", "{{.Release.Namespace}}")

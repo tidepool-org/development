@@ -6,7 +6,7 @@ import os
 import re
 import subprocess
 import sys
-
+import click
 import yaml
 
 # Create Helm template that may be used to instantiate a Gloo API Gateway to serve 
@@ -459,9 +459,12 @@ class ManifestBuilder:
     def write(self):
         print(yaml.dump(self.manifest_dict, explicit_start = True, default_flow_style=False))
 
-def main():
-    protocol = sys.argv[1]
+@click.command()
+@click.argument('protocol')
+def main(protocol):
+    """Generate the Gloo API Gateway for the given protocol, either "http" or "https" from Ambassador mappings."""
     ManifestBuilder(protocol, yaml.safe_load(sys.stdin)).write()
 
 if __name__ == "__main__":
-    main()
+   main()
+

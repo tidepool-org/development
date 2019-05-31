@@ -1,10 +1,10 @@
 #!/usr/local/bin/python3
-# Extract Ambassador Mappings from annotated Services
 
 import json
 import os
 import subprocess
 import sys
+import click
 import yaml
 
 def ambassador_services_from(docs):
@@ -68,10 +68,14 @@ def ambassador_mappings(input):
                         mappings.append(doc)
     return mappings
 
-def main():
-    docs = list(yaml.load_all(sys.stdin, Loader=yaml.FullLoader))
+@click.command()
+@click.option("--input", type=click.File('r'), default="-", help="input file")
+def main(input):
+    """Extract Ambassador Mappings from annotated Services"""
+    docs = list(yaml.load_all(input, Loader=yaml.FullLoader))
     mappings = ambassador_mappings(docs)
     print(yaml.dump(mappings,Dumper=yaml.Dumper))
+
 
 if __name__ == "__main__":
     main()
