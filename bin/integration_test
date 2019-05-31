@@ -44,6 +44,7 @@ spec.values.domain: integration-test.tidepool.org
 spec.releaseName: tidepool-${ENVIRONMENT}
 !
 yq d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
+yq w -i mongodb-helmrelease.yaml spec.releaseName tidepool-mongo-${ENVIRONMENT}
 
 # Set the environment/namespace in all of the Kubernetes resource manifests
 for file in $(find . -name \*.yaml -print)
