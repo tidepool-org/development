@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -xv
 # This script is used to run integration tests of a new image of a service with an existing Kubernetes cluster.
 #
 # Pre-requisites:
@@ -24,6 +24,12 @@ CLUSTER_GIT_NAME=${3:-integration-test}
 
 # The base environment for the tests.  This determines which versions of the OTHER services are to be used in the test.
 BASE_ENVIRONMENT=${4:-develop} # other options are "master", "released"
+
+# Which ghost inspector suite to run
+GHOST_SUITE_ID=5cd313c570bb2576edfb75e4
+
+# Tidpool API key for Ghost Inspector
+GHOST_API_KEY=1d903bbbe266b0b560b80a5dff6659cfdf8aec8f
 
 # The name of the environment that we will create within a K8s namespace of the same name
 ENVIRONMENT=${SERVICE}-${TAG:0:20}
@@ -64,10 +70,12 @@ git push
 
 # Wait for running state @see https://github.com/zlabjp/kubernetes-scripts/blob/master/wait-until-pods-readya to do this reliably. 
 # Unfortunately, this method in zlabjp requires direct access to the cluster.  We need another way! For now we sleep.
+echo "waiting for services to become ready."
 sleep 300
 
 # Run integration test(s)
-curl "https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=${CLUSTER_URL} > ghostinspector.json
+curl "https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=${CLUSTER_URL}" > ghostinspector.json
+cat ghostinspector.json
 success=$(grep -c '"passing":false' ghostinspector.json)
 
 # Clean up test cluster by renaming manifest files. This causes Weave to free the resources, if weave was started with garbage collection on.
