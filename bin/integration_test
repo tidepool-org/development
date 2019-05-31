@@ -41,6 +41,7 @@ cat <<! | yq w tidepool-helmrelease.yaml -i -s -
 metadata.annotations[flux.weave.works/automated]: false
 spec.values.${SERVICE}.image: tidepool/${SERVICE}:${TAG}
 spec.values.domain: integration-test.tidepool.org
+spec.releaseName: tidepool-${ENVIRONMENT}
 !
 yq d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
 

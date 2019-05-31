@@ -1,0 +1,89 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: tidepool
+  namespace: qa1
+  annotations:
+    flux.weave.works/automated: "true"
+    flux.weave.works/tag.shoreline: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.tidewhisperer: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.blip: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.gatekeeper: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.highwater: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.jellyfish: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.mailhog: "semver:1.*"
+    flux.weave.works/tag.export: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.seagull: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.hydrophone: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.messageapi: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.platformAuth: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.platformBlob: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.platformData: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.platformImage: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.platformMigrations: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.platformNotification: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.platformTask: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.platformTools: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.platformUser: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+spec:
+  releaseName: tidepool
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: charts/tidepool/0.1.3
+    ref: k8s
+  values:
+    gateway:
+      name: gloo
+      https:
+        enabled: false
+      http:
+        enabled: true
+    mongo:
+      enabled: false
+    includeSecrets: false
+    namespace:
+      create: false
+    nosqlclient:
+      enabled: false
+    blip:
+      image: tidepool/blip:develop-a8484947ae6a0043d156ec895076039f8a791a55
+    export:
+      enabled: false
+      image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
+    gatekeeper:
+      image: tidepool/gatekeeper:develop-9b8e58227a946eae34debbe23f7748d7e9570b79
+    highwater:
+      image: tidepool/highwater:develop-3f0838c29e726230b616638d97f593ba07607bab
+    hydrophone:
+      image: tidepool/hydrophone:develop-3b621eb9873d97d76cafbeab8edaab398217dd3b
+    jellyfish:
+      image: tidepool/jellyfish:develop-942156b4166dc5b158bf53fe8826872be62fe44e
+    messageapi:
+      image: tidepool/message-api:develop-3c23130779e5286a404c439bed49c18186a7711a
+    auth:
+      image: tidepool/platform-auth:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+    blob:
+      image: tidepool/platform-blob:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+    data:
+      image: tidepool/platform-data:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+    image:
+      image: tidepool/platform-image:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+    migrations:
+      image: tidepool/platform-migrations:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+    notification:
+      enabled: false
+      image: tidepool/platform-notification:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+    task:
+      image: tidepool/platform-task:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+    tools:
+      enabled: false
+      image: tidepool/platform-tools:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+    user:
+      image: tidepool/platform-user:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+    seagull:
+      image: tidepool/seagull:develop-5252952843dfe47536bc472e88c6e0017b316eb5
+    shoreline:
+      image: tidepool/shoreline:develop-ad5025eeccb9fa3a3fde346391194ac85de01ce0
+    tidewhisperer:
+      image: tidepool/tide-whisperer:develop-26174c02c95fe1d5b092fea68b7046fd3fc1e798
