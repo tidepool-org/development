@@ -1,53 +1,66 @@
-#!/bin/bash -xv
-# This script is used to run smoke tests of a new image of a service 
+#!/bin/bash 
+# This script is used to run integration tests of a new image of a service with an existing Kubernetes cluster.
 #
-# Prior to executing this script, the following must be done:
-#   Set up a wildcard domain in Route53 for all *.integration-test.tidepool.org -> integration test K8s cluster
-#   In K8s cluster, install helm and weave flux. This will install the (unconfigured) API gateway. 
+# Pre-requisites:
+# 1) Set up a wildcard domain in Route53 for all *.integration-test.tidepool.org -> integration test K8s cluster
+# 2) In the K8s cluster, install helm # and weave flux. This will install the (unconfigured) API gateway.
 
-# create docker image of ${SERVICE} with ${TAG} 
-# push image to private repo 
+# This script
+# 1) creates a declarative description of the test settings in the `dev-ops` repo;
+# 2) spins up a new "environment" inside an existing Kubernetes cluster (the "integration-test" cluster);
+# 3) runs the integration test using Ghost Inspector;
+# 4) frees the resources used in Kubernetes to run the test;
+# 5) captures the test results and commits them to the repo; and,
+# 6) returns an exit status code of 1 for test failure and 0 for test success.
+
+# The first two arguments are actually required.  Defaults are given here simply for testing this script.
 SERVICE=${1:-hydrophone}
 TAG=${2:-develop-657ba6265ad38ce7c61be77b5642e99c0ede6945}
+CLUSTER=${3:-intergration-test}
 
-# select random name for namespace
-export NAMESPACE=${SERVICE}-${TAG:0:20}
+# The environment that we will create within a K8s namespace of the same name
+ENVIRONMENT=${SERVICE}-${TAG:0:20}
 
 # install yq - http://mikefarah.github.io/yq/
 #brew install yq
 
 cd /tmp
-mkdir ${NAMESPACE}
-cd ${NAMESPACE}
+mkdir ${ENVIRONMENT}
+cd ${ENVIRONMENT}
 git clone git@github.com:tidepool-org/dev-ops
-cd dev-ops/clusters/integration-test/flux/environments
-subdir=$(date +%F)/${NAMESPACE}
+cd dev-ops/clusters/${CLUSTER}/flux/environments
+subdir=$(date +%F)/${ENVIRONMENT}
 mkdir -p ${subdir}
 
 cp -r integration-test/* ${subdir}/ 
 cd ${subdir}
 
-# patch the tidepool-helmrelease to add the new image for the service and to turn off automation
+# Patch the tidepool-helmrelease to add the new test image for the service and to turn off automatic updates of the images
+# The OTHER images will be selected based on the configuration on the base environment
 cat <<! | yq w tidepool-helmrelease.yaml -i -s -
 metadata.annotations[flux.weave.works/automated]: false
 spec.values.${SERVICE}.image: tidepool/${SERVICE}:${TAG}
 spec.values.domain: integration-test.tidepool.org
 !
 yq d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
-# change the namespace in all of the files
+
+# Set the environment/namespace in all of the Kubernetes resource manifests
 for file in $(find . -name \*.yaml -print)
 do
-	yq w -i $file metadata.namespace ${NAMESPACE}
+	yq w -i $file metadata.namespace ${ENVIRONMENT}
 done
+
+# Aave the results to GitHub.  This repo is polled by Weave Flux, which will create the test environment in the cluster.
 git add .
-git commit -m "Creating integration test environment ${NAMESPACE} to test ${SERVICE}:${TAG}"
+git commit -m "Creating integration test environment ${ENVIRONMENT} to test ${SERVICE}:${TAG}"
 git push
 exit
 
-#wait for running state @see https://github.com/zlabjp/kubernetes-scripts/blob/master/wait-until-pods-readya
+# Wait for running state @see https://github.com/zlabjp/kubernetes-scripts/blob/master/wait-until-pods-readya to do this reliably. For now, sleep.
+sleep 300
 
-#run ghost inspector
-curl "https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=http://${NAMESPACE}.integration-test.tidepool.org > $PWD/ghostinspector.json
+# Run ghost inspector
+curl "https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=http://${ENVIRONMENT}.integration-test.tidepool.org > $PWD/ghostinspector.json
 
 #clean up cluster by turning off h
 for file in *.yaml
@@ -55,8 +68,10 @@ do
 	mv $file $file.off
 done
 git add .
-git commit -m "Turn off ${NAMESPACE}."
+git commit -m "Turn off ${ENVIRONMENT}."
 git push
+
+rm -rf /tmp/${ENVIRONMENT}
 
 if [ $(grep -c '"passing":false' $PWD/ghostinspector.json) -ne 0 ]; then exit 1; fi
 
