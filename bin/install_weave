@@ -19,12 +19,13 @@ else
 fi
 
 BASE=$(git rev-parse --show-toplevel)/clusters/
-CURRENT_PATH=clusters/$(pwd | sed -e "s#^$BASE##" -e "s#/.*##")
+CLUSTER_NAME=$(pwd | sed -e "s#^$BASE##" -e "s#/.*##")
+CURRENT_PATH=clusters/${CLUSTER_NAME}
 
 SOURCE_BRANCH=${2:-${CURRENT_BRANCH}}
 SOURCE_PATH=${3:-${CURRENT_PATH}/flux}
 SOURCE_REPO=${4:-${CURRENT_REPO}}
-SOURCE_SECRET=${1:-${SOURCE_PATH}/../flux-git-deploy.yaml}
+SOURCE_SECRET=${1:-${BASE}/${CLUSTER_NAME}/flux-secret.yaml}
 
 GIT_SECRET_NAME=$(basename $SOURCE_SECRET | sed -e s/\.yaml$//)
 
