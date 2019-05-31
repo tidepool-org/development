@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash  -xv
 # This script is used to run integration tests of a new image of a service with an existing Kubernetes cluster.
 #
 # Pre-requisites:
@@ -31,11 +31,9 @@ ENVIRONMENT=${SERVICE}-${TAG:0:20}
 # The URL at which the test environment can be reached.
 CLUSTER_URL=http://${ENVIRONMENT}.integration-test.tidepool.org
 
-# install yq - http://mikefarah.github.io/yq/
-#brew install yq
-
 # Create declarative description of the test environment for Weave Flux
-cd /tmp
+mytmpdir=$(mktemp -d "./zombie.XXXXXXXXX")
+cd $mytmpdir
 mkdir ${ENVIRONMENT}
 cd ${ENVIRONMENT}
 git clone git@github.com:tidepool-org/dev-ops
@@ -46,18 +44,17 @@ cp -r ${BASE_ENVIRONMENT}/* ${subdir}/
 cd ${subdir}
 # Patch the tidepool-helmrelease to add the new test image for the service and to turn off automatic updates of the images
 # The OTHER images will be selected based on the configuration on the base environment
-cat <<! | yq w tidepool-helmrelease.yaml -i -s -
-metadata.annotations[flux.weave.works/automated]: false
-spec.values.${SERVICE}.image: tidepool/${SERVICE}:${TAG}
-spec.values.domain: integration-test.tidepool.org
-spec.releaseName: tidepool-${ENVIRONMENT}
-!
-yq d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
-yq w -i mongodb-helmrelease.yaml spec.releaseName tidepool-mongo-${ENVIRONMENT}
+YQ="docker run -v ${PWD}:/workdir mikefarah/yq yq"
+${YQ} w -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/automated]: false
+${YQ} w -i tidepool-helmrelease.yaml spec.values.${SERVICE}.image: tidepool/${SERVICE}:${TAG}
+${YQ} w -i tidepool-helmrelease.yaml spec.values.domain: integration-test.tidepool.org
+${YQ} w -i tidepool-helmrelease.yaml spec.releaseName: tidepool-${ENVIRONMENT}
+${YQ} d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
+${YQ} w -i mongodb-helmrelease.yaml spec.releaseName tidepool-mongo-${ENVIRONMENT}
 # Set the environment/namespace in all of the Kubernetes resource manifests
 for file in $(find . -name \*.yaml -print)
 do
-	yq w -i $file metadata.namespace ${ENVIRONMENT}
+	${YQ} w -i $file metadata.namespace ${ENVIRONMENT}
 done
 
 # Save the results to GitHub.  This repo is polled by Weave Flux, which will create the test environment in the cluster.
@@ -84,6 +81,6 @@ git push
 
 #clean up local file system
 cd
-rm -rf /tmp/${ENVIRONMENT}
+rm -rf $mytmpdir
 
 if [ ${success} -ne 0 ]; then exit 1; fi
