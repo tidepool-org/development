@@ -16,4 +16,5 @@ spec:
         enabled: false
       https:
         enabled: true
-      hostnames: integration-test-app.tidepool.org,integration-test-api.tidepool.org,integration-test-uploads.tidepool.org
+        hostnames: integration-test.tidepool.org
+
