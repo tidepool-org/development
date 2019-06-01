@@ -13,8 +13,8 @@ spec:
   values:
     gateway:
       http:
-        enabled: true
-      https:
         enabled: false
+      https:
+        enabled: true
       hostnames: "*.integration-test.tidepool.org"
 
