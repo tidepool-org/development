@@ -1,33 +1,32 @@
----
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: tidepool
-  namespace: integration-test
+  namespace: master
   annotations:
     flux.weave.works/automated: "true"
-    flux.weave.works/tag.auth: "glob:master-*"
-    flux.weave.works/tag.blip: "glob:master-*"
-    flux.weave.works/tag.blob: "glob:master-*"
-    flux.weave.works/tag.data: "glob:master-*"
-    flux.weave.works/tag.export: "glob:master-*"
-    flux.weave.works/tag.gatekeeper: "glob:master-*"
-    flux.weave.works/tag.highwater: "glob:master-*"
-    flux.weave.works/tag.hydrophone: "glob:master-*"
-    flux.weave.works/tag.image: "glob:master-*"
-    flux.weave.works/tag.jellyfish: "glob:master-*"
-    flux.weave.works/tag.mailhog: "semver:1.*"
-    flux.weave.works/tag.messageapi: "glob:master-*"
-    flux.weave.works/tag.migrations: "glob:master-*"
-    flux.weave.works/tag.notification: "glob:master-*"
-    flux.weave.works/tag.seagull: "glob:master-*"
-    flux.weave.works/tag.shoreline: "glob:master-*"
-    flux.weave.works/tag.task: "glob:master-*"
-    flux.weave.works/tag.tidewhisperer: "glob:master-*"
-    flux.weave.works/tag.tools: "glob:master-*"
-    flux.weave.works/tag.user: "glob:master-*"
+    flux.weave.works/tag.auth: glob:master-*
+    flux.weave.works/tag.blip: glob:master-*
+    flux.weave.works/tag.blob: glob:master-*
+    flux.weave.works/tag.data: glob:master-*
+    flux.weave.works/tag.export: glob:master-*
+    flux.weave.works/tag.gatekeeper: glob:master-*
+    flux.weave.works/tag.highwater: glob:master-*
+    flux.weave.works/tag.hydrophone: glob:master-*
+    flux.weave.works/tag.image: glob:master-*
+    flux.weave.works/tag.jellyfish: glob:master-*
+    flux.weave.works/tag.mailhog: semver:1.*
+    flux.weave.works/tag.messageapi: glob:master-*
+    flux.weave.works/tag.migrations: glob:master-*
+    flux.weave.works/tag.notification: glob:master-*
+    flux.weave.works/tag.seagull: glob:master-*
+    flux.weave.works/tag.shoreline: glob:master-*
+    flux.weave.works/tag.task: glob:master-*
+    flux.weave.works/tag.tidewhisperer: glob:master-*
+    flux.weave.works/tag.tools: glob:master-*
+    flux.weave.works/tag.user: glob:master-*
 spec:
-  releaseName: tidepool
+  releaseName: master-tidepool
   chart:
     git: git@github.com:tidepool-org/development
     path: charts/tidepool/0.1.3

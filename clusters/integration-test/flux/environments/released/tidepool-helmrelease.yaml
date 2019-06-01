@@ -1,33 +1,32 @@
----
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: tidepool
-  namespace: qa1
+  namespace: released
   annotations:
     flux.weave.works/automated: "true"
-    flux.weave.works/tag.shoreline: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.tidewhisperer: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.blip: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.gatekeeper: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.highwater: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.jellyfish: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.mailhog: "semver:1.*"
-    flux.weave.works/tag.export: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.seagull: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.hydrophone: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.messageapi: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.platformAuth: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.platformBlob: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.platformData: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.platformImage: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.platformMigrations: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.platformNotification: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.platformTask: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.platformTools: "regexp:^v\\d+\\.\\d+\\.\\d+$"
-    flux.weave.works/tag.platformUser: "regexp:^v\\d+\\.\\d+\\.\\d+$"
+    flux.weave.works/tag.shoreline: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.tidewhisperer: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.blip: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.gatekeeper: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.highwater: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.jellyfish: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.mailhog: semver:1.*
+    flux.weave.works/tag.export: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.seagull: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.hydrophone: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.messageapi: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.platformAuth: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.platformBlob: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.platformData: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.platformImage: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.platformMigrations: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.platformNotification: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.platformTask: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.platformTools: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.platformUser: regexp:^v\d+\.\d+\.\d+$
 spec:
-  releaseName: tidepool
+  releaseName: released-tidepool
   chart:
     git: git@github.com:tidepool-org/development
     path: charts/tidepool/0.1.3

@@ -1,12 +1,12 @@
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
-  name: tidepool-mongo
-  namespace: integration-test
+  name: mongo
+  namespace: released
   annotations:
     flux.weave.works/automated: "false"
 spec:
-  releaseName: tidepool-mongo
+  releaseName: released-mongo
   skipDepUpdate: true
   chart:
     git: git@github.com:tidepool-org/development
@@ -16,5 +16,3 @@ spec:
     mongo:
       image: mongo:3.2
       persistent: false
-
-

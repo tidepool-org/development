@@ -25,70 +25,103 @@ CLUSTER_GIT_NAME=${3:-integration-test}
 # The base environment for the tests.  This determines which versions of the OTHER services are to be used in the test.
 BASE_ENVIRONMENT=${4:-develop} # other options are "master", "released"
 
-# Which ghost inspector suite to run
-GHOST_SUITE_ID=5cd313c570bb2576edfb75e4
-
-# Tidpool API key for Ghost Inspector
-GHOST_API_KEY=1d903bbbe266b0b560b80a5dff6659cfdf8aec8f
-
-# The name of the environment that we will create within a K8s namespace of the same name
-ENVIRONMENT=${SERVICE}-${TAG:0:20}
 
 # The URL at which the test environment can be reached.
 CLUSTER_URL=http://${ENVIRONMENT}.integration-test.tidepool.org
 
 # Create declarative description of the test environment for Weave Flux
-mytmpdir=$(mktemp -d "./zombie.XXXXXXXXX")
-cd $mytmpdir
-mkdir ${ENVIRONMENT}
-cd ${ENVIRONMENT}
-git clone git@github.com:tidepool-org/dev-ops
-cd dev-ops/clusters/${CLUSTER_GIT_NAME}/flux/environments
-subdir=$(date +%F)/${ENVIRONMENT}
-mkdir -p ${subdir}
-cp -r ${BASE_ENVIRONMENT}/* ${subdir}/ 
-cd ${subdir}
 # Patch the tidepool-helmrelease to add the new test image for the service and to turn off automatic updates of the images
-# The OTHER images will be selected based on the configuration on the base environment
-YQ="docker run -v ${PWD}:/workdir mikefarah/yq yq"
-${YQ} w -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/automated]: false
-${YQ} w -i tidepool-helmrelease.yaml spec.values.${SERVICE}.image: tidepool/${SERVICE}:${TAG}
-${YQ} w -i tidepool-helmrelease.yaml spec.values.domain: integration-test.tidepool.org
-${YQ} w -i tidepool-helmrelease.yaml spec.releaseName: tidepool-${ENVIRONMENT}
-${YQ} d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
-${YQ} w -i mongodb-helmrelease.yaml spec.releaseName tidepool-mongo-${ENVIRONMENT}
-# Set the environment/namespace in all of the Kubernetes resource manifests
-for file in $(find . -name \*.yaml -print)
-do
-	${YQ} w -i $file metadata.namespace ${ENVIRONMENT}
-done
 
-# Save the results to GitHub.  This repo is polled by Weave Flux, which will create the test environment in the cluster.
-git add .
-git commit -m "Creating integration test environment ${ENVIRONMENT} to test ${SERVICE}:${TAG}"
-git push
 
-# Wait for running state @see https://github.com/zlabjp/kubernetes-scripts/blob/master/wait-until-pods-readya to do this reliably. 
-# Unfortunately, this method in zlabjp requires direct access to the cluster.  We need another way! For now we sleep.
-echo "waiting for services to become ready."
-sleep 300
+# set up and change to a working directory
+function setup()
+{
+    curdir=$(pwd)
+    mytmpdir=$(mktemp -d "./zombie.XXXXXXXXX")
+    cd $mytmpdir
+}
 
-# Run integration test(s)
-curl "https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=${CLUSTER_URL}" > ghostinspector.json
-cat ghostinspector.json
-success=$(grep -c '"passing":false' ghostinspector.json)
+# start services, Note that the ENVIRONMENT variable is set here
+function start_services()
+{
+    git clone git@github.com:tidepool-org/dev-ops
+    FROM=$(git rev-parse HEAD)
+    ENVIRONMENT=${SERVICE}-${TAG:0:20}-${FROM:0:10}
+    cd dev-ops/clusters/${CLUSTER_GIT_NAME}/flux/environments
+    subdir=$(date +%F)/${ENVIRONMENT}
+    mkdir -p ${subdir}
+    cp -r ${BASE_ENVIRONMENT}/* ${subdir}/ 
+    cd ${subdir}
 
-# Clean up test cluster by renaming manifest files. This causes Weave to free the resources, if weave was started with garbage collection on.
-for file in $(find . -name \*.yaml -print)
-do
-	mv $file $file.off
-done
-git add .
-git commit -m "Turn off ${ENVIRONMENT} by rename .yaml files to .yaml.off."
-git push
+    YQ="docker run -v ${PWD}:/workdir mikefarah/yq yq"
+    ${YQ} w -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/automated]: false
+    ${YQ} w -i tidepool-helmrelease.yaml spec.values.${SERVICE}.image: tidepool/${SERVICE}:${TAG}
+    ${YQ} w -i tidepool-helmrelease.yaml spec.values.domain: integration-test.tidepool.org
+    ${YQ} w -i tidepool-helmrelease.yaml spec.releaseName: tidepool-${ENVIRONMENT}
+    ${YQ} d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
+    ${YQ} w -i mongodb-helmrelease.yaml spec.releaseName tidepool-mongo-${ENVIRONMENT}
+
+    # Update namespace
+    for file in $(find . -name \*.yaml -print)
+    do
+        grep "kind" $file | grep Namespace >/dev/null
+        if [ $? -eq 0 ]
+        then
+          ${YQ} w -i $file metadata.name ${ENVIRONMENT}
+        else
+          ${YQ} w -i $file metadata.namespace ${ENVIRONMENT}
+        fi
+    done
+
+    # Save the results to GitHub.  This repo is polled by Weave Flux, which will create the test environment in the cluster.
+    git add .
+    git commit -m "Creating integration test environment ${ENVIRONMENT} to test ${SERVICE}:${TAG} with base ${BASE_ENVIRONMENT}."
+    git push
+
+    # Wait for running state @see https://github.com/zlabjp/kubernetes-scripts/blob/master/wait-until-pods-readya to do this reliably. 
+    # Unfortunately, this method in zlabjp requires direct access to the cluster.  We need another way! For now we sleep.
+    echo "waiting for services to become ready."
+    sleep 300
+}
+
+# Stop and free cluster resources
+function stop_services()
+{
+    for file in $(find . -name \*.yaml -print)
+    do
+	    mv $file $file.off
+    done
+    git add .
+    git commit -m "Turn off ${ENVIRONMENT} by rename .yaml files to .yaml.off."
+    git push
+}
+
+# run integration tests, return 0 iff tests succeed
+function run_tests()
+{
+    # Which ghost inspector suite to run
+    GHOST_SUITE_ID=5cd313c570bb2576edfb75e4
+
+    # Tidpool API key for Ghost Inspector
+    GHOST_API_KEY=1d903bbbe266b0b560b80a5dff6659cfdf8aec8f
+
+    curl "https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=${CLUSTER_URL}" > ghostinspector.json
+    cat ghostinspector.json
+    grep -c '"passing":false' ghostinspector.json
+    return $?
+}
 
 #clean up local file system
-cd
-rm -rf $mytmpdir
+function cleanup()
+{
+    cd $curdir
+    rm -rf $mytmpdir
+}
 
-if [ ${success} -ne 0 ]; then exit 1; fi
+setup
+start_services
+run_tests
+result=$?
+stop_services
+cleanup
+exit $result

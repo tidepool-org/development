@@ -1,0 +1,16 @@
+#!/bin/bash -xv
+# Change the namespace for all resources in this directory and all subdirectories.
+#
+
+YQ="docker run -v ${PWD}:/workdir mikefarah/yq yq"
+ENVIRONMENT=${1:-$(basename $(pwd))}
+for file in $(find . -name \*.yaml -print)
+do
+	grep "kind" $file | grep Namespace >/dev/null
+	if [ $? -eq 0 ]
+	then
+	  ${YQ} w -i $file metadata.name ${ENVIRONMENT}
+	else
+	  ${YQ} w -i $file metadata.namespace ${ENVIRONMENT}
+	fi
+done
