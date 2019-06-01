@@ -8,6 +8,7 @@ metadata:
     external-dns.alpha.kubernetes.io/alias: "true"
     external-dns.alpha.kubernetes.io/hostname: '{{.Values.gateway.hostnames}}'
 spec:
+  releaseName: {{.Values.gateway.name}}-gateway-loadbalancer
   externalTrafficPolicy: Local
   ports:
 {{if .Values.gateway.https.enabled }}
