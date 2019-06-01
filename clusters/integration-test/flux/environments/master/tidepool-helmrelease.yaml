@@ -1,3 +1,4 @@
+---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
@@ -46,43 +47,43 @@ spec:
     nosqlclient:
       enabled: false
     blip:
-      image: tidepool/blip:develop-a8484947ae6a0043d156ec895076039f8a791a55
+      image: tidepool/blip:master-1547d4a5bfcaff540544f989f2adb5ce299a6771
     export:
       enabled: false
-      image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
+      image: tidepool/export:master-17c8de7344eea3d8a404e1c112c2c7f03e88321e
     gatekeeper:
-      image: tidepool/gatekeeper:develop-9b8e58227a946eae34debbe23f7748d7e9570b79
+      image: tidepool/gatekeeper:master-ff9239c90d432a251024247380e54123896beb03
     highwater:
-      image: tidepool/highwater:develop-3f0838c29e726230b616638d97f593ba07607bab
+      image: tidepool/highwater:master-1a7a0f9ce2af300a9b366b69043afaf28befdb99
     hydrophone:
-      image: tidepool/hydrophone:develop-3b621eb9873d97d76cafbeab8edaab398217dd3b
+      image: tidepool/hydrophone:master-5a098f25546a3a2f0e1dfbbc51735589dcf03879
     jellyfish:
-      image: tidepool/jellyfish:develop-942156b4166dc5b158bf53fe8826872be62fe44e
+      image: tidepool/jellyfish:master-3409448a4dcd8f5de7167c7525c3cd89cedadf95
     messageapi:
-      image: tidepool/message-api:develop-3c23130779e5286a404c439bed49c18186a7711a
+      image: tidepool/message-api:master-1087d1378392afaadef077b82af64d0904036c20
     auth:
-      image: tidepool/platform-auth:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+      image: tidepool/platform-auth:master-3468cb7a3d6f0cf5971a281022586a9462668737
     blob:
-      image: tidepool/platform-blob:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+      image: tidepool/platform-blob:master-3468cb7a3d6f0cf5971a281022586a9462668737
     data:
-      image: tidepool/platform-data:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+      image: tidepool/platform-data:master-3468cb7a3d6f0cf5971a281022586a9462668737
     image:
-      image: tidepool/platform-image:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+      image: tidepool/platform-image:master-3468cb7a3d6f0cf5971a281022586a9462668737
     migrations:
-      image: tidepool/platform-migrations:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+      image: tidepool/platform-migrations:master-3468cb7a3d6f0cf5971a281022586a9462668737
     notification:
       enabled: false
-      image: tidepool/platform-notification:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+      image: tidepool/platform-notification:master-3468cb7a3d6f0cf5971a281022586a9462668737
     task:
-      image: tidepool/platform-task:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+      image: tidepool/platform-task:master-3468cb7a3d6f0cf5971a281022586a9462668737
     tools:
       enabled: false
-      image: tidepool/platform-tools:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+      image: tidepool/platform-tools:master-3468cb7a3d6f0cf5971a281022586a9462668737
     user:
-      image: tidepool/platform-user:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+      image: tidepool/platform-user:master-3468cb7a3d6f0cf5971a281022586a9462668737
     seagull:
-      image: tidepool/seagull:develop-5252952843dfe47536bc472e88c6e0017b316eb5
+      image: tidepool/seagull:master-8b9d5288a81f937e16013202876f7167c47a30ac
     shoreline:
-      image: tidepool/shoreline:develop-ad5025eeccb9fa3a3fde346391194ac85de01ce0
+      image: tidepool/shoreline:master-b6505c04b001d63c89d36d13de568c63a5eeac6c
     tidewhisperer:
-      image: tidepool/tide-whisperer:develop-26174c02c95fe1d5b092fea68b7046fd3fc1e798
+      image: tidepool/tide-whisperer:master-1995cc2dd7f5f3ae0621d82c9716748eab108d60
