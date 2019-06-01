@@ -22,6 +22,7 @@ spec:
         - --policy=upsert-only # would prevent ExternalDNS from deleting any records, omit to enable full synchronization
 {{if .Values.awszonetype}}
         - --aws-zone-type={{.Values.awszonetype}}
+        - --aws-evaluate-target-health=false
 {{ end }}
         - --registry=txt
         - --txt-owner-id={{.Values.ownerid}}
