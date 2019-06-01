@@ -16,5 +16,5 @@ spec:
         enabled: false
       https:
         enabled: true
-        hostnames: *.integration-test.tidepool.org
+        hostnames: "*.integration-test.tidepool.org"
 
