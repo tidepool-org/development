@@ -76,6 +76,7 @@ function start_services()
     # Save the results to GitHub.  This repo is polled by Weave Flux, which will create the test environment in the cluster.
     git add .
     git commit -m "Creating integration test environment ${ENVIRONMENT} to test ${SERVICE}:${TAG} with base ${BASE_ENVIRONMENT}."
+    git pull --rebase
     git push
 
     # Wait for running state @see https://github.com/zlabjp/kubernetes-scripts/blob/master/wait-until-pods-readya to do this reliably. 
@@ -93,6 +94,7 @@ function stop_services()
     done
     git add .
     git commit -m "Turn off ${ENVIRONMENT} by rename .yaml files to .yaml.off."
+    git pull --rebase
     git push
 }
 
