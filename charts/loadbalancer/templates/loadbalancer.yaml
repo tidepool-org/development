@@ -16,7 +16,7 @@ spec:
     protocol: TCP
     targetPort: 8443
 {{ end }}
-{{if .Values.gateway.https.enabled }}
+{{if .Values.gateway.http.enabled }}
   - name: http
     port: 80
     protocol: TCP
