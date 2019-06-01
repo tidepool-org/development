@@ -1,8 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: integration-test
+  name: hydrophone-develop-657ba6265ad3
   labels:
     istio-injection: disabled
     linkerd.io/inject: enabled
-  namespace: hydrophone-develop-657ba6265ad3
