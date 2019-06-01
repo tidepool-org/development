@@ -17,15 +17,15 @@ metadata:
     flux.weave.works/tag.seagull: regexp:^v\d+\.\d+\.\d+$
     flux.weave.works/tag.hydrophone: regexp:^v\d+\.\d+\.\d+$
     flux.weave.works/tag.messageapi: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.platformAuth: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.platformBlob: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.platformData: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.platformImage: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.platformMigrations: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.platformNotification: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.platformTask: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.platformTools: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.platformUser: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.auth: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.blob: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.data: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.image: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.migrations: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.notification: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.task: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.tools: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.user: regexp:^v\d+\.\d+\.\d+$
 spec:
   releaseName: released-tidepool
   chart:
