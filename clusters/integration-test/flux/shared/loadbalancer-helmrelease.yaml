@@ -3,7 +3,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: loadbalancer
-  namespace: integration-test
+  namespace: default
 spec:
   releaseName: loadbalancer
   chart:
