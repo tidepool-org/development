@@ -46,7 +46,7 @@ function start_services()
 {
     git clone git@github.com:tidepool-org/dev-ops
     FROM=$(git rev-parse HEAD)
-    ENVIRONMENT=${SERVICE}-${TAG:0:20}-${FROM:0:10}
+    ENVIRONMENT=${SERVICE}-${TAG:0:12}-${FROM:0:6}
     cd dev-ops/clusters/${CLUSTER_GIT_NAME}/flux/environments
     subdir=$(date +%F)/${ENVIRONMENT}
     mkdir -p ${subdir}
