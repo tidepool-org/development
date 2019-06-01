@@ -49,7 +49,7 @@ then
       --set rbac.create=true \
       --set helmOperator.create=true \
       --set helmOperator.chartsSyncInterval=1m \
-      --set helmOperator.replicaCount=2 \
+      --set helmOperator.replicaCount=1 \
       --set helmOperator.updateChartDeps=true \
       --set helmOperator.createCRD=${INSTALL_CRDS} \
       --set git.secretName=${GIT_SECRET_NAME} \
