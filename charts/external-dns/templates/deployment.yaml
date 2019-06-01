@@ -23,6 +23,6 @@ spec:
 {{if .Values.awszonetype}}
         - --aws-zone-type={{.Values.awszonetype}}
 {{ end }}
-        - --aws-evaluate-target-health=0
+        - --aws-evaluate-target-health=F
         - --registry=txt
         - --txt-owner-id={{.Values.ownerid}}
