@@ -35,9 +35,9 @@ spec:
     gateway:
       name: gloo
       https:
-        enabled: false
-      http:
         enabled: true
+      http:
+        enabled: false
     mongo:
       enabled: false
     includeSecrets: false
