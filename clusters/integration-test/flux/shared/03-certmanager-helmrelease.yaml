@@ -1,0 +1,15 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: gloo
+  chart:
+    repository: https://charts.jetstack.io/
+    name: jetstack/cert-manager
+    version: 0.8.0
+  values:
+    {}
