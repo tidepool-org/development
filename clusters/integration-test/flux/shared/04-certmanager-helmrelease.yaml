@@ -6,7 +6,7 @@ metadata:
   annotations:
     flux.weave.works/automated: "false"
 spec:
-  releaseName: gloo
+  releaseName: cert-manager
   chart:
     repository: https://charts.jetstack.io/
     name: cert-manager
