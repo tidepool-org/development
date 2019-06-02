@@ -33,6 +33,7 @@ spec:
     ref: k8s
   values:
     gateway:
+      domain: integration-test.tidepool.org
       name: gloo
       https:
         enabled: true
