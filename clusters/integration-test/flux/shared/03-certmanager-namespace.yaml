@@ -6,5 +6,6 @@ metadata:
   labels:
       istio-injection: disabled
       linkerd.io/inject: disabled
-      certmanager.k8s.io/disable-validation: true
+      "certmanager.k8s.io/disable-validation": "true"
+
 
