@@ -38,9 +38,9 @@ spec:
         name: integration-test.tidepool.org
       name: gloo
       https:
-        enabled: true
-      http:
         enabled: false
+      http:
+        enabled: true
     mongo:
       enabled: false
     includeSecrets: false
