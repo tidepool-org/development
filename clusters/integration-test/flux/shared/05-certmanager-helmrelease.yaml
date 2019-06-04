@@ -8,8 +8,8 @@ metadata:
 spec:
   releaseName: cert-manager
   chart:
-    repository: https://charts.jetstack.io/
-    name: cert-manager
-    version: 0.8.0
+    git: git@github.com:jetstack/cert-manager
+    path: deploy
+    ref: master
   values:
     {}
