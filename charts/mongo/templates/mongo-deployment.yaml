@@ -27,12 +27,40 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      containers:
+{{ if .Values.mongo.seed }}
+      volumes:
+      - name: dump
+        emptyDir: {}
+      initContainer: # provide the data volume
+        - image: tidepool/mongoseed:init
+          name: seed-data
+          command: [ "date" ]
+          volumeMounts:
+          - mountPath: /dump
+            name: dump
+{{ end }}
+      containers: 
       - image: "{{ .Values.mongo.image }}"
         name: mongo
         ports:
         - containerPort: {{.Values.mongo.port}}
         resources: {}
+{{ if .Values.mongo.seed }}
+      - image: "{{ .Values.mongo.image }}"
+        name: seeder
+        volumeMounts:
+        - mountPath: /dump
+          name: dump
+        command: [ "/bin/sh" ]
+        args: [ "-c", "while [ true ]; do; mongo --eval "db.adminCommand('ping')"; if [ $? -eq 0 ]; then; break; else; sleep 3; fi; done; mongorestore -h localhost /dump; touch /dump/ready" ]
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /dump/ready
+          initialDelaySeconds: 3
+          periodSeconds: 5
+{{ end }}
 {{ if .Values.mongo.persistent }}
         volumeMounts:
         - mountPath: /data/db
