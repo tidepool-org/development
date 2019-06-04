@@ -57,13 +57,13 @@ spec:
               fieldRef:
                 fieldPath: status.hostIP
           - name: DD_APM_ENABLED
-            value: "true"
+            value: "false"
           - name: DD_PROCESS_AGENT_ENABLED
             value: "true"
           - name: DD_LOGS_ENABLED
-            value: "true"
+            value: "false"
           - name: DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL
-            value: "true"
+            value: "false"
           - name: DD_LOGS_CONFIG_LOGS_DD_URL
             value: "tcp-encrypted-intake.logs.datadoghq.com:10516"
         resources:
