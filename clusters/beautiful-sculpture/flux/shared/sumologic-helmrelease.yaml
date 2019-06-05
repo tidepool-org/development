@@ -4,7 +4,7 @@ metadata:
   name: sumologic-fluentd
   namespace: default
   annotations:
-    flux.weave.works/automated: "false"
+    flux.weave.works/automated: "true"
     
 spec:
   releaseName: sumologic-fluentd
