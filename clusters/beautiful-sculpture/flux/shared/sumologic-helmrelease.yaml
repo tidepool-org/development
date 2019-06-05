@@ -1,0 +1,18 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: sumologic-fluentd
+  namespace: default
+  annotations:
+    flux.weave.works/automated: "false"
+    
+spec:
+  releaseName: sumologic-fluentd
+  values: 
+    sumologic:
+      collectorUrl: https://endpoint2.collection.us2.sumologic.com/receiver/v1/http/ZaVnC4dhaV3QsQa4RGvBkoPN9FdwgaC1s4HNIMWh9mNU5TkT-NYe-ZA1RVFiCKex7kQkdSzKb2m8Nny54dXh1p_KEGIy77JoIPC-yRCqGGcwFyOEv0qCcw==
+  
+  chart:
+    git: git@github.com:helm/charts
+    path: stable/sumologic-fluentd
+    ref: master
