@@ -36,7 +36,7 @@ spec:
         - name: MONGO_CONNECTION_STRING
           value: mongodb://{{include "charts.mongo.start" .}}/seagull{{include "charts.mongo.end" .}}
         - name: NODE_ENV
-          value: '{{.Values.environment}}'
+          value: '{{.Values.global.environment}}'
         - name: PORT
           value: "{{.Values.seagull.port}}"
         - name: PUBLISH_HOST
@@ -65,6 +65,6 @@ spec:
         ports:
         - containerPort: {{.Values.seagull.port}}
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.global.resources | nindent 10 }}
       restartPolicy: Always
 status: {}

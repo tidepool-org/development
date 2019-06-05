@@ -51,7 +51,7 @@ spec:
               name: highwater
               key: UCSF_WHITELIST
         - name: NODE_ENV
-          value: '{{.Values.environment}}'
+          value: '{{.Values.global.environment}}'
         - name: PORT
           value: "{{.Values.highwater.port}}"
         - name: PUBLISH_HOST
@@ -68,7 +68,7 @@ spec:
         - name: USER_API_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"}]}'
         image: "{{ .Values.highwater.image }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
         livenessProbe:
           httpGet:
             path: /status
@@ -79,6 +79,6 @@ spec:
         ports:
         - containerPort: {{.Values.highwater.port}}
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.global.resources | nindent 10 }}
       restartPolicy: Always
 status: {}

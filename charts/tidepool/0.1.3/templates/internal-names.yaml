@@ -4,7 +4,7 @@ metadata:
   name: '{{- include "charts.host.internal.tp" . -}}'
   namespace: '{{.Release.Namespace}}'
 spec:
-  externalName: {{ .Values.gateway.proxy.name -}}.{{- .Values.gateway.proxy.namespace -}}.svc.cluster.local
+  externalName: {{ .Values.global.gateway.proxy.name -}}.{{- .Values.global.gateway.proxy.namespace -}}.svc.cluster.local
   ports:
   - port: 80
   type: ExternalName

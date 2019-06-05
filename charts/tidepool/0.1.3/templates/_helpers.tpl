@@ -4,46 +4,46 @@ Expand the name of the chart.
 */}}
 
 {{- define "charts.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- default .Chart.Name .Values.global.nameOverrideide | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "charts.mongo.start" -}}
-{{- if .Values.mongo.username -}}
-{{- .Values.mongo.username -}}
-{{- if .Values.mongo.password -}}
-:{{- .Values.mongo.password -}}
+{{- if .Values.global.mongo.username -}}
+{{- .Values.global.mongo.username -}}
+{{- if .Values.global.mongo.password -}}
+:{{- .Values.global.mongo.password -}}
 {{- end -}}
 @
 {{- end -}}
-{{- .Values.mongo.host -}}:{{.Values.mongo.port}}
+{{- .Values.global.mongo.host -}}:{{.Values.global.mongo.port}}
 {{- end -}}
 
 {{- define "charts.mongo.end" -}}
-?ssl={{ .Values.mongo.tls}}
-{{- if .Values.mongo.replicaSetName -}}
-&replicaSet={{.Values.mongo.replicaSetName}}
+?ssl={{ .Values.global.mongo.tls}}
+{{- if .Values.global.mongo.replicaSetName -}}
+&replicaSet={{.Values.global.mongo.replicaSetName}}
 {{- end -}}
 {{- end -}}
 
 {{- define "charts.host.internal.tp" -}} {{.Release.Namespace}}-internal {{- end }}
 
 {{- define "charts.host.external.tp" -}}
-{{- if .Values.hostnameOverride -}}
-.Values.hostnameOverride
+{{- if .Values.global.hostnameOverride -}}
+.Values.global.hostnameOverride
 {{- else -}}
-{{ .Release.Namespace }}.{{- .Values.gateway.domain.name -}}
+{{ .Release.Namespace }}.{{- .Values.global.gateway.domain.name -}}
 {{- end -}}
 {{- end }}
 
 {{- define "charts.hosts" -}}
-{{- if .Values.singleEnvironment -}}
+{{- if .Values.global.singleEnvironment -}}
 *
 {{- else -}}
 {{- include "charts.host.external.tp" . -}}
 {{- end -}}
 {{- end -}}
 
-{{- define "charts.s3.url" -}} https://s3-{{.Values.aws.region}}.amazonaws.com {{- end }}
+{{- define "charts.s3.url" -}} https://s3-{{.Values.global.aws.region}}.amazonaws.com {{- end }}
 
 {{- define "charts.image.s3.bucket" -}}
 {{- if (.Values.image.service.unstructured.store.s3.bucket) and (ne .Values.image.service.unstructured.store.s3.bucket "") -}}
@@ -82,7 +82,7 @@ tidepool-{{ .Release.Namespace }}-data
 {{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.hydrophone.s3.bucket" .}} {{- end }}
 
 {{- define "charts.protocol" -}}
-{{ if .Values.gateway.https.enabled }}https {{- else -}} http {{- end -}} {{- end -}}
+{{ if .Values.global.gateway.https.enabled }}https {{- else -}} http {{- end -}} {{- end -}}
 
 
 {{/*
@@ -91,10 +91,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "charts.fullname" -}}
-{{- if .Values.fullnameOverride -}}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- if .Values.global.fullnameOverride -}}
+{{- .Values.global.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- $name := default .Chart.Name .Values.global.nameOverrideide -}}
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -166,7 +166,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
           value: data
         - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
-          value: '{{.Values.service.provider.dexcom.client.url}}'
+          value: '{{.Values.global.provider.dexcom.client.url}}'
         - name: TIDEPOOL_ENV
           value: local
         - name: TIDEPOOL_LOGGER_LEVEL
@@ -198,7 +198,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_SERVER_TLS
           value: "false"
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
-          value: '{{.Values.service.provider.dexcom.authorize.url}}'
+          value: '{{.Values.global.provider.dexcom.authorize.url}}'
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
           valueFrom:
             secretKeyRef:
@@ -219,21 +219,21 @@ Create environment variables used by all platform services.
               name: dexcom
               key: STATE_SALT
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
-          value: '{{.Values.service.provider.dexcom.token.url}}'
+          value: '{{.Values.global.provider.dexcom.token.url}}'
         - name: TIDEPOOL_SESSION_STORE_DATABASE
           value: user
         - name: TIDEPOOL_STORE_ADDRESSES
-          value: '{{.Values.mongo.host}}:{{.Values.mongo.port}}'
+          value: '{{.Values.global.mongo.host}}:{{.Values.global.mongo.port}}'
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
         - name: TIDEPOOL_STORE_USERNAME
-          value: '{{.Values.mongo.username}}'
+          value: '{{.Values.global.mongo.username}}'
         - name: TIDEPOOL_STORE_PASSWORD
-          value: '{{.Values.mongo.password}}'
+          value: '{{.Values.global.mongo.password}}'
         - name: TIDEPOOL_STORE_TLS
-          value: '{{.Values.mongo.tls}}'
+          value: '{{.Values.global.mongo.tls}}'
         - name: TIDEPOOL_STORE_OPT_PARAMS
-          value: '{{.Values.mongo.optParams}}'
+          value: '{{.Values.global.mongo.optParams}}'
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS
@@ -304,7 +304,7 @@ Create liveness and readiness probes for platform services.
       initContainers:
       - name: init-mongo
         image: busybox
-        command: ['sh', '-c', 'until nc -zvv {{.Values.mongo.host}} {{.Values.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -zvv {{.Values.global.mongo.host}} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
 {{- end -}} 
 {{- define "charts.init.shoreline" -}}
       initContainers:

@@ -1,40 +1,58 @@
-nameOverride: ""
-fullnameOverride: ""
-environment: production
-aws:
-  region: us-west-2
-includeSecrets: true
-namespace:
-  create: true
-hostnameOverride: "" #for production, provide the host name, otherwise will get the namespace as a prefix
-singleEnvironment: false  # set this to true to route all traffic independent of target hostname
+global:
+  aws:
+    region: us-west-2
+  environment: production
+  fullnameOverride: ""
+  hostnameOverride: "" #for production, provide the host name, otherwise will get the namespace as a prefix
+  image:
+    pullPolicy: IfNotPresent
+  includeSecrets: true
+  namespace:
+    create: true
+  nameOverride: ""
+  singleEnvironment: false  # set this to true to route all traffic independent of target hostname
 
-resources:
-  {}
-  # If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
-  #
-gateway:
-  domain:
-    name: "tidepool.org"
-  name: gloo
-  proxy:
-    name:  gateway-proxy
-    namespace: gloo-system
-  tlssecret:
-    name: tidepool-org
-    namespace: default
-  https:
+  mongo: 
     enabled: true
-  http:
-    enabled: false
+    host: 'mongodb'
+    username: ''
+    password: ''
+    port: '27017'
+    tls: 'false'
+    optParams: ''
+  provider:
+    dexcom:
+      token: { url: 'https://api.dexcom.com/v1/oauth2/token' }
+      authorize: { url: 'https://api.dexcom.com/v1/oauth2/login?prompt=login' }
+      client: { url: "https://api.dexcom.com" }
+  gateway:
+    domain:
+      name: "tidepool.org"
+    name: gloo
+    proxy:
+      name:  gateway-proxy
+      namespace: gloo-system
+    tlssecret:
+      name: tidepool-org
+      namespace: default
+    https:
+      enabled: true
+    http:
+      enabled: false
 
+  resources:
+    {}
+    # If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #  cpu: 100m
+    #  memory: 128Mi
+    # requests:
+    #  cpu: 100m
+    #  memory: 128Mi
+    #
+
+# non-Tidepool services
 ambassador:
   fullnameOverride: ambassador
   replicaCount: 1
@@ -50,8 +68,13 @@ ambassador:
       sidecar.istio.io/inject: "false"
       service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
       service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
-image:
-  pullPolicy: IfNotPresent
+
+nosqlclient:
+  image: 'mongoclient/mongoclient'
+  enabled: 'true'
+  port: '3001'
+
+# Tidepool services
 blip: 
   port: '3000'
   image: tidepool/blip:v1.17.0
@@ -79,7 +102,7 @@ hydrophone:
     fromAddress: "Tidepool <noreply@tidepool.org>"
   #bucket: ''
   host: hydrophone
-  port: '9157'
+  targetPort: '9157'
 jellyfish: 
   enabled: true
   image: tidepool/jellyfish:v0.12.3-release.2
@@ -93,18 +116,6 @@ messageapi:
   host: message-api
   port: '9119'
   window: 21
-mongo: 
-  enabled: true
-  host: 'mongodb'
-  username: ''
-  password: ''
-  port: '27017'
-  tls: 'false'
-  optParams: ''
-nosqlclient:
-  image: 'mongoclient/mongoclient'
-  enabled: 'true'
-  port: '3001'
 auth:
   image: tidepool/platform-auth:1.32.0-release.4
   host: auth
@@ -162,12 +173,6 @@ seagull:
   host: seagull
   port: '9120'
   salt: KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
-service:
-  provider:
-    dexcom:
-      token: { url: 'https://api.dexcom.com/v1/oauth2/token' }
-      authorize: { url: 'https://api.dexcom.com/v1/oauth2/login?prompt=login' }
-      client: { url: "https://api.dexcom.com" }
 shoreline:
   image: tidepool/shoreline:v0.14.2-release.1
   host: shoreline
