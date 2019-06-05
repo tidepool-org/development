@@ -38,7 +38,7 @@ spec:
         - name: MONGO_CONNECTION_STRING
           value: mongodb://{{include "charts.mongo.start" .}}/data{{include "charts.mongo.end" .}}
         - name: NODE_ENV
-          value: '{{.Values.environment}}'
+          value: '{{.Values.global.environment}}'
         - name: PORT
           value: "{{.Values.jellyfish.port}}"
         - name: PUBLISH_HOST
@@ -59,13 +59,13 @@ spec:
         - name: SERVICE_NAME
           value: jellyfish
         - name: STORAGE_TYPES
-          value: '{"aws/s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.aws.region}}", "bucket": "{{ include "charts.jellyfish.s3.bucket" .}}" }}'
+          value: '{"aws/s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.global.aws.region}}", "bucket": "{{ include "charts.jellyfish.s3.bucket" .}}" }}'
         - name: STORAGE_DEFAULT
           value: {{.Values.jellyfish.storage}}
         - name: USER_API_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "{{.Values.shoreline.host}}:{{.Values.shoreline.port}}"}]}'
         image: "{{ .Values.jellyfish.image }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
         livenessProbe:
           httpGet:
             path: /status
@@ -76,6 +76,6 @@ spec:
         ports:
         - containerPort: {{.Values.jellyfish.port}}
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.global.resources | nindent 10 }}
       restartPolicy: Always
 status: {}

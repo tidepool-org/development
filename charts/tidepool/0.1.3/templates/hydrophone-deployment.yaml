@@ -33,7 +33,7 @@ spec:
               name: server-secret
               key: secret
         - name: REGION
-          value: {{.Values.aws.region}}            
+          value: {{.Values.global.aws.region}}            
         - name: TIDEPOOL_HYDROPHONE_ENV
           value: |
             {
@@ -67,7 +67,7 @@ spec:
                 },
                 "service": {
                     "certFile": "config/cert.pem",
-                    "host": "localhost:{{.Values.hydrophone.port}}",
+                    "host": "localhost:80",
                     "keyFile": "config/key.pem",
                     "protocol": "http",
                     "service": "hydrophone"
@@ -77,17 +77,17 @@ spec:
                 }
             }
         image: "{{ .Values.hydrophone.image }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.hydrophone.port}}
+            port: {{.Values.hydrophone.targetPort}}
           initialDelaySeconds: 30
           periodSeconds: 10
         name: hydrophone
         ports:
-        - containerPort: {{.Values.hydrophone.port}}
+        - containerPort: {{.Values.hydrophone.targetPort}}
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.global.resources | nindent 10 }}
       restartPolicy: Always
 status: {}

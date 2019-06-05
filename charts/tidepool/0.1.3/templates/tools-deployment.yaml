@@ -32,6 +32,6 @@ spec:
         image: "{{ .Values.tools.image }}"
         name: tools
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.global.resources | nindent 10 }}
       restartPolicy: Always
 {{ end }}

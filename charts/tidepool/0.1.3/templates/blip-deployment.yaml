@@ -29,12 +29,12 @@ spec:
         env:
         - name: SKIP_HAKKEN
           value: "true"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
         name: blip
         ports:
         - containerPort: {{.Values.blip.port}}
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.global.resources | nindent 10 }}
       restartPolicy: Always
 
 status: {}

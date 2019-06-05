@@ -39,7 +39,7 @@ spec:
               name: server-secret
               key: session
         image: "{{ .Values.export.image }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
         livenessProbe:
           httpGet:
             path: /export/status
@@ -50,6 +50,6 @@ spec:
         ports:
         - containerPort: {{.Values.export.port}}
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.global.resources | nindent 10 }}
       restartPolicy: Always
 {{ end }}

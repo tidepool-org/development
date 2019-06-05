@@ -32,6 +32,6 @@ spec:
         image: "{{ .Values.migrations.image }}"
         name: migrations
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.global.resources | nindent 10 }}
       restartPolicy: Always
 {{ end }}

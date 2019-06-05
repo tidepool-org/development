@@ -34,5 +34,5 @@ spec:
         ports:
         - containerPort: {{.Values.notification.port}}
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.global.resources | nindent 10 }}
       restartPolicy: Always

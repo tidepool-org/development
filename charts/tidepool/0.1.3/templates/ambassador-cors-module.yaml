@@ -1,4 +1,4 @@
-{{ if (eq .Values.gateway.name "ambassador") }}
+{{ if (eq .Values.global.gateway.name "ambassador") }}
 apiVersion: getambassador.io/v1
 config:
   cors:

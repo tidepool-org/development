@@ -1,5 +1,5 @@
 # Auto-generated file by ambassador_gateway. Do not edit.
-{{ if (eq .Values.gateway.name "ambassador") }}
+{{ if (eq .Values.global.gateway.name "ambassador") }}
 --- #file: {{.Release.Namespace}}-blip.yaml
 apiVersion: getambassador.io/v1
 host: '{{.Release.Namespace}}-app.tidepool.org|{{.Release.Namespace}}-app-internal'
