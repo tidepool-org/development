@@ -9,7 +9,7 @@ spec:
   releaseName: cert-manager
   chart:
     git: git@github.com:jetstack/cert-manager
-    path: deploy
+    path: deploy/charts/cert-manager
     ref: master
   values:
     {}
