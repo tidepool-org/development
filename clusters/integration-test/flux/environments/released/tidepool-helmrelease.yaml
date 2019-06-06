@@ -52,7 +52,7 @@ spec:
     blip:
       image: tidepool/blip:v1.20.2
     export:
-      enabled: false
+      enabled: true
       image: tidepool/export:v1.3.2
     gatekeeper:
       image: tidepool/gatekeeper:v0.7.2

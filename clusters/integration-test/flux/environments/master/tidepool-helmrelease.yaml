@@ -52,7 +52,7 @@ spec:
     blip:
       image: tidepool/blip:master-1547d4a5bfcaff540544f989f2adb5ce299a6771
     export:
-      enabled: false
+      enabled: true
       image: tidepool/export:master-17c8de7344eea3d8a404e1c112c2c7f03e88321e
     gatekeeper:
       image: tidepool/gatekeeper:master-ff9239c90d432a251024247380e54123896beb03

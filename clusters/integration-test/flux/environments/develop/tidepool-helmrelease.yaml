@@ -51,7 +51,7 @@ spec:
     blip:
       image: tidepool/blip:develop-a8484947ae6a0043d156ec895076039f8a791a55
     export:
-      enabled: false
+      enabled: true
       image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
     gatekeeper:
       image: tidepool/gatekeeper:develop-9b8e58227a946eae34debbe23f7748d7e9570b79
