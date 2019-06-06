@@ -25,8 +25,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: {{.Values.hydrophone.targetPort}}
-    targetPort: {{.Values.hydrophone.targetPort}}
+    port: {{.Values.hydrophone.port}}
+    targetPort: {{.Values.hydrophone.port}}
   selector:
     app: hydrophone
     app.kubernetes.io/name: {{ include "charts.name" . }}
