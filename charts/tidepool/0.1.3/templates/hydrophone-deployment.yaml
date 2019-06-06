@@ -81,12 +81,12 @@ spec:
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.hydrophone.targetPort}}
+            port: {{.Values.hydrophone.port}}
           initialDelaySeconds: 30
           periodSeconds: 10
         name: hydrophone
         ports:
-        - containerPort: {{.Values.hydrophone.targetPort}}
+        - containerPort: {{.Values.hydrophone.port}}
         resources:
           {{- toYaml .Values.global.resources | nindent 10 }}
       restartPolicy: Always
