@@ -25,7 +25,7 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: 80
+    port: {{.Values.hydrophone.targetPort}}
     targetPort: {{.Values.hydrophone.targetPort}}
   selector:
     app: hydrophone
