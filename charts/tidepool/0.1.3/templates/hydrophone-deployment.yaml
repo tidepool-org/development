@@ -55,12 +55,13 @@ spec:
                     "tokenRefreshInterval": "1h"
                 }
             }
+        - name: PROTOCOL
+          value: {{include "charts.protocol" . }}
         - name: TIDEPOOL_HYDROPHONE_SERVICE
           value: |
             {
                 "hydrophone": {
-                    "assetUrl": "{{include "charts.hydrophone.s3.url" .}}",
-                    "webUrl": "{{- include "charts.protocol" . -}}://{{- include "charts.host.external.tp" . -}}"
+                    "assetUrl": "{{include "charts.hydrophone.s3.url" .}}"
                 },
                 "mongo": {
                     "connectionString": "mongodb://{{include "charts.mongo.start" .}}/confirm{{include "charts.mongo.end" .}}"
