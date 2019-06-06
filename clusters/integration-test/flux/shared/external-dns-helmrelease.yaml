@@ -7,7 +7,7 @@ metadata:
 spec:
   releaseName: external-dns
   chart:
-    git: git@github.com:tidepool-org/development
-    path: charts/external-dns
-    ref: k8s
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    name: external-dns
+    version: 1.7.9
   values: {}
