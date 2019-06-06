@@ -25,7 +25,7 @@ Expand the name of the chart.
 {{- end -}}
 {{- end -}}
 
-{{- define "charts.host.internal.tp" -}} {{.Release.Namespace}}-internal {{- end }}
+{{- define "charts.host.internal.tp" -}} internal {{- end }}
 
 {{- define "charts.host.external.tp" -}}
 {{- if .Values.global.hostnameOverride -}}
@@ -118,14 +118,14 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://{{.Values.auth.host}}:{{.Values.auth.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: http://{{include "charts.host.internal.tp" .}}
+          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
               name: server-secret
               key: secret
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
-          value: {{include "charts.host.internal.tp" .}}
+          value: {{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
         - name: TIDEPOOL_AUTH_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
@@ -174,7 +174,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_MESSAGE_STORE_DATABASE
           value: messages
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
-          value: http://{{include "charts.host.internal.tp" .}}
+          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
         - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
           value: http://{{.Values.notification.host}}:{{.Values.notification.port}}
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
@@ -210,7 +210,7 @@ Create environment variables used by all platform services.
               name: dexcom
               key: CLIENT_SECRET
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
-          value: http://{{include "charts.host.internal.tp" .}}/v1/oauth/dexcom/redirect
+          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}/v1/oauth/dexcom/redirect
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
           value: offline_access
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
@@ -250,7 +250,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
           value: :{{.Values.task.port}}
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
-          value: http://{{include "charts.host.internal.tp" .}}
+          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
         - name: TIDEPOOL_USER_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
