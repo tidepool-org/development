@@ -67,7 +67,7 @@ spec:
                 },
                 "service": {
                     "certFile": "config/cert.pem",
-                    "host": "localhost:80",
+                    "host": "localhost:{{.Values.hydrophone.port}}",
                     "keyFile": "config/key.pem",
                     "protocol": "http",
                     "service": "hydrophone"
