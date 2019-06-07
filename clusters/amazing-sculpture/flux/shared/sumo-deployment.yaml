@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: sumo-graphite
+  name: sumo-graphite
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: sumo-graphite
+    spec:
+      volumes:
+      - name: sumo-sources
+        configMap:
+          name: sumo-sources
+          items:
+          - key: sources.json
+            path: sources.json
+      containers:
+      - name: sumo-graphite
+        image: sumologic/collector:latest
+        ports:
+        - containerPort: 2003
+        volumeMounts:
+        - mountPath: /sumo
+          name: sumo-sources
+        env:
+        - name: SUMO_ACCESS_ID
+          value: collector
+        - name: SUMO_ACCESS_KEY
+          value: su08b6gYybXzgT
+        - name: SUMO_SOURCES_JSON
+          value: /sumo/sources.json
