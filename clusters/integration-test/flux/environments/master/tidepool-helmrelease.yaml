@@ -50,7 +50,7 @@ spec:
     nosqlclient:
       enabled: false
     blip:
-      image: tidepool/blip:master-29e7e1a536ec39a13a1733329b567cc93965cb83
+      image: tidepool/blip:master-0205c75644e6f548d6314694d0c12010f4117467
     export:
       enabled: true
       image: tidepool/export:master-17c8de7344eea3d8a404e1c112c2c7f03e88321e
