@@ -11,7 +11,7 @@ then
 fi
 
 echo "$templates" | mappings | gloo_manifests http | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if (and (eq .Values.gateway.name \"gloo\") (.Values.gateway.http.enabled)) }}" "{{ end }}" > $1/templates/gloo-http.yaml
+{{ if (and (eq .Values.global.gateway.name \"gloo\") (.Values.global.gateway.http.enabled)) }}" "{{ end }}" > $1/templates/gloo-http.yaml
 
 echo "$templates" | mappings | gloo_manifests https | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if (and (eq .Values.gateway.name \"gloo\") (.Values.gateway.https.enabled)) }}" "{{ end }}" > $1/templates/gloo-https.yaml
+{{ if (and (eq .Values.global.gateway.name \"gloo\") (.Values.global.gateway.https.enabled)) }}" "{{ end }}" > $1/templates/gloo-https.yaml
