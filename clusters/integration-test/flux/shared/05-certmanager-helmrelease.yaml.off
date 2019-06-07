@@ -8,8 +8,8 @@ metadata:
 spec:
   releaseName: cert-manager
   chart:
-    repository: https://kubernetes-charts.storage.googleapis.com/
+    repository: https://charts.jetstack.io
     name: cert-manager
-    version: v0.6.7
+    version: v0.8.0
   values:
     {}
