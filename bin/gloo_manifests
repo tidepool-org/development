@@ -359,6 +359,7 @@ class RoutesBuilder:
         if ":" in s:
             (svc_with_namespace,port) = s.split(":")
         else:
+            port = 80
             svc_with_namespace = s
         svc = svc_with_namespace.replace(".default","")
         return svc, int(port)
