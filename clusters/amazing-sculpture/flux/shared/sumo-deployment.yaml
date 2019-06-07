@@ -28,8 +28,8 @@ spec:
           name: sumo-sources
         env:
         - name: SUMO_ACCESS_ID
-          value: collector
+          value: suYopGNZL9Lc2A
         - name: SUMO_ACCESS_KEY
-          value: su08b6gYybXzgT
+          value: 6lvaJoNoBGy4NHODuV2x0QC4ohzajAoe7hymVLrOPOR538HSMfZ8A8GU3oWiUD6j
         - name: SUMO_SOURCES_JSON
           value: /sumo/sources.json
