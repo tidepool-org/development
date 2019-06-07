@@ -13,7 +13,7 @@ metadata:
       method_regex: true
       rewrite: "/"
       path_redirect: "false"
-      service: hydrophone.{{ .Release.Namespace }}
+      service: hydrophone.{{ .Release.Namespace }}:{{ .Values.hydrophone.port }}
   labels:
     app: hydrophone
     helm.sh/chart: {{ include "charts.chart" . }}

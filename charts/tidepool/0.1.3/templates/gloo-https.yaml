@@ -1,5 +1,5 @@
 # Auto-generated file by gloo_gateway. Do not edit.
-{{ if (and (eq .Values.global.gateway.name "gloo") (.Values.global.gateway.https.enabled)) }}
+{{ if (and (eq .Values.gateway.name "gloo") (.Values.gateway.https.enabled)) }}
 --- #file: gloo-auth-9222-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -70,8 +70,8 @@ spec:
   displayName: '{{.Release.Namespace}}-external'
   sslConfig:
     secretRef:
-      name: '{{.Values.global.gateway.tlssecret.name}}'
-      namespace: '{{.Values.global.gateway.tlssecret.namespace}}'
+      name: '{{.Values.gateway.tlssecret.name}}'
+      namespace: '{{.Values.gateway.tlssecret.namespace}}'
     sniDomains:
     - '{{include "charts.host.external.tp" .}}'
   virtualHost:
@@ -158,6 +158,15 @@ spec:
         methods:
         - GET
         prefix: /verification-with-password
+      routeAction:
+        single:
+          upstream:
+            name: '{{.Release.Namespace}}-blip-3000'
+            namespace: '{{.Release.Namespace}}'
+    - matcher:
+        methods:
+        - POST
+        prefix: /event/csp-report/violation
       routeAction:
         single:
           upstream:
@@ -787,6 +796,15 @@ spec:
         methods:
         - GET
         prefix: /verification-with-password
+      routeAction:
+        single:
+          upstream:
+            name: '{{.Release.Namespace}}-blip-3000'
+            namespace: '{{.Release.Namespace}}'
+    - matcher:
+        methods:
+        - POST
+        prefix: /event/csp-report/violation
       routeAction:
         single:
           upstream:
