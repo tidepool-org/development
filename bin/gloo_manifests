@@ -21,16 +21,16 @@ HOSTS_SERVED = '{{include "charts.hosts" .}}'
 EXTERNAL_HOST_NAME = '{{include "charts.host.external.tp" .}}'
 
 """The name of the TLS secret containing the TLS cert"""
-TLS_SECRET_NAME = '{{.Values.gateway.tlssecret.name}}'
+TLS_SECRET_NAME = '{{.Values.global.gateway.tlssecret.name}}'
 
 """The namespace of the TLS secret containing the TLS cert"""
-TLS_SECRET_NAMESPACE = '{{.Values.gateway.tlssecret.namespace}}'
+TLS_SECRET_NAMESPACE = '{{.Values.global.gateway.tlssecret.namespace}}'
 
 """The name of the Gateway Proxy Service"""
-GATEWAY_PROXY_NAME = '{{.Values.gateway.proxy.name}}'
+GATEWAY_PROXY_NAME = '{{.Values.global.gateway.proxy.name}}'
 
 """The namespace of the Gateway Proxy Service"""
-GATEWAY_PROXY_NAMESPACE = '{{.Values.gateway.proxy.namespace}}'
+GATEWAY_PROXY_NAMESPACE = '{{.Values.global.gateway.proxy.namespace}}'
 
 """The environment being instantiated"""
 ENVIRONMENT = '{{.Release.Namespace}}'
