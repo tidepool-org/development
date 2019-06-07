@@ -118,6 +118,16 @@ metadata:
       kind:  Mapping
       host: tp
       name: {{ .Release.Namespace -}}-blip
+      prefix: /event/csp-report/violation
+      rewrite: ""
+      method: "POST"
+      method_regex: false
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.port}}
+      ---
+      apiVersion: tidepool/v1alpha
+      kind:  Mapping
+      host: tp
+      name: {{ .Release.Namespace -}}-blip
       prefix: "/"
       rewrite: ""
       method: "GET"
