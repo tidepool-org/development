@@ -70,8 +70,8 @@ spec:
   displayName: '{{.Release.Namespace}}-external'
   sslConfig:
     secretRef:
-      name: '{{.Values.gateway.tlssecret.name}}'
-      namespace: '{{.Values.gateway.tlssecret.namespace}}'
+      name: '{{.Values.global.gateway.tlssecret.name}}'
+      namespace: '{{.Values.global.gateway.tlssecret.namespace}}'
     sniDomains:
     - '{{include "charts.host.external.tp" .}}'
   virtualHost:
