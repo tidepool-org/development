@@ -5,3 +5,4 @@ mongo:
   tls: 'false'
   volume: mongo2
   persistent: true
+  seed: false
