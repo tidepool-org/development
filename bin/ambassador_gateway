@@ -9,4 +9,4 @@ then
 fi
 
 echo "$templates" | mappings | ambassador_manifests | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if (eq .Values.gateway.name \"ambassador\") }}" "{{ end }}" >$1/templates/ambassador-routes.yaml
+{{ if (eq .Values.global.gateway.name \"ambassador\") }}" "{{ end }}" >$1/templates/ambassador-routes.yaml

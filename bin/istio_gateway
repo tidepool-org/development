@@ -9,8 +9,8 @@ then
 fi
 
 echo "$(templates)" | mappings | istio_manifests http  | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if and (eq .Values.gateway.name \"istio\") (.Values.gateway.http.enabled) }}" "{{ end }}"  > $1/templates/istio-http.yaml
+{{ if and (eq .Values.global.gateway.name \"istio\") (.Values.global.gateway.http.enabled) }}" "{{ end }}"  > $1/templates/istio-http.yaml
 
 echo "$(templates)" | mappings | istio_manifests https | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if and (eq .Values.gateway.name \"istio\") (.Values.gateway.https.enabled) }}" "{{ end }}" > $1/templates/istio-https.yaml
+{{ if and (eq .Values.global.gateway.name \"istio\") (.Values.global.gateway.https.enabled) }}" "{{ end }}" > $1/templates/istio-https.yaml
 
