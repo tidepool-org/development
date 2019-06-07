@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/bash 
 # reports the current URL/branch/path that weave is tracking
 #
-weaveargs=$(kubectl get pods -o json | jq '.items[].spec.containers | .[] | select(.name=="flux") | .args')
+weaveargs=$(kubectl get pods -n default -o json | jq '.items[].spec.containers | .[] | select(.name=="flux") | .args')
 echo $weaveargs
 paths=$(echo $weaveargs | jq '.[] | select(startswith("--git-path"))' | sed -e "s/--git-path=//g" -e "s/\"//g")
 branch=$(echo $weaveargs | jq '.[] | select(startswith("--git-branch"))' | sed -e "s/--git-branch=//" -e "s/\"//g")
