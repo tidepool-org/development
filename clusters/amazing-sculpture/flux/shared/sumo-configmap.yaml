@@ -8,7 +8,7 @@ data:
       "api.version": "v1",
       "sources": [
         {
-          "name": "Ankit Test",
+          "name": "sumo eks logging",
           "category": "kubernetes/metrics",
           "automaticDateParsing": true,
           "contentType": "Graphite",
