@@ -35,7 +35,7 @@ spec:
         - image: tidepool/mongoseed:init
           name: seed-data
           command: [ "/bin/sh" ]
-          args: [ "-c", "mkdir /input; cp -r /dump/* /input" ]
+          args: [ "-c", "mkdir -p /input; cp -r /dump/* /input/" ]
           volumeMounts:
           - mountPath: /input
             name: dump
@@ -53,7 +53,7 @@ spec:
         - mountPath: /dump
           name: dump
         command: [ "/bin/sh" ]
-        args: [ "-c", 'while ! mongo --eval "db.adminCommand(\"ping\")"; do sleep 3; done; mongorestore -h localhost /dump; touch /dump/ready; while mongo --eval "db.adminCommand(\"ping\")"; do sleep 60; done' ]
+        args: [ "-c", 'ls -l /dump; while ! mongo --eval "db.adminCommand(\"ping\")"; do sleep 3; done; mongorestore -h localhost /dump; touch /dump/ready; while mongo --eval "db.adminCommand(\"ping\")"; do sleep 60; done' ]
         readinessProbe:
           exec:
             command:
