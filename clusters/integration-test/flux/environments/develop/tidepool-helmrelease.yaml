@@ -21,7 +21,7 @@ metadata:
     flux.weave.works/tag.migrations: glob:develop-*
     flux.weave.works/tag.notification: glob:develop-*
     flux.weave.works/tag.seagull: glob:develop-*
-    flux.weave.works/tag.shoreline: glob:develop-*
+    flux.weave.works/tag.shoreline: glob:debug-*
     flux.weave.works/tag.task: glob:develop-*
     flux.weave.works/tag.tidewhisperer: glob:develop-*
     flux.weave.works/tag.tools: glob:develop-*
