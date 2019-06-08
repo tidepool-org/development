@@ -34,9 +34,10 @@ spec:
       initContainer: # provide the data volume
         - image: tidepool/mongoseed:init
           name: seed-data
-          command: [ "date" ]
+          command: [ "/bin/sh" ]
+          args; [ "-c", "mkdir /input; cp -r /dump/* /input" ]
           volumeMounts:
-          - mountPath: /dump
+          - mountPath: /input
             name: dump
 {{ end }}
       containers: 
