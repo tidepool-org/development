@@ -35,7 +35,7 @@ spec:
         - image: tidepool/mongoseed:init
           name: seed-data
           command: [ "/bin/sh" ]
-          args; [ "-c", "mkdir /input; cp -r /dump/* /input" ]
+          args: [ "-c", "mkdir /input; cp -r /dump/* /input" ]
           volumeMounts:
           - mountPath: /input
             name: dump
