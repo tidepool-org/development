@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+epiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
@@ -52,7 +52,7 @@ spec:
         - mountPath: /dump
           name: dump
         command: [ "/bin/sh" ]
-        args: [ "-c", 'while [ true ]; do mongo --eval "db.adminCommand(\"ping\")"; if [ $? -eq 0 ]; then break; else sleep 3; fi; done; mongorestore -h localhost /dump; touch /dump/ready' ]
+        args: [ "-c", 'while ! mongo --eval "db.adminCommand(\"ping\")"; do sleep 3; done; mongorestore -h localhost /dump; touch /dump/ready' ]
         readinessProbe:
           exec:
             command:
