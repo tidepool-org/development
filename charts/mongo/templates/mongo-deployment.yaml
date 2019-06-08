@@ -31,11 +31,17 @@ spec:
       volumes:
       - name: dump
         emptyDir: {}
+{{ if .Values.mongo.persistent }}
+      - name: '{{.Values.mongo.volume}}'
+        persistentVolumeClaim:
+          claimName: {{.Values.mongo.volume}}
+{{ end }}
       initContainer: # provide the data volume
         - image: tidepool/mongoseed:init
           name: seed-data
           command: [ "/bin/sh" ]
-          args: [ "-c", "mkdir -p /input; cp -r /dump/* /input/" ]
+          args: [ "-c", "mkdir -p /input; cp -r /dump/* /input" ]
+          imagePullPolicy: Always
           volumeMounts:
           - mountPath: /input
             name: dump
@@ -68,9 +74,3 @@ spec:
           name: {{.Values.mongo.volume}}
 {{ end }}
       restartPolicy: Always
-{{ if .Values.mongo.persistent }}
-      volumes:
-      - name: '{{.Values.mongo.volume}}'
-        persistentVolumeClaim:
-          claimName: {{.Values.mongo.volume}}
-{{ end }}
