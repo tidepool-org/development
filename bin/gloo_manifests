@@ -6,7 +6,7 @@ import os
 import re
 import subprocess
 import sys
-import click
+
 import yaml
 
 # Create Helm template that may be used to instantiate a Gloo API Gateway to serve 
@@ -434,16 +434,13 @@ class ManifestBuilder:
        If the external traffic is HTTPS, then we create two virtual services. 
     """
 
-    def __init__(self, protocol, mappings):
+    def __init__(self, mappings):
         self.manifest_dict = dict()
 
         all_routes = RoutesBuilder(mappings).get()
         for base,ordered in all_routes.items():
-            if protocol == "http":
-                self.add(VirtualServiceBuilder(ordered, INTERNAL_VS_NAME, CORS_POLICY, "http", [ HOSTS_SERVED, INTERNAL_VS_NAME + "." + ENVIRONMENT]).get())
-            else:
-                self.add(VirtualServiceBuilder(ordered, INTERNAL_VS_NAME, None, "http", [INTERNAL_VS_NAME + "." + ENVIRONMENT]).get())
-                self.add(VirtualServiceBuilder(ordered, EXTERNAL_VS_NAME, CORS_POLICY, "https", [HOSTS_SERVED]).get())
+            self.add(VirtualServiceBuilder(ordered, INTERNAL_VS_NAME, CORS_POLICY, "http", [ HOSTS_SERVED, INTERNAL_VS_NAME + "." + ENVIRONMENT]).get())
+            self.add(VirtualServiceBuilder(ordered, EXTERNAL_VS_NAME, CORS_POLICY, "https", [HOSTS_SERVED]).get())
             #builder.add(ExternalNameServiceBuilder().get())
         for ref in RoutesBuilder.refs(mappings):
             self.add(UpstreamBuilder(ref).get())
@@ -460,12 +457,9 @@ class ManifestBuilder:
     def write(self):
         print(yaml.dump(self.manifest_dict, explicit_start = True, default_flow_style=False))
 
-@click.command()
-@click.argument('protocol')
-def main(protocol):
+def main():
     """Generate the Gloo API Gateway for the given protocol, either "http" or "https" from Ambassador mappings."""
-    ManifestBuilder(protocol, yaml.safe_load(sys.stdin)).write()
+    ManifestBuilder(yaml.safe_load(sys.stdin)).write()
 
 if __name__ == "__main__":
    main()
-
