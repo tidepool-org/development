@@ -7,7 +7,7 @@ metadata:
   annotations:
     flux.weave.works/automated: "true"
     flux.weave.works/tag.auth: glob:develop-*
-    flux.weave.works/tag.blip: glob:develop-*
+    flux.weave.works/tag.blip: glob:inttest-*
     flux.weave.works/tag.blob: glob:develop-*
     flux.weave.works/tag.data: glob:develop-*
     flux.weave.works/tag.export: glob:develop-*
