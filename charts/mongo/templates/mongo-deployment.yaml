@@ -1,4 +1,4 @@
-epiVersion: extensions/v1beta1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
@@ -51,8 +51,6 @@ spec:
         volumeMounts:
         - mountPath: /dump
           name: dump
-        command: [ "/bin/sh" ]
-        args: [ "-c", 'while ! mongo --eval "db.adminCommand(\"ping\")"; do sleep 3; done; mongorestore -h localhost /dump; touch /dump/ready' ]
         readinessProbe:
           exec:
             command:
