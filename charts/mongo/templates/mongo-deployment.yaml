@@ -37,14 +37,14 @@ spec:
           claimName: {{.Values.mongo.volume}}
 {{ end }}
       initContainer: # provide the data volume
-        - image: tidepool/mongoseed:init
-          name: seed-data
-          command: [ "/bin/sh" ]
-          args: [ "-c", "mkdir -p /input; cp -r /dump/* /input" ]
-          imagePullPolicy: Always
-          volumeMounts:
-          - mountPath: /input
-            name: dump
+      - image: tidepool/mongoseed:init
+        name: seed-data
+        command: [ "/bin/sh" ]
+        args: [ "-c", "mkdir -p /input; cp -r /dump/* /input" ]
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /input
+          name: dump
 {{ end }}
       containers: 
       - image: "{{ .Values.mongo.image }}"
