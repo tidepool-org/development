@@ -52,7 +52,7 @@ spec:
         - mountPath: /dump
           name: dump
         command: [ "/bin/sh" ]
-        args: [ "-c", 'while ! mongo --eval "db.adminCommand(\"ping\")"; do sleep 3; done; mongorestore -h localhost /dump; touch /dump/ready; while mongo --eval "db.adminCommand(\"ping\"); do sleep 60; done' ]
+        args: [ "-c", 'while ! mongo --eval "db.adminCommand(\"ping\")"; do sleep 3; done; mongorestore -h localhost /dump; touch /dump/ready; while mongo --eval "db.adminCommand(\"ping\")"; do sleep 60; done' ]
         readinessProbe:
           exec:
             command:
