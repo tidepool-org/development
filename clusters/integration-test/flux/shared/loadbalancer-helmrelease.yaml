@@ -3,7 +3,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: loadbalancer
-  namespace: default
+  namespace: gloo-system
 spec:
   releaseName: loadbalancer
   chart:
@@ -12,6 +12,7 @@ spec:
     ref: k8s
   values:
     gateway:
+      name: gloo
       http:
         enabled: true
       https:
