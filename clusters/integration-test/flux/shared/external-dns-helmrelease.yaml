@@ -13,7 +13,9 @@ spec:
   values:
     domainfilter: tidepool.org
     provider: aws
-    image: registry.opensource.zalan.do/teapot/external-dns
+    image:
+      name: registry.opensource.zalan.do/teapot/external-dns
+      pullSecrets:{}
     tag: latest
     awszonetype: public 
     ownerid: external-dns 
