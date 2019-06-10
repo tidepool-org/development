@@ -47,8 +47,8 @@ spec:
             {
                 "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.global.ports.gatekeeper}}"]}},
                 "hakken": {
-                  "host": "hakken:{{.Values.hakken.port}}",
-                  "skipHakken": {{.Values.hakken.skip}}
+                  "host": "hakken",
+                  "skipHakken": true
                 },
                 "highwater": {
                     "metricsSource": "shoreline",

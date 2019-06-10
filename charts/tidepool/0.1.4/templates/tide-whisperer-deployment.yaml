@@ -46,8 +46,8 @@ spec:
                 },
                 "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.global.ports.gatekeeper}}"]}},
                 "hakken": {
-                  "host": "hakken:{{.Values.hakken.port}}",
-                  "skipHakken": {{.Values.hakken.skip}}
+                  "host": "hakken",
+                  "skipHakken": true
                   },
                 "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.global.ports.seagull}}"]}},
                 "shoreline": {
