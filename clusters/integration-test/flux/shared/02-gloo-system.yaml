@@ -40,7 +40,7 @@ spec:
         stats: true
 
     discovery:
-      enabled: false
+      enabled: true
       deployment:
         image:
           repository: quay.io/solo-io/discovery
