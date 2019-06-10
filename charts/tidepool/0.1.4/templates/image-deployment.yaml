@@ -29,7 +29,7 @@ spec:
       - env:
         {{ include "charts.platform.env" .}}
         image: "{{ .Values.image.image }}"
-        {{ template "charts.platform.probes" .Values.image }}
+        {{ template "charts.platform.probes" .Values.global.ports.image }}
         name: image
         ports:
         - containerPort: {{.Values.global.ports.image}}

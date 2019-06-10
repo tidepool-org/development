@@ -29,7 +29,7 @@ spec:
       - env:
         {{ include "charts.platform.env" .}}
         image: "{{ .Values.notification.image }}"
-        {{ template "charts.platform.probes" .Values.notification}}
+        {{ template "charts.platform.probes" .Values.global.ports.notification}}
         name: notification
         ports:
         - containerPort: {{.Values.global.ports.notification}}
