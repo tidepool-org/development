@@ -2,7 +2,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: gloo
-  namespace: default
+  namespace: gloo-system
   annotations:
     flux.weave.works/automated: "false"
 spec:
