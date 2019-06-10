@@ -32,7 +32,7 @@ spec:
         {{ template "charts.platform.probes" .Values.blob}}
         name: blob
         ports:
-        - containerPort: {{.Values.blob.port}}
+        - containerPort: {{.Values.globals.port.blob}}
         resources:
           {{- toYaml .Values.global.resources | nindent 10 }}
       restartPolicy: Always
