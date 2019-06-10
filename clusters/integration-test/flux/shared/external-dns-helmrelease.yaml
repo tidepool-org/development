@@ -21,3 +21,5 @@ spec:
     ownerid: external-dns 
     rbac:
       create: true
+    logLevel: debug
+
