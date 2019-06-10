@@ -17,3 +17,5 @@ spec:
     tag: latest
     awszonetype: public 
     ownerid: external-dns 
+    rbac:
+      create: true
