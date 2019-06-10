@@ -28,7 +28,7 @@ spec:
       containers:
       - env:
         - name: DISCOVERY_HOST
-          value: 'hakken:{{.Values.hakken.port}}'
+          value: 'hakken'
         - name: GATEKEEPER_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.global.ports.gatekeeper}}"}]}'
         - name: METRICS_SERVICE

@@ -101,8 +101,6 @@ export:
   enabled: true
 gatekeeper: 
   image: tidepool/gatekeeper:v0.7.2
-hakken: 
-  skip: true
 highwater: 
   image: tidepool/highwater:v0.3.5
   salt: gf78fSEI7tOQQP9xfXMO9HfRyMnW4Sx88Q
