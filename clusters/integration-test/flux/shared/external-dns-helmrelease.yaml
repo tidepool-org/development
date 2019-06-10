@@ -22,4 +22,7 @@ spec:
     rbac:
       create: true
     logLevel: debug
+    aws:
+      region: us-west-2
+    txtOwnerId: default
 
