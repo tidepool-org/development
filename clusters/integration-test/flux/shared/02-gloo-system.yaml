@@ -13,11 +13,11 @@ spec:
     version: 0.13.30
   values:
     namespace:
-      create: true
+      create: false
     rbac:
       create: true
     crds:
-      create: true
+      create: false
     
     settings:
       # if this is set to false, default settings will be created by pods upon boot
