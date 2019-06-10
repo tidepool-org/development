@@ -15,7 +15,7 @@ spec:
     provider: aws
     image:
       name: registry.opensource.zalan.do/teapot/external-dns
-      pullSecrets:{}
+      pullSecrets: {}
     tag: latest
     awszonetype: public 
     ownerid: external-dns 
