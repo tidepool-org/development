@@ -54,7 +54,7 @@ spec:
     highwater:
       image: tidepool/highwater:develop-3f0838c29e726230b616638d97f593ba07607bab
     hydrophone:
-      image: tidepool/hydrophone:develop-49b9831c0b7ec705fb11d45f80682d821049e69f
+      image: tidepool/hydrophone:develop-a40e55fb70f7cf2a2848859f3b0fff59fd40177b
       ses:
         fromAddress: "Tidepool <noreply@tidepool.org>"
     jellyfish:
