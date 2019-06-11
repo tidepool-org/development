@@ -13,52 +13,59 @@
 # 5) captures the test results and commits them to the repo; and,
 # 6) returns an exit status code of 1 for test failure and 0 for test success.
 
+# -- INPUT ARGUMENTS with default values ---
+
 # The name of the service to be tested, e.g hydrophone, blip, auth, image.
 SERVICE=${1:-hydrophone}
 
 # The tag of the image to be tested, e.g. "develop-657ba6265ad38ce7c61be77b5642e99c0ede6945"
 TAG=${2:-develop-657ba6265ad38ce7c61be77b5642e99c0ede6945}
 
-# The base environment for the tests.  This determines which versions of the OTHER services are to be used in the test.
-BASE_ENVIRONMENT=${3:-develop} # other options are "master", "released"
+# The ID of the GhostInspector suite to run
+GHOST_SUITE_ID=${3:-5cf5ba3f9ffa2f2438ed2e0f}
+
+# The subdirectory of the ${CONFIGPATH} that contains the configuration of the dependencies of the service to test.
+BASE_ENVIRONMENT=${4:-develop}
 
 # The protocol to test
-PROTOCOL=${4:-http}
+PROTOCOL=${5:-http}
 
 # The Git config repo.
-CONFIGREPO=${5:-git@github.com:tidepool-org/dev-ops}
+CONFIGREPO=${6:-git@github.com:tidepool-org/dev-ops}
 
-# The path within the config repo to the environments
-CONFIGPATH=${6:-clusters/integration-test/flux/environments}
+# The path within the config repo to all the Tidepool environment configurations maintained by the cluster.
+CONFIGPATH=${7:-clusters/integration-test/flux/environments}
 
-# Generate a unique suffix for the environment name
+# ------------------------------
+
+# A unique suffix that can be used in a file name and a url component
 SUFFIX=$(date | md5 | head -c8)
 
 # The current date in a format that can be used in a file name and a url component
 DATE=$(date +%F)
 
-# Compose the emphemeral environment name that can be used in a file name and a url component
+# The subdirectory of the ${CONFIGPATH} to store the config for the ephemeral environment.
+EPHEMERAL_DIR=emphemeral/${DATE}/${SERVICE}-${SUFFIX}
+
+# The Kubernetes namespace of the emphemeral enviroment.  Must be usable as a file name or url component.
 ENVIRONMENT=${DATE}-${SERVICE}-${SUFFIX}
 
 # The URL at which the test environment can be reached.
 CLUSTER_URL=${PROTOCOL}://${ENVIRONMENT}.integration-test.tidepool.org
 
-# The directory that the script started in
-CURDIR=$(pwd)
-
-# Temporary directory to perform work
+# Temporary directory to perform work. This cannot be in /tmp when using this with Docker.
 TMPDIR=$(mktemp -d "./zombie.XXXXXXXXX")
 
-# The ID of the ghost inspector suite to run
-GHOST_SUITE_ID=5cf5ba3f9ffa2f2438ed2e0f
+# Clean up the temporary directory on exit
+trap -- "rm -rf ${TMPDIR}" EXIT
 
-# The Tidpool API key for Ghost Inspector
+# The Tidpool API key for GhostInspector
 GHOST_API_KEY=1d903bbbe266b0b560b80a5dff6659cfdf8aec8f
 
 # The URL of the test runner
 TESTURL="https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=${CLUSTER_URL}"
 
-# The file in which to store the test results
+# The filename in which to store the test results
 RESULTFILE=ghostinspector.json
 
 # start services from within top of CONFIG rep
@@ -67,10 +74,9 @@ function start_services()
     cd $TMPDIR
     git clone ${CONFIGREPO}
     cd $(echo -n ${CONFIGREPO} | sed -e "s#.*/##")/${CONFIGPATH}
-    subdir=ephemeral/${DATE}/${SERVICE}-${SUFFIX}
-    mkdir -p ${subdir}
-    cp -r ${BASE_ENVIRONMENT}/* ${subdir}/ 
-    cd ${subdir}
+    mkdir -p ${EPHEMERAL_DIR}
+    cp -r ${BASE_ENVIRONMENT}/* ${EPHEMERAL_DIR}/ 
+    cd ${EPHEMERAL_DIR}
 
     YQ="docker run -v ${PWD}:/workdir mikefarah/yq yq"
     ${YQ} w -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/automated] false
@@ -78,6 +84,15 @@ function start_services()
     ${YQ} w -i tidepool-helmrelease.yaml spec.releaseName tidepool-${ENVIRONMENT}
     ${YQ} d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
     ${YQ} w -i mongodb-helmrelease.yaml spec.releaseName mongo-${ENVIRONMENT}
+
+    if [ "$PROTOCOL" == "http" ]
+    then
+        ${YQ} w -i tidepool-helmrelease.yaml spec.values.global.gateway.http.enabled true
+        ${YQ} w -i tidepool-helmrelease.yaml spec.values.global.gateway.https.enabled false
+    else
+        ${YQ} w -i tidepool-helmrelease.yaml spec.values.global.gateway.http.enabled false
+        ${YQ} w -i tidepool-helmrelease.yaml spec.values.global.gateway.https.enabled true
+    fi
 
     # Update namespace
     for file in $(find . -name \*.yaml -print)
@@ -101,6 +116,15 @@ function start_services()
     sleep 300
 }
 
+# run integration tests, return 0 iff tests succeed
+function run_tests()
+{
+    curl ${TESTURL} | python3 -m json.tool > ${RESULTFILE}
+    cat ${RESULTFILE}
+    grep -c '"passing":false' ${RESULTFILE}
+    return $?
+}
+
 # Stop and free cluster resources
 function stop_services()
 {
@@ -114,25 +138,8 @@ function stop_services()
     git push
 }
 
-# run integration tests, return 0 iff tests succeed
-function run_tests()
-{
-    curl ${TESTURL} | python3 -m json.tool > ${RESULTFILE}
-    cat ${RESULTFILE}
-    grep -c '"passing":false' ${RESULTFILE}
-    return $?
-}
-
-#clean up local file system
-function cleanup()
-{
-    cd $CURDIR
-    rm -rf $TMPDIR
-}
-
 start_services
 run_tests
 result=$?
 stop_services
-cleanup
 exit $result
