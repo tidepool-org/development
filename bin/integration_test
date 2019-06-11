@@ -45,7 +45,7 @@ SUFFIX=$(date | md5 | head -c8)
 DATE=$(date +%F)
 
 # The subdirectory of the ${CONFIGPATH} to store the config for the ephemeral environment.
-EPHEMERAL_DIR=emphemeral/${DATE}/${SERVICE}-${SUFFIX}
+EPHEMERAL_DIR=ephemeral/${DATE}/${SERVICE}-${SUFFIX}
 
 # The Kubernetes namespace of the emphemeral enviroment.  Must be usable as a file name or url component.
 ENVIRONMENT=${DATE}-${SERVICE}-${SUFFIX}
