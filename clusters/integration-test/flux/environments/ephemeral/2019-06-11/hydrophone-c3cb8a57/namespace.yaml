@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: 2019-06-11-hydrophone-c3cb8a57
+  labels:
+    istio-injection: disabled
+    linkerd.io/inject: enabled
