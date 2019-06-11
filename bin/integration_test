@@ -1,13 +1,13 @@
 #!/bin/bash -xv
-# This script is used to run integration tests of a new image of a service with an existing Kubernetes cluster.
+# This script is used to run integration tests of a new image of a service within an existing Kubernetes cluster.
 #
 # Pre-requisites:
 # 1) Set up a wildcard domain in Route53 for all *.integration-test.tidepool.org -> integration test K8s cluster
 # 2) In the K8s cluster, install helm and weave flux. This will install the (unconfigured) API gateway.
 
 # This script
-# 1) creates a declarative description of the test settings in the `dev-ops` repo;
-# 2) spins up a new "environment" inside an existing Kubernetes cluster (the "integration-test" cluster);
+# 1) creates a declarative description of the test settings in the config repo;
+# 2) spins up a new "environment" inside an existing Kubernetes cluster;
 # 3) runs the integration test using Ghost Inspector;
 # 4) frees the resources used in Kubernetes to run the test;
 # 5) captures the test results and commits them to the repo; and,
@@ -19,68 +19,84 @@ SERVICE=${1:-hydrophone}
 # The tag of the image to be tested, e.g. "develop-657ba6265ad38ce7c61be77b5642e99c0ede6945"
 TAG=${2:-develop-657ba6265ad38ce7c61be77b5642e99c0ede6945}
 
-# The name of the cluster as represented in the Git repo.
-CLUSTER_GIT_NAME=${3:-integration-test}
-
 # The base environment for the tests.  This determines which versions of the OTHER services are to be used in the test.
-BASE_ENVIRONMENT=${4:-develop} # other options are "master", "released"
+BASE_ENVIRONMENT=${3:-develop} # other options are "master", "released"
 
+# The protocol to test
+PROTOCOL=${4:-http}
+
+# The Git config repo.
+CONFIGREPO=${5:-git@github.com:tidepool-org/dev-ops}
+
+# The path within the config repo to the environments
+CONFIGPATH=${6:-clusters/integration-test/flux/environments}
+
+# Generate a unique suffix for the environment name
+SUFFIX=$(date | md5 | head -c8)
+
+# The current date in a format that can be used in a file name and a url component
+DATE=$(date +%F)
+
+# Compose the emphemeral environment name that can be used in a file name and a url component
+ENVIRONMENT=${DATE}-${SERVICE}-${SUFFIX}
 
 # The URL at which the test environment can be reached.
-CLUSTER_URL=http://${ENVIRONMENT}.integration-test.tidepool.org
+CLUSTER_URL=${PROTOCOL}://${ENVIRONMENT}.integration-test.tidepool.org
 
-# Create declarative description of the test environment for Weave Flux
-# Patch the tidepool-helmrelease to add the new test image for the service and to turn off automatic updates of the images
+# The directory that the script started in
+CURDIR=$(pwd)
 
+# Temporary directory to perform work
+TMPDIR=$(mktemp -d "./zombie.XXXXXXXXX")
 
-# set up and change to a working directory
-function setup()
-{
-    curdir=$(pwd)
-    mytmpdir=$(mktemp -d "./zombie.XXXXXXXXX")
-    cd $mytmpdir
-}
+# The ID of the ghost inspector suite to run
+GHOST_SUITE_ID=5cf5ba3f9ffa2f2438ed2e0f
 
-# start services, Note that the ENVIRONMENT variable is set here
+# The Tidpool API key for Ghost Inspector
+GHOST_API_KEY=1d903bbbe266b0b560b80a5dff6659cfdf8aec8f
+
+# The URL of the test runner
+TESTURL="https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=${CLUSTER_URL}"
+
+# The file in which to store the test results
+RESULTFILE=ghostinspector.json
+
+# start services from within top of CONFIG rep
 function start_services()
 {
-    git clone git@github.com:tidepool-org/dev-ops
-    FROM=$(git rev-parse HEAD)
-    ENVIRONMENT=${SERVICE}-${TAG:0:12}-${FROM:0:6}
-    cd dev-ops/clusters/${CLUSTER_GIT_NAME}/flux/environments
-    subdir=$(date +%F)/${ENVIRONMENT}
+    cd $TMPDIR
+    git clone ${CONFIGREPO}
+    cd $(echo -n ${CONFIGREPO} | sed -e "s#.*/##")/${CONFIGPATH}
+    subdir=ephemeral/${DATE}/${SERVICE}-${SUFFIX}
     mkdir -p ${subdir}
     cp -r ${BASE_ENVIRONMENT}/* ${subdir}/ 
     cd ${subdir}
 
     YQ="docker run -v ${PWD}:/workdir mikefarah/yq yq"
-    ${YQ} w -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/automated]: false
-    ${YQ} w -i tidepool-helmrelease.yaml spec.values.${SERVICE}.image: tidepool/${SERVICE}:${TAG}
-    ${YQ} w -i tidepool-helmrelease.yaml spec.values.domain: integration-test.tidepool.org
-    ${YQ} w -i tidepool-helmrelease.yaml spec.releaseName: tidepool-${ENVIRONMENT}
+    ${YQ} w -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/automated] false
+    ${YQ} w -i tidepool-helmrelease.yaml spec.values.${SERVICE}.image tidepool/${SERVICE}:${TAG}
+    ${YQ} w -i tidepool-helmrelease.yaml spec.releaseName tidepool-${ENVIRONMENT}
     ${YQ} d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
     ${YQ} w -i mongodb-helmrelease.yaml spec.releaseName tidepool-mongo-${ENVIRONMENT}
 
     # Update namespace
     for file in $(find . -name \*.yaml -print)
     do
-        grep "kind" $file | grep Namespace >/dev/null
-        if [ $? -eq 0 ]
+        if grep "kind" $file | grep Namespace >/dev/null
         then
-          ${YQ} w -i $file metadata.name ${ENVIRONMENT}
+            ${YQ} w -i $file metadata.namespace ${ENVIRONMENT}
         else
-          ${YQ} w -i $file metadata.namespace ${ENVIRONMENT}
+            ${YQ} w -i $file metadata.name ${ENVIRONMENT}
         fi
     done
-
+    
     # Save the results to GitHub.  This repo is polled by Weave Flux, which will create the test environment in the cluster.
     git add .
     git commit -m "Creating integration test environment ${ENVIRONMENT} to test ${SERVICE}:${TAG} with base ${BASE_ENVIRONMENT}."
     git pull --rebase
     git push
 
-    # Wait for running state @see https://github.com/zlabjp/kubernetes-scripts/blob/master/wait-until-pods-readya to do this reliably. 
-    # Unfortunately, this method in zlabjp requires direct access to the cluster.  We need another way! For now we sleep.
+    # XXX We should poll a readiness port instead
     echo "waiting for services to become ready."
     sleep 300
 }
@@ -101,26 +117,19 @@ function stop_services()
 # run integration tests, return 0 iff tests succeed
 function run_tests()
 {
-    # Which ghost inspector suite to run
-    GHOST_SUITE_ID=5cd313c570bb2576edfb75e4
-
-    # Tidpool API key for Ghost Inspector
-    GHOST_API_KEY=1d903bbbe266b0b560b80a5dff6659cfdf8aec8f
-
-    curl "https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=${CLUSTER_URL}" > ghostinspector.json
-    cat ghostinspector.json
-    grep -c '"passing":false' ghostinspector.json
+    curl ${TESTURL} | python3 -m json.tool > ${RESULTFILE}
+    cat ${RESULTFILE}
+    grep -c '"passing":false' ${RESULTFILE}
     return $?
 }
 
 #clean up local file system
 function cleanup()
 {
-    cd $curdir
-    rm -rf $mytmpdir
+    cd $CURDIR
+    rm -rf $TMPDIR
 }
 
-setup
 start_services
 run_tests
 result=$?
