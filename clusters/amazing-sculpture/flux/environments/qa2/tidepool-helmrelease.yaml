@@ -78,7 +78,7 @@ spec:
               bucket: "" # ensures that the generated bucket name is used
               prefix: "blobs"
     platformData:
-      image: tidepool/platform-data:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
+      image: tidepool/platform-data:develop-f401ac553fa733b3ecfdf35dae465003d309400e
     platformImage:
       image: tidepool/platform-image:develop-628faff1ad18e8bdf71c3e6c35462d7e68535002
       service:
