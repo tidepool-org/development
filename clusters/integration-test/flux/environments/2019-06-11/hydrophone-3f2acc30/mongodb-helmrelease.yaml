@@ -1,0 +1,19 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: 2019-06-11-hydrophone-3f2acc30
+  namespace: develop
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: tidepool-mongo-2019-06-11-hydrophone-3f2acc30
+  skipDepUpdate: true
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: charts/mongo
+    ref: k8s
+  values:
+    mongo:
+      image: mongo:3.2
+      persistent: false
+      seed: true
