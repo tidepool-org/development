@@ -113,7 +113,7 @@ function start_services()
 
     # XXX We should poll a readiness port instead
     echo "waiting for services to become ready."
-    sleep 300
+    sleep 500
 }
 
 # run integration tests, return 0 iff tests succeed
