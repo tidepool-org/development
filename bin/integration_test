@@ -77,18 +77,21 @@ function start_services()
     ${YQ} w -i tidepool-helmrelease.yaml spec.values.${SERVICE}.image tidepool/${SERVICE}:${TAG}
     ${YQ} w -i tidepool-helmrelease.yaml spec.releaseName tidepool-${ENVIRONMENT}
     ${YQ} d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
-    ${YQ} w -i mongodb-helmrelease.yaml spec.releaseName tidepool-mongo-${ENVIRONMENT}
+    ${YQ} w -i mongodb-helmrelease.yaml spec.releaseName mongo-${ENVIRONMENT}
 
     # Update namespace
     for file in $(find . -name \*.yaml -print)
     do
-        if grep "kind" $file | grep Namespace >/dev/null
+        if grep "kind" $file | egrep "kind: +Namespace" >/dev/null
         then
             ${YQ} w -i $file metadata.name ${ENVIRONMENT}
         else
             ${YQ} w -i $file metadata.namespace ${ENVIRONMENT}
         fi
+        echo $file
+        cat $file
     done
+    exit
     
     # Save the results to GitHub.  This repo is polled by Weave Flux, which will create the test environment in the cluster.
     git add .
