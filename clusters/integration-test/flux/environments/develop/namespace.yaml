@@ -5,4 +5,3 @@ metadata:
   labels:
     istio-injection: disabled
     linkerd.io/inject: enabled
-  namespace: develop

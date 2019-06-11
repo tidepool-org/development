@@ -84,11 +84,14 @@ function start_services()
     do
         if grep "kind" $file | grep Namespace >/dev/null
         then
-            ${YQ} w -i $file metadata.namespace ${ENVIRONMENT}
-        else
             ${YQ} w -i $file metadata.name ${ENVIRONMENT}
+        else
+            ${YQ} w -i $file metadata.namespace ${ENVIRONMENT}
         fi
+        echo $file
+        cat $file
     done
+    exit
     
     # Save the results to GitHub.  This repo is polled by Weave Flux, which will create the test environment in the cluster.
     git add .
