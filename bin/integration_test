@@ -142,4 +142,5 @@ start_services
 run_tests
 result=$?
 stop_services
+rm -rf $TMPDIR
 exit $result
