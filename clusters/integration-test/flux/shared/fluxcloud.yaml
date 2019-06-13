@@ -40,6 +40,6 @@ spec:
         - name: SLACK_ICON_EMOJI
           value: ":heart:"
         - name: GITHUB_URL
-          value: "https://github.com/tidepool.org/dev-ops/"
+          value: "https://github.com/tidepool-org/dev-ops"
         - name: LISTEN_ADDRESS
           value: ":3032"
