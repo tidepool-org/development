@@ -6,7 +6,7 @@ metadata:
 spec:
   installationNamespace: linkerd
   mesh:
-    linkerdMesh:
+    linkerd:
       enableAutoInject: true
       enableMtls: true
-      linkerdVersion: stable-2.3.0
+      version: stable-2.3.0
