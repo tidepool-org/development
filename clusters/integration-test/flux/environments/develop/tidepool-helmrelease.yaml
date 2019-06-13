@@ -61,7 +61,7 @@ spec:
     hydrophone:
       image: tidepool/hydrophone:k8s-1e188f354f9a90a0d04c23e2175dc35546118781
     jellyfish:
-      image: tidepool/jellyfish:develop-b46ed683da2f7fd49ebe96216de72fc272681b86
+      image: tidepool/jellyfish:develop-6917d00930f04cc4e2cd749737f0bc58d61d4976
     messageapi:
       image: tidepool/message-api:develop-6a0d3dc428f0fd66d2351595dfe9315bb0182521
     auth:
