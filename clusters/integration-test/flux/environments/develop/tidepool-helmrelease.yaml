@@ -13,7 +13,7 @@ metadata:
     flux.weave.works/tag.export: glob:develop-*
     flux.weave.works/tag.gatekeeper: glob:develop-*
     flux.weave.works/tag.highwater: glob:develop-*
-    flux.weave.works/tag.hydrophone: glob:k8s-*
+    flux.weave.works/tag.hydrophone: glob:develop-*
     flux.weave.works/tag.image: glob:develop-*
     flux.weave.works/tag.jellyfish: glob:develop-*
     flux.weave.works/tag.mailhog: semver:1.*
