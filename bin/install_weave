@@ -60,7 +60,7 @@ then
       --set git.timeoout=40s \
       --namespace default \
       --reuse-values \
-      --set additionalArgs={--sync-garbage-collection} \
+      --set additionalArgs='{--sync-garbage-collection,--connect=ws://fluxcloud}' \
       flux \
       chart/flux
 else
