@@ -8,7 +8,7 @@ spec:
     name: fluxcloud
   ports:
   - protocol: TCP
-    port: 8081
+    port: 80
     targetPort: 3032
 ---
 apiVersion: extensions/v1beta1
