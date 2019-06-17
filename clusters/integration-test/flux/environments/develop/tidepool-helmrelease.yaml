@@ -67,21 +67,21 @@ spec:
     auth:
       image: tidepool/platform-auth:develop-88f80519ff94861f3cc0e13454a32db4b92252cd
     blob:
-      image: tidepool/platform-blob:develop-fbbbef2713b5739b68a7496fd415de12e5f60386
+      image: tidepool/platform-blob:develop-88f80519ff94861f3cc0e13454a32db4b92252cd
     data:
-      image: tidepool/platform-data:develop-fbbbef2713b5739b68a7496fd415de12e5f60386
+      image: tidepool/platform-data:develop-88f80519ff94861f3cc0e13454a32db4b92252cd
     image:
-      image: tidepool/platform-image:develop-fbbbef2713b5739b68a7496fd415de12e5f60386
+      image: tidepool/platform-image:develop-88f80519ff94861f3cc0e13454a32db4b92252cd
     migrations:
       image: tidepool/platform-migrations:develop-fbbbef2713b5739b68a7496fd415de12e5f60386
     notification:
       enabled: false
-      image: tidepool/platform-notification:develop-fbbbef2713b5739b68a7496fd415de12e5f60386
+      image: tidepool/platform-notification:develop-88f80519ff94861f3cc0e13454a32db4b92252cd
     task:
-      image: tidepool/platform-task:develop-fbbbef2713b5739b68a7496fd415de12e5f60386
+      image: tidepool/platform-task:develop-88f80519ff94861f3cc0e13454a32db4b92252cd
     tools:
       enabled: false
-      image: tidepool/platform-tools:develop-fbbbef2713b5739b68a7496fd415de12e5f60386
+      image: tidepool/platform-tools:develop-88f80519ff94861f3cc0e13454a32db4b92252cd
     user:
       image: tidepool/platform-user:develop-fbbbef2713b5739b68a7496fd415de12e5f60386
     seagull:
