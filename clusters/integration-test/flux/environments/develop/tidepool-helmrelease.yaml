@@ -67,7 +67,7 @@ spec:
     auth:
       image: tidepool/platform-auth:develop-f401ac553fa733b3ecfdf35dae465003d309400e
     blob:
-      image: tidepool/platform-blob:develop-f401ac553fa733b3ecfdf35dae465003d309400e
+      image: tidepool/platform-blob:develop-fbbbef2713b5739b68a7496fd415de12e5f60386
     data:
       image: tidepool/platform-data:develop-f401ac553fa733b3ecfdf35dae465003d309400e
     image:
