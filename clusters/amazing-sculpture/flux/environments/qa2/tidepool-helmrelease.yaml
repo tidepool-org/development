@@ -67,7 +67,7 @@ spec:
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
-      image: tidepool/platform-auth:develop-88f80519ff94861f3cc0e13454a32db4b92252cd
+      image: tidepool/platform-auth:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
     platformBlob:
       image: tidepool/platform-blob:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
       service:
@@ -78,7 +78,7 @@ spec:
               bucket: "" # ensures that the generated bucket name is used
               prefix: "blobs"
     platformData:
-      image: tidepool/platform-data:develop-88f80519ff94861f3cc0e13454a32db4b92252cd
+      image: tidepool/platform-data:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
     platformImage:
       image: tidepool/platform-image:develop-88f80519ff94861f3cc0e13454a32db4b92252cd
       service:
