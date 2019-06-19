@@ -63,7 +63,7 @@ spec:
     jellyfish:
       image: tidepool/jellyfish:develop-6917d00930f04cc4e2cd749737f0bc58d61d4976
     messageapi:
-      image: tidepool/message-api:develop-6a0d3dc428f0fd66d2351595dfe9315bb0182521
+      image: tidepool/message-api:develop-5098ed3894734fc4a036ab9843f3d5966bfe5517
     auth:
       image: tidepool/platform-auth:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
     blob:
