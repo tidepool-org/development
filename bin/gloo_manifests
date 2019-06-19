@@ -1,5 +1,5 @@
 #!/usr/local/bin/python3
-# Generate gloo manifests files from Ambassador Mapppings
+# Generate gloo manifests files from Ambassador Mappings
 
 import json
 import os
@@ -14,17 +14,21 @@ import yaml
 
 # These values must be provided by Helm when the resulting Helm template file is interpreted
 
-"""The hosts served by the API Gateway"""
-HOSTS_SERVED = '{{include "charts.hosts" .}}'
+# Names use for key and value of fields for virtual hosts
+VIRTUAL_HOST_KEY = "$key"
+VIRTUAL_HOST_SPEC = "$spec"
+
+"""The host served by the API Gateway"""
+HOST = VIRTUAL_HOST_SPEC + ".name"
 
 """The name used for SNI"""
-EXTERNAL_HOST_NAME = '{{include "charts.host.external.tp" .}}'
+EXTERNAL_HOST_NAME = VIRTUAL_HOST_KEY + '.name'
 
 """The name of the TLS secret containing the TLS cert"""
-TLS_SECRET_NAME = '{{.Values.global.gateway.tlssecret.name}}'
+TLS_SECRET_NAME = VIRTUAL_HOST_SPEC +'.tlssecret.name'
 
 """The namespace of the TLS secret containing the TLS cert"""
-TLS_SECRET_NAMESPACE = '{{.Values.global.gateway.tlssecret.namespace}}'
+TLS_SECRET_NAMESPACE = VIRTUAL_HOST_SPEC + '.tlssecret.namespace'
 
 """The name of the Gateway Proxy Service"""
 GATEWAY_PROXY_NAME = '{{.Values.global.gateway.proxy.name}}'
@@ -86,7 +90,8 @@ def metadata_spec(name, namespace):
 class VirtualServiceBuilder:
     """Builds a Gloo virtual service manifest"""
 
-    def __init__(self, routes, name, cors, protocol, hosts_served):
+    def __init__(self, routes, prefix, cors, protocol, hosts_served):
+        name = VIRTUAL_HOST_KEY + "-" + prefix + "-" + protocol
         useSSL = protocol == "https"
         if len(routes) > 0:
             self.virtual_service = {
@@ -435,31 +440,42 @@ class ManifestBuilder:
     """
 
     def __init__(self, mappings):
-        self.manifest_dict = dict()
+        self.mappings = mappings
+        self.routes = RoutesBuilder(mappings).get()
 
-        all_routes = RoutesBuilder(mappings).get()
-        for base,ordered in all_routes.items():
-            self.add(VirtualServiceBuilder(ordered, INTERNAL_VS_NAME, CORS_POLICY, "http", [ HOSTS_SERVED, INTERNAL_VS_NAME + "." + ENVIRONMENT]).get())
-            self.add(VirtualServiceBuilder(ordered, EXTERNAL_VS_NAME, CORS_POLICY, "https", [HOSTS_SERVED]).get())
-            #builder.add(ExternalNameServiceBuilder().get())
-        for ref in RoutesBuilder.refs(mappings):
-            self.add(UpstreamBuilder(ref).get())
-        #self.add(GatewayBuilder(False).get())
-        #self.add(GatewayBuilder(True).get())
+    def external(self, protocol):
+        d = dict()
+        for base,ordered in self.routes.items():
+            if protocol == "https":
+                self.add(d, VirtualServiceBuilder(ordered, EXTERNAL_VS_NAME, CORS_POLICY, "https", [HOST]).get())
+            else:
+                self.add(d, VirtualServiceBuilder(ordered, EXTERNAL_VS_NAME, None, "http", [HOST]).get())
+        return d
+
+    def internal(self):
+        d = dict()
+        for base,ordered in self.routes.items():
+            self.add(d, VirtualServiceBuilder(ordered, INTERNAL_VS_NAME, None, "http", [ INTERNAL_VS_NAME + "." + ENVIRONMENT]).get())
+        for ref in RoutesBuilder.refs(self.mappings):
+            self.add(d, UpstreamBuilder(ref).get())
+        return d
     
-    def add(self, manifest):
+    def add(self, manifest_dict, manifest):
         if manifest is not None:
             service_name = manifest["metadata"]["name"].replace(ENVIRONMENT + "-","").replace(INTERNAL_VS_NAME, "internal")
             service_kind = manifest["kind"].lower()
             name = "gloo-" + service_name + "-" + service_kind
-            self.manifest_dict[name] = manifest
+            manifest_dict[name] = manifest
 
-    def write(self):
-        print(yaml.dump(self.manifest_dict, explicit_start = True, default_flow_style=False))
+    def write(self, manifest_dict):
+        print(yaml.dump(manifest_dict, explicit_start = True, default_flow_style=False))
 
-def main():
-    """Generate the Gloo API Gateway for the given protocol, either "http" or "https" from Ambassador mappings."""
-    ManifestBuilder(yaml.safe_load(sys.stdin)).write()
+def main(kind, protocol):
+    builder=ManifestBuilder(yaml.safe_load(sys.stdin))
+    if kind  == "internal":
+        builder.write(builder.internal())
+    else:
+        builder.write(builder.external(protocol))
 
 if __name__ == "__main__":
-   main()
+   main(sys.argv[1], sys.argv[2])

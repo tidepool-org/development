@@ -1,5 +1,5 @@
 #!/bin/bash
-rm -f $1/templates/gloo-https.yaml $1/templates/gloo-http.yaml
+rm -f $1/templates/gloo-*.yaml 
 
 templates="$(helm template --namespace=default $1)"
 
@@ -10,6 +10,11 @@ then
 	exit 1
 fi
 
-echo "$templates" | mappings | gloo_manifests | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if (eq .Values.global.gateway.name \"gloo\") }}" "{{ end }}" > $1/templates/gloo-http.yaml
+echo "$templates" | mappings | gloo_manifests internal http | single_file "# Auto-generated file by $(basename $0). Do not edit.
+" "" > $1/templates/gloo-internal.yaml
 
+echo "$templates" | mappings | gloo_manifests external http | single_file "# Auto-generated file by $(basename $0). Do not edit.
+{{- range \$key, \$spec := .Values.global.hosts.http }}" "{{ end }}" > $1/templates/gloo-external-http.yaml
+
+echo "$templates" | mappings | gloo_manifests external https | single_file "# Auto-generated file by $(basename $0). Do not edit.
+{{- range \$key, \$spec := .Values.global.hosts.https }}" "{{ end }}" > $1/templates/gloo-external-https.yaml
