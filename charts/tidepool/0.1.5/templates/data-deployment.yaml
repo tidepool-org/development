@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: data
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: data
+  namespace: {{.Release.Namespace}}
+spec:
+  selector:
+    matchLabels:
+      app: data
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: data
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{ include "charts.init.shoreline" .}}
+      containers:
+      - env:
+        {{ include "charts.platform.env" .}}
+        image: "{{ .Values.data.image }}"
+        {{ template "charts.platform.probes" .Values.global.ports.data}}
+        name: data
+        ports:
+        - containerPort: {{.Values.global.ports.data}}
+        resources:
+          {{- toYaml .Values.global.resources | nindent 10 }}
+      restartPolicy: Always
+status: {}

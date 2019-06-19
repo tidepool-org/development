@@ -1,0 +1,174 @@
+global:
+  ports:
+    blip: 3000
+    export: 9300
+    gatekeeper: 9123
+    hakken: 8000
+    highwater: 9191
+    hydrophone: 9157
+    jellyfish: 9122
+    messageapi: 9119
+    auth: 9222
+    blob: 9225
+    data: 9220
+    image: 9226
+    notification: 9223
+    task: 9224
+    user: 9221
+    seagull: 9120
+    shoreline: 9107
+    tidewhisperer: 9127
+  aws:
+    region: us-west-2
+  environment: production
+  fullnameOverride: ""
+  image:
+    pullPolicy: IfNotPresent
+  includeSecrets: true
+  namespace:
+    create: true
+  nameOverride: ""
+
+  mongo: 
+    enabled: true
+    host: 'mongodb'
+    username: ''
+    password: ''
+    port: 27017
+    tls: 'false'
+    optParams: ''
+  provider:
+    dexcom:
+      token: { url: 'https://api.dexcom.com/v1/oauth2/token' }
+      authorize: { url: 'https://api.dexcom.com/v1/oauth2/login?prompt=login' }
+      client: { url: "https://api.dexcom.com" }
+  hosts:
+    default:
+      protocol:
+        https
+    http:
+      dev:
+        name: dev.tidepool.org
+    https:
+      dev-s:
+        name: dev.tidepool.org
+        tlssecret:
+          name: tidepool-org
+          namespace: default
+  gateway:
+    name: gloo
+    proxy:
+      name:  gateway-proxy
+      namespace: gloo-system
+
+  resources:
+    {}
+    # If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #  cpu: 100m
+    #  memory: 128Mi
+    # requests:
+    #  cpu: 100m
+    #  memory: 128Mi
+    #
+
+# non-Tidepool services
+ambassador:
+  fullnameOverride: ambassador
+  replicaCount: 1
+  service:
+    http:
+      port: 80
+    https:
+      port: 443
+    securityContext:
+      runAsNonRoot: false
+    externalTrafficPolicy: Local
+    annotations:
+      sidecar.istio.io/inject: "false"
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+
+nosqlclient:
+  image: 'mongoclient/mongoclient'
+  enabled: 'true'
+  port: 3001
+
+# Tidepool services
+blip: 
+  image: tidepool/blip:v1.17.0
+export:
+  image: tidepool/export:v1.3.2
+  enabled: true
+gatekeeper: 
+  image: tidepool/gatekeeper:v0.7.2
+highwater: 
+  image: tidepool/highwater:v0.3.5
+  salt: gf78fSEI7tOQQP9xfXMO9HfRyMnW4Sx88Q
+hydrophone:
+  image: tidepool/hydrophone:v0.9.0-release.1
+  ses:
+    fromAddress: "Tidepool <noreply@tidepool.org>"
+  #bucket: ''
+jellyfish: 
+  enabled: true
+  image: tidepool/jellyfish:v0.12.3-release.2
+  salt: 'itNkczadZ1EeC9fUWR3LnbKFagtYYLOk'
+  #bucket: ''
+  storage: 'aws/s3'
+  #storage: 'local'
+messageapi: 
+  image: tidepool/message-api:v0.7.14-release.1
+  window: 21
+auth:
+  image: tidepool/platform-auth:1.32.0-release.4
+blob:
+  image: tidepool/platform-blob:1.32.0-release.4
+  service:
+    unstructured:
+      store:
+        file: {directory: "_data/blobs"}
+        #type: file
+        s3:
+          #bucket:
+          prefix: "blobs"
+        type: s3
+data:
+  image: tidepool/platform-data:1.32.0-release.4
+image:
+  image: tidepool/platform-image:1.32.0-release.4
+  service:
+    unstructured:
+      store:
+        file: {directory: "_data/image"}
+        #type: file
+        s3:
+          #bucket: ""
+          prefix: "images"
+        type: s3
+migrations:
+  enabled: true
+  image: tidepool/platform-migrations:1.32.0-release.4
+notification:
+  image: tidepool/platform-notification:1.32.0-release.4
+task:
+  image: tidepool/platform-task:1.32.0-release.4
+tools:
+  enabled: true
+  image: tidepool/platform-tools:1.32.0-release.4
+user:
+  image: tidepool/platform-user:1.32.0-release.4
+seagull: 
+  image: tidepool/seagull:v0.7.2-release.4
+  salt: KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
+shoreline:
+  image: tidepool/shoreline:v0.14.2-release.1
+  longtermkey: abcdefghijklmnopqrstuvwxyz
+  salt: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+  verification: {secret: +skip}
+  mailchimp:
+     url: https://us7.api.mailchimp.com/3.0
+tidewhisperer:
+  image: tidepool/tide-whisperer:v0.13.0-release.3
+
