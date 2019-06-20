@@ -65,10 +65,6 @@ tidepool-{{ .Release.Namespace }}-data
 {{- define "charts.blob.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.blob.s3.bucket" .}} {{- end }}
 {{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.hydrophone.s3.bucket" .}} {{- end }}
 
-{{- define "charts.protocol" -}}
-{{ if .Values.global.gateway.https.enabled }}https {{- else -}} http {{- end -}} {{- end -}}
-
-
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).

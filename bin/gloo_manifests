@@ -90,8 +90,7 @@ def metadata_spec(name, namespace):
 class VirtualServiceBuilder:
     """Builds a Gloo virtual service manifest"""
 
-    def __init__(self, routes, prefix, cors, protocol, hosts_served):
-        name = VIRTUAL_HOST_KEY + "-" + prefix + "-" + protocol
+    def __init__(self, routes, name, cors, protocol, hosts_served):
         useSSL = protocol == "https"
         if len(routes) > 0:
             self.virtual_service = {
@@ -446,10 +445,11 @@ class ManifestBuilder:
     def external(self, protocol):
         d = dict()
         for base,ordered in self.routes.items():
+            name = VIRTUAL_HOST_KEY + "-" + EXTERNAL_VS_NAME + "-" + protocol
             if protocol == "https":
-                self.add(d, VirtualServiceBuilder(ordered, EXTERNAL_VS_NAME, CORS_POLICY, "https", [HOST]).get())
+                self.add(d, VirtualServiceBuilder(ordered, name, CORS_POLICY, "https", [HOST]).get())
             else:
-                self.add(d, VirtualServiceBuilder(ordered, EXTERNAL_VS_NAME, None, "http", [HOST]).get())
+                self.add(d, VirtualServiceBuilder(ordered, name, None, "http", [HOST]).get())
         return d
 
     def internal(self):
