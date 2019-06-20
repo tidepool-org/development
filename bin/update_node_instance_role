@@ -1,0 +1,35 @@
+#!/bin/bash
+STACK_NAME=${1:-eksctl-qae-nodegroup-ng-1}
+current=$(aws cloudformation get-template --stack-name ${STACK_NAME})
+update='
+{
+  "AssumeRolePolicyDocument": {
+    "Statement": [
+      {
+        "Action": "sts:AssumeRole",
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "ec2.amazonaws.com"
+        }
+      }
+    ],
+    "Version": "2012-10-17"
+  },
+  "ManagedPolicyArns": [
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+    "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+    "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess",
+    "arn:aws:iam::118346523422:policy/Route53-Policy",
+    "arn:aws:iam::aws:policy/AmazonSESFullAccess"
+  ],
+  "Path": "/"
+}'
+
+TEMPLATE_BODY=$(echo "$current" | jq ".TemplateBody.Resources.NodeInstanceRole.Properties = $update" | jq .TemplateBody )
+
+out=$(aws cloudformation create-change-set --capabilities CAPABILITY_IAM --region=us-west-2 --change-set-name update-policies --stack-name ${STACK_NAME} --template-body "$TEMPLATE_BODY" )
+
+id=$(echo "$out" | jq .Id | sed -e s/\"//g)
+
+aws cloudformation execute-change-set --change-set-name $id
