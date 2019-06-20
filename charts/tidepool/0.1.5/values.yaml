@@ -46,6 +46,8 @@ global:
     default:
       protocol:
         http
+      host:
+        localhost
     http:
       localhost:
         name: localhost
@@ -151,8 +153,11 @@ shoreline:
   longtermkey: abcdefghijklmnopqrstuvwxyz
   salt: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
   verification: {secret: +skip}
+  clinicDemoUserId: "e79b15328a"
   mailchimp:
-     url: https://us7.api.mailchimp.com/3.0
+    url: https://us7.api.mailchimp.com/3.0
+    personalLists: "[]"
+    clinicLists: "[]"
 tidewhisperer:
   image: tidepool/tide-whisperer:v0.13.0-release.3
 

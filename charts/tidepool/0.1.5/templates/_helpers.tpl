@@ -27,6 +27,10 @@ Expand the name of the chart.
 
 {{- define "charts.host.internal.tp" -}} internal {{- end }}
 
+{{- define "charts.host.external.tp" -}} 
+{{- .Values.global.hosts.default.protocol -}}://{{- .Values.global.hosts.default.host -}}
+{{- end }}
+
 {{- define "charts.s3.url" -}} https://s3-{{.Values.global.aws.region}}.amazonaws.com {{- end }}
 
 {{- define "charts.image.s3.bucket" -}}
@@ -190,7 +194,7 @@ Create environment variables used by all platform services.
               name: dexcom
               key: CLIENT_SECRET
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
-          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}/v1/oauth/dexcom/redirect
+          value: {{include "charts.host.external.tp" .}}/v1/oauth/dexcom/redirect
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
           value: offline_access
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT

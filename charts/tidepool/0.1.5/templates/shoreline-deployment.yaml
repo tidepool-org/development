@@ -74,7 +74,7 @@ spec:
                     "service": "shoreline"
                 },
                 "user": {
-                    "clinicDemoUserId": "",
+                    "clinicDemoUserId": "{{.Values.shoreline.clinicDemoUserId}}",
                     "longTermDaysDuration": 30,
                     "longTermKey": "{{.Values.shoreline.longtermkey}}",
                     "salt": "{{.Values.shoreline.salt}}",
@@ -82,8 +82,10 @@ spec:
                     "verificationSecret": "{{.Values.shoreline.verification.secret}}",
                     "mailchimp": {
                       "url": "{{.Values.shoreline.mailchimp.url}}",
-                      "apiKey": ""
-                    }
+                      "apiKey": "",
+                      "personalLists": {{.Values.shoreline.mailchimp.personalLists}},
+                      "clinicLists": {{.Values.shoreline.mailchimp.clinicLists}}
+                     }
                 }
             }
         image: "{{ .Values.shoreline.image }}"
