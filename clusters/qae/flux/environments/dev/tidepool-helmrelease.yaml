@@ -1,4 +1,3 @@
----
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
@@ -32,11 +31,13 @@ spec:
     path: charts/tidepool/0.1.5
     ref: k8s
   values:
-    global
+    global:
       hosts:
         default:
           protocol:
             https
+          host:
+            dev.tidepool.org
         http: {}
         https:
           dev:
@@ -63,6 +64,8 @@ spec:
         name: gloo
       mongo:
         enabled: false
+        host: 'db.dev.private.tidepool.org'
+        tls: 'true'
       includeSecrets: false
       namespace:
         create: false
@@ -77,6 +80,7 @@ spec:
       image: tidepool/gatekeeper:v0.7.2
     highwater:
       image: tidepool/highwater:v0.3.5
+      salt: "DVkFvvX1dr1PBw4YmMkI"
     hydrophone:
       image: tidepool/hydrophone:v99.99.100
     jellyfish:
@@ -105,7 +109,38 @@ spec:
       image: tidepool/platform-user:go11110-89257ec20c2aa8899b76d7b8264619ce55d3f8bb
     seagull:
       image: tidepool/seagull:v0.7.2
+      salt: "Seagulls are the salt of the earth, without them, the coastline would not smell of dead fish"
     shoreline:
       image: tidepool/shoreline:v0.14.2
+      salt: "fuheqwiuhfkjkljdsoifkqm"
+      longtermkey: "bnthqfizruxgjsmckpwevaoydl"
+      clinicDemoUserId: "e79b15328a"
+      mailchimp:
+        url: "https://us7.api.mailchimp.com/3.0"
+        personalLists: >
+          [
+            {
+              "id": "d79b5a3924",
+              "interests": {
+                "35d99df867": true
+              }
+            },
+            {
+              "id": "461feca051"
+            }
+          ]
+        clinicLists: >
+          [
+            {
+              "id": "d79b5a3924",
+              "interests": {
+                "35d99df867": true,
+                "03cab91941": true
+              }
+            },
+            {
+              "id": "627a2577da"
+            }
+          ]
     tidewhisperer:
       image: tidepool/tide-whisperer:v0.13.0
