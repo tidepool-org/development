@@ -1,0 +1,17 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: amazing-sculpture-1549406110
+  region: us-west-2
+
+nodeGroups:
+  - name: ng-f9de187a
+    instanceType: m5.large
+    desiredCapacity: 5
+    ssh:
+      publicKeyPath:  ~/.ssh/aws-tidepool-derrickburns.pub
+    iam:
+      withAddonPolicies:
+        certManager: true
+

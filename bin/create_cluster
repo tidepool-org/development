@@ -1,0 +1,31 @@
+#!/bin/bash -xv
+
+#File in which cluster config is stored
+CONFIG_FILE=${1:-config.yaml}
+
+#File in which to store kubeconfig 
+KUBECONFIG=${2:-kubeconfig.yaml}
+
+YQ="docker run -v ${PWD}:/workdir mikefarah/yq yq"
+CLUSTER_NAME=$(${YQ} r $CONFIG_FILE metadata.name)
+
+# AWS account number
+ACCOUNT=118346523422
+
+# Kubernetes group to assign users to
+GROUP=system:masters
+
+# AWS Region to create cluster in
+REGION=us-west-2
+
+# AWS users to associate with system master group
+USERS="lennartgoedhart-cli benderr-cli derrick-cli mikeallgeier-cli"
+
+eksctl create cluster --config-file=$CONFIG_FILE --kubeconfig $KUBECONFIG
+
+for user in $USERS
+do
+    arn=arn:aws:iam::${ACCOUNT}:user/${user}
+    eksctl create iamidentitymapping --region=${REGION}  --role=$arn --group=$GROUP --name=$CLUSTER_NAME --username=$user
+done
+

@@ -1,0 +1,14 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: supergloo
+  namespace: supergloo-system
+spec:
+  releaseName: supergloo
+  chart:
+    repository: http://storage.googleapis.com/supergloo-helm/
+    name: supergloo
+    version: 0.3.22
+  values:
+    {}
