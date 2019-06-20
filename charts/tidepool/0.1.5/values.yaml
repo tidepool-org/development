@@ -45,16 +45,16 @@ global:
   hosts:
     default:
       protocol:
-        https
+        http
     http:
-      dev:
-        name: dev.tidepool.org
-    https:
-      dev-s:
-        name: dev.tidepool.org
-        tlssecret:
-          name: tidepool-org
-          namespace: default
+      localhost:
+        name: localhost
+    #https:
+      #dev-s:
+        #name: dev.tidepool.org
+        #tlssecret:
+          #name: tidepool-org
+          #namespace: default
   gateway:
     name: gloo
     proxy:
@@ -74,22 +74,6 @@ global:
     #
 
 # non-Tidepool services
-ambassador:
-  fullnameOverride: ambassador
-  replicaCount: 1
-  service:
-    http:
-      port: 80
-    https:
-      port: 443
-    securityContext:
-      runAsNonRoot: false
-    externalTrafficPolicy: Local
-    annotations:
-      sidecar.istio.io/inject: "false"
-      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
-
 nosqlclient:
   image: 'mongoclient/mongoclient'
   enabled: 'true'
