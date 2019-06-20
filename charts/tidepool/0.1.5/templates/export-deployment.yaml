@@ -37,7 +37,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: server-secret
-              key: session
+              key: export
         image: "{{ .Values.export.image }}"
         imagePullPolicy: {{ .Values.global.image.pullPolicy }}
         livenessProbe:
