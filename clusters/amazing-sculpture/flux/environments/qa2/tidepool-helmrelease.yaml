@@ -59,7 +59,7 @@ spec:
         fromAddress: "Tidepool <noreply@tidepool.org>"
     jellyfish:
       enabled: true
-      image: tidepool/jellyfish:develop-6917d00930f04cc4e2cd749737f0bc58d61d4976
+      image: tidepool/jellyfish:develop-bd60775ac84102843aa7f56eec6f1ca915d55e02
       storage: "aws/s3"
       bucket: "" # ensures that the generated bucket name is used
     messageapi:
