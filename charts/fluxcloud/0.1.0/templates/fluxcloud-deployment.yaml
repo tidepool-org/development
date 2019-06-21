@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}
+  name: "{{- .Values.name -}}"
 spec:
   replicas: 1
   strategy:
@@ -9,24 +9,24 @@ spec:
   template:
     metadata:
       labels:
-        name: {{ .Values.name }}
+        name: "{{- .Values.name -}}"
     spec:
       containers:
       - name: fluxcloud
-        image: {{ .Values.image }}
+        image: "{{- .Values.image -}}"
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: {{ .Values.containerPort }}
         env:
         - name: SLACK_URL
-          value: {{ .Values.slack.url }} 
+          value: "{{- .Values.slack.url -}}"
         - name: SLACK_CHANNEL
-          value: {{ .Values.slack.channel }}
+          value: "{{- .Values.slack.channel -}}"
         - name: SLACK_USERNAME
-          value: {{ .Values.slack.username }}
+          value: "{{- .Values.slack.username -}}"
         - name: SLACK_ICON_EMOJI
           value: ":heart:"
         - name: GITHUB_URL
-          value: {{ .Values.github }}
+          value: "{{- .Values.github -}}"
         - name: LISTEN_ADDRESS
-          value: ":{{.Values.containerPort}}"
+          value: ":{{- .Values.containerPort -}}"

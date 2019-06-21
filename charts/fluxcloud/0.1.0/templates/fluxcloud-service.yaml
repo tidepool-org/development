@@ -1,11 +1,10 @@
----
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ .Values.name }}
+  name: "{{- .Values.name -}}"
 spec:
   selector:
-    name: {{ .Values.name }}
+    name: "{{- .Values.name -}}"
   ports:
   - protocol: TCP
     port: {{ .Values.port }}
