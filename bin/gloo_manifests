@@ -34,13 +34,13 @@ TLS_SECRET_NAME = '{{ ' + SPEC + '.tlssecret.name }}'
 TLS_SECRET_NAMESPACE = '{{ ' + SPEC + '.tlssecret.namespace }}'
 
 """The name of the Gateway Proxy Service"""
-GATEWAY_PROXY_NAME = '{{ $proxyname }}'
+GATEWAY_PROXY_NAME = '{{ $.Value.globals.proxy.name }}'
 
 """The namespace of the Gateway Proxy Service"""
-GATEWAY_PROXY_NAMESPACE = '{{ $proxynamespace }}'
+GATEWAY_PROXY_NAMESPACE = '{{ $.Values.global.proxy.namespace }}'
 
 """The environment being instantiated"""
-ENVIRONMENT = '{{ $.Release.Name }}'
+ENVIRONMENT = '{{ $.Release.Namespace }}'
 
 """The name used to access the virtual service from other services"""
 INTERNAL_VS_NAME = 'internal'
