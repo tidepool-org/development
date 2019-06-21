@@ -29,3 +29,5 @@ do
     eksctl create iamidentitymapping --region=${REGION}  --role=$arn --group=$GROUP --name=$CLUSTER_NAME --username=$user
 done
 
+STACK_NAME=eksctl-${CLUSTER_NAME}-nodegroup-ng-1
+update_node_instance role $STACK_NAME

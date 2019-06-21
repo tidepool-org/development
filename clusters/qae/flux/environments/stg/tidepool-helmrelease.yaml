@@ -26,7 +26,7 @@ metadata:
     flux.weave.works/tag.tools: regexp:^v\d+\.\d+\.\d+$
     flux.weave.works/tag.user: regexp:^v\d+\.\d+\.\d+$
 spec:
-  releaseName: dev-tidepool
+  releaseName: stg-tidepool
   chart:
     git: git@github.com:tidepool-org/development
     path: charts/tidepool/0.1.5

@@ -6,7 +6,7 @@ metadata:
   annotations:
     flux.weave.works/automated: "false"
 spec:
-  releaseName: dev-mongo
+  releaseName: stg-mongo
   skipDepUpdate: true
   chart:
     git: git@github.com:tidepool-org/development
