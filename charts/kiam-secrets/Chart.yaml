@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart to automatically generate kiam secrets
+name: kiam-secrets
+version: 0.1.0
