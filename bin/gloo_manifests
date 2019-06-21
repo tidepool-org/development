@@ -31,16 +31,16 @@ TLS_SECRET_NAME = VIRTUAL_HOST_SPEC +'.tlssecret.name'
 TLS_SECRET_NAMESPACE = VIRTUAL_HOST_SPEC + '.tlssecret.namespace'
 
 """The name of the Gateway Proxy Service"""
-GATEWAY_PROXY_NAME = '{{.Values.global.gateway.proxy.name}}'
+GATEWAY_PROXY_NAME = '$proxyname'
 
 """The namespace of the Gateway Proxy Service"""
-GATEWAY_PROXY_NAMESPACE = '{{.Values.global.gateway.proxy.namespace}}'
+GATEWAY_PROXY_NAMESPACE = '$proxynamespace'
 
 """The environment being instantiated"""
-ENVIRONMENT = '{{.Release.Namespace}}'
+ENVIRONMENT = '$relname'
 
 """The name used to access the virtual service from other services"""
-INTERNAL_VS_NAME = '{{include "charts.host.internal.tp" .}}'
+INTERNAL_VS_NAME = 'internal'
 
 """The name used to access the virtual service from the LoadBalancer."""
 EXTERNAL_VS_NAME = ENVIRONMENT + "-external"

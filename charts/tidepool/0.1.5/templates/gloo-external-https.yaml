@@ -6,7 +6,7 @@ apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
   name: $key-$relname-external-https
-  namespace: '$relname'
+  namespace: $relname
 spec:
   displayName: $key-$relname-external-https
   sslConfig:
@@ -50,8 +50,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-auth-9222'
-            namespace: '$relname'
+            name: $relname-auth-9222
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -61,8 +61,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-auth-9222'
-            namespace: '$relname'
+            name: $relname-auth-9222
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -70,8 +70,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blip-3000'
-            namespace: '$relname'
+            name: $relname-blip-3000
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -82,8 +82,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-data-9220'
-            namespace: '$relname'
+            name: $relname-data-9220
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -93,8 +93,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-auth-9222'
-            namespace: '$relname'
+            name: $relname-auth-9222
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -102,8 +102,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blip-3000'
-            namespace: '$relname'
+            name: $relname-blip-3000
+            namespace: $relname
     - matcher:
         methods:
         - POST
@@ -111,8 +111,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blip-3000'
-            namespace: '$relname'
+            name: $relname-blip-3000
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -121,8 +121,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-auth-9222'
-            namespace: '$relname'
+            name: $relname-auth-9222
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -130,8 +130,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-data-9220'
-            namespace: '$relname'
+            name: $relname-data-9220
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -141,8 +141,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-image-9226'
-            namespace: '$relname'
+            name: $relname-image-9226
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -150,8 +150,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-auth-9222'
-            namespace: '$relname'
+            name: $relname-auth-9222
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -160,8 +160,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-data-9220'
-            namespace: '$relname'
+            name: $relname-data-9220
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -169,8 +169,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blip-3000'
-            namespace: '$relname'
+            name: $relname-blip-3000
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -178,8 +178,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blip-3000'
-            namespace: '$relname'
+            name: $relname-blip-3000
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -187,8 +187,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blob-9225'
-            namespace: '$relname'
+            name: $relname-blob-9225
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -198,8 +198,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-data-9220'
-            namespace: '$relname'
+            name: $relname-data-9220
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -209,8 +209,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-image-9226'
-            namespace: '$relname'
+            name: $relname-image-9226
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -220,8 +220,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-auth-9222'
-            namespace: '$relname'
+            name: $relname-auth-9222
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -231,8 +231,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blob-9225'
-            namespace: '$relname'
+            name: $relname-blob-9225
+            namespace: $relname
     - matcher:
         methods:
         - DELETE
@@ -240,8 +240,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-data-9220'
-            namespace: '$relname'
+            name: $relname-data-9220
+            namespace: $relname
     - matcher:
         methods:
         - POST
@@ -249,8 +249,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-jellyfish-9122'
-            namespace: '$relname'
+            name: $relname-jellyfish-9122
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -258,8 +258,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blip-3000'
-            namespace: '$relname'
+            name: $relname-blip-3000
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -267,8 +267,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blip-3000'
-            namespace: '$relname'
+            name: $relname-blip-3000
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -276,8 +276,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-jellyfish-9122'
-            namespace: '$relname'
+            name: $relname-jellyfish-9122
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -285,8 +285,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blip-3000'
-            namespace: '$relname'
+            name: $relname-blip-3000
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -295,8 +295,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blob-9225'
-            namespace: '$relname'
+            name: $relname-blob-9225
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -306,8 +306,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-task-9224'
-            namespace: '$relname'
+            name: $relname-task-9224
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -316,8 +316,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-user-9221'
-            namespace: '$relname'
+            name: $relname-user-9221
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -330,8 +330,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-data-9220'
-            namespace: '$relname'
+            name: $relname-data-9220
+            namespace: $relname
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -342,8 +342,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-jellyfish-9122'
-            namespace: '$relname'
+            name: $relname-jellyfish-9122
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -356,8 +356,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-user-9221'
-            namespace: '$relname'
+            name: $relname-user-9221
+            namespace: $relname
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -368,8 +368,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-data-9220'
-            namespace: '$relname'
+            name: $relname-data-9220
+            namespace: $relname
     - matcher:
         methods:
         - POST
@@ -379,8 +379,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-data-9220'
-            namespace: '$relname'
+            name: $relname-data-9220
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -390,8 +390,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-image-9226'
-            namespace: '$relname'
+            name: $relname-image-9226
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -404,8 +404,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-seagull-9120'
-            namespace: '$relname'
+            name: $relname-seagull-9120
+            namespace: $relname
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -416,8 +416,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blip-3000'
-            namespace: '$relname'
+            name: $relname-blip-3000
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -430,8 +430,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-data-9220'
-            namespace: '$relname'
+            name: $relname-data-9220
+            namespace: $relname
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -447,8 +447,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-highwater-9191'
-            namespace: '$relname'
+            name: $relname-highwater-9191
+            namespace: $relname
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -464,8 +464,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-hydrophone-9157'
-            namespace: '$relname'
+            name: $relname-hydrophone-9157
+            namespace: $relname
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -481,8 +481,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-message-api-9119'
-            namespace: '$relname'
+            name: $relname-message-api-9119
+            namespace: $relname
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -494,8 +494,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-task-9224'
-            namespace: '$relname'
+            name: $relname-task-9224
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -503,8 +503,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blip-3000'
-            namespace: '$relname'
+            name: $relname-blip-3000
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -512,8 +512,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-data-9220'
-            namespace: '$relname'
+            name: $relname-data-9220
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -526,8 +526,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-export-9300'
-            namespace: '$relname'
+            name: $relname-export-9300
+            namespace: $relname
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -543,8 +543,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-gatekeeper-9123'
-            namespace: '$relname'
+            name: $relname-gatekeeper-9123
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -552,8 +552,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blip-3000'
-            namespace: '$relname'
+            name: $relname-blip-3000
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -561,8 +561,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blip-3000'
-            namespace: '$relname'
+            name: $relname-blip-3000
+            namespace: $relname
     - matcher:
         methods:
         - POST
@@ -570,8 +570,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-jellyfish-9122'
-            namespace: '$relname'
+            name: $relname-jellyfish-9122
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -584,8 +584,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-shoreline-9107'
-            namespace: '$relname'
+            name: $relname-shoreline-9107
+            namespace: $relname
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -596,8 +596,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-tide-whisperer-9127'
-            namespace: '$relname'
+            name: $relname-tide-whisperer-9127
+            namespace: $relname
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -608,8 +608,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-jellyfish-9122'
-            namespace: '$relname'
+            name: $relname-jellyfish-9122
+            namespace: $relname
     - matcher:
         methods:
         - GET
@@ -617,6 +617,6 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '$relname-blip-3000'
-            namespace: '$relname'
+            name: $relname-blip-3000
+            namespace: $relname
 {{ end }}
