@@ -14,7 +14,9 @@ echo "$templates" | mappings | gloo_manifests internal http | single_file "# Aut
 " "" > $1/templates/gloo-internal.yaml
 
 echo "$templates" | mappings | gloo_manifests external http | single_file "# Auto-generated file by $(basename $0). Do not edit.
+{{- \$relname := .Release.Name -}}
 {{- range \$key, \$spec := .Values.global.hosts.http }}" "{{ end }}" > $1/templates/gloo-external-http.yaml
 
 echo "$templates" | mappings | gloo_manifests external https | single_file "# Auto-generated file by $(basename $0). Do not edit.
+{{- \$relname := .Release.Name -}}
 {{- range \$key, \$spec := .Values.global.hosts.https }}" "{{ end }}" > $1/templates/gloo-external-https.yaml
