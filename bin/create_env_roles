@@ -1,0 +1,85 @@
+ENVIRONMENT=${1:-dev}
+
+POLICY='
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::tidepool-ENVIRONMENT-data"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::tidepool-ENVIRONMENT-data/*"
+            ],
+            "Effect": "Allow"
+        },
+	{
+           "Effect": "Allow",
+           "Action": [
+           	"ses:*"
+	   ],
+           "Resource": "*"
+	}
+    ]
+}'
+
+policy=$(echo $POLICY | sed -e "s/ENVIRONMENT/$ENVIRONMENT/g")
+
+ASSUME='{
+    "Version": "2012-10-17",
+    "Statement": [
+	{
+	    "Effect": "Allow",
+	    "Principal": {
+		"Service": "ec2.amazonaws.com"
+	    },
+	    "Action": "sts:AssumeRole"
+	}
+    ]
+}'
+
+ROLE='{
+        "Path": "/",
+        "RoleName": "ENVIRONMENT-K8s-Service-Worker",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": "ec2.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                }
+            ]
+        },
+        "Description": "Allow K8s services to send email and to use an assigned S3 bucket.",
+        "MaxSessionDuration": 3600,
+        "Tags": [
+            {
+                "Key": "env",
+                "Value": "ENVIRONMENT"
+            }
+        ]
+}'
+role=$(echo $ROLE | sed -e "s/ENVIRONMENT/$ENVIRONMENT/g")
+
+out=$(aws iam create-role  --role-name ${ENVIRONMENT}-K8s-Service-Worker --assume-role-policy-document "$ASSUME" --cli-input-json "$role")
+rolename=$(echo "$out" | jq .Role.RoleName | sed -e s/\"//g)
+echo $out
+
+aws iam put-role-policy --role-name "$rolename" --policy-name "${ENVIRONMENT}-K8s-Service-Policy" --policy-document "$policy"
+
+
+
