@@ -1,3 +1,4 @@
+---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
@@ -34,32 +35,30 @@ spec:
     global:
       hosts:
         default:
-          protocol:
-            https
-          host:
-            stg.tidepool.org
+          protocol: https
+          host: stg.tidepool.org
         http: {}
         https:
           stg:
             name: stg.tidepool.org
             tlssecret:
-               name: tidepool-org
-               namespace: default
+              name: tidepool-org
+              namespace: default
           api:
             name: stg-api.tidepool.org
             tlssecret:
-               name: tidepool-org
-               namespace: default
+              name: tidepool-org
+              namespace: default
           app:
             name: stg-app.tidepool.org
             tlssecret:
-               name: tidepool-org
-               namespace: default
+              name: tidepool-org
+              namespace: default
           uploads:
             name: stg-uploads.tidepool.org
             tlssecret:
-               name: tidepool-org
-               namespace: default
+              name: tidepool-org
+              namespace: default
       gateway:
         name: gloo
       mongo:
@@ -72,7 +71,7 @@ spec:
     nosqlclient:
       enabled: false
     blip:
-      image: tidepool/blip:v1.21.0
+      image: tidepool/blip:v1.22.0
     export:
       enabled: true
       image: tidepool/export:v1.3.2
@@ -109,7 +108,8 @@ spec:
       image: tidepool/platform-user:go11110-89257ec20c2aa8899b76d7b8264619ce55d3f8bb
     seagull:
       image: tidepool/seagull:v0.7.2
-      salt: "Seagulls are the salt of the earth, without them, the coastline would not smell of dead fish"
+      salt: "Seagulls are the salt of the earth, without them, the coastline would\
+        \ not smell of dead fish"
     shoreline:
       image: tidepool/shoreline:v0.14.2
       salt: "fuheqwiuhfkjkljdsoifkqm"
