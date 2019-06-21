@@ -5,121 +5,121 @@
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-auth-9222
-  namespace: $relname
+  name: '{{ $.Release.Name }}-auth-9222'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: auth
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9222
 --- #file: gloo-blip-3000-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-blip-3000
-  namespace: $relname
+  name: '{{ $.Release.Name }}-blip-3000'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: blip
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 3000
 --- #file: gloo-blob-9225-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-blob-9225
-  namespace: $relname
+  name: '{{ $.Release.Name }}-blob-9225'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: blob
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9225
 --- #file: gloo-data-9220-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-data-9220
-  namespace: $relname
+  name: '{{ $.Release.Name }}-data-9220'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: data
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9220
 --- #file: gloo-export-9300-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-export-9300
-  namespace: $relname
+  name: '{{ $.Release.Name }}-export-9300'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: export
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9300
 --- #file: gloo-gatekeeper-9123-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-gatekeeper-9123
-  namespace: $relname
+  name: '{{ $.Release.Name }}-gatekeeper-9123'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: gatekeeper
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9123
 --- #file: gloo-highwater-9191-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-highwater-9191
-  namespace: $relname
+  name: '{{ $.Release.Name }}-highwater-9191'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: highwater
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9191
 --- #file: gloo-hydrophone-9157-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-hydrophone-9157
-  namespace: $relname
+  name: '{{ $.Release.Name }}-hydrophone-9157'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: hydrophone
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9157
 --- #file: gloo-image-9226-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-image-9226
-  namespace: $relname
+  name: '{{ $.Release.Name }}-image-9226'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: image
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9226
 --- #file: gloo-internal-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
   name: internal
-  namespace: $relname
+  namespace: '{{ $.Release.Name }}'
 spec:
   displayName: internal
   virtualHost:
     domains:
-    - internal.$relname
+    - internal.{{ $.Release.Name }}
     routes:
     - matcher:
         methods:
@@ -130,8 +130,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-auth-9222
-            namespace: $relname
+            name: '{{ $.Release.Name }}-auth-9222'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -141,8 +141,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-auth-9222
-            namespace: $relname
+            name: '{{ $.Release.Name }}-auth-9222'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -150,8 +150,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blip-3000
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blip-3000'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -162,8 +162,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-data-9220
-            namespace: $relname
+            name: '{{ $.Release.Name }}-data-9220'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -173,8 +173,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-auth-9222
-            namespace: $relname
+            name: '{{ $.Release.Name }}-auth-9222'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -182,8 +182,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blip-3000
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blip-3000'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - POST
@@ -191,8 +191,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blip-3000
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blip-3000'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -201,8 +201,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-auth-9222
-            namespace: $relname
+            name: '{{ $.Release.Name }}-auth-9222'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -210,8 +210,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-data-9220
-            namespace: $relname
+            name: '{{ $.Release.Name }}-data-9220'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -221,8 +221,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-image-9226
-            namespace: $relname
+            name: '{{ $.Release.Name }}-image-9226'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -230,8 +230,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-auth-9222
-            namespace: $relname
+            name: '{{ $.Release.Name }}-auth-9222'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -240,8 +240,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-data-9220
-            namespace: $relname
+            name: '{{ $.Release.Name }}-data-9220'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -249,8 +249,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blip-3000
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blip-3000'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -258,8 +258,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blip-3000
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blip-3000'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -267,8 +267,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blob-9225
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blob-9225'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -278,8 +278,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-data-9220
-            namespace: $relname
+            name: '{{ $.Release.Name }}-data-9220'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -289,8 +289,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-image-9226
-            namespace: $relname
+            name: '{{ $.Release.Name }}-image-9226'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -300,8 +300,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-auth-9222
-            namespace: $relname
+            name: '{{ $.Release.Name }}-auth-9222'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -311,8 +311,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blob-9225
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blob-9225'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - DELETE
@@ -320,8 +320,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-data-9220
-            namespace: $relname
+            name: '{{ $.Release.Name }}-data-9220'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - POST
@@ -329,8 +329,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-jellyfish-9122
-            namespace: $relname
+            name: '{{ $.Release.Name }}-jellyfish-9122'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -338,8 +338,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blip-3000
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blip-3000'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -347,8 +347,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blip-3000
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blip-3000'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -356,8 +356,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-jellyfish-9122
-            namespace: $relname
+            name: '{{ $.Release.Name }}-jellyfish-9122'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -365,8 +365,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blip-3000
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blip-3000'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -375,8 +375,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blob-9225
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blob-9225'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -386,8 +386,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-task-9224
-            namespace: $relname
+            name: '{{ $.Release.Name }}-task-9224'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -396,8 +396,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-user-9221
-            namespace: $relname
+            name: '{{ $.Release.Name }}-user-9221'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -410,8 +410,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-data-9220
-            namespace: $relname
+            name: '{{ $.Release.Name }}-data-9220'
+            namespace: '{{ $.Release.Name }}'
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -422,8 +422,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-jellyfish-9122
-            namespace: $relname
+            name: '{{ $.Release.Name }}-jellyfish-9122'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -436,8 +436,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-user-9221
-            namespace: $relname
+            name: '{{ $.Release.Name }}-user-9221'
+            namespace: '{{ $.Release.Name }}'
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -448,8 +448,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-data-9220
-            namespace: $relname
+            name: '{{ $.Release.Name }}-data-9220'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - POST
@@ -459,8 +459,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-data-9220
-            namespace: $relname
+            name: '{{ $.Release.Name }}-data-9220'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -470,8 +470,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-image-9226
-            namespace: $relname
+            name: '{{ $.Release.Name }}-image-9226'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -484,8 +484,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-seagull-9120
-            namespace: $relname
+            name: '{{ $.Release.Name }}-seagull-9120'
+            namespace: '{{ $.Release.Name }}'
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -496,8 +496,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blip-3000
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blip-3000'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -510,8 +510,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-data-9220
-            namespace: $relname
+            name: '{{ $.Release.Name }}-data-9220'
+            namespace: '{{ $.Release.Name }}'
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -527,8 +527,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-highwater-9191
-            namespace: $relname
+            name: '{{ $.Release.Name }}-highwater-9191'
+            namespace: '{{ $.Release.Name }}'
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -544,8 +544,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-hydrophone-9157
-            namespace: $relname
+            name: '{{ $.Release.Name }}-hydrophone-9157'
+            namespace: '{{ $.Release.Name }}'
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -561,8 +561,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-message-api-9119
-            namespace: $relname
+            name: '{{ $.Release.Name }}-message-api-9119'
+            namespace: '{{ $.Release.Name }}'
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -574,8 +574,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-task-9224
-            namespace: $relname
+            name: '{{ $.Release.Name }}-task-9224'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -583,8 +583,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blip-3000
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blip-3000'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -592,8 +592,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-data-9220
-            namespace: $relname
+            name: '{{ $.Release.Name }}-data-9220'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -606,8 +606,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-export-9300
-            namespace: $relname
+            name: '{{ $.Release.Name }}-export-9300'
+            namespace: '{{ $.Release.Name }}'
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -623,8 +623,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-gatekeeper-9123
-            namespace: $relname
+            name: '{{ $.Release.Name }}-gatekeeper-9123'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -632,8 +632,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blip-3000
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blip-3000'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -641,8 +641,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blip-3000
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blip-3000'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - POST
@@ -650,8 +650,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-jellyfish-9122
-            namespace: $relname
+            name: '{{ $.Release.Name }}-jellyfish-9122'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -664,8 +664,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-shoreline-9107
-            namespace: $relname
+            name: '{{ $.Release.Name }}-shoreline-9107'
+            namespace: '{{ $.Release.Name }}'
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -676,8 +676,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-tide-whisperer-9127
-            namespace: $relname
+            name: '{{ $.Release.Name }}-tide-whisperer-9127'
+            namespace: '{{ $.Release.Name }}'
       routePlugins:
         prefixRewrite:
           prefixRewrite: /
@@ -688,8 +688,8 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-jellyfish-9122
-            namespace: $relname
+            name: '{{ $.Release.Name }}-jellyfish-9122'
+            namespace: '{{ $.Release.Name }}'
     - matcher:
         methods:
         - GET
@@ -697,90 +697,90 @@ spec:
       routeAction:
         single:
           upstream:
-            name: $relname-blip-3000
-            namespace: $relname
+            name: '{{ $.Release.Name }}-blip-3000'
+            namespace: '{{ $.Release.Name }}'
 --- #file: gloo-jellyfish-9122-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-jellyfish-9122
-  namespace: $relname
+  name: '{{ $.Release.Name }}-jellyfish-9122'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: jellyfish
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9122
 --- #file: gloo-message-api-9119-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-message-api-9119
-  namespace: $relname
+  name: '{{ $.Release.Name }}-message-api-9119'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: message-api
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9119
 --- #file: gloo-seagull-9120-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-seagull-9120
-  namespace: $relname
+  name: '{{ $.Release.Name }}-seagull-9120'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: seagull
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9120
 --- #file: gloo-shoreline-9107-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-shoreline-9107
-  namespace: $relname
+  name: '{{ $.Release.Name }}-shoreline-9107'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: shoreline
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9107
 --- #file: gloo-task-9224-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-task-9224
-  namespace: $relname
+  name: '{{ $.Release.Name }}-task-9224'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: task
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9224
 --- #file: gloo-tide-whisperer-9127-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-tide-whisperer-9127
-  namespace: $relname
+  name: '{{ $.Release.Name }}-tide-whisperer-9127'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: tide-whisperer
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9127
 --- #file: gloo-user-9221-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: $relname-user-9221
-  namespace: $relname
+  name: '{{ $.Release.Name }}-user-9221'
+  namespace: '{{ $.Release.Name }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: user
-      serviceNamespace: $relname
+      serviceNamespace: '{{ $.Release.Name }}'
       servicePort: 9221
 

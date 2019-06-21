@@ -15,29 +15,32 @@ import yaml
 # These values must be provided by Helm when the resulting Helm template file is interpreted
 
 # Names use for key and value of fields for virtual hosts
-VIRTUAL_HOST_KEY = "$key"
-VIRTUAL_HOST_SPEC = "$spec"
+
+KEY = "$key"
+SPEC= "$spec"
+VIRTUAL_HOST_KEY = '{{ ' + KEY + ' }}'
+VIRTUAL_HOST_SPEC = '{{ ' + SPEC + ' }}'
 
 """The host served by the API Gateway"""
-HOST = VIRTUAL_HOST_SPEC + ".name"
+HOST = '{{ ' + SPEC + '.name }}'
 
 """The name used for SNI"""
-EXTERNAL_HOST_NAME = VIRTUAL_HOST_KEY + '.name'
+EXTERNAL_HOST_NAME = '{{ ' + SPEC + '.name }}'
 
 """The name of the TLS secret containing the TLS cert"""
-TLS_SECRET_NAME = VIRTUAL_HOST_SPEC +'.tlssecret.name'
+TLS_SECRET_NAME = '{{ ' + SPEC + '.tlssecret.name }}'
 
 """The namespace of the TLS secret containing the TLS cert"""
-TLS_SECRET_NAMESPACE = VIRTUAL_HOST_SPEC + '.tlssecret.namespace'
+TLS_SECRET_NAMESPACE = '{{ ' + SPEC + '.tlssecret.namespace }}'
 
 """The name of the Gateway Proxy Service"""
-GATEWAY_PROXY_NAME = '$proxyname'
+GATEWAY_PROXY_NAME = '{{ $proxyname }}'
 
 """The namespace of the Gateway Proxy Service"""
-GATEWAY_PROXY_NAMESPACE = '$proxynamespace'
+GATEWAY_PROXY_NAMESPACE = '{{ $proxynamespace }}'
 
 """The environment being instantiated"""
-ENVIRONMENT = '$relname'
+ENVIRONMENT = '{{ $.Release.Name }}'
 
 """The name used to access the virtual service from other services"""
 INTERNAL_VS_NAME = 'internal'
