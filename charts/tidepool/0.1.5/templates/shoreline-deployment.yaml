@@ -83,8 +83,8 @@ spec:
                     "mailchimp": {
                       "url": "{{.Values.shoreline.mailchimp.url}}",
                       "apiKey": "",
-                      "personalLists": {{.Values.shoreline.mailchimp.personalLists}},
-                      "clinicLists": {{.Values.shoreline.mailchimp.clinicLists}}
+                      "personalLists": {{.Values.shoreline.mailchimp.personalLists | nindent 24 -}},
+                      "clinicLists": {{.Values.shoreline.mailchimp.clinicLists | nindent 24}}
                      }
                 }
             }
