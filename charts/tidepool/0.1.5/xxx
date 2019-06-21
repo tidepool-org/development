@@ -3038,32 +3038,32 @@ spec:
                       "url": "https://us7.api.mailchimp.com/3.0",
                       "apiKey": "",
                       "personalLists": 
-                    [
-                      {
-                        "id": "d79b5a3924",
-                        "interests": {
-                          "35d99df867": true
-                        }
-                      },
-                      {
-                        "id": "461feca051"
-                      }
-                    ]
-                    ,
+                        [
+                          {
+                            "id": "d79b5a3924",
+                            "interests": {
+                              "35d99df867": true
+                            }
+                          },
+                          {
+                            "id": "461feca051"
+                          }
+                        ]
+                        ,
                       "clinicLists": 
-                    [
-                      {
-                        "id": "d79b5a3924",
-                        "interests": {
-                          "35d99df867": true,
-                          "03cab91941": true
-                        }
-                      },
-                      {
-                        "id": "627a2577da"
-                      }
-                    ]
-                    
+                        [
+                          {
+                            "id": "d79b5a3924",
+                            "interests": {
+                              "35d99df867": true,
+                              "03cab91941": true
+                            }
+                          },
+                          {
+                            "id": "627a2577da"
+                          }
+                        ]
+                        
                      }
                 }
             }

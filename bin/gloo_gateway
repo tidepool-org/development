@@ -11,6 +11,7 @@ then
 fi
 
 echo "$templates" | mappings | gloo_manifests internal http | single_file "# Auto-generated file by $(basename $0). Do not edit.
+{{- \$relname := .Release.Name -}}
 " "" > $1/templates/gloo-internal.yaml
 
 echo "$templates" | mappings | gloo_manifests external http | single_file "# Auto-generated file by $(basename $0). Do not edit.
