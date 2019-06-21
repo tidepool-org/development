@@ -1,4 +1,3 @@
-values:
    name: fluxcloud
    image: justinbarrack/fluxcloud:v0.3.6
    port: 80
