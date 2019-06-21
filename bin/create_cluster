@@ -30,4 +30,4 @@ do
 done
 
 STACK_NAME=eksctl-${CLUSTER_NAME}-nodegroup-ng-1
-update_node_instance role $STACK_NAME
+update_node_instance_role $STACK_NAME
