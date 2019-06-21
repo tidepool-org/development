@@ -10,7 +10,7 @@ spec:
     path: charts/fluxcloud/0.1.0
     ref: k8s
   values:
-    svc: fluxcloud
+    name: fluxcloud
     slack:
       channel: "#flux"
       github: "https://github.com/tidepool-org/dev-ops"
