@@ -1,5 +1,5 @@
 name: fluxcloud
-image: "justinbarrack/fluxcloud:v0.3.6"
+image: "justinbarrick/fluxcloud:0.3.6"
 port: 80
 containerPort: 3032
 github: "https://github.com/tidepool-org/dev-ops"
