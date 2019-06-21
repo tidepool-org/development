@@ -63,8 +63,8 @@ spec:
         name: gloo
       mongo:
         enabled: false
-        host: 'db.dev.private.tidepool.org'
-        tls: 'true'
+        host: "ip-10-48-33-162.us-west-2.compute.internal"     # db.dev.private.tidepool.org
+        tls: 'false'
       includeSecrets: false
       namespace:
         create: false
