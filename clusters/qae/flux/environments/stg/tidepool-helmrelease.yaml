@@ -117,7 +117,7 @@ spec:
       clinicDemoUserId: "676404ec56"
       mailchimp:
         url: "https://us7.api.mailchimp.com/3.0"
-        personalLists: >
+        personalLists: |
           [
             {
               "id": "d79b5a3924",
@@ -129,7 +129,7 @@ spec:
               "id": "461feca051"
             }
           ]
-        clinicLists: >
+        clinicLists: |
           [
             {
               "id": "d79b5a3924",
