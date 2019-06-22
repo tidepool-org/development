@@ -1,0 +1,46 @@
+#!/bin/bash -x
+#
+# Create kiam-server role if it does not exist
+# Add trust relationship with given principal
+
+PRINCIPAL=${1:-foo}
+base='{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}'
+update='
+      {
+        "Action": "sts:AssumeRole",
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "PRINCIPAL"
+        }
+      }'
+UPDATE=$(echo $update | sed -e "s/PRINCIPAL/$PRINCIPAL/")
+out=$(aws iam get-role --role-name kiam-server)
+if [ $? -ne 0 ]
+then 
+    aws iam create-role --role-name kiam-server --assume-role-policy-document "$base"
+    policy=$base
+else
+    policy=$(echo "$out" | jq .Role.AssumeRolePolicyDocument)
+fi
+
+arns=$(echo "$policy"  | jq '.Statement' | jq '.[].Principal.AWS' | sed -e "s/\"//g")
+for arn in $arns
+do
+	if [ "$arn" == "$PRINCIPAL" ]
+	then
+		exit 0
+	fi
+done
+updated=$(echo "$policy" | jq ".Statement += [ $UPDATE ]")
+aws iam update-assume-role-policy --role-name kiam-server --policy-document "$updated"
