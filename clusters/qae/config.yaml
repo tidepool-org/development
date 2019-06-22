@@ -9,10 +9,22 @@ metadata:
 nodeGroups:
   - name: ng-1
     instanceType: m5.large
-    desiredCapacity: 5
+    desiredCapacity: 3
     ssh:
       publicKeyPath:  ~/.ssh/aws-tidepool-derrickburns.pub
     iam:
       withAddonPolicies:
         certManager: true
+    labels:
+      kiam-server: false
+  - name: ng-kiam
+    instanceType: t3.medium
+    desiredCapacity: 1
+    ssh:
+      publicKeyPath:  ~/.ssh/aws-tidepool-derrickburns.pub
+    labels: 
+      kiam-server: true
+    volumeType: gp2
+    taints:
+      kiam-server: "false:NoExecute"
 
