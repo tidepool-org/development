@@ -4,7 +4,9 @@ kind: Namespace
 metadata:
   name: {{.Release.Namespace}}
   labels:
-      istio-injection: disabled
-      linkerd.io/inject: enabled
+    istio-injection: disabled
+    linkerd.io/inject: enabled
+  annotations:
+    iam.amazonaws.com/permitted: {{ .Release.Namespace }}-Worker
 {{ end }}
 
