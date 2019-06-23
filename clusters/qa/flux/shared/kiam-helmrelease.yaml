@@ -27,7 +27,6 @@ spec:
       extraArgs:
         region: us-west-2
         role-base-arn-autodetect : true
-        assume-role-arn: arn:aws:iam::118346523422:role/kiam-server
     
       extraHostPathMounts:
       - name: ssl-certs
@@ -53,6 +52,10 @@ spec:
       - name: ssl-certs
         mountPath: /etc/ssl/certs
         hostPath: /etc/pki/ca-trust/extracted/pem
+      extraArgs:
+        region: us-west-2
+        role-base-arn-autodetect : true
+        assume-role-arn: arn:aws:iam::118346523422:role/kiam-server
       useHostNetwork: true
       log:
         level: debug
