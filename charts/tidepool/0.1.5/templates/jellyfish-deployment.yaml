@@ -19,6 +19,8 @@ spec:
   strategy: {}
   template:
     metadata:
+      annotations:
+        iam.amazonaws.com/role: {{ .Release.Namespace }}-Worker
       labels:
         app: jellyfish
         app.kubernetes.io/name: {{ include "charts.name" . }}
