@@ -6,4 +6,4 @@ metadata:
     istio-injection: disabled
     linkerd.io/inject: enabled
   annotations:
-    iam.amazonaws.com/permitted: dev-K8s-Service-.*
+    iam.amazonaws.com/permitted: Dev-Worker
