@@ -2,9 +2,12 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: qae
+  name: qa
   region: us-west-2
   version: "1.13"
+
+vpc:
+  cidr: "10.49.0.0/16"
 
 nodeGroups:
   - name: ng-1
@@ -16,15 +19,14 @@ nodeGroups:
       withAddonPolicies:
         certManager: true
     labels:
-      kiam-server: false
+      kiam-server: "false"
   - name: ng-kiam
     instanceType: t3.medium
     desiredCapacity: 1
     ssh:
       publicKeyPath:  ~/.ssh/aws-tidepool-derrickburns.pub
     labels: 
-      kiam-server: true
-    volumeType: gp2
+      kiam-server: "true"
     taints:
       kiam-server: "false:NoExecute"
 

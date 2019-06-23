@@ -19,26 +19,55 @@ kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admi
 #### this command can be used both for the initial install of helm and subsequent upgrades
 `helm init --skip-refresh --upgrade --service-account tiller --history-max 200`
 
-#### create cluster
+#### Create cluster directory
 ```
+BIN="dev-ops/bin"
 cd clusters
 mkdir $CLUSTER_NAME
 cd $CLUSTER_NAME
 ```
-#### this command will create a 5 node cluster and save the configuration in a local file
-#### this will take about 10-15 minutes
-`eksctl create cluster --name $CLUSTER_NAME --nodes-min 5 --nodes-max=6 --region=us-west-2 --kubeconfig=./kubeconfig.yaml`
 
-`BIN="dev-ops/bin"`
+#### Create cluster configuration
+```
+echo <<! >config.yaml
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: qae
+  region: us-west-2
+  version: "1.13"
+
+nodeGroups:
+  - name: ng-1
+    instanceType: m5.large
+    desiredCapacity: 3
+    ssh:
+      publicKeyPath:  ~/.ssh/aws-tidepool-derrickburns.pub
+    iam:
+      withAddonPolicies:
+        certManager: true
+    labels:
+      kiam-server: false
+  - name: ng-kiam
+    instanceType: t3.medium
+    desiredCapacity: 1
+    ssh:
+      publicKeyPath:  ~/.ssh/aws-tidepool-derrickburns.pub
+    labels: 
+      kiam-server: true
+    volumeType: gp2
+    taints:
+      kiam-server: "false:NoExecute"
+!
+```
+
+#### This will take about 10-15 minutes
+`$BIN/create_cluster`
+
 
 #### install Weave flux (from within the cluster subdirectory)
 `$BIN/install_weave`
-
-#### install deploy key into branch w/ write access so that weave can update the cluster
-`$BIN/push_deploy_key`
-
-#### update aws-auth configmap to add tidepool ops users
-`$BIN/install_users`
 
 #### set DNS routes in the manifest and upload that to Git.
 `$BIN/set_routes2 $CLUSTER_NAME`

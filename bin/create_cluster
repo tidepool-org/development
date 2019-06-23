@@ -31,3 +31,4 @@ done
 
 STACK_NAME=eksctl-${CLUSTER_NAME}-nodegroup-ng-1
 update_node_instance_role $STACK_NAME
+#update_kiam_service_role $STACK_NAME

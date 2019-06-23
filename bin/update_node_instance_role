@@ -20,8 +20,6 @@ update='
     "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
     "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess",
-    "arn:aws:iam::118346523422:policy/Route53-Policy",
-    "arn:aws:iam::aws:policy/AmazonSESFullAccess"
   ],
   "Path": "/"
 }'
