@@ -24,9 +24,6 @@ spec:
       # nodeSelector:
       #   kiam-agent: "true"
       #
-      extraArgs:
-        region: us-west-2
-        role-base-arn-autodetect : true
     
       extraHostPathMounts:
       - name: ssl-certs
