@@ -15,13 +15,13 @@ Expand the name of the chart.
 {{- end -}}
 @
 {{- end -}}
-{{- .Values.global.mongo.host -}}:{{.Values.global.mongo.port}}
+{{- .Values.global.mongo.hosts | join "," -}}
 {{- end -}}
 
 {{- define "charts.mongo.end" -}}
 ?ssl={{ .Values.global.mongo.tls}}
-{{- if .Values.global.mongo.replicaSetName -}}
-&replicaSet={{.Values.global.mongo.replicaSetName}}
+{{- if .Values.global.mongo.optParams -}}
+&{{.Values.global.mongo.optParams}}
 {{- end -}}
 {{- end -}}
 
@@ -207,7 +207,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_SESSION_STORE_DATABASE
           value: user
         - name: TIDEPOOL_STORE_ADDRESSES
-          value: '{{.Values.global.mongo.host}}:{{.Values.global.mongo.port}}'
+          value: '{{ .Values.global.mongo.hosts | join "," }}'
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
         - name: TIDEPOOL_STORE_USERNAME
@@ -288,7 +288,7 @@ Create liveness and readiness probes for platform services.
       initContainers:
       - name: init-mongo
         image: busybox
-        command: ['sh', '-c', 'until nc -zvv {{.Values.global.mongo.host}} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -zvv {{.Values.global.mongo.hosts[0]}} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
 {{- end -}} 
 {{- define "charts.init.shoreline" -}}
       initContainers:

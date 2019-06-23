@@ -31,10 +31,12 @@ global:
 
   mongo: 
     enabled: true
-    host: 'mongodb'
+    hosts: 
+      - mongodb
+    port:
+      27017
     username: ''
     password: ''
-    port: 27017
     tls: 'false'
     optParams: ''
   provider:
