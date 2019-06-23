@@ -25,9 +25,9 @@ spec:
       #   kiam-agent: "true"
       #
       extraArgs:
-      - region: us-west-2
-      - role-base-arn-autodetect : true
-      - assume-role-arn: arn:aws:iam::118346523422:role/kiam-server
+        region: us-west-2
+        role-base-arn-autodetect : true
+        assume-role-arn: arn:aws:iam::118346523422:role/kiam-server
     
       extraHostPathMounts:
       - name: ssl-certs
