@@ -56,4 +56,3 @@ spec:
       useHostNetwork: true
       log:
         level: debug
-    ~
