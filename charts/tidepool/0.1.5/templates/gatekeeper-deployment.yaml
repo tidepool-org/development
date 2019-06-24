@@ -27,6 +27,9 @@ spec:
       {{ include "charts.init.mongo" .}}
       containers:
       - env:
+        {{ include "charts.mongo.params" .}}
+        - name: MONGO_DATABASE
+          value: gatekeeper
         - name: DISCOVERY_HOST
           value: 'hakken'
         - name: GATEKEEPER_SECRET
@@ -34,8 +37,6 @@ spec:
             secretKeyRef:
               name: server-secret
               key: gatekeeper
-        - name: MONGO_CONNECTION_STRING
-          value: mongodb://{{include "charts.mongo.start" .}}/gatekeeper{{include "charts.mongo.end" .}}
         - name: NODE_ENV
           value: '{{.Values.global.environment}}'
         - name: PORT

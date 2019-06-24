@@ -27,6 +27,9 @@ spec:
       {{ include "charts.init.mongo" .}}
       containers:
       - env:
+        {{ include "charts.mongo.params" .}}
+        - name: MONGO_DATABASE
+          value: user
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
@@ -61,7 +64,7 @@ spec:
           value: |
             {
                 "mongo": {
-                    "connectionString": "mongodb://{{include "charts.mongo.start" .}}/user{{include "charts.mongo.end" .}}"
+                    "connectionString": ""
                 },
                 "oauth2": {
                     "expireDays": 14

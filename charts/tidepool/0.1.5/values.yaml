@@ -31,13 +31,14 @@ global:
 
   mongo: 
     enabled: true
+    primary: mongodb
     hosts: 
     - mongodb
     port:
       27017
     username: ''
     password: ''
-    tls: 'false'
+    ssl: 'false'
     optParams: ''
   provider:
     dexcom:

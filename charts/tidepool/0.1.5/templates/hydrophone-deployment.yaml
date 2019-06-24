@@ -29,6 +29,9 @@ spec:
       {{ include "charts.init.mongo" .}}
       containers:
       - env:
+        {{ include "charts.mongo.params" .}}
+        - name: MONGO_DATABASE
+          value: confirm
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
@@ -66,7 +69,7 @@ spec:
                     "assetUrl": "{{include "charts.hydrophone.s3.url" .}}"
                 },
                 "mongo": {
-                    "connectionString": "mongodb://{{include "charts.mongo.start" .}}/confirm{{include "charts.mongo.end" .}}"
+                    "connectionString": ""
                 },
                 "service": {
                     "certFile": "config/cert.pem",
