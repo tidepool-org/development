@@ -220,13 +220,12 @@ Create environment variables used by all platform services.
           value: tidepool
         - name: TIDEPOOL_STORE_USERNAME
           value: '{{.Values.global.mongo.username}}'
-{{ if .Values.global.mongo.usepassword }}'
         - name: TIDEPOOL_STORE_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mongo
               key: password
-{{ end }}
+              optional: true
         - name: TIDEPOOL_STORE_TLS
           value: '{{.Values.global.mongo.ssl}}'
         - name: TIDEPOOL_STORE_OPT_PARAMS
