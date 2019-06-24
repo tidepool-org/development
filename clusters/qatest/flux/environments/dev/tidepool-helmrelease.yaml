@@ -88,7 +88,7 @@ spec:
       enabled: true
       image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
     gatekeeper:
-      image: tidepool/gatekeeper:mongo-params-592bf69a733330b0d2fea82b5330efc63453173d
+      image: tidepool/gatekeeper:mongo-params-4bc82ec7c82d8f7573be8ad122b711ca87361d39
     highwater:
       image: tidepool/highwater:develop-3f0838c29e726230b616638d97f593ba07607bab
       salt: "DVkFvvX1dr1PBw4YmMkI"
