@@ -32,7 +32,7 @@ global:
   mongo: 
     enabled: true
     hosts: 
-      - mongodb
+    - mongodb
     port:
       27017
     username: ''
