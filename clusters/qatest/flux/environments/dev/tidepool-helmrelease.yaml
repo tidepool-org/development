@@ -64,6 +64,7 @@ spec:
       mongo:
         enabled: false
         #host: "ip-10-48-33-162.us-west-2.compute.internal"     # db.dev.private.tidepool.org
+        primary: "cluster0-shard-00-00-hu2cn.mongodb.net"
         hosts:
         - "cluster0-shard-00-00-hu2cn.mongodb.net"
         - "cluster0-shard-00-01-hu2cn.mongodb.net"
