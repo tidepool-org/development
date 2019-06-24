@@ -171,4 +171,4 @@ spec:
             }
           ]
     tidewhisperer:
-      image: tidepool/tide-whisperer:develop-a5c310888e15262c491e9af476e7af9acf90d1f4
+      image: tidepool/tide-whisperer:develop-8472e2b74d678fc8fe6d7afbd3cf9f9a7501b7ed
