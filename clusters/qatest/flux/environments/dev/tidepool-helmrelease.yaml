@@ -154,4 +154,4 @@ spec:
             }
           ]
     tidewhisperer:
-      image: tidepool/tide-whisperer:mongo-params-b0ae94871d6a912620e7b3bf1b9ec7649ec969bf
+      image: tidepool/tide-whisperer:mongo-params-7d6cf6dfbe4a5f869f7c2868484bbd951a927bc4
