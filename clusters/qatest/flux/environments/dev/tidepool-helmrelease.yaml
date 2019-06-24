@@ -74,7 +74,7 @@ spec:
         - "cluster0-shard-00-02-hu2cn.mongodb.net"
         port: 27017
         username: derrickburns
-        password: ihHY12klOHnMDgut
+        usepassword: true
         tls: 'true'
         optParams: 'replicaSet=Cluster0-shard-0&authSource=admin&w=majority'
       includeSecrets: false
