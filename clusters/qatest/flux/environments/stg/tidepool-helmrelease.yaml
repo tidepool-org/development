@@ -66,7 +66,7 @@ spec:
         primary: "ip-10-32-34-91.us-west-2.compute.internal"
         hosts: 
         - "ip-10-32-34-91.us-west-2.compute.internal" # db.stg.private.tidepool.org
-        tls: 'true'
+        ssl: 'true'
       includeSecrets: false
       namespace:
         create: false
