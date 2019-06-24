@@ -109,7 +109,7 @@ spec:
       image: tidepool/highwater:develop-3f0838c29e726230b616638d97f593ba07607bab
       salt: "DVkFvvX1dr1PBw4YmMkI"
     hydrophone:
-      image: tidepool/hydrophone:develop-a40e55fb70f7cf2a2848859f3b0fff59fd40177b
+      image: tidepool/hydrophone:develop-305e1a6b2950a97de3f2773d5c19033e3d26d15f
     jellyfish:
       image: tidepool/jellyfish:develop-53fdb17c447025698142c55d4ccb16ad01958b4c
     messageapi:
@@ -171,4 +171,4 @@ spec:
             }
           ]
     tidewhisperer:
-      image: tidepool/tide-whisperer:develop-b26bdad5b57ea49c2b05eeaa1e07ff762bc9522c
+      image: tidepool/tide-whisperer:develop-a5c310888e15262c491e9af476e7af9acf90d1f4
