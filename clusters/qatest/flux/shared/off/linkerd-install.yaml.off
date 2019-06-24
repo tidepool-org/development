@@ -1,0 +1,12 @@
+apiVersion: supergloo.solo.io/v1
+kind: Install
+metadata:
+  name: linkerd
+  namespace: default
+spec:
+  installationNamespace: linkerd
+  mesh:
+    linkerd:
+      enableAutoInject: true
+      enableMtls: true
+      version: stable-2.3.0
