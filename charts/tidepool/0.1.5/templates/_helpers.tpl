@@ -13,9 +13,12 @@ Expand the name of the chart.
         - name: MONGO_USER
           value: '{{ .Values.global.mongo.username }}'
 {{ end }}
-{{ if .Values.global.mongo.password }}
+{{ if .Values.global.mongo.usepassword }}
         - name: MONGO_PASSWORD
-          value: '{{ .Values.global.mongo.password }}'
+          valueFrom:
+            secretKeyRef:
+              name: mongo
+              key: password
 {{ end }}
 {{ if .Values.global.mongo.hosts }}
         - name: MONGO_HOSTS
