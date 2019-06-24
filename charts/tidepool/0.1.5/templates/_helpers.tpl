@@ -13,13 +13,12 @@ Expand the name of the chart.
         - name: MONGO_USER
           value: '{{ .Values.global.mongo.username }}'
 {{ end }}
-{{ if .Values.global.mongo.usepassword }}
         - name: MONGO_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mongo
               key: password
-{{ end }}
+              optional: true
 {{ if .Values.global.mongo.hosts }}
         - name: MONGO_HOSTS
           value: '{{ .Values.global.mongo.hosts | join "," }}'

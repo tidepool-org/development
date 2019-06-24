@@ -37,7 +37,6 @@ global:
     port:
       27017
     username: ''
-    usepassword: false
     ssl: 'false'
     optParams: ''
   provider:
