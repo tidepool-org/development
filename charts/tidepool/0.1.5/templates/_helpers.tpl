@@ -30,7 +30,7 @@ Expand the name of the chart.
 {{ end }}
 {{ if .Values.global.mongo.ssl }}
         - name: MONGO_SSL
-          value: {{ .Values.global.mongo.ssl }}
+          value: '{{ .Values.global.mongo.ssl }}'
 {{ end }}
 {{ end }}
 
