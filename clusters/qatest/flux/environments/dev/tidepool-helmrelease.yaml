@@ -119,7 +119,7 @@ spec:
     user:
       image: tidepool/platform-user:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
     seagull:
-      image: tidepool/seagull:mongo-params-67a8a60eaaee7a1b9abf777fe236c2367bda5975
+      image: tidepool/seagull:mongo-params-b4164ea3b432cf4b01a768136540e29b62fb3da9
       salt: "Seagulls are the salt of the earth, without them, the coastline would\
         \ not smell of dead fish"
     shoreline:
