@@ -6,25 +6,44 @@ metadata:
   namespace: dev
   annotations:
     flux.weave.works/automated: "true"
-    flux.weave.works/tag.shoreline: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.tidewhisperer: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.blip: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.gatekeeper: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.highwater: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.jellyfish: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.export: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.seagull: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.hydrophone: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.messageapi: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.auth: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.blob: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.data: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.image: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.migrations: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.notification: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.task: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.tools: regexp:^v\d+\.\d+\.\d+$
-    flux.weave.works/tag.user: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.shoreline: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.tidewhisperer: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.blip: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.gatekeeper: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.highwater: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.jellyfish: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.export: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.seagull: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.hydrophone: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.messageapi: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.auth: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.blob: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.data: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.image: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.migrations: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.notification: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.task: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.tools: regexp:^v\d+\.\d+\.\d+$
+    #flux.weave.works/tag.user: regexp:^v\d+\.\d+\.\d+$
+    flux.weave.works/tag.auth: glob:develop-*
+    flux.weave.works/tag.blip: glob:develop-*
+    flux.weave.works/tag.blob: glob:develop-*
+    flux.weave.works/tag.data: glob:develop-*
+    flux.weave.works/tag.export: glob:develop-*
+    flux.weave.works/tag.gatekeeper: glob:develop-*
+    flux.weave.works/tag.highwater: glob:develop-*
+    flux.weave.works/tag.hydrophone: glob:develop-*
+    flux.weave.works/tag.image: glob:develop-*
+    flux.weave.works/tag.jellyfish: glob:develop-*
+    flux.weave.works/tag.messageapi: glob:develop-*
+    flux.weave.works/tag.migrations: glob:develop-*
+    flux.weave.works/tag.notification: glob:develop-*
+    flux.weave.works/tag.seagull: glob:develop-*
+    flux.weave.works/tag.shoreline: glob:debug-*
+    flux.weave.works/tag.task: glob:develop-*
+    flux.weave.works/tag.tidewhisperer: glob:develop-*
+    flux.weave.works/tag.tools: glob:develop-*
+    flux.weave.works/tag.user: glob:develop-*
 spec:
   releaseName: dev-tidepool
   chart:
