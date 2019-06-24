@@ -288,7 +288,7 @@ Create liveness and readiness probes for platform services.
       initContainers:
       - name: init-mongo
         image: busybox
-        command: ['sh', '-c', 'until nc -zvv {{ .Values.global.mongo.hosts | index 0 }} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -zvv {{ index .Values.global.mongo.hosts 0 }} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
 {{- end -}} 
 {{- define "charts.init.shoreline" -}}
       initContainers:
