@@ -48,15 +48,14 @@ nodeGroups:
       withAddonPolicies:
         certManager: true
     labels:
-      kiam-server: false
+      kiam-server: "false"
   - name: ng-kiam
     instanceType: t3.medium
     desiredCapacity: 1
     ssh:
       publicKeyPath:  ~/.ssh/aws-tidepool-derrickburns.pub
     labels: 
-      kiam-server: true
-    volumeType: gp2
+      kiam-server: "true"
     taints:
       kiam-server: "false:NoExecute"
 !
@@ -64,6 +63,10 @@ nodeGroups:
 
 #### This will take about 10-15 minutes
 `$BIN/create_cluster`
+
+#### Add NodeInstanceRole to kiam-server role as Trusted Relationship
+
+#### Add Peering relationship with Atlas
 
 
 #### install Weave flux (from within the cluster subdirectory)

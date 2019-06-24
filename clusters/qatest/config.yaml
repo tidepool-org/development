@@ -2,7 +2,7 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: qa
+  name: qatest
   region: us-west-2
   version: "1.13"
 
