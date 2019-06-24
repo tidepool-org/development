@@ -97,7 +97,7 @@ spec:
     jellyfish:
       image: tidepool/jellyfish:mongo-params-35bc76c4d79103afcd9795f2d78f1253ba0214d9
     messageapi:
-      image: tidepool/message-api:mongo-params-722dec6b24231d70b57fc929b3ce64163591d555
+      image: tidepool/message-api:mongo-params-715c22b741a5889e471efd1eee714bc488a2d65a
     auth:
       image: tidepool/platform-auth:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
     blob:
