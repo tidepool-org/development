@@ -29,6 +29,9 @@ spec:
       {{ include "charts.init.mongo" .}}
       containers:
       - env:
+        {{ include "charts.mongo.params" .}}
+        - name: MONGO_DATABASE
+          value: 'data'
         - name: SKIP_HAKKEN
           value: "true"
         - name: DISCOVERY_HOST
@@ -37,8 +40,6 @@ spec:
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.global.ports.gatekeeper}}"}]}'
         - name: MINIMUM_UPLOADER_VERSION
           value: 0.251.0
-        - name: MONGO_CONNECTION_STRING
-          value: mongodb://{{include "charts.mongo.start" .}}/data{{include "charts.mongo.end" .}}
         - name: NODE_ENV
           value: '{{.Values.global.environment}}'
         - name: PORT
