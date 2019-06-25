@@ -66,7 +66,8 @@ spec:
           value: |
             {
                 "hydrophone": {
-                    "assetUrl": "{{include "charts.hydrophone.s3.url" .}}"
+                    "assetUrl": "{{include "charts.hydrophone.s3.url" .}}",
+                    "webUrl": "{{ .Values.global.hosts.default.protocol }}://{{ .Values.global.hosts.default.host }}"
                 },
                 "mongo": {
                     "connectionString": ""
