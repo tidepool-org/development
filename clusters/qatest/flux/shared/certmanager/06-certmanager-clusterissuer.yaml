@@ -9,8 +9,7 @@ spec:
     email: derrick@tidepool.org
     privateKeySecretRef:
       name: letsencrypt-staging
-    dns01:
-      providers:
-      - name: route53
+    solvers:
+      dns01:
         route53:
           region: us-west-2
