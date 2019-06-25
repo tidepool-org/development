@@ -122,7 +122,7 @@ spec:
       salt: "Seagulls are the salt of the earth, without them, the coastline would\
         \ not smell of dead fish"
     shoreline:
-      image: tidepool/shoreline:mongo-params-fff499243e443d775df5bf37a0e20339f80a137f
+      image: tidepool/shoreline:mongo-params-a60ec59254a1ccb213f57aaaeb870bd7dd960514
       salt: "fuheqwiuhfkjkljdsoifkqm"
       longtermkey: "bnthqfizruxgjsmckpwevaoydl"
       clinicDemoUserId: "e79b15328a"
