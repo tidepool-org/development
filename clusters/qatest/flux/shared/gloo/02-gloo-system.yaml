@@ -10,7 +10,7 @@ spec:
   chart:
     repository: https://storage.googleapis.com/solo-public-helm/
     name: gloo
-    version: 0.13.30
+    version: 0.14.1
   values:
     namespace:
       create: false
