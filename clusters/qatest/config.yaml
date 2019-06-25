@@ -15,14 +15,14 @@ nodeGroups:
     desiredCapacity: 3
     ssh:
       publicKeyPath:  ~/.ssh/aws-tidepool-derrickburns.pub
-    iam:
-      withAddonPolicies:
-        certManager: true
     labels:
       kiam-server: "false"
   - name: ng-kiam
     instanceType: t3.medium
     desiredCapacity: 1
+    iam:
+      withAddonPolicies:
+        certManager: true
     ssh:
       publicKeyPath:  ~/.ssh/aws-tidepool-derrickburns.pub
     labels: 

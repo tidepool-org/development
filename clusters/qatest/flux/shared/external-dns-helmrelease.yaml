@@ -11,6 +11,8 @@ spec:
     name: external-dns
     version: 1.7.9
   values:
+    podAnnotations:
+      iam.amazonaws.com/role: External-DNS-Role
     domainfilter: tidepool.org
     provider: aws
     image:
