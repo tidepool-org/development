@@ -3,7 +3,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: external-dns
-  namespace: default
+  namespace: shared
 spec:
   releaseName: external-dns
   chart:
