@@ -46,22 +46,22 @@ spec:
             name: dev.tidepool.org
             tlssecret:
               name: tidepool-org
-              namespace: default
+              namespace: gloo-system
           api:
             name: dev-api.tidepool.org
             tlssecret:
               name: tidepool-org
-              namespace: default
+              namespace: gloo-system
           app:
             name: dev-app.tidepool.org
             tlssecret:
               name: tidepool-org
-              namespace: default
+              namespace: gloo-system
           uploads:
             name: dev-uploads.tidepool.org
             tlssecret:
               name: tidepool-org
-              namespace: default
+              namespace: gloo-system
       gateway:
         name: gloo
       mongo:
