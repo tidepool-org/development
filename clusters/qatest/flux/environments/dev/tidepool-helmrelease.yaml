@@ -92,7 +92,7 @@ spec:
       image: tidepool/highwater:develop-3f0838c29e726230b616638d97f593ba07607bab
       salt: "DVkFvvX1dr1PBw4YmMkI"
     hydrophone:
-      image: tidepool/hydrophone:mongo-params-68478329725d6e53ab4120949c44285871ab3c2d
+      image: tidepool/hydrophone:mongo-params-5cdb4008691296a7ab1c3d975c7633e1d209c61d
     jellyfish:
       image: tidepool/jellyfish:mongo-params-7e44a9d5f3abf40076312d363e649dac04ae4d6d
     messageapi:
