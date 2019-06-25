@@ -1,4 +1,6 @@
-### Services
+# Service Guide
+
+Installed in this cluster are a number of support services.
 
 - cert-manager - installs and rotates TLS certificates
 - gloo - routes traffic to services (i.e. the API Gateway)
