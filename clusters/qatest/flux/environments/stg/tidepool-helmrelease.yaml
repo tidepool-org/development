@@ -43,22 +43,22 @@ spec:
             name: stg.tidepool.org
             tlssecret:
               name: tidepool-org
-              namespace: default
+              namespace: gloo-system
           api:
             name: stg-api.tidepool.org
             tlssecret:
               name: tidepool-org
-              namespace: default
+              namespace: gloo-system
           app:
             name: stg-app.tidepool.org
             tlssecret:
               name: tidepool-org
-              namespace: default
+              namespace: gloo-system
           uploads:
             name: stg-uploads.tidepool.org
             tlssecret:
               name: tidepool-org
-              namespace: default
+              namespace: gloo-system
       gateway:
         name: gloo
       mongo:
