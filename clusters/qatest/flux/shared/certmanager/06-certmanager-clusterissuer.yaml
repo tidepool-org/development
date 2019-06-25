@@ -10,6 +10,6 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-staging
     solvers:
-      dns01:
-        route53:
-          region: us-west-2
+    - dns01:
+       route53:
+         region: us-west-2
