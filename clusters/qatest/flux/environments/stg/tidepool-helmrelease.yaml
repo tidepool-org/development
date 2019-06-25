@@ -64,7 +64,7 @@ spec:
       mongo:
         enabled: false
         primary: "ip-10-32-34-91.us-west-2.compute.internal"
-        hosts: 
+        hosts:
         - "ip-10-32-34-91.us-west-2.compute.internal" # db.stg.private.tidepool.org
         ssl: 'true'
       includeSecrets: false
@@ -73,7 +73,7 @@ spec:
     nosqlclient:
       enabled: false
     blip:
-      image: tidepool/blip:v1.22.0
+      image: tidepool/blip:v1.22.1
     export:
       enabled: true
       image: tidepool/export:v1.3.2
