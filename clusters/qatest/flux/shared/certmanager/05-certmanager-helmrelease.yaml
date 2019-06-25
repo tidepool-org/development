@@ -12,4 +12,6 @@ spec:
     name: cert-manager
     version: v0.8.1
   values:
-    {}
+    podAnnotations:
+      iam.amazonaws.com/role: External-DNS-Role
+
