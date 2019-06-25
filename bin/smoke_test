@@ -1,15 +1,12 @@
 #!/bin/bash -xv
 # Smoke test a given ENVIRONMENT on a given CLUSTER using a given PROTOCOL
 
-ENVIRONMENT=${1:-develop}
-CLUSTER=${2:-integration-test.tidepool.org}
-PROTOCOL=${3:-http}
+URL=${1:-https://dev.tidepool.org}
 
 # Which ghost inspector suite to run
-GHOST_SUITE_ID=${4:-5cf5ba3f9ffa2f2438ed2e0f}
+GHOST_SUITE_ID=${2:-5cf5ba3f9ffa2f2438ed2e0f}
 
 # Tidpool API key for Ghost Inspector
-GHOST_API_KEY=${5:-1d903bbbe266b0b560b80a5dff6659cfdf8aec8f}
+GHOST_API_KEY=${3:-1d903bbbe266b0b560b80a5dff6659cfdf8aec8f}
 
-CLUSTER_URL=${PROTOCOL}://${ENVIRONMENT}.${CLUSTER}
-curl "https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=${CLUSTER_URL}" | grep -c '"passing":false'
+curl "https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=${URL}" | grep -c '"passing":false'
