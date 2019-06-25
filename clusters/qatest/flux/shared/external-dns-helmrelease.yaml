@@ -11,15 +11,6 @@ spec:
     name: external-dns
     version: 1.7.9
   values:
-    nodeSelector:
-      kiam-server: "true"
-    # This states that the server pods can withstand the taint on the second node group that prevents
-    # other pods from being scheduled there.
-    tolerations:
-    - key: kiam-server
-      operator: Equal
-      value: "false"
-      effect: NoExecute
     domainfilter: tidepool.org
     provider: aws
     image:
