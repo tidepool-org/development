@@ -52,15 +52,16 @@ then
       --set helmOperator.replicaCount=1 \
       --set helmOperator.updateChartDeps=true \
       --set helmOperator.createCRD=${INSTALL_CRDS} \
-      --set git.secretName=${GIT_SECRET_NAME} \
+      --set helmOperator.git.secretName=${GIT_SECRET_NAME} \
+      --set syncGarbageCollection.enabled=true \
       --set git.url=${SOURCE_REPO} \
       --set git.path=${SOURCE_PATH} \
       --set git.branch=${SOURCE_BRANCH} \
       --set git.pollInterval=1m \
       --set git.timeoout=40s \
-      --namespace default \
+      --namespace flux \
       --reuse-values \
-      --set additionalArgs='{--sync-garbage-collection,--connect=ws://fluxcloud}' \
+      --set additionalArgs='{--connect=ws://fluxcloud}' \
       flux \
       chart/flux
 else

@@ -1,7 +1,0 @@
-#!/bin/bash
-# adds Tidepool ops members as system:masters of current cluster
-
-USERS="- userarn: arn:aws:iam::118346523422:user/lennartgoedhart-cli\n  username: lennartgoedhart-cli\n  groups:\n    - system:masters\n- userarn: arn:aws:iam::118346523422:user/benderr-cli\n  username: benderr-cli\n  groups:\n    - system:masters\n- userarn: arn:aws:iam::118346523422:user/derrick-cli\n  username: derrick-cli\n  groups:\n    - system:masters\n- userarn: arn:aws:iam::118346523422:user/mikeallgeier-cli\n  username: mikeallgeier-cli\n  groups:\n    - system:masters\n"
-
-kubectl patch configmap -n kube-system aws-auth -p="{\"op\": \"replace\", \"path\": \"/data/mapUsers\", \"value\": \"$USERS\" }"
-
