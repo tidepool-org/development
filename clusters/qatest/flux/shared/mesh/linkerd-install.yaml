@@ -9,4 +9,4 @@ spec:
     linkerd:
       enableAutoInject: true
       enableMtls: true
-      version: stable-2.3.0
+      version: stable-2.3.2
