@@ -2,7 +2,7 @@ apiVersion: supergloo.solo.io/v1
 kind: Install
 metadata:
   name: linkerd
-  namespace: default
+  namespace: supergloo-system
 spec:
   installationNamespace: linkerd
   mesh:

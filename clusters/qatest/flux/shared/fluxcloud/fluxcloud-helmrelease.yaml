@@ -2,7 +2,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: fluxcloud
-  namespace: default
+  namespace: flux
 spec:
   releaseName: fluxcloud
   chart:
