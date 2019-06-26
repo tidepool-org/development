@@ -23,6 +23,8 @@ spec:
         app: highwater
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        linkerd.io/inject: enabled
     spec:
       containers:
       - env:

@@ -23,6 +23,8 @@ spec:
         app: shoreline
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        linkerd.io/inject: enabled
     spec:
       {{ include "charts.init.mongo" .}}
       containers:
