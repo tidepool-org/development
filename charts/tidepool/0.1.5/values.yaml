@@ -1,71 +1,74 @@
 global:
   ports:
-    blip: 3000
-    export: 9300
-    gatekeeper: 9123
-    hakken: 8000
-    highwater: 9191
-    hydrophone: 9157
-    jellyfish: 9122
-    messageapi: 9119
-    auth: 9222
-    blob: 9225
-    data: 9220
-    image: 9226
-    notification: 9223
-    task: 9224
-    user: 9221
-    seagull: 9120
-    shoreline: 9107
-    tidewhisperer: 9127
+    blip: 3000                                                        # blip service internal port
+    export: 9300                                                      # export service internal port
+    gatekeeper: 9123                                                  # gatekeeper service internal port
+    hakken: 8000                                                      # hakken service internal port (UNUSED)
+    highwater: 9191                                                   # highwater service internal port
+    hydrophone: 9157                                                  # hydrophone service internal port
+    jellyfish: 9122                                                   # jellyfish service internal port
+    messageapi: 9119                                                  # messageapi service internal port
+    auth: 9222                                                        # auth service internal port
+    blob: 9225                                                        # blob service internal port
+    data: 9220                                                        # data service internal port
+    image: 9226                                                       # image service internal port
+    notification: 9223                                                # notification service internal port
+    task: 9224                                                        # task service internal port
+    user: 9221                                                        # user service internal port
+    seagull: 9120                                                     # seagull service internal port
+    shoreline: 9107                                                   # shoreline service internal port
+    tidewhisperer: 9127                                               # tidewhisperer service internal port
   aws:
-    region: us-west-2
-  environment: production
-  fullnameOverride: ""
+    region: us-west-2                                                 # AWS region service to be deployed in
+  environment: production                                             #
+  fullnameOverride: ""                                                #
   image:
-    pullPolicy: IfNotPresent
-  includeSecrets: true
+    pullPolicy: IfNotPresent                                          # Docker image pull policy
+  includeSecrets: true                                                # whether to install secrets for local development
   namespace:
-    create: true
+    create: true                                                      # whether to create the namespace for the service
   nameOverride: ""
 
-  mongo: 
-    enabled: true
-    primary: mongodb
-    hosts: 
-    - mongodb
+  mongo:
+    enabled: true                                                     # whether to launch a local Mongo instance
+    primary: mongodb                                                  # a single Mongo instance name:port
+    hosts:
+    - mongodb                                                         # one (of possibly several) Mongo instance name:port names
     port:
-      27017
-    username: ''
-    ssl: 'false'
-    optParams: ''
+      27017                                                           # the Mongo port
+    username: ''                                                      # a username in the Mongo instance
+    ssl: 'false'                                                      # whether to use SSL to communicate with Mongo
+    optParams: ''                                                     # optional parameters to pass on the Mongo connection string
   provider:
     dexcom:
-      token: { url: 'https://api.dexcom.com/v1/oauth2/token' }
-      authorize: { url: 'https://api.dexcom.com/v1/oauth2/login?prompt=login' }
-      client: { url: "https://api.dexcom.com" }
+      token:
+        url: 'https://api.dexcom.com/v1/oauth2/token'                 # the url to retrieve an Oauth2 token from Dexcom
+      authorize:
+        url: 'https://api.dexcom.com/v1/oauth2/login?prompt=login'    # the url to get authorization from Dexcom
+      client:
+        url: "https://api.dexcom.com"                                 # the Dexcom client API url
   hosts:
     default:
       protocol:
-        http
+        http                                                          # the protocol to use for signup emails
       host:
-        localhost
-    http:
-      localhost:
-        name: localhost
-    #https:
-      #dev-s:
-        #name: dev.tidepool.org
-        #tlssecret:
-          #name: tidepool-org
-          #namespace: default
+        localhost                                                     # a valid DNS name for the service
+    http:                                                             # a map of hosts that provide HTTP access to the service
+      localhost:                                                      # a simple identifier for a host providing HTTP access
+        name: localhost                                               # a DNS name for a host providing HTTP access
+    #https:                                                           # a map of hosts that provide HTTPS access to the service
+      #dev:                                                           # a map of hosts that provide HTTPS access to the service
+        #name: dev.tidepool.org                                       # a simple identifier for a host providing HTTPS access
+        #tlssecret:                                                   # a TLS secret containing the Cert for the host
+          #name: tidepool-org                                         # the name of the TLS secret
+          #namespace: default                                         # the namespace of the TLS secret
   gateway:
     name: gloo
     proxy:
-      name:  gateway-proxy
-      namespace: gloo-system
+      name:  gateway-proxy                                            # the name of the API gateway
+      namespace: gloo-system                                          # the namespace of the API gateway
 
-  resources:
+  resources:                                                          # the resources for each service
     {}
     # If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
@@ -84,14 +87,14 @@ nosqlclient:
   port: 3001
 
 # Tidepool services
-blip: 
+blip:
   image: tidepool/blip:v1.17.0
 export:
   image: tidepool/export:v1.3.2
   enabled: true
-gatekeeper: 
+gatekeeper:
   image: tidepool/gatekeeper:v0.7.2
-highwater: 
+highwater:
   image: tidepool/highwater:v0.3.5
   salt: gf78fSEI7tOQQP9xfXMO9HfRyMnW4Sx88Q
 hydrophone:
@@ -99,14 +102,14 @@ hydrophone:
   ses:
     fromAddress: "Tidepool <noreply@tidepool.org>"
   #bucket: ''
-jellyfish: 
+jellyfish:
   enabled: true
   image: tidepool/jellyfish:v0.12.3-release.2
   salt: 'itNkczadZ1EeC9fUWR3LnbKFagtYYLOk'
   #bucket: ''
   storage: 'aws/s3'
   #storage: 'local'
-messageapi: 
+messageapi:
   image: tidepool/message-api:v0.7.14-release.1
   window: 21
 auth:
@@ -147,7 +150,7 @@ tools:
   image: tidepool/platform-tools:1.32.0-release.4
 user:
   image: tidepool/platform-user:1.32.0-release.4
-seagull: 
+seagull:
   image: tidepool/seagull:v0.7.2-release.4
   salt: KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
 shoreline:
