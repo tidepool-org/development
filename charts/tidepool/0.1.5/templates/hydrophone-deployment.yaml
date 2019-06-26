@@ -21,6 +21,7 @@ spec:
     metadata:
       annotations:
         iam.amazonaws.com/role: {{ .Release.Namespace }}-Worker
+        linkerd.io/inject: enabled
       labels:
         app: hydrophone
         app.kubernetes.io/name: {{ include "charts.name" . }}

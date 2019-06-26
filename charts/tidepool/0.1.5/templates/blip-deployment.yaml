@@ -23,6 +23,8 @@ spec:
         app: blip
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        linkerd.io/inject: enabled
     spec:
       containers:
       - image: "{{ .Values.blip.image }}"
