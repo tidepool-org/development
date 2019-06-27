@@ -5,4 +5,5 @@ metadata:
   labels:
     certmanager.k8s.io/disable-validation: "true"
   annotations:
+    "helm.sh/hook": "pre-install"
     iam.amazonaws.com/permitted: ".*"
