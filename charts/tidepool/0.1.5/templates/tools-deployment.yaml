@@ -30,6 +30,14 @@ spec:
       - env:
         {{ include "charts.platform.env" .}}
         image: "{{ .Values.tools.image }}"
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 10101
+          capabilities:
+            drop:
+            - ALL
         name: tools
         resources:
           {{- toYaml .Values.global.resources | nindent 10 }}

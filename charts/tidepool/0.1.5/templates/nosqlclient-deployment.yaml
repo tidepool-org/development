@@ -31,6 +31,14 @@ spec:
       containers:
       - name: nosqlclient
         image: "{{ .Values.nosqlclient.image }}"
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 10101
+          capabilities:
+            drop:
+            - ALL
         ports:
         - containerPort: 3000
         env:

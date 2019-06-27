@@ -28,10 +28,17 @@ spec:
     spec:
       containers:
       - image: "{{ .Values.blip.image }}"
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 10101
+          capabilities:
+            drop:
+            - ALL
         env:
         - name: SKIP_HAKKEN
           value: "true"
-        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
         name: blip
         ports:
         - containerPort: {{.Values.global.ports.blip}}
