@@ -6,5 +6,5 @@ metadata:
     istio-injection: disabled
     linkerd.io/inject: disabled
   annotations:
-    iam.amazonaws.com/permitted: "thanos"
+    iam.amazonaws.com/permitted: "Thanos"
 

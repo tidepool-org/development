@@ -32,7 +32,7 @@ spec:
         enabled: false
       deployment:
         annotations: 
-          iam.amazonaws.com/role: thanos
+          iam.amazonaws.com/role: Thanos
 
     s3:
       enabled: true
