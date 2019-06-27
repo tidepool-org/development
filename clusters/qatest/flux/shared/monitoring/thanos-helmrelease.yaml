@@ -34,7 +34,7 @@ spec:
 
     query:
       stores:
-        thanos-store.thanos:10901
+        thanos-store-grpc.thanos:10901
     s3:
       enabled: true
       bucket: "tidepool-thanos"
