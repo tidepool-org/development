@@ -80,12 +80,6 @@ global:
     #  memory: 128Mi
     #
 
-# non-Tidepool services
-nosqlclient:
-  image: 'mongoclient/mongoclient'
-  enabled: 'true'
-  port: 3001
-
 # Tidepool services
 blip:
   image: tidepool/blip:v1.17.0
