@@ -1,0 +1,18 @@
+# Thanos query configuration
+query:
+  replicaCount: 1
+  logLevel: debug
+  queryReplicaLabel: prometheus_replica
+  stores:
+    - thanos-store-grpc:10901
+    - thanos-sidecar-0.monitoring:10901
+    - thanos-sidecar-1.monitoring:10901
+  tlsClient:
+    enabled: true
+
+objectStorageConfig:
+  enabled: true
+
+store:
+  tlsServer:
+    enabled: false
