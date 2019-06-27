@@ -20,7 +20,6 @@ spec:
         - thanos-sidecar-1.monitoring:10901
       tlsClient:
         enabled: false
-
       deployment:
         annotations: 
           iam.amazonaws.com/role: thanos
@@ -35,12 +34,6 @@ spec:
         annotations: 
           iam.amazonaws.com/role: thanos
 
-    query:
-      stores:
-        - thanos-store-grpc.thanos:10901
-      deployment:
-        annotations: 
-          iam.amazonaws.com/role: thanos
     s3:
       enabled: true
       bucket: "tidepool-thanos"
