@@ -27,3 +27,10 @@ spec:
     store:
       tlsServer:
         enabled: false
+    s3:
+      enabled: true
+      bucket: "tidepool-thanos"
+      endpoint: "s3.us-west-2.amazonaws.com"
+      insecure: false
+      signatureV2: false
+      encryptSse: false
