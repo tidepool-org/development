@@ -8,43 +8,43 @@ spec:
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
     name: grafana
-    version: "3.5.4"
- values:
-   datasources:
-    datasources.yaml:
-      apiVersion: 1
-      datasources:
-      - name: Prometheus
-        type: prometheus
-        url: http://thanos-query-http.thanos:10902
-        access: proxy
-        isDefault: true
-   dashboardProviders:
-    dashboardproviders.yaml:
-      apiVersion: 1
-      providers:
-      - name: 'default'
-        orgId: 1
-        folder: ''
-        type: file
-        disableDeletion: false
-        editable: true
-        options:
-          path: /var/lib/grafana/dashboards/default
-   dashboards:
-     default:
-       cluster-stats:
-         # Ref: https://grafana.com/dashboards/1621
-         gnetId: 1621
-         revision: 1
-         datasource: Prometheus
-       prometheus-stats:
-         # Ref: https://grafana.com/dashboards/2
-         gnetId: 2
-         revision: 2
-         datasource: Prometheus
-       node-exporter:
-         # Ref: https://grafana.com/dashboards/1860
-         gnetId: 1860
-         revision: 13
-         datasource: Prometheus
+    version: 3.5.4
+  values:
+    datasources:
+     datasources.yaml:
+       apiVersion: 1
+       datasources:
+       - name: Prometheus
+         type: prometheus
+         url: http://thanos-query-http.thanos:10902
+         access: proxy
+         isDefault: true
+    dashboardProviders:
+     dashboardproviders.yaml:
+       apiVersion: 1
+       providers:
+       - name: 'default'
+         orgId: 1
+         folder: ''
+         type: file
+         disableDeletion: false
+         editable: true
+         options:
+           path: /var/lib/grafana/dashboards/default
+    dashboards:
+      default:
+        cluster-stats:
+          # Ref: https://grafana.com/dashboards/1621
+          gnetId: 1621
+          revision: 1
+          datasource: Prometheus
+        prometheus-stats:
+          # Ref: https://grafana.com/dashboards/2
+          gnetId: 2
+          revision: 2
+          datasource: Prometheus
+        node-exporter:
+          # Ref: https://grafana.com/dashboards/1860
+          gnetId: 1860
+          revision: 13
+          datasource: Prometheus
