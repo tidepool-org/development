@@ -7,6 +7,24 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.global.nameOverrideide | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "charts.mongo.start" -}}
+{{- if .Values.global.mongo.username -}}
+{{- .Values.global.mongo.username -}}
+{{- if .Values.global.mongo.password -}}
+:{{- .Values.global.mongo.password -}}
+{{- end -}}
+@
+{{- end -}}
+{{- .Values.global.mongo.hosts | join "," -}}
+{{- end -}}
+
+{{- define "charts.mongo.end" -}}
+?ssl={{ .Values.global.mongo.tls}}
+{{- if .Values.global.mongo.optParams -}}
+&{{.Values.global.mongo.optParams}}
+{{- end -}}
+{{- end -}}
+
 
 {{- define "charts.mongo.params" -}}
 {{ if .Values.global.mongo.username }}
@@ -197,11 +215,13 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: dexcom
               key: CLIENT_ID
+	      optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
               name: dexcom
               key: CLIENT_SECRET
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
           value: {{include "charts.host.external.tp" .}}/v1/oauth/dexcom/redirect
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
@@ -211,6 +231,7 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: dexcom
               key: STATE_SALT
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
           value: '{{.Values.global.provider.dexcom.token.url}}'
         - name: TIDEPOOL_SESSION_STORE_DATABASE
