@@ -7,25 +7,6 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.global.nameOverrideide | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "charts.mongo.start" -}}
-{{- if .Values.global.mongo.username -}}
-{{- .Values.global.mongo.username -}}
-{{- if .Values.global.mongo.password -}}
-:{{- .Values.global.mongo.password -}}
-{{- end -}}
-@
-{{- end -}}
-{{- .Values.global.mongo.hosts | join "," -}}
-{{- end -}}
-
-{{- define "charts.mongo.end" -}}
-?ssl={{ .Values.global.mongo.tls}}
-{{- if .Values.global.mongo.optParams -}}
-&{{.Values.global.mongo.optParams}}
-{{- end -}}
-{{- end -}}
-
-
 {{- define "charts.mongo.params" -}}
 {{ if .Values.global.mongo.username }}
         - name: MONGO_USER
