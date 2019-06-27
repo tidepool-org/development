@@ -57,7 +57,14 @@ spec:
         - name: USER_API_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
         image: "{{ .Values.gatekeeper.image }}"
-        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 10101
+          capabilities:
+            drop:
+            - ALL
         livenessProbe:
            httpGet:
              path: /status

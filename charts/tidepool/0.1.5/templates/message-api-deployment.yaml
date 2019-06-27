@@ -63,7 +63,14 @@ spec:
         - name: SKIP_HAKKEN
           value: "true"
         image: "{{ .Values.messageapi.image }}" 
-        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 10101
+          capabilities:
+            drop:
+            - ALL
         livenessProbe:
           httpGet:
             path: /status

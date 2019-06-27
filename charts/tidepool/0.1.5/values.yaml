@@ -27,7 +27,7 @@ global:
   includeSecrets: true                                                # whether to install secrets for local development
   namespace:
     create: true                                                      # whether to create the namespace for the service
-  nameOverride: ""
+  nameOverride: ""                                                    # the name to use for the helm chart, if given
 
   mongo:
     enabled: true                                                     # whether to launch a local Mongo instance

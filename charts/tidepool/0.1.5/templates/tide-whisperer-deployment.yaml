@@ -80,6 +80,14 @@ spec:
                 }
             }
         image: "{{ .Values.tidewhisperer.image }}"
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 10101
+          capabilities:
+            drop:
+            - ALL
         livenessProbe:
           httpGet:
             path: /status
