@@ -1,18 +1,29 @@
-# Thanos query configuration
-query:
-  replicaCount: 1
-  logLevel: debug
-  queryReplicaLabel: prometheus_replica
-  stores:
-    - thanos-store-grpc:10901
-    - thanos-sidecar-0.monitoring:10901
-    - thanos-sidecar-1.monitoring:10901
-  tlsClient:
-    enabled: true
-
-objectStorageConfig:
-  enabled: true
-
-store:
-  tlsServer:
-    enabled: false
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: thanos
+  namespace: thanos
+spec:
+  releaseName: thanos
+  chart:
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    name: prometheus-operator
+    version: 5.13.0
+  values:
+    query:
+      replicaCount: 1
+      logLevel: debug
+      queryReplicaLabel: prometheus_replica
+      stores:
+        - thanos-store-grpc:10901
+        - thanos-sidecar-0.monitoring:10901
+        - thanos-sidecar-1.monitoring:10901
+      tlsClient:
+        enabled: false
+    
+    objectStorageConfig:
+      enabled: true
+    
+    store:
+      tlsServer:
+        enabled: false
