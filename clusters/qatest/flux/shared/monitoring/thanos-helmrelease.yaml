@@ -20,6 +20,10 @@ spec:
         - thanos-sidecar-1.monitoring:10901
       tlsClient:
         enabled: false
+
+    deployment:
+      annotations: 
+        iam.amazonaws.com/role: thanos
     
     objectStorageConfig:
       enabled: true
@@ -27,6 +31,10 @@ spec:
     store:
       tlsServer:
         enabled: false
+
+    query:
+      stores:
+        thanos-store.thanos:10901
     s3:
       enabled: true
       bucket: "tidepool-thanos"
