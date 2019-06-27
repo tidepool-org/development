@@ -6,9 +6,9 @@ metadata:
 spec:
   releaseName: thanos
   chart:
-    repository: https://kubernetes-charts.storage.googleapis.com/
-    name: prometheus-operator
-    version: 5.13.0
+    git: git@github.com:arthur-c/thanos-helm-chart
+    path: thanos
+    ref: master
   values:
     query:
       replicaCount: 1
