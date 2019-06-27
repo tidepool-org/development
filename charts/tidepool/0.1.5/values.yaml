@@ -24,7 +24,7 @@ global:
   fullnameOverride: ""                                                #
   image:
     pullPolicy: IfNotPresent                                          # Docker image pull policy
-  includeSecrets: true                                                # whether to install secrets for local development
+  generateSharedSecrets: true                                         # whether to generate random shared secrets
   namespace:
     create: true                                                      # whether to create the namespace for the service
   nameOverride: ""                                                    # the name to use for the helm chart, if given
