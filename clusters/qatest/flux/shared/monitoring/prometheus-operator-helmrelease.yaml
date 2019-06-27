@@ -18,7 +18,7 @@ spec:
           tag: v2.8.0    # use a specific version of Prometheus
         externalLabels:  # a cool way to add default labels to all metrics 
           geo: us          
-          region: us-west2
+          region: us-west-2
         serviceMonitorNamespaceSelector:  # allows the operator to find target config from multiple namespaces
           any: true
         thanos:         # add Thanos Sidecar
@@ -28,4 +28,3 @@ spec:
             name: thanos-objstore-config
     grafana:           # (optional) we don't need Grafana in all clusters
       enabled: false
-            
