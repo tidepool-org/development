@@ -10,9 +10,7 @@ metadata:
   name: shoreline
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server-secret"
-    secret.reloader.stakater.com/reload: "mongo"
-    secret.reloader.stakater.com/reload: "mailchimp"
+    secret.reloader.stakater.com/reload: "server-secret,mongo,mailchimp"
 spec:
   selector:
     matchLabels:
