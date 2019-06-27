@@ -21,9 +21,9 @@ spec:
       tlsClient:
         enabled: false
 
-    deployment:
-      annotations: 
-        iam.amazonaws.com/role: thanos
+      deployment:
+        annotations: 
+          iam.amazonaws.com/role: thanos
     
     objectStorageConfig:
       enabled: true
@@ -31,14 +31,16 @@ spec:
     store:
       tlsServer:
         enabled: false
-      annotations: 
-        iam.amazonaws.com/role: thanos
+      deployment:
+        annotations: 
+          iam.amazonaws.com/role: thanos
 
     query:
       stores:
         - thanos-store-grpc.thanos:10901
-      annotations: 
-        iam.amazonaws.com/role: thanos
+      deployment:
+        annotations: 
+          iam.amazonaws.com/role: thanos
     s3:
       enabled: true
       bucket: "tidepool-thanos"
