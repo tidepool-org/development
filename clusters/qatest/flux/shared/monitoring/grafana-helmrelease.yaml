@@ -1,4 +1,3 @@
-
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
@@ -9,7 +8,7 @@ spec:
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
     name: grafana
-    version: 3.5.4
+    version: "3.5.4"
  values:
    datasources:
     datasources.yaml:
