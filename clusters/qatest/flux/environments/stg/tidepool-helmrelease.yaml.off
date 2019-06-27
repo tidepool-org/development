@@ -33,6 +33,7 @@ spec:
     ref: k8s
   values:
     global:
+      generateSharedSecrets: false
       hosts:
         default:
           protocol: https
