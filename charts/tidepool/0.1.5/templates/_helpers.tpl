@@ -105,6 +105,7 @@ Create chart name and version as used by the chart label.
 {{/*
 Create environment variables used by all platform services.
 */}}
+
 {{- define "charts.platform.env" -}}
 
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
