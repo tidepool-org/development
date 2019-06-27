@@ -10,6 +10,9 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
   name: tools
   namespace: {{.Release.Namespace}}
+  annotations:
+    secret.reloader.stakater.com/reload: "server-secret"
+    secret.reloader.stakater.com/reload: "mongo"
 spec:
   selector:
     matchLabels:

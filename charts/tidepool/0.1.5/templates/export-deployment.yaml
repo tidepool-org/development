@@ -10,6 +10,8 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   name: export
   namespace: {{.Release.Namespace}}
+  annotations:
+    secret.reloader.stakater.com/reload: "server-secret"
 spec:
   selector:
     matchLabels:
