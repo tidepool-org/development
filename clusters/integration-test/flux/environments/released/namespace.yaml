@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: released
-  labels:
-    istio-injection: disabled
-    linkerd.io/inject: enabled
