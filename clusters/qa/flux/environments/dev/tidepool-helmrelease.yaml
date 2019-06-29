@@ -93,9 +93,9 @@ spec:
     hydrophone:
       image: tidepool/hydrophone:mongo-params-f0d6173ecdc5b059b00c20c5921a552c42a06523
     jellyfish:
-      image: tidepool/jellyfish:mongo-params-d6327fda1261faf6ba73154ff0fcd1ebfdb59fcc
+      image: tidepool/jellyfish:mongo-params-1df857d2c787e9659e8eabd360953d43ced67eda
     messageapi:
-      image: tidepool/message-api:mongo-params-5ddb0b8af5f36236dddbcb1ff650c3d8f6b1a589
+      image: tidepool/message-api:mongo-params-7d6e64e6b12641ad62a6da434b9be6d2739a541a
     auth:
       image: tidepool/platform-auth:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
     blob:
