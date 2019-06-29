@@ -1,0 +1,19 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: integration-test-cert
+  namespace: gloo-system
+spec:
+  secretName: integration-test-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: '*.integration-test.tidepool.org'
+  dnsNames:
+  - '*.integration-test.tidepool.org'
+  acme:
+    config:
+    - dns01:
+        provider: route53
+      domains:
+      - '*.integration-test.tidepool.org'

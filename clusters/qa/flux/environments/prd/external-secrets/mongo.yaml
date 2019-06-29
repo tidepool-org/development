@@ -1,0 +1,12 @@
+apiVersion: kubernetes-client.io/v1
+kind: ExternalSecret
+metadata:
+  name: mongo
+  namespace: prd
+secretDescriptor:
+  backendType: secretsManager
+  data:
+  - key: prd/mongo
+    name: password
+    property: password
+
