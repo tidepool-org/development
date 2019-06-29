@@ -117,7 +117,7 @@ spec:
     user:
       image: tidepool/platform-user:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
     seagull:
-      image: tidepool/seagull:mongo-params-6f0c6dfbc2fee030a81d6ed315e469ed2c8c4207
+      image: tidepool/seagull:mongo-params-14bd8189dbd1e45854040c1b49c0bd7f84b5256f
     shoreline:
       image: tidepool/shoreline:mongo-params-04b6456b15ee654518eb4ea9c5cbaf134a43c30a
       clinicDemoUserId: "5d509deb6b"
