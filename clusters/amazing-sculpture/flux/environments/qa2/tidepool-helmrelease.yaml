@@ -50,7 +50,7 @@ spec:
     export:
       image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
     gatekeeper:
-      image: tidepool/gatekeeper:develop-b5775ba2af1a78bdbcb426ea3e5dc2b2456c8366
+      image: tidepool/gatekeeper:develop-b112f6ec857022075a87d8de36187655d6cb0a12
     highwater:
       image: tidepool/highwater:develop-3f0838c29e726230b616638d97f593ba07607bab
     hydrophone:
@@ -59,7 +59,7 @@ spec:
         fromAddress: "Tidepool <noreply@tidepool.org>"
     jellyfish:
       enabled: true
-      image: tidepool/jellyfish:develop-63c83c9951c055dea6c0bc8e0feeeb4682be107b
+      image: tidepool/jellyfish:develop-8d7a660794d1cc455a3331091ed69da8f2b6d902
       storage: "aws/s3"
       bucket: "" # ensures that the generated bucket name is used
     messageapi:
