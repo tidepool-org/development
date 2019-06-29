@@ -67,16 +67,14 @@ spec:
         name: gloo
       mongo:
         enabled: false
-        #host: "ip-10-48-33-162.us-west-2.compute.internal"     # db.dev.private.tidepool.org
-        primary: "cluster0-shard-00-00-hu2cn.mongodb.net"
+        host: ip-10-48-33-162.us-west-2.compute.internal     # db.dev.private.tidepool.org
+        primary: ip-10-48-33-162.us-west-2.compute.internal
         hosts:
-        - "cluster0-shard-00-00-hu2cn.mongodb.net"
-        - "cluster0-shard-00-01-hu2cn.mongodb.net"
-        - "cluster0-shard-00-02-hu2cn.mongodb.net"
+        - ip-10-48-33-162.us-west-2.compute.internal
         port: 27017
-        username: derrickburns
-        ssl: 'true'
-        optParams: 'replicaSet=Cluster0-shard-0&authSource=admin&w=majority'
+        #username: derrickburns
+        ssl: 'false'
+        #optParams: 'replicaSet=Cluster0-shard-0&authSource=admin&w=majority'
       namespace:
         create: false
     nosqlclient:
