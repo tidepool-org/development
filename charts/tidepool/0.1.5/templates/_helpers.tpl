@@ -196,7 +196,7 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: dexcom
               key: CLIENT_ID
-	      optional: true
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
