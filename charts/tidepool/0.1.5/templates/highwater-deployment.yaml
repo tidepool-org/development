@@ -64,7 +64,10 @@ spec:
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SALT_DEPLOY
-          value: '{{.Values.highwater.salt}}'
+          valueFrom:
+            secretKeyRef:
+              name: highwater
+              key: salt
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:

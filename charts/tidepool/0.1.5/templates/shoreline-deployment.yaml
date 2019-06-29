@@ -10,7 +10,7 @@ metadata:
   name: shoreline
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server-secret,mongo,mailchimp"
+    secret.reloader.stakater.com/reload: "server-secret,mongo,mailchimp,shoreline"
 spec:
   selector:
     matchLabels:
@@ -44,6 +44,21 @@ spec:
             secretKeyRef:
               name: server-secret
               key: shoreline
+        - name: SALT
+          valueFrom:
+            secretKeyRef:
+              name: shoreline
+              key: salt
+        - name: VERIFICATION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: shoreline
+              key: verification
+        - name: LONG_TERM_KEY
+          valueFrom:
+            secretKeyRef:
+              name: shoreline
+              key: longtermkey 
         - name: MAILCHIMP_APIKEY
           valueFrom:
             secretKeyRef:
@@ -84,10 +99,7 @@ spec:
                 "user": {
                     "clinicDemoUserId": "{{.Values.shoreline.clinicDemoUserId}}",
                     "longTermDaysDuration": 30,
-                    "longTermKey": "{{.Values.shoreline.longtermkey}}",
-                    "salt": "{{.Values.shoreline.salt}}",
                     "tokenDurationSecs": 2592000,
-                    "verificationSecret": "{{.Values.shoreline.verification.secret}}",
                     "mailchimp": {
                       "url": "{{.Values.shoreline.mailchimp.url}}",
                       "apiKey": "",
