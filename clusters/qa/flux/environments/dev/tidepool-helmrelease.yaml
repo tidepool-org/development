@@ -87,7 +87,7 @@ spec:
       enabled: true
       image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
     gatekeeper:
-      image: tidepool/gatekeeper:mongo-params-ba44937e7e7151e45991d0c2690d2ca8eb3ef28d
+      image: tidepool/gatekeeper:mongo-params-ef8114e9a11c879c9207a8d92d24bd5334290c6d
     highwater:
       image: tidepool/highwater:develop-3f0838c29e726230b616638d97f593ba07607bab
     hydrophone:
