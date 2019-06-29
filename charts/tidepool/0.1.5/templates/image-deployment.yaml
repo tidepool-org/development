@@ -48,4 +48,3 @@ spec:
         resources:
           {{- toYaml .Values.global.resources | nindent 10 }}
       restartPolicy: Always
-status: {}
