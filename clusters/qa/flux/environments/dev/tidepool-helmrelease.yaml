@@ -119,7 +119,7 @@ spec:
     seagull:
       image: tidepool/seagull:mongo-params-b2258d80224411fa7a42bb96c7d4de62ea3a916a
     shoreline:
-      image: tidepool/shoreline:mongo-params-202bb20924ab4c93fb050f79df8e3e070f0858c4
+      image: tidepool/shoreline:mongo-params-265aff7fc98ab1959508c395b348b77ca48a1f1d
       clinicDemoUserId: "e79b15328a"
       mailchimp:
         url: "https://us7.api.mailchimp.com/3.0"
