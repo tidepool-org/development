@@ -29,6 +29,7 @@ spec:
         linkerd.io/inject: enabled
     spec:
       {{ include "charts.init.mongo" .}}
+      {{ include "charts.init.shoreline" .}}
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
