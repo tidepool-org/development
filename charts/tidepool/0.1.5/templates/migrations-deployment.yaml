@@ -27,6 +27,7 @@ spec:
       annotations:
         linkerd.io/inject: enabled
     spec:
+      initContainers:
       {{ include "charts.init.shoreline" .}}
       containers:
       - env:
