@@ -97,20 +97,20 @@ spec:
     messageapi:
       image: tidepool/message-api:mongo-params-7d6e64e6b12641ad62a6da434b9be6d2739a541a
     auth:
-      image: tidepool/platform-auth:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
+      image: tidepool/platform-auth:quiet-logging-d2682daee6fd1ba19af54d713b34b2d621b4d65a
     blob:
-      image: tidepool/platform-blob:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
+      image: tidepool/platform-blob:quiet-logging-d2682daee6fd1ba19af54d713b34b2d621b4d65a
     data:
       image: tidepool/platform-data:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
     image:
-      image: tidepool/platform-image:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
+      image: tidepool/platform-image:quiet-logging-d2682daee6fd1ba19af54d713b34b2d621b4d65a
     migrations:
       image: tidepool/platform-migrations:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
     notification:
       enabled: false
-      image: tidepool/platform-notification:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
+      image: tidepool/platform-notification:quiet-logging-d2682daee6fd1ba19af54d713b34b2d621b4d65a
     task:
-      image: tidepool/platform-task:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
+      image: tidepool/platform-task:quiet-logging-d2682daee6fd1ba19af54d713b34b2d621b4d65a
     tools:
       enabled: false
       image: tidepool/platform-tools:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
