@@ -89,7 +89,7 @@ spec:
     gatekeeper:
       image: tidepool/gatekeeper:mongo-params-8d6be44ce1c903a03d6e7da20cc6a3ef437f4d05
     highwater:
-      image: tidepool/highwater:develop-3f0838c29e726230b616638d97f593ba07607bab
+      image: tidepool/highwater:quiet-loggin-8dc36af49754be0b16fa628bebfa6645db3b05b8
     hydrophone:
       image: tidepool/hydrophone:mongo-params-f0d6173ecdc5b059b00c20c5921a552c42a06523
     jellyfish:
