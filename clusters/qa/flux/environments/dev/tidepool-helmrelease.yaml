@@ -113,9 +113,9 @@ spec:
       image: tidepool/platform-task:quiet-logging-d2682daee6fd1ba19af54d713b34b2d621b4d65a
     tools:
       enabled: false
-      image: tidepool/platform-tools:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
+      image: tidepool/platform-tools:quiet-logging-d2682daee6fd1ba19af54d713b34b2d621b4d65a
     user:
-      image: tidepool/platform-user:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
+      image: tidepool/platform-user:quiet-logging-d2682daee6fd1ba19af54d713b34b2d621b4d65a
     seagull:
       image: tidepool/seagull:mongo-params-b2258d80224411fa7a42bb96c7d4de62ea3a916a
     shoreline:
