@@ -14,6 +14,17 @@ metadata:
       method_regex: true
       rewrite: "/"
       service: shoreline.{{ .Release.Namespace }}:{{.Values.global.ports.shoreline}}
+      ---
+      apiVersion: tidepool/v1alpha
+      kind:  Mapping
+      host: tp
+      name: {{ .Release.Namespace -}}-shoreline-serverlogin
+      prefix: /serverlogin/
+      path_redirect: "false"
+      method: "POST"
+      method_regex: false
+      rewrite: ""
+      service: shoreline.{{ .Release.Namespace }}:{{.Values.global.ports.shoreline}}
   labels:
     app: shoreline
     helm.sh/chart: {{ include "charts.chart" . }}
