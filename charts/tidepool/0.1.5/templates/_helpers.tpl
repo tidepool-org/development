@@ -300,13 +300,11 @@ Create liveness and readiness probes for platform services.
           timeoutSeconds: 5
 {{- end -}} 
 {{- define "charts.init.mongo" -}}
-      initContainers:
       - name: init-mongo
         image: busybox
         command: ['sh', '-c', 'until nc -zvv {{ .Values.global.mongo.primary }} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
 {{- end -}} 
 {{- define "charts.init.shoreline" -}}
-      initContainers:
       - name: init-shoreline
         image: busybox
         command: ['sh', '-c', 'until nc -zvv shoreline {{.Values.global.ports.shoreline}}; do echo waiting for shoreline; sleep 2; done;']
