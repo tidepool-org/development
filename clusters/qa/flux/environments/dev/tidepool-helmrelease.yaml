@@ -117,7 +117,7 @@ spec:
     user:
       image: tidepool/platform-user:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
     seagull:
-      image: tidepool/seagull:mongo-params-8a8f98a17d2ce94812d678aef0a33692cd3e726e
+      image: tidepool/seagull:mongo-params-b2258d80224411fa7a42bb96c7d4de62ea3a916a
     shoreline:
       image: tidepool/shoreline:mongo-params-6fe5366826a4b2e7a30bfdb5bced0ee6b1f190cd
       clinicDemoUserId: "e79b15328a"
@@ -149,4 +149,4 @@ spec:
             }
           ]
     tidewhisperer:
-      image: tidepool/tide-whisperer:mongo-params-25aa84a4edea6224bba3db21359acd75389ded1b
+      image: tidepool/tide-whisperer:mongo-params-706d76e6380b148947e7c84e1369d40f3e9cc691
