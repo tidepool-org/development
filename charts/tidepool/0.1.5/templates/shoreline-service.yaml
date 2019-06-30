@@ -19,7 +19,7 @@ metadata:
       kind:  Mapping
       host: tp
       name: {{ .Release.Namespace -}}-shoreline-serverlogin
-      prefix: /serverlogin/
+      prefix: /serverlogin
       path_redirect: "false"
       method: "POST"
       method_regex: false
