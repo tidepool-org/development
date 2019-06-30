@@ -23,7 +23,7 @@ spec:
     metadata:
       annotations:
         iam.amazonaws.com/role: {{ .Release.Namespace }}-Worker
-        linkerd.io/inject: enabled
+        linkerd.io/inject: "{{ .Values.linkerd }}"
       labels:
         app: image
         app.kubernetes.io/name: {{ include "charts.name" . }}

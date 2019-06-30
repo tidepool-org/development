@@ -1,4 +1,5 @@
 global:
+  linkerd: disabled
   ports:
     blip: 3000                                                        # blip service internal port
     export: 9300                                                      # export service internal port
