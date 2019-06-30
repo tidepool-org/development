@@ -17,5 +17,5 @@ spec:
         enabled: true
       https:
         enabled: true
-      hostnames: "dev.tidepool.org"
+      hostnames: "dev.tidepool.org,dev-api.tidepool.org,dev-app.tidepool.org,dev-uploads.tidepool.org"
 
