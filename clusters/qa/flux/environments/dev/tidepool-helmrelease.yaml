@@ -120,7 +120,7 @@ spec:
     user:
       image: tidepool/platform-user:quiet-logging-d2682daee6fd1ba19af54d713b34b2d621b4d65a
     seagull:
-      image: tidepool/seagull:mongo-params-4e0a050048b38fab5b309a36939b0b77cccc01fe
+      image: tidepool/seagull:mongo-params-de6b3556e2acf08d5cfef95fec249efeef0bb27b
     shoreline:
       image: tidepool/shoreline:mongo-params-90db221670f3f31a4ef0664d2a42741dd5d15056
       clinicDemoUserId: "e79b15328a"
