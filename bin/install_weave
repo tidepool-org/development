@@ -57,6 +57,7 @@ then
       --set git.url=${SOURCE_REPO} \
       --set git.path=${SOURCE_PATH} \
       --set git.branch=${SOURCE_BRANCH} \
+      --set git.label=${CLUSTER_NAME} \
       --set git.pollInterval=1m \
       --set git.timeoout=40s \
       --namespace flux \
