@@ -121,7 +121,6 @@ spec:
                     "service": "shoreline"
                 },
                 "user": {
-                    "clinicDemoUserId": "{{.Values.shoreline.clinicDemoUserId}}",
                     "longTermDaysDuration": 30,
                     "tokenDurationSecs": 2592000
                 }
