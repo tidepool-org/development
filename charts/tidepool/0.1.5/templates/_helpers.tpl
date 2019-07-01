@@ -20,7 +20,7 @@ Expand the name of the chart.
               optional: true
 {{ if .Values.global.mongo.hosts }}
         - name: MONGO_HOSTS
-          value: '{{ .Values.global.mongo.hosts | join "," }}'
+          value: '{{ .Values.global.mongo.hosts }}'
 {{ end }}
 {{ if .Values.global.mongo.optParams }}
         - name: MONGO_OPT_PARAMS
@@ -218,7 +218,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_SESSION_STORE_DATABASE
           value: user
         - name: TIDEPOOL_STORE_ADDRESSES
-          value: '{{ .Values.global.mongo.hosts | join "," }}'
+          value: '{{ .Values.global.mongo.hosts }}'
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
         - name: TIDEPOOL_STORE_USERNAME
@@ -302,7 +302,7 @@ Create liveness and readiness probes for platform services.
 {{- define "charts.init.mongo" -}}
       - name: init-mongo
         image: busybox
-        command: ['sh', '-c', 'until nc -zvv {{ .Values.global.mongo.primary }} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -zvv {{ (split "," .Values.global.mongo.hosts)_0 }} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
 {{- end -}} 
 {{- define "charts.init.shoreline" -}}
       - name: init-shoreline
