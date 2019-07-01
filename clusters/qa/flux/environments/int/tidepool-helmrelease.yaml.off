@@ -67,12 +67,7 @@ spec:
         name: gloo
       mongo:
         enabled: false
-        #host:  db.int.private.tidepool.org
-        primary: "cluster0-shard-00-00-hu2cn.mongodb.net"
-        hosts:
-        #- db.int.private.tidepool.org
-        #- "cluster0-shard-00-01-hu2cn.mongodb.net"
-        #- "cluster0-shard-00-02-hu2cn.mongodb.net"
+        hosts: "db.int.private.tidepool.org"
         port: 27017
         username: derrickburns
         ssl: 'true'
