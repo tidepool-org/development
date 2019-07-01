@@ -35,6 +35,26 @@ spec:
         {{ include "charts.mongo.params" .}}
         - name: MONGO_DATABASE
           value: user
+        - name: CLINIC_LISTS
+          valueFrom:
+            configMapKeyRef:
+              name: shoreline-configmap
+              key: mailchimp.clinicLists
+        - name: MAILCHIMP_URL
+          valueFrom:
+            configMapKeyRef:
+              name: shoreline-configmap
+              key: mailchimp.url
+        - name: PERSONAL_LISTS
+          valueFrom:
+            configMapKeyRef:
+              name: shoreline-configmap
+              key: mailchimp.personalLists
+        - name: DEMO_CLINIC_USER_ID
+          valueFrom:
+            configMapKeyRef:
+              name: shoreline-configmap
+              key: demoClinic.userId
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
