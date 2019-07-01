@@ -11,6 +11,7 @@ metadata:
   namespace: {{.Release.Namespace}}
   annotations:
     secret.reloader.stakater.com/reload: "server-secret,mongo,mailchimp,shoreline"
+    configmap.reloader.stakater.com/reload: "shoreline-configmap"
 spec:
   selector:
     matchLabels:
