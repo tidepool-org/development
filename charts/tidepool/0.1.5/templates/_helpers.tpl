@@ -302,7 +302,7 @@ Create liveness and readiness probes for platform services.
 {{- define "charts.init.mongo" -}}
       - name: init-mongo
         image: busybox
-        command: ['sh', '-c', 'until nc -zvv {{ (split "," .Values.global.mongo.hosts)_0 }} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -zvv {{ (split "," .Values.global.mongo.hosts)._0 }} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
 {{- end -}} 
 {{- define "charts.init.shoreline" -}}
       - name: init-shoreline
