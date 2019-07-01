@@ -67,15 +67,8 @@ spec:
         name: gloo
       mongo:
         enabled: false
-        #host: "cluster0-shard-00-00-hu2cn.mongodb.net"
-        host: ip-10-48-33-162.us-west-2.compute.internal
-        #primary: "cluster0-shard-00-00-hu2cn.mongodb.net"
-        primary: ip-10-48-33-162.us-west-2.compute.internal
-        hosts:
-        - ip-10-48-33-162.us-west-2.compute.internal
-        #- "cluster0-shard-00-00-hu2cn.mongodb.net"
-        #- "cluster0-shard-00-01-hu2cn.mongodb.net"
-        #- "cluster0-shard-00-02-hu2cn.mongodb.net"
+        hosts: "ip-10-48-33-162.us-west-2.compute.internal"
+        #hosts: "cluster0-shard-00-00-hu2cn.mongodb.net,cluster0-shard-00-01-hu2cn.mongodb.net,cluster0-shard-00-02-hu2cn.mongodb.net"
         port: 27017
         #username: derrickburns
         ssl: 'true'
