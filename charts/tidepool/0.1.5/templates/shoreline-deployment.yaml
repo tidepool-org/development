@@ -41,21 +41,25 @@ spec:
             configMapKeyRef:
               name: shoreline-configmap
               key: mailchimp.clinicLists
+              optional: true
         - name: MAILCHIMP_URL
           valueFrom:
             configMapKeyRef:
               name: shoreline-configmap
               key: mailchimp.url
+              optional: true
         - name: PERSONAL_LISTS
           valueFrom:
             configMapKeyRef:
               name: shoreline-configmap
               key: mailchimp.personalLists
+              optional: true
         - name: DEMO_CLINIC_USER_ID
           valueFrom:
             configMapKeyRef:
               name: shoreline-configmap
               key: demoClinic.userId
+              optional: true
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
