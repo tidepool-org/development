@@ -116,22 +116,14 @@ spec:
                     "expireDays": 14
                 },
                 "service": {
-                    "certFile": "config/cert.pem",
                     "host": "localhost:{{.Values.global.ports.shoreline}}",
-                    "keyFile": "config/key.pem",
                     "protocol": "http",
                     "service": "shoreline"
                 },
                 "user": {
                     "clinicDemoUserId": "{{.Values.shoreline.clinicDemoUserId}}",
                     "longTermDaysDuration": 30,
-                    "tokenDurationSecs": 2592000,
-                    "mailchimp": {
-                      "url": "{{.Values.shoreline.mailchimp.url}}",
-                      "apiKey": "",
-                      "personalLists": {{.Values.shoreline.mailchimp.personalLists | nindent 24 -}},
-                      "clinicLists": {{.Values.shoreline.mailchimp.clinicLists | nindent 24}}
-                     }
+                    "tokenDurationSecs": 2592000
                 }
             }
         image: "{{ .Values.shoreline.image }}"
