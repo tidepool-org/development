@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shoreline-configmap
+  namespace: stg
+data:
+  demoClinic.userId: "676404ec56"
+  mailchimp.url: "https://us7.api.mailchimp.com/3.0"
+  mailchimp.personalLists: >
+    [
+      {
+        "id": "d79b5a3924",
+        "interests": {
+          "35d99df867": true
+        }
+      },
+      {
+        "id": "461feca051"
+      }
+    ]
+  mailchimp.clinicLists: >
+    [
+      {
+        "id": "d79b5a3924",
+        "interests": {
+          "35d99df867": true,
+          "03cab91941": true
+        }
+      },
+      {
+        "id": "627a2577da"
+      }
+    ]

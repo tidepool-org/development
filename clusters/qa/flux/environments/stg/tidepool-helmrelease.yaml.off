@@ -111,33 +111,5 @@ spec:
       image: tidepool/seagull:v0.7.2
     shoreline:
       image: tidepool/shoreline:v0.14.2
-      clinicDemoUserId: "676404ec56"
-      mailchimp:
-        url: "https://us7.api.mailchimp.com/3.0"
-        personalLists: >
-          [
-            {
-              "id": "d79b5a3924",
-              "interests": {
-                "35d99df867": true
-              }
-            },
-            {
-              "id": "461feca051"
-            }
-          ]
-        clinicLists: >
-          [
-            {
-              "id": "d79b5a3924",
-              "interests": {
-                "35d99df867": true,
-                "03cab91941": true
-              }
-            },
-            {
-              "id": "627a2577da"
-            }
-          ]
     tidewhisperer:
       image: tidepool/tide-whisperer:v0.13.0

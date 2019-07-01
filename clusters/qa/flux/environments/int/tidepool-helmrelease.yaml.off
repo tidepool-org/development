@@ -120,12 +120,5 @@ spec:
       image: tidepool/seagull:mongo-params-ddd3bdf75ba9c06f043ee0a6404eed6a9c67d03e
     shoreline:
       image: tidepool/shoreline:mongo-params-6fe5366826a4b2e7a30bfdb5bced0ee6b1f190cd
-      clinicDemoUserId: "5d509deb6b"
-      mailchimp:
-        url: "https://us7.api.mailchimp.com/3.0"
-        personalLists: >
-          []
-        clinicLists: >
-          []
     tidewhisperer:
       image: tidepool/tide-whisperer:mongo-params-25aa84a4edea6224bba3db21359acd75389ded1b

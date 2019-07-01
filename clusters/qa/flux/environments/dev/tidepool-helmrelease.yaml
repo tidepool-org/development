@@ -123,33 +123,5 @@ spec:
       image: tidepool/seagull:mongo-params-de6b3556e2acf08d5cfef95fec249efeef0bb27b
     shoreline:
       image: tidepool/shoreline:mongo-params-90db221670f3f31a4ef0664d2a42741dd5d15056
-      clinicDemoUserId: "e79b15328a"
-      mailchimp:
-        url: "https://us7.api.mailchimp.com/3.0"
-        personalLists: >
-          [
-            {
-              "id": "d79b5a3924",
-              "interests": {
-                "35d99df867": true
-              }
-            },
-            {
-              "id": "461feca051"
-            }
-          ]
-        clinicLists: >
-          [
-            {
-              "id": "d79b5a3924",
-              "interests": {
-                "35d99df867": true,
-                "03cab91941": true
-              }
-            },
-            {
-              "id": "627a2577da"
-            }
-          ]
     tidewhisperer:
       image: tidepool/tide-whisperer:mongo-params-af13aa55003c994ee28dc41f06a25fc7a48e841b
