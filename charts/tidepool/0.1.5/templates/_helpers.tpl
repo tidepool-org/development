@@ -260,7 +260,10 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_USER_STORE_DATABASE
           value: user
         - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
-          value: '{{.Values.shoreline.salt}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: shoreline 
         - name: TIDEPOOL_IMAGE_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
