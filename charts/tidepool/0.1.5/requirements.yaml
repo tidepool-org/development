@@ -2,3 +2,4 @@ dependencies:
 - name: gloo
   version: "0.14.1"
   repository: "https://storage.googleapis.com/solo-public-helm/"
+  condition: gloo.enabled
