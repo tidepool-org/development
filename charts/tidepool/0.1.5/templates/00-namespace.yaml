@@ -5,7 +5,7 @@ metadata:
   name: {{.Release.Namespace}}
   labels:
     istio-injection: disabled
-    linkerd.io/inject: enabled
+    global.linkerd.io/inject: {{ .Values.global.linkerd }}
   annotations:
     iam.amazonaws.com/permitted: {{ .Release.Namespace }}-Worker
 {{ end }}
