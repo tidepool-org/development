@@ -35,14 +35,14 @@ spec:
     path: charts/tidepool/0.1.5
     ref: k8s
   values:
+    gloo:
+      namespace:
+        create: false
+      rbac:
+        create: true
+      crds:
+        create: false
     global:
-      gloo:
-        namespace:
-          create: false
-        rbac:
-          create: true
-        crds:
-          create: false
       generateSharedSecrets: false
       hosts:
         default:
