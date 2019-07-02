@@ -1,5 +1,21 @@
 gloo:
   enabled: true
+  gatewayProxies:
+    gateway-proxy:
+      deployment:
+        image:
+          repository: quay.io/solo-io/gloo-envoy-wrapper
+          pullPolicy: Always
+        stats: true
+        httpPort: 8080
+        httpsPort: 8443
+        replicas: 1
+      service:
+        type: LoadBalancer
+        httpPort: 80
+        httpsPort: 443
+      extraAnnotations:
+        #service.beta.kubernetes.io/aws-load-balancer-type: "nlb" # if running in AWS
 global:
   linkerd: disabled
   ports:
