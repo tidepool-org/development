@@ -23,8 +23,6 @@ global:
     region: us-west-2                                                 # AWS region service to be deployed in
   environment: production                                             #
   fullnameOverride: ""                                                #
-  image:
-    pullPolicy: IfNotPresent                                          # Docker image pull policy
   generateSharedSecrets: true                                         # whether to generate random shared secrets
   namespace:
     create: true                                                      # whether to create the namespace for the service

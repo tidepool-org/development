@@ -28,10 +28,10 @@ spec:
         linkerd.io/inject: "{{ .Values.global.linkerd }}"
     spec:
       initContainers:
-      {{ include "charts.init.mongo" .}}
+      {{ include "charts.init.mongo" . | nindent 6 }}
       containers:
       - env:
-        {{ include "charts.mongo.params" .}}
+        {{ include "charts.mongo.params" . | nindent 8 }}
         - name: MONGO_DATABASE
           value: seagull
         - name: DISCOVERY_HOST

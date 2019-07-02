@@ -26,10 +26,10 @@ spec:
         linkerd.io/inject: "{{ .Values.global.linkerd }}"
     spec:
       initContainers:
-      {{ include "charts.init.shoreline" .}}
+      {{ include "charts.init.shoreline" . | nindent 6 }}
       containers:
       - env:
-        {{ include "charts.platform.env" .}}
+        {{ include "charts.platform.env" . | nindent 8 }}
         image: "{{ .Values.image.repository }}:{{.Values.image.tag }}"
         name: migrations
         resources:
