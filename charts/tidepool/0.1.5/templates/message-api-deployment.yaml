@@ -10,7 +10,7 @@ metadata:
   name: message-api
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server-secret,mongo"
+    secret.reloader.stakater.com/reload: "server,mongo"
 spec:
   selector:
     matchLabels:
@@ -55,7 +55,7 @@ spec:
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: secret
         - name: SERVICE_NAME
           value: message-api

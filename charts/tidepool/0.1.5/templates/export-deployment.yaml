@@ -11,7 +11,7 @@ metadata:
   name: export
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server-secret"
+    secret.reloader.stakater.com/reload: "server"
 spec:
   selector:
     matchLabels:
@@ -40,7 +40,7 @@ spec:
         - name: SESSION_SECRET
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: export
         image: "{{ .Values.export.image }}"
         livenessProbe:

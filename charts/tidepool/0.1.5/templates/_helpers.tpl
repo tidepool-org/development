@@ -114,14 +114,14 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: secret
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
           value: {{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
         - name: TIDEPOOL_AUTH_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: auth
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.auth}}
@@ -130,7 +130,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_BLOB_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: blob
         - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.blob}}
@@ -149,7 +149,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_DATA_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: data
         - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.data}}
@@ -172,7 +172,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: notification
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.notification}}
@@ -183,7 +183,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_PERMISSION_STORE_SECRET
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: gatekeeper
         - name: TIDEPOOL_PROFILE_STORE_DATABASE
           value: seagull
@@ -244,7 +244,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_TASK_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: task
         - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.task}}
@@ -253,7 +253,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_USER_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: user
         - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.user}}
@@ -262,12 +262,12 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: shoreline 
         - name: TIDEPOOL_IMAGE_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: image 
         - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.image}}

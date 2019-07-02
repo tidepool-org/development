@@ -10,7 +10,7 @@ metadata:
   name: data
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server-secret,mongo"
+    secret.reloader.stakater.com/reload: "server,mongo"
 spec:
   selector:
     matchLabels:

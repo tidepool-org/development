@@ -10,7 +10,7 @@ metadata:
   name: shoreline
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server-secret,mongo,mailchimp,shoreline"
+    secret.reloader.stakater.com/reload: "server,mongo,mailchimp,shoreline"
     configmap.reloader.stakater.com/reload: "shoreline-configmap"
 spec:
   selector:
@@ -63,12 +63,12 @@ spec:
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: secret
         - name: API_SECRET
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: shoreline
         - name: SALT
           valueFrom:
