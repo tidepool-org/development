@@ -10,7 +10,7 @@ metadata:
   name: seagull
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo,seagull"
+    secret.reloader.stakater.com/reload: "server,mongo"
 spec:
   selector:
     matchLabels:
@@ -50,8 +50,8 @@ spec:
         - name: SALT_DEPLOY
           valueFrom:
             secretKeyRef:
-              name: seagull
-              key: salt
+              name: server
+              key: seagull
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
