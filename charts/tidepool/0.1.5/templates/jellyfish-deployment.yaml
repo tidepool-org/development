@@ -51,7 +51,10 @@ spec:
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SALT_DEPLOY
-          value: '{{.Values.jellyfish.salt}}'
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: jellyfish
         - name: SCHEMA_VERSION
           value: "3"
         - name: SEAGULL_SERVICE
