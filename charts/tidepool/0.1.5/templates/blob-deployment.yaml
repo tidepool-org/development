@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: blob
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: blob
+  namespace: {{.Release.Namespace}}
+  annotations:
+    secret.reloader.stakater.com/reload: "server-secret,mongo"
+spec:
+  selector:
+    matchLabels:
+      app: blob
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        iam.amazonaws.com/role: {{ .Release.Namespace }}-Worker
+        linkerd.io/inject: "{{ .Values.global.linkerd }}"
+      labels:
+        app: blob
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      initContainers:
+      {{ include "charts.init.shoreline" .}}
+      containers:
+      - env:
+        {{ include "charts.platform.env" .}}
+        image: "{{ .Values.blob.image }}"
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 10101
+          capabilities:
+            drop:
+            - ALL
+        {{ template "charts.platform.probes" .Values.global.ports.blob}}
+        name: blob
+        ports:
+        - containerPort: {{.Values.global.ports.blob}}
+        resources:
+          {{- toYaml .Values.global.resources | nindent 10 }}
+      restartPolicy: Always
+status: {}
