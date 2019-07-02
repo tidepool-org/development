@@ -29,8 +29,8 @@ spec:
         linkerd.io/inject: "{{ .Values.global.linkerd }}"
     spec:
       initContainers:
-      {{ include "charts.init.mongo" . | toYaml | nindent 6 }}
-      {{ include "charts.init.shoreline" . | toYaml | nindent 6 }}
+      {{ include "charts.init.mongo" . }}
+      {{ include "charts.init.shoreline" . }}
       containers:
       - env:
         {{- include "charts.mongo.params" . | toYaml | nindent 8 }}
