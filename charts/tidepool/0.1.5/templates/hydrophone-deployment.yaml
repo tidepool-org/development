@@ -30,7 +30,7 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       initContainers:
-      {{ include "charts.init.mongo" .}}
+      {{ include "charts.init.mongo" . | nindent 6 }}
       containers:
       - env:
         {{ include "charts.mongo.params" .}}

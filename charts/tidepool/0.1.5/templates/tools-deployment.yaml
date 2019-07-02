@@ -28,10 +28,10 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       initContainers:
-      {{ include "charts.init.shoreline" .}}
+      {{ include "charts.init.shoreline" . | nindent 6 }}
       containers:
       - env:
-        {{ include "charts.platform.env" .}}
+        {{ include "charts.platform.env" . | nindent 8 }}
         image: "{{ .Values.tools.image }}"
         name: tools
         resources:
