@@ -45,7 +45,7 @@ global:
     pullPolicy: IfNotPresent                                          # Docker image pull policy
   generateSharedSecrets: true                                         # whether to generate random shared secrets
   namespace:
-    create: true                                                      # whether to create the namespace for the service
+    create: false                                                     # whether to create the namespace for the service
   nameOverride: ""                                                    # the name to use for the helm chart, if given
   mongo:
     enabled: true                                                     # whether to launch a local Mongo instance
