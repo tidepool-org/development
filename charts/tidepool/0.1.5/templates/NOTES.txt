@@ -1,0 +1,29 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }}
+  $ helm get {{ .Release.Name }}
+
+The tidepool service relies on various secrets to encrypt and decrypt
+data.  Within Tidepool, the service retrieves these secrets from
+an Amazon service.  If you are running locally, you need to provide
+those secrets.
+
+To ease this, EACH time you install the helm chart, a new set of
+secrets are generated.  This is fine, if you throw away all you
+data between installations. However, if you persist your data, then
+you need to keep the same secrets from one helm installation to the
+next.
+
+To do that, after the first successful helm installation, you will
+need to run `kubectl get secrets server-secrets -o yaml` and save
+the results into a file.  These are the secrets that helm generated
+for you.  If you rerun helm later, you will need to use these secrets
+and NOT the secrets that it would generate.  To run off secret
+generation, add the setting `--set "generateSharedSecrets=false`
+when running helm.  To load the secret file, run
+
+kubectl apply -f server-secret.yaml
