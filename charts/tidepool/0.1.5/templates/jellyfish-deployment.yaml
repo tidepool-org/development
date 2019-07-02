@@ -53,7 +53,7 @@ spec:
         - name: SALT_DEPLOY
           valueFrom:
             secretKeyRef:
-              name: server-secret
+              name: server
               key: jellyfish
         - name: SCHEMA_VERSION
           value: "3"
