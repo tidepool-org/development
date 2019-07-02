@@ -33,8 +33,7 @@ global:
   mongo:
     enabled: true                                                     # whether to launch a local Mongo instance
     primary: mongodb                                                  # a single Mongo instance name:port
-    hosts:
-    - mongodb                                                         # one (of possibly several) Mongo instance name:port names
+    hosts: "mongodb"
     port:
       27017                                                           # the Mongo port
     username: ''                                                      # a username in the Mongo instance
