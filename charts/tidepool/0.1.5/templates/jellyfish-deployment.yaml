@@ -23,7 +23,7 @@ spec:
     metadata:
       annotations:
         iam.amazonaws.com/role: {{ .Release.Namespace }}-Worker
-        linkerd.io/inject: "{{ .Values.linkerd }}"
+        linkerd.io/inject: "{{ .Values.global.linkerd }}"
       labels:
         app: jellyfish
         app.kubernetes.io/name: {{ include "charts.name" . }}
