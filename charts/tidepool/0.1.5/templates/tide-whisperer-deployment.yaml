@@ -33,7 +33,7 @@ spec:
       {{ include "charts.init.shoreline" . | toYaml | nindent 6 }}
       containers:
       - env:
-        {{ include "charts.mongo.params" .}}
+        {{ include "charts.mongo.params" . | toYaml | nindent 8 }}
         - name: MONGO_DATABASE
           value: data
         - name: SERVER_SECRET
