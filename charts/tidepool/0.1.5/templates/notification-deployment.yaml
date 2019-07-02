@@ -29,10 +29,10 @@ spec:
         linkerd.io/inject: "{{ .Values.global.linkerd }}"
     spec:
       initContainers:
-      {{ include "charts.init.shoreline" . | nindent 6 }}
+      {{ include "charts.init.shoreline" .}}
       containers:
       - env:
-        {{ include "charts.platform.env" . | nindent 8 }}
+        {{ include "charts.platform.env" .}}
         image: "{{ .Values.notification.image }}"
         {{ template "charts.platform.probes" .Values.global.ports.notification}}
         name: notification

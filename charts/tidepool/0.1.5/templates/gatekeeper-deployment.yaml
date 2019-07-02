@@ -29,7 +29,7 @@ spec:
         linkerd.io/inject: "{{ .Values.global.linkerd }}"
     spec:
       initContainers:
-      {{ include "charts.init.mongo" . | nindent 6 }}
+      {{ include "charts.init.mongo" .}}
       containers:
       - env:
         {{ include "charts.mongo.params" .}}

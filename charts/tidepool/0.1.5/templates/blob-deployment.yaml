@@ -30,10 +30,10 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       initContainers:
-      {{ include "charts.init.shoreline" . | nindent 6 }}
+      {{ include "charts.init.shoreline" .}}
       containers:
       - env:
-        {{ include "charts.platform.env" . | nindent 8 }}
+        {{ include "charts.platform.env" .}}
         image: "{{ .Values.blob.image }}"
         {{ template "charts.platform.probes" .Values.global.ports.blob}}
         name: blob
