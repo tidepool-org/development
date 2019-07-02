@@ -68,6 +68,9 @@ global:
     proxy:
       name:  gateway-proxy                                            # the name of the API gateway
       namespace: gloo-system                                          # the namespace of the API gateway
+  gloo:
+    namespace:
+      create: true
 
   resources:                                                          # the resources for each service
     {}
