@@ -91,7 +91,6 @@ gatekeeper:
   image: tidepool/gatekeeper:v0.7.2
 highwater:
   image: tidepool/highwater:v0.3.5
-  salt: gf78fSEI7tOQQP9xfXMO9HfRyMnW4Sx88Q
 hydrophone:
   image: tidepool/hydrophone:v0.9.0-release.1
   ses:
@@ -100,7 +99,6 @@ hydrophone:
 jellyfish:
   enabled: true
   image: tidepool/jellyfish:v0.12.3-release.2
-  salt: 'itNkczadZ1EeC9fUWR3LnbKFagtYYLOk'
   #bucket: ''
   storage: 'aws/s3'
   #storage: 'local'
@@ -147,17 +145,8 @@ user:
   image: tidepool/platform-user:1.32.0-release.4
 seagull:
   image: tidepool/seagull:v0.7.2-release.4
-  salt: KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
 shoreline:
   image: tidepool/shoreline:v0.14.2-release.1
-  longtermkey: abcdefghijklmnopqrstuvwxyz
-  salt: ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
-  verification: {secret: +skip}
-  clinicDemoUserId: "e79b15328a"
-  mailchimp:
-    url: https://us7.api.mailchimp.com/3.0
-    personalLists: "[]"
-    clinicLists: "[]"
 tidewhisperer:
   image: tidepool/tide-whisperer:v0.13.0-release.3
 
