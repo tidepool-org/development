@@ -36,12 +36,7 @@ spec:
     ref: k8s
   values:
     gloo:
-      namespace:
-        create: false
-      rbac:
-        create: true
-      crds:
-        create: false
+      enabled: false
     global:
       generateSharedSecrets: false
       hosts:
