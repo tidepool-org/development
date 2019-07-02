@@ -1,0 +1,90 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: jellyfish
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: jellyfish
+  namespace: {{.Release.Namespace}}
+  annotations:
+    secret.reloader.stakater.com/reload: "server-secret,mongo"
+spec:
+  selector:
+    matchLabels:
+      app: jellyfish
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: {{ .Values.global.replicaCount }}
+  template:
+    metadata:
+      annotations:
+        iam.amazonaws.com/role: {{ .Release.Namespace }}-Worker
+        linkerd.io/inject: "{{ .Values.global.linkerd }}"
+      labels:
+        app: jellyfish
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      initContainers:
+      {{ include "charts.init.mongo" .}}
+      containers:
+      - env:
+        {{ include "charts.mongo.params" .}}
+        - name: MONGO_DATABASE
+          value: 'data'
+        - name: SKIP_HAKKEN
+          value: "true"
+        - name: DISCOVERY_HOST
+          value: 'hakken'
+        - name: GATEKEEPER_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.global.ports.gatekeeper}}"}]}'
+        - name: MINIMUM_UPLOADER_VERSION
+          value: 0.251.0
+        - name: NODE_ENV
+          value: '{{.Values.global.environment}}'
+        - name: PORT
+          value: "{{.Values.global.ports.jellyfish}}"
+        - name: PUBLISH_HOST
+          value: 'hakken'
+        - name: SALT_DEPLOY 
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: jellyfish
+        - name: SCHEMA_VERSION
+          value: "3"
+        - name: SEAGULL_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:{{.Values.global.ports.seagull}}"}]}'
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server-secret
+              key: secret
+        - name: SERVE_STATIC
+          value: dist
+        - name: SERVICE_NAME
+          value: jellyfish
+        - name: STORAGE_TYPES
+          value: '{"aws/s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.global.aws.region}}", "bucket": "{{ include "charts.jellyfish.s3.bucket" .}}" }}'
+        - name: STORAGE_DEFAULT
+          value: {{.Values.storage}}
+        - name: USER_API_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
+        image: "{{ .Values.image.repository }}:{{.Values.image.tag }}"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: {{.Values.global.ports.jellyfish}}
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        name: jellyfish
+        ports:
+        - containerPort: {{.Values.global.ports.jellyfish}}
+        resources:
+          {{- toYaml .Values.global.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.global.securityContext | nindent 10 }}
+      restartPolicy: Always

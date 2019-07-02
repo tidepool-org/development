@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: blip
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  name: blip
+  namespace: {{.Release.Namespace}}
+spec:
+  selector:
+    matchLabels:
+      app: blip
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: {{ .Values.global.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: blip
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        linkerd.io/inject: "{{ .Values.global.linkerd }}"
+    spec:
+      containers:
+      - image: "{{ .Values.image.repository }}:{{.Values.image.tag }}"
+        env:
+        - name: SKIP_HAKKEN
+          value: "true"
+        name: blip
+        ports:
+        - containerPort: {{.Values.global.ports.blip}}
+        resources:
+          {{- toYaml .Values.global.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.global.securityContext | nindent 10 }}
+      restartPolicy: Always

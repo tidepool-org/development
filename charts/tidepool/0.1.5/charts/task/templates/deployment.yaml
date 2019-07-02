@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: task
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: task
+  namespace: {{.Release.Namespace}}
+  annotations:
+    secret.reloader.stakater.com/reload: "server-secret,mongo,dexcom"
+spec:
+  selector:
+    matchLabels:
+      app: task
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: {{ .Values.global.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: task
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        linkerd.io/inject: "{{ .Values.global.linkerd }}"
+    spec:
+      initContainers:
+      {{ include "charts.init.shoreline" .}}
+      containers:
+      - env:
+        {{ include "charts.task.env" .}}
+        {{ include "charts.platform.env" .}}
+        image: "{{ .Values.image.repository }}:{{.Values.image.tag }}"
+        {{ template "charts.platform.probes" .Values.global.ports.task}}
+        name: task
+        ports:
+        - containerPort: {{.Values.global.ports.task}}
+        resources:
+          {{- toYaml .Values.global.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.global.securityContext | nindent 10 }}
+      restartPolicy: Always
