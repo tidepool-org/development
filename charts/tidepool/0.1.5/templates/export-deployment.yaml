@@ -43,14 +43,6 @@ spec:
               name: server-secret
               key: export
         image: "{{ .Values.export.image }}"
-        securityContext:
-          readOnlyRootFilesystem: true
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 10101
-          capabilities:
-            drop:
-            - ALL
         livenessProbe:
           httpGet:
             path: /export/status
@@ -62,5 +54,7 @@ spec:
         - containerPort: {{.Values.global.ports.export}}
         resources:
           {{- toYaml .Values.global.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.global.securityContext | nindent 10 }}
       restartPolicy: Always
 {{ end }}

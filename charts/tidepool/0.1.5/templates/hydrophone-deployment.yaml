@@ -88,14 +88,6 @@ spec:
                 }
             }
         image: "{{ .Values.hydrophone.image }}"
-        securityContext:
-          readOnlyRootFilesystem: true
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 10101
-          capabilities:
-            drop:
-            - ALL
         livenessProbe:
           httpGet:
             path: /status
@@ -107,5 +99,6 @@ spec:
         - containerPort: {{.Values.global.ports.hydrophone}}
         resources:
           {{- toYaml .Values.global.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.global.securityContext | nindent 10 }}
       restartPolicy: Always
-status: {}

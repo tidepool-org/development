@@ -33,16 +33,10 @@ spec:
       - env:
         {{ include "charts.platform.env" .}}
         image: "{{ .Values.migrations.image }}"
-        securityContext:
-          readOnlyRootFilesystem: true
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 10101
-          capabilities:
-            drop:
-            - ALL
         name: migrations
         resources:
           {{- toYaml .Values.global.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.global.securityContext | nindent 10 }}
       restartPolicy: Always
 {{ end }}

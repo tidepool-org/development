@@ -34,18 +34,12 @@ spec:
       - env:
         {{ include "charts.platform.env" .}}
         image: "{{ .Values.auth.image }}"
-        securityContext:
-          readOnlyRootFilesystem: true
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 10101
-          capabilities:
-            drop:
-            - ALL
         {{ template "charts.platform.probes" .Values.global.ports.auth}}
         name: auth
         ports:
         - containerPort: {{.Values.global.ports.auth}}
         resources:
           {{- toYaml .Values.global.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.global.securityContext | nindent 10 }}
       restartPolicy: Always

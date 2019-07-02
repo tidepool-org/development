@@ -80,6 +80,13 @@ global:
     #  cpu: 100m
     #  memory: 128Mi
     #
+  securityContext: 
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 10101
+    capabilities:
+      drop:
+      - ALL
 
 # Tidepool services
 blip:

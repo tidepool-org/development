@@ -35,17 +35,12 @@ spec:
       - env:
         {{ include "charts.platform.env" .}}
         image: "{{ .Values.image.image }}"
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 10101
-          capabilities:
-            drop:
-            - ALL
         {{ template "charts.platform.probes" .Values.global.ports.image }}
         name: image
         ports:
         - containerPort: {{.Values.global.ports.image}}
         resources:
           {{- toYaml .Values.global.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.global.securityContext | nindent 10 }}
       restartPolicy: Always
