@@ -33,6 +33,8 @@ spec:
     ref: k8s
   values:
     global:
+      externalSecrets:
+        enabled: true
       generateSharedSecrets: false
       hosts:
         default:

@@ -35,11 +35,11 @@ spec:
     path: charts/tidepool/0.1.5
     ref: k8s
   values:
-    externalSecrets:
-      enabled: true
     gloo:
       enabled: false
     global:
+      externalSecrets:
+        enabled: true
       generateSharedSecrets: false
       hosts:
         default:
