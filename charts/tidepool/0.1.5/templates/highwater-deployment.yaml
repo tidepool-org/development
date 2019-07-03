@@ -66,8 +66,8 @@ spec:
         - name: SALT_DEPLOY
           valueFrom:
             secretKeyRef:
-              name: highwater
-              key: salt
+              name: server
+              key: highwater
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
