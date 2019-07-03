@@ -17,8 +17,14 @@ gloo:
       extraAnnotations:
         #service.beta.kubernetes.io/aws-load-balancer-type: "nlb" # if running in AWS
 global:
-  externalSecrets:
-     enabled: false
+  secrets:
+    external:
+      source: awsSecretManager                                        # external secrets are loaded from aws
+      #source: other                                                  # external secrets are by other means
+    internal:
+      source: helm                                                    # internal secrets are randominly generated 
+      #source: awsSecretManager                                       # internal secrets are loaded from aws
+      #source: other                                                  # internal secrets are provided by other means
   linkerd: disabled
   ports:
     blip: 3000                                                        # blip service internal port
@@ -45,7 +51,6 @@ global:
   fullnameOverride: ""                                                #
   image:
     pullPolicy: IfNotPresent                                          # Docker image pull policy
-  generateSharedSecrets: true                                         # whether to generate random shared secrets
   namespace:
     create: false                                                     # whether to create the namespace for the service
   nameOverride: ""                                                    # the name to use for the helm chart, if given
