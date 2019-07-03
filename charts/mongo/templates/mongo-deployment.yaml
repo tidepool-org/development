@@ -27,15 +27,14 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-{{ if .Values.mongo.seed }}
-      volumes:
-      - name: dump
-        emptyDir: {}
 {{ if .Values.mongo.persistent }}
+      volumes:
       - name: '{{.Values.mongo.volume}}'
         persistentVolumeClaim:
+{{ if .Values.mongo.seed }}
+      - name: dump
+        emptyDir: {}
           claimName: {{.Values.mongo.volume}}
-{{ end }}
       initContainers: # provide the data volume
       - image: tidepool/mongoseed:init
         name: seed-data
@@ -45,6 +44,7 @@ spec:
         volumeMounts:
         - mountPath: /input
           name: dump
+{{ end }}
 {{ end }}
       containers: 
       - image: "{{ .Values.mongo.image }}"
