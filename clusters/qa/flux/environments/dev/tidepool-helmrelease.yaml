@@ -84,7 +84,7 @@ spec:
     nosqlclient:
       enabled: false
     blip:
-      image: tidepool/blip:release-1.23.0-c2c732ed0246ddb6c9599a2a1dd056016874060e
+      image: tidepool/blip:release-1.23.0-f542c7526e0eafe9ace837c96806915e374cf64c
     export:
       enabled: true
       image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
