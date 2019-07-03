@@ -19,12 +19,12 @@ gloo:
 global:
   secrets:
     external:
-      source: awsSecretManager                                        # external secrets are loaded from aws
-      #source: other                                                  # external secrets are by other means
+      source: "awsSecretsManager"                                     # external secrets are loaded from aws
+      #source: "other"                                                # external secrets are by other means
     internal:
-      source: helm                                                    # internal secrets are randominly generated 
-      #source: awsSecretManager                                       # internal secrets are loaded from aws
-      #source: other                                                  # internal secrets are provided by other means
+      source: "helm"                                                  # internal secrets are randominly generated 
+      #source: "awsSecretsManager"                                    # internal secrets are loaded from aws
+      #source: "other"                                                # internal secrets are provided by other means
   linkerd: disabled
   ports:
     blip: 3000                                                        # blip service internal port
