@@ -68,13 +68,13 @@ spec:
         - name: API_SECRET
           valueFrom:
             secretKeyRef:
-              name: server
-              key: shoreline
+              name: shorline
+              key: api
         - name: SALT
           valueFrom:
             secretKeyRef:
-              name: shoreline
-              key: salt
+              name: server
+              key: shoreline
         - name: VERIFICATION_SECRET
           valueFrom:
             secretKeyRef:
