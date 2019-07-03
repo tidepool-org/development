@@ -36,9 +36,11 @@ spec:
     ref: k8s
   values:
     global:
-      externalSecrets:
-        enabled: true
-      generateSharedSecrets: false
+      secrets:
+        internal:
+          source: awsSecretsManager
+        external:
+          source: awsSecretsManager
       hosts:
         default:
           protocol: https
