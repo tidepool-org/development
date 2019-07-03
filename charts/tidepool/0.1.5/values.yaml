@@ -1,3 +1,5 @@
+externalSecrets:
+  enabled: true
 gloo:
   enabled: true
   gatewayProxies:
