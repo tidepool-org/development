@@ -1,5 +1,3 @@
-externalSecrets:
-  enabled: true
 gloo:
   enabled: true
   gatewayProxies:
@@ -19,6 +17,8 @@ gloo:
       extraAnnotations:
         #service.beta.kubernetes.io/aws-load-balancer-type: "nlb" # if running in AWS
 global:
+  externalSecrets:
+     enabled: false
   linkerd: disabled
   ports:
     blip: 3000                                                        # blip service internal port
