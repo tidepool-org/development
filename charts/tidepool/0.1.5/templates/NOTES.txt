@@ -9,22 +9,24 @@ To learn more about the release, try:
 
 {{ if .Values.generateSharedSecrets }}
 
-The tidepool service relies on various secrets to encrypt and decrypt
+The Tidepool services rely on various secrets to encrypt and decrypt
 data.  Within Tidepool, the service retrieves these secrets from
 an Amazon service.  If you are running locally, you need to provide
 those secrets.
 
-Some of those secrets are provided by or shared with third parties.
-You need to supply these in the form of Kubernetes Secret manifests.
-Others are for Tidepool internal use. You have just generated those
-with Helm.  
+Some of those secrets are provided by or shared with third parties
+(e.g. Dexcom, Mailchimp, UCSF).  You need to supply these in the
+form of Kubernetes Secret manifests.  If you do not provide them,
+then the associated services are not available.  Look in the
+deployment files for secrets that are marked optional.
 
-I see that you generated new internal secrets.
-Each time you install this Helm chart, a new set of
-secrets are generated.  This is fine, if you throw away all you
-data between installations.  However, if you persist your data,
-then you need to keep the same secrets from one helm installation
-to the next.
+Others are for Tidepool internal use. You have just generated those
+with Helm.
+
+Each time you install this Helm chart, a new set of secrets are
+generated.  This is fine, if you throw away all you data between
+installations.  However, if you persist your data, then you need
+to keep the same secrets from one helm installation to the next.
 
 To do that, after the first successful helm installation, you will
 need to run 
