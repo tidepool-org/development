@@ -70,21 +70,25 @@ spec:
             secretKeyRef:
               name: shorline
               key: api
+              optional: true
         - name: SALT
           valueFrom:
             secretKeyRef:
               name: server
               key: shoreline
+              optional: true
         - name: VERIFICATION_SECRET
           valueFrom:
             secretKeyRef:
               name: shoreline
               key: verification
+              optional: true
         - name: LONG_TERM_KEY
           valueFrom:
             secretKeyRef:
               name: shoreline
               key: longtermkey 
+              optional: true
         - name: MAILCHIMP_APIKEY
           valueFrom:
             secretKeyRef:
