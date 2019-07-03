@@ -4,6 +4,6 @@ metadata:
   name: int
   labels:
     istio-injection: disabled
-    linkerd.io/inject: enabled
+    linkerd.io/inject: disabled
   annotations:
     iam.amazonaws.com/permitted: "int-.*"
