@@ -7,7 +7,7 @@ To learn more about the release, try:
   $ helm status {{ .Release.Name }}
   $ helm get {{ .Release.Name }}
 
-{{ if .Values.generateSharedSecrets }}
+{{ if eq  .Values.global.secrets.internal.source "helm"}}
 
 The Tidepool services rely on various secrets to encrypt and decrypt
 data.  Within Tidepool, the service retrieves these secrets from
@@ -31,7 +31,7 @@ to keep the same secrets from one helm installation to the next.
 To do that, after the first successful helm installation, you will
 need to run 
 
-kubectl get secrets server-secrets -o yaml
+kubectl get secrets server-secrets -o yaml >server-secret.yaml
 
 and save the results into a file.  These are the secrets that helm
 generated for you.  If you rerun helm install later, you will need
@@ -39,7 +39,7 @@ to use these secrets and NOT the secrets that it would generate.
 To run off secret generation, add the setting when running `helm
 install`:
 
-  --set "generateSharedSecrets=false"
+  --set "global.secrets.internal.source=other"
 
 To load the secret file, run:
 
