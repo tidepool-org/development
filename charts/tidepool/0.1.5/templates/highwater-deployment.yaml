@@ -51,6 +51,7 @@ spec:
             secretKeyRef:
               name: highwater
               key: UCSF_APIKEY
+              optional: true
         - name: METRICS_UCSF_WHITELIST
           valueFrom:
             secretKeyRef:

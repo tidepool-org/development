@@ -68,7 +68,7 @@ spec:
         - name: API_SECRET
           valueFrom:
             secretKeyRef:
-              name: shorline
+              name: shoreline
               key: api
               optional: true
         - name: SALT
