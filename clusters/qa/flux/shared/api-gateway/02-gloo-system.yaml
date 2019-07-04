@@ -17,7 +17,7 @@ spec:
     rbac:
       create: true
     crds:
-      create: false
+      create: true
     
     settings:
       # if this is set to false, default settings will be created by pods upon boot
