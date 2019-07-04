@@ -36,6 +36,8 @@ spec:
     ref: k8s
   values:
     global:
+      store:
+        type: "s3"
       secrets:
         internal:
           source: awsSecretsManager

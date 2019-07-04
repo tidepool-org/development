@@ -35,11 +35,11 @@ spec:
     path: charts/tidepool/0.1.5
     ref: k8s
   values:
-    store:
-      type: "s3"
     gloo:
       enabled: false
     global:
+      store:
+        type: "s3"
       secrets:
         internal:
           source: awsSecretsManager
