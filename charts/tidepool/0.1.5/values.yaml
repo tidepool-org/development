@@ -14,7 +14,7 @@ gloo:
         type: LoadBalancer
         httpPort: 80
         httpsPort: 443
-      extraAnnotations:
+      extraAnnotations: {}
         #service.beta.kubernetes.io/aws-load-balancer-type: "nlb" # if running in AWS
 global:
   store: 
@@ -141,7 +141,7 @@ auth:
   image: tidepool/platform-auth:1.32.0-release.4
 blob:
   image: tidepool/platform-blob:1.32.0-release.4
-  directory "_data/blobs"
+  directory: "_data/blobs"
   prefix: "blobs"
 data:
   image: tidepool/platform-data:1.32.0-release.4
