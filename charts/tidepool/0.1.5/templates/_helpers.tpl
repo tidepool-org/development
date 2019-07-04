@@ -141,7 +141,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
           value: '{{.Values.blob.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.store.type}}'
+          value: '{{.Values.global.store.type}}'
         - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
           value: confirm
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
@@ -274,7 +274,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
           value: http://image:{{.Values.global.ports.image}}
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.store.type}}'
+          value: '{{.Values.global.store.type}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
           value: '{{.Values.image.directory}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET

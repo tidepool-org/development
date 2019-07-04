@@ -71,7 +71,7 @@ spec:
         - name: STORAGE_TYPES
           value: '{"s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.global.aws.region}}", "bucket": "{{ include "charts.jellyfish.s3.bucket" .}}" }}'
         - name: STORAGE_DEFAULT
-          value: '{{ .Values.store.type }}'
+          value: '{{ .Values.global.store.type }}'
         - name: USER_API_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
         image: "{{ .Values.jellyfish.image }}"
