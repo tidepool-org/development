@@ -84,7 +84,7 @@ spec:
                     "service": "hydrophone"
                 },
                 "sesEmail": {
-                    "fromAddress": "{{.Values.hydrophone.ses.fromAddress}}"
+                    "fromAddress": "{{.Values.hydrophone.fromAddress}}"
                 }
             }
         image: "{{ .Values.hydrophone.image }}"

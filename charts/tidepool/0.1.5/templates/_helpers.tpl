@@ -41,16 +41,16 @@ Expand the name of the chart.
 {{- define "charts.s3.url" -}} https://s3-{{.Values.global.aws.region}}.amazonaws.com {{- end }}
 
 {{- define "charts.image.s3.bucket" -}}
-{{- if (.Values.image.service.unstructured.store.s3.bucket) and (ne .Values.image.service.unstructured.store.s3.bucket "") -}}
-.Values.image.service.unstructured.store.s3.bucket
+{{- if (.Values.image.bucket) and (ne .Values.image.bucket "") -}}
+.Values.image.bucket
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
 {{- end -}}
 
 {{- define "charts.blob.s3.bucket" -}}
-{{- if (.Values.blob.service.unstructured.store.s3.bucket) and (ne .Values.blob.service.unstructured.store.s3.bucket "") -}}
-.Values.blob.service.unstructured.store.s3.bucket
+{{- if (.Values.blob.bucket) and (ne .Values.blob.bucket "") -}}
+.Values.blob.bucket
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
@@ -135,13 +135,13 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.blob}}
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.blob.service.unstructured.store.file.directory}}'
+          value: '{{.Values.blob.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
           value: '{{include "charts.blob.s3.bucket" .}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.blob.service.unstructured.store.s3.prefix}}'
+          value: '{{.Values.blob.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.blob.service.unstructured.store.type}}'
+          value: '{{.Values.store.type}}'
         - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
           value: confirm
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
@@ -274,13 +274,13 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
           value: http://image:{{.Values.global.ports.image}}
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.image.service.unstructured.store.type}}'
+          value: '{{.Values.store.type}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.image.service.unstructured.store.file.directory}}'
+          value: '{{.Values.image.directory}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
           value: '{{include "charts.blob.s3.bucket" .}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.image.service.unstructured.store.s3.prefix}}'
+          value: '{{.Values.image.prefix}}'
 {{- end -}}        
 
 {{/*

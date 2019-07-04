@@ -17,10 +17,13 @@ gloo:
       extraAnnotations:
         #service.beta.kubernetes.io/aws-load-balancer-type: "nlb" # if running in AWS
 global:
+  store: 
+    type: s3
+    #type: file
   secrets:
     external:
-      source: "awsSecretsManager"                                     # external secrets are loaded from aws
-      #source: "other"                                                # external secrets are by other means
+      #source: "awsSecretsManager"                                    # external secrets are loaded from aws
+      source: "other"                                                 # external secrets are by other means
     internal:
       source: "helm"                                                  # internal secrets are randominly generated 
       #source: "awsSecretsManager"                                    # internal secrets are loaded from aws
@@ -126,15 +129,11 @@ highwater:
   image: tidepool/highwater:v0.3.5
 hydrophone:
   image: tidepool/hydrophone:v0.9.0-release.1
-  ses:
-    fromAddress: "Tidepool <noreply@tidepool.org>"
+  fromAddress: "Tidepool <noreply@tidepool.org>"
   #bucket: ''
 jellyfish:
   enabled: true
   image: tidepool/jellyfish:v0.12.3-release.2
-  #bucket: ''
-  storage: 'aws/s3'
-  #storage: 'local'
 messageapi:
   image: tidepool/message-api:v0.7.14-release.1
   window: 21
@@ -142,28 +141,14 @@ auth:
   image: tidepool/platform-auth:1.32.0-release.4
 blob:
   image: tidepool/platform-blob:1.32.0-release.4
-  service:
-    unstructured:
-      store:
-        file: {directory: "_data/blobs"}
-        #type: file
-        s3:
-          #bucket:
-          prefix: "blobs"
-        type: s3
+  directory "_data/blobs"
+  prefix: "blobs"
 data:
   image: tidepool/platform-data:1.32.0-release.4
 image:
   image: tidepool/platform-image:1.32.0-release.4
-  service:
-    unstructured:
-      store:
-        file: {directory: "_data/image"}
-        #type: file
-        s3:
-          #bucket: ""
-          prefix: "images"
-        type: s3
+  directory: "_data/image"
+  prefix: "images"
 migrations:
   enabled: true
   image: tidepool/platform-migrations:1.32.0-release.4
