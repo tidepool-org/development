@@ -18,8 +18,8 @@ gloo:
         #service.beta.kubernetes.io/aws-load-balancer-type: "nlb" # if running in AWS
 global:
   store: 
-    type: s3
-    #type: file
+    #type: s3
+    type: file
   secrets:
     external:
       #source: "awsSecretsManager"                                    # external secrets are loaded from aws
