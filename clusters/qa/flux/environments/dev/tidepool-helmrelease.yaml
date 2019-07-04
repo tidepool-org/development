@@ -35,6 +35,8 @@ spec:
     path: charts/tidepool/0.1.5
     ref: k8s
   values:
+    store:
+      type: "s3"
     gloo:
       enabled: false
     global:
