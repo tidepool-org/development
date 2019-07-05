@@ -345,15 +345,6 @@ spec:
     - matcher:
         methods:
         - POST
-        prefix: /serverlogin/
-      routeAction:
-        single:
-          upstream:
-            name: '{{ $.Release.Namespace }}-shoreline-9107'
-            namespace: '{{ $.Release.Namespace }}'
-    - matcher:
-        methods:
-        - POST
         - PUT
         - DELETE
         prefix: /v1/datasets
@@ -361,6 +352,15 @@ spec:
         single:
           upstream:
             name: '{{ $.Release.Namespace }}-data-9220'
+            namespace: '{{ $.Release.Namespace }}'
+    - matcher:
+        methods:
+        - POST
+        prefix: /serverlogin
+      routeAction:
+        single:
+          upstream:
+            name: '{{ $.Release.Namespace }}-shoreline-9107'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
