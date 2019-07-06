@@ -84,15 +84,12 @@ global:
       namespace: gloo-system                                          # the namespace of the API gateway
 
   resources:                                                          # the resources for each service
-    {}
-    # If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #  cpu: 100m
-    #  memory: 128Mi
-    # requests:
-    #  cpu: 100m
-    #  memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 32Mi
     #
   securityContext: 
     allowPrivilegeEscalation: false
