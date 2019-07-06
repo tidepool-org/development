@@ -3,7 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   annotations:
   name: migrations
-  namespace: {{ .Releaese.Namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   maxReplicas: {{ .Values.migrations.maxReplicas | default 10 }}
   minReplicas: {{ .Values.migrations.minReplicas | default 1 }}

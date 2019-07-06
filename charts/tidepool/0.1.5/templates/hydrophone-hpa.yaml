@@ -3,7 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   annotations:
   name: hydrophone
-  namespace: {{ .Releaese.Namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   maxReplicas: {{ .Values.hydrophone.maxReplicas | default 10 }}
   minReplicas: {{ .Values.hydrophone.minReplicas | default 1 }}

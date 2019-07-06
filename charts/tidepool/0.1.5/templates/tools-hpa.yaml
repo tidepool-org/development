@@ -3,7 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   annotations:
   name: tools
-  namespace: {{ .Releaese.Namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   maxReplicas: {{ .Values.tools.maxReplicas | default 10 }}
   minReplicas: {{ .Values.tools.minReplicas | default 1 }}

@@ -3,7 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   annotations:
   name: auth
-  namespace: {{ .Releaese.Namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   maxReplicas: {{ .Values.auth.maxReplicas | default 10 }}
   minReplicas: {{ .Values.auth.minReplicas | default 1 }}

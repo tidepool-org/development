@@ -3,7 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   annotations:
   name: tide-whisperer
-  namespace: {{ .Releaese.Namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   maxReplicas: {{ .Values.tidewhisperer.maxReplicas | default 10 }}
   minReplicas: {{ .Values.tidewhisperer.minReplicas | default 1 }}

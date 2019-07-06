@@ -3,7 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   annotations:
   name: gatekeeper
-  namespace: {{ .Releaese.Namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   maxReplicas: {{ .Values.gatekeeper.maxReplicas | default 10 }}
   minReplicas: {{ .Values.gatekeeper.minReplicas | default 1 }}

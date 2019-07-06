@@ -3,7 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   annotations:
   name: seagull
-  namespace: {{ .Releaese.Namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   maxReplicas: {{ .Values.seagull.maxReplicas | default 10 }}
   minReplicas: {{ .Values.seagull.minReplicas | default 1 }}

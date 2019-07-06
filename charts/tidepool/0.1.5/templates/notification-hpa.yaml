@@ -3,7 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   annotations:
   name: notification
-  namespace: {{ .Releaese.Namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   maxReplicas: {{ .Values.notification.maxReplicas | default 10 }}
   minReplicas: {{ .Values.notification.minReplicas | default 1 }}

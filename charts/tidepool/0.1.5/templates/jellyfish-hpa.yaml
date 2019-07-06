@@ -3,7 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   annotations:
   name: jellyfish
-  namespace: {{ .Releaese.Namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   maxReplicas: {{ .Values.jellyfish.maxReplicas | default 10 }}
   minReplicas: {{ .Values.jellyfish.minReplicas | default 1 }}
