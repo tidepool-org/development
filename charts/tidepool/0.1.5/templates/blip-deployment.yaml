@@ -31,6 +31,10 @@ spec:
         env:
         - name: SKIP_HAKKEN
           value: "true"
+{{ if .Values.blip.webpackPublicPath }}
+        - name: WEBPACK_PUBLIC_PATH
+          value: {{ .Values.blip.webpackPublicPath }}
+{{ end }}
         name: blip
         ports:
         - containerPort: {{.Values.global.ports.blip}}

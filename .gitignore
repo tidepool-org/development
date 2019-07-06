@@ -1,2 +1,5 @@
 docker-compose.override.yml
 *.swp
+values-override.yaml
+server-secret.yaml
+Tiltfile

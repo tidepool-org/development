@@ -1,0 +1,48 @@
+# Copy this file as `Tiltfile`, update any config variables as needed, and run with `tilt up`
+
+# Configuration #
+development_dir = False # Change to the root directory of the tidepool-org/development repo.
+mongo_data_dir = False  # <Optional> Change to a local directory to persist mongodb data to.
+
+tidepool_helm_version = '0.1.5' # The version of the Tidepool helm charts to build.
+server_secret_file = './server-secret.yaml' # <Optional> The name of the server secrets file used to persist salt hashes. Required for data persistence.
+tidepool_helm_overrides_file = './values-override.yaml' # <Optional> If present, applies overrides to the settings in the chart's values.yaml.
+
+tidepool_helm_chart_dir = "{}/charts/tidepool/{}".format(development_dir, tidepool_helm_version)
+mongo_helm_chart_dir = "{}/charts/mongo".format(development_dir)
+loadbalancer_helm_chart_dir = "{}/charts/loadbalancer".format(development_dir)
+
+# Deployment
+if development_dir:
+  # Set up mongo template command and deploy mongodb service
+  mongo_helm_template_cmd = 'helm template --name local-mongo '
+
+  if mongo_data_dir:
+    mongo_helm_template_cmd += '--set "mongo.hostPath={}" '.format(mongo_data_dir)
+
+  k8s_yaml(local(mongo_helm_template_cmd + mongo_helm_chart_dir))
+  k8s_resource('mongodb', port_forwards=[27017])
+  watch_file(mongo_helm_chart_dir)
+
+  # Set up tidepool template command and deploy tidepool services
+  tidepool_helm_template_cmd = 'helm template --name local '
+
+  if read_file(server_secret_file):
+    k8s_yaml(server_secret_file)
+    tidepool_helm_template_cmd += '--set "global.secrets.internal.source=other" '
+  else:
+    print('Generating new unique server secrets. To persist your server secrets between stack builds, ')
+    print('run `kubectl get secrets server -o yaml >{}` once the stack is completely started'.format(server_secret_file))
+
+  if read_file(tidepool_helm_overrides_file):
+    tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
+    watch_file(tidepool_helm_overrides_file)
+
+  k8s_yaml(local(tidepool_helm_template_cmd + tidepool_helm_chart_dir))
+  watch_file(tidepool_helm_chart_dir)
+
+  # Load balancer
+  tidepool_helm_loadbalancer_cmd = 'helm template --name local-loadbalancer '
+  k8s_yaml(local(tidepool_helm_loadbalancer_cmd + loadbalancer_helm_chart_dir))
+else:
+  fail('OOPS! You need to point "development_dir" to the root of local copy of the tidepool "development" repo in your Tiltfile')
