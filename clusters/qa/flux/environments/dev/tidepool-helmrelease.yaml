@@ -55,22 +55,18 @@ spec:
             name: dev.tidepool.org
             tlssecret:
               name: tidepool-org
-              namespace: default
           api:
             name: dev-api.tidepool.org
             tlssecret:
               name: tidepool-org
-              namespace: default
           app:
             name: dev-app.tidepool.org
             tlssecret:
               name: tidepool-org
-              namespace: default
           uploads:
             name: dev-uploads.tidepool.org
             tlssecret:
               name: tidepool-org
-              namespace: default
       gateway:
         name: gloo
       mongo:
@@ -83,10 +79,8 @@ spec:
         #optParams: 'replicaSet=Cluster0-shard-0&authSource=admin&w=majority'
       namespace:
         create: false
-    nosqlclient:
-      enabled: false
     blip:
-      image: tidepool/blip:release-1.23.0-f542c7526e0eafe9ace837c96806915e374cf64c
+      image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
     export:
       enabled: true
       image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
