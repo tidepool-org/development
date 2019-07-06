@@ -11,4 +11,4 @@ spec:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: tide-whisperer
-  targetCPUUtilizationPercentage: {{ .Values.tide-whisperer.targetCPUUtilizationPercentage | default 50 }}
+  targetCPUUtilizationPercentage: {{ .Values.tidewhisperer.targetCPUUtilizationPercentage | default 50 }}
