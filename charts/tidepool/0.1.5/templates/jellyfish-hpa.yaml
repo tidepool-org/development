@@ -1,0 +1,14 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+  name: jellyfish
+  namespace: {{ .Releaese.Namespace }}
+spec:
+  maxReplicas: {{ .Values.jellyfish.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.jellyfish.minReplicas | default 1 }}
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: jellyfish
+  targetCPUUtilizationPercentage: {{ .Values.jellyfish.targetCPUUtilizationPercentage | default 50 }}

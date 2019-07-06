@@ -1,0 +1,14 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+  name: message-api
+  namespace: {{ .Releaese.Namespace }}
+spec:
+  maxReplicas: {{ .Values.message-api.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.message-api.minReplicas | default 1 }}
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: message-api
+  targetCPUUtilizationPercentage: {{ .Values.message-api.targetCPUUtilizationPercentage | default 50 }}

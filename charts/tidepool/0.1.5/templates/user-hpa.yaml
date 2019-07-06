@@ -1,0 +1,14 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+  name: user
+  namespace: {{ .Releaese.Namespace }}
+spec:
+  maxReplicas: {{ .Values.user.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.user.minReplicas | default 1 }}
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: user
+  targetCPUUtilizationPercentage: {{ .Values.user.targetCPUUtilizationPercentage | default 50 }}

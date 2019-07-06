@@ -1,0 +1,14 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+  name: tide-whisperer
+  namespace: {{ .Releaese.Namespace }}
+spec:
+  maxReplicas: {{ .Values.tide-whisperer.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.tide-whisperer.minReplicas | default 1 }}
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: tide-whisperer
+  targetCPUUtilizationPercentage: {{ .Values.tide-whisperer.targetCPUUtilizationPercentage | default 50 }}

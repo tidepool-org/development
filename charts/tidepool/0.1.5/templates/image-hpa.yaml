@@ -1,0 +1,14 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+  name: image
+  namespace: {{ .Releaese.Namespace }}
+spec:
+  maxReplicas: {{ .Values.image.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.image.minReplicas | default 1 }}
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: image
+  targetCPUUtilizationPercentage: {{ .Values.image.targetCPUUtilizationPercentage | default 50 }}

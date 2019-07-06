@@ -1,0 +1,14 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+  name: shoreline
+  namespace: {{ .Releaese.Namespace }}
+spec:
+  maxReplicas: {{ .Values.shoreline.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.shoreline.minReplicas | default 1 }}
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: shoreline
+  targetCPUUtilizationPercentage: {{ .Values.shoreline.targetCPUUtilizationPercentage | default 50 }}
