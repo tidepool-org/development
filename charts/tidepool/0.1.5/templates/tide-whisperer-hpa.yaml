@@ -5,8 +5,8 @@ metadata:
   name: tide-whisperer
   namespace: {{ .Releaese.Namespace }}
 spec:
-  maxReplicas: {{ .Values.tide-whisperer.maxReplicas | default 10 }}
-  minReplicas: {{ .Values.tide-whisperer.minReplicas | default 1 }}
+  maxReplicas: {{ .Values.tidewhisperer.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.tidewhisperer.minReplicas | default 1 }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
