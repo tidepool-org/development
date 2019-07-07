@@ -10,6 +10,8 @@ spec:
     name: cluster-autoscaler
     version: 0.14.2
   values: 
+    rbac:
+      create: true
     autoDiscovery:
       clusterName: qatest
     awsRegion: us-west-2
