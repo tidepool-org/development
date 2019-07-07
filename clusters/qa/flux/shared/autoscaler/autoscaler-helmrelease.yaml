@@ -20,7 +20,7 @@ spec:
       effect: NoExecute
     serviceMonitor:
       enabled: true
-    sslCertHostPath: /etc/pki/ca-trust/extracted/pem
+    sslCertHostPath: /etc/ssl/certs/ca-bundle.crt
     extraArgs:
       v: 4
       stderrthreshold: info
