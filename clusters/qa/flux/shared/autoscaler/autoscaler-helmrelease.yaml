@@ -1,0 +1,28 @@
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: autoscaler
+  namespace: autoscaler
+spec:
+  releaseName: autoscaler
+  chart:
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    name: cluster-autoscaler
+    version: 0.14.2
+    values: 
+      autoDiscovery:
+        clusterName: qatest
+      awsRegion: us-west-2
+      tolerations:
+      - key: kiam-server
+        operator: Equal
+        value: "false"
+        effect: NoExecute
+      serviceMonitor:
+        enabled: true
+      extraArgs:
+        v: 4
+        stderrthreshold: info
+        logtostderr: true
+        skip-nodes-with-local-storage: false
+      
