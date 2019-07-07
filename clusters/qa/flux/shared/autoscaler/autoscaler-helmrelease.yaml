@@ -13,11 +13,6 @@ spec:
     autoDiscovery:
       clusterName: qatest
     awsRegion: us-west-2
-    tolerations:
-    - key: kiam-server
-      operator: Equal
-      value: "false"
-      effect: NoExecute
     serviceMonitor:
       enabled: true
     sslCertHostPath: /etc/ssl/certs/ca-bundle.crt
@@ -26,4 +21,5 @@ spec:
       stderrthreshold: info
       logtostderr: true
       skip-nodes-with-local-storage: false
-    
+      podAnnotations:
+        iam.amazonaws.com/role: k8s-autoscaler
