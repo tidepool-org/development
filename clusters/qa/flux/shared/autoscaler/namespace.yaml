@@ -7,3 +7,4 @@ metadata:
     linkerd.io/inject: disabled
   annotations:
     "helm.sh/hook": "pre-install"
+    iam.amazonaws.com/permitted: "k8s-autoscaler"
