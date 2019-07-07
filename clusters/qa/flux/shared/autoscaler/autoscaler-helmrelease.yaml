@@ -24,4 +24,4 @@ spec:
       logtostderr: true
       skip-nodes-with-local-storage: false
     podAnnotations:
-      iam.amazonaws.com/role: k8s-autoscaler
+      iam.amazonaws.com/role: k8s-autoscaling
