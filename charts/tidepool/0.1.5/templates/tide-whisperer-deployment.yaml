@@ -76,9 +76,7 @@ spec:
                     "minimum": 1
                 },
                 "service": {
-                    "certFile": "config/cert.pem",
                     "host": "localhost:{{.Values.global.ports.tidewhisperer}}",
-                    "keyFile": "config/key.pem",
                     "protocol": "http",
                     "service": "tide-whisperer"
                 }

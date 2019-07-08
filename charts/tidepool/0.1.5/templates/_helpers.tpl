@@ -8,28 +8,20 @@ Expand the name of the chart.
 {{- end -}}
 
 {{- define "charts.mongo.params" -}}
-{{ if .Values.global.mongo.username }}
         - name: MONGO_USER
           value: '{{ .Values.global.mongo.username }}'
-{{ end }}
         - name: MONGO_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mongo
               key: password
               optional: true
-{{ if .Values.global.mongo.hosts }}
         - name: MONGO_HOSTS
           value: '{{ .Values.global.mongo.hosts }}'
-{{ end }}
-{{ if .Values.global.mongo.optParams }}
         - name: MONGO_OPT_PARAMS
           value: '{{ .Values.global.mongo.optParams }}'
-{{ end }}
-{{ if .Values.global.mongo.ssl }}
         - name: MONGO_SSL
           value: '{{ .Values.global.mongo.ssl }}'
-{{ end }}
 {{ end }}
 
 {{- define "charts.host.internal.tp" -}} internal {{- end }}
@@ -169,22 +161,22 @@ Create environment variables used by all platform services.
 {{ end }}
 
 {{ define "charts.platform.env.mongo" }}
-        - name: TIDEPOOL_STORE_ADDRESSES
-          value: '{{ .Values.global.mongo.hosts }}'
-        - name: TIDEPOOL_STORE_DATABASE
-          value: tidepool
         - name: TIDEPOOL_STORE_USERNAME
-          value: '{{.Values.global.mongo.username}}'
+          value: '{{ .Values.global.mongo.username }}'
         - name: TIDEPOOL_STORE_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mongo
               key: password
               optional: true
-        - name: TIDEPOOL_STORE_TLS
-          value: '{{.Values.global.mongo.ssl}}'
+        - name: TIDEPOOL_STORE_ADDRESSES
+          value: '{{ .Values.global.mongo.hosts }}'
         - name: TIDEPOOL_STORE_OPT_PARAMS
           value: '{{.Values.global.mongo.optParams}}'
+        - name: TIDEPOOL_STORE_TLS
+          value: '{{.Values.global.mongo.ssl}}'
+        - name: TIDEPOOL_STORE_DATABASE
+          value: tidepool
 {{ end }}        
 
 {{/*
