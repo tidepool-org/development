@@ -115,7 +115,7 @@ spec:
     user:
       image: tidepool/platform-user:quiet-logging-d2682daee6fd1ba19af54d713b34b2d621b4d65a
     seagull:
-      image: tidepool/seagull:mongo-params-de6b3556e2acf08d5cfef95fec249efeef0bb27b
+      image: tidepool/seagull:mongo-params-71a179bc49cb038bb097bedaddca20d02309e9df
     shoreline:
       image: tidepool/shoreline:mongo-params-7b567b4a061142a48caeede4e0da1cbcc61fc93c
     tidewhisperer:
