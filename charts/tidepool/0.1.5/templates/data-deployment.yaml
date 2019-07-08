@@ -32,6 +32,7 @@ spec:
       {{ include "charts.init.shoreline" .}}
       containers:
       - env:
+        {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
         - name: TIDEPOOL_DATA_SERVICE_SECRET

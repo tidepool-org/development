@@ -166,6 +166,9 @@ Create environment variables used by all platform services.
           value: debug
         - name: TIDEPOOL_SERVER_TLS
           value: "false"
+{{ end }}
+
+{{ define "charts.platform.env.mongo" }}
         - name: TIDEPOOL_STORE_ADDRESSES
           value: '{{ .Values.global.mongo.hosts }}'
         - name: TIDEPOOL_STORE_DATABASE
