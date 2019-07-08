@@ -10,7 +10,7 @@ metadata:
   name: blob
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "TidepoolServiceSecret,mongo,Blob"
+    secret.reloader.stakater.com/reload: "TidepoolServerSecret,mongo,Blob"
 spec:
   selector:
     matchLabels:

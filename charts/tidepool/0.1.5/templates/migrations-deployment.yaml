@@ -11,7 +11,7 @@ metadata:
   name: migrations
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "TidepoolServiceSecret,mongo"
+    secret.reloader.stakater.com/reload: "TidepoolServerSecret,mongo"
 
 spec:
   selector:

@@ -10,7 +10,7 @@ metadata:
   name: auth
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "TidepoolServiceSecret,mongo,DexcomApi,Auth"
+    secret.reloader.stakater.com/reload: "TidepoolServerSecret,mongo,DexcomApi,Auth"
 spec:
   selector:
     matchLabels:

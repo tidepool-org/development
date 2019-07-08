@@ -10,7 +10,7 @@ metadata:
   name: seagull
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "TidepoolServiceSecret,mongo,Seagull"
+    secret.reloader.stakater.com/reload: "TidepoolServerSecret,mongo,Seagull"
 spec:
   selector:
     matchLabels:

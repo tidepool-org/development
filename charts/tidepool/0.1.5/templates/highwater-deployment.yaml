@@ -10,7 +10,7 @@ metadata:
   name: highwater
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "TidepoolServiceSecret,Highwater"
+    secret.reloader.stakater.com/reload: "TidepoolServerSecret,Highwater"
 spec:
   selector:
     matchLabels:

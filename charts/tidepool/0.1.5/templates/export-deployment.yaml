@@ -11,7 +11,7 @@ metadata:
   name: export
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "TidepoolServiceSecret"
+    secret.reloader.stakater.com/reload: "TidepoolServerSecret"
 spec:
   selector:
     matchLabels:
