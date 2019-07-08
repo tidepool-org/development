@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: shoreline-configmap
+  name: Shoreline
   namespace: dev
 data:
-  demoClinic.userId: "e79b15328a"
-  mailchimp.url: "https://us7.api.mailchimp.com/3.0"
-  mailchimp.personalLists: >
+  ClinicDemoUserId: "e79b15328a"
+  MailchimpURL: "https://us7.api.mailchimp.com/3.0"
+  MailchimpPersonalLists: >
     [
       {
         "id": "d79b5a3924",
@@ -18,7 +18,7 @@ data:
         "id": "461feca051"
       }
     ]
-  mailchimp.clinicLists: >
+  MailchimpClinicLists: >
     [
       {
         "id": "d79b5a3924",
