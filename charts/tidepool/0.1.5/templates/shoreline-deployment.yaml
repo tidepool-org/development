@@ -10,8 +10,8 @@ metadata:
   name: shoreline
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo,mailchimp,shoreline"
-    configmap.reloader.stakater.com/reload: "shoreline-configmap"
+    secret.reloader.stakater.com/reload: "TidepoolServerSecret,mongo,Shoreline"
+    configmap.reloader.stakater.com/reload: "Shoreline"
 spec:
   selector:
     matchLabels:
@@ -39,61 +39,61 @@ spec:
         - name: CLINIC_LISTS
           valueFrom:
             configMapKeyRef:
-              name: shoreline-configmap
-              key: mailchimp.clinicLists
+              name: Shoreline
+              key: MailchimpClinicLists
               optional: true
         - name: MAILCHIMP_URL
           valueFrom:
             configMapKeyRef:
-              name: shoreline-configmap
-              key: mailchimp.url
+              name: Shoreline
+              key: MailchimpURL
               optional: true
         - name: PERSONAL_LISTS
           valueFrom:
             configMapKeyRef:
-              name: shoreline-configmap
-              key: mailchimp.personalLists
+              name: Shoreline
+              key: MailchimpPersonalLists
               optional: true
         - name: DEMO_CLINIC_USER_ID
           valueFrom:
             configMapKeyRef:
-              name: shoreline-configmap
-              key: demoClinic.userId
+              name: Shoreline
+              key: ClinicDemoUserId
               optional: true
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: server
-              key: secret
+              name: TidepoolServerSecret
+              key: ServiceAuth
         - name: API_SECRET
           valueFrom:
             secretKeyRef:
-              name: shoreline
-              key: api
+              name: Shoreline
+              key: ServiceAuth
               optional: true
         - name: SALT
           valueFrom:
             secretKeyRef:
-              name: server
-              key: shoreline
+              name: Shoreline
+              key: UserPasswordSalt
               optional: true
         - name: VERIFICATION_SECRET
           valueFrom:
             secretKeyRef:
-              name: shoreline
-              key: verification
+              name: Shoreline
+              key: UserMailVerification
               optional: true
         - name: LONG_TERM_KEY
           valueFrom:
             secretKeyRef:
-              name: shoreline
-              key: longtermkey 
+              name: Shoreline
+              key: UserLongTermKey 
               optional: true
         - name: MAILCHIMP_APIKEY
           valueFrom:
             secretKeyRef:
-              name: mailchimp
-              key: apikey
+              name: Shoreline
+              key: MailchimpApiKey
               optional: true
         - name: TIDEPOOL_SHORELINE_ENV
           value: |

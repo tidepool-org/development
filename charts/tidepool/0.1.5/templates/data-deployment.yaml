@@ -10,7 +10,7 @@ metadata:
   name: data
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo"
+    secret.reloader.stakater.com/reload: "TidepoolServiceSecret,mongo,Data"
 spec:
   selector:
     matchLabels:
@@ -32,7 +32,21 @@ spec:
       {{ include "charts.init.shoreline" .}}
       containers:
       - env:
-        {{ include "charts.platform.env" .}}
+        {{ include "charts.platform.env.misc" .}}
+        {{ include "charts.platform.env.clients" .}}
+        - name: TIDEPOOL_DATA_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: Data
+              key: ServiceAuth
+        - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
+          value: :{{.Values.global.ports.data}}
+        - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+          value: http://data:{{.Values.global.ports.data}}
+        - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+          value: data
+        - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
+          value: data
         image: "{{ .Values.data.image }}"
         {{ template "charts.platform.probes" .Values.global.ports.data}}
         name: data

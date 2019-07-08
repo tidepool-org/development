@@ -10,7 +10,7 @@ metadata:
   name: jellyfish
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo"
+    secret.reloader.stakater.com/reload: "TidepoolServiceSecret,mongo,Jellyfish"
 spec:
   selector:
     matchLabels:
@@ -53,8 +53,8 @@ spec:
         - name: SALT_DEPLOY
           valueFrom:
             secretKeyRef:
-              name: server
-              key: jellyfish
+              name: Jellyfish
+              key: CarelinkSalt
         - name: SCHEMA_VERSION
           value: "3"
         - name: SEAGULL_SERVICE
@@ -62,8 +62,8 @@ spec:
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: server
-              key: secret
+              name: TidepoolServerSecret
+              key: ServiceAuth
         - name: SERVE_STATIC
           value: dist
         - name: SERVICE_NAME

@@ -10,7 +10,7 @@ metadata:
   name: hydrophone
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo"
+    secret.reloader.stakater.com/reload: "TidepoolServiceSecret,mongo"
 spec:
   selector:
     matchLabels:
@@ -39,8 +39,8 @@ spec:
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: server
-              key: secret
+              name: TidepoolServerSecret
+              key: ServiceAuth
         - name: REGION
           value: {{.Values.global.aws.region}}            
         - name: TIDEPOOL_HYDROPHONE_ENV

@@ -10,6 +10,9 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
   name: migrations
   namespace: {{.Release.Namespace}}
+  annotations:
+    secret.reloader.stakater.com/reload: "TidepoolServiceSecret,mongo"
+
 spec:
   selector:
     matchLabels:
@@ -31,7 +34,10 @@ spec:
       {{ include "charts.init.shoreline" .}}
       containers:
       - env:
-        {{ include "charts.platform.env" .}}
+        {{ include "charts.platform.env.misc" .}}
+        {{ include "charts.platform.env.clients" .}}
+        - name: TIDEPOOL_SESSION_STORE_DATABASE
+          value: user
         image: "{{ .Values.migrations.image }}"
         name: migrations
         resources:

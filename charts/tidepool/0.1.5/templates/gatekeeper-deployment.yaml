@@ -10,7 +10,7 @@ metadata:
   name: gatekeeper
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo"
+    secret.reloader.stakater.com/reload: "TidepoolServiceSecret,mongo"
 spec:
   selector:
     matchLabels:
@@ -40,8 +40,8 @@ spec:
         - name: GATEKEEPER_SECRET
           valueFrom:
             secretKeyRef:
-              name: server
-              key: gatekeeper
+              name: Gatekeeper
+              key: GroupIdEncryptionKey
         - name: NODE_ENV
           value: '{{.Values.global.environment}}'
         - name: PORT
@@ -53,8 +53,8 @@ spec:
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: server
-              key: secret
+              name: TidepoolServerSecret
+              key: ServiceAuth
         - name: SERVICE_NAME
           value: gatekeeper
         - name: USER_API_SERVICE

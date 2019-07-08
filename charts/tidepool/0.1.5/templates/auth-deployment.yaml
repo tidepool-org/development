@@ -10,7 +10,7 @@ metadata:
   name: auth
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo,dexcom"
+    secret.reloader.stakater.com/reload: "TidepoolServiceSecret,mongo,DexcomApi,Auth"
 spec:
   selector:
     matchLabels:
@@ -32,7 +32,23 @@ spec:
       {{ include "charts.init.shoreline" .}}
       containers:
       - env:
-        {{ include "charts.platform.env" .}}
+        {{ include "charts.platform.env.misc" .}}
+        {{ include "charts.platform.env.dexcom" .}}
+        {{ include "charts.platform.env.clients" .}}
+        - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+          value: {{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: Auth
+              key: ServiceAuth
+        - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+          value: :{{.Values.global.ports.auth}}
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: TidepoolServerSecret
+              key: ServiceAuth
         image: "{{ .Values.auth.image }}"
         {{ template "charts.platform.probes" .Values.global.ports.auth}}
         name: auth

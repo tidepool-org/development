@@ -11,7 +11,7 @@ metadata:
   name: tools
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo"
+    secret.reloader.stakater.com/reload: "TidepoolServerSecret,mongo"
 spec:
   selector:
     matchLabels:
@@ -31,7 +31,17 @@ spec:
       {{ include "charts.init.shoreline" .}}
       containers:
       - env:
-        {{ include "charts.platform.env" .}}
+        {{ include "charts.platform.env.misc" .}}
+        {{ include "charts.platform.env.clients" .}}
+        - name: TIDEPOOL_PERMISSION_STORE_DATABASE
+          value: gatekeeper
+        - name: TIDEPOOL_PERMISSION_STORE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: Gatekeeper
+              key: ServiceAuth
+        - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
+          value: data
         image: "{{ .Values.tools.image }}"
         name: tools
         resources:

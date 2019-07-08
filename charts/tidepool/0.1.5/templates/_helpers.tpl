@@ -105,118 +105,67 @@ Create chart name and version as used by the chart label.
 Create environment variables used by all platform services.
 */}}
 
-{{- define "charts.platform.env" -}}
-
-        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
-          value: http://auth:{{.Values.global.ports.auth}}
-        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
-        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: server
-              key: secret
-        - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
-          value: {{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
-        - name: TIDEPOOL_AUTH_SERVICE_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: server
-              key: auth
-        - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.global.ports.auth}}
-        - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
-          value: http://blob:{{.Values.global.ports.blob}}
-        - name: TIDEPOOL_BLOB_SERVICE_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: server
-              key: blob
-        - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.global.ports.blob}}
-        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.blob.directory}}'
-        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
-          value: '{{include "charts.blob.s3.bucket" .}}'
-        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.blob.prefix}}'
-        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.global.store.type}}'
-        - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
-          value: confirm
-        - name: TIDEPOOL_DATA_CLIENT_ADDRESS
-          value: http://data:{{.Values.global.ports.data}}
-        - name: TIDEPOOL_DATA_SERVICE_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: server
-              key: data
-        - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.global.ports.data}}
-        - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
-          value: http://data:{{.Values.global.ports.data}}
-        - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
-          value: data
-        - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
-          value: '{{.Values.global.provider.dexcom.client.url}}'
-        - name: TIDEPOOL_ENV
-          value: local
-        - name: TIDEPOOL_LOGGER_LEVEL
-          value: debug
-        - name: TIDEPOOL_MESSAGE_STORE_DATABASE
-          value: messages
-        - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
-          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
-        - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
-          value: http://notification:{{.Values.global.ports.notification}}
-        - name: TIDEPOOL_NOTIFICATION_SERVICE_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: server
-              key: notification
-        - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.global.ports.notification}}
-        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
-          value: http://gatekeeper:{{.Values.global.ports.gatekeeper}}
-        - name: TIDEPOOL_PERMISSION_STORE_DATABASE
-          value: gatekeeper
-        - name: TIDEPOOL_PERMISSION_STORE_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: server
-              key: gatekeeper
-        - name: TIDEPOOL_PROFILE_STORE_DATABASE
-          value: seagull
-        - name: TIDEPOOL_SERVER_TLS
-          value: "false"
+{{ define "charts.platform.env.dexcom" }}
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
           value: '{{.Values.global.provider.dexcom.authorize.url}}'
-        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: dexcom
-              key: CLIENT_ID
-              optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: dexcom
-              key: CLIENT_SECRET
-              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
           value: {{include "charts.host.external.tp" .}}/v1/oauth/dexcom/redirect
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
           value: offline_access
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          value: '{{.Values.global.provider.dexcom.token.url}}'
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: DexcomApi
+              key: ClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: DexcomApi
+              key: ClientSecret
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
           valueFrom:
             secretKeyRef:
-              name: dexcom
-              key: STATE_SALT
+              name: DexcomApi
+              key: StateSalt
               optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
-          value: '{{.Values.global.provider.dexcom.token.url}}'
-        - name: TIDEPOOL_SESSION_STORE_DATABASE
-          value: user
+{{ end }}
+
+{{ define "charts.platform.env.clients" }}
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: http://auth:{{.Values.global.ports.auth}}
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
+          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
+        - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
+          value: http://blob:{{.Values.global.ports.blob}}
+        - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+          value: http://data:{{.Values.global.ports.data}}
+        - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
+          value: '{{.Values.global.provider.dexcom.client.url}}'
+        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
+          value: http://image:{{.Values.global.ports.image}}
+        - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
+          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
+        - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
+          value: http://notification:{{.Values.global.ports.notification}}
+        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+          value: http://gatekeeper:{{.Values.global.ports.gatekeeper}}
+        - name: TIDEPOOL_TASK_CLIENT_ADDRESS
+          value: http://task:{{.Values.global.ports.task}}
+        - name: TIDEPOOL_USER_CLIENT_ADDRESS
+          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
+{{ end }}
+
+{{ define "charts.platform.env.misc" }}
+        - name: TIDEPOOL_ENV
+          value: local
+        - name: TIDEPOOL_LOGGER_LEVEL
+          value: debug
+        - name: TIDEPOOL_SERVER_TLS
+          value: "false"
         - name: TIDEPOOL_STORE_ADDRESSES
           value: '{{ .Values.global.mongo.hosts }}'
         - name: TIDEPOOL_STORE_DATABASE
@@ -233,55 +182,7 @@ Create environment variables used by all platform services.
           value: '{{.Values.global.mongo.ssl}}'
         - name: TIDEPOOL_STORE_OPT_PARAMS
           value: '{{.Values.global.mongo.optParams}}'
-        - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
-          value: data
-        - name: TIDEPOOL_TASK_CLIENT_ADDRESS
-          value: http://task:{{.Values.global.ports.task}}
-        - name: TIDEPOOL_TASK_QUEUE_DELAY
-          value: "5"
-        - name: TIDEPOOL_TASK_QUEUE_WORKERS
-          value: "5"
-        - name: TIDEPOOL_TASK_SERVICE_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: server
-              key: task
-        - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.global.ports.task}}
-        - name: TIDEPOOL_USER_CLIENT_ADDRESS
-          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
-        - name: TIDEPOOL_USER_SERVICE_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: server
-              key: user
-        - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.global.ports.user}}
-        - name: TIDEPOOL_USER_STORE_DATABASE
-          value: user
-        - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
-          valueFrom:
-            secretKeyRef:
-              name: server
-              key: shoreline 
-        - name: TIDEPOOL_IMAGE_SERVICE_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: server
-              key: image 
-        - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.global.ports.image}}
-        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
-          value: http://image:{{.Values.global.ports.image}}
-        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.global.store.type}}'
-        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.image.directory}}'
-        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
-          value: '{{include "charts.blob.s3.bucket" .}}'
-        - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.image.prefix}}'
-{{- end -}}        
+{{ end }}        
 
 {{/*
 Create liveness and readiness probes for platform services.
