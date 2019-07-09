@@ -56,7 +56,7 @@ spec:
         - name: TIDEPOOL_PERMISSION_STORE_SECRET
           valueFrom:
             secretKeyRef:
-              name: gatekeeper
+              name: tidepool-server-secret
               key: ServiceAuth
         - name: TIDEPOOL_MESSAGE_STORE_DATABASE
           value: messages
