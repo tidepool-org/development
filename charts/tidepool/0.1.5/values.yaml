@@ -11,7 +11,7 @@ global:
   secrets:
     external:
       #source: "awsSecretsManager"                                    # external secrets are loaded from aws
-      source: "other"                                                 # external secrets are by other means
+      source: "local"                                                 # external secrets are by other means
     internal:
       source: "helm"                                                  # internal secrets are randominly generated 
       #source: "awsSecretsManager"                                    # internal secrets are loaded from aws
@@ -21,7 +21,6 @@ global:
     blip: 3000                                                        # blip service internal port
     export: 9300                                                      # export service internal port
     gatekeeper: 9123                                                  # gatekeeper service internal port
-    hakken: 8000                                                      # hakken service internal port (UNUSED)
     highwater: 9191                                                   # highwater service internal port
     hydrophone: 9157                                                  # hydrophone service internal port
     jellyfish: 9122                                                   # jellyfish service internal port
@@ -40,13 +39,10 @@ global:
     region: us-west-2                                                 # AWS region service to be deployed in
   environment: production                                             #
   fullnameOverride: ""                                                #
-  image:
-    pullPolicy: IfNotPresent                                          # Docker image pull policy
   namespace:
     create: false                                                     # whether to create the namespace for the service
   nameOverride: ""                                                    # the name to use for the helm chart, if given
   mongo:
-    primary: mongodb                                                  # a single Mongo instance name:port
     hosts: "mongodb"                                                  # comma-separated list of Mongo hosts
     port: 27017                                                       # the Mongo port
     username: ''                                                      # a username in the Mongo instance
