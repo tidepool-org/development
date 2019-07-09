@@ -11,7 +11,7 @@ metadata:
   name: export
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "Export"
+    secret.reloader.stakater.com/reload: "export"
 spec:
   selector:
     matchLabels:

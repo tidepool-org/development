@@ -160,6 +160,11 @@ Create environment variables used by all platform services.
           value: debug
         - name: TIDEPOOL_SERVER_TLS
           value: "false"
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth
+              key: ServiceAuth
 {{ end }}
 
 {{ define "charts.platform.env.mongo" }}

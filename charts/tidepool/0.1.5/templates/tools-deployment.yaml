@@ -11,7 +11,7 @@ metadata:
   name: tools
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "mongo,Gatekeeper"
+    secret.reloader.stakater.com/reload: "mongo,gatekeeper"
 spec:
   selector:
     matchLabels:

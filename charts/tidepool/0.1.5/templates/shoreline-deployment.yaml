@@ -10,8 +10,8 @@ metadata:
   name: shoreline
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "TidepoolServerSecret,mongo,Shoreline"
-    configmap.reloader.stakater.com/reload: "Shoreline"
+    secret.reloader.stakater.com/reload: "tidepool-server-secret,mongo,shoreline"
+    configmap.reloader.stakater.com/reload: "shoreline"
 spec:
   selector:
     matchLabels:

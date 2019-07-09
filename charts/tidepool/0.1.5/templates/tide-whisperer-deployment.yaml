@@ -10,7 +10,7 @@ metadata:
   name: tide-whisperer
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "TidepoolServerSecret,mongo,Auth"
+    secret.reloader.stakater.com/reload: "tidepool-server-secret,mongo,auth"
 spec:
   selector:
     matchLabels:
