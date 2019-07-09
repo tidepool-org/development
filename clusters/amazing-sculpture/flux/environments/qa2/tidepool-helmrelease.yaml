@@ -103,4 +103,4 @@ spec:
     shoreline:
       image: tidepool/shoreline:develop-580fcb334d61ade1b83c6ae35148977fdb18dc3d
     tidewhisperer:
-      image: tidepool/tide-whisperer:develop-db8fae48e72f2ea415432a02c28b8d9fa716e0c4
+      image: tidepool/tide-whisperer:develop-ec81a5ef85bd39f3041320dfe86f042fc19dd960
