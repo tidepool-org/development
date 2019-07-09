@@ -10,7 +10,7 @@ metadata:
   name: notification
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "TidepoolServerSecret,mongo,Notification"
+    secret.reloader.stakater.com/reload: "mongo,Notification"
 spec:
   selector:
     matchLabels:

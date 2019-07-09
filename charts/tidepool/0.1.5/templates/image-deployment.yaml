@@ -10,7 +10,7 @@ metadata:
   name: image
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "TidepoolServerSecret,mongo,Image"
+    secret.reloader.stakater.com/reload: "mongo,Image"
 spec:
   selector:
     matchLabels:
