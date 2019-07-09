@@ -135,6 +135,8 @@ Create environment variables used by all platform services.
           value: http://blob:{{.Values.global.ports.blob}}
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
           value: http://data:{{.Values.global.ports.data}}
+        - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
+          value: http://data:{{.Values.global.ports.data}}
         - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
           value: '{{.Values.global.provider.dexcom.client.url}}'
         - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
