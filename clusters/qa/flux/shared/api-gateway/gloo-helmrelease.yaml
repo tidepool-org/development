@@ -12,6 +12,8 @@ spec:
     name: gloo
     version: 0.14.1
   values:
+    crds:
+      create: true
     gatewayProxies:
       gateway-proxy:
         service:
