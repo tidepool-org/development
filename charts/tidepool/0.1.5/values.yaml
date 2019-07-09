@@ -47,9 +47,8 @@ global:
   nameOverride: ""                                                    # the name to use for the helm chart, if given
   mongo:
     primary: mongodb                                                  # a single Mongo instance name:port
-    hosts: "mongodb"
-    port:
-      27017                                                           # the Mongo port
+    hosts: "mongodb"                                                  # comma-separated list of Mongo hosts
+    port: 27017                                                       # the Mongo port
     username: ''                                                      # a username in the Mongo instance
     ssl: 'false'                                                      # whether to use SSL to communicate with Mongo
     optParams: ''                                                     # optional parameters to pass on the Mongo connection string
@@ -90,9 +89,9 @@ global:
       cpu: 50m
       memory: 32Mi
     #
-  securityContext: 
+  securityContext:                                                    # the security context for all services
     allowPrivilegeEscalation: false
-    runAsNonRoot: true
+    runAsNonRoot: true                                                # we don't need root access
     runAsUser: 10101
     capabilities:
       drop:
@@ -110,8 +109,8 @@ highwater:
   image: tidepool/highwater:v0.3.5
 hydrophone:
   image: tidepool/hydrophone:v0.9.0-release.1
-  fromAddress: "Tidepool <noreply@tidepool.org>"
-  #bucket: ''
+  fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send
+  #bucket: ''                                                         # S3 bucket with email templates
 jellyfish:
   enabled: true
   image: tidepool/jellyfish:v0.12.3-release.2
@@ -122,14 +121,14 @@ auth:
   image: tidepool/platform-auth:1.32.0-release.4
 blob:
   image: tidepool/platform-blob:1.32.0-release.4
-  directory: "_data/blobs"
-  prefix: "blobs"
+  directory: "_data/blobs"                                            # directory to use if using local file storage
+  prefix: "blobs"                                                     # prefix to use if using local file storage
 data:
   image: tidepool/platform-data:1.32.0-release.4
 image:
   image: tidepool/platform-image:1.32.0-release.4
-  directory: "_data/image"
-  prefix: "images"
+  directory: "_data/image"                                            # directory to use if using local file storage
+  prefix: "images"                                                    # prefix to use if using local file storage
 migrations:
   enabled: true
   image: tidepool/platform-migrations:1.32.0-release.4
