@@ -50,7 +50,7 @@ spec:
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: TidepoolServerSecret
+              name: tidepool-server-secret
               key: ServiceAuth
         - name: SERVICE_NAME
           value: seagull

@@ -39,12 +39,12 @@ spec:
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: TidepoolServerSecret
+              name: tidepool-server-secret
               key: ServiceAuth
         - name: AUTH_SECRET
           valueFrom:
             secretKeyRef:
-              name: Auth
+              name: auth
               key: ServiceAuth
         - name: TIDEPOOL_TIDE_WHISPERER_ENV
           value: |

@@ -39,7 +39,7 @@ spec:
         - name: TIDEPOOL_BLOB_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
-              name: Blob
+              name: blob
               key: ServiceAuth
         - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.blob}}

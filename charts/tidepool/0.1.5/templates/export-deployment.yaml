@@ -40,7 +40,7 @@ spec:
         - name: SESSION_SECRET
           valueFrom:
             secretKeyRef:
-              name: Export
+              name: export
               key: SessionEncryptionKey
         image: "{{ .Values.export.image }}"
         livenessProbe:

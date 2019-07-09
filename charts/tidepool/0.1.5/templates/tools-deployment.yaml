@@ -39,7 +39,7 @@ spec:
         - name: TIDEPOOL_PERMISSION_STORE_SECRET
           valueFrom:
             secretKeyRef:
-              name: Gatekeeper
+              name: gatekeeper
               key: ServiceAuth
         - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
           value: data

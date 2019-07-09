@@ -38,7 +38,7 @@ spec:
         - name: TIDEPOOL_USER_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
-              name: User
+              name: user
               key: ServiceAuth
         - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.user}}
@@ -47,7 +47,7 @@ spec:
         - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
           valueFrom:
             secretKeyRef:
-              name: Shoreline
+              name: shoreline
               key: UserPasswordSalt 
         - name: TIDEPOOL_PROFILE_STORE_DATABASE
           value: seagull
@@ -56,7 +56,7 @@ spec:
         - name: TIDEPOOL_PERMISSION_STORE_SECRET
           valueFrom:
             secretKeyRef:
-              name: Gatekeeper
+              name: gatekeeper
               key: ServiceAuth
         - name: TIDEPOOL_MESSAGE_STORE_DATABASE
           value: messages

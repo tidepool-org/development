@@ -109,19 +109,19 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: DexcomApi
+              name: dexcom-api
               key: ClientId
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: DexcomApi
+              name: dexcom-api
               key: ClientSecret
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
           valueFrom:
             secretKeyRef:
-              name: DexcomApi
+              name: dexcom-api
               key: StateSalt
               optional: true
 {{ end }}

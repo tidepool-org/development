@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+ApiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
@@ -40,7 +40,7 @@ spec:
         - name: GATEKEEPER_SECRET
           valueFrom:
             secretKeyRef:
-              name: Gatekeeper
+              name: gatekeeper
               key: GroupIdEncryptionKey
         - name: NODE_ENV
           value: '{{.Values.global.environment}}'
@@ -53,7 +53,7 @@ spec:
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: TidepoolServerSecret
+              name: tidepool-server-secret
               key: ServiceAuth
         - name: SERVICE_NAME
           value: gatekeeper

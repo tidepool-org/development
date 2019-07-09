@@ -39,60 +39,60 @@ spec:
         - name: CLINIC_LISTS
           valueFrom:
             configMapKeyRef:
-              name: Shoreline
+              name: shoreline
               key: MailchimpClinicLists
               optional: true
         - name: MAILCHIMP_URL
           valueFrom:
             configMapKeyRef:
-              name: Shoreline
+              name: shoreline
               key: MailchimpURL
               optional: true
         - name: PERSONAL_LISTS
           valueFrom:
             configMapKeyRef:
-              name: Shoreline
+              name: shoreline
               key: MailchimpPersonalLists
               optional: true
         - name: DEMO_CLINIC_USER_ID
           valueFrom:
             configMapKeyRef:
-              name: Shoreline
+              name: shoreline
               key: ClinicDemoUserId
               optional: true
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: TidepoolServerSecret
+              name: tidepool-server-secret
               key: ServiceAuth
         - name: API_SECRET
           valueFrom:
             secretKeyRef:
-              name: Shoreline
+              name: shoreline
               key: ServiceAuth
               optional: true
         - name: SALT
           valueFrom:
             secretKeyRef:
-              name: Shoreline
+              name: shoreline
               key: UserPasswordSalt
               optional: true
         - name: VERIFICATION_SECRET
           valueFrom:
             secretKeyRef:
-              name: Shoreline
+              name: shoreline
               key: UserMailVerification
               optional: true
         - name: LONG_TERM_KEY
           valueFrom:
             secretKeyRef:
-              name: Shoreline
+              name: shoreline
               key: UserLongTermKey 
               optional: true
         - name: MAILCHIMP_APIKEY
           valueFrom:
             secretKeyRef:
-              name: Shoreline
+              name: shoreline
               key: MailchimpApiKey
               optional: true
         - name: TIDEPOOL_SHORELINE_ENV

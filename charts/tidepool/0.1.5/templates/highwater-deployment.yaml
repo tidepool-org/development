@@ -37,25 +37,25 @@ spec:
         - name: METRICS_APIKEY
           valueFrom:
             secretKeyRef:
-              name: Highwater
+              name: highwater
               key: KissmetricsAPIKey
               optional: true
         - name: METRICS_TOKEN
           valueFrom:
             secretKeyRef:
-              name: Highwater
+              name: highwater
               key: KissmetricsToken
               optional: true
         - name: METRICS_UCSF_APIKEY
           valueFrom:
             secretKeyRef:
-              name: Highwater
+              name: highwater
               key: UCSFKissmetricsAPIKey
               optional: true
         - name: METRICS_UCSF_WHITELIST
           valueFrom:
             secretKeyRef:
-              name: Highwater
+              name: highwater
               key: UCSFWhitelist
               optional: true
         - name: NODE_ENV
@@ -67,12 +67,12 @@ spec:
         - name: SALT_DEPLOY
           valueFrom:
             secretKeyRef:
-              name: Highwater
+              name: highwater
               key: UserIdSalt
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: TidepoolServerSecret
+              name: tidepool-server-secret
               key: ServiceAuth
         - name: SERVICE_NAME
           value: highwater

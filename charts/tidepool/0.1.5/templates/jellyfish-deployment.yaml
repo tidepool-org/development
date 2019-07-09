@@ -53,7 +53,7 @@ spec:
         - name: SALT_DEPLOY
           valueFrom:
             secretKeyRef:
-              name: Jellyfish
+              name: jellyfish
               key: CarelinkSalt
         - name: SCHEMA_VERSION
           value: "3"
@@ -62,7 +62,7 @@ spec:
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: TidepoolServerSecret
+              name: tidepool-server-secret
               key: ServiceAuth
         - name: SERVE_STATIC
           value: dist
