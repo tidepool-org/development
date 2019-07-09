@@ -7,7 +7,7 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.global.nameOverrideide | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "charts.mongo.params" -}}
+{{ define "charts.mongo.params" }}
         - name: MONGO_USER
           value: '{{ .Values.global.mongo.username }}'
         - name: MONGO_PASSWORD
