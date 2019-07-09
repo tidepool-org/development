@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: int
-  labels:
-    istio-injection: disabled
-    linkerd.io/inject: disabled
-  annotations:
-    iam.amazonaws.com/permitted: "int-.*"
