@@ -63,7 +63,7 @@ spec:
       storage: "aws/s3"
       bucket: "" # ensures that the generated bucket name is used
     messageapi:
-      image: tidepool/message-api:develop-f6da47cbce3730e4d6674b56dacd5f478c14c50e
+      image: tidepool/message-api:develop-6d94baa3f0b1b703eb2354e4c786cd930f8bef92
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
