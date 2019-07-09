@@ -46,7 +46,6 @@ global:
     create: false                                                     # whether to create the namespace for the service
   nameOverride: ""                                                    # the name to use for the helm chart, if given
   mongo:
-    enabled: true                                                     # whether to launch a local Mongo instance
     primary: mongodb                                                  # a single Mongo instance name:port
     hosts: "mongodb"
     port:
