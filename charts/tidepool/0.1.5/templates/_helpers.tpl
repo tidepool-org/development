@@ -8,8 +8,10 @@ Expand the name of the chart.
 {{- end -}}
 
 {{ define "charts.mongo.params" }}
+{{ if .Values.global.mongo.username }}
         - name: MONGO_USER
           value: '{{ .Values.global.mongo.username }}'
+{{ end }}
         - name: MONGO_PASSWORD
           valueFrom:
             secretKeyRef:
