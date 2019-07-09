@@ -40,10 +40,10 @@ spec:
           value: {{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.auth}}
-        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
-              name: tidepool-server-secret
+              name: auth
               key: ServiceAuth
         image: "{{ .Values.auth.image }}"
         {{ template "charts.platform.probes" .Values.global.ports.auth}}

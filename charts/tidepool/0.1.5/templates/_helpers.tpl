@@ -131,6 +131,11 @@ Create environment variables used by all platform services.
           value: http://auth:{{.Values.global.ports.auth}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
           value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: tidepool-server-secret
+              key: ServiceAuth
         - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
           value: http://blob:{{.Values.global.ports.blob}}
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
