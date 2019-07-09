@@ -1,10 +1,14 @@
 ## Routing to Tidepool Environments
 
+The Tidepool helm chart may be deployed in different namespaces.  Each deployment may serve one or more hosts using either HTTP or HTTPS in any combination.
+
+
+
+
 We can run multiple versions of a Tidepool environment within a
 single Kubernetes cluster. To do so, we associate each version with
 its own Kubernetes `namespace`. The name of the environment is the
 name of the namespace.
-
 
 ### External Addressing
 

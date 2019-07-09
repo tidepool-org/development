@@ -105,6 +105,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `blob.prefix`  | File prefix to use when storing blobs on file storage         | `blobs` | 
 | `image.directory` | Directory to use when storing images on file storage       | `_data/image` | 
 | `image.prefix` | File prefix to use when storing images on file storage        | `images` | 
+| `gloo.gatewayProxies.gateway-proxy.service.type` | The Service type to expose. If `LoadBalancer`, then a LoadBalancer will be allocated. | 'ServiceIP` |
 
 
 ### Specifying Values
