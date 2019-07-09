@@ -47,11 +47,6 @@ spec:
           value: "{{.Values.global.ports.seagull}}"
         - name: PUBLISH_HOST
           value: 'hakken'
-        - name: SALT_DEPLOY
-          valueFrom:
-            secretKeyRef:
-              name: Seagull
-              key: EncryptionSalt
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
