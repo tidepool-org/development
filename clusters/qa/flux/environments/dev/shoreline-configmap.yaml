@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: Shoreline
+  name: shoreline
   namespace: dev
 data:
   ClinicDemoUserId: "e79b15328a"
