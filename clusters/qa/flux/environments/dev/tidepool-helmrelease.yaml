@@ -89,7 +89,7 @@ spec:
     highwater:
       image: tidepool/highwater:quiet-loggin-8dc36af49754be0b16fa628bebfa6645db3b05b8
     hydrophone:
-      image: tidepool/hydrophone:mongo-params-f0d6173ecdc5b059b00c20c5921a552c42a06523
+      image: tidepool/hydrophone:develop-40c8f4fc6da0dfaee96745b87be3a6f44b5d0522
     jellyfish:
       image: tidepool/jellyfish:mongo-params-32a331abeb64b010d53ecbd6454a06fb14dcd6a0
     messageapi:
@@ -117,6 +117,6 @@ spec:
     seagull:
       image: tidepool/seagull:mongo-params-71a179bc49cb038bb097bedaddca20d02309e9df
     shoreline:
-      image: tidepool/shoreline:mongo-params-7b567b4a061142a48caeede4e0da1cbcc61fc93c
+      image: tidepool/shoreline:develop-580fcb334d61ade1b83c6ae35148977fdb18dc3d
     tidewhisperer:
       image: tidepool/tide-whisperer:mongo-params-8510e36edb53c0d876a30e326a988a23d21109f5
