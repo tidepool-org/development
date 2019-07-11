@@ -15,14 +15,14 @@ metadata:
     flux.weave.works/tag.data: glob:develop-*
     flux.weave.works/tag.export: glob:develop-*
     flux.weave.works/tag.gatekeeper: glob:mongo-*
-    flux.weave.works/tag.highwater: glob:mongo-*
+    flux.weave.works/tag.highwater: glob:package-*
     flux.weave.works/tag.hydrophone: glob:develop-*
     flux.weave.works/tag.image: glob:quiet-*
-    flux.weave.works/tag.jellyfish: glob:mongo-*
-    flux.weave.works/tag.messageapi: glob:mongo-*
+    flux.weave.works/tag.jellyfish: glob:develop-*
+    flux.weave.works/tag.messageapi: glob:develop-*
     flux.weave.works/tag.migrations: glob:quiet-*
     flux.weave.works/tag.notification: glob:quiet-*
-    flux.weave.works/tag.seagull: glob:mongo-*
+    flux.weave.works/tag.seagull: glob:develop-*
     flux.weave.works/tag.shoreline: glob:develop-*
     flux.weave.works/tag.task: glob:quiet-*
     flux.weave.works/tag.tidewhisperer: glob:mongo-*
