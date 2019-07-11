@@ -70,13 +70,14 @@ spec:
       gateway:
         name: gloo
       mongo:
-        enabled: false
-        hosts: "ip-10-48-33-162.us-west-2.compute.internal"
-        #hosts: "cluster0-shard-00-00-hu2cn.mongodb.net,cluster0-shard-00-01-hu2cn.mongodb.net,cluster0-shard-00-02-hu2cn.mongodb.net"
+        #mongodb+srv://derrickburns:<password>@cluster0-hu2cn.mongodb.net/test?w=majority
+        #hosts: "ip-10-48-33-162.us-west-2.compute.internal"
+        scheme: mongodb+srv
+        hosts: cluster0-hu2cn.mongodb.net
         port: 27017
-        #username: derrickburns
+        username: tidepoolmongo-service-dev
         ssl: 'true'
-        #optParams: 'replicaSet=Cluster0-shard-0&authSource=admin&w=majority'
+        optParams: 'w=majority'
       namespace:
         create: false
     blip:
