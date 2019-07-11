@@ -87,13 +87,13 @@ spec:
     gatekeeper:
       image: tidepool/gatekeeper:mongo-protocol-6aca03f0c94cb2da1e5f7b03d2c114ba3bb407cf
     highwater:
-      image: tidepool/highwater:quiet-loggin-8dc36af49754be0b16fa628bebfa6645db3b05b8
+      image: tidepool/highwater:package-update-038b85a947d61e78a7b3de35408fe9db46630e28
     hydrophone:
       image: tidepool/hydrophone:develop-01ca8c05bb2abcaaa620e26f874e331dc2111dad
     jellyfish:
-      image: tidepool/jellyfish:mongo-params-32a331abeb64b010d53ecbd6454a06fb14dcd6a0
+      image: tidepool/jellyfish:develop-2f3317c41346586bdbed305de17dad37307975a4
     messageapi:
-      image: tidepool/message-api:mongo-params-7d6e64e6b12641ad62a6da434b9be6d2739a541a
+      image: tidepool/message-api:develop-931e662ab52db12187a66559673cee5fb9f9e638
     auth:
       image: tidepool/platform-auth:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
     blob:
@@ -115,7 +115,7 @@ spec:
     user:
       image: tidepool/platform-user:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
     seagull:
-      image: tidepool/seagull:mongo-params-71a179bc49cb038bb097bedaddca20d02309e9df
+      image: tidepool/seagull:develop-93020eb645a4dbc723128809a5d8367ed4c6ddee
     shoreline:
       image: tidepool/shoreline:develop-e5da94f4eaffd1b04e9bdc42fd8744165587bc15
     tidewhisperer:
