@@ -117,6 +117,6 @@ spec:
     seagull:
       image: tidepool/seagull:mongo-params-71a179bc49cb038bb097bedaddca20d02309e9df
     shoreline:
-      image: tidepool/shoreline:develop-580fcb334d61ade1b83c6ae35148977fdb18dc3d
+      image: tidepool/shoreline:develop-e5da94f4eaffd1b04e9bdc42fd8744165587bc15
     tidewhisperer:
       image: tidepool/tide-whisperer:mongo-params-8510e36edb53c0d876a30e326a988a23d21109f5
