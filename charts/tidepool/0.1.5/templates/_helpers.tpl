@@ -156,6 +156,8 @@ Create environment variables used by all platform services.
 {{ end }}
 
 {{ define "charts.mongo.params" }}
+        - name: TIDEPOOL_STORE_SCHEME
+          value: '{{ .Values.global.mongo.scheme }}'
         - name: TIDEPOOL_STORE_USERNAME
           value: '{{ .Values.global.mongo.username }}'
         - name: TIDEPOOL_STORE_PASSWORD
