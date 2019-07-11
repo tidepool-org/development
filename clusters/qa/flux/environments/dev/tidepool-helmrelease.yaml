@@ -119,4 +119,4 @@ spec:
     shoreline:
       image: tidepool/shoreline:develop-e5da94f4eaffd1b04e9bdc42fd8744165587bc15
     tidewhisperer:
-      image: tidepool/tide-whisperer:mongo-params-8510e36edb53c0d876a30e326a988a23d21109f5
+      image: tidepool/tide-whisperer:mongo-scheme-3bc97a9629da32dc8b9fb2c3495a35a16a59cbae
