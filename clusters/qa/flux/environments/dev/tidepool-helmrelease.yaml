@@ -73,7 +73,7 @@ spec:
         #mongodb+srv://derrickburns:<password>@cluster0-hu2cn.mongodb.net/test?w=majority
         #hosts: "ip-10-48-33-162.us-west-2.compute.internal"
         scheme: 'mongodb'
-        hosts: cluster0-shard-00-01-hu2cn.mongodb.net
+        hosts: cluster0-shard-00-01-hu2cn.mongodb.net:27017,cluster0-shard-00-00-hu2cn.mongodb.net:27017,cluster0-shard-00-02-hu2cn.mongodb.net:27017
         port: 27017
         username: 'derrickburns'
         ssl: 'true'
