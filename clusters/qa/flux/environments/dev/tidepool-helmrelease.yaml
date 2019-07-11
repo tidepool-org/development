@@ -91,7 +91,7 @@ spec:
     hydrophone:
       image: tidepool/hydrophone:develop-01ca8c05bb2abcaaa620e26f874e331dc2111dad
     jellyfish:
-      image: tidepool/jellyfish:mongo-params-32a331abeb64b010d53ecbd6454a06fb14dcd6a0
+      image: tidepool/jellyfish:mongo-database-ba16372e4825bf23a79455d6cdac28d82236c49f
     messageapi:
       image: tidepool/message-api:develop-931e662ab52db12187a66559673cee5fb9f9e638
     auth:
