@@ -55,5 +55,5 @@ secret["secretDescriptor"]["data"] = values
 print(yaml.dump(secret))
 out=json.dumps(awsvalue)
 #print(key, out)
-client.create_secret( Name=key, SecretString=out)
+client.update_secret( SecretId=key, SecretString=out)
 #client.delete_secret( SecretId=key)
