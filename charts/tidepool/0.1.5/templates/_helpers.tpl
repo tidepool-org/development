@@ -171,6 +171,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_STORE_OPT_PARAMS
           value: '{{.Values.global.mongo.optParams}}'
         - name: TIDEPOOL_STORE_TLS
+          value: '{{.Values.global.mongo.ssl}}'
 {{ end }}
 
 {{ define "charts.platform.env.mongo" }}
