@@ -36,10 +36,28 @@ spec:
           value: {{ .Values.blip.webpackPublicPath }}
 {{ end }}
         name: blip
+# {{ if .Values.blip.mounts }}
+#         volumeMounts:
+# {{- range .Values.blip.mounts }}
+#         - mountPath: {{ .mountPath | quote }}
+#           name: {{ .name | quote }}
+# {{- end }}
+#       volumes:
+# {{- range .Values.blip.mounts }}
+#       - name: {{ .name | quote }}
+#         hostPath:
+#           path: {{ .hostPath | quote }}
+#           type: Directory
+# {{- end }}
+# {{ end }}
         ports:
         - containerPort: {{.Values.global.ports.blip}}
         resources:
           {{- toYaml .Values.global.resources | nindent 10 }}
         securityContext:
+{{ if .Values.blip.securityContext }}
+          {{- toYaml .Values.blip.securityContext | nindent 10 }}
+{{ else }}
           {{- toYaml .Values.global.securityContext | nindent 10 }}
+{{ end }}
       restartPolicy: Always
