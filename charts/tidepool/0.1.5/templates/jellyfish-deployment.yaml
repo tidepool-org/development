@@ -34,7 +34,7 @@ spec:
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
-        - name: MONGO_DATABASE
+        - name: TIDEPOOL_STORE_DATABASE
           value: 'data'
         - name: SKIP_HAKKEN
           value: "true"

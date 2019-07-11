@@ -7,25 +7,6 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.global.nameOverrideide | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{ define "charts.mongo.params" }}
-{{ if .Values.global.mongo.username }}
-        - name: MONGO_USER
-          value: '{{ .Values.global.mongo.username }}'
-{{ end }}
-        - name: MONGO_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mongo
-              key: password
-              optional: true
-        - name: MONGO_HOSTS
-          value: '{{ .Values.global.mongo.hosts }}'
-        - name: MONGO_OPT_PARAMS
-          value: '{{ .Values.global.mongo.optParams }}'
-        - name: MONGO_SSL
-          value: '{{ .Values.global.mongo.ssl }}'
-{{ end }}
-
 {{- define "charts.host.internal.tp" -}} internal {{- end }}
 
 {{- define "charts.host.external.tp" -}} 
@@ -174,7 +155,7 @@ Create environment variables used by all platform services.
               key: ServiceAuth
 {{ end }}
 
-{{ define "charts.platform.env.mongo" }}
+{{ define "charts.mongo.params" }}
         - name: TIDEPOOL_STORE_USERNAME
           value: '{{ .Values.global.mongo.username }}'
         - name: TIDEPOOL_STORE_PASSWORD
@@ -188,6 +169,10 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_STORE_OPT_PARAMS
           value: '{{.Values.global.mongo.optParams}}'
         - name: TIDEPOOL_STORE_TLS
+{{ end }}
+
+{{ define "charts.platform.env.mongo" }}
+{{ include "charts.mongo.params" . }}
           value: '{{.Values.global.mongo.ssl}}'
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
