@@ -89,15 +89,15 @@ spec:
               bucket: ""  # ensures that the generated bucket name is used
               prefix: "images"
     platformMigrations:
-      image: tidepool/platform-migrations:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
+      image: tidepool/platform-migrations:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
     platformNotification:
-      image: tidepool/platform-notification:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
+      image: tidepool/platform-notification:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
     platformTask:
-      image: tidepool/platform-task:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
+      image: tidepool/platform-task:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
     platformTools:
-      image: tidepool/platform-tools:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
+      image: tidepool/platform-tools:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
     platformUser:
-      image: tidepool/platform-user:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
+      image: tidepool/platform-user:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
     seagull:
       image: tidepool/seagull:develop-26162ae51fb1baa492b59e1b6bb93357b8843008
     shoreline:
