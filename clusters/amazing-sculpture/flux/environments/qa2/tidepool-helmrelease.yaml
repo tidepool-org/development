@@ -69,7 +69,7 @@ spec:
     platformAuth:
       image: tidepool/platform-auth:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
     platformBlob:
-      image: tidepool/platform-blob:develop-8f6f88ace8f5f6852876201b2ba5e0e1ffae3f5f
+      image: tidepool/platform-blob:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
       service:
         unstructured:
           store:
