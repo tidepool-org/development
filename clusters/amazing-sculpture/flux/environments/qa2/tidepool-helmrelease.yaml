@@ -67,9 +67,9 @@ spec:
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
-      image: tidepool/platform-auth:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
+      image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     platformBlob:
-      image: tidepool/platform-blob:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
+      image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
       service:
         unstructured:
           store:
@@ -78,9 +78,9 @@ spec:
               bucket: "" # ensures that the generated bucket name is used
               prefix: "blobs"
     platformData:
-      image: tidepool/platform-data:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
+      image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     platformImage:
-      image: tidepool/platform-image:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
+      image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
       service:
         unstructured:
           store:
@@ -93,7 +93,7 @@ spec:
     platformNotification:
       image: tidepool/platform-notification:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
     platformTask:
-      image: tidepool/platform-task:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
+      image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     platformTools:
       image: tidepool/platform-tools:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
     platformUser:
