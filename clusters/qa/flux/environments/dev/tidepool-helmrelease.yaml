@@ -89,7 +89,7 @@ spec:
     highwater:
       image: tidepool/highwater:quiet-loggin-8dc36af49754be0b16fa628bebfa6645db3b05b8
     hydrophone:
-      image: tidepool/hydrophone:develop-40c8f4fc6da0dfaee96745b87be3a6f44b5d0522
+      image: tidepool/hydrophone:develop-01ca8c05bb2abcaaa620e26f874e331dc2111dad
     jellyfish:
       image: tidepool/jellyfish:mongo-params-32a331abeb64b010d53ecbd6454a06fb14dcd6a0
     messageapi:
