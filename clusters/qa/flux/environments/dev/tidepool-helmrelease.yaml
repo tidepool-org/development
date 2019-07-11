@@ -23,7 +23,7 @@ metadata:
     flux.weave.works/tag.migrations: glob:quiet-*
     flux.weave.works/tag.notification: glob:quiet-*
     flux.weave.works/tag.seagull: glob:develop-*
-    flux.weave.works/tag.shoreline: glob:develop-*
+    flux.weave.works/tag.shoreline: glob:mongo-*
     flux.weave.works/tag.task: glob:quiet-*
     flux.weave.works/tag.tidewhisperer: glob:mongo-*
     flux.weave.works/tag.tools: glob:quiet-*
