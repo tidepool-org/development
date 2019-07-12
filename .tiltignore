@@ -1,0 +1,16 @@
+.git
+.gitignore
+node_modules
+npm-debug.log
+_book
+artifact_node.sh
+config/*
+!config/local.sh
+deploy
+dist
+test/bin
+coverage
+tmp
+web
+*.log
+*/tiltMounts

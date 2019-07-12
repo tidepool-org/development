@@ -10,7 +10,6 @@ tidepool_helm_overrides_file = './values-override.yaml' # <Optional> If present,
 
 tidepool_helm_chart_dir = "{}/charts/tidepool/{}".format(development_dir, tidepool_helm_version)
 mongo_helm_chart_dir = "{}/charts/mongo".format(development_dir)
-loadbalancer_helm_chart_dir = "{}/charts/loadbalancer".format(development_dir)
 
 # Deployment
 if development_dir:
@@ -38,11 +37,107 @@ if development_dir:
     tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
     watch_file(tidepool_helm_overrides_file)
 
+    ### Blip Overrides Start ###
+    overrides = read_yaml(tidepool_helm_overrides_file) or {}
+    blipOverrides = overrides.get('blip', False)
+    if blipOverrides:
+      mounts = blipOverrides.get('mounts')
+      buildTarget = blipOverrides.get('buildTarget', 'develop')
+
+      if type(mounts) == 'list':
+        custom_build_args = {
+          'deps': [],
+        }
+
+        fallback_commands = []
+        sync_commands = []
+        run_commands = []
+        port_forwards = []
+
+        for mount in mounts:
+          hostPath = mount.get('hostPath')
+          custom_build_args['deps'].append(hostPath)
+          port_forwards += mount.get('portForwards', []);
+
+          if mount.get('type') == 'primary':
+            custom_build_args['command'] = 'docker build --target {} -t $EXPECTED_REF {}'.format(buildTarget, hostPath)
+            custom_build_args['primaryHostPath'] = hostPath
+            # custom_build_args['deps'].append(hostPath)
+
+            image = blipOverrides.get('image', 'tidepool/blip:develop')
+            custom_build_args['image'] = image
+
+            fallback_commands.append(fall_back_on([
+              '{}/Dockerfile'.format(hostPath),
+            ]))
+
+            sync_commands.append(sync(hostPath, '/app'))
+
+            # Run yarn install on app directory when it's package.json changes
+            run_commands.append(run(
+              'cd /app && yarn install',
+              trigger='{}/package.json'.format(hostPath),
+            ))
+
+          elif mount.get('type') == 'linked':
+            package_name = mount.get('packageName');
+
+            local('cd {path} && mkdir -p tiltMounts/{pkg} && rsync -a --delete --exclude "node_modules" --exclude ".git" --exclude "dist" --exclude "coverage" {hostPath}/ {path}/tiltMounts/{pkg}'.format(
+              path=custom_build_args['primaryHostPath'],
+              hostPath=hostPath,
+              pkg=package_name,
+            ))
+
+            print('Linking package: {}'.format(package_name))
+
+            sync_commands.append(sync(hostPath, '/app/tiltMounts/{}'.format(package_name)))
+
+            # Run yarn install in linked package directory when it's package.json changes
+            run_commands.append(run(
+              'cd /app/tiltMounts/{} && yarn install'.format(package_name),
+              trigger='{}/package.json'.format(hostPath),
+            ))
+
+            run_commands.append(run(
+              '[ ! -L /app/node_modules/{pkg}  ] && cd /app/tiltMounts/{pkg} && yarn link && cd /app && yarn link {pkg}'.format(
+                pkg=package_name,
+              ),
+              trigger
+            ))
+
+          else:
+            package_name = mount.get('name');
+            print('Unlinking package: {}'.format(package_name))
+            run_commands.append(run(
+              '[ -L /app/node_modules/{pkg} ] && yarn unlink {pkg}; cd /{pkg} && yarn unlink; cd /app && rm -f node_modules/{pkg} && yarn install --force'.format(
+                pkg=package_name,
+              ),
+            ))
+
+        live_update_commands = fallback_commands + sync_commands + run_commands;
+        print('run_commands', run_commands)
+
+        if custom_build_args.get('command'):
+          print('Building custom blip image using base image: {}'.format(custom_build_args.get('image')))
+          custom_build(
+            ref=custom_build_args.get('image'),
+            command=custom_build_args.get('command'),
+            deps=custom_build_args.get('deps'),
+            disable_push=True,
+            live_update=live_update_commands,
+            ignore=['node_modules'],
+          )
+
+      for i in range(len(port_forwards)):
+        port_forwards[i] = int(port_forwards[i])
+
+      k8s_resource('blip', port_forwards=port_forwards, trigger_mode=TRIGGER_MODE_AUTO)
+      k8s_resource('gateway-proxy', port_forwards=[3000])
+    ### Blip Overrides End ###
+
+  # fail('NOT YET ;)')
+
   k8s_yaml(local(tidepool_helm_template_cmd + tidepool_helm_chart_dir))
   watch_file(tidepool_helm_chart_dir)
-
-  # Load balancer
-  tidepool_helm_loadbalancer_cmd = 'helm template --name local-loadbalancer '
-  k8s_yaml(local(tidepool_helm_loadbalancer_cmd + loadbalancer_helm_chart_dir))
 else:
   fail('OOPS! You need to point "development_dir" to the root of local copy of the tidepool "development" repo in your Tiltfile')

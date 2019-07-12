@@ -55,16 +55,16 @@ USAGE: tidepool_docker command [service] [...additional args]
 EOF
 }
 
-restart() { (cd ${DIR} && docker-compose stop ${1} && docker-compose start ${1}); }
+restart() { (kubectl scale deployment ${1} --replicas=0 && kubectl scale deployment ${1} --replicas=1); }
 
-run_exec() { args="${@:2}" && (cd ${DIR} && docker-compose exec ${1} /bin/sh -c "${args}") }
+run_exec() { args="${@:2}" && (kubectl exec -ti $(kubectl get pods | grep ${1} | awk '{print $1}') -- /bin/sh -c "${args}") }
 
 run_yarn() {
-  NODE_SERVICES='@(blip|viz)'
-  BLIP_MOUNTED_NODE_SERVICES='@(tideline|tidepool-platform-client)'
+  NODE_SERVICES='@(blip)'
+  BLIP_MOUNTED_NODE_SERVICES='@(tideline|tidepool-platform-client|viz)'
 
   if [[ ${BLIP_MOUNTED_NODE_SERVICES} =~ ${1} ]]; then
-    run_exec blip "cd /${1} && yarn ${@:2}"
+    run_exec blip "cd ./tiltMounts/${1} && yarn ${@:2}"
   elif [[ ${NODE_SERVICES} =~ ${1} ]]; then
     run_exec ${1} "yarn ${@:2}"
   else
@@ -73,8 +73,8 @@ run_yarn() {
 }
 
 case ${1-help} in
-  up) (cd ${DIR} && docker-compose up -d ${2-});;
-  down) (cd ${DIR} && docker-compose down -v);;
+  up) (cd ${DIR} && tilt up);;
+  down) (cd ${DIR} && tilt down);;
   stop) (cd ${DIR} && docker-compose stop ${2-});;
   rm) (cd ${DIR} && docker-compose rm -fsv ${2-});;
   restart) restart ${2-};;
