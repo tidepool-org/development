@@ -102,7 +102,6 @@ if development_dir:
               '[ ! -L /app/node_modules/{pkg}  ] && cd /app/tiltMounts/{pkg} && yarn link && cd /app && yarn link {pkg}'.format(
                 pkg=package_name,
               ),
-              trigger
             ))
 
           else:
