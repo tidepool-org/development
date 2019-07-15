@@ -13,7 +13,7 @@ global:
       protocol:
         http                                                          # the protocol to use for signup emails
       host:
-        localhost                                                     # a valid DNS name for the service
+        "localhost:3000"                                              # a valid DNS name/port for the service
     http:                                                             # a map of hosts that provide HTTP access to the service
       localhost:                                                      # when port forwarding, you need to add the port value to the hostname
-        name: "localhost:3000"                                        # a DNS name for a host providing HTTP access
+        name: "localhost:3000"                                        # a DNS name/port for a host providing HTTP access
