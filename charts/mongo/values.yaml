@@ -1,8 +1,6 @@
 mongo: 
-  image: mongo:3.2
-  host: 'mongo'
+  image: mongo:3.6
   port: '27017'
-  tls: 'false'
   volume: mongo2
   persistent: true
   seed: false

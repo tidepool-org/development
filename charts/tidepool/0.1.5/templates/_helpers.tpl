@@ -9,6 +9,10 @@ Expand the name of the chart.
 
 {{- define "charts.host.internal.tp" -}} internal {{- end }}
 
+{{ define "charts.host.internal.address" -}}
+http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
+{{- end }}
+
 {{- define "charts.host.external.tp" -}} 
 {{- .Values.global.hosts.default.protocol -}}://{{- .Values.global.hosts.default.host -}}
 {{- end }}
@@ -113,7 +117,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://auth:{{.Values.global.ports.auth}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
+          value: "{{ include "charts.host.internal.address" .}}"
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
@@ -130,7 +134,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
           value: http://image:{{.Values.global.ports.image}}
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
-          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
+          value: "{{ include "charts.host.internal.address" .}}"
         - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
           value: http://notification:{{.Values.global.ports.notification}}
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
@@ -138,7 +142,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS
           value: http://task:{{.Values.global.ports.task}}
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
-          value: http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
+          value: "{{ include "charts.host.internal.address" .}}"
 {{ end }}
 
 {{ define "charts.platform.env.misc" }}
@@ -176,7 +180,6 @@ Create environment variables used by all platform services.
 
 {{ define "charts.platform.env.mongo" }}
 {{ include "charts.mongo.params" . }}
-          value: '{{.Values.global.mongo.ssl}}'
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
 {{ end }}        

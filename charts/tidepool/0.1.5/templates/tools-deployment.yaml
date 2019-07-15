@@ -40,7 +40,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: gatekeeper
-              key: ServiceAuth
+              key: GroupIdEncryptionKey
         - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
           value: data
         image: "{{ .Values.tools.image }}"

@@ -1,9 +1,15 @@
 gloo:
   enabled: true
-  gateway-proxy:
-    service:
-      extraAnnotations: {}
-        #service.beta.kubernetes.io/aws-load-balancer-type: "nlb"     # if running in AWS
+  namespace:
+    create: false
+  gatewayProxies:
+    gateway-proxy:
+      service:
+        httpPort: 80                                                 # HTTP port to listen on
+        httpsPort: 443                                               # HTTPS port to listen on
+        type: LoadBalancer                                           # Type of service to create (alternative: ClusterIP)
+        #extraAnnotations:                                           # Use to create an AWS Network Load Balancer 
+          #service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 global:
   store: 
     #type: s3                                                         # store non-Mongo data in S3
@@ -72,10 +78,9 @@ global:
           #name: tidepool-org                                         # the name of the TLS secret
           #namespace: default                                         # the namespace of the TLS secret
   gateway:
-    name: gloo
-    proxy:
-      name:  gateway-proxy                                            # the name of the API gateway
-      namespace: gloo-system                                          # the namespace of the API gateway
+    proxy:                                                            # proxy if embedded gloo gateway is disabled.
+      name: gateway-proxy                                             # the name of the API gateway service (unused if gloo.enabled)
+      namespace: gloo-system                                          # the namespace of the API gateway proxy service  (unused if gloo.enabled)
 
   resources:                                                          # the resources for each service
     limits:
@@ -95,52 +100,52 @@ global:
 
 # Tidepool services
 blip:
-  image: tidepool/blip:v1.17.0
+  image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
 export:
-  image: tidepool/export:v1.3.2
+  image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
   enabled: true
 gatekeeper:
-  image: tidepool/gatekeeper:v0.7.2
+  image: tidepool/gatekeeper:mongo-protocol-6aca03f0c94cb2da1e5f7b03d2c114ba3bb407cf
 highwater:
-  image: tidepool/highwater:v0.3.5
+  image: tidepool/highwater:package-update-038b85a947d61e78a7b3de35408fe9db46630e28
 hydrophone:
-  image: tidepool/hydrophone:v0.9.0-release.1
+  image: tidepool/hydrophone:develop-01ca8c05bb2abcaaa620e26f874e331dc2111dad
   fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send
   #bucket: ''                                                         # S3 bucket with email templates
 jellyfish:
   enabled: true
-  image: tidepool/jellyfish:v0.12.3-release.2
+  image: tidepool/jellyfish:develop-2f3317c41346586bdbed305de17dad37307975a4
 messageapi:
-  image: tidepool/message-api:v0.7.14-release.1
+  image: tidepool/message-api:develop-931e662ab52db12187a66559673cee5fb9f9e638
   window: 21
 auth:
-  image: tidepool/platform-auth:1.32.0-release.4
+  image: tidepool/platform-auth:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
 blob:
-  image: tidepool/platform-blob:1.32.0-release.4
+  image: tidepool/platform-blob:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
   directory: "_data/blobs"                                            # directory to use if using local file storage
   prefix: "blobs"                                                     # prefix to use if using local file storage
 data:
-  image: tidepool/platform-data:1.32.0-release.4
+  image: tidepool/platform-data:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
 image:
-  image: tidepool/platform-image:1.32.0-release.4
+  image: tidepool/platform-image:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
   directory: "_data/image"                                            # directory to use if using local file storage
   prefix: "images"                                                    # prefix to use if using local file storage
 migrations:
   enabled: true
-  image: tidepool/platform-migrations:1.32.0-release.4
+  image: tidepool/platform-migrations:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
 notification:
-  image: tidepool/platform-notification:1.32.0-release.4
+  image: tidepool/platform-notification:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
 task:
-  image: tidepool/platform-task:1.32.0-release.4
+  image: tidepool/platform-task:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
 tools:
   enabled: true
-  image: tidepool/platform-tools:1.32.0-release.4
+  image: tidepool/platform-tools:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
 user:
-  image: tidepool/platform-user:1.32.0-release.4
+  image: tidepool/platform-user:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
 seagull:
-  image: tidepool/seagull:v0.7.2-release.4
+  image: tidepool/seagull:develop-93020eb645a4dbc723128809a5d8367ed4c6ddee
 shoreline:
-  image: tidepool/shoreline:v0.14.2-release.1
+  image: tidepool/shoreline:mongo-scheme-6d2cfb4c964de2d988f819a2b47adf95edab753d
 tidewhisperer:
-  image: tidepool/tide-whisperer:v0.13.0-release.3
+  image: tidepool/tide-whisperer:mongo-scheme-3bc97a9629da32dc8b9fb2c3495a35a16a59cbae
 
