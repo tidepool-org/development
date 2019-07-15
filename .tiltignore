@@ -13,4 +13,5 @@ coverage
 tmp
 web
 *.log
-*/tiltMounts
+*/packageMounts
+*/packageMountDeps
