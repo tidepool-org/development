@@ -11,7 +11,7 @@ gloo:
         #extraAnnotations:                                           # Use to create an AWS Network Load Balancer 
           #service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 mongodb:
-  enabled: false
+  enabled: true
   image:
     tag: "3.6"
   persistence:
@@ -19,6 +19,12 @@ mongodb:
   fullnameOverride: "mongodb"
   usePassword: false
 global:
+  gateway:
+    httpPort: 80
+    httpsPort: 443
+    proxy:                                                            # proxy if embedded gloo gateway is disabled.
+      name: gateway-proxy                                             # the name of the API gateway service (unused if gloo.enabled)
+      namespace: gloo-system                                          # the namespace of the API gateway proxy service  (unused if gloo.enabled)
   store: 
     #type: s3                                                         # store non-Mongo data in S3
     type: file                                                        # store non-Mongo data on file system
@@ -85,10 +91,6 @@ global:
         #tlssecret:                                                   # a TLS secret containing the Cert for the host
           #name: tidepool-org                                         # the name of the TLS secret
           #namespace: default                                         # the namespace of the TLS secret
-  gateway:
-    proxy:                                                            # proxy if embedded gloo gateway is disabled.
-      name: gateway-proxy                                             # the name of the API gateway service (unused if gloo.enabled)
-      namespace: gloo-system                                          # the namespace of the API gateway proxy service  (unused if gloo.enabled)
 
   resources:                                                          # the resources for each service
     limits:
@@ -115,7 +117,7 @@ export:
 gatekeeper:
   image: tidepool/gatekeeper:mongo-protocol-6aca03f0c94cb2da1e5f7b03d2c114ba3bb407cf
 highwater:
-  image: tidepool/highwater:package-update-038b85a947d61e78a7b3de35408fe9db46630e28
+  image: tidepool/highwater:fixlodash-01293b71525c355885ccf4eefa2af47c3ebfc749
 hydrophone:
   image: tidepool/hydrophone:develop-01ca8c05bb2abcaaa620e26f874e331dc2111dad
   fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send
