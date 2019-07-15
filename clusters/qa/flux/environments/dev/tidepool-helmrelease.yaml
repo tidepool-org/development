@@ -1,4 +1,3 @@
----
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
@@ -51,7 +50,8 @@ spec:
         default:
           protocol: https
           host: dev.tidepool.org
-        http: {}
+        http:
+          localhost:  null
         https:
           dev:
             name: dev.tidepool.org
@@ -89,18 +89,22 @@ spec:
     highwater:
       image: tidepool/highwater:fixlodash-01293b71525c355885ccf4eefa2af47c3ebfc749
     hydrophone:
+      bucket: tidepool-qa1-asset
       image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
     jellyfish:
+      bucket: tidepool-qa1-data
       image: tidepool/jellyfish:mongo-database-bb73ab9802b8a774defd8e1ff66eb29ba47c7b72
     messageapi:
       image: tidepool/message-api:develop-47bafb72383a7d50c813b2402f789b6485accfaa
     auth:
       image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     blob:
+      bucket: tidepool-qa1-data
       image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     data:
       image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     image:
+      bucket: tidepool-qa1-data
       image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     migrations:
       image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
