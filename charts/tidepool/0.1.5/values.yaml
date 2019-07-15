@@ -19,6 +19,19 @@ mongodb:
   fullnameOverride: "mongodb"
   usePassword: false
 global:
+  hosts:
+    default:
+      protocol: http                                                  # the protocol to use for signup emails
+      host: localhost                                                 # a valid DNS name[:port] for the service
+    http:                                                             # a map of hosts that provide HTTP access to the service
+      localhost:                                                      # a simple identifier for a host providing HTTP access
+        name: localhost                                                 # a DNS name[:port] for a host providing HTTP access.
+    #https:                                                           # a map of hosts that provide HTTPS access to the service
+      #dev:                                                           # a map of hosts that provide HTTPS access to the service
+        #name: dev.tidepool.org                                       # a simple identifier for a host providing HTTPS access
+        #tlssecret:                                                   # a TLS secret containing the Cert for the host
+          #name: tidepool-org                                         # the name of the TLS secret
+          #namespace: default                                         # the namespace of the TLS secret
   gateway:                                                            # only needed if need to expose the incoming IP address
     #httpPort: 80                                                     # to create an external HTTP gateway on port 80
     #httpsPort: 443                                                   # to create an external HTTPS gateway on port 443
@@ -76,21 +89,6 @@ global:
         url: 'https://api.dexcom.com/v1/oauth2/login?prompt=login'    # the url to get authorization from Dexcom
       client:
         url: "https://api.dexcom.com"                                 # the Dexcom client API url
-  hosts:
-    default:
-      protocol:
-        http                                                          # the protocol to use for signup emails
-      host:
-        localhost                                                     # a valid DNS name for the service
-    http:                                                             # a map of hosts that provide HTTP access to the service
-      localhost:                                                      # a simple identifier for a host providing HTTP access
-        name: localhost                                               # a DNS name for a host providing HTTP access
-    #https:                                                           # a map of hosts that provide HTTPS access to the service
-      #dev:                                                           # a map of hosts that provide HTTPS access to the service
-        #name: dev.tidepool.org                                       # a simple identifier for a host providing HTTPS access
-        #tlssecret:                                                   # a TLS secret containing the Cert for the host
-          #name: tidepool-org                                         # the name of the TLS secret
-          #namespace: default                                         # the namespace of the TLS secret
 
   resources:                                                          # the resources for each service
     limits:
