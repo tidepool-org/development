@@ -87,7 +87,7 @@ spec:
     gatekeeper:
       image: tidepool/gatekeeper:mongo-protocol-19c7e592916c592ea74f7cd79ee38660d0b546ad
     highwater:
-      image: tidepool/highwater:develop-f599b9f368c8826e69298be1efd63fa8a1e93b8a
+      image: tidepool/highwater:fixlodash-01293b71525c355885ccf4eefa2af47c3ebfc749
     hydrophone:
       image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
     jellyfish:
