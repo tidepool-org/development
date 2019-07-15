@@ -20,8 +20,8 @@ mongodb:
   usePassword: false
 global:
   gateway:
-    httpPort: 80
-    httpsPort: 443
+    #httpPort: 80                                                     # to create an external HTTP gateway on port 80
+    #httpsPort: 443                                                   # to create an external HTTPS gateway on port 443
     proxy:                                                            # proxy if embedded gloo gateway is disabled.
       name: gateway-proxy                                             # the name of the API gateway service (unused if gloo.enabled)
       namespace: gloo-system                                          # the namespace of the API gateway proxy service  (unused if gloo.enabled)
@@ -85,6 +85,8 @@ global:
     http:                                                             # a map of hosts that provide HTTP access to the service
       localhost:                                                      # a simple identifier for a host providing HTTP access
         name: localhost                                               # a DNS name for a host providing HTTP access
+      localhost3000:                                                  # when port forwarding, you need to add the port value to the hostname
+        name: "localhost:3000"                                        # a DNS name for a host providing HTTP access
     #https:                                                           # a map of hosts that provide HTTPS access to the service
       #dev:                                                           # a map of hosts that provide HTTPS access to the service
         #name: dev.tidepool.org                                       # a simple identifier for a host providing HTTPS access
