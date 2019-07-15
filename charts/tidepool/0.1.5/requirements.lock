@@ -2,5 +2,8 @@ dependencies:
 - name: gloo
   repository: https://storage.googleapis.com/solo-public-helm/
   version: 0.14.1
-digest: sha256:f918a4b276fa43736b325d349029e48263bac8af1b40137509e48f99d6a6a2b2
-generated: "2019-07-14T23:44:56.395895-07:00"
+- name: mongodb
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 6.1.2
+digest: sha256:cce7f1f42246d843b6081979ca557db5fe63bdb4e05c52dce59f171032e1752d
+generated: "2019-07-15T09:16:41.793197-07:00"
