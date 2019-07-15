@@ -87,7 +87,7 @@ spec:
     gatekeeper:
       image: tidepool/gatekeeper:mongo-protocol-19c7e592916c592ea74f7cd79ee38660d0b546ad
     highwater:
-      image: tidepool/highwater:package-update-038b85a947d61e78a7b3de35408fe9db46630e28
+      image: tidepool/highwater:develop-f599b9f368c8826e69298be1efd63fa8a1e93b8a
     hydrophone:
       image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
     jellyfish:
@@ -95,28 +95,28 @@ spec:
     messageapi:
       image: tidepool/message-api:develop-47bafb72383a7d50c813b2402f789b6485accfaa
     auth:
-      image: tidepool/platform-auth:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+      image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     blob:
-      image: tidepool/platform-blob:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+      image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     data:
       image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     image:
-      image: tidepool/platform-image:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+      image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     migrations:
-      image: tidepool/platform-migrations:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+      image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     notification:
       enabled: false
-      image: tidepool/platform-notification:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+      image: tidepool/platform-notification:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     task:
-      image: tidepool/platform-task:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+      image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     tools:
       enabled: false
-      image: tidepool/platform-tools:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+      image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     user:
-      image: tidepool/platform-user:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+      image: tidepool/platform-user:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     seagull:
       image: tidepool/seagull:develop-d413273a5707c0707245c0178b47fe627e5296ed
     shoreline:
-      image: tidepool/shoreline:mongo-scheme-6d2cfb4c964de2d988f819a2b47adf95edab753d
+      image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
     tidewhisperer:
-      image: tidepool/tide-whisperer:mongo-scheme-3bc97a9629da32dc8b9fb2c3495a35a16a59cbae
+      image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
