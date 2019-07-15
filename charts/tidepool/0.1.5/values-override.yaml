@@ -1,0 +1,19 @@
+gloo:
+  gatewayProxies:
+    gateway-proxy:
+      service:
+        httpPort: 3000                                               # HTTP port to listen on
+        httpsPort: 8443                                              # HTTPS port to listen on
+        type: ClusterIP                                              # Type of service to create (alternative: ClusterIP)
+mongodb:
+  enabled: false
+global:
+  hosts:
+    default:
+      protocol:
+        http                                                          # the protocol to use for signup emails
+      host:
+        localhost                                                     # a valid DNS name for the service
+    http:                                                             # a map of hosts that provide HTTP access to the service
+      localhost:                                                      # when port forwarding, you need to add the port value to the hostname
+        name: "localhost:3000"                                        # a DNS name for a host providing HTTP access
