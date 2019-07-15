@@ -7,3 +7,4 @@ metadata:
     linkerd.io/inject: disabled
   annotations:
     iam.amazonaws.com/permitted: "dev-.*"
+    discovery.solo.io/function_discovery: "disabled"

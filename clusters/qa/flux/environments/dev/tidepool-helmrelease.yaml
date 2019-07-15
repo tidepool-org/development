@@ -9,25 +9,25 @@ metadata:
     #flux.weave.works/tag.shoreline: "regexp:^v\d+\.\d+\.\d+$"
     #flux.weave.works/tag.shoreline: "semver:~1."
     #flux.weave.works/tag.shoreline: "glob:master-*"
-    flux.weave.works/tag.auth: glob:quiet-*
+    flux.weave.works/tag.auth: glob:develop-*
     flux.weave.works/tag.blip: glob:release-1.23.0*
-    flux.weave.works/tag.blob: glob:quiet-*
+    flux.weave.works/tag.blob: glob:develop-*
     flux.weave.works/tag.data: glob:develop-*
     flux.weave.works/tag.export: glob:develop-*
     flux.weave.works/tag.gatekeeper: glob:mongo-*
-    flux.weave.works/tag.highwater: glob:package-*
+    flux.weave.works/tag.highwater: glob:develop-*
     flux.weave.works/tag.hydrophone: glob:develop-*
-    flux.weave.works/tag.image: glob:quiet-*
+    flux.weave.works/tag.image: glob:develop-*
     flux.weave.works/tag.jellyfish: glob:mongo-*
     flux.weave.works/tag.messageapi: glob:develop-*
-    flux.weave.works/tag.migrations: glob:quiet-*
-    flux.weave.works/tag.notification: glob:quiet-*
+    flux.weave.works/tag.migrations: glob:develop-*
+    flux.weave.works/tag.notification: glob:develop-*
     flux.weave.works/tag.seagull: glob:develop-*
-    flux.weave.works/tag.shoreline: glob:mongo-*
-    flux.weave.works/tag.task: glob:quiet-*
-    flux.weave.works/tag.tidewhisperer: glob:mongo-*
-    flux.weave.works/tag.tools: glob:quiet-*
-    flux.weave.works/tag.user: glob:quiet-*
+    flux.weave.works/tag.shoreline: glob:develop-*
+    flux.weave.works/tag.task: glob:develop-*
+    flux.weave.works/tag.tidewhisperer: glob:develop-*
+    flux.weave.works/tag.tools: glob:develop-*
+    flux.weave.works/tag.user: glob:develop-*
 spec:
   releaseName: dev-tidepool
   chart:
@@ -36,6 +36,8 @@ spec:
     ref: k8s
   values:
     gloo:
+      enabled: false
+    mongodb:
       enabled: false
     global:
       store:
@@ -67,8 +69,6 @@ spec:
             name: dev-uploads.tidepool.org
             tlssecret:
               name: tidepool-org
-      gateway:
-        name: gloo
       mongo:
         #mongodb+srv://derrickburns:<password>@cluster0-hu2cn.mongodb.net/test?w=majority
         #hosts: "ip-10-48-33-162.us-west-2.compute.internal"
