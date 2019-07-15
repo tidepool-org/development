@@ -5,9 +5,9 @@ gloo:
   gatewayProxies:
     gateway-proxy:
       service:
-        httpPort: 80                                                 # HTTP port to listen on
-        httpsPort: 443                                               # HTTPS port to listen on
-        type: LoadBalancer                                           # Type of service to create (alternative: ClusterIP)
+        httpPort: 3000                                                 # HTTP port to listen on
+        httpsPort: 8443                                               # HTTPS port to listen on
+        type: ClusterIP                                           # Type of service to create (alternative: ClusterIP)
         #extraAnnotations:                                           # Use to create an AWS Network Load Balancer 
           #service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 global:

@@ -3,4 +3,4 @@ dependencies:
   repository: https://storage.googleapis.com/solo-public-helm/
   version: 0.14.1
 digest: sha256:f918a4b276fa43736b325d349029e48263bac8af1b40137509e48f99d6a6a2b2
-generated: "2019-07-02T14:50:02.927832-07:00"
+generated: "2019-07-14T23:44:56.395895-07:00"
