@@ -80,12 +80,11 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.hosts.default.protocol`   | If `http` use `http` for email verification link. If `https` use 	`https` for email verification links.          | `http`     |
 | `global.hosts.default.host`   | Host to use in email verification link.          | `localhost`  |
 | `global.hosts.http.{name}`   | Display name to use for http host                 | `localhost`  |
-| `global.hosts.http.{name}.name`   | Http host to listen to                       | `localhost`  |
+| `global.hosts.http.{name}.name`   | Http host[:port] to listen to                       | `localhost`  |
 | `global.hosts.https.{name}`   | Display name to use for https host {name}        | ``  |
-| `global.hosts.https.{name}.name`   | Https host to listen to host {name}         | ``  |
+| `global.hosts.https.{name}.name`   | Https host[:port] to listen to host {name}         | ``  |
 | `global.hosts.https.{name}.tlssecret.name`   | TLS secret name for host {name}   | ``  |
 | `global.hosts.https.{name}.tlssecret.namespace` | TLS secret namespace for host {name} | ``  |
-| `global.gateway.name`   | Name of the API gateway                               | `gloo`  |
 | `global.gateway.proxy.name`   | Name of the API gateway proxy                  | `gateway-proxy`  |
 | `global.gateway.proxy.namespace`   | Namespace of the API gateway proxy        | `gloo-system`  |
 | `global.resources.limits.cpu`   | CPU Limit                                    | `200m`  |
@@ -105,7 +104,13 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `blob.prefix`  | File prefix to use when storing blobs on file storage         | `blobs` | 
 | `image.directory` | Directory to use when storing images on file storage       | `_data/image` | 
 | `image.prefix` | File prefix to use when storing images on file storage        | `images` | 
-| `gloo.gatewayProxies.gateway-proxy.service.type` | The Service type to expose. If `LoadBalancer`, then a LoadBalancer will be allocated. | 'ServiceIP` |
+| `gloo.enabled` | Whether to include an API Gateway with this installation      | `true` |
+| `mongodb.enabled` | Whether to include an mongodb with this installation      | `true` |
+| `mongodb.{name}`  | See [mongodb values](https://github.com/helm/charts/tree/master/stable/mongodb) | `` |
+| `gloo.gatewayProxies.gateway-proxy.service.type` | The Service type to expose. If `LoadBalancer`, then a LoadBalancer will be allocated. | `ServiceIP` |
+| `gloo.gatewayProxies.gateway-proxy.service.httpPort` | The http port to listen to.| `80` |
+| `gloo.gatewayProxies.gateway-proxy.service.httpsPort` | The https port to listen to.| `` |
+| `gloo.{name}`  | See [gloo values](https://github.com/solo-io/gloo/tree/master/install/helm/gloo) | `` |
 
 
 ### Specifying Values
