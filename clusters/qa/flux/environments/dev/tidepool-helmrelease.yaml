@@ -96,7 +96,7 @@ spec:
       bucket: tidepool-qa1-data
       image: tidepool/jellyfish:mongo-database-a8b117f07c277dfae78a6b5f270f84cd661b3b8d
     messageapi:
-      image: tidepool/message-api:develop-47bafb72383a7d50c813b2402f789b6485accfaa
+      image: tidepool/message-api:develop-448835b6be0c27185e487f582f9b47a784aa781f
     auth:
       image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     blob:
