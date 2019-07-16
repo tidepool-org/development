@@ -110,50 +110,50 @@ global:
 blip:
   image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
 export:
-  image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
+  image: tidepool/export:develop-c67e1425a4f6eb4c3f70f95284a24899a9ff986f
   enabled: true
 gatekeeper:
-  image: tidepool/gatekeeper:mongo-protocol-6aca03f0c94cb2da1e5f7b03d2c114ba3bb407cf
+  image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
 highwater:
-  image: tidepool/highwater:fixlodash-01293b71525c355885ccf4eefa2af47c3ebfc749
+  image: tidepool/highwater:develop-7ceb4423f579649938296d2895857145d542bbad
 hydrophone:
-  image: tidepool/hydrophone:develop-01ca8c05bb2abcaaa620e26f874e331dc2111dad
+  image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
   fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send
   #bucket: ''                                                         # S3 bucket with email templates
 jellyfish:
   enabled: true
-  image: tidepool/jellyfish:develop-2f3317c41346586bdbed305de17dad37307975a4
+  image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
 messageapi:
-  image: tidepool/message-api:develop-931e662ab52db12187a66559673cee5fb9f9e638
+  image: tidepool/message-api:develop-448835b6be0c27185e487f582f9b47a784aa781f
   window: 21
 auth:
-  image: tidepool/platform-auth:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+  image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 blob:
-  image: tidepool/platform-blob:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+  image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
   directory: "_data/blobs"                                            # directory to use if using local file storage
   prefix: "blobs"                                                     # prefix to use if using local file storage
 data:
-  image: tidepool/platform-data:develop-3324c19a0a6dd24b51aadfa759ed751672b2a9ee
+  image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 image:
-  image: tidepool/platform-image:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+  image: ttidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
   directory: "_data/image"                                            # directory to use if using local file storage
   prefix: "images"                                                    # prefix to use if using local file storage
 migrations:
   enabled: true
-  image: tidepool/platform-migrations:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+  image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 notification:
-  image: tidepool/platform-notification:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+  image: tidepool/platform-notification:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 task:
-  image: tidepool/platform-task:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+  image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 tools:
   enabled: true
-  image: tidepool/platform-tools:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+  image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 user:
-  image: tidepool/platform-user:quiet-logging-fe1ee6ee7cfac005c89d28bca5db371a19c55a99
+  image: tidepool/platform-user:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 seagull:
-  image: tidepool/seagull:develop-93020eb645a4dbc723128809a5d8367ed4c6ddee
+  image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
 shoreline:
-  image: tidepool/shoreline:mongo-scheme-6d2cfb4c964de2d988f819a2b47adf95edab753d
+  image: ttidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
 tidewhisperer:
-  image: tidepool/tide-whisperer:mongo-scheme-3bc97a9629da32dc8b9fb2c3495a35a16a59cbae
+  image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
 
