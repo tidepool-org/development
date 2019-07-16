@@ -50,7 +50,7 @@ spec:
     export:
       image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
     gatekeeper:
-      image: tidepool/gatekeeper:develop-f806225827f36a7ec7a14fc6966e46d4f1e81a82
+      image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
     highwater:
       image: tidepool/highwater:develop-7ceb4423f579649938296d2895857145d542bbad
     hydrophone:
