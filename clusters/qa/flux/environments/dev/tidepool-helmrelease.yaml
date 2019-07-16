@@ -14,11 +14,11 @@ metadata:
     flux.weave.works/tag.blob: glob:develop-*
     flux.weave.works/tag.data: glob:develop-*
     flux.weave.works/tag.export: glob:develop-*
-    flux.weave.works/tag.gatekeeper: glob:mongo-*
-    flux.weave.works/tag.highwater: glob:fixlodash-*
+    flux.weave.works/tag.gatekeeper: glob:develop-*
+    flux.weave.works/tag.highwater: glob:develop-*
     flux.weave.works/tag.hydrophone: glob:develop-*
     flux.weave.works/tag.image: glob:develop-*
-    flux.weave.works/tag.jellyfish: glob:mongo-*
+    flux.weave.works/tag.jellyfish: glob:develop-*
     flux.weave.works/tag.messageapi: glob:develop-*
     flux.weave.works/tag.migrations: glob:develop-*
     flux.weave.works/tag.notification: glob:develop-*
