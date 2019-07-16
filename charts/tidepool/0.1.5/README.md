@@ -14,7 +14,7 @@ This chart bootstraps an Tidepool Environment on a [Kubernetes](http://kubernete
 
 ## Prerequisites
 
-- Kubernetes 1.13+
+- Kubernetes 1.11+
 
 ## Installing the Chart
 
@@ -128,3 +128,10 @@ Alternatively, a YAML file that specifies the values for the above parameters ca
 ```console
 $ helm upgrade --install --wait my-release -f values.yaml .
 ```
+
+### Using a Pre-existing Mongo Instance
+By default, this helm chart will install a version of mongodb in the Kubernetes cluster.  You may disable this by setting `mongodb.enabled` to `false`.
+
+To use an existing Mongo server, simply provide the Mongo connection parameters are above.  
+
+N.B If you are running Mongo on your local laptop and typically access it using host `localhost`, you cannot simply use the host name `localhost` because that name is overloaded to mean something different in the Kubernetes cluster. Instead, you must provide an alias that resolves to your `localhost`.  Do this by creating the alias in your `/etc/hosts` file.  Then, you may use that alias to identify your Mongo server.
