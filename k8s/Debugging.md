@@ -1,6 +1,19 @@
 ## How to Debug Your Kubernetes Services
 
-Debugging Kubernetes services can be as easy as debugging services running locally with [Telepresence](https://www.telepresence.io/discussion/overview) or [Squash](https://squash.solo.io/). 
+Debugging Kubernetes services can be as easy as debugging services running locally with 
+[Tilt](https://tilt.dev/),
+[Telepresence](https://www.telepresence.io/discussion/overview) or [Squash](https://squash.solo.io/)
+
+#### Tilt
+With Tilt, you can edit your services and kubernetes manifest files locally and Tilt will rebuild and redeploy as needed.
+
+From the developer:
+
+>Tilt is super fast to set up for greenfield projects, but it really shines when your setup requires some “extra love” (and even then it’s still pretty quick!) Any setup, any architecture, no matter how complex. Any engineer can run tilt up to see the app live instantly.
+
+>Tilt watches your filesystem and updates your servers in seconds so you can spend more time getting stuff done and less time watching paint dry. Tilt makes even the most complicated setups feel snappy again — and that’s no easy task.
+
+>Stop playing 20 questions with kubectl each time your app misbehaves. Tilt collects problems from across tools and services into one UI. One place to see build breakages, yaml typos, crash loops, and request exceptions.
 
 #### Telepresence
 With Telepresence, you run and debug *one* service locally that *appears to Kubernetes to be running in your Kubernetes cluster*.
