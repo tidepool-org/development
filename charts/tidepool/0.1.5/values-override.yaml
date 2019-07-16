@@ -3,8 +3,6 @@ gloo:
     gateway-proxy:
       service:
         httpPort: 3000                                               # Listen on ::3000 for HTTP traffic only
-mongodb:
-  enabled: false                                                     # Do not use embedded mongodb
 global:
   hosts:
     default:
