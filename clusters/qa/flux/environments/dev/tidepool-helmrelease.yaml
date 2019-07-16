@@ -94,7 +94,7 @@ spec:
       image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
     jellyfish:
       bucket: tidepool-qa1-data
-      image: tidepool/jellyfish:mongo-database-bb73ab9802b8a774defd8e1ff66eb29ba47c7b72
+      image: tidepool/jellyfish:mongo-database-a8b117f07c277dfae78a6b5f270f84cd661b3b8d
     messageapi:
       image: tidepool/message-api:develop-47bafb72383a7d50c813b2402f789b6485accfaa
     auth:
