@@ -204,7 +204,7 @@ Create liveness and readiness probes for platform services.
           timeoutSeconds: 5
 {{- end -}} 
 {{- define "charts.init.mongo" -}}
-{{ if .Values.global.mongo.await }}
+{{ if (eq .Values.global.mongo.await "true") }}
       - name: init-mongo
         image: busybox
         command: ['sh', '-c', 'until nc -zvv {{ (split "," .Values.global.mongo.hosts)._0 }} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']

@@ -154,7 +154,7 @@ user:
 seagull:
   image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
 shoreline:
-  image: ttidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
+  image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
 tidewhisperer:
   image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
 
