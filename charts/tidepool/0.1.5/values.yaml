@@ -136,7 +136,7 @@ blob:
 data:
   image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 image:
-  image: ttidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+  image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
   directory: "_data/image"                                            # directory to use if using local file storage
   prefix: "images"                                                    # prefix to use if using local file storage
 migrations:
