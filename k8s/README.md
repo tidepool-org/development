@@ -52,7 +52,7 @@ minikube config set vm-driver hyperkit
 #### Configure minikube
 (to use the same version of K8s that Tidepool uses)
 ```
-minikube config set kubernetes-version v1.11.5
+minikube config set kubernetes-version v1.13.7
 minikube config set memory 8192
 minikube config set cpus 4
 ```
