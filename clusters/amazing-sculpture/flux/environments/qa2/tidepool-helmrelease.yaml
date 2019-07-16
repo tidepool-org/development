@@ -48,7 +48,7 @@ spec:
     blip:
       image: tidepool/blip:develop-be936a5e237a12e3c4734ffd2798d79443ab0e1d
     export:
-      image: tidepool/export:develop-b00327cf2a986cf4c63aecc9140c1df63c5caa59
+      image: tidepool/export:develop-c67e1425a4f6eb4c3f70f95284a24899a9ff986f
     gatekeeper:
       image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
     highwater:
