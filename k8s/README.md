@@ -1,5 +1,5 @@
 
-### Running Tidepool on Kubernetes
+# Running Tidepool on Kubernetes
 Tidepool can be run on Kubernetes. Here are the instructions on: 
 * [How to Install Client Tools](#How-to-Install-Client-Tools)
 * [How to Create A Local Kubernetes Cluster](#How-to-Create-A-Kubernetes-Cluster)
@@ -8,34 +8,47 @@ Tidepool can be run on Kubernetes. Here are the instructions on:
 * [How to Access the Tidepool Services](#How-to-Access-the-Tidepool-Services)
 * [How to Inspect Your Cluster](#How-to-Inspect-Your-Cluster)
 
-### How to Install Client Tools
+# How to Install Client Tools
 
 There are a number of useful client tools for interacting with a Kubernetes cluster.  These instructions assume that you are on MacOSX.
 
 Get the client tools and install them onto your local machine. We recommend that you use the `brew` tool for this on a Mac.
 
+## Required Client Tools
+
 #### Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/), the Kubernetes CLI tool
 
-This tool will allow you to manipulate your Kubernetes cluster.
+kubectl allows you to manipulate your Kubernetes cluster.
 ```
 brew install kubernetes-cli
 ```
-#### Install [kail](https://github.com/boz/kail), the Kubernetes log tailer (Recommended) 
+## Recommended Client Tools
+#### Install [k9s](https://github.com/derailed/k9s), a curses based Kubernetes CLI 
+k9s allows you to visualize the state of all the resources in your cluster and logs of running pods.  Once you master the commands, you will find it to be the most efficient way to explore cluser state.
+```
+brew install derailed/k9s/k9s
+```
+#### Install [kail](https://github.com/boz/kail), the Kubernetes log tailer
 
-This tool will allow you to aggregate log messages from the many sources within Kubernetes.
+kail allows you to aggregate log messages from the many sources within Kubernetes.
 ```
 brew tap boz/repo
 brew install boz/repo/kail
 ```
 
-### How to Create A Kubernetes Cluster
+## How to Create A Kubernetes Cluster
 You may create a Kubernetes cluster on your local machine, on machines in your data center ("on prem"), or on a cloud service.  In each case, there are several ways to do so.  
 
+### Create a Single Node Local Cluster with Minikube
 Here we provide instructions for creating a single node "cluster" on your local machine.  
 
 There are several ways to run Kubernetes on your local machine ([docker desktop](https://rominirani.com/tutorial-getting-started-with-kubernetes-with-docker-on-mac-7f58467203fd), [k3s](https://k3s.io/), [minikube](https://kubernetes.io/docs/setup/minikube/), [kind](https://github.com/kubernetes-sigs/kind), etc.) and several [opinions](https://medium.com/containers-101/local-kubernetes-for-mac-minikube-vs-docker-desktop-f2789b3cad3a) on which is best.  Any one will probably do. 
 
-However, we choose to document `minikube` because it offers the opportunity to select a particular version of Kubernetes and it runs on all manner of desktops, including MacOSX, Linux, and Windows.
+#### Install minikube
+
+However, we choose to document `minikube` because it offers the opportunity to select a *particular version of Kubernetes*. This means that you can test is a environment that most closely matches what we use in production.
+
+Minikube also runs on all manner of desktops, including MacOSX, Linux, and Windows.
 
 Install [minikube](https://github.com/kubernetes/minikube) (see [this excellent tutorial](https://codefresh.io/kubernetes-tutorial/local-kubernetes-mac-minikube-vs-docker-desktop/))
 ```
@@ -62,13 +75,13 @@ minikube start --extra-config=apiserver.authorization-mode=RBAC
 minikube ssh -- sudo ip link set docker0 promisc on
 ```
 #### Configure CLI tools to talk to your local cluster. 
-
 In **each and every window** that you will use the Docker cli, you must set environment variables to use the Docker daemon in the minikube VM:
 ```
 eval $(minikube docker-env)
 ```
 #### Stop your cluster
-Kubernetes can be a heavy resource consumer.  So, you may want to (non-destructively) stop the virtual machine running your cluster when you are not using it.  You may restart it later with the `minikube start `command above.
+Kubernetes can be a heavy resource consumer.  So, you may want to (non-destructively) stop the virtual machine running your cluster when you are not using it.  You may restart it later with the 
+`minikube start` command above.
 ```
 minikube stop
 ```
@@ -83,31 +96,10 @@ The Tidepool Kubernetes manifests are created and installed using the [helm](htt
 ```
 kubectl -n kube-system create sa tiller
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-helm init --skip-refresh --upgrade --service-account tiller
+helm init --skip-refresh --upgrade --service-account tiller --history-max=10
 ```
 
-#### Install Kubernetes Dashboard
-To see what is running in your cluster, we use the [Kubernetes dashboard](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login) which provides safe, authenticated access to the cluster:
-```
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml
-```
-
-#### Accessing Your Kubernetes dashboard
-
-Run ```kubectl proxy``` to forward the connection.
-
-A token is needed to access the k8s dashboard, retrieve the token as follows:
-
-```
-SECRET_NAME=$(kubectl get serviceaccount default -n kube-system -o jsonpath='{.secrets[].name}')
-
-kubectl get secret ${SECRET_NAME} -o jsonpath='{.data.token}' -n kube-system | base64 -D
-```
-
-Open the [dashboard](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login) and provide the token (if requested).
-
-
-### How to Install the Tidepool Services
+## How to Install the Tidepool Services
 We install the Tidepool services using the [Helm package manager](https://helm.sh/).
 
 You have a choice in how you use helm. You may install the Tidepool services into your cluster manually using the helm CLI or you may use another tool called Weave Flux to install the Tidepool services using helm on your behalf.  
@@ -116,8 +108,7 @@ With the manual approach, if you make a configuration, e.g. change the Docker im
 
 With the automated approach, you would simply edit a file on GitHub or push a new image to Docker Hub, and Weave Flux would notice the change and update your cluster using helm on your behalf.
 
-
-#### Clone the Tidepool Repo
+### Clone the Tidepool Repo
 So, let use start off by cloning the Tidepool repo with the helm chart. 
 
 ```
@@ -132,7 +123,7 @@ git checkout -b ${YOUR_BRANCH_NAME}
 ```
 Now you have your own clone of the repo and a branch to work in. 
 
-#### Manual Update
+### Manual Update
 
 To perform manual updates using Helm, you will need the Helm CLI tool. 
 
@@ -147,24 +138,20 @@ Helm packages are called `charts`.  The [Helm chart for Tidepool](https://github
 You may install the Tidepool services directly into the default namespace of your cluster with this Helm command, where `RELEASE_NAME` is a name of your choosing:
 
 ```
-helm install ${REPO_DIR}/k8s/charts/tidepool --name ${RELEASE_NAME}
+helm install ${REPO_DIR}/k8s/charts/tidepool/0.1.5 --name ${RELEASE_NAME}
 ```
 
-You will also need to install a version of the Mongo DB that is compatible with Tidepool (3.2 at present).  You may do this as follows, where `MONGO_RELEASE_NAME` is a name of your choosing:
-```
-helm install ${REPO_DIR}/k8s/charts/mongo --name ${MONGO_RELEASE_NAME}
-```
-
+This will install a local version of MongoDB inside your Kubernetes cluster to store your data.  This data will NOT persist across restarts without modifying the configuration.
 
 #### Changing Docker Images for Tidepool Services
 The Kubernetes Deployment manifests make reference to the specific Docker images used for the Tidepool services. With Helm, these manifests are templated to allow for variable substitution and other manipulations. 
 
-In our Tidepool Helm [template files](https://github.com/tidepool-org/development/tree/k8s/k8s/charts/tidepool/templates), we have variable for each Docker image.  The default values are provided in the [values.yaml](https://github.com/tidepool-org/development/blob/k8s/k8s/charts/tidepool/values.yaml). file. 
+In our Tidepool Helm [template files](https://github.com/tidepool-org/development/tree/k8s/k8s/charts/tidepool/0.1.5/templates), we have a variable for each Docker image.  The default values are provided in the [values.yaml](https://github.com/tidepool-org/development/blob/k8s/k8s/charts/tidepool/0.1.5/values.yaml). file. 
 
 To change the Docker images while the cluster is running, first create a local file (`values-override.yaml`) with the image name and tags to change.  Then, upgrade your helm release with the   `helm upgrade` command and provide a set of new values in a local file:
 
 ```
-helm upgrade ${RELEASE_NAME} ${REPO_DIR}/k8s/charts/tidepool -f values-override.yaml
+helm upgrade ${RELEASE_NAME} ${REPO_DIR}/k8s/charts/tidepool/0.1.5 -f values-override.yaml
 ```
 
 #### GitOps
@@ -228,39 +215,15 @@ Then, open GitHub, navigate to your fork, go to `Setting > Deploy` keys click on
 
 Once you have installed the Tidepool services in your cluster, they will start and run.  
 
-#### Connect to Blip, the Tidepool Frontend
-To access the Tidepool Web portal, you need to forward a local port to the port that provides the Tidepool Web application
+#### Connect to Tidepool Web
+To access the Tidepool Web portal, you need to forward a local port to the API gateway:
 
 ```
-kubectl port-forward svc/blip 3000:3000 &
+kubectl port-forward svc/gateway-proxy 3000 &
 ```
 Open [localhost:3000](localhost:3000)
 
-#### Forward API Requests to API Gateway
-At present, you must also forward traffic from the API Gateway to the Tidepool backend.` `This is needed to inform the Tidepool web app where the Tidepool API server is located. The default config is localhost.  In production, this would be replaced with the DNS name of the Api server.  Now, we just manually forward to the internal service. 
-
-(make sure to include the name of your service if you did not use default, e.g. ```mydeploy-amabassador```
-
-
-```
-kubectl port-forward deployment/default-ambassador 8009 &
-```
-### How to Inspect Your Cluster
-
-There are several ways to inspect what is happening inside your cluster.  Foremost is inspecting the Kubernetes dashboard that you installed above.  From the dashboard, you may inspect the logs of any running Kubernetes.  You may also inspect the logs from the command line.
-
-There are a number of other optional services that you may choose to run in your cluster, including [Istio](https://istio.io/) (service mesh), [Prometheus](https://prometheus.io/) (metrics), [Grafana](https://grafana.com/) (analytics and monitoring), [Kiali](https://www.kiali.io/) (service mesh observability), and Jaeger (distributed tracing).  Each offers its own web interface.  Follow the instructions below to inspect those services.
-*   Web Services 
-Given private access (`kubectl`) to a Kubernetes cluster, you may look at Kubernetes web services by forwarding the port of a service to a local port.
-    *   Ambassador Admin Console in browse
-        *   `kubectl port-forward deployment/ambassador 8877 &`
-        *   Open [http://localhost:8877/ambassador/v0/diag/](http://localhost:8877/ambassador/v0/diag/)
-    *   Kubernetes Dashboard
-        *   <code>kubectl proxy</code>
-        *   Get token to authenticate
-            *   <code>SECRET_NAME=$(kubectl get serviceaccount default -n kube-system -o jsonpath='{.secrets[].name}')</code>
-            *   <code>kubectl get secret ${SECRET_NAME} -o jsonpath='{.data.token}' -n kube-system | base64 -D</code>
-        *   Open [http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login)
+## How to Inspect Your Cluster
 
 *   Logs
     *   All services
@@ -269,8 +232,6 @@ Given private access (`kubectl`) to a Kubernetes cluster, you may look at Kubern
         *   <code>kail -n default </code>
     *   Tidepool Web
         *   <code>kail --svc blip</code>
-    *   Istio (if installed)
-        *   <code>kail -n istio-system</code>
     *   Tiller
         *   <code>kail -n kube-system --svc tiller</code>
 *   GitOps
