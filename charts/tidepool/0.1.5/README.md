@@ -34,8 +34,24 @@ To uninstall/delete the `my-release` environment:
 ```console
 $ helm delete --purge my-release
 ```
+The command removes all the Kubernetes components associated with the chart and deletes the release *except* CRDs.
 
-The command removes all the Kubernetes components associated with the chart and deletes the release.
+To remove the gloo CRDS, you may do this manually:
+```
+kubectl delete crd virtualservices.gateway.solo.io
+kubectl delete crd gateways.gateway.solo.io
+kubectl delete crd proxies.gloo.solo.io
+kubectl delete crd settings.gloo.solo.io
+kubectl delete crd upstreams.gloo.solo.io
+kubectl delete crd upstreamgroups.gloo.solo.io
+```
+
+Alternatively, you may leave the CRDs.  However on the next install of this chart, you will get an error that one of the Gloo CRDs exists.  
+To avoid attempts to reinstall the Gloo CRDs, set the parameter `gloo.crds.create` to `false` on install:
+```
+helm install --name my-release --set gloo.crds.create=false .
+```
+
 
 ## Configuration
 
