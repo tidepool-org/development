@@ -22,6 +22,10 @@ kubectl allows you to manipulate your Kubernetes cluster.
 ```
 brew install kubernetes-cli
 ```
+#### Install [helm](https://helm.sh), the Kubernetes Package Manager
+```
+brew install kubernetes-helm
+```
 ## Recommended Client Tools
 #### Install [k9s](https://github.com/derailed/k9s), a curses based Kubernetes CLI 
 k9s allows you to visualize the state of all the resources in your cluster and logs of running pods.  Once you master the commands, you will find it to be the most efficient way to explore cluser state.
@@ -74,11 +78,6 @@ minikube config set cpus 4
 minikube start --extra-config=apiserver.authorization-mode=RBAC
 minikube ssh -- sudo ip link set docker0 promisc on
 ```
-#### Configure CLI tools to talk to your local cluster. 
-In **each and every window** that you will use the Docker cli, you must set environment variables to use the Docker daemon in the minikube VM:
-```
-eval $(minikube docker-env)
-```
 #### Stop your cluster
 Kubernetes can be a heavy resource consumer.  So, you may want to (non-destructively) stop the virtual machine running your cluster when you are not using it.  You may restart it later with the 
 `minikube start` command above.
@@ -127,11 +126,6 @@ Now you have your own clone of the repo and a branch to work in.
 
 To perform manual updates using Helm, you will need the Helm CLI tool. 
 
-#### Install Helm Client
-To manually install the Tidepool services into your Kubernetes cluster, you use the Helm client.  This tool will allow  you to install packages on your Kubernetes cluster.
-```
-brew install kubernetes-helm
-```
 #### Install Tidepool Helm Chart
 Helm packages are called `charts`.  The [Helm chart for Tidepool](https://github.com/tidepool-org/development/tree/k8s/k8s/charts/tidepool) is stored in the public GitHub development repo in the _k8s_ branch at present. When you install a Helm package into a cluster, the installation itself is given a name, called the *release name*. 
 
