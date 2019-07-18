@@ -79,7 +79,7 @@ case ${1-help} in
   rm) (cd ${DIR} && docker-compose rm -fsv ${2-});;
   restart) restart ${2-};;
   pull) (cd ${DIR} && docker-compose pull ${2-});;
-  logs) (cd ${DIR} && docker-compose logs --tail=20 -f ${2-});;
+  logs) (cd ${DIR} && kubectl logs $(kubectl get pods | grep ${2} | awk '{print $1}') --tail=20 -f);;
   rebuild) (cd ${DIR} && docker-compose build ${2-} && docker-compose up -d ${2-});;
   exec) run_exec ${2} ${@:3};;
   link) (cd ${DIR} && docker-compose exec ${2} /bin/sh -c "cd /app/packageMounts/${3} && yarn link && cd /app && yarn link ${3}") && restart ${2};;
