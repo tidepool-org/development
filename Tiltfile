@@ -10,6 +10,7 @@ development_dir = config.get('development_dir')
 mongodb_data_dir = config.get('mongodb_data_dir')
 server_secrets_dir = config.get('server_secrets_dir')
 tidepool_helm_overrides_file = config.get('tidepool_helm_overrides_file')
+k8s_provisioner = config.get('k8s_provisioner')
 k8s_cluster_name = config.get('k8s_cluster_name')
 tidepool_helm_version = config.get('tidepool_helm_version')
 
@@ -150,11 +151,11 @@ def applyBlipOverrides (overrides):
         if mount.get('type') == 'primary':
           custom_build_args['command'] = 'docker build --target {} -t $EXPECTED_REF {}; '.format(buildTarget, hostPath)
 
-          # Uncomment as appropriate below to allow running locally built images in `kind` clusters
-          # custom_build_args['command'] += ' && kind load docker-image --nodes {cluster}-control-plane --name {cluster} $EXPECTED_REF '.format(cluster=k8s_cluster_name)
+          if k8s_provisioner == 'kind':
+            custom_build_args['command'] += ' && kind load docker-image --nodes {cluster}-control-plane --name {cluster} $EXPECTED_REF '.format(cluster=k8s_cluster_name)
 
-          # Uncomment as appropriate below to allow running locally built images in `k3s` clusters (via `k3d` CLI)
-          # custom_build_args['command'] += ' && k3d import-images -n {cluster} $EXPECTED_REF'.format(cluster=k8s_cluster_name)
+          if k8s_provisioner == 'k3s':
+            custom_build_args['command'] += ' && k3d import-images -n {cluster} $EXPECTED_REF'.format(cluster=k8s_cluster_name)
 
           custom_build_args['primaryHostPath'] = hostPath
 
