@@ -13,8 +13,9 @@ This chart bootstraps an Tidepool Environment on a [Kubernetes](http://kubernete
 When you install the chart with the default values, you will also install an embedded Mongo database and a Gloo API Gateway.  You may access
 the Tidepool Web Service at port 80 of the `gateway-proxy` service using kubectl port-forwarding:
 ```
-kubectl port-forward svc/gateway-proxy 3000:80
+kubectl port-forward svc/gateway-proxy 8080
 ```
+Then open your web browser to 
 
 ## Features
 

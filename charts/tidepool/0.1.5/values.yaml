@@ -25,7 +25,7 @@ global:
       host: localhost                                                 # a valid DNS name[:port] for the service
     http:                                                             # a map of hosts that provide HTTP access to the service
       localhost:                                                      # a simple identifier for a host providing HTTP access
-        name: localhost                                                 # a DNS name[:port] for a host providing HTTP access.
+      name: 'localhost:8080'                                          # a DNS name[:port] for a host providing HTTP access.
     #https:                                                           # a map of hosts that provide HTTPS access to the service
       #dev:                                                           # a map of hosts that provide HTTPS access to the service
         #name: dev.tidepool.org                                       # a simple identifier for a host providing HTTPS access
