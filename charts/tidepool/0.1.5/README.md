@@ -1,6 +1,26 @@
 # Tidepool
 
-Tidepool is an open source, Kubernetes-native web-service that stores and visualizes diabetes data.
+This directory contains a helm chart for Tidepool, an open source, Kubernetes-native web-service that stores and visualizes diabetes data.
+
+The chart features:
+
+* port-forwarding (so that Docker does not have to run privileged).
+* horizontal pod scaling
+* secrets stored in cluster or retrieved via AWS Secrets Manager
+* multiple DNS aliases to same backend
+* http and/or https access
+* server SNI (different certificates as needed per domain)
+* internal secret generation (on first installation)
+* local deployment with
+  * optional embedded MongoDB
+  * optional embedded API Gateway
+* simultaneous, multiple deployments (in different namespaces)
+* ability to forgo installing certain non-essential services (tools, migration, jellyfish)
+* general MongoDB URI support
+  * including mongodb and mongdb+srv schemes, usernames, passwords, and additional URL parameters
+  * allows use of AtlasDB or Amazon DocumentDB
+  * allows use of local (out of cluster) MongoDB
+
 
 ## TL;DR;
 
