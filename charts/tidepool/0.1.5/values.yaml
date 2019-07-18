@@ -5,7 +5,7 @@ gloo:
   gatewayProxies:
     gateway-proxy:
       service:
-        #httpPort: 3000                                              # HTTP port to listen on
+        httpPort: 8080                                               # HTTP port to listen on
         #httpsPort: 8443                                             # HTTPS port to listen on
         type: ClusterIP                                              # Type of service to create (alternative: ClusterIP)
         #extraAnnotations:                                           # Use to create an AWS Network Load Balancer 

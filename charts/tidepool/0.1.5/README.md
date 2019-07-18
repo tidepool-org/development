@@ -1,5 +1,23 @@
 # Tidepool
 
+## TL;DR;
+
+```console
+$ helm install --dry-run --debug .
+```
+
+## Introduction
+
+This chart bootstraps an Tidepool Environment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+
+When you install the chart with the default values, you will also install an embedded Mongo database and a Gloo API Gateway.  You may access
+the Tidepool Web Service at port 80 of the `gateway-proxy` service using kubectl port-forwarding:
+```
+kubectl port-forward svc/gateway-proxy 3000:80
+```
+
+## Features
+
 This directory contains a helm chart for Tidepool, an open source, Kubernetes-native web-service that stores and visualizes diabetes data.
 
 The chart features:
@@ -22,15 +40,7 @@ The chart features:
   * allows use of local (out of cluster) MongoDB
 
 
-## TL;DR;
 
-```console
-$ helm install --dry-run --debug .
-```
-
-## Introduction
-
-This chart bootstraps an Tidepool Environment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
 
