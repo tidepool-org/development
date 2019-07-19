@@ -99,7 +99,7 @@ spec:
     platformUser:
       image: tidepool/platform-user:master-3468cb7a3d6f0cf5971a281022586a9462668737
     seagull:
-      image: tidepool/seagull:master-8112553a22015ce8c398c4d9b7029f4771876f6e
+      image: tidepool/seagull:master-40e4294b921ae30aace6dd8aa478c977b506fadf
     shoreline:
       image: tidepool/shoreline:master-b6505c04b001d63c89d36d13de568c63a5eeac6c
     tidewhisperer:
