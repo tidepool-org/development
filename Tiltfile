@@ -1,26 +1,35 @@
-### Configuration Start ###
+### Helpers Start ###
+def absolute_dir(relative_dir):
+  # Get absolute path in order to use as volume mount
+    return str(local('cd {} && pwd'.format(relative_dir))).strip()
+### Helpers End ###
+
+### Config Start ###
 config = read_yaml('./Tiltconfig.yaml')
 configOverrides = read_yaml('./local/Tiltconfig.yaml', False)
 
 if type(configOverrides) == 'dict':
   config.update(configOverrides.items())
 
-tidepool_repos_root_dir = config.get('tidepool_repos_root_dir')
-development_dir = config.get('development_dir')
-mongodb_data_dir = config.get('mongodb_data_dir')
-server_secrets_dir = config.get('server_secrets_dir')
+tidepool_repos_root_dir = absolute_dir(config.get('tidepool_repos_root_dir'))
+development_dir = absolute_dir(config.get('development_dir'))
+mongodb_data_dir = absolute_dir(config.get('mongodb_data_dir'))
+server_secrets_dir = absolute_dir(config.get('server_secrets_dir'))
 tidepool_helm_overrides_file = config.get('tidepool_helm_overrides_file')
-k8s_provisioner = config.get('k8s_provisioner')
+k8s_environment = config.get('k8s_environment')
 k8s_cluster_name = config.get('k8s_cluster_name')
 tidepool_helm_version = config.get('tidepool_helm_version')
 
 tidepool_helm_chart_dir = "{}/charts/tidepool/{}".format(development_dir, tidepool_helm_version)
 mongo_helm_chart_dir = "{}/charts/mongo".format(development_dir)
-### Configuration End ###
+### Config End ###
 
 ### Main Start ###
 def main():
   if development_dir:
+
+    # Prepare the k8s cluster
+    prepare_k8s_cluster()
 
     # Set up tidepool helm template command
     tidepool_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
@@ -56,6 +65,14 @@ def main():
   else:
     fail('OOPS! You need to point "development_dir" to the root of local copy of the tidepool "development" repo in your Tiltfile')
 ### Main End ###
+
+### Cluster Prep Start ###
+def prepare_k8s_cluster ():
+  if ['kind', 'k3s', 'minikube'].index(k8s_environment) >= 0:
+    default_admin_clusterrolebinding = local('kubectl get clusterrolebinding default-admin --ignore-not-found')
+    if not default_admin_clusterrolebinding:
+      local('kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:default')
+### Cluster Prep End ###
 
 ### Secrets Start ###
 def getServerSecrets (tidepool_helm_template_cmd):
@@ -118,9 +135,7 @@ def createMongoService ():
   if mongodb_data_dir:
     # Ensure data directory exists
     local('mkdir -p {}'.format(mongodb_data_dir))
-    # Get absolute path in order to use as volume mount
-    absolute_mongodb_data_dir = str(local('cd {} && pwd'.format(mongodb_data_dir)))
-    mongo_helm_template_cmd += '--set "mongo.hostPath={}" '.format(absolute_mongodb_data_dir)
+    mongo_helm_template_cmd += '--set "mongo.hostPath={}" '.format(mongodb_data_dir)
 
   k8s_yaml(local(mongo_helm_template_cmd + mongo_helm_chart_dir))
   k8s_resource('mongodb', port_forwards=[27017])
@@ -136,6 +151,7 @@ def applyBlipOverrides (overrides):
     if type(mounts) == 'list':
       custom_build_args = {
         'deps': [],
+        'disable_push': True, # No need to push in default docker-for-desktop k8s env
       }
 
       fallback_commands = []
@@ -151,11 +167,16 @@ def applyBlipOverrides (overrides):
         if mount.get('type') == 'primary':
           custom_build_args['command'] = 'docker build --target {} -t $EXPECTED_REF {}; '.format(buildTarget, hostPath)
 
-          if k8s_provisioner == 'kind':
-            custom_build_args['command'] += ' && kind load docker-image --nodes {cluster}-control-plane --name {cluster} $EXPECTED_REF '.format(cluster=k8s_cluster_name)
+          if k8s_environment == 'kind':
+            if k8s_cluster_name != 'kind':
+              # Tilt has bug where it will not auto-deploy to kind if the cluster_name isn't `kind`, so we take care of that
+              custom_build_args['command'] += ' kind load docker-image --nodes {cluster}-control-plane --name {cluster} $EXPECTED_REF '.format(cluster=k8s_cluster_name)
+            else:
+              # Allow Tilt to automatically sideload image with `kind load` internally
+              custom_build_args['disable_push'] = False
 
-          if k8s_provisioner == 'k3s':
-            custom_build_args['command'] += ' && k3d import-images -n {cluster} $EXPECTED_REF'.format(cluster=k8s_cluster_name)
+          if k8s_environment == 'k3s':
+            custom_build_args['command'] += ' k3d import-images -n {cluster} $EXPECTED_REF'.format(cluster=k8s_cluster_name)
 
           custom_build_args['primaryHostPath'] = hostPath
 
@@ -231,9 +252,10 @@ def applyBlipOverrides (overrides):
           ref=custom_build_args.get('image'),
           command=custom_build_args.get('command'),
           deps=custom_build_args.get('deps'),
-          disable_push=True,
+          disable_push=custom_build_args.get('disable_push'),
           live_update=live_update_commands,
           ignore=['node_modules'],
+          tag='tilt-blip',
         )
 
     for i in range(len(port_forwards)):
