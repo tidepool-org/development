@@ -89,7 +89,7 @@ spec:
               bucket: ""  # ensures that the generated bucket name is used
               prefix: "images"
     platformMigrations:
-      image: tidepool/platform-migrations:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
+      image: tidepool/platform-migrations:develop-cebea363931570d3930848a21e6a3d07a54f4425
     platformNotification:
       image: tidepool/platform-notification:develop-cebea363931570d3930848a21e6a3d07a54f4425
     platformTask:
