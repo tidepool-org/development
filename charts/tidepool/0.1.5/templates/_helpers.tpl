@@ -7,6 +7,14 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.global.nameOverrideide | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "charts.iam.role" -}}
+{{- if .Values.global.iam.nameOverride -}}
+{{- .Values.global.iam.nameOverride -}}
+{{- else -}}
+{{- .Release.Namespace -}}{{- .Values.global.iam.suffix -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "charts.host.internal.tp" -}} internal {{- end }}
 
 {{ define "charts.host.internal.address" -}}

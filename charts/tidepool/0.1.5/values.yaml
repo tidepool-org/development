@@ -19,6 +19,9 @@ mongodb:
   fullnameOverride: "mongodb"
   usePassword: false
 global:
+  iam:
+    suffix: "-Worker"
+    nameOverride: ""
   hosts:
     default:
       protocol: http                                                  # the protocol to use for signup emails

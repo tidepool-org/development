@@ -28,6 +28,7 @@ This helm chart for Tidepool features:
   * including mongodb and mongdb+srv schemes, usernames, passwords, and additional URL parameters
   * allows use of AtlasDB or Amazon DocumentDB
   * allows use of local (out of cluster) MongoDB
+* support for IAM role assignment using Kiam
 
 ## Prerequisites
 
@@ -93,6 +94,8 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.secrets.external.source`   | If `awsSecretsManager`, retrieve secrets shared with third parties from Amazon Secrets Manager. If `local`, you must provide these secrets as Kubernetes Secrets | `local`                            |
 | `global.secrets.internal.source`   | If `awsSecretsManager`, retrieve internally used secrets from Amazon Secrets Manager. If `helm`, these internal secrets will be generated when the Helm chart is installed. If `local`, you must provide these secrets as Kubernetes Secrets | `helm`                            |
 | `global.linkerd`                | If `enabled` use the `linkerd` service mesh     | `disabled`  |
+| `global.iam.suffix`               | Suffix to add to namespace to create IAM role name     | `-Worker`  |
+| `global.iam.nameOverride`         | IAM Role name to use if non-empty             | ``  |
 | `global.ports.blip`               | Blip service container port                   | `3000`      |
 | `global.ports.export`             | Export service container port                 | `9300`      |
 | `global.ports.gatekeeper`         | Gatekeeper service container port             | `9123`      |
@@ -186,4 +189,5 @@ N.B If you are running Mongo on your local laptop and typically access it using 
 
 The Tidepool web service may be installed under multiple namespaces within the same cluster (using different host names).  However, the Gloo API Gateway may only be installed once.  You must disable the installation of Gloo for subsequent installations by setting the value `gloo.enabled` to `false`.
 
-You must also set different host names by setting the values under `global.hosts`.
+You must also set different host names by setting the values under `global.hosts`
+
