@@ -99,7 +99,7 @@ spec:
     platformUser:
       image: tidepool/platform-user:1.33.0-release.1
     seagull:
-      image: tidepool/seagull:v0.7.2
+      image: tidepool/seagull:v0.8.0
     shoreline:
       image: tidepool/shoreline:v0.14.2
     tidewhisperer:
