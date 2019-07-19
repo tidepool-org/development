@@ -67,7 +67,7 @@ spec:
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
-      image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+      image: tidepool/platform-auth:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
     platformBlob:
       image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
       service:
