@@ -1,27 +1,16 @@
 # Tidepool
 
+This directory contains a helm chart for Tidepool, an open source, Kubernetes-native web-service that stores and visualizes diabetes data.
+
 ## TL;DR;
 
 ```console
 $ helm install --dry-run --debug .
 ```
 
-## Introduction
-
-This chart bootstraps an Tidepool Environment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
-
-When you install the chart with the default values, you will also install an embedded Mongo database and a Gloo API Gateway.  You may access
-the Tidepool Web Service at port 80 of the `gateway-proxy` service using kubectl port-forwarding:
-```
-kubectl port-forward svc/gateway-proxy 8080
-```
-Then open your web browser to 
-
 ## Features
 
-This directory contains a helm chart for Tidepool, an open source, Kubernetes-native web-service that stores and visualizes diabetes data.
-
-The chart features:
+This helm chart for Tidepool features:
 
 * port-forwarding (so that Docker does not have to run privileged).
 * horizontal pod scaling
@@ -40,14 +29,13 @@ The chart features:
   * allows use of AtlasDB or Amazon DocumentDB
   * allows use of local (out of cluster) MongoDB
 
-
-
-
 ## Prerequisites
 
 - Kubernetes 1.11+
 
-## Installing the Chart
+## Quickstart
+
+This chart bootstraps an Tidepool Environment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 To install the chart with the release name `my-release`:
 
@@ -57,6 +45,18 @@ $ helm install --name my-release .
 
 The command deploys Tidepool on the Kubernetes cluster in the default configuration.
 The [configuration](#configuration) section lists the parameters that can be configured during installation.
+
+The default configuration  includes an embedded Mongo database and a Gloo API Gateway.  You may access
+the Tidepool Web Service at port 80 of the `gateway-proxy` service using kubectl port-forwarding:
+
+```console
+kubectl port-forward svc/gateway-proxy 8080
+```
+Then open your web browser to port 8080 on localhost. Using MacOsX w/ Chrome):
+
+```console
+open -a /Applications/Google\ Chrome.app/ http://localhost:8080
+```
 
 ## Uninstalling the Chart
 
@@ -83,7 +83,6 @@ To avoid attempts to reinstall the Gloo CRDs, set the parameter `gloo.crds.creat
 helm install --name my-release --set gloo.crds.create=false .
 ```
 
-
 ## Configuration
 
 The following tables lists the configurable parameters of the Ambassador chart and their default values.
@@ -93,7 +92,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.store.type`                | If `s3`, store blob/image data in Amazon S3. If `file` store blob/image data in local files.               | `file`                            |
 | `global.secrets.external.source`   | If `awsSecretsManager`, retrieve secrets shared with third parties from Amazon Secrets Manager. If `local`, you must provide these secrets as Kubernetes Secrets | `local`                            |
 | `global.secrets.internal.source`   | If `awsSecretsManager`, retrieve internally used secrets from Amazon Secrets Manager. If `helm`, these internal secrets will be generated when the Helm chart is installed. If `local`, you must provide these secrets as Kubernetes Secrets | `helm`                            |
-| `global.linkerd`                | If `enabled` then use the `linkerd` service mesh | `disabled`                       |
+| `global.linkerd`                | If `enabled` use the `linkerd` service mesh     | `disabled`  |
 | `global.ports.blip`               | Blip service container port                   | `3000`      |
 | `global.ports.export`             | Export service container port                 | `9300`      |
 | `global.ports.gatekeeper`         | Gatekeeper service container port             | `9123`      |
@@ -113,7 +112,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.ports.seagull`            | Seagull service container port                | `9120`      |
 | `global.aws.region`               | AWS region to deploy in                       | `us-west-2` |
 | `global.environment`              | Node environment (passed as NODE_ENV)         | `production`|
-| `global.fullnameOverride`         |                   | ``                           |
+| `global.fullnameOverride`         |                                               | ``          |
 | `global.nameOverride`             | If non-empty, Helm chart name to use          | ``          |
 | `global.namespace.create`         | If true, create namespace                     | `false`     |
 | `global.mongo.hosts`              | Comma-separated list of Mongo hosts           | `mongodb`   |
@@ -125,34 +124,34 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.provider.dexcom.authorize.url` | The URL to authorization from Dexcom     | `https://api.dexcom.com/v1/oauth2/login?prompt=login` |
 | `global.provider.dexcom.client.url` | The Dexcom client API URL                   | `https://api.dexcom.com` |
 | `global.hosts.default.protocol`   | If `http` use `http` for email verification link. If `https` use 	`https` for email verification links.          | `http`     |
-| `global.hosts.default.host`   | Host to use in email verification link.          | `localhost`  |
-| `global.hosts.http.{name}`   | Display name to use for http host                 | `localhost`  |
-| `global.hosts.http.{name}.name`   | Http host[:port] to listen to                       | `localhost`  |
-| `global.hosts.https.{name}`   | Display name to use for https host {name}        | ``  |
-| `global.hosts.https.{name}.name`   | Https host[:port] to listen to host {name}         | ``  |
-| `global.hosts.https.{name}.tlssecret.name`   | TLS secret name for host {name}   | ``  |
+| `global.hosts.default.host`   | Host to use in email verification link.           | `localhost`  |
+| `global.hosts.http.{name}`   | Display name to use for http host                  | `localhost`  |
+| `global.hosts.http.{name}.name`   | Http host[:port] to listen to                 | `localhost:8080`  |
+| `global.hosts.https.{name}`   | Display name to use for https host {name}         | ``  |
+| `global.hosts.https.{name}.name`   | Https host[:port] to listen to host {name}   | ``  |
+| `global.hosts.https.{name}.tlssecret.name`   | TLS secret name for host {name}    | ``  |
 | `global.hosts.https.{name}.tlssecret.namespace` | TLS secret namespace for host {name} | ``  |
-| `global.gateway.proxy.name`   | Name of the API gateway proxy                  | `gateway-proxy`  |
-| `global.gateway.proxy.namespace`   | Namespace of the API gateway proxy        | `gloo-system`  |
-| `global.resources.limits.cpu`   | CPU Limit                                    | `200m`  |
-| `global.resources.limits.memory`  | Memory Limit                               | `128Mi`  |
-| `global.resources.requests.cpu`   | CPU Limit                                  | `50m`  |
-| `global.resources.requests.memory`   | Memory Limit                            | `32Mi`  |
-| `global.securityContext`   | Set Security Context for pods                     | `200m`  |
-| `export.enabled`   | Enable export service if true                             | `true`  |
-| `jellyfish.enabled`   | Enable jellyfish service if true                       | `true`  
-| `export.enabled`   | Enable export service if true                             | `true`  |
-| `migrations.enabled`   | Enable migrations service if true                     | `true`  |
-| `tools.enabled`   | Enable tools service if true                               | `true`  |
-| `hydrophone.fromAddress`   | Email address to use for replies to sigups        | `Tidepool <noreply@tidepool.org>`  |
-| `hydrophone.bucket` | S3 bucket where email templates are stored               | `tidepool-{env}` |
-| `messageapi.window` |                                                          | `21` |
-| `blob.directory` | Directory to use when storing blobs on file storage         | `_data/blobs` | 
-| `blob.prefix`  | File prefix to use when storing blobs on file storage         | `blobs` | 
-| `image.directory` | Directory to use when storing images on file storage       | `_data/image` | 
-| `image.prefix` | File prefix to use when storing images on file storage        | `images` | 
-| `gloo.enabled` | Whether to include an API Gateway with this installation      | `true` |
-| `mongodb.enabled` | Whether to include an mongodb with this installation      | `true` |
+| `global.gateway.proxy.name`   | Name of the API gateway proxy                     | `gateway-proxy`  |
+| `global.gateway.proxy.namespace`   | Namespace of the API gateway proxy           | `gloo-system`  |
+| `global.resources.limits.cpu`   | CPU Limit                                       | `200m`  |
+| `global.resources.limits.memory`  | Memory Limit                                  | `128Mi`  |
+| `global.resources.requests.cpu`   | CPU Limit                                     | `50m`  |
+| `global.resources.requests.memory`   | Memory Limit                               | `32Mi`  |
+| `global.securityContext`   | Set Security Context for pods                        | `200m`  |
+| `export.enabled`   | Enable export service if true                                | `true`  |
+| `jellyfish.enabled`   | Enable jellyfish service if true                          | `true`  
+| `export.enabled`   | Enable export service if true                                | `true`  |
+| `migrations.enabled`   | Enable migrations service if true                        | `true`  |
+| `tools.enabled`   | Enable tools service if true                                  | `true`  |
+| `hydrophone.fromAddress`   | Email address to use for replies to sigups           | `Tidepool <noreply@tidepool.org>`  |
+| `hydrophone.bucket` | S3 bucket where email templates are stored                  | `tidepool-{env}` |
+| `messageapi.window` |                                                             | `21` |
+| `blob.directory` | Directory to use when storing blobs on file storage            | `_data/blobs` | 
+| `blob.prefix`  | File prefix to use when storing blobs on file storage            | `blobs` | 
+| `image.directory` | Directory to use when storing images on file storage          | `_data/image` | 
+| `image.prefix` | File prefix to use when storing images on file storage           | `images` | 
+| `gloo.enabled` | Whether to include an API Gateway with this installation         | `true` |
+| `mongodb.enabled` | Whether to include an mongodb with this installation          | `true` |
 | `mongodb.{name}`  | See [mongodb values](https://github.com/helm/charts/tree/master/stable/mongodb) | `` |
 | `gloo.gatewayProxies.gateway-proxy.service.type` | The Service type to expose. If `LoadBalancer`, then a LoadBalancer will be allocated. | `ServiceIP` |
 | `gloo.gatewayProxies.gateway-proxy.service.httpPort` | The http port to listen to.| `80` |
