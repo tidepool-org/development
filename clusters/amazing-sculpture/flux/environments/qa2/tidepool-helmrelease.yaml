@@ -67,7 +67,7 @@ spec:
     mailhog:
       image: mailhog/mailhog:v1.0.0
     platformAuth:
-      image: tidepool/platform-auth:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
+      image: tidepool/platform-auth:develop-cebea363931570d3930848a21e6a3d07a54f4425
     platformBlob:
       image: tidepool/platform-blob:develop-cebea363931570d3930848a21e6a3d07a54f4425
       service:
@@ -80,7 +80,7 @@ spec:
     platformData:
       image: tidepool/platform-data:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
     platformImage:
-      image: tidepool/platform-image:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
+      image: tidepool/platform-image:develop-cebea363931570d3930848a21e6a3d07a54f4425
       service:
         unstructured:
           store:
@@ -91,11 +91,11 @@ spec:
     platformMigrations:
       image: tidepool/platform-migrations:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
     platformNotification:
-      image: tidepool/platform-notification:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
+      image: tidepool/platform-notification:develop-cebea363931570d3930848a21e6a3d07a54f4425
     platformTask:
       image: tidepool/platform-task:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
     platformTools:
-      image: tidepool/platform-tools:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
+      image: tidepool/platform-tools:develop-cebea363931570d3930848a21e6a3d07a54f4425
     platformUser:
       image: tidepool/platform-user:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
     seagull:
