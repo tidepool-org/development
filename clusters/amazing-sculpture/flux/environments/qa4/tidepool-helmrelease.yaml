@@ -80,7 +80,7 @@ spec:
     platformData:
       image: tidepool/platform-data:master-f8238ac78964181384d72f1bb6578e9d5183b559
     platformImage:
-      image: tidepool/platform-image:master-3468cb7a3d6f0cf5971a281022586a9462668737
+      image: tidepool/platform-image:master-f8238ac78964181384d72f1bb6578e9d5183b559
       service:
         unstructured:
           store:
@@ -93,11 +93,11 @@ spec:
     platformNotification:
       image: tidepool/platform-notification:master-f8238ac78964181384d72f1bb6578e9d5183b559
     platformTask:
-      image: tidepool/platform-task:master-3468cb7a3d6f0cf5971a281022586a9462668737
+      image: tidepool/platform-task:master-f8238ac78964181384d72f1bb6578e9d5183b559
     platformTools:
       image: tidepool/platform-tools:master-3468cb7a3d6f0cf5971a281022586a9462668737
     platformUser:
-      image: tidepool/platform-user:master-3468cb7a3d6f0cf5971a281022586a9462668737
+      image: tidepool/platform-user:master-f8238ac78964181384d72f1bb6578e9d5183b559
     seagull:
       image: tidepool/seagull:master-40e4294b921ae30aace6dd8aa478c977b506fadf
     shoreline:
