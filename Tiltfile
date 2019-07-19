@@ -68,7 +68,7 @@ def main():
 
 ### Cluster Prep Start ###
 def prepare_k8s_cluster ():
-  if ['kind', 'k3s', 'minikube'].index(k8s_environment) >= 0:
+  if ['kind', 'k3d', 'minikube'].index(k8s_environment) >= 0:
     default_admin_clusterrolebinding = local('kubectl get clusterrolebinding default-admin --ignore-not-found')
     if not default_admin_clusterrolebinding:
       local('kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:default')
@@ -175,8 +175,9 @@ def applyBlipOverrides (overrides):
               # Allow Tilt to automatically sideload image with `kind load` internally
               custom_build_args['disable_push'] = False
 
-          if k8s_environment == 'k3s':
-            custom_build_args['command'] += ' k3d import-images -n {cluster} $EXPECTED_REF'.format(cluster=k8s_cluster_name)
+          if k8s_environment == 'k3d':
+            custom_build_args['disable_push'] = False
+            # custom_build_args['command'] += ' k3d import-images -n {cluster} $EXPECTED_REF'.format(cluster=k8s_cluster_name)
 
           custom_build_args['primaryHostPath'] = hostPath
 

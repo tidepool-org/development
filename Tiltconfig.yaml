@@ -6,6 +6,6 @@ development_dir: '.' # Root directory of the tidepool-org/development repo.
 mongodb_data_dir: './local/mongodb_data' # <Optional> Local directory to persist mongodb data to. Override with `false` to disable.
 server_secrets_dir: './local/secrets' # <Optional> Local directory to persist k8s secrets to. Override with `false` to disable.
 tidepool_helm_overrides_file: './local/values-override.yaml' # <Optional> Filepath containing helm chart value overrides.
-k8s_environment: 'docker-for-desktop' # Kubernetes provisioning tool. One of [docker-for-desktop, minikube, kind, k3s]
-k8s_cluster_name: 'docker-for-desktop-cluster' # Name of k8s cluster. Required if using `k3s` or `kind` clusters.
+k8s_environment: 'docker-for-desktop' # Kubernetes provisioning tool. One of [docker-for-desktop, minikube, kind, k3d]
+k8s_cluster_name: 'docker-for-desktop-cluster' # Name of k8s cluster. Required if using `k3d` or `kind` clusters.
 tidepool_helm_version: '0.1.5' # Version of the Tidepool helm charts to deploy.
