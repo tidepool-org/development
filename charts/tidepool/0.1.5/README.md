@@ -181,3 +181,9 @@ By default, this helm chart will install a version of mongodb in the Kubernetes 
 To use an existing Mongo server, simply provide the Mongo connection parameters are above.  
 
 N.B If you are running Mongo on your local laptop and typically access it using host `localhost`, you cannot simply use the host name `localhost` because that name is overloaded to mean something different in the Kubernetes cluster. Instead, you must provide an alias that resolves to your `localhost`.  Do this by creating the alias in your `/etc/hosts` file.  Then, you may use that alias to identify your Mongo server.
+
+### Multiple Instantiations
+
+The Tidepool web service may be installed under multiple namespaces within the same cluster (using different host names).  However, the Gloo API Gateway may only be installed once.  You must disable the installation of Gloo for subsequent installations by setting the value `gloo.enabled` to `false`.
+
+You must also set different host names by setting the values under `global.hosts`.
