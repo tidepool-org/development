@@ -80,7 +80,7 @@ spec:
     platformData:
       image: tidepool/platform-data:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
     platformImage:
-      image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+      image: tidepool/platform-image:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
       service:
         unstructured:
           store:
@@ -89,15 +89,15 @@ spec:
               bucket: ""  # ensures that the generated bucket name is used
               prefix: "images"
     platformMigrations:
-      image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+      image: tidepool/platform-migrations:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
     platformNotification:
       image: tidepool/platform-notification:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
     platformTask:
-      image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+      image: tidepool/platform-task:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
     platformTools:
-      image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+      image: tidepool/platform-tools:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
     platformUser:
-      image: tidepool/platform-user:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+      image: tidepool/platform-user:develop-ea3e117f0d1e9a25fb0e2625a4d7dce23dbcfc45
     seagull:
       image: tidepool/seagull:develop-1a6a0eb6a523032259b768381b446f509628b083
     shoreline:
