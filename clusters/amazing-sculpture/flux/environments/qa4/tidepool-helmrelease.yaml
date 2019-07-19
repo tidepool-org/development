@@ -95,7 +95,7 @@ spec:
     platformTask:
       image: tidepool/platform-task:master-f8238ac78964181384d72f1bb6578e9d5183b559
     platformTools:
-      image: tidepool/platform-tools:master-3468cb7a3d6f0cf5971a281022586a9462668737
+      image: tidepool/platform-tools:master-f8238ac78964181384d72f1bb6578e9d5183b559
     platformUser:
       image: tidepool/platform-user:master-f8238ac78964181384d72f1bb6578e9d5183b559
     seagull:
