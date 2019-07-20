@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# Create kiam-server role if it does not exist
-# Add trust relationship for NodeInstanceRole in given stack
+# Create the IAM role for the Kiam server if it does not exist
 
 STACK_NAME=$1
+KIAM_ROLE_NAME=${2:-kiam-server}
 
 role=$(aws cloudformation describe-stack-resource --stack-name ${STACK_NAME} --logical-resource-id NodeInstanceRole)
 
@@ -29,10 +29,10 @@ update='
         "Action": "sts:AssumeRole"
       }'
 UPDATE=$(echo $update | sed -e "s#PRINCIPAL#$PRINCIPAL#")
-out=$(aws iam get-role --role-name kiam-server)
+out=$(aws iam get-role --role-name ${KIAM_ROLE_NAME})
 if [ $? -ne 0 ]
 then 
-    aws iam create-role --role-name kiam-server --assume-role-policy-document "$base"
+    aws iam create-role --role-name ${KIAM_ROLE_NAME} --assume-role-policy-document "$base"
     policy=$base
 else
     policy=$(echo "$out" | jq .Role.AssumeRolePolicyDocument)
@@ -47,4 +47,4 @@ do
 	fi
 done
 updated=$(echo "$policy" | jq --argjson UPDATE "$UPDATE" '.Statement += [ $UPDATE ]')
-aws iam update-assume-role-policy --role-name kiam-server --policy-document "$updated"
+aws iam update-assume-role-policy --role-name ${KIAM_ROLE_NAME} --policy-document "$updated"
