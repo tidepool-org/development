@@ -1,0 +1,22 @@
+#!/bin/bash -xv
+
+# Create an Amazon EKS cluster using eksctl
+
+if [ $# == 0 ]
+then
+    YQ="docker run -v ${PWD}:/workdir mikefarah/yq yq"
+    CLUSTER_NAME=$(${YQ} r $CONFIG_FILE metadata.name)
+else
+    CLUSTER_NAME=$1
+fi
+
+#File in which cluster config is stored
+CONFIG_FILE=${2:-config.yaml}
+
+KIAM_ROLE_NAME=${3:-kiam-server}
+
+nodegroups=$(yq r ${CONFIG_FILE} nodeGroups[*].name | sed -e "s/- //"))
+for nodegroup in $nodegroups
+do
+    update_kiam_server_role eksctl-${CLUSTER_NAME}-nodegroup-$nodegroup ${KIAM_ROLE_NAME}
+done

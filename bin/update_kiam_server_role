@@ -2,7 +2,7 @@
 #
 # Create the IAM role for the Kiam server if it does not exist
 
-STACK_NAME=$1
+STACK_NAME=$1}
 KIAM_ROLE_NAME=${2:-kiam-server}
 
 role=$(aws cloudformation describe-stack-resource --stack-name ${STACK_NAME} --logical-resource-id NodeInstanceRole)
