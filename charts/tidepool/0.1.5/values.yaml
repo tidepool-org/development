@@ -19,6 +19,8 @@ mongodb:
   fullnameOverride: "mongodb"
   usePassword: false
 global:
+  hpa:
+    enabled: true
   iam:
     suffix: "-Worker"
     nameOverride: ""
