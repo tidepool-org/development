@@ -1,0 +1,104 @@
+#!/bin/bash
+
+# Create the IAM roles and policies needed for a Tidepool environment
+
+# the name of the bucket in which you store Tidepool data
+BUCKET=$1
+
+# the role name to create
+ROLE_NAME=$2
+
+# the role name of the Kiam server that will assume this role created.
+KIAM_ROLE_NAME=${3:-kiam-server}
+
+POLICY='
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::BUCKET"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::BUCKET/*"
+            ],
+            "Effect": "Allow"
+        },
+	{
+           "Effect": "Allow",
+           "Action": [
+           	"ses:*"
+	   ],
+           "Resource": "*"
+	}
+    ]
+}'
+
+policy=$(echo $POLICY | sed -e "s/BUCKET/$BUCKET/g")
+
+ASSUME='{
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            },
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "arn:aws:iam::TIDEPOOL_AWS_ACCOUNT:role/KIAM_ROLE_NAME"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        }
+'
+
+ROLE='{
+        "Path": "/",
+        "RoleName": "ROLE_NAME",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": "ec2.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                }
+            ]
+        },
+        "Description": "Allow K8s services to send email and to use an assigned S3 bucket.",
+        "MaxSessionDuration": 3600,
+        "Tags": [
+            {
+                "Key": "bucket",
+                "Value": "BUCKET"
+            }
+        ]
+}'
+
+role=$(echo $ROLE | sed -e "s/ROLE_NAME/$ROLE_NAME/" -e "s/BUCKET/$BUCKET/")
+assume=$(echo $ASSUME | sed -e "s/KIAM_ROLE_NAME/$KIAM_ROLE_NAME/" -e "s/BUCKET/$BUCKET/" -e "s/TIDEPOOL_AWS_ACCOUNT/$TIDEPOOL_AWS_ACCOUNT/")
+
+set -x
+aws iam create-role  --role-name ${ROLE_NAME} --assume-role-policy-document "$assume" --cli-input-json "$role"
+aws iam put-role-policy --role-name "${ROLE_NAME}" --policy-name "${ROLE_NAME}-Service-Policy" --policy-document "$policy"
+
+
+

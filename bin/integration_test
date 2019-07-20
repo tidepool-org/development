@@ -1,0 +1,146 @@
+#!/bin/bash -xv
+# This script is used to run integration tests of a new image of a service within an existing Kubernetes cluster.
+#
+# Pre-requisites:
+# 1) Set up a wildcard domain in Route53 for all *.integration-test.tidepool.org -> integration test K8s cluster
+# 2) In the K8s cluster, install helm and weave flux. This will install the (unconfigured) API gateway.
+
+# This script
+# 1) creates a declarative description of the test settings in the config repo;
+# 2) spins up a new "environment" inside an existing Kubernetes cluster;
+# 3) runs the integration test using Ghost Inspector;
+# 4) frees the resources used in Kubernetes to run the test;
+# 5) captures the test results and commits them to the repo; and,
+# 6) returns an exit status code of 1 for test failure and 0 for test success.
+
+# -- INPUT ARGUMENTS with default values ---
+
+# The name of the service to be tested, e.g hydrophone, blip, auth, image.
+SERVICE=${1:-hydrophone}
+
+# The tag of the image to be tested, e.g. "develop-657ba6265ad38ce7c61be77b5642e99c0ede6945"
+TAG=${2:-develop-657ba6265ad38ce7c61be77b5642e99c0ede6945}
+
+# The ID of the GhostInspector suite to run
+GHOST_SUITE_ID=${3:-5cf5ba3f9ffa2f2438ed2e0f}
+
+# The subdirectory of the ${CONFIGPATH} that contains the configuration of the dependencies of the service to test.
+BASE_ENVIRONMENT=${4:-develop}
+
+# The protocol to test
+PROTOCOL=${5:-http}
+
+# The Git config repo.
+CONFIGREPO=${6:-git@github.com:tidepool-org/dev-ops}
+
+# The path within the config repo to all the Tidepool environment configurations maintained by the cluster.
+CONFIGPATH=${7:-clusters/integration-test/flux/environments}
+
+# ------------------------------
+
+# A unique suffix that can be used in a file name and a url component
+SUFFIX=$(date | md5 | head -c8)
+
+# The current date in a format that can be used in a file name and a url component
+DATE=$(date +%F)
+
+# The subdirectory of the ${CONFIGPATH} to store the config for the ephemeral environment.
+EPHEMERAL_DIR=ephemeral/${DATE}/${SERVICE}-${SUFFIX}
+
+# The Kubernetes namespace of the emphemeral enviroment.  Must be usable as a file name or url component.
+ENVIRONMENT=${DATE}-${SERVICE}-${SUFFIX}
+
+# The URL at which the test environment can be reached.
+CLUSTER_URL=${PROTOCOL}://${ENVIRONMENT}.integration-test.tidepool.org
+
+# Temporary directory to perform work. This cannot be in /tmp when using this with Docker.
+TMPDIR=$(mktemp -d "./zombie.XXXXXXXXX")
+
+# Clean up the temporary directory on exit
+trap -- "rm -rf ${TMPDIR}" EXIT
+
+# The Tidpool API key for GhostInspector
+GHOST_API_KEY=1d903bbbe266b0b560b80a5dff6659cfdf8aec8f
+
+# The URL of the test runner
+TESTURL="https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=${CLUSTER_URL}"
+
+# The filename in which to store the test results
+RESULTFILE=ghostinspector.json
+
+# start services from within top of CONFIG rep
+function start_services()
+{
+    cd $TMPDIR
+    git clone ${CONFIGREPO}
+    cd $(echo -n ${CONFIGREPO} | sed -e "s#.*/##")/${CONFIGPATH}
+    mkdir -p ${EPHEMERAL_DIR}
+    cp -r ${BASE_ENVIRONMENT}/* ${EPHEMERAL_DIR}/ 
+    cd ${EPHEMERAL_DIR}
+
+    YQ="docker run -v ${PWD}:/workdir mikefarah/yq yq"
+    ${YQ} w -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/automated] false
+    ${YQ} w -i tidepool-helmrelease.yaml spec.values.${SERVICE}.image tidepool/${SERVICE}:${TAG}
+    ${YQ} w -i tidepool-helmrelease.yaml spec.releaseName tidepool-${ENVIRONMENT}
+    ${YQ} d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
+    ${YQ} w -i mongodb-helmrelease.yaml spec.releaseName mongo-${ENVIRONMENT}
+
+    if [ "$PROTOCOL" == "http" ]
+    then
+        ${YQ} w -i tidepool-helmrelease.yaml spec.values.global.gateway.http.enabled true
+        ${YQ} w -i tidepool-helmrelease.yaml spec.values.global.gateway.https.enabled false
+    else
+        ${YQ} w -i tidepool-helmrelease.yaml spec.values.global.gateway.http.enabled false
+        ${YQ} w -i tidepool-helmrelease.yaml spec.values.global.gateway.https.enabled true
+    fi
+
+    # Update namespace
+    for file in $(find . -name \*.yaml -print)
+    do
+        if grep "kind" $file | egrep "kind: +Namespace" >/dev/null
+        then
+            ${YQ} w -i $file metadata.name ${ENVIRONMENT}
+        else
+            ${YQ} w -i $file metadata.namespace ${ENVIRONMENT}
+        fi
+    done
+    
+    # Save the results to GitHub.  This repo is polled by Weave Flux, which will create the test environment in the cluster.
+    git add .
+    git commit -m "Creating integration test environment ${ENVIRONMENT} to test ${SERVICE}:${TAG} with base ${BASE_ENVIRONMENT}."
+    git pull --rebase
+    git push
+
+    # XXX We should poll a readiness port instead
+    echo "waiting for services to become ready."
+    sleep 500
+}
+
+# run integration tests, return 0 iff tests succeed
+function run_tests()
+{
+    curl ${TESTURL} | python3 -m json.tool > ${RESULTFILE}
+    cat ${RESULTFILE}
+    grep -c '"passing":false' ${RESULTFILE}
+    return $?
+}
+
+# Stop and free cluster resources
+function stop_services()
+{
+    for file in $(find . -name \*.yaml -print)
+    do
+	    mv $file $file.off
+    done
+    git add .
+    git commit -m "Turn off ${ENVIRONMENT} by rename .yaml files to .yaml.off."
+    git pull --rebase
+    git push
+}
+
+start_services
+run_tests
+result=$?
+stop_services
+rm -rf $TMPDIR
+exit $result

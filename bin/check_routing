@@ -1,0 +1,33 @@
+#!/bin/bash 
+# Report on whether the virtual services provided by the current K8s cluster are being routed via DNS
+# Assumes only one elb is present
+
+ZONEID=$(get_zone_id)
+echo "current cluster: $(kubectl config current-context)"
+recordSets=$(aws route53 list-resource-record-sets --hosted-zone-id ${ZONEID})
+echo $recordSets
+elb=$(identify_loadbalancers)
+hosts=$(virtual_hosts)
+mismatch=false
+for host in $hosts
+do
+   current=$(echo $recordSets | jq ".ResourceRecordSets[] | select(.Name==\"${host}.\") | .AliasTarget.DNSName" |sed  -e 's#\"##g' -e 's#\.$##' )
+   if [ "$current" == "" ]
+   then
+	  echo "$host $host is NOT being routed."
+	  mismatch=true
+	  continue
+   fi
+   if [ "$current" != "$elb" ]
+   then
+	   echo "host $host is being routed by a different Ambassador load balancer."
+	   mismatch=true
+   fi
+done
+
+if [ "$mismatch" == "true" ]
+then
+    echo "current load balancer is NOT used with current virtual hosts"
+else
+    echo "current load balance IS used with current virtual hosts."
+fi

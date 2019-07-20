@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# Create kiam-server role if it does not exist
+# Add trust relationship for NodeInstanceRole in given stack
+
+STACK_NAME=$1
+
+role=$(aws cloudformation describe-stack-resource --stack-name ${STACK_NAME} --logical-resource-id NodeInstanceRole)
+
+PRINCIPAL="arn:aws:iam::${TIDEPOOL_AWS_ACCOUNT}:role/"$(echo $role | jq .StackResourceDetail.PhysicalResourceId | sed -e 's/\"//g')
+base='{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}'
+update='
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "PRINCIPAL"
+        },
+        "Action": "sts:AssumeRole"
+      }'
+UPDATE=$(echo $update | sed -e "s#PRINCIPAL#$PRINCIPAL#")
+out=$(aws iam get-role --role-name kiam-server)
+if [ $? -ne 0 ]
+then 
+    aws iam create-role --role-name kiam-server --assume-role-policy-document "$base"
+    policy=$base
+else
+    policy=$(echo "$out" | jq .Role.AssumeRolePolicyDocument)
+fi
+
+arns=$(echo "$policy"  | jq '.Statement' | jq '.[].Principal.AWS' | sed -e 's/"//g' -e "s/'//g" )
+for arn in $arns
+do
+	if [ "$arn" == "$PRINCIPAL" ]
+	then
+		exit 0
+	fi
+done
+updated=$(echo "$policy" | jq --argjson UPDATE "$UPDATE" '.Statement += [ $UPDATE ]')
+aws iam update-assume-role-policy --role-name kiam-server --policy-document "$updated"

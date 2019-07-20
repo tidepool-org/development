@@ -1,0 +1,36 @@
+#!/bin/bash -xv
+
+# Create an Amazon EKS cluster using eksctl
+
+# Amazon account number
+ACCOUNT=${TIDEPOOL_AWS_ACCOUNT:-123456789012}
+
+# Users that will have system:master access (in addition to the user that creates the cluster)
+USERS=${1:-"lennartgoedhart-cli benderr-cli derrick-cli mikeallgeier-cli"}
+
+# AWS Region to create cluster in
+REGION=${2:-us-west-2}
+
+#File in which cluster config is stored
+CONFIG_FILE=${3:-config.yaml}
+
+#File in which to store kubeconfig 
+KUBECONFIG=${4:-kubeconfig.yaml}
+
+YQ="docker run -v ${PWD}:/workdir mikefarah/yq yq"
+CLUSTER_NAME=$(${YQ} r $CONFIG_FILE metadata.name)
+
+# Kubernetes group to assign users to
+GROUP=system:masters
+
+eksctl create cluster --config-file=$CONFIG_FILE --kubeconfig $KUBECONFIG
+
+for user in $USERS
+do
+    arn=arn:aws:iam::${ACCOUNT}:user/${user}
+    eksctl create iamidentitymapping --region=${REGION}  --role=$arn --group=$GROUP --name=$CLUSTER_NAME --username=$user
+done
+
+STACK_NAME=eksctl-${CLUSTER_NAME}-nodegroup-ng-1
+update_node_instance_role ${STACK_NAME}
+update_kiam_server_role ${STACK_NAME}

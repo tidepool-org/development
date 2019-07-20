@@ -1,0 +1,2 @@
+#!/bin/bash
+kubectl get svc -o json --all-namespaces | jq '.items | .[] | .status.loadBalancer | select(.ingress != null) | .ingress | .[] | .hostname' | sed -e 's#"##g'
