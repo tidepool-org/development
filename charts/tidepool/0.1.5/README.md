@@ -192,3 +192,8 @@ The Tidepool web service may be installed under multiple namespaces within the s
 
 You must also set different host names by setting the values under `global.hosts`
 
+### Secrets
+
+To use external services such as DexcomAPI, Mailchimp, and KissMetrics, you must provide certain shared secrets.
+See the secrets manifest files for details.
+
