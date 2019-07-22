@@ -1,0 +1,138 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Shared Resources
+Parameters:
+  ClusterName:
+    Type: String
+  NodeGroupStackName:
+    Type: String
+Resources:
+  KiamServerManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Path: /
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action: sts:AssumeRole
+          Resource: "*"
+  KiamServerRole:
+    Type: AWS::IAM::Role
+    Properties: 
+      RoleName: 
+        Fn::Sub: "${ClusterName}-kiam-server-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Principal:
+            AWS: 
+              Fn::ImportValue:
+                Fn::Sub: "${NodeGroupStackName}::InstanceRoleARN"
+          Action: sts:AssumeRole
+        - Effect: Allow
+          Principal:
+            Service: ec2.amazonaws.com
+          Action: sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - !Ref KiamServerManagedPolicy
+  DNSManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Path: /
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Action: route53:ChangeResourceRecordSets
+          Resource: arn:aws:route53:::hostedzone/*
+        - Effect: Allow
+          Action:
+          - route53:GetChange
+          - route53:ListHostedZones
+          - route53:ListResourceRecordSets
+          - route53:ListHostedZonesByName
+          Resource: "*"
+  ExternalDNSRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        Fn::Sub: "${ClusterName}-externalDNS-role"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Action: ["sts:AssumeRole"]
+          Effect: Allow
+          Principal:
+            Service: ec2.amazonaws.com
+        - Action: ["sts:AssumeRole"]
+          Effect: Allow
+          Principal:
+            AWS: 
+              Fn::GetAtt:
+              - KiamServerRole
+              - "Arn"
+      Path: /
+      ManagedPolicyArns:
+        - !Ref DNSManagedPolicy
+  CertManagerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        Fn::Sub: "${ClusterName}-certmanager-role"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Action: ["sts:AssumeRole"]
+          Effect: Allow
+          Principal:
+            Service: ec2.amazonaws.com
+        - Action: ["sts:AssumeRole"]
+          Effect: Allow
+          Principal:
+            AWS: 
+              Fn::GetAtt:
+              - KiamServerRole
+              - "Arn"
+      Path: /
+      ManagedPolicyArns:
+        - !Ref DNSManagedPolicy
+  AutoscalingManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Path: /
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Action:
+          - autoscaling:DescribeAutoScalingInstances
+          - autoscaling:SetDesiredCapacity
+          - autoscaling:DescribeAutoScalingGroups
+          - autoscaling:DescribeTags
+          - autoscaling:DescribeLaunchConfigurations
+          - autoscaling:TerminateInstanceInAutoScalingGroup
+          Resource: "*"
+  AutoscalingRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        Fn::Sub: "${ClusterName}-autoscaler-role"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Action: ["sts:AssumeRole"]
+          Effect: Allow
+          Principal:
+            Service: ec2.amazonaws.com
+        - Action: ["sts:AssumeRole"]
+          Effect: Allow
+          Principal:
+            AWS: 
+              Fn::GetAtt:
+              - KiamServerRole
+              - "Arn"
+      Path: /
+      ManagedPolicyArns:
+        - !Ref AutoscalingManagedPolicy
