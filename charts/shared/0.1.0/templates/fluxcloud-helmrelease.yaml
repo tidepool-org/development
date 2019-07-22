@@ -3,7 +3,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: fluxcloud
-  namespace: fluxcloud
+  namespace: flux
   annotations:
     flux.weave.works/automated: "false"
 spec:
@@ -14,7 +14,7 @@ spec:
     name: fluxcloud
     github: {{ include "charts.fluxcloud.github" . }}
     slack:
-      channel: {{ include "charts.fluxcloud.slack.channel . }}
+      channel: {{ include "charts.fluxcloud.slack.channel" . }}
       username: {{ .Values.fluxcloud.username | quote }}
   valuesFrom:
   - secretKeyRef:
