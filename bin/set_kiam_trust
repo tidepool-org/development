@@ -13,7 +13,7 @@ fi
 #File in which cluster config is stored
 CONFIG_FILE=${2:-config.yaml}
 
-KIAM_ROLE_NAME=${3:-kiam-server}
+KIAM_ROLE_NAME=/clusters/${CLUSTER_NAME}/kiam-server-role
 
 nodegroups=$(yq r ${CONFIG_FILE} nodeGroups[*].name | sed -e "s/- //"))
 for nodegroup in $nodegroups
