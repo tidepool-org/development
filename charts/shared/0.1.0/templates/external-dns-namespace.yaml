@@ -1,0 +1,11 @@
+{{ if .Values.externalDNS.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-dns-system
+  labels:
+    istio-injection: disabled
+    linkerd.io/inject: enabled
+  annotations:
+    iam.amazonaws.com/permitted: {{ include "charts.externalDNS.role" . }}
+  {{ end }}

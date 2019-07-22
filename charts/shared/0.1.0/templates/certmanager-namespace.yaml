@@ -1,0 +1,10 @@
+{{ if .Values.certmanager.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cert-manager
+  labels:
+    certmanager.k8s.io/disable-validation: "true"
+  annotations:
+    iam.amazonaws.com/permitted: {{ include "charts.certmanager.role" . }}
+{{ end }}

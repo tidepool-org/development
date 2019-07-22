@@ -1,0 +1,22 @@
+{{ if .Values.fluxcloud.enabled }}
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: fluxcloud
+  namespace: fluxcloud
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: fluxcloud
+  chart:
+    {{- .Values.fluxcloud.chart | toYaml | nindent 4 }}
+  values:
+    name: fluxcloud
+    github: {{ include "charts.fluxcloud.github" . }}
+    slack:
+      channel: {{ include "charts.fluxcloud.slack.channel . }}
+      username: {{ .Values.fluxcloud.username | quote }}
+  valuesFrom:
+  - secretKeyRef:
+      {{ .Values.fluxcloud.secretKeyRef | toYaml | nindent 6 }}
+{{ end }}

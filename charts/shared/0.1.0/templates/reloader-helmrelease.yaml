@@ -1,0 +1,14 @@
+{{ if .Values.reloader.enabled }}
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: reloader
+  namespace: reloader
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: reloader
+  chart:
+    {{- .Values.reloader.chart | toYaml | nindent 4 }}
+  values: {}
+{{ end }}

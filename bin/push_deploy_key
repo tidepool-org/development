@@ -11,7 +11,7 @@
 #
 context=$(kubectl config current-context)
 github_access_token=$(cat ~/.secrets/github_access_token)
-key=$(fluxctl identity)
+key=$(fluxctl --k8s-fwd-ns=flux identity)
 rp=$(git rev-parse --is-inside-work-tree 2>/dev/null)
 
 if [ $? -ne 0 ] || [ "$rp" != "true" ]; then

@@ -1,0 +1,9 @@
+{{ if .Values.fluxcloud.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fluxcloud
+  labels:
+    istio-injection: disabled
+    linkerd.io/inject: disabled
+{{ end }}
