@@ -63,15 +63,15 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ end }}
 
 {{- define "charts.autoscaler.role" -}}
-{{- printf "/cluster/%s/%s-autoscaler-role"  .Values.global.clusterName .Values.global.clusterName | quote -}}
+{{- printf "%s-autoscaler-role"  .Values.global.clusterName | quote -}}
 {{- end -}}
 
 {{- define "charts.certmanager.role" -}}
-{{- printf "/cluster/%s/%s-certmanager-role"  .Values.global.clusterName .Values.global.clusterName | quote -}}
+{{- printf "%s-certmanager-role"  .Values.global.clusterName | quote -}}
 {{- end -}}
 
 {{- define "charts.externalDNS.role" -}}
-{{- printf "/cluster/%s/%s-externalDNS-role"  .Values.global.clusterName .Values.global.clusterName | quote -}}
+{{- printf "%s-externalDNS-role"  .Values.global.clusterName | quote -}}
 {{- end -}}
 
 {{- define "charts.fluxcloud.github" -}}
@@ -83,6 +83,6 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{- define "charts.kiam.arn" -}}
-{{- printf "arn:aws:iam::%s:role/cluster/%s/%s-kiam-server-role" .Values.global.id .Values.global.clusterName .Values.global.clusterName | quote -}}
+{{- printf "arn:aws:iam::%s:role/%s-kiam-server-role" .Values.global.id .Values.global.clusterName | quote -}}
 {{- end -}}
 
