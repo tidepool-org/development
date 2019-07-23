@@ -21,9 +21,6 @@ mongodb:
 global:
   hpa:
     enabled: true
-  iam:
-    suffix: "-Worker"
-    nameOverride: ""
   hosts:
     default:
       protocol: http                                                  # the protocol to use for signup emails

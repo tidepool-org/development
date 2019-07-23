@@ -7,12 +7,12 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.global.nameOverrideide | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "charts.iam.role" -}}
-{{- if .Values.global.iam.nameOverride -}}
-{{- .Values.global.iam.nameOverride -}}
-{{- else -}}
-/env/{{- .Release.Namespace -}}/worker
+{{- define "charts.externalSecrets.role" -}}
+/cluster/{{ .Values.global.clusterName }}/env/{{- .Release.Namespace -}}/secrets-role
 {{- end -}}
+
+{{- define "charts.iam.role" -}}
+/cluster/{{ .Values.global.clusterName }}/env/{{- .Release.Namespace -}}/worker-role
 {{- end -}}
 
 {{- define "charts.host.internal.tp" -}} internal {{- end }}

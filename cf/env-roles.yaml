@@ -1,6 +1,8 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Shared Resources
 Parameters:
+  ClusterName:
+    Type: String
   EnvName:
     Type: String
   ClusterRoleStackName:
@@ -10,7 +12,7 @@ Resources:
     Type: AWS::IAM::ManagedPolicy
     Properties:
       Path: 
-        Fn::Sub: "/env/${EnvName}/"
+        Fn::Sub: "/cluster/${ClusterName}/env/${EnvName}/"
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -48,14 +50,14 @@ Resources:
               Fn::ImportValue:
                 Fn::Sub: "${ClusterRoleStackName}::KiamServerRoleARN"
       Path: 
-        Fn::Sub: "/env/${EnvName}/"
+        Fn::Sub: "/cluster/${ClusterName}/env/${EnvName}/"
       ManagedPolicyArns:
         - !Ref WorkerManagedPolicy
   SecretsManagedPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
       Path: 
-        Fn::Sub: "/env/${EnvName}/"
+        Fn::Sub: "/cluster/${ClusterName}/env/${EnvName}/"
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -81,15 +83,6 @@ Resources:
               Fn::ImportValue:
                 Fn::Sub: "${ClusterRoleStackName}::KiamServerRoleARN"
       Path: 
-        Fn::Sub: "/env/${EnvName}/"
+        Fn::Sub: "/cluster/${ClusterName}/env/${EnvName}/"
       ManagedPolicyArns:
         - !Ref SecretsManagedPolicy
- Outputs:
-  SecretsRoleARN:
-    Export:
-      Name: !Sub '${AWS::StackName}::SecretsRoleARN'
-    Value: !GetAtt SecretsRole.Arn
-  WorkerRoleARN:
-    Export:
-      Name: !Sub '${AWS::StackName}::WorkerRoleARN'
-    Value: !GetAtt WorkerRole.Arn

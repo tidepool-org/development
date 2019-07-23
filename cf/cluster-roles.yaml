@@ -140,6 +140,10 @@ Resources:
       ManagedPolicyArns:
         - !Ref AutoscalerManagedPolicy
 Outputs:
+  ClusterName:
+    Export:
+      Name: !Sub '${AWS::StackName}::ClusterName'
+    Value: !Sub "${ClusterName}"
   AutoscalerRoleARN:
     Export:
       Name: !Sub '${AWS::StackName}::AutoscalerRoleARN'
