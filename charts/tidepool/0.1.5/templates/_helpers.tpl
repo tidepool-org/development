@@ -11,6 +11,11 @@ Expand the name of the chart.
 /cluster/{{ .Values.global.clusterName }}/env/{{- .Release.Namespace -}}/secrets-role
 {{- end -}}
 
+{{- define "charts.roles.permitted" -}}
+/cluster/{{ .Values.global.clusterName }}/env/{{- .Release.Namespace -}}/.*
+{{- end -}}
+
+
 {{- define "charts.iam.role" -}}
 /cluster/{{ .Values.global.clusterName }}/env/{{- .Release.Namespace -}}/worker-role
 {{- end -}}

@@ -7,6 +7,6 @@ metadata:
     istio-injection: disabled
     global.linkerd.io/inject: {{ .Values.global.linkerd }}
   annotations:
-    iam.amazonaws.com/permitted: {{ .Release.Namespace }}-Worker
+    iam.amazonaws.com/permitted: {{ include "charts.roles.permitted" . }}
 {{ end }}
 

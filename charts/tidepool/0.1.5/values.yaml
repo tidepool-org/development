@@ -19,6 +19,8 @@ mongodb:
   fullnameOverride: "mongodb"
   usePassword: false
 global:
+  namespace:
+    create: false
   hpa:
     enabled: true
   hosts:
