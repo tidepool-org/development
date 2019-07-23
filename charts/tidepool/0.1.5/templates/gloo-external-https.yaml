@@ -1,5 +1,6 @@
 # Auto-generated file by gloo_gateway. Do not edit.
 {{- $relname := .Release.Name -}}
+{{ if .Values.global.hosts.https }}
 {{- range $key, $spec := .Values.global.hosts.https }}
 --- #file: gloo-{{ $key }}-external-https-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
@@ -628,4 +629,5 @@ spec:
           upstream:
             name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
+{{ end }}
 {{ end }}
