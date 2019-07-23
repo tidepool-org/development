@@ -51,8 +51,7 @@ spec:
         default:
           protocol: https
           host: dev.tidepool.org
-        http:
-          localhost:
+        http: null
         https:
           dev:
             name: dev.tidepool.org
