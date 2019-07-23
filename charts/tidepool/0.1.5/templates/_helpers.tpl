@@ -29,7 +29,7 @@ http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
 
 {{- define "charts.image.s3.bucket" -}}
 {{- if (.Values.image.bucket) and (ne .Values.image.bucket "") -}}
-.Values.image.bucket
+{{ .Values.image.bucket }}
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
@@ -37,7 +37,7 @@ tidepool-{{ .Release.Namespace }}-data
 
 {{- define "charts.blob.s3.bucket" -}}
 {{- if (.Values.blob.bucket) and (ne .Values.blob.bucket "") -}}
-.Values.blob.bucket
+{{ .Values.blob.bucket }}
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
@@ -45,7 +45,7 @@ tidepool-{{ .Release.Namespace }}-data
 
 {{- define "charts.hydrophone.s3.bucket" -}}
 {{- if (.Values.hydrophone.bucket) and (ne .Values.hydrophone.bucket "") -}}
-.Values.hydrophone.bucket
+{{ .Values.hydrophone.bucket }}
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-asset
 {{- end -}}
@@ -53,7 +53,7 @@ tidepool-{{ .Release.Namespace }}-asset
 
 {{- define "charts.jellyfish.s3.bucket" -}}
 {{- if (.Values.jellyfish.bucket) and (ne .Values.jellyfish.bucket "") -}}
-.Values.jellyfish.bucket
+{{ .Values.jellyfish.bucket }}
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
