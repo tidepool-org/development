@@ -87,7 +87,7 @@ spec:
     gatekeeper:
       image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
     highwater:
-      image: tidepool/highwater:develop-7ceb4423f579649938296d2895857145d542bbad
+      image: tidepool/highwater:develop-cb0ef1425b29f0a37c10e975876804f3ccfb1348
     hydrophone:
       bucket: tidepool-qa1-asset
       image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
@@ -102,7 +102,7 @@ spec:
       bucket: tidepool-qa1-data
       image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     data:
-      image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+      image: tidepool/platform-data:develop-cebea363931570d3930848a21e6a3d07a54f4425
     image:
       bucket: tidepool-qa1-data
       image: tidepool/platform-image:develop-cebea363931570d3930848a21e6a3d07a54f4425
