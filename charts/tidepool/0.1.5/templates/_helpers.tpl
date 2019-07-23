@@ -17,7 +17,7 @@ Expand the name of the chart.
 
 
 {{- define "charts.iam.role" -}}
-/cluster/{{ .Values.global.clusterName }}/env/{{- .Release.Namespace -}}/worker-role
+/cluster/{{- .Values.global.clusterName -}}/env/{{- .Release.Namespace -}}/worker-role
 {{- end -}}
 
 {{- define "charts.host.internal.tp" -}} internal {{- end }}
