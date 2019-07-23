@@ -27,7 +27,7 @@ SOURCE_PATH=${3:-${CURRENT_PATH}/flux}
 SOURCE_REPO=${4:-${CURRENT_REPO}}
 SOURCE_SECRET=${1:-${BASE}/${CLUSTER_NAME}/flux-secret.yaml}
 
-if [ -f SOURCE_SECRET ]
+if [ -f $SOURCE_SECRET ]
 then
 
     GIT_SECRET_NAME=$(basename $SOURCE_SECRET | sed -e s/\.yaml$//)
@@ -65,6 +65,7 @@ then
       --set git.path=${SOURCE_PATH} \
       --set git.branch=${SOURCE_BRANCH} \
       --set git.label=${CLUSTER_NAME} \
+      --set git.secretName=${GIT_SECRET_NAME} \
       --set git.pollInterval=1m \
       --set git.timeoout=40s \
       --namespace flux \
