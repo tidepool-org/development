@@ -1,0 +1,95 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Shared Resources
+Parameters:
+  EnvName:
+    Type: String
+  ClusterRoleStackName:
+    Type: String
+Resources:
+  WorkerManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Path: 
+        Fn::Sub: "/env/${EnvName}/"
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Action:
+          - s3:ListBucket
+          Resource:
+          - Fn::Sub: "arn:aws:s3:::tidepool-${EnvName}-data/*"
+          Effect: Allow
+        - Action:
+          - s3:GetObject
+          - s3:PutObject
+          - s3:DeleteObject
+          Resource:
+          - Fn::Sub: "arn:aws:s3:::tidepool-${EnvName}-data/*"
+          Effect: Allow
+        - Effect: Allow
+          Action:
+          - ses:*
+          Resource: "*"
+  WorkerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "worker-role"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Action: ["sts:AssumeRole"]
+          Effect: Allow
+          Principal:
+            Service: ec2.amazonaws.com
+        - Action: ["sts:AssumeRole"]
+          Effect: Allow
+          Principal:
+            AWS:
+              Fn::ImportValue:
+                Fn::Sub: "${ClusterRoleStackName}::KiamServerRoleARN"
+      Path: 
+        Fn::Sub: "/env/${EnvName}/"
+      ManagedPolicyArns:
+        - !Ref WorkerManagedPolicy
+  SecretsManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Path: 
+        Fn::Sub: "/env/${EnvName}/"
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action: secretsmanager:GetSecretValue
+          Resource:
+          - Fn::Sub: "arn:aws:secretsmanager:::secret:${EnvName}/*"
+  SecretsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "secrets-role"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Action: ["sts:AssumeRole"]
+          Effect: Allow
+          Principal:
+            Service: ec2.amazonaws.com
+        - Action: ["sts:AssumeRole"]
+          Effect: Allow
+          Principal:
+            AWS:
+              Fn::ImportValue:
+                Fn::Sub: "${ClusterRoleStackName}::KiamServerRoleARN"
+      Path: 
+        Fn::Sub: "/env/${EnvName}/"
+      ManagedPolicyArns:
+        - !Ref SecretsManagedPolicy
+ Outputs:
+  SecretsRoleARN:
+    Export:
+      Name: !Sub '${AWS::StackName}::SecretsRoleARN'
+    Value: !GetAtt SecretsRole.Arn
+  WorkerRoleARN:
+    Export:
+      Name: !Sub '${AWS::StackName}::WorkerRoleARN'
+    Value: !GetAtt WorkerRole.Arn

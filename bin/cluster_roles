@@ -1,0 +1,7 @@
+#!/bin/bash -x
+CLUSTER_NAME=$1
+CONFIG_REPO=${2:-$(git rev-parse --show-toplevel)}
+DEV_REPO=$(realpath ${3:-${CONFIG_REPO}/../development})
+CONFIG_FILE=$(realpath $CONFIG_REPO/clusters/${CLUSTER_NAME}/config.yaml)
+
+aws cloudformation create-stack --stack-name "eksctl-${CLUSTER_NAME}-roles" --capabilities CAPABILITY_NAMED_IAM --template-body file://${DEV_REPO}/cf/cluster-roles.yaml --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}     ParameterKey=NodeGroupStackName,ParameterValue=eksctl-${CLUSTER_NAME}-nodegroup-ng-1 

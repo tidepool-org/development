@@ -11,7 +11,7 @@ Expand the name of the chart.
 {{- if .Values.global.iam.nameOverride -}}
 {{- .Values.global.iam.nameOverride -}}
 {{- else -}}
-{{- .Release.Namespace -}}{{- .Values.global.iam.suffix -}}
+/env/{{- .Release.Namespace -}}/worker
 {{- end -}}
 {{- end -}}
 
