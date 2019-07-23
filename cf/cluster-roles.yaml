@@ -9,8 +9,6 @@ Resources:
   KiamServerManagedPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
-      Path: 
-        Fn::Sub: "/cluster/${ClusterName}/"
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -20,7 +18,8 @@ Resources:
   KiamServerRole:
     Type: AWS::IAM::Role
     Properties: 
-      RoleName: "kiam-server-role"
+      RoleName: 
+        Fn::Sub: "${ClusterName}-kiam-server-role"
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -34,15 +33,11 @@ Resources:
           Principal:
             Service: ec2.amazonaws.com
           Action: sts:AssumeRole
-      Path: 
-        Fn::Sub: "/cluster/${ClusterName}/"
       ManagedPolicyArns:
         - !Ref KiamServerManagedPolicy
   DNSManagedPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
-      Path: 
-        Fn::Sub: "/cluster/${ClusterName}/"
       PolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -59,7 +54,8 @@ Resources:
   ExternalDNSRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: "externalDNS-role"
+      RoleName: 
+        Fn::Sub: "${ClusterName}-externalDNS-role"
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -74,14 +70,13 @@ Resources:
               Fn::GetAtt:
               - KiamServerRole
               - "Arn"
-      Path: 
-        Fn::Sub: "/cluster/${ClusterName}/"
       ManagedPolicyArns:
         - !Ref DNSManagedPolicy
   CertManagerRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: "certmanager-role"
+      RoleName: 
+        Fn::Sub: "${ClusterName}-certmanager-role"
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -96,15 +91,11 @@ Resources:
               Fn::GetAtt:
               - KiamServerRole
               - "Arn"
-      Path: 
-        Fn::Sub: "/cluster/${ClusterName}/"
       ManagedPolicyArns:
         - !Ref DNSManagedPolicy
   AutoscalerManagedPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
-      Path: 
-        Fn::Sub: "/cluster/${ClusterName}/"
       PolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -120,7 +111,8 @@ Resources:
   AutoscalerRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: "autoscaler-role"
+      RoleName: 
+        Fn::Sub: "${ClusterName}-autoscaler-role"
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -135,8 +127,6 @@ Resources:
               Fn::GetAtt:
               - KiamServerRole
               - "Arn"
-      Path: 
-        Fn::Sub: "/cluster/${ClusterName}/"
       ManagedPolicyArns:
         - !Ref AutoscalerManagedPolicy
 Outputs:

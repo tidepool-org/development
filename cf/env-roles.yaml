@@ -3,6 +3,10 @@ Description: Shared Resources
 Parameters:
   ClusterName:
     Type: String
+  AccountNumber:
+    Type: String
+  Region:
+    Type: String
   EnvName:
     Type: String
   ClusterRoleStackName:
@@ -11,8 +15,6 @@ Resources:
   WorkerManagedPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
-      Path: 
-        Fn::Sub: "/cluster/${ClusterName}/env/${EnvName}/"
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -35,7 +37,8 @@ Resources:
   WorkerRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: "worker-role"
+      RoleName: 
+        Fn::Sub: "${ClusterName}-${EnvName}-worker-role"
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -49,26 +52,23 @@ Resources:
             AWS:
               Fn::ImportValue:
                 Fn::Sub: "${ClusterRoleStackName}::KiamServerRoleARN"
-      Path: 
-        Fn::Sub: "/cluster/${ClusterName}/env/${EnvName}/"
       ManagedPolicyArns:
         - !Ref WorkerManagedPolicy
   SecretsManagedPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
-      Path: 
-        Fn::Sub: "/cluster/${ClusterName}/env/${EnvName}/"
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
         - Effect: Allow
           Action: secretsmanager:GetSecretValue
           Resource:
-          - Fn::Sub: "arn:aws:secretsmanager:::secret:${EnvName}/*"
+          - Fn::Sub: "arn:aws:secretsmanager:${Region}:${AccountNumber}:secret:${EnvName}/*"
   SecretsRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: "secrets-role"
+      RoleName: 
+        Fn::Sub: "${ClusterName}-${EnvName}-secrets-role"
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -82,7 +82,5 @@ Resources:
             AWS:
               Fn::ImportValue:
                 Fn::Sub: "${ClusterRoleStackName}::KiamServerRoleARN"
-      Path: 
-        Fn::Sub: "/cluster/${ClusterName}/env/${EnvName}/"
       ManagedPolicyArns:
         - !Ref SecretsManagedPolicy

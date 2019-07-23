@@ -41,8 +41,10 @@ client = boto3.client('secretsmanager')
 key=env + "/" + base 
 
 for name,value in data.items():
-    decoded=base64.standard_b64decode(value).decode("utf-8") 
-    #print(base, name,  decoded)
+    print(value)
+    #decoded=base64.standard_b64decode(value).decode("utf-8") 
+    decoded=value
+    print(base, name,  decoded)
     value = dict()
     value["key"] = key
     value["name"] = name
@@ -51,7 +53,8 @@ for name,value in data.items():
     values.append(value)
 
 secret["secretDescriptor"]["data"] = values
-print(yaml.dump(secret))
+print("processing file")
+#print(yaml.dump(secret))
 out=json.dumps(awsvalue)
 #print(key, out)
 client.create_secret( Name=key, SecretString=out)
