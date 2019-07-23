@@ -51,7 +51,7 @@ spec:
         default:
           protocol: https
           host: dev.tidepool.org
-        http: null
+        http:
         https:
           dev:
             name: dev.tidepool.org
@@ -110,7 +110,7 @@ spec:
       image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     notification:
       enabled: false
-      image: tidepool/platform-notification:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+      image: tidepool/platform-notification:develop-cebea363931570d3930848a21e6a3d07a54f4425
     task:
       image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     tools:
