@@ -13,7 +13,8 @@ Resources:
         Version: "2012-10-17"
         Statement:
         - Effect: Allow
-          Action: sts:AssumeRole
+          Action:
+          - sts:AssumeRole
           Resource: "*"
   KiamServerRole:
     Type: AWS::IAM::Role
@@ -28,11 +29,13 @@ Resources:
             AWS: 
               Fn::ImportValue:
                 Fn::Sub: "${NodeGroupStackName}::InstanceRoleARN"
-          Action: sts:AssumeRole
+          Action:
+          - sts:AssumeRole
         - Effect: Allow
           Principal:
             Service: ec2.amazonaws.com
-          Action: sts:AssumeRole
+          Action:
+          - sts:AssumeRole
       ManagedPolicyArns:
         - !Ref KiamServerManagedPolicy
   DNSManagedPolicy:
@@ -42,7 +45,8 @@ Resources:
         Version: 2012-10-17
         Statement:
         - Effect: Allow
-          Action: route53:ChangeResourceRecordSets
+          Action:
+          - route53:ChangeResourceRecordSets
           Resource: arn:aws:route53:::hostedzone/*
         - Effect: Allow
           Action:
@@ -59,11 +63,13 @@ Resources:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
-        - Action: ["sts:AssumeRole"]
+        - Action:
+          - sts:AssumeRole
           Effect: Allow
           Principal:
             Service: ec2.amazonaws.com
-        - Action: ["sts:AssumeRole"]
+        - Action:
+          - sts:AssumeRole
           Effect: Allow
           Principal:
             AWS: 
@@ -80,11 +86,13 @@ Resources:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
-        - Action: ["sts:AssumeRole"]
+        - Action:
+          - sts:AssumeRole
           Effect: Allow
           Principal:
             Service: ec2.amazonaws.com
-        - Action: ["sts:AssumeRole"]
+        - Action:
+          - sts:AssumeRole
           Effect: Allow
           Principal:
             AWS: 
@@ -116,11 +124,13 @@ Resources:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
-        - Action: ["sts:AssumeRole"]
+        - Action:
+          - sts:AssumeRole
           Effect: Allow
           Principal:
             Service: ec2.amazonaws.com
-        - Action: ["sts:AssumeRole"]
+        - Action:
+          - sts:AssumeRole
           Effect: Allow
           Principal:
             AWS: 

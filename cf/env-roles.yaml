@@ -42,11 +42,13 @@ Resources:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
-        - Action: ["sts:AssumeRole"]
+        - Action:
+          - sts:AssumeRole
           Effect: Allow
           Principal:
             Service: ec2.amazonaws.com
-        - Action: ["sts:AssumeRole"]
+        - Action:
+          - sts:AssumeRole
           Effect: Allow
           Principal:
             AWS:
@@ -61,7 +63,8 @@ Resources:
         Version: '2012-10-17'
         Statement:
         - Effect: Allow
-          Action: secretsmanager:GetSecretValue
+          Action:
+          - secretsmanager:GetSecretValue
           Resource:
           - Fn::Sub: "arn:aws:secretsmanager:${Region}:${AccountNumber}:secret:${EnvName}/*"
   SecretsRole:
@@ -72,11 +75,13 @@ Resources:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
-        - Action: ["sts:AssumeRole"]
+        - Action:
+          - sts:AssumeRole
           Effect: Allow
           Principal:
             Service: ec2.amazonaws.com
-        - Action: ["sts:AssumeRole"]
+        - Action:
+          - sts:AssumeRole
           Effect: Allow
           Principal:
             AWS:
