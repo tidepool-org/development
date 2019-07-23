@@ -7,16 +7,12 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.global.nameOverrideide | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "charts.externalSecrets.role" -}}
-{{ .Values.global.clusterName }}-{{ .Release.Namespace}}-secrets-role
+{{- define "charts.iam.role" -}}
+{{- if .Values.global.iam.nameOverride -}}
+{{- .Values.global.iam.nameOverride -}}
+{{- else -}}
+{{- .Release.Namespace -}}{{- .Values.global.iam.suffix -}}
 {{- end -}}
-
-{{- define "charts.roles.permitted" -}}
-{{- .Release.Namespace -}}/.*
-{{- end -}}
-
-{{- define "charts.worker.role" -}}
-{{ .Values.global.clusterName }}-{{ .Release.Namespace}}-worker-role
 {{- end -}}
 
 {{- define "charts.host.internal.tp" -}} internal {{- end }}
@@ -33,7 +29,7 @@ http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
 
 {{- define "charts.image.s3.bucket" -}}
 {{- if (.Values.image.bucket) and (ne .Values.image.bucket "") -}}
-{{ .Values.image.bucket }}
+.Values.image.bucket
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
@@ -41,7 +37,7 @@ tidepool-{{ .Release.Namespace }}-data
 
 {{- define "charts.blob.s3.bucket" -}}
 {{- if (.Values.blob.bucket) and (ne .Values.blob.bucket "") -}}
-{{ .Values.blob.bucket }}
+.Values.blob.bucket
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
@@ -49,7 +45,7 @@ tidepool-{{ .Release.Namespace }}-data
 
 {{- define "charts.hydrophone.s3.bucket" -}}
 {{- if (.Values.hydrophone.bucket) and (ne .Values.hydrophone.bucket "") -}}
-{{ .Values.hydrophone.bucket }}
+.Values.hydrophone.bucket
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-asset
 {{- end -}}
@@ -57,7 +53,7 @@ tidepool-{{ .Release.Namespace }}-asset
 
 {{- define "charts.jellyfish.s3.bucket" -}}
 {{- if (.Values.jellyfish.bucket) and (ne .Values.jellyfish.bucket "") -}}
-{{ .Values.jellyfish.bucket }}
+.Values.jellyfish.bucket
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
 {{- end -}}

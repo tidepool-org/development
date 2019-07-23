@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        iam.amazonaws.com/role: "{{ include "charts.worker.role" . }}"
+        iam.amazonaws.com/role: "{{ include "charts.iam.role . }}"
         linkerd.io/inject: "{{ .Values.global.linkerd }}"
       labels:
         app: hydrophone
@@ -70,7 +70,7 @@ spec:
           value: |
             {
                 "hydrophone": {
-                    "assetUrl": {{ include "charts.hydrophone.s3.url" . | quote }},
+                    "assetUrl": "{{include "charts.hydrophone.s3.url" .}}",
                     "webUrl": "{{ .Values.global.hosts.default.protocol }}://{{ .Values.global.hosts.default.host }}"
                 },
                 "mongo": {
