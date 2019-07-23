@@ -1,7 +1,7 @@
 ### Helpers Start ###
 def absolute_dir(relative_dir):
   # Get absolute path in order to use as volume mount
-    return str(local('cd {} && pwd'.format(relative_dir))).strip()
+    return str(local('mkdir -p {dir} && cd {dir} && pwd'.format(dir=relative_dir))).strip()
 ### Helpers End ###
 
 ### Config Start ###
@@ -68,10 +68,12 @@ def main():
 
 ### Cluster Prep Start ###
 def prepare_k8s_cluster ():
-  if ['kind', 'k3d', 'minikube'].index(k8s_environment) >= 0:
-    default_admin_clusterrolebinding = local('kubectl get clusterrolebinding default-admin --ignore-not-found')
-    if not default_admin_clusterrolebinding:
-      local('kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:default')
+  for env in ['kind', 'k3d']:
+    if env == k8s_environment:
+      default_admin_clusterrolebinding = local('kubectl get clusterrolebinding default-admin --ignore-not-found')
+      if not default_admin_clusterrolebinding:
+        local('kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:default')
+      break
 ### Cluster Prep End ###
 
 ### Secrets Start ###
@@ -164,7 +166,7 @@ def applyBlipOverrides (overrides):
         custom_build_args['deps'].append(hostPath)
         port_forwards += mount.get('portForwards', []);
 
-        if mount.get('type') == 'primary':
+        if mount.get('primary'):
           custom_build_args['command'] = 'docker build --target {} -t $EXPECTED_REF {}; '.format(buildTarget, hostPath)
 
           if k8s_environment == 'kind':
@@ -193,10 +195,10 @@ def applyBlipOverrides (overrides):
           # Run yarn install on app directory when it's package.json changes
           run_commands.append(run(
             'cd /app && yarn install',
-            trigger='{}/package.json'.format(hostPath),
+            trigger='{}/yarn.lock'.format(hostPath),
           ))
 
-        elif mount.get('type') == 'linked':
+        elif mount.get('mounted'):
           package_name = mount.get('packageName');
           print('Linking package: {}'.format(package_name))
 
@@ -206,13 +208,11 @@ def applyBlipOverrides (overrides):
             pkg=package_name,
           ))
 
-
           local('cd {path} && mkdir -p packageMountDeps/{pkg} && rsync -a --delete {hostPath}/package.json {path}/packageMountDeps/{pkg}/'.format(
             path=custom_build_args['primaryHostPath'],
             hostPath=hostPath,
             pkg=package_name,
           ))
-
 
           local('if [ -f {hostPath}/yarn.lock ]; then cd {path} && mkdir -p packageMountDeps/{pkg} && rsync -a --delete {hostPath}/yarn.lock {path}/packageMountDeps/{pkg}/; fi'.format(
             path=custom_build_args['primaryHostPath'],
@@ -225,21 +225,34 @@ def applyBlipOverrides (overrides):
           # Run yarn install in linked package directory when it's package.json changes
           run_commands.append(run(
             'cd /app/packageMounts/{} && yarn install'.format(package_name),
-            trigger='{}/package.json'.format(hostPath),
+            trigger='{}/yarn.lock'.format(hostPath),
           ))
 
-          run_commands.append(run(
-            'if [ ! -L /app/node_modules/{pkg} ]; then cd /app/packageMounts/{pkg} && yarn link && cd /app && yarn link {pkg}; fi'.format(
-              pkg=package_name,
-            ),
-          ))
+          if mount.get('linked'):
+            run_commands.append(run(
+              'if [ ! -L /app/node_modules/{pkg} ]; then cd /app/packageMounts/{pkg} && yarn link && cd /app && yarn link {pkg}; else exit 0; fi'.format(
+                pkg=package_name,
+              ),
+            ))
+          else:
+             run_commands.append(run(
+            'if [ -L /app/node_modules/{pkg} ]; then yarn unlink {pkg} && cd /{pkg} && yarn unlink && cd /app && rm -f node_modules/{pkg} && yarn install --force; fi'.format(
+                pkg=package_name,
+              ),
+            ))
 
         else:
-          package_name = mount.get('name');
-          print('Unlinking package: {}'.format(package_name))
+          package_name = mount.get('packageName');
+          print('Unmounting and unlinking package: {}'.format(package_name))
+
+          local('cd {path} && rm -rf packageMounts/{pkg} && rm -rf packageMountDeps/{pkg}/package.json && rm -rf packageMountDeps/{pkg}/yarn.lock'.format(
+            path=custom_build_args['primaryHostPath'],
+            hostPath=hostPath,
+            pkg=package_name,
+          ))
 
           run_commands.append(run(
-            'if [ -L /app/node_modules/{pkg} ]; then yarn unlink {pkg}; cd /{pkg} && yarn unlink; cd /app && rm -f node_modules/{pkg} && yarn install --force; fi'.format(
+            'if [ -L /app/node_modules/{pkg} ]; then yarn unlink {pkg} && cd /{pkg} && yarn unlink && cd /app && rm -f node_modules/{pkg} && yarn install --force; else exit 0; fi'.format(
               pkg=package_name,
             ),
           ))

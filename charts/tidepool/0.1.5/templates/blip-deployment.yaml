@@ -38,8 +38,12 @@ spec:
         name: blip
         ports:
         - containerPort: {{.Values.global.ports.blip}}
+{{ if .Values.blip.resources }}
         resources:
+          {{- toYaml .Values.blip.resources | nindent 10 }}
+{{ else }}
           {{- toYaml .Values.global.resources | nindent 10 }}
+{{ end }}
         securityContext:
 {{ if .Values.blip.securityContext }}
           {{- toYaml .Values.blip.securityContext | nindent 10 }}
