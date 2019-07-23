@@ -8,16 +8,15 @@ Expand the name of the chart.
 {{- end -}}
 
 {{- define "charts.externalSecrets.role" -}}
-/cluster/{{ .Values.global.clusterName }}/env/{{- .Release.Namespace -}}/secrets-role
+/cluster/{{ .Values.global.clusterName }}/env/{{- .Release.Namespace -}}/{{ .Values.global.clusterName }}-{{ .Release.Namespace}}-secrets-role
 {{- end -}}
 
 {{- define "charts.roles.permitted" -}}
 /cluster/{{ .Values.global.clusterName }}/env/{{- .Release.Namespace -}}/.*
 {{- end -}}
 
-
 {{- define "charts.worker.role" -}}
-/cluster/{{- .Values.global.clusterName -}}/env/{{- .Release.Namespace -}}/worker-role
+/cluster/{{ .Values.global.clusterName }}/env/{{- .Release.Namespace -}}/{{ .Values.global.clusterName }}-{{ .Release.Namespace}}-worker-role
 {{- end -}}
 
 {{- define "charts.host.internal.tp" -}} internal {{- end }}
