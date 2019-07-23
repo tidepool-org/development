@@ -16,7 +16,7 @@ Expand the name of the chart.
 {{- end -}}
 
 
-{{- define "charts.iam.role" -}}
+{{- define "charts.worker.role" -}}
 /cluster/{{- .Values.global.clusterName -}}/env/{{- .Release.Namespace -}}/worker-role
 {{- end -}}
 
