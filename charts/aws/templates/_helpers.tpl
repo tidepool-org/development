@@ -34,5 +34,5 @@ Create chart name and version as used by the chart label.
 
 {{ define "charts.aws.accountinfo" }}
 global:
-  id: {{ .Values.accountNumber }}
+  id: "{{ .Values.accountNumber }}"
 {{ end }}
