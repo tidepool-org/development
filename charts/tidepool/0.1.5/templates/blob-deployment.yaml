@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        iam.amazonaws.com/role: "{{ include "charts.iam.role . }}"
+        iam.amazonaws.com/role: "{{ include "charts.iam.role" . }}"
         linkerd.io/inject: "{{ .Values.global.linkerd }}"
       labels:
         app: blob
