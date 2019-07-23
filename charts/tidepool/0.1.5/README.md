@@ -91,6 +91,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | Parameter                          | Description                                                                     | Default                           |
 | ---------------------------------- | ------------------------------------------------------------------------------- | --------------------------------- |
 | `global.aws.region`               | AWS region to deploy in                       | `us-west-2` |
+| `global.clusterName`              | The name of the K8s cluster tha hosts this env.| ``|
 | `global.environment`              | Node environment (passed as NODE_ENV)         | `production`|
 | `global.fullnameOverride`         |                                               | ``          |
 | `global.gateway.proxy.name`   | Name of the API gateway proxy                     | `gateway-proxy`  |
@@ -104,8 +105,6 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.hosts.https.{name}.tlssecret.namespace` | TLS secret namespace for host {name} | ``  |
 | `global.hosts.https.{name}`   | Display name to use for https host {name}         | ``  |
 | `global.hpa.enabled`            | If true, the allocate a horizontal pod autoscalers for all pods | 'true' |
-| `global.iam.nameOverride`         | IAM Role name to use if non-empty             | ``  |
-| `global.iam.suffix`               | Suffix to add to namespace to create IAM role name     | `-Worker`  |
 | `global.linkerd`                | If `enabled` use the `linkerd` service mesh     | `disabled`  |
 | `global.mongo.hosts`              | Comma-separated list of Mongo hosts           | `mongodb`   |
 | `global.mongo.optParams`          | Additional Mongo connection params            | ``          |
