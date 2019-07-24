@@ -46,7 +46,7 @@ spec:
     hostnameOverride: ""
     includeSecrets: false
     blip:
-      image: tidepool/blip:master-368c0fa3dc97bc3686c606a0783f2dae3c63c84c
+      image: tidepool/blip:master-92963c5c8bb0df6562e1cc561822f735362f9a0b
     export:
       image: tidepool/export:master-17c8de7344eea3d8a404e1c112c2c7f03e88321e
     gatekeeper:
