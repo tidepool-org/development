@@ -1,10 +1,10 @@
 global:
-  clusterName: development
+  clusterName: yourClusterName
   awsRegion: us-west-2
   email: derrick@tidepool.org
   logLevel: debug
-  id: "123456789012"  # amazon account id, should provide from secret
-  hostnames: []      # arra of hostnames to alias to this loadbalancer on this cluster listening to 80 and 443
+  id: "123456789012"  # Amazon account id, should provide from secret
+  hostnames: []       # array of hostnames to alias to this loadbalancer on this cluster listening to 80 and 443
 
 autoscaler:
   enabled: true
@@ -87,3 +87,21 @@ reloader:
     git: git@github.com:stakater/Reloader
     path: deployments/kubernetes/chart/reloader
     ref: master
+
+sumologic-fluentd:
+  enabled: true
+  chart:
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    chart: sumologic-fluentd
+    version: 1.1.0
+
+datadog-agent:
+  enabled: true
+  chart:
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    chart: datadog
+    version: 1.31.7
+  secretKeyRef:
+    name: datadog-agent-token
+    key: values.yaml
+

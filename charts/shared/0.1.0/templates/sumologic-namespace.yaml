@@ -1,0 +1,11 @@
+{{ if .Values.sumologic-fluentd.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sumologic
+  labels:
+    istio-injection: disabled
+    linkerd.io/inject: disabled
+  annotations:
+    "helm.sh/hook": "pre-install"
+{{ end }}
