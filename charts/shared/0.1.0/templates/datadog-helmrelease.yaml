@@ -11,15 +11,15 @@ spec:
   serviceAccountName: datadog-agent
   chart:
     {{- .Values.datadogAgent.chart | toYaml | nindent 4 }}
-values:
-  datadog:
-    apiKeyExistingSecret: datadog
-    appKeyExistingSecret: datadog-app
-    clusterName: {{ .Values.global.clusterName }}
-    logLevel: {{ .Values.global.logLevel }}
-  clusterAgent:
-    enabled: true
-valuesFrom:
-- secretKeyRef:
-    {{ .Values.datadogAgent.secretKeyRef | toYaml | nindent 6 }}
+  values:
+    datadog:
+      apiKeyExistingSecret: datadog
+      appKeyExistingSecret: datadog-app
+      clusterName: {{ .Values.global.clusterName }}
+      logLevel: {{ .Values.global.logLevel }}
+    clusterAgent:
+      enabled: true
+  valuesFrom:
+  - secretKeyRef:
+      {{ .Values.datadogAgent.secretKeyRef | toYaml | nindent 6 }}
 {{ end }}
