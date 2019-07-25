@@ -21,5 +21,5 @@ values:
     enabled: true
 valuesFrom:
 - secretKeyRef:
-    {{ .Values.datadogAgent.secretKeyRef | toYaml | nindent 6 ||
+    {{ .Values.datadogAgent.secretKeyRef | toYaml | nindent 6 }}
 {{ end }}
