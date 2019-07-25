@@ -92,14 +92,14 @@ sumologicFluentd:
   enabled: true
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
-    chart: sumologic-fluentd
+    name: sumologic-fluentd
     version: 1.1.0
 
 datadogAgent:
   enabled: true
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
-    chart: datadog
+    name: datadog
     version: 1.31.7
   secretKeyRef:
     name: datadog-agent-token
