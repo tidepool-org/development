@@ -6,6 +6,4 @@ metadata:
   labels:
     istio-injection: disabled
     linkerd.io/inject: disabled
-  annotations:
-    "helm.sh/hook": "pre-install"
 {{ end }}
