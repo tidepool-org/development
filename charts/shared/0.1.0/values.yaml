@@ -105,3 +105,9 @@ datadogAgent:
     name: datadog-agent-token
     key: values.yaml
 
+externalSecrets:
+  enabled: true
+  chart:
+    git: git@github.com:godaddy/kubernetes-external-secrets
+    path: charts/kubernetes-external-secrets
+    ref: master
