@@ -1,4 +1,4 @@
-{{ if .Values.sumologic-fluentd.enabled }}
+{{ if .Values.sumologicFluentd.enabled }}
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
@@ -9,7 +9,7 @@ metadata:
 spec:
   releaseName: sumologic-fluentd
   chart:
-    {{ - Values.sumologic-fluentd.chart | toYaml | nindent 4 }}
+    {{ - Values.sumologicFluentd.chart | toYaml | nindent 4 }}
   values:
     sumologic:
       collectorUrlExistingSecret:  sumologic

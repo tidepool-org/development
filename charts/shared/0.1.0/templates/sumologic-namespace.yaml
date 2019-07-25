@@ -1,4 +1,4 @@
-{{ if .Values.sumologic-fluentd.enabled }}
+{{ if .Values.sumologicFluentd.enabled }}
 apiVersion: v1
 kind: Namespace
 metadata:

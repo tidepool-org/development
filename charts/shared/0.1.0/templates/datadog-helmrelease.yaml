@@ -1,4 +1,4 @@
-{{ if .Values.datadog-agent.enabled }}
+{{ if .Values.datadogAgent.enabled }}
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
@@ -10,7 +10,7 @@ spec:
   releaseName: datadog-agent
   serviceAccountName: datadog-agent
   chart:
-    {{- .Values.datadog-agent.chart | toYaml | nindent 4 }}
+    {{- .Values.datadogAgent.chart | toYaml | nindent 4 }}
 values:
   datadog:
     apiKeyExistingSecret: datadog
@@ -21,5 +21,5 @@ values:
     enabled: true
 valuesFrom:
 - secretKeyRef:
-    {{ .Values.datadog-agent.secretKeyRef | toYaml | nindent 6 ||
+    {{ .Values.datadogAgent.secretKeyRef | toYaml | nindent 6 ||
 {{ end }}
