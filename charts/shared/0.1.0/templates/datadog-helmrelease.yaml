@@ -16,6 +16,7 @@ values:
     apiKeyExistingSecret: datadog
     appKeyExistingSecret: datadog-app
     clusterName: {{ .Values.global.clusterName }}
+    logLevel: {{ .Values.global.logLevel }}
   clusterAgent:
     enabled: true
 valuesFrom:
