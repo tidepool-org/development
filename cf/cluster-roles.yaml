@@ -3,6 +3,10 @@ Description: Shared Resources
 Parameters:
   ClusterName:
     Type: String
+  AccountNumber:
+    Type: String
+  Region:
+    Type: String
   NodeGroupStackName:
     Type: String
 Resources:
@@ -139,6 +143,40 @@ Resources:
               - "Arn"
       ManagedPolicyArns:
         - !Ref AutoscalerManagedPolicy
+  ExternalSecretsManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - secretsmanager:GetSecretValue
+          Resource:
+          - Fn::Sub: "arn:aws:secretsmanager:${Region}:${AccountNumber}:secret:${ClusterName}/*"
+  ExternalSecretsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 
+        Fn::Sub: "${ClusterName}-secrets-role"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: ec2.amazonaws.com
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            AWS: 
+              Fn::GetAtt:
+              - KiamServerRole
+              - "Arn"
+      ManagedPolicyArns:
+        - !Ref ExternalSecretsManagedPolicy
 Outputs:
   ClusterName:
     Export:
@@ -160,3 +198,9 @@ Outputs:
     Export:
       Name: !Sub '${AWS::StackName}::KiamServerRoleARN'
     Value: !GetAtt KiamServerRole.Arn
+  ExternalSecretsRoleARN:
+    Export:
+      Name: !Sub '${AWS::StackName}:ExternalSecretsRoleARN'
+    Value: !GetAtt ExternalSecretsRole.Arn
+
+
