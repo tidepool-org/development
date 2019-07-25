@@ -8,7 +8,6 @@ metadata:
     flux.weave.works/automated: "false"
 spec:
   releaseName: datadog-agent
-  serviceAccountName: datadog-agent
   chart:
     {{- .Values.datadogAgent.chart | toYaml | nindent 4 }}
   values:
