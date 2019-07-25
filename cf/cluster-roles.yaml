@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Shared Resources
+Description: Kubernetes IAM Roles and Policies
 Parameters:
   ClusterName:
     Type: String
