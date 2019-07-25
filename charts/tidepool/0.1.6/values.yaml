@@ -19,8 +19,9 @@ mongodb:
   fullnameOverride: "mongodb"
   usePassword: false
 global:
+  clusterName: "yourClusterNameHere"                                  # the cluster name
   namespace:
-    create: false
+    create: false                                                     # whether to create the namespace
   hpa:
     enabled: true
   hosts:
