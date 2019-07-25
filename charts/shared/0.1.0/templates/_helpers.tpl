@@ -74,6 +74,10 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- printf "%s-externalDNS-role"  .Values.global.clusterName | quote -}}
 {{- end -}}
 
+{{- define "charts.externalSecrets.role" -}}
+{{- printf "%s-secrets-role"  .Values.global.clusterName | quote -}}
+{{- end -}}
+
 {{- define "charts.fluxcloud.github" -}}
 {{- printf "https://github.com/tidepool-org/cluster-%s" .Values.global.clusterName | quote -}}
 {{- end -}}
