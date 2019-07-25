@@ -9,7 +9,7 @@ metadata:
 spec:
   releaseName: sumologic-fluentd
   chart:
-    {{- Values.sumologicFluentd.chart | toYaml | nindent 4 }}
+    {{- .Values.sumologicFluentd.chart | toYaml | nindent 4 }}
   values:
     sumologic:
       collectorUrlExistingSecret:  sumologic
