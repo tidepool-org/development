@@ -13,7 +13,7 @@ spec:
   values:
     datadog:
       apiKeyExistingSecret: datadog
-      appKeyExistingSecret: datadog-app
+      appKeyExistingSecret: datadog
       clusterName: {{ .Values.global.clusterName }}
       logLevel: {{ .Values.global.logLevel }}
     clusterAgent:
