@@ -55,16 +55,18 @@ USAGE: tidepool_docker command [service] [...additional args]
 EOF
 }
 
-restart() { (cd ${DIR} && docker-compose stop ${1} && docker-compose start ${1}); }
+run_docker() { args="${@:1}" && (set_docker_env && docker ${args}) }
 
-run_exec() { args="${@:2}" && (cd ${DIR} && docker-compose exec ${1} /bin/sh -c "${args}") }
+restart() { (kubectl scale deployment ${1} --replicas=0 && kubectl scale deployment ${1} --replicas=1) }
+
+run_exec() { args="${@:2}" && (kubectl exec -ti svc/${1} -c ${1} -- /bin/sh -c "${args}") }
 
 run_yarn() {
-  NODE_SERVICES='@(blip|viz)'
-  BLIP_MOUNTED_NODE_SERVICES='@(tideline|tidepool-platform-client)'
+  NODE_SERVICES='@(blip)'
+  BLIP_MOUNTED_NODE_SERVICES='@(tideline|tidepool-platform-client|@tidepool/viz)'
 
   if [[ ${BLIP_MOUNTED_NODE_SERVICES} =~ ${1} ]]; then
-    run_exec blip "cd /${1} && yarn ${@:2}"
+    run_exec blip "cd ./packageMounts/${1} && yarn ${@:2}"
   elif [[ ${NODE_SERVICES} =~ ${1} ]]; then
     run_exec ${1} "yarn ${@:2}"
   else
@@ -72,18 +74,39 @@ run_yarn() {
   fi
 }
 
+set_docker_env() {
+  export DOCKER_HOST=tcp://127.0.0.1:2375
+}
+
+set_tilt_env() {
+  set_docker_env
+
+  set -o allexport
+  [[ -f .env ]] && source .env
+  set +o allexport
+
+  case "$1" in
+    --trap-shutdown) trap 'SHUTTING_DOWN=1 tilt down' EXIT;;
+    --shutdown) export SHUTTING_DOWN=1;;
+  esac
+}
+
 case ${1-help} in
-  up) (cd ${DIR} && docker-compose up -d ${2-});;
-  down) (cd ${DIR} && docker-compose down -v);;
+  start) (cd ${DIR} && docker-compose up ${2-});;
   stop) (cd ${DIR} && docker-compose stop ${2-});;
+  up) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up --port=0);;
+  down) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
   rm) (cd ${DIR} && docker-compose rm -fsv ${2-});;
   restart) restart ${2-};;
   pull) (cd ${DIR} && docker-compose pull ${2-});;
-  logs) (cd ${DIR} && docker-compose logs --tail=20 -f ${2-});;
+  logs) (cd ${DIR} && kubectl logs svc/${2} --tail=20 -c ${2} -f);;
+  port-forward) (cd ${DIR} && kubectl port-forward svc/${2} ${3});;
   rebuild) (cd ${DIR} && docker-compose build ${2-} && docker-compose up -d ${2-});;
   exec) run_exec ${2} ${@:3};;
-  link) (cd ${DIR} && docker-compose exec ${2} /bin/sh -c "cd /${3} && yarn link && cd /app && yarn link ${3}") && restart ${2};;
-  unlink) (cd ${DIR} && docker-compose exec ${2} /bin/sh -c "yarn unlink ${3}; cd /${3} && yarn unlink; cd /app && rm -f node_modules/${3} && yarn install --force") && restart ${2};;
+  link) (cd ${DIR} && run_exec ${2} "cd /app/packageMounts/${3}; pwd && pwd && echo ${3} && yarn link && cd /app && yarn link ${3} && touch webpack.config.js");;
+  unlink) (cd ${DIR} && run_exec ${2} "yarn unlink ${3}; cd /app/packageMounts/${3} && yarn unlink; cd /app && rm -f node_modules/${3} && yarn install --force && touch webpack.config.js");;
   yarn) run_yarn ${2} "${@:3}";;
+  docker) run_docker "${@:2}";;
+  prune) (run_docker "system prune --volumes -af");;
   *|help) usage;;
 esac
