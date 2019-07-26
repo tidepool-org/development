@@ -59,9 +59,7 @@ run_docker() { args="${@:1}" && (export DOCKER_HOST=tcp://127.0.0.1:2375 && dock
 
 restart() { (kubectl scale deployment ${1} --replicas=0 && kubectl scale deployment ${1} --replicas=1) }
 
-run_exec() { args="${@:2}" && (kubectl exec -ti $(kubectl get pods | grep ${1} | awk '{print $1}') -c ${1} -- /bin/sh -c "${args}") }
-
-restart_blip_webpack() { run_exec 'blip' "PID=`ps -a | grep '[w]ebpack-dev-server' | awk '{print $1}'` && echo $PID"; }
+run_exec() { args="${@:2}" && (kubectl exec -ti svc/${1} -c ${1} -- /bin/sh -c "${args}") }
 
 run_yarn() {
   NODE_SERVICES='@(blip)'
@@ -76,19 +74,25 @@ run_yarn() {
   fi
 }
 
+export_env() {
+  set -o allexport
+  [[ -f .env ]] && source .env
+  set +o allexport
+}
+
 case ${1-help} in
-  up) (cd ${DIR} && export DOCKER_HOST=tcp://127.0.0.1:2375 && tilt up --port=0);;
+  up) (cd ${DIR} && export DOCKER_HOST=tcp://127.0.0.1:2375 && export_env && trap 'SHUTTING_DOWN=1 tilt down' EXIT && tilt up --port=0);;
   down) (cd ${DIR} && export DOCKER_HOST=tcp://127.0.0.1:2375 && tilt down);;
   stop) (cd ${DIR} && docker-compose stop ${2-});;
   rm) (cd ${DIR} && docker-compose rm -fsv ${2-});;
   restart) restart ${2-};;
-  restart_blip_webpack) restart_blip_webpack;;
   pull) (cd ${DIR} && docker-compose pull ${2-});;
-  logs) (cd ${DIR} && kubectl logs $(kubectl get pods | grep ${2} | awk '{print $1}') --tail=20 -c ${2} -f);;
+  logs) (cd ${DIR} && kubectl logs svc/${2} --tail=20 -c ${2} -f);;
+  port-forward) (cd ${DIR} && kubectl port-forward svc/${2} ${3});;
   rebuild) (cd ${DIR} && docker-compose build ${2-} && docker-compose up -d ${2-});;
   exec) run_exec ${2} ${@:3};;
-  link) (cd ${DIR} && run_exec ${2} /bin/sh -c "cd /app/packageMounts/${3} && yarn link && cd /app && yarn link ${3}") && restart ${2};;
-  unlink) (cd ${DIR} && run_exec ${2} /bin/sh -c "yarn unlink ${3}; cd /app/packageMounts/${3} && yarn unlink; cd /app && rm -f node_modules/${3} && yarn install --force") && restart ${2};;
+  link) (cd ${DIR} && run_exec ${2} "cd /app/packageMounts/${3}; pwd && pwd && echo ${3} && yarn link && cd /app && yarn link ${3} && touch webpack.config.js");;
+  unlink) (cd ${DIR} && run_exec ${2} "yarn unlink ${3}; cd /app/packageMounts/${3} && yarn unlink; cd /app && rm -f node_modules/${3} && yarn install --force && touch webpack.config.js");;
   yarn) run_yarn ${2} "${@:3}";;
   docker) run_docker "${@:2}";;
   *|help) usage;;
