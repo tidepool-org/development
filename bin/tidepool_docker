@@ -74,15 +74,22 @@ run_yarn() {
   fi
 }
 
-export_env() {
+set_tilt_env() {
+  export DOCKER_HOST=tcp://127.0.0.1:2375
+
   set -o allexport
   [[ -f .env ]] && source .env
   set +o allexport
+
+  case "$1" in
+    --trap-shutdown) trap 'SHUTTING_DOWN=1 tilt down' EXIT;;
+    --shutdown) export SHUTTING_DOWN=1;;
+  esac
 }
 
 case ${1-help} in
-  up) (cd ${DIR} && export DOCKER_HOST=tcp://127.0.0.1:2375 && export_env && trap 'SHUTTING_DOWN=1 tilt down' EXIT && tilt up --port=0);;
-  down) (cd ${DIR} && export DOCKER_HOST=tcp://127.0.0.1:2375 && tilt down);;
+  up) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up --port=0);;
+  down) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
   stop) (cd ${DIR} && docker-compose stop ${2-});;
   rm) (cd ${DIR} && docker-compose rm -fsv ${2-});;
   restart) restart ${2-};;
