@@ -1,4 +1,5 @@
-#!/bin/bash -xv
+#!/bin/bash
+USERS=${1:-"lennartgoedhart-cli benderr-cli derrick-cli mikeallgeier-cli"}
 
 # Create an Amazon EKS cluster using eksctl
 
@@ -10,15 +11,12 @@ USERS=${1:-"lennartgoedhart-cli benderr-cli derrick-cli mikeallgeier-cli"}
 
 CONFIG_FILE=${2:-config.yaml}
 
-YQ="docker run -v ${PWD}:/workdir mikefarah/yq yq"
+YQ="yq"
 CLUSTER_NAME=$(${YQ} r $CONFIG_FILE metadata.name)
 REGION=$(${YQ} r $CONFIG_FILE metadata.region)
 
-
 # Kubernetes group to assign users to
 GROUP=system:masters
-
-eksctl create cluster --config-file=$CONFIG_FILE --kubeconfig $KUBECONFIG
 
 for user in $USERS
 do

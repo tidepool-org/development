@@ -1,5 +1,5 @@
-#!/bin/bash -x
-CLUSTER_NAME=$1
+#!/bin/bash
+CLUSTER_NAME=${1:-$CLUSTER_NAME}
 CONFIG_REPO=${2:-$(git rev-parse --show-toplevel)}
 REGION=${3:-us-west-2}
 DEV_REPO=$(realpath ${3:-${CONFIG_REPO}/../development})
