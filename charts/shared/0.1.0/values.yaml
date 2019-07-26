@@ -98,5 +98,5 @@ datadogAgent:
     name: datadog
     version: 1.31.7
   secretKeyRef:
-    name: datadog-agent-token
+    name: datadog
     key: values.yaml
