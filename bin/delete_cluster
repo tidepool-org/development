@@ -1,0 +1,42 @@
+#!/bin/bash 
+
+if [ $# -ne 2 ]
+then
+  echo "Usage:  delete_cluster \${CLUSTER_NAME} \${ENVIRONMENTS} \${NODE_GROUPS:-ng-1 ng-kiam}"
+  exit
+fi
+
+CLUSTER_NAME=${1:-$CLUSTER_NAME}
+ENVIRONMENTS=$2
+NODE_GROUPS=${3:-ng-1 ng-kiam}
+
+STACKS=""
+
+for env in ${ENVIRONMENTS}
+do
+  STACKS="$STACKS eksctl-${CLUSTER_NAME}-${env}-roles"
+done
+
+STACKS="$STACKS eksctl-${CLUSTER_NAME}-roles"
+
+for ng in ${NODE_GROUPS}
+do
+  STACKS="$STACKS eksctl-${CLUSTER_NAME}-nodegroup-${ng}"
+done
+
+STACKS="$STACKS eksctl-${CLUSTER_NAME}-cluster"
+
+for stack in ${STACKS}
+do
+  echo "deleting $stack"
+  #aws cloudformation delete-stack --stack-name $stack
+  #aws cloudformation stack-delete-complete --stack-name $stack
+  if [ $? -ne 0 ]
+  then
+      echo "failed to delete $stack"
+  else
+      echo "deleted $stack"
+  fi
+  echo
+done
+echo "deleted cluster $CLUSTER_NAME"

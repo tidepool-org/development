@@ -1,0 +1,23 @@
+#!/bin/bash 
+
+if [ $# -ne 2 ]
+then
+  echo "Usage:  stop_services \${CLUSTER_NAME} \${ENVIRONMENTS} \${NODE_GROUPS:-ng-1 ng-kiam}"
+  exit
+fi
+
+CLUSTER_NAME=${1:-$CLUSTER_NAME}
+ENVIRONMENTS=$2
+
+for env in $ENVIRONMENTS
+do
+  echo "shutting down environment env"
+  helm delete ${env}-tidepool
+done
+
+for release in flux gloo external-secrets kiam cert-manager metrics-server aws-secret datadog-agent external-dns fluxcloud prometheus-operator reloader shared sumologic-fluentd
+do 
+  echo "shutting down service $release"
+  helm delete $release
+done   
+echo "done shutting down services for cluster $CLUSTER_NAME, environments $ENVIRONMENTS"
