@@ -54,13 +54,6 @@ gloo:
   crds:
     create: false
 
-kiam:
-  enabled: true
-  chart:
-    repository: https://kubernetes-charts.storage.googleapis.com/
-    name: kiam
-    version: "2.3.0"
-
 metricsServer:
   enabled: true
   chart:
@@ -107,10 +100,3 @@ datadogAgent:
   secretKeyRef:
     name: datadog-agent-token
     key: values.yaml
-
-externalSecrets:
-  enabled: true
-  chart:
-    git: git@github.com:godaddy/kubernetes-external-secrets
-    path: charts/kubernetes-external-secrets
-    ref: master
