@@ -96,4 +96,4 @@ datadogAgent:
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
     name: datadog
-    version: 1.31.7
+    version: 1.31.11
