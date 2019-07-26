@@ -36,6 +36,9 @@ then
     then
 	    echo "applying secret for flux identity at ${SOURCE_SECRET}"
 	    kubectl apply -f ${SOURCE_SECRET}
+	    SECRETARG="--set git.secretName=${GIT_SECRET_NAME}"
+    else
+	    SECRETARG=""
     fi
 else 
     GIT_SECRET_NAME="flux-git-deploy"
@@ -65,7 +68,7 @@ then
       --set git.path=${SOURCE_PATH} \
       --set git.branch=${SOURCE_BRANCH} \
       --set git.label=${CLUSTER_NAME} \
-      --set git.secretName=${GIT_SECRET_NAME} \
+      ${SECRETARG} \
       --set git.pollInterval=1m \
       --set git.timeoout=40s \
       --namespace flux \
