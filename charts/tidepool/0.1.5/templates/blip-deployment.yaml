@@ -38,6 +38,9 @@ spec:
         name: blip
         ports:
         - containerPort: {{.Values.global.ports.blip}}
+{{ range $key, $port := .Values.global.ports.viz }}
+        - containerPort: {{ $port }}
+{{ end }}
 {{ if .Values.blip.resources }}
         resources:
           {{- toYaml .Values.blip.resources | nindent 10 }}
