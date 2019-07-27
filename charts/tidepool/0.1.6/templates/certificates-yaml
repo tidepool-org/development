@@ -1,6 +1,6 @@
 {{ if .Values.global.certificates }}
-{{- range $key, $spec := .Values.global.certificates }}
---- #file: gloo-{{ $key }}-cert.yaml
+{{- range $spec := .Values.global.certificates }}
+--- #file: gloo-{{ $spec.secretName }}-cert.yaml
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
