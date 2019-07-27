@@ -92,13 +92,10 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | Parameter                          | Description                                                                     | Default                           |
 | ---------------------------------- | ------------------------------------------------------------------------------- | --------------------------------- |
 | `global.aws.region`               | AWS region to deploy in                       | `us-west-2` |
-| `global.certificates.[].secretName | TLS secret to create in same namespace | `` |
-| `global.certificates.[].commonName | CommonName on the cert | `` |
-| `global.certificates.[].issuer     | Certificate issuer | `letsencrypt-staging` |
-| `global.certificates.[].domains    | Domains on cert | value of commonName ||
-| `global.certificates.[].dnsNames    | DNS names on cert | value of commonName ||
 |
-| `global.clusterName`              | The name of the K8s cluster tha hosts this env.| ``|
+| `global.certificateIssuer`        | Name of TLS certificate issuer, e.g. `letsencrypt-stating`, `letsencrypt-production` | `` |
+| `global.awsRegion`              | Name of the AWS region | `us-west-2`|
+| `global.clusterName`              | The name of the K8s cluster that hosts this env.| ``|
 | `global.environment`              | Node environment (passed as NODE_ENV)         | `production`|
 | `global.fullnameOverride`         |                                               | ``          |
 | `global.gateway.proxy.name`   | Name of the API gateway proxy                     | `gateway-proxy`  |
@@ -107,10 +104,9 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.hosts.default.protocol`   | If `http` use `http` for email verification link. If `https` use 	`https` for email verification links.          | `http`     |
 | `global.hosts.http.{name}.name`   | Http host[:port] to listen to                 | `localhost:8080`  |
 | `global.hosts.http.{name}`   | Display name to use for http host                  | `localhost`  |
-| `global.hosts.https.{name}.name`   | Https host[:port] to listen to host {name}   | ``  |
-| `global.hosts.https.{name}.tlssecret.name`   | TLS secret name for host {name}    | ``  |
-| `global.hosts.https.{name}.tlssecret.namespace` | TLS secret namespace for host {name} | ``  |
-| `global.hosts.https.{name}`   | Display name to use for https host {name}         | ``  |
+| `global.hosts.https.commonName`   | DNS common name   | ``  |
+| `global.hosts.https.secretName`   | TLS secret name to use for authentication | ``  |
+| `global.hosts.https.dnsNames`   | List of Subject Alternative Names to use | `[]`  |
 | `global.hpa.enabled`            | If true, the allocate a horizontal pod autoscalers for all pods | 'true' |
 | `global.linkerd`                | If `enabled` use the `linkerd` service mesh     | `disabled`  |
 | `global.mongo.hosts`              | Comma-separated list of Mongo hosts           | `mongodb`   |

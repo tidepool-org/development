@@ -1,4 +1,4 @@
-{{ if .Values.global.certificates }}
+{{ if .Values.global.certificateIssuer }}
 {{ $release := .Release.Namespace }}
 ---
 apiVersion: certmanager.k8s.io/v1alpha1
@@ -15,7 +15,7 @@ spec:
     solvers:
     - dns01:
        route53:
-         region: {{ .Values.global.awsRegion | quote }}
+         region: {{ .Values.global.awsRegion }}
 ---
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Issuer
@@ -31,27 +31,23 @@ spec:
     solvers:
     - dns01:
        route53:
-         region: {{ .Values.global.awsRegion | quote }}
----
-{{- range $spec := .Values.global.certificates }}
---- #file: {{ $spec.secretName }}-cert.yaml
+         region: {{ .Values.global.awsRegion }}
+{{ if .Values.global.hosts.https }}
+{{ $spec := .Values.global.hosts.https }}
+--- #file: {{ $spec.commonName }}-certificate.yaml
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
-  name: {{ $spec.secretName }}
-  namespace: {{ $release }}
+  name: {{ $spec.commonName | replace "." "_" }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   secretName: {{ $spec.secretName }}
   issuerRef:
-    name: letsencrypt-{{ if $spec.production }}production{{ else }}staging{{ end }}
+    name: {{ .Values.global.certificateIssuer }}
     kind: Issuer
-  commonName: {{ $spec.commonName | quote }}
+  commonName: {{ $spec.commonName }}
   dnsNames:
-{{- if $spec.dnsNames -}}
   {{- $spec.dnsNames | toYaml | nindent 2 -}}
-{{- else }}
-  - {{ $spec.commonName | quote }}
-{{- end }}
   acme:
     config:
     - dns01:
@@ -60,7 +56,7 @@ spec:
 {{- if $spec.domains -}}
       {{- $spec.domains | toYaml | nindent 6 -}}
 {{- else }}
-      - {{ $spec.commonName | quote }}
+      - {{ $spec.commonName }}
 {{- end }}
 {{ end }}
 {{ end }}

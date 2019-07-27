@@ -19,7 +19,9 @@ mongodb:
   fullnameOverride: "mongodb"
   usePassword: false
 global:
+  awsRegion: us-west-2
   clusterName: "yourClusterNameHere"                                  # the cluster name
+  #certificateIssuer: letsencrypt-staging                             # the name of the certificate issuer
   namespace:
     create: false                                                     # whether to create the namespace
   hpa:
@@ -32,11 +34,9 @@ global:
       localhost:                                                      # a simple identifier for a host providing HTTP access
         name: 'localhost:8080'                                        # a DNS name[:port] for a host providing HTTP access.
     #https:                                                           # a map of hosts that provide HTTPS access to the service
-      #dev:                                                           # a map of hosts that provide HTTPS access to the service
-        #name: dev.tidepool.org                                       # a simple identifier for a host providing HTTPS access
-        #tlssecret:                                                   # a TLS secret containing the Cert for the host
-          #name: tidepool-org                                         # the name of the TLS secret
-          #namespace: default                                         # the namespace of the TLS secret
+      #commonName:                                                    # common name of the host
+      #secretName:                                                    # name of K8s secret containing the certificate
+      #dnsNames:                                                      # list of DNS names
   gateway:                                                            # only needed if need to expose the incoming IP address
     #httpPort: 80                                                     # to create an external HTTP gateway on port 80
     #httpsPort: 443                                                   # to create an external HTTPS gateway on port 443

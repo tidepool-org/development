@@ -2,17 +2,17 @@
 {{- $relname := .Release.Name -}}
 {{ if .Values.global.hosts.http }}
 {{- range $key, $spec := .Values.global.hosts.http }}
---- #file: gloo-{{ $key }}-external-http-virtualservice.yaml
+--- #file: gloo-{{ $dnsName | replace "." "_" }}-external-http-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{ $key }}-{{ $.Release.Namespace }}-external-http'
+  name: '{{ $dnsName | replace "." "_" }}-{{ $.Release.Namespace }}-external-http'
   namespace: '{{ $.Release.Namespace }}'
 spec:
-  displayName: '{{ $key }}-{{ $.Release.Namespace }}-external-http'
+  displayName: '{{ $dnsName | replace "." "_" }}-{{ $.Release.Namespace }}-external-http'
   virtualHost:
     domains:
-    - '{{ $spec.name }}'
+    - '{{ $dnsName }}'
     routes:
     - matcher:
         methods:

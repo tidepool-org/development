@@ -1,21 +1,20 @@
 # Auto-generated file by gloo_gateway. Do not edit.
-{{- $relname := .Release.Name -}}
-{{ if .Values.global.hosts.https }}
-{{- range $key, $spec := .Values.global.hosts.https }}
---- #file: gloo-{{ $key }}-external-https-virtualservice.yaml
+{{ if and .Values.global.hosts.https .Values.gloabl.hosts.https.dnsNames }}
+{{- range $dnsName := .Values.global.hosts.https.dnsNames }}
+--- #file: gloo-{{ $dnsName | replace "." "_" }}-external-https-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{ $key }}-{{ $.Release.Namespace }}-external-https'
+  name: '{{ $dnsName | replace "." "_" }}-{{ $.Release.Namespace }}-external-https'
   namespace: '{{ $.Release.Namespace }}'
 spec:
-  displayName: '{{ $key }}-{{ $.Release.Namespace }}-external-https'
+  displayName: '{{ $dnsName | replace "." "_" }}-{{ $.Release.Namespace }}-external-https'
   sslConfig:
     secretRef:
-      name: '{{ $spec.tlssecret.name }}'
-      namespace: '{{ $spec.tlssecret.namespace | default "default" }}'
+      name: '{{ $.Values.global.hosts.https.secretName }}'
+      namespace: '{{ $.Release.Namespace }}'
     sniDomains:
-    - '{{ $spec.name }}'
+    - '{{ $dnsName }}'
   virtualHost:
     corsPolicy:
       allowCredentials: true
@@ -40,7 +39,7 @@ spec:
       - x-tidepool-trace-session
       maxAge: 600s
     domains:
-    - '{{ $spec.name }}'
+    - '{{ $dnsName }}'
     routes:
     - matcher:
         methods:
