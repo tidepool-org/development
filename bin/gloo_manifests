@@ -14,19 +14,19 @@ import yaml
 
 # These values must be provided by Helm when the resulting Helm template file is interpreted
 
-VIRTUAL_HOST_KEY = '{{ $key }}'
+VIRTUAL_HOST_KEY = '{{ $dnsName | replace "." "_" }}'
 
 """The host served by the API Gateway"""
-HOST = '{{ $spec.name }}'
+HOST = '{{ $dnsName }}'
 
 """The name used for SNI"""
-EXTERNAL_HOST_NAME = '{{ $spec.name }}'
+EXTERNAL_HOST_NAME = '{{ $dnsName }}'
 
 """The name of the TLS secret containing the TLS cert"""
-TLS_SECRET_NAME = '{{ $spec.tlssecret.name }}'
+TLS_SECRET_NAME = '{{ $.Values.global.hosts.https.secretName }}'
 
 """The namespace of the TLS secret containing the TLS cert"""
-TLS_SECRET_NAMESPACE = '{{ $spec.tlssecret.namespace | default "default" }}'
+TLS_SECRET_NAMESPACE = '{{ $.Release.Namespace }}'
 
 """The name of the Gateway Proxy Service"""
 GATEWAY_PROXY_NAME = '{{ $.Value.globals.proxy.name }}'
