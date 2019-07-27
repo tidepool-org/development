@@ -29,6 +29,7 @@ This helm chart for Tidepool features:
   * allows use of AtlasDB or Amazon DocumentDB
   * allows use of local (out of cluster) MongoDB
 * support for IAM role assignment using Kiam
+* automatic generation of TLS certificate requests (using certmanager)
 
 ## Prerequisites
 
@@ -91,6 +92,12 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | Parameter                          | Description                                                                     | Default                           |
 | ---------------------------------- | ------------------------------------------------------------------------------- | --------------------------------- |
 | `global.aws.region`               | AWS region to deploy in                       | `us-west-2` |
+| `global.certificates.[].secretName | TLS secret to create in same namespace | `` |
+| `global.certificates.[].commonName | CommonName on the cert | `` |
+| `global.certificates.[].issuer     | Certificate issuer | `letsencrypt-staging` |
+| `global.certificates.[].domains    | Domains on cert | value of commonName ||
+| `global.certificates.[].dnsNames    | DNS names on cert | value of commonName ||
+|
 | `global.clusterName`              | The name of the K8s cluster tha hosts this env.| ``|
 | `global.environment`              | Node environment (passed as NODE_ENV)         | `production`|
 | `global.fullnameOverride`         |                                               | ``          |
