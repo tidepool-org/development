@@ -11,7 +11,7 @@ spec:
   secretName: {{ $spec.secretName | quote }}
   issuerRef:
     name: {{ $spec.issuer | default "letsencrypt-staging" }}
-    kind: ClusterIssuer
+    kind: Issuer
   commonName: {{ $spec.commonName | quote }}
   dnsNames:
 {{- if $spec.dnsNames -}}
