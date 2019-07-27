@@ -57,6 +57,8 @@ EOF
 
 run_docker() { args="${@:1}" && (set_docker_env && docker ${args}) }
 
+run_docker_compose() { args="${@:1}" && (docker-compose -f 'docker-compose.k8s.yml' ${args}) }
+
 restart() { (kubectl scale deployment ${1} --replicas=0 && kubectl scale deployment ${1} --replicas=1) }
 
 run_exec() { args="${@:2}" && (kubectl exec -ti svc/${1} -c ${1} -- /bin/sh -c "${args}") }
@@ -91,22 +93,31 @@ set_tilt_env() {
   esac
 }
 
+set_kubeconfig() {
+  until curl -s --fail http://127.0.0.1:10080/kubernetes-ready; do
+    sleep 1;
+  done
+  curl http://127.0.0.1:10080/config > ~/.kube/config
+}
+
 case ${1-help} in
-  start) (cd ${DIR} && docker-compose up ${2-});;
-  stop) (cd ${DIR} && docker-compose stop ${2-});;
-  up) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up --port=0);;
+  start) (cd ${DIR} && run_docker_compose up -d ${2-});;
+  stop) (cd ${DIR} && run_docker_compose stop ${2-});;
+  up) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up --port=0 ${2-});;
   down) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
-  rm) (cd ${DIR} && docker-compose rm -fsv ${2-});;
   restart) restart ${2-};;
-  pull) (cd ${DIR} && docker-compose pull ${2-});;
+  destroy) (cd ${DIR} && run_docker_compose rm -fsv);;
+  pull) (cd ${DIR} && run_docker_compose pull ${2-server});;
   logs) (cd ${DIR} && kubectl logs svc/${2} --tail=20 -c ${2} -f);;
+  server-logs) (cd ${DIR} && run_docker_compose logs --tail=20 -f server);;
   port-forward) (cd ${DIR} && kubectl port-forward svc/${2} ${3});;
-  rebuild) (cd ${DIR} && docker-compose build ${2-} && docker-compose up -d ${2-});;
   exec) run_exec ${2} ${@:3};;
+  server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
   link) (cd ${DIR} && run_exec ${2} "cd /app/packageMounts/${3}; pwd && pwd && echo ${3} && yarn link && cd /app && yarn link ${3} && touch webpack.config.js");;
   unlink) (cd ${DIR} && run_exec ${2} "yarn unlink ${3}; cd /app/packageMounts/${3} && yarn unlink; cd /app && rm -f node_modules/${3} && yarn install --force && touch webpack.config.js");;
   yarn) run_yarn ${2} "${@:3}";;
   docker) run_docker "${@:2}";;
   prune) (run_docker "system prune --volumes -af");;
+  set-kubeconfig) set_kubeconfig;;
   *|help) usage;;
 esac
