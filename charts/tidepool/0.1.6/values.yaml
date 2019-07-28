@@ -21,6 +21,7 @@ mongodb:
 global:
   awsRegion: us-west-2
   clusterName: "yourClusterNameHere"                                  # the cluster name
+  email: "derrick@tidepool.org"
   #certificateIssuer: letsencrypt-staging                             # the name of the certificate issuer
   namespace:
     create: false                                                     # whether to create the namespace
