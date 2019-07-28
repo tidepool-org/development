@@ -6,15 +6,15 @@
 {{ if $spec.dnsNames }}
 {{- range $dnsName := $spec.dnsNames }}
 {{ $legalName := printf "%s-%s" $dnsName $port }}
---- #file: gloo-{{ $legalName }}-external-http-virtualservice.yaml
+--- #file: gloo-{{ $legalName }}-virtualservice.yaml
 ---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{ $legalName }}-{{ $.Release.Namespace }}-external-http'
+  name: '{{ $legalName }}'
   namespace: '{{ $.Release.Namespace }}'
 spec:
-  displayName: '{{ $legalName }}-{{ $.Release.Namespace }}-external-http'
+  displayName: '{{ $legalName }}'
   virtualHost:
     domains:
     - '{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf " %s" $dnsName -}}{{- end -}}'

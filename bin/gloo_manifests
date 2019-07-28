@@ -443,7 +443,7 @@ class ManifestBuilder:
     def external(self, protocol):
         d = dict()
         for base,ordered in self.routes.items():
-            name = VIRTUAL_HOST_KEY + "-" + EXTERNAL_VS_NAME + "-" + protocol
+            name = VIRTUAL_HOST_KEY 
             if protocol == "https":
                 self.add(d, VirtualServiceBuilder(ordered, name, CORS_POLICY, "https", [HOST]).get())
             else:
