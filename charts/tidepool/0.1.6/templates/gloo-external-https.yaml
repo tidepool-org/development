@@ -1,5 +1,5 @@
 # Auto-generated file by gloo_gateway. Do not edit.
-{{ if .Values.global.hosts.https }}{
+{{ if .Values.global.hosts.https }}
 {{ $spec := .Values.global.hosts.https }}
 {{ $default := "80" }}
 {{ $port := $spec.port | default $default }}
@@ -7,7 +7,6 @@
 {{- range $dnsName := $spec.dnsNames }}
 {{ $legalName := printf "%s-%s" $dnsName $port | replace "." "_" }}
 --- #file: gloo-{{ $legalName }}-external-https-virtualservice.yaml
----
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:

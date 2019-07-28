@@ -26,7 +26,7 @@ echo "$templates" | mappings | gloo_manifests external http | single_file "# Aut
 {{ end }}" > $1/templates/gloo-external-http.yaml
 
 echo "$templates" | mappings | gloo_manifests external https | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if .Values.global.hosts.https }}{
+{{ if .Values.global.hosts.https }}
 {{ \$spec := .Values.global.hosts.https }}
 {{ \$default := \"80\" }}
 {{ \$port := \$spec.port | default \$default }}
