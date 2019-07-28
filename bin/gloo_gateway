@@ -15,9 +15,8 @@ echo "$templates" | mappings | gloo_manifests internal http | single_file "# Aut
 " "" > $1/templates/gloo-internal.yaml
 
 echo "$templates" | mappings | gloo_manifests external http | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{- \$relname := .Release.Name -}}
-{{ if .Values.global.hosts.http }}
-{{- range \$key, \$spec := .Values.global.hosts.http }}" "{{ end }}
+{{ if and .Values.global.hosts.http .Values.gloabl.hosts.http.dnsNames }}
+{{- range \$dnsName := .Values.global.hosts.http.dnsNames }}" "{{ end }}
 {{ end }}" > $1/templates/gloo-external-http.yaml
 
 echo "$templates" | mappings | gloo_manifests external https | single_file "# Auto-generated file by $(basename $0). Do not edit.
