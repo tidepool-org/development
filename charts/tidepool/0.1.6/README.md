@@ -94,6 +94,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.aws.region`               | AWS region to deploy in                       | `us-west-2` |
 |
 | `global.certificateIssuer`        | Name of TLS certificate issuer, e.g. `letsencrypt-stating`, `letsencrypt-production` | `` |
+| `global.issuerKind`        | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer` | `ClusterIssuer` |
 | `global.awsRegion`              | Name of the AWS region | `us-west-2`|
 | `global.clusterName`              | The name of the K8s cluster that hosts this env.| ``|
 | `global.environment`              | Node environment (passed as NODE_ENV)         | `production`|
