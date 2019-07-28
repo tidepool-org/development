@@ -30,7 +30,7 @@ global:
     default:
       protocol: http                                                  # the protocol to use for signup emails
       host: localhost                                                 # a valid DNS name[:port] for the service
-    http:                                                             # a map of hosts that provide HTTP access to the service
+    #http:                                                             # a map of hosts that provide HTTP access to the service
       #dnsNames:                                                      # list of DNS names
     #https:                                                           # a map of hosts that provide HTTPS access to the service
       #commonName:                                                    # common name of the host

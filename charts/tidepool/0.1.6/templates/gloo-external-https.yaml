@@ -1,17 +1,20 @@
 # Auto-generated file by gloo_gateway. Do not edit.
-{{ if and .Values.global.hosts.https .Values.gloabl.hosts.https.dnsNames }}
-{{- range $dnsName := .Values.global.hosts.https.dnsNames }}
---- #file: gloo-{{ $dnsName | replace "." "_" }}-external-https-virtualservice.yaml
+{{ if .Values.global.hosts.https }}{
+{{ $spec := .Values.global.hosts.https }}
+{{ if $spec.dnsNames }}
+{{- range $dnsName := $spec.dnsNames }}
+{{ $legalName := $dnsName | replace "." "_" }}
+--- #file: gloo-{{ $legalName }}-external-https-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{ $dnsName | replace "." "_" }}-{{ $.Release.Namespace }}-external-https'
+  name: '{{ printf "%s-%s" $legalName (default "80" $spec.port) }}-{{ $.Release.Namespace }}-external-https'
   namespace: '{{ $.Release.Namespace }}'
 spec:
-  displayName: '{{ $dnsName | replace "." "_" }}-{{ $.Release.Namespace }}-external-https'
+  displayName: '{{ printf "%s-%s" $dnsName (default "80" $spec.port )  }}-{{ $.Release.Namespace }}-external-https'
   sslConfig:
     secretRef:
-      name: '{{ $.Values.global.hosts.https.secretName }}'
+      name: '{{ $spec.secretName }}'
       namespace: '{{ $.Release.Namespace }}'
     sniDomains:
     - '{{ $dnsName }}'
@@ -39,7 +42,11 @@ spec:
       - x-tidepool-trace-session
       maxAge: 600s
     domains:
-    - '{{ $dnsName }}'
+    - {{ if and $spec.port (ne $spec.port "443") -}}
+      {{- printf "%s:%s" $dnsName $spec.port -}}
+      {{- else -}}
+      {{ $dnsName -}}
+      {{- end }}
     routes:
     - matcher:
         methods:
@@ -628,5 +635,6 @@ spec:
           upstream:
             name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
+{{ end }}
 {{ end }}
 {{ end }}

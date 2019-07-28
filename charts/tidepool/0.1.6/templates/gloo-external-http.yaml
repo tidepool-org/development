@@ -1,18 +1,24 @@
 # Auto-generated file by gloo_gateway. Do not edit.
-{{- $relname := .Release.Name -}}
-{{ if .Values.global.hosts.http }}
-{{- range $key, $spec := .Values.global.hosts.http }}
---- #file: gloo-{{ $dnsName | replace "." "_" }}-external-http-virtualservice.yaml
+{{ if and .Values.global.hosts.http }}
+{{ $spec := .Values.global.hosts.http }}
+{{ if $spec.dnsNames }}
+{{- range $dnsName := $spec.dnsNames }}
+{{ $legalName := $dnsName | replace "." "_" }}
+--- #file: gloo-{{ $legalName }}-external-http-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{ $dnsName | replace "." "_" }}-{{ $.Release.Namespace }}-external-http'
+  name: '{{ printf "%s-%s" $dnsName (default "80" $spec.port) }}-{{ $.Release.Namespace }}-external-http'
   namespace: '{{ $.Release.Namespace }}'
 spec:
-  displayName: '{{ $dnsName | replace "." "_" }}-{{ $.Release.Namespace }}-external-http'
+  displayName: '{{ printf "%s-%s" $dnsName (default "80" $spec.port )  }}-{{ $.Release.Namespace }}-external-http'
   virtualHost:
     domains:
-    - '{{ $dnsName }}'
+    - {{ if and $spec.port (ne $spec.port "80") -}}
+      {{- printf "%s:%s" $dnsName $spec.port -}}
+      {{- else -}}
+      {{ $dnsName -}}
+      {{- end }}
     routes:
     - matcher:
         methods:
@@ -601,5 +607,6 @@ spec:
           upstream:
             name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
+{{ end }}
 {{ end }}
 {{ end }}
