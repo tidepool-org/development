@@ -42,7 +42,7 @@ spec:
       - x-tidepool-trace-session
       maxAge: 600s
     domains:
-    - {{ if and $spec.port (ne $spec.port 443) -}}
+    - {{ if and $spec.port (ne $spec.port "443") -}}
       {{- printf "%s:%s" $dnsName $spec.port -}}
       {{- else -}}
       {{ $dnsName -}}
