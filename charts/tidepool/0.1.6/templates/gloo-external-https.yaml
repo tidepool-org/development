@@ -7,6 +7,7 @@
 {{- range $dnsName := $spec.dnsNames }}
 {{ $legalName := printf "%s-%s" $dnsName $port | replace "." "_" }}
 --- #file: gloo-{{ $legalName }}-external-https-virtualservice.yaml
+---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
@@ -44,8 +45,7 @@ spec:
       - x-tidepool-trace-session
       maxAge: 600s
     domains:
-    - '{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}}{{- else -}}
-      {{ $dnsName -}}{{- end -}}'
+    - '{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf " %s" $dnsName -}}{{- end -}}'
     routes:
     - matcher:
         methods:

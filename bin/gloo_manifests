@@ -17,7 +17,7 @@ import yaml
 VIRTUAL_HOST_KEY = '{{ $legalName }}'
 
 """The host served by the API Gateway"""
-HOST='{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}}{{- else -}}{{ printf " %s\n    - %s:%s" $dnsName $dnsName $default -}}{{- end -}}'
+HOST='{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf " %s" $dnsName -}}{{- end -}}'
 
 """The name used for SNI"""
 EXTERNAL_HOST_NAME = '{{ $dnsName }}'
@@ -466,7 +466,7 @@ class ManifestBuilder:
             manifest_dict[name] = manifest
 
     def write(self, manifest_dict):
-        print(yaml.dump(manifest_dict, explicit_start = True, default_flow_style=False))
+        print(yaml.dump(manifest_dict, explicit_start = True, default_style=None,default_flow_style=False, width=1000))
 
 def main(kind, protocol):
     builder=ManifestBuilder(yaml.safe_load(sys.stdin))
