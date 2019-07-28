@@ -102,8 +102,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.gateway.proxy.namespace`   | Namespace of the API gateway proxy           | `gloo-system`  |
 | `global.hosts.default.host`   | Host to use in email verification link.           | `localhost`  |
 | `global.hosts.default.protocol`   | If `http` use `http` for email verification link. If `https` use 	`https` for email verification links.          | `http`     |
-| `global.hosts.http.{name}.name`   | Http host[:port] to listen to                 | `localhost:8080`  |
-| `global.hosts.http.{name}`   | Display name to use for http host                  | `localhost`  |
+| `global.hosts.http.dnsNames`   | List of host[:port] to listen to                 | `localhost:8080`  |
 | `global.hosts.https.commonName`   | DNS common name   | ``  |
 | `global.hosts.https.secretName`   | TLS secret name to use for authentication | ``  |
 | `global.hosts.https.dnsNames`   | List of Subject Alternative Names to use | `[]`  |
