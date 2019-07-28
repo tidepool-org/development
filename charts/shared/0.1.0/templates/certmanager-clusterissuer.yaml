@@ -3,7 +3,7 @@ apiVersion: certmanager.k8s.io/v1alpha1
 kind: Issuer
 metadata:
   name: letsencrypt-staging
-  namespace: {{ $release }}
+  namespace: {{ .Release.Namespace }}
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
@@ -19,7 +19,7 @@ apiVersion: certmanager.k8s.io/v1alpha1
 kind: Issuer
 metadata:
   name: letsencrypt-production
-  namespace: {{ $release }}
+  namespace: {{ .Release.Namespace }}
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
