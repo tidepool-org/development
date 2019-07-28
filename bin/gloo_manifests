@@ -14,10 +14,10 @@ import yaml
 
 # These values must be provided by Helm when the resulting Helm template file is interpreted
 
-VIRTUAL_HOST_KEY = '{{ $dnsName | replace "." "_" }}'
+VIRTUAL_HOST_KEY = '{{ $legalName }}'
 
 """The host served by the API Gateway"""
-HOST = '{{ $dnsName }}'
+HOST = '{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}}{{- else -}} {{ $dnsName -}}{{- end -}}'
 
 """The name used for SNI"""
 EXTERNAL_HOST_NAME = '{{ $dnsName }}'
