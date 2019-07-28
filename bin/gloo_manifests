@@ -17,7 +17,7 @@ import yaml
 VIRTUAL_HOST_KEY = '{{ $legalName }}'
 
 """The host served by the API Gateway"""
-HOST = '{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}}{{- else -}} {{ $dnsName -}}{{- end -}}'
+HOST='{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}}{{- else -}}{{ printf " %s\n    - %s:%s" $dnsName $dnsName $default -}}{{- end -}}'
 
 """The name used for SNI"""
 EXTERNAL_HOST_NAME = '{{ $dnsName }}'
