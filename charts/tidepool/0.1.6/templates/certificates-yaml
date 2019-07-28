@@ -21,10 +21,7 @@ spec:
     - dns01:
         provider: route53
       domains:
-{{- if $spec.domains -}}
       {{- $spec.domains | toYaml | nindent 6 -}}
-{{- else }}
-      {{- $spec.dnsNames | toYaml | nindent 6 -}}
 {{- end }}
 {{ end }}
 {{ end }}
