@@ -8,13 +8,13 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{ printf "%s-%s" $dnsName (default "80" $spec.port) }}-{{ $.Release.Namespace }}-external-http'
+  name: '{{ printf "%s-%s" $dnsName (default 80 $spec.port) }}-{{ $.Release.Namespace }}-external-http'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   displayName: '{{ printf "%s-%s" $dnsName (default "80" $spec.port )  }}-{{ $.Release.Namespace }}-external-http'
   virtualHost:
     domains:
-    - {{ if and $spec.port (ne $spec.port "80") -}}
+    - {{ if and $spec.port (ne $spec.port 80) -}}
       {{- printf "%s:%s" $dnsName $spec.port -}}
       {{- else -}}
       {{ $dnsName -}}
