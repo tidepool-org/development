@@ -10,5 +10,7 @@ spec:
   releaseName: metrics-server
   chart:
     {{- .Values.metricsServer.chart | toYaml | nindent 4 }}
-  values: {}
+  values: 
+    hostNetwork:
+      enabled: true
 {{ end }}
