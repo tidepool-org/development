@@ -21,7 +21,7 @@ echo "$templates" | mappings | gloo_manifests external http | single_file "# Aut
 {{ \$port := \$spec.port | default \$default }}
 {{ if \$spec.dnsNames }}
 {{- range \$dnsName := \$spec.dnsNames }}
-{{ \$legalName := printf \"%s-%s\" \$dnsName \$port | replace \".\" \"_\" }}" "{{ end }}
+{{ \$legalName := printf \"%s-%s\" \$dnsName \$port }}" "{{ end }}
 {{ end }}
 {{ end }}" > $1/templates/gloo-external-http.yaml
 
@@ -32,6 +32,6 @@ echo "$templates" | mappings | gloo_manifests external https | single_file "# Au
 {{ \$port := \$spec.port | default \$default }}
 {{ if \$spec.dnsNames }}
 {{- range \$dnsName := \$spec.dnsNames }}
-{{ \$legalName := printf \"%s-%s\" \$dnsName \$port | replace \".\" \"_\" }}" "{{ end }}
+{{ \$legalName := printf \"%s-%s\" \$dnsName \$port }}" "{{ end }}
 {{ end }}
 {{ end }}" > $1/templates/gloo-external-https.yaml

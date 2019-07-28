@@ -5,7 +5,7 @@
 {{ $port := $spec.port | default $default }}
 {{ if $spec.dnsNames }}
 {{- range $dnsName := $spec.dnsNames }}
-{{ $legalName := printf "%s-%s" $dnsName $port | replace "." "_" }}
+{{ $legalName := printf "%s-%s" $dnsName $port }}
 --- #file: gloo-{{ $legalName }}-external-http-virtualservice.yaml
 ---
 apiVersion: gateway.solo.io/v1
