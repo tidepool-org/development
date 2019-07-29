@@ -31,15 +31,17 @@ global:
     default:
       protocol: http                                                  # the protocol to use for signup emails
       host: localhost                                                 # a valid DNS name[:port] for the service
-    #http:                                                             # a map of hosts that provide HTTP access to the service
-      #dnsNames:                                                      # list of DNS names
-    #https:                                                           # a map of hosts that provide HTTPS access to the service
-      #commonName:                                                    # common name of the host
-      #secretName:                                                    # name of K8s secret containing the certificate
-      #dnsNames:                                                      # list of DNS names
+    http:                                                            
+      enabled: true
+      port: "8080"                                                    # default HTTP port - must be quoted
+      dnsNames: [ "localhost" ]                                       # list of DNS names
+    https:                                                           
+      enabled: false 
+      port: "8433"                                                    # default HTTPS port - must be quoted
+      commonName: ""                                                  # common name of the host
+      secretName:  ""                                                 # name of K8s secret containing the certificate
+      dnsNames: []                                                    # list of DNS names
   gateway:                                                            # only needed if need to expose the incoming IP address
-    #httpPort: 80                                                     # to create an external HTTP gateway on port 80
-    #httpsPort: 443                                                   # to create an external HTTPS gateway on port 443
     proxy:                                                            # proxy if embedded gloo gateway is disabled.
       name: gateway-proxy                                             # the name of the API gateway service (unused if gloo.enabled)
       namespace: gloo-system                                          # the namespace of the API gateway proxy service  (unused if gloo.enabled)

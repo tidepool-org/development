@@ -1,4 +1,4 @@
-{{ if (or .Values.global.gateway.httpPort .Values.global.gateway.httpsPort ) }}
+{{ if (or .Values.global.hosts.http.enabled .Values.global.hosts.https.enabled ) }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -10,19 +10,19 @@ metadata:
 spec:
   externalTrafficPolicy: Local
   ports:
-{{ if .Values.global.gateway.httpsPort }}
+{{ if .Values.global.hosts.https.enabled }}
   - name: https
-    port: {{ .Values.global.gateway.httpsPort  }}
+    port: {{ .Values.global.hosts.https.port | default 443  }}
     protocol: TCP
     targetPort: 8443
 {{ end }}
-{{ if .Values.global.gateway.httpPort }}
+{{ if .Values.global.hosts.http.enabled }}
   - name: http
-    port: {{ .Values.global.gateway.httpPort }}
+    port: {{ .Values.global.hosts.http.port | default 80 }}
     protocol: TCP
     targetPort: 8080
 {{ end }}
   selector:
-    gloo: gateway-proxy
+    gloo: {{ .Values.global.gateway.proxy.name }}
   type: {{ .Values.global.gateway.type | default "LoadBalancer" }}
 {{ end }}
