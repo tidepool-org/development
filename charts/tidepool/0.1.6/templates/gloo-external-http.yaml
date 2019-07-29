@@ -1,5 +1,5 @@
 # Auto-generated file by gloo_gateway. Do not edit.
-{{ if and .Values.global.hosts.http }}
+{{ if .Values.global.hosts.http }}
 {{ $spec := .Values.global.hosts.http }}
 {{ $default := "80" }}
 {{ $port := $spec.port | default $default }}

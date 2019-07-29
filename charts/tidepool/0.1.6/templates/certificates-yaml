@@ -1,7 +1,6 @@
 {{ if .Values.global.certificateIssuer }}
-{{ $release := .Release.Namespace }}
-{{ if .Values.global.hosts.https }}
 {{ $spec := .Values.global.hosts.https }}
+{{ if and $spec.enabled .Values.global.certificateIssuer }}
 --- #file: {{ $spec.commonName }}-certificate.yaml
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
@@ -23,5 +22,4 @@ spec:
       domains:
       {{- $spec.domains | toYaml | nindent 6 -}}
 {{- end }}
-{{ end }}
 {{ end }}

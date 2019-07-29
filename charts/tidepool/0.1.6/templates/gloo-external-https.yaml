@@ -1,7 +1,7 @@
 # Auto-generated file by gloo_gateway. Do not edit.
-{{ if .Values.global.hosts.https }}
+{{ if .Values.global.hosts.https.enabled }}
 {{ $spec := .Values.global.hosts.https }}
-{{ $default := "80" }}
+{{ $default := "443" }}
 {{ $port := $spec.port | default $default }}
 {{ if $spec.dnsNames }}
 {{- range $dnsName := $spec.dnsNames }}
