@@ -1,6 +1,5 @@
-{{ if .Values.global.certificateIssuer }}
 {{ $spec := .Values.global.hosts.https }}
-{{ if and $spec.enabled .Values.global.certificateIssuer }}
+{{ if and $spec.enabled $spec.certificateIssuer }}
 --- #file: {{ $spec.commonName }}-certificate.yaml
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
@@ -10,8 +9,8 @@ metadata:
 spec:
   secretName: {{ $spec.secretName }}
   issuerRef:
-    name: {{ .Values.global.certificateIssuer }}
-    kind: {{ .Values.global.issuerKind | default "ClusterIssuer" }}
+    name: {{ $spec.certificateIssuer }}
+    kind: {{ $spec.issuerKind | default "ClusterIssuer" }}
   commonName: {{ $spec.commonName }}
   dnsNames:
   {{- $spec.dnsNames | toYaml | nindent 2 -}}
@@ -22,4 +21,3 @@ spec:
       domains:
       {{- $spec.domains | toYaml | nindent 6 -}}
 {{- end }}
-{{ end }}

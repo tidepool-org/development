@@ -21,8 +21,6 @@ mongodb:
 global:
   awsRegion: us-west-2
   clusterName: "yourClusterNameHere"                                  # the cluster name
-  #certificateIssuer: letsencrypt-staging                             # the name of the certificate issuer
-  issuerKind: ClusterIssuer
   namespace:
     create: false                                                     # whether to create the namespace
   hpa:
@@ -41,6 +39,8 @@ global:
       commonName: ""                                                  # common name of the host
       secretName:  ""                                                 # name of K8s secret containing the certificate
       dnsNames: []                                                    # list of DNS names
+      certificateIssuer: ""                                           # the name of the certificate issuer
+      issuerKind: ClusterIssuer                                       # kind of the certificate issuer
   gateway:                                                            # only needed if need to expose the incoming IP address
     proxy:                                                            # proxy if embedded gloo gateway is disabled.
       name: gateway-proxy                                             # the name of the API gateway service (unused if gloo.enabled)
