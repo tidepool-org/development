@@ -1,6 +1,6 @@
 {{ if .Values.certmanager.enabled }}
 apiVersion: certmanager.k8s.io/v1alpha1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: letsencrypt-staging
   namespace: {{ .Release.Namespace }}
@@ -16,7 +16,7 @@ spec:
          region: {{ .Values.global.awsRegion }}
 ---
 apiVersion: certmanager.k8s.io/v1alpha1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: letsencrypt-production
   namespace: {{ .Release.Namespace }}
