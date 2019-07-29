@@ -87,6 +87,7 @@ global:
     username: ''                                                      # a username in the Mongo instance
     ssl: 'false'                                                      # whether to use SSL to communicate with Mongo
     optParams: ''                                                     # optional parameters to pass on the Mongo connection string
+    secretName: 'mongo'
   provider:
     dexcom:
       token:

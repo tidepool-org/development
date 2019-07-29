@@ -183,7 +183,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_STORE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mongo
+              name: {{ .Values.global.mongo.secretName }}
               key: password
               optional: true
         - name: TIDEPOOL_STORE_ADDRESSES
