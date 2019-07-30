@@ -34,7 +34,7 @@ spec:
 {{ if .Values.mongo.hostPath }}
         hostPath:
           path: '{{.Values.mongo.hostPath}}'
-          type: DirectoryOrCreate
+          type: Directory
 {{ end }}
 {{ if .Values.mongo.seed }}
       - name: dump
