@@ -9,6 +9,8 @@ Parameters:
     Type: String
   EnvName:
     Type: String
+  BucketName:
+    Type: String
   ClusterRoleStackName:
     Type: String
 Resources:
@@ -21,14 +23,14 @@ Resources:
         - Action:
           - s3:ListBucket
           Resource:
-          - Fn::Sub: "arn:aws:s3:::tidepool-${EnvName}-data/*"
+          - Fn::Sub: "arn:aws:s3:::${BucketName}/*"
           Effect: Allow
         - Action:
           - s3:GetObject
           - s3:PutObject
           - s3:DeleteObject
           Resource:
-          - Fn::Sub: "arn:aws:s3:::tidepool-${EnvName}-data/*"
+          - Fn::Sub: "arn:aws:s3:::${BucketName}/*"
           Effect: Allow
         - Effect: Allow
           Action:

@@ -1,9 +1,10 @@
 #!/bin/bash
 CLUSTER_NAME=$1
 ENV_NAME=$2
-REGION=${3:-us-west-2}
+BUCKET_NAME=${3:-tidepool-${ENV_NAME}-data}
+REGION=${4:-us-west-2}
 CONFIG_REPO=${4:-$(git rev-parse --show-toplevel)}
 DEV_REPO=$(realpath ${4:-${CONFIG_REPO}/../development})
 CONFIG_FILE=$(realpath $CONFIG_REPO/clusters/${CLUSTER_NAME}/config.yaml)
 
-aws cloudformation create-stack --stack-name "eksctl-${CLUSTER_NAME}-${ENV_NAME}-roles" --capabilities CAPABILITY_NAMED_IAM --template-body file://${DEV_REPO}/cf/env-roles.yaml --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}  ParameterKey=EnvName,ParameterValue=${ENV_NAME}   ParameterKey=ClusterRoleStackName,ParameterValue=eksctl-${CLUSTER_NAME}-roles ParameterKey=Region,ParameterValue=${REGION} ParameterKey=AccountNumber,ParameterValue=${TIDEPOOL_AWS_ACCOUNT}
+aws cloudformation create-stack --stack-name "eksctl-${CLUSTER_NAME}-${ENV_NAME}-roles" --capabilities CAPABILITY_NAMED_IAM --template-body file://${DEV_REPO}/cf/env-roles.yaml --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}  ParameterKey=EnvName,ParameterValue=${ENV_NAME}   ParameterKey=ClusterRoleStackName,ParameterValue=eksctl-${CLUSTER_NAME}-roles ParameterKey=Region,ParameterValue=${REGION} ParameterKey=AccountNumber,ParameterValue=${TIDEPOOL_AWS_ACCOUNT} ParameterKey=BucketName,ParameterValue=${BUCKET_NAME}
