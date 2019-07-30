@@ -28,12 +28,22 @@ spec:
     spec:
       containers:
       - image: "{{ .Values.blip.image }}"
+{{ if .Values.blip.command }}
+        command: {{ .Values.blip.command }}
+{{ end }}
+{{ if .Values.blip.args }}
+        args: {{ .Values.blip.args }}
+{{ end }}
         env:
         - name: SKIP_HAKKEN
           value: "true"
 {{ if .Values.blip.webpackPublicPath }}
         - name: WEBPACK_PUBLIC_PATH
           value: {{ .Values.blip.webpackPublicPath }}
+{{ end }}
+{{ if .Values.blip.apiHost }}
+        - name: API_HOST
+          value: {{ .Values.blip.apiHost }}
 {{ end }}
         name: blip
         ports:
