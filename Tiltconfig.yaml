@@ -1,11 +1,77 @@
-# To override some or all of these, create an overrides file at `local/Tiltconfig.yaml`,
-# and update any config variables as needed
+# Copy to `local/Tiltconfig.yaml` and update as needed
 
-tidepool_repos_root_dir: './..' # Root directory containing your checked out tidepool repos.
-development_dir: '.' # Root directory of the tidepool-org/development repo.
-mongodb_data_dir: './local/mongodb_data' # <Optional> Local directory to persist mongodb data to. Override with `false` to disable.
-server_secrets_dir: './local/secrets' # <Optional> Local directory to persist k8s secrets to. Override with `false` to disable.
-tidepool_helm_overrides_file: './local/values-override.yaml' # <Optional> Filepath containing helm chart value overrides.
-k8s_environment: 'bsycorp/kind' # Kubernetes provisioning tool. One of [docker-for-desktop, minikube, kind, k3d, bsycorp/kind]
-k8s_cluster_name: 'kind' # Name of k8s cluster. Required if using `k3d or `kind` clusters.
-tidepool_helm_version: '0.1.5' # Version of the Tidepool helm charts to deploy.
+tidepool_helm_charts_version: '0.1.5' # Version of the Tidepool helm charts to deploy.
+
+global:
+  ports:
+    viz:
+      stories: 8083
+      typestories: 8082
+  hosts:
+    default:
+      protocol:
+        http
+      host:
+        "localhost:3000"
+    http:
+      localhost:
+        name: "localhost:3000"
+  secrets:
+    hostPath: './local/secrets'
+  securityContext:                                                    # the security context for all services
+    allowPrivilegeEscalation: false
+    runAsNonRoot: false                                                # we don't need root access
+    runAsUser: 0
+    capabilities:
+      drop:
+      - ALL
+
+gateway-proxy:
+  portForwards: ['3000:8080']
+
+gloo:
+  gatewayProxies:
+    gateway-proxy:
+      service:
+        httpPort: 3000
+
+mongodb:
+  enabled: false # We deploy our own directly within the Tiltfile
+  hostPath: '/data/db' # Note: this is relative to the k8s server container defined in `docker-compose.k8s.yml`.
+
+data:
+  # image: tidepool-k8s-data
+  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  containerPath: '/go/src/github.com/tidepool-org/platform'
+  dockerFile: 'Dockerfile.data'
+  rebuildCommand: 'make service-restart'
+
+tidewhisperer:
+  # image: tidepool-k8s-tidewhisperer
+  # hostPath: '~/go/src/github.com/tidepool-org/tide-whisperer'
+  containerPath: '/go/src/github.com/tidepool-org/tide-whisperer'
+  rebuildCommand: './build.sh'
+
+blip:
+  # image: tidepool-k8s-blip
+  # hostPath: ../blip
+  containerPath: '/app'
+  apiHost: 'http://localhost:3000'
+  linkedPackages:
+    - name: tideline
+      packageName: tideline
+      hostPath: ../tideline
+      enabled: false
+
+    - name: tidepool-platform-client
+      packageName: tidepool-platform-client
+      hostPath: ../platform-client
+      enabled: false
+
+    - name: viz
+      packageName: '@tidepool/viz'
+      hostPath: ../viz
+      enabled: false
+  securityContext:
+    runAsUser: 1000 # Needed to run as `node` user
+  resources: {} # Turn off resourse limits for blip to allow webpack dev server to run
