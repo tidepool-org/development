@@ -1,0 +1,14 @@
+{{ if .Values.nosqlclient.enabled }}
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: nosqlclient
+  namespace: nosqlclient
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: nosqlclient
+  chart:
+    {{- .Values.nosqlclient.chart | toYaml | nindent 4 }}
+  values: {}
+{{ end }}

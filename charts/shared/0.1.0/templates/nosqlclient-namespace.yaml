@@ -1,0 +1,10 @@
+{{ if .Values.nosqlclient.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nosqlclient
+  labels:
+    istio-injection: disabled
+    linkerd.io/inject: disabled
+{{ end }}
+  

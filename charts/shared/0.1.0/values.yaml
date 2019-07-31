@@ -97,3 +97,6 @@ datadogAgent:
     repository: https://kubernetes-charts.storage.googleapis.com/
     name: datadog
     version: 1.31.11
+
+nosqlclient:
+  enabled: true
