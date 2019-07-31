@@ -100,3 +100,8 @@ datadogAgent:
 
 nosqlclient:
   enabled: true
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: charts/nosqlclient/1.0.0
+    ref: k8s
+          
