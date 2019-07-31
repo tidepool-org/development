@@ -1,0 +1,4 @@
+nosqlclient:
+  enabled: true
+  image: mongoclient/mongoclient:2.2.0
+  port: 3000
