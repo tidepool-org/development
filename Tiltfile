@@ -29,6 +29,8 @@ def main():
   # Set up tidepool helm template command
   tidepool_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
 
+  prepareServer()
+
   if not is_shutdown:
     # Fetch and/or apply generated secrets on startup
     tidepool_helm_template_cmd = setServerSecrets(tidepool_helm_template_cmd)
@@ -61,6 +63,14 @@ def main():
   # Back out of actual provisioning for debugging purposes by uncommenting below
   # fail('NOT YET ;)')
 ### Main End ###
+
+### Prepare Server Start ###
+def prepareServer():
+  # Ensure default-admin clusterrolebinding on default:default service account
+  default_admin_clusterrolebinding = local('kubectl get clusterrolebinding default-admin --ignore-not-found')
+  if not default_admin_clusterrolebinding:
+    local('kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:default')
+### Prepare Server End ###
 
 ### Secrets Start ###
 def setServerSecrets (tidepool_helm_template_cmd):
@@ -161,30 +171,9 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       sync_commands.append(sync(hostPath, containerPath))
 
       if service == 'blip':
-        # Persist the yarn cache from builds to allow subsequent builds to be faster
-        # preBuildCommand += """
-        #   CACHE_UPDATE_REQUIRED=false
-        #   if [ ! -f {hostPath}/packageMountDeps/.yarn-cache.tgz ]; then
-        #     echo "Init empty .yarn-cache.tgz"
-        #     tar -cvzf {hostPath}/packageMountDeps/.yarn-cache.tgz --files-from /dev/null
-        #     CACHE_UPDATE_REQUIRED=true
-        #   fi
-        # """.format(
-        #   hostPath=hostPath,
-        # )
-
-        # postBuildCommand += """
-        #   if [ "$CACHE_UPDATE_REQUIRED" == 'true' ]; then
-        #     echo "Saving Yarn cache"
-        #     docker run --rm --entrypoint tar $EXPECTED_REF czf - /home/node/.cache/yarn/ > {hostPath}/packageMountDeps/.yarn-cache.tgz
-        #   fi
-        # """.format(
-        #   hostPath=hostPath,
-        # )
-
         # Run yarn install in container whenever yarn.lock changes on host
         run_commands.append(run(
-          'cd {} && yarn install'.format(containerPath),
+          'cd {} && yarn install --silent'.format(containerPath),
           trigger='{}/yarn.lock'.format(hostPath),
         ))
 
@@ -204,7 +193,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
 
             # Run yarn install in linked package directory when it's yarn.lock changes
             run_commands.append(run(
-              'cd /app/packageMounts/{} && yarn install'.format(packageName),
+              'cd /app/packageMounts/{} && yarn install --silent'.format(packageName),
               trigger='{}/yarn.lock'.format(packageHostPath),
             ))
 
@@ -257,166 +246,6 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
 
   return tidepool_helm_template_cmd
 ### Service Overrides End ###
-
-### Blip Overrides Start ###
-def applyBlipOverrides(overrides):
-  mounts = overrides.get('linkedPackages')
-  buildTarget = overrides.get('buildTarget', 'development')
-
-  if type(mounts) == 'list':
-    custom_build_args = {
-      'deps': [],
-      'disable_push': True, # No need to push in default docker-for-desktop k8s env
-    }
-
-    fallback_commands = []
-    sync_commands = []
-    run_commands = []
-
-    for mount in mounts:
-      hostPath = mount.get('hostPath')
-      custom_build_args['deps'].append(hostPath)
-      port_forwards += mount.get('portForwards', []);
-
-      if mount.get('primary'):
-        custom_build_args['command'] = """
-          CACHE_UPDATE_REQUIRED=false
-
-          if [ ! -f {hostPath}/packageMountDeps/.yarn-cache.tgz ]; then
-            echo "Init empty .yarn-cache.tgz"
-            tar -cvzf {hostPath}/packageMountDeps/.yarn-cache.tgz --files-from /dev/null
-            CACHE_UPDATE_REQUIRED=true
-          fi
-
-          docker build --target {target} -t $EXPECTED_REF {hostPath};
-
-          docker run --rm --entrypoint cat $EXPECTED_REF /app/yarn.lock > /tmp/yarn.lock
-
-          if ! diff -q {hostPath}/yarn.lock /tmp/yarn.lock > /dev/null 2>&1; then
-            echo "Saving yarn.lock"
-            cp /tmp/yarn.lock {hostPath}/yarn.lock
-            CACHE_UPDATE_REQUIRED=true
-          fi;
-        """.format(
-          target=buildTarget,
-          hostPath=hostPath,
-        )
-
-        custom_build_args['primaryHostPath'] = hostPath
-
-        image = overrides.get('image', 'tidepool/blip:develop')
-        custom_build_args['image'] = image
-
-        fallback_commands.append(fall_back_on([
-          '{}/Dockerfile'.format(hostPath),
-        ]))
-
-        sync_commands.append(sync(hostPath, '/app'))
-
-        # Run yarn install on app directory when it's package.json changes
-        run_commands.append(run(
-          'cd /app && yarn install --silent',
-          trigger='{}/yarn.lock'.format(hostPath),
-        ))
-
-      else:
-        package_name = mount.get('packageName');
-
-        if mount.get('mounted'):
-          print('Linking package: {}'.format(package_name))
-
-          yarn_cache_update_required = yarn_cache_update_required or bool(int(str(local('if [ ! -f {path}/packageMountDeps/{pkg}/yarn.lock ]; then printf 1; else printf 0; fi'.format(
-            path=custom_build_args.get('primaryHostPath'),
-            pkg=package_name,
-          )))))
-
-          custom_build_args['command'] += """
-            if [ -f {hostPath}/yarn.lock ]; then
-              docker run --rm --entrypoint cat $EXPECTED_REF /app/packageMounts/{pkg}/yarn.lock > /tmp/yarn.lock
-
-              if ! diff -q {hostPath}/yarn.lock /tmp/yarn.lock > /dev/null 2>&1; then
-                echo "Saving yarn.lock for {pkg}"
-                cp /tmp/yarn.lock {hostPath}/yarn.lock
-                CACHE_UPDATE_REQUIRED=true
-              fi;
-            fi;
-          """.format(
-            hostPath=hostPath,
-            pkg=package_name,
-          )
-
-          local('cd {path} && mkdir -p packageMounts/{pkg} && rsync -a --delete --exclude "node_modules" --exclude ".git" --exclude "dist" --exclude "coverage" {hostPath}/ {path}/packageMounts/{pkg}'.format(
-            path=custom_build_args.get('primaryHostPath'),
-            hostPath=hostPath,
-            pkg=package_name,
-          ))
-
-          local('cd {path} && mkdir -p packageMountDeps/{pkg} && rsync -a --delete {hostPath}/package.json {path}/packageMountDeps/{pkg}/'.format(
-            path=custom_build_args.get('primaryHostPath'),
-            hostPath=hostPath,
-            pkg=package_name,
-          ))
-
-          local('if [ -f {hostPath}/yarn.lock ]; then cd {path} && mkdir -p packageMountDeps/{pkg} && rsync -a --delete {hostPath}/yarn.lock {path}/packageMountDeps/{pkg}/; fi'.format(
-            path=custom_build_args.get('primaryHostPath'),
-            hostPath=hostPath,
-            pkg=package_name,
-          ))
-
-          sync_commands.append(sync(hostPath, '/app/packageMounts/{}'.format(package_name)))
-
-          # Run yarn install in linked package directory when it's yarn.lock changes
-          run_commands.append(run(
-            'cd /app/packageMounts/{} && yarn install --silent'.format(package_name),
-            trigger='{}/yarn.lock'.format(hostPath),
-          ))
-
-        else:
-          print('Unmounting package: {}'.format(package_name))
-
-          yarn_cache_update_required = yarn_cache_update_required or bool(int(str(local('if [ ! f {path}/packageMountDeps/{pkg}/yarn.lock ]; then printf 1; else printf 0; fi'.format(
-            path=custom_build_args.get('primaryHostPath'),
-            pkg=package_name,
-          )))))
-
-          local('cd {path} && rm -rf packageMounts/{pkg} && rm -rf packageMountDeps/{pkg}/package.json && rm -rf packageMountDeps/{pkg}/yarn.lock'.format(
-            path=custom_build_args.get('primaryHostPath'),
-            hostPath=hostPath,
-            pkg=package_name,
-          ))
-
-    live_update_commands = fallback_commands + sync_commands + run_commands;
-
-    if custom_build_args.get('command'):
-      if yarn_cache_update_required:
-        custom_build_args['command'] += """
-          echo "Saving Yarn cache"
-          docker run --rm --entrypoint tar $EXPECTED_REF czf - /home/node/.cache/yarn/ > {path}/packageMountDeps/.yarn-cache.tgz
-        """.format(
-          path=custom_build_args.get('primaryHostPath'),
-        )
-      else:
-        custom_build_args['command'] += """
-          if [ "$CACHE_UPDATE_REQUIRED" == 'true' ]; then
-            echo "Saving Yarn cache"
-            docker run --rm --entrypoint tar $EXPECTED_REF czf - /home/node/.cache/yarn/ > {path}/packageMountDeps/.yarn-cache.tgz
-          fi;
-        """.format(
-          path=custom_build_args.get('primaryHostPath'),
-        )
-
-      print('Building custom blip image using base image: {}'.format(custom_build_args.get('image')))
-
-      custom_build(
-        ref=custom_build_args.get('image'),
-        command=custom_build_args.get('command'),
-        deps=custom_build_args.get('deps'),
-        disable_push=custom_build_args.get('disable_push'),
-        live_update=live_update_commands,
-        ignore=['node_modules'],
-        tag='tilt-blip',
-      )
-### Blip Overrides End ###
 
 # Unleash the beast
 main()
