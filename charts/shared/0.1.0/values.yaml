@@ -50,7 +50,7 @@ gloo:
   chart:
     repository: https://storage.googleapis.com/solo-public-helm/
     name: gloo
-    version: "0.14.1"
+    version: "0.18.5"
   crds:
     create: false
 

@@ -11,7 +11,7 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    gloo: gateway-proxy
+    gloo: gatewayProxyV2
   type: ClusterIP 
 {{ else }}
   externalName: {{ .Values.global.gateway.proxy.name -}}.{{- .Values.global.gateway.proxy.namespace -}}.svc.cluster.local

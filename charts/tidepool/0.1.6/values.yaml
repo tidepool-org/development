@@ -3,7 +3,7 @@ gloo:
   namespace:
     create: false
   gatewayProxies:
-    gateway-proxy:
+    gatewayProxyV2:
       service:
         httpPort: 8080                                               # HTTP port to listen on
         #httpsPort: 8443                                             # HTTPS port to listen on
@@ -43,7 +43,7 @@ global:
       issuerKind: ClusterIssuer                                       # kind of the certificate issuer
   gateway:                                                            # only needed if need to expose the incoming IP address
     proxy:                                                            # proxy if embedded gloo gateway is disabled.
-      name: gateway-proxy                                             # the name of the API gateway service (unused if gloo.enabled)
+      name: gatewayProxyV2                                             # the name of the API gateway service (unused if gloo.enabled)
       namespace: gloo-system                                          # the namespace of the API gateway proxy service  (unused if gloo.enabled)
   store: 
     #type: s3                                                         # store non-Mongo data in S3

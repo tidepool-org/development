@@ -15,7 +15,7 @@ spec:
     crds:
       create: {{ .Values.gloo.crds.create }}
     gatewayProxies:
-      gateway-proxy:
+      gatewayProxyV2:
         service:
           extraAnnotations:
             service.beta.kubernetes.io/aws-load-balancer-type: "nlb"

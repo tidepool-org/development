@@ -1,6 +1,6 @@
 gloo:
   gatewayProxies:
-    gateway-proxy:
+    gatewayProxyV2:
       service:
         httpPort: 3000                                               # Listen on ::3000 for HTTP traffic only
 global:
