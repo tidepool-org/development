@@ -84,8 +84,8 @@ global:
   nameOverride: ""                                                    # the name to use for the helm chart, if given
   mongo:
     await: 'false'                                                    # whether to await for mongo to be ready before starting services
+    scheme: "mongodb"
     hosts: "mongodb"                                                  # comma-separated list of Mongo hosts
-    port: 27017                                                       # the Mongo port
     username: ''                                                      # a username in the Mongo instance
     ssl: 'false'                                                      # whether to use SSL to communicate with Mongo
     optParams: ''                                                     # optional parameters to pass on the Mongo connection string

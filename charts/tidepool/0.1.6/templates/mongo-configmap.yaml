@@ -1,0 +1,14 @@
+{{ with .Values.mongo }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo
+  namespace: {{ $.Release.Namespace }}
+data:
+  scheme: {{ .scheme }}
+  hosts: {{ .hosts | quote }}
+  username: {{ .username | quote }}
+  ssl: {{ .ssl }}
+  optParams: {{ .optParams | quote }}
+{{ end }} 
+{{ end }}
