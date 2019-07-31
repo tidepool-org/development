@@ -13,12 +13,6 @@ spec:
   values:
     kubeStateMetrics:
       enabled: false
-    kube-state-metrics:
-      image:
-        repository: quay.io/coreos/kube-state-metrics
-        tag: v1.7.1
-      rbac:
-        create: true
     datadog:
       apiKeyExistingSecret: datadog
       appKeyExistingSecret: datadog
