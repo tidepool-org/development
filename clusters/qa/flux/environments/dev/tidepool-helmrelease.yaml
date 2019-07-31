@@ -121,6 +121,6 @@ spec:
     seagull:
       image: tidepool/seagull:develop-6ee6461a72f0e24261f946183eef12853c1f1fb2
     shoreline:
-      image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
+      image: tidepool/shoreline:develop-2894ba8e68647a1fcc74822f9dd7bf2e20d32c44
     tidewhisperer:
       image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
