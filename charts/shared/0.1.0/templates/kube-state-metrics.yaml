@@ -1,0 +1,14 @@
+{{ if .Values.kubeStateMetrics.enabled }}
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: kube-state-metrics
+  namespace: datadog
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: kube-state-metrics
+  chart:
+    {{- .Values.kubeStateMetrics.chart | toYaml | nindent 4 }}
+  values: {}
+{{ end }}
