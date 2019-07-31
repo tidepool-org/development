@@ -13,6 +13,7 @@ spec:
   values:
     kube-state-metrics:
       image:
+        repository: quay.io/coreos/kube-state-metrics
         tag: 1.7.1
       rbac:
         create: true
