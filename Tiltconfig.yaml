@@ -1,5 +1,6 @@
 # Copy to `local/Tiltconfig.yaml` and update as needed
 
+### Global Config Start ###
 tidepool_helm_charts_version: '0.1.5' # Version of the Tidepool helm charts to deploy.
 
 global:
@@ -18,39 +19,39 @@ global:
         name: "localhost:3000"
   secrets:
     hostPath: './local/secrets'
-  securityContext:                                                    # the security context for all services
+  securityContext:
     allowPrivilegeEscalation: false
-    runAsNonRoot: false                                                # we don't need root access
-    runAsUser: 0
+    runAsNonRoot: false
+    runAsUser: 0 # We need to run as root for some of the rebuild commands in development goLang services
     capabilities:
       drop:
       - ALL
+### Global Config End ###
 
+### Gateway Config Start ###
 gateway-proxy:
-  portForwards: ['3000:8080']
+  portForwards: ['3000']
 
 gloo:
   gatewayProxies:
     gateway-proxy:
       service:
         httpPort: 3000
+### Gateway Config End ###
 
+### MongoDB Config Start ###
 mongodb:
   enabled: false # We deploy our own directly within the Tiltfile
   hostPath: '/data/db' # Note: this is relative to the k8s server container defined in `docker-compose.k8s.yml`.
+### MongoDB Config End ###
 
-data:
-  # image: tidepool-k8s-data
+### Tidepool Services Config Start ###
+auth:
+  # image: tidepool-k8s-auth
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
-  dockerFile: 'Dockerfile.data'
+  dockerFile: 'Dockerfile.auth'
   rebuildCommand: 'make service-restart'
-
-tidewhisperer:
-  # image: tidepool-k8s-tidewhisperer
-  # hostPath: '~/go/src/github.com/tidepool-org/tide-whisperer'
-  containerPath: '/go/src/github.com/tidepool-org/tide-whisperer'
-  rebuildCommand: './build.sh'
 
 blip:
   # image: tidepool-k8s-blip
@@ -76,3 +77,108 @@ blip:
   securityContext:
     runAsUser: 1000 # Needed to run as `node` user
   resources: {} # Turn off resourse limits for blip to allow webpack dev server to run
+
+blob:
+  # image: tidepool-k8s-blob
+  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  containerPath: '/go/src/github.com/tidepool-org/platform'
+  dockerFile: 'Dockerfile.blob'
+  rebuildCommand: 'make service-restart'
+
+data:
+  # image: tidepool-k8s-data
+  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  containerPath: '/go/src/github.com/tidepool-org/platform'
+  dockerFile: 'Dockerfile.data'
+  rebuildCommand: 'make service-restart'
+
+export:
+  # image: tidepool-k8s-export
+  # hostPath: ../export
+  containerPath: '/app'
+
+gatekeeper:
+  # image: tidepool-k8s-gatekeeper
+  # hostPath: ../gatekeeper
+  containerPath: '/app'
+
+highwater:
+  # image: tidepool-k8s-highwater
+  # hostPath: ../highwater
+  containerPath: '/app'
+
+hydrophone:
+  # image: tidepool-k8s-hydrophone
+  # hostPath: '~/go/src/github.com/tidepool-org/hydrophone'
+  containerPath: '/go/src/github.com/tidepool-org/hydrophone'
+  rebuildCommand: './build.sh'
+
+image:
+  # image: tidepool-k8s-image
+  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  containerPath: '/go/src/github.com/tidepool-org/platform'
+  dockerFile: 'Dockerfile.image'
+  rebuildCommand: 'make service-restart'
+
+jellyfish:
+  # image: tidepool-k8s-jellyfish
+  # hostPath: ../jellyfish
+  containerPath: '/app'
+
+message-api:
+  # image: tidepool-k8s-message-api
+  # hostPath: ../message-api
+  containerPath: '/app'
+
+migrations:
+  # image: tidepool-k8s-migrations
+  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  containerPath: '/go/src/github.com/tidepool-org/platform'
+  dockerFile: 'Dockerfile.migrations'
+  rebuildCommand: 'make service-restart'
+
+notification:
+  # image: tidepool-k8s-notification
+  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  containerPath: '/go/src/github.com/tidepool-org/platform'
+  dockerFile: 'Dockerfile.notification'
+  rebuildCommand: 'make service-restart'
+
+seagull:
+  # image: tidepool-k8s-seagull
+  # hostPath: ../seagull
+  containerPath: '/app'
+
+shoreline:
+  # image: tidepool-k8s-shoreline
+  # hostPath: '~/go/src/github.com/tidepool-org/shoreline'
+  containerPath: '/go/src/github.com/tidepool-org/shoreline'
+  rebuildCommand: './build.sh'
+
+task:
+  # image: tidepool-k8s-task
+  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  containerPath: '/go/src/github.com/tidepool-org/platform'
+  dockerFile: 'Dockerfile.task'
+  rebuildCommand: 'make service-restart'
+
+tidewhisperer:
+  # image: tidepool-k8s-tidewhisperer
+  # hostPath: '~/go/src/github.com/tidepool-org/tide-whisperer'
+  containerPath: '/go/src/github.com/tidepool-org/tide-whisperer'
+  rebuildCommand: './build.sh'
+
+tools:
+  # image: tidepool-k8s-tools
+  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  containerPath: '/go/src/github.com/tidepool-org/platform'
+  dockerFile: 'Dockerfile.tools'
+  rebuildCommand: 'make service-restart'
+
+user:
+  # image: tidepool-k8s-user
+  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  containerPath: '/go/src/github.com/tidepool-org/platform'
+  dockerFile: 'Dockerfile.user'
+  rebuildCommand: 'make service-restart'
+### Tidepool Services Config End ###
