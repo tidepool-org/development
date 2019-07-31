@@ -1,4 +1,6 @@
 # Copy to `local/Tiltconfig.yaml` and update as needed
+# To run local development images for the tidepool services, uncomment the `image` and `hostPath`
+# parameters, and update the `hostPath` if you've checked the repo out to a different location.
 
 ### Global Config Start ###
 tidepool_helm_charts_version: '0.1.5' # Version of the Tidepool helm charts to deploy.
@@ -10,10 +12,8 @@ global:
       typestories: 8082
   hosts:
     default:
-      protocol:
-        http
-      host:
-        "localhost:3000"
+      protocol: http
+      host: "localhost:3000"
     http:
       localhost:
         name: "localhost:3000"
@@ -42,7 +42,7 @@ gloo:
 ### MongoDB Config Start ###
 mongodb:
   enabled: false # We deploy our own directly within the Tiltfile
-  hostPath: '/data/db' # Note: this is relative to the k8s server container defined in `docker-compose.k8s.yml`.
+  hostPath: '/data/db' # Note: this path is relative to the k8s server container defined in `docker-compose.k8s.yml`. Local machine path is volume-mounted using the TIDEPOOL_DOCKER_MONGO_VOLUME environment variable.
 ### MongoDB Config End ###
 
 ### Tidepool Services Config Start ###
