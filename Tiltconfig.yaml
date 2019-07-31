@@ -57,6 +57,7 @@ blip:
   # hostPath: ../blip
   containerPath: '/app'
   apiHost: 'http://localhost:3000'
+  webpackDevTool: cheap-module-eval-source-map
   linkedPackages:
     - name: tideline
       packageName: tideline

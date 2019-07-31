@@ -41,6 +41,10 @@ spec:
         - name: WEBPACK_PUBLIC_PATH
           value: {{ .Values.blip.webpackPublicPath }}
 {{ end }}
+{{ if .Values.blip.webpackDevTool }}
+        - name: WEBPACK_DEVTOOL
+          value: {{ .Values.blip.webpackDevTool }}
+{{ end }}
 {{ if .Values.blip.apiHost }}
         - name: API_HOST
           value: {{ .Values.blip.apiHost }}
