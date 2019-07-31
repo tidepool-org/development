@@ -1,3 +1,0 @@
-nosqlclient:
-  image: 'mongoclient/mongoclient'
-  port: 3001
