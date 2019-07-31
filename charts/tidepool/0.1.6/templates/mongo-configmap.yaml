@@ -11,4 +11,3 @@ data:
   ssl: {{ .ssl }}
   optParams: {{ .optParams | quote }}
 {{ end }} 
-{{ end }}
