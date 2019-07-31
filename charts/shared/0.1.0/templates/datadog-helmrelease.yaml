@@ -11,6 +11,8 @@ spec:
   chart:
     {{- .Values.datadogAgent.chart | toYaml | nindent 4 }}
   values:
+    kubeStateMetrics:
+      enabled: false
     kube-state-metrics:
       image:
         repository: quay.io/coreos/kube-state-metrics
