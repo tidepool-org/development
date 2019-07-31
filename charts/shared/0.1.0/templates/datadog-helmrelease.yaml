@@ -11,6 +11,11 @@ spec:
   chart:
     {{- .Values.datadogAgent.chart | toYaml | nindent 4 }}
   values:
+    kube-state-metrics:
+      image:
+        tag: 1.7.1
+      rbac:
+        create: true
     datadog:
       apiKeyExistingSecret: datadog
       appKeyExistingSecret: datadog
