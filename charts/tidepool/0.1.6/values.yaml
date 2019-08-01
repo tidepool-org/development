@@ -1,5 +1,9 @@
 gloo:
   enabled: true
+  settings:
+    create: true
+  discovery:
+    fdsMode: WHITELIST
   namespace:
     create: false
   gatewayProxies:
