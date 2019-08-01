@@ -29,8 +29,6 @@ def main():
   # Set up tidepool helm template command
   tidepool_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
 
-  prepareServer()
-
   if not is_shutdown:
     # Fetch and/or apply generated secrets on startup
     tidepool_helm_template_cmd = setServerSecrets(tidepool_helm_template_cmd)
@@ -63,14 +61,6 @@ def main():
   # Back out of actual provisioning for debugging purposes by uncommenting below
   # fail('NOT YET ;)')
 ### Main End ###
-
-### Prepare Server Start ###
-def prepareServer():
-  # Ensure default-admin clusterrolebinding on default:default service account
-  default_admin_clusterrolebinding = local('kubectl get clusterrolebinding default-admin --ignore-not-found')
-  if not default_admin_clusterrolebinding:
-    local('kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:default')
-### Prepare Server End ###
 
 ### Secrets Start ###
 def setServerSecrets (tidepool_helm_template_cmd):
