@@ -1,0 +1,32 @@
+{{ if .Values.gloo.enabled }}
+apiVersion: gateway.solo.io.v2/v2
+kind: Gateway
+metadata:
+  annotations:
+    origin: default
+  name: gateway-ssl
+  namespace: gloo-system
+spec:
+  ssl: true
+  bindAddress: '::'
+  bindPort: 8443
+  gatewayProxyName: gateway-proxy-v2
+  httpGateway: {}
+  useProxyProto: false
+  plugins:
+    accessLoggingService:
+      accessLog:
+      - fileSink:
+          path: /dev/stdout
+          jsonFormat:
+            startTime: "%START_TIME(%Y/%m/%dT%H:%M:%S%z %s)%"
+            duration: "%DURATION%"
+            protocol: "%PROTOCOL%"
+            method: "%REQ(:METHOD)%"
+            authority: "%REQ(:AUTHORITY)%"
+            path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+            bytesReceived: "%BYTES_RECEIVED%"
+            bytesSent: "%BYTES_SENT%"
+            responseCode: "%RESPONSE_CODE%"
+            sessionToken: "%REQ(x-tidepool-session-token)%"
+{{ end }}
