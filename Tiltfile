@@ -155,10 +155,13 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       run_commands = []
       build_deps = [hostPath]
 
-      buildCommand = 'docker build --file {dockerFile} --target {target} -t $EXPECTED_REF'.format(
+      buildCommand = 'docker build --file {dockerFile} -t $EXPECTED_REF'.format(
         dockerFile='{}/{}'.format(hostPath, dockerFile),
         target=target,
       )
+
+      if target:
+        buildCommand += ' --target {}'.format(target)
 
       preBuildCommand = ''
       postBuildCommand = ''
@@ -230,8 +233,8 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       buildCommand += ' {}'.format(hostPath)
 
       # Apply any rebuild commands specified
-      if overrides.get('rebuildCommand'):
-        run_commands.append(run(overrides.get('rebuildCommand')))
+      if overrides.get('restartCommand'):
+        run_commands.append(run(overrides.get('restartCommand')))
 
       live_update_commands = fallback_commands + sync_commands + run_commands;
 

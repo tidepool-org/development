@@ -51,7 +51,7 @@ auth:
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.auth'
-  rebuildCommand: 'make service-restart'
+  restartCommand: 'make service-restart'
 
 blip:
   # image: tidepool-k8s-blip
@@ -83,14 +83,14 @@ blob:
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.blob'
-  rebuildCommand: 'make service-restart'
+  restartCommand: 'make service-restart'
 
 data:
   # image: tidepool-k8s-data
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.data'
-  rebuildCommand: 'make service-restart'
+  restartCommand: 'make service-restart'
 
 export:
   # image: tidepool-k8s-export
@@ -111,14 +111,14 @@ hydrophone:
   # image: tidepool-k8s-hydrophone
   # hostPath: '~/go/src/github.com/tidepool-org/hydrophone'
   containerPath: '/go/src/github.com/tidepool-org/hydrophone'
-  rebuildCommand: './build.sh'
+  restartCommand: './build.sh'
 
 image:
   # image: tidepool-k8s-image
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.image'
-  rebuildCommand: 'make service-restart'
+  restartCommand: 'make service-restart'
 
 jellyfish:
   # image: tidepool-k8s-jellyfish
@@ -135,50 +135,51 @@ migrations:
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.migrations'
-  rebuildCommand: 'make service-restart'
+  restartCommand: 'make service-restart'
 
 notification:
   # image: tidepool-k8s-notification
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.notification'
-  rebuildCommand: 'make service-restart'
+  restartCommand: 'make service-restart'
 
 seagull:
   # image: tidepool-k8s-seagull
   # hostPath: ../seagull
   containerPath: '/app'
+  restartCommand: 'touch service-restart'
 
 shoreline:
   # image: tidepool-k8s-shoreline
   # hostPath: '~/go/src/github.com/tidepool-org/shoreline'
   containerPath: '/go/src/github.com/tidepool-org/shoreline'
-  rebuildCommand: './build.sh'
+  restartCommand: './build.sh'
 
 task:
   # image: tidepool-k8s-task
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.task'
-  rebuildCommand: 'make service-restart'
+  restartCommand: 'make service-restart'
 
 tidewhisperer:
   # image: tidepool-k8s-tidewhisperer
   # hostPath: '~/go/src/github.com/tidepool-org/tide-whisperer'
   containerPath: '/go/src/github.com/tidepool-org/tide-whisperer'
-  rebuildCommand: './build.sh'
+  restartCommand: './build.sh'
 
 tools:
   # image: tidepool-k8s-tools
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.tools'
-  rebuildCommand: 'make service-restart'
+  restartCommand: 'make service-restart'
 
 user:
   # image: tidepool-k8s-user
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.user'
-  rebuildCommand: 'make service-restart'
+  restartCommand: 'make service-restart'
 ### Tidepool Services Config End ###
