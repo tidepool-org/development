@@ -49,7 +49,7 @@ The command deploys Tidepool on the Kubernetes cluster in the default configurat
 The [configuration](#configuration) section lists the parameters that can be configured during installation.
 
 The default configuration  includes an embedded Mongo database and a Gloo API Gateway.  You may access
-the Tidepool Web Service at port 80 of the `gateway-proxy` service using kubectl port-forwarding:
+the Tidepool Web Service at port 8080 of the `gateway-proxyy-v2` service using kubectl port-forwarding:
 
 ```console
 kubectl port-forward svc/gateway-proxy 8080
