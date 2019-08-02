@@ -1,4 +1,4 @@
-{{ with .Values.mongo }}
+{{ with .Values.global.mongo }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
