@@ -9,7 +9,6 @@ metadata:
 spec:
   releaseName: gloo
   chart:
-  chart:
     {{- .Values.gloo.chart | toYaml | nindent 4 }}
   values:
     crds:
