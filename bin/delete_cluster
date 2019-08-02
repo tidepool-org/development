@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-if [ $# -ne 2 ]
+if [ $# -lt 2 ]
 then
   echo "Usage:  delete_cluster \${CLUSTER_NAME} \${ENVIRONMENTS} \${NODE_GROUPS:-ng-1 ng-kiam}"
   exit
@@ -29,8 +29,8 @@ STACKS="$STACKS eksctl-${CLUSTER_NAME}-cluster"
 for stack in ${STACKS}
 do
   echo "deleting $stack"
-  #aws cloudformation delete-stack --stack-name $stack
-  #aws cloudformation stack-delete-complete --stack-name $stack
+  aws cloudformation delete-stack --stack-name $stack
+  aws cloudformation stack-delete-complete --stack-name $stack
   if [ $? -ne 0 ]
   then
       echo "failed to delete $stack"
