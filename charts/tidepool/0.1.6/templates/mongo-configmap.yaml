@@ -5,9 +5,9 @@ metadata:
   name: mongo
   namespace: {{ $.Release.Namespace }}
 data:
-  scheme: {{ .scheme }}
+  scheme: {{ .scheme | quote }}
   hosts: {{ .hosts | quote }}
   username: {{ .username | quote }}
-  ssl: {{ .ssl }}
+  ssl: {{ .ssl | quote }}
   optParams: {{ .optParams | quote }}
 {{ end }} 
