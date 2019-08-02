@@ -30,7 +30,7 @@ for stack in ${STACKS}
 do
   echo "deleting $stack"
   aws cloudformation delete-stack --stack-name $stack
-  aws cloudformation stack-delete-complete --stack-name $stack
+  aws cloudformation wait stack-delete-complete --stack-name $stack
   if [ $? -ne 0 ]
   then
       echo "failed to delete $stack"
