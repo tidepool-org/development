@@ -1,8 +1,30 @@
 #!/bin/bash
-CLUSTER_NAME=${1:-$CLUSTER_NAME}
-CONFIG_REPO=${2:-$(git rev-parse --show-toplevel)}
-DEV_REPO=$(realpath ${3:-${CONFIG_REPO}/../development})
-REGION=${4:-us-west-2}
-CONFIG_FILE=$(realpath $CONFIG_REPO/clusters/${CLUSTER_NAME}/config.yaml)
 
-aws cloudformation create-stack --stack-name "eksctl-${CLUSTER_NAME}-roles" --capabilities CAPABILITY_NAMED_IAM --template-body file://${DEV_REPO}/cf/cluster-roles.yaml --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}     ParameterKey=NodeGroupStackName,ParameterValue=eksctl-${CLUSTER_NAME}-nodegroup-ng-kiam ParameterKey=Region,ParameterValue=${REGION} ParameterKey=AccountNumber,ParameterValue=${TIDEPOOL_AWS_ACCOUNT}
+if [ -z ${DEV_REPO+x} ]
+then
+	echo "Must set \$DEV_REPO in environment"
+	exit
+fi
+
+if [ "$TIDEPOOL_AWS_ACCOUNT" == "" ]
+then
+	echo "Must set \$TIDEPOOL_AWS_ACCOUNT in enviroment"
+	exit
+fi
+	
+CLUSTER_NAME=${1:-${CLUSTER_NAME:-""}}
+
+if [ "$CLUSTER_NAME" == "" ]
+then
+	echo "missing cluster name"
+	echo "usage: cluster_roles \${CLUSTER_NAME} \${AWS_REGION:-us-west-2}"
+fi
+
+REGION=${2:-${AWS_REGION:-us-west-2}}
+
+CF_FILE=file://${DEV_REPO}/cf/cluster-roles.yaml
+NODEGROUP_STACK_NAME=eksctl-${CLUSTER_NAME}-nodegroup-ng-kiam
+STACK_NAME=eksctl-${CLUSTER_NAME}-roles
+
+set -x
+aws cloudformation create-stack --stack-name ${STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body ${CF_FILE} --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}     ParameterKey=NodeGroupStackName,ParameterValue=${NODEGROUP_STACK_NAME} ParameterKey=Region,ParameterValue=${REGION} ParameterKey=AccountNumber,ParameterValue=${TIDEPOOL_AWS_ACCOUNT}

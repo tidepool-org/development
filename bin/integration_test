@@ -31,7 +31,7 @@ BASE_ENVIRONMENT=${4:-develop}
 PROTOCOL=${5:-http}
 
 # The Git config repo.
-CONFIGREPO=${6:-git@github.com:tidepool-org/dev-ops}
+CONFIG_REPO=${6:-${CONFIG_REPO:-git@github.com:tidepool-org/dev-ops}}
 
 # The path within the config repo to all the Tidepool environment configurations maintained by the cluster.
 CONFIGPATH=${7:-clusters/integration-test/flux/environments}
@@ -72,8 +72,8 @@ RESULTFILE=ghostinspector.json
 function start_services()
 {
     cd $TMPDIR
-    git clone ${CONFIGREPO}
-    cd $(echo -n ${CONFIGREPO} | sed -e "s#.*/##")/${CONFIGPATH}
+    git clone ${CONFIG_REPO}
+    cd $(echo -n ${CONFIG_REPO} | sed -e "s#.*/##")/${CONFIGPATH}
     mkdir -p ${EPHEMERAL_DIR}
     cp -r ${BASE_ENVIRONMENT}/* ${EPHEMERAL_DIR}/ 
     cd ${EPHEMERAL_DIR}

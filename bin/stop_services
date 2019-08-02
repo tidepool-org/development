@@ -1,15 +1,6 @@
 #!/bin/bash 
 
-if [ $# -ne 2 ]
-then
-  echo "Usage:  stop_services \${CLUSTER_NAME} \${ENVIRONMENTS} \${NODE_GROUPS:-ng-1 ng-kiam}"
-  exit
-fi
-
-CLUSTER_NAME=${1:-$CLUSTER_NAME}
-ENVIRONMENTS=$2
-
-for env in $ENVIRONMENTS
+for env in $1
 do
   echo "shutting down environment env"
   helm delete ${env}-tidepool
@@ -20,4 +11,4 @@ do
   echo "shutting down service $release"
   helm delete $release
 done   
-echo "done shutting down services for cluster $CLUSTER_NAME, environments $ENVIRONMENTS"
+echo "done shutting down services for environments $ENVIRONMENTS"

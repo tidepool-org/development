@@ -1,14 +1,12 @@
-#!/bin/bash -xv
-# Install/upgrade Weave Flux
+#!/bin/bash 
+# Install/upgrade Weave Flux to watch the current branch of the CONFIG repo
 #
-# If run within the a Git repo, it will use the remote origin repo as the source repo and the current branch as the source branch.
-
-rp=$(git rev-parse --is-inside-work-tree 2>/dev/null)
-if [ "${rp}" = "true" ]
-then
-    CURRENT_BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
-    CURRENT_REPO=$(git config --get remote.origin.url)
-fi
+# Usage: install_flux ${SECRET:-.../flux-secret.yaml} ${BRANCH:-current branch} ${PATH:-.../flux}
+#
+# Current Kubectl context must point to cluster that you want to update.
+#
+# Provide CONFIG_REPO in env variable OR $(cwd) must be within config repo.
+# Provide CLUSTER_NAME in env variable OR $(cwd) must be within clusters subdir of config repo.
 
 CRDS_UNINSTALLED=$(kubectl get crds helmreleases.flux.weave.works >/dev/null; echo $?)
 if [ ${CRDS_UNINSTALLED} -eq 0 ]
@@ -18,14 +16,34 @@ else
     INSTALL_CRDS=true
 fi
 
-BASE=$(git rev-parse --show-toplevel)/clusters/
-CLUSTER_NAME=$(pwd | sed -e "s#^$BASE##" -e "s#/.*##")
-CURRENT_PATH=clusters/${CLUSTER_NAME}
+CONFIG_REPO=${CONFIG_REPO:-$(git rev-parse --show-toplevel)}
+if [ $? -ne 0 ]
+then
+    echo "\$CONFIG_REPO cannot be inferred"
+    exit 1
+fi
 
-SOURCE_BRANCH=${2:-${CURRENT_BRANCH}}
-SOURCE_PATH=${3:-${CURRENT_PATH}/flux}
-SOURCE_REPO=${4:-${CURRENT_REPO}}
-SOURCE_SECRET=${1:-${BASE}/${CLUSTER_NAME}/flux-secret.yaml}
+BASE=${CONFIG_REPO}/clusters/
+CLUSTER_NAME=${CLUSTER_NAME:-$(pwd | sed -e "s#^$BASE##" -e "s#/.*##")}
+
+if [ "$CLUSTER_NAME" == "" ]
+then
+    echo "\$CLUSTER_NAME cannot be inferred"
+    exit 1
+fi
+
+if [ ! -d "${CONFIG_REPO}/clusters/${CLUSTER_NAME}" ]
+then
+   echo "Cannot find cluster definition in config repo at ${CONFIG_REPO}/clusters/${CLUSTER_NAME}"
+   exit 1
+fi
+
+# Pull the remote url and the branch from Git if not provided
+cd $CONFIG_REPO
+SOURCE_SECRET=${1:-${BASE}${CLUSTER_NAME}/flux-secret.yaml}
+SOURCE_BRANCH=${2:-$(git branch | grep \* | cut -d ' ' -f2)}
+SOURCE_PATH=${3:-clusters/${CLUSTER_NAME}/flux}
+SOURCE_URL=$(git config --get remote.origin.url)
 
 if [ -f $SOURCE_SECRET ]
 then
@@ -49,10 +67,10 @@ rm -rf flux
 git clone https://github.com/weaveworks/flux/
 cd flux
 
-read -p "Install weave: install_crds=${INSTALL_CRDS} branch=${SOURCE_BRANCH} path=${SOURCE_PATH} repo=${SOURCE_REPO}? (y|N)  " -n 1 -r
+read -p "Install Flux: install_crds=${INSTALL_CRDS} branch=${SOURCE_BRANCH} path=${SOURCE_PATH} repo=${SOURCE_URL} cluster=${CLUSTER_NAME} ${SECRETARG}? (y|N)  " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
-then
-    kubectl install -f flux-helm-repositories-secret.yaml
+then 
+    set -x
     helm delete flux --purge
     helm upgrade \
     --install \
@@ -64,7 +82,7 @@ then
       --set helmOperator.createCRD=${INSTALL_CRDS} \
       --set helmOperator.configureRepositories.enable=true \
       --set syncGarbageCollection.enabled=true \
-      --set git.url=${SOURCE_REPO} \
+      --set git.url=${SOURCE_URL} \
       --set git.path=${SOURCE_PATH} \
       --set git.branch=${SOURCE_BRANCH} \
       --set git.label=${CLUSTER_NAME} \

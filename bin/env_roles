@@ -1,10 +1,45 @@
 #!/bin/bash
-CLUSTER_NAME=$1
-ENV_NAME=$2
-BUCKET_NAME=${3:-tidepool-${ENV_NAME}-data}
-REGION=${4:-us-west-2}
-CONFIG_REPO=${4:-$(git rev-parse --show-toplevel)}
-DEV_REPO=$(realpath ${5:-${CONFIG_REPO}/../development})
-CONFIG_FILE=$(realpath $CONFIG_REPO/clusters/${CLUSTER_NAME}/config.yaml)
+set -o errexit -o pipefail -o noclobber -o nounset
 
-aws cloudformation create-stack --stack-name "eksctl-${CLUSTER_NAME}-${ENV_NAME}-roles" --capabilities CAPABILITY_NAMED_IAM --template-body file://${DEV_REPO}/cf/env-roles.yaml --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}  ParameterKey=EnvName,ParameterValue=${ENV_NAME}   ParameterKey=ClusterRoleStackName,ParameterValue=eksctl-${CLUSTER_NAME}-roles ParameterKey=Region,ParameterValue=${REGION} ParameterKey=AccountNumber,ParameterValue=${TIDEPOOL_AWS_ACCOUNT} ParameterKey=BucketName,ParameterValue=${BUCKET_NAME}
+if [ -z ${DEV_REPO+x} ]
+then
+	echo "Must set \$DEV_REPO in environment"
+	exit
+fi
+	
+if [ -z ${TIDEPOOL_AWS_ACCOUNT} ]
+then
+	echo "Must set \$TIDEPOOL_AWS_ACCOUNT in environment"
+	exit
+fi
+
+TIDEPOOL_ENVIRONMENT=${1:-${TIDEPOOL_ENVIRONMENT:-""}}
+CLUSTER_NAME=${2:-${CLUSTER_NAME:-""}}
+
+bad=0
+if [ "$CLUSTER_NAME" == "" ]
+then
+	echo "missing cluster name"
+	bad=1
+fi
+
+if [ "$TIDEPOOL_ENVIRONMENT" == "" ]
+then
+	echo "missing cluster name"
+	bad=1
+fi
+
+if [ $bad -eq 1 ]
+then
+	echo "usage: env_roles \${TIDEPOOL_ENVIRONMENT} \${CLUSTER_NAME}"
+	exit 1
+fi
+
+BUCKET_NAME=${3:-tidepool-${TIDEPOOL_ENVIRONMENT}-data}
+AWS_REGION=${3:-${AWS_REGION:-us-west-2}}
+
+CF_FILE=file://${DEV_REPO}/cf/env-roles.yaml
+STACK_NAME=eksctl-${CLUSTER_NAME}-${TIDEPOOL_ENVIRONMENT}-roles
+
+set -x
+aws cloudformation create-stack --stack-name ${STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body ${CF_FILE} --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}  ParameterKey=EnvName,ParameterValue=${TIDEPOOL_ENVIRONMENT}   ParameterKey=ClusterRoleStackName,ParameterValue=eksctl-${CLUSTER_NAME}-roles ParameterKey=Region,ParameterValue=${AWS_REGION} ParameterKey=AccountNumber,ParameterValue=${TIDEPOOL_AWS_ACCOUNT} ParameterKey=BucketName,ParameterValue=${BUCKET_NAME}
