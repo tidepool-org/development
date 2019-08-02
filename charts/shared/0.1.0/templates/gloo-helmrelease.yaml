@@ -16,7 +16,7 @@ spec:
     settings:
       create: true
     discovery:
-      fdsMode: "BLACKLIST"
+      fdsMode: "WHITELIST"
     gatewayProxies:
       gatewayProxyV2:
         service:
