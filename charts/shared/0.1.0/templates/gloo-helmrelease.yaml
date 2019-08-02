@@ -14,6 +14,10 @@ spec:
   values:
     crds:
       create: {{ .Values.gloo.crds.create }}
+    settings:
+      create: true
+    discovery:
+      fdsMode: BLACKLIST 
     gatewayProxies:
       gatewayProxyV2:
         service:
