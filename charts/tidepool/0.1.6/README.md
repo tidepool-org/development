@@ -92,14 +92,10 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | Parameter                          | Description                                                                     | Default                           |
 | ---------------------------------- | ------------------------------------------------------------------------------- | --------------------------------- |
 | `global.aws.region`               | AWS region to deploy in                       | `us-west-2` |
-|
-| `global.certificateIssuer`        | Name of TLS certificate issuer, e.g. `letsencrypt-stating`, `letsencrypt-production` | `` |
-| `global.issuerKind`        | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer` | `ClusterIssuer` |
-| `global.awsRegion`              | Name of the AWS region | `us-west-2`|
 | `global.clusterName`              | The name of the K8s cluster that hosts this env.| ``|
 | `global.environment`              | Node environment (passed as NODE_ENV)         | `production`|
 | `global.fullnameOverride`         |                                               | ``          |
-| `global.gateway.proxy.name`   | Name of the API gateway proxy                     | `gateway-proxy`  |
+| `global.gateway.proxy.name`   | Name of the API gateway proxy                     | `gateway-proxy-v2`  |
 | `global.gateway.proxy.namespace`   | Namespace of the API gateway proxy           | `gloo-system`  |
 | `global.hosts.default.host`   | Host to use in email verification link.           | `localhost`  |
 | `global.hosts.default.protocol`   | If `http` use `http` for email verification link. If `https` use 	`https` for email verification links.          | `http`     |
@@ -107,6 +103,8 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.hosts.https.commonName`   | DNS common name   | ``  |
 | `global.hosts.https.secretName`   | TLS secret name to use for authentication | ``  |
 | `global.hosts.https.dnsNames`   | List of Subject Alternative Names to use | `[]`  |
+| `global.hosts.https.certificateIssuer`        | Name of TLS certificate issuer, e.g. `letsencrypt-stating`, `letsencrypt-production` | `` |
+| `global.hosts.https.issuerKind`        | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer` | `ClusterIssuer` |
 | `global.hpa.enabled`            | If true, the allocate a horizontal pod autoscalers for all pods | 'true' |
 | `global.linkerd`                | If `enabled` use the `linkerd` service mesh     | `disabled`  |
 | `global.mongo.hosts`              | Comma-separated list of Mongo hosts           | `mongodb`   |
@@ -146,9 +144,9 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.securityContext`   | Set Security Context for pods                        | `200m`  |
 | `global.store.type`                | If `s3`, store blob/image data in Amazon S3. If `file` store blob/image data in local files.               | `file`                            |
 | `gloo.enabled` | Whether to include an API Gateway with this installation         | `true` |
-| `gloo.gatewayProxies.gateway-proxy.service.httpPort` | The http port to listen to.| `80` |
-| `gloo.gatewayProxies.gateway-proxy.service.httpsPort` | The https port to listen to.| `` |
-| `gloo.gatewayProxies.gateway-proxy.service.type` | The Service type to expose. If `LoadBalancer`, then a LoadBalancer will be allocated. | `ServiceIP` |
+| `gloo.gatewayProxies.gateway-proxy-v2.service.httpPort` | The http port to listen to.| `80` |
+| `gloo.gatewayProxies.gateway-proxy-v2.service.httpsPort` | The https port to listen to.| `` |
+| `gloo.gatewayProxies.gateway-proxy-v2.service.type` | The Service type to expose. If `LoadBalancer`, then a LoadBalancer will be allocated. | `ServiceIP` |
 | `gloo.{name}`  | See [gloo values](https://github.com/solo-io/gloo/tree/master/install/helm/gloo) | `` |
 | `blob.directory` | Directory to use when storing blobs on file storage            | `_data/blobs` | 
 | `blob.prefix`  | File prefix to use when storing blobs on file storage            | `blobs` | 
