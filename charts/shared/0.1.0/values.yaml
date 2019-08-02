@@ -53,6 +53,8 @@ gloo:
     version: "0.18.5"
   crds:
     create: false
+  discovery:
+    fdsMode: WHITELIST
 
 metricsServer:
   enabled: true
