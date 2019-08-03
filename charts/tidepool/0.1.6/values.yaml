@@ -21,7 +21,6 @@ mongodb:
   persistence:
     enabled: false
   fullnameOverride: "mongodb"
-  usePassword: false
 global:
   awsRegion: us-west-2
   clusterName: "yourClusterNameHere"                                  # the cluster name
