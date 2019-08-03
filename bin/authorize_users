@@ -4,7 +4,11 @@ USERS=${1:-"lennartgoedhart-cli benderr-cli derrick-cli mikeallgeier-cli"}
 # Create an Amazon EKS cluster using eksctl
 
 # Amazon account number
-ACCOUNT=${TIDEPOOL_AWS_ACCOUNT:-123456789012}
+if [ -z ${AWS_ACCOUNT+x} ]
+then
+	echo "\${AWS_ACCOUNT} must be set."
+	exit 1
+fi
 
 # Users that will have system:master access (in addition to the user that creates the cluster)
 USERS=${1:-"lennartgoedhart-cli benderr-cli derrick-cli mikeallgeier-cli"}
@@ -20,6 +24,6 @@ GROUP=system:masters
 
 for user in $USERS
 do
-    arn=arn:aws:iam::${ACCOUNT}:user/${user}
+    arn=arn:aws:iam::${AWS_ACCOUNT}:user/${user}
     eksctl create iamidentitymapping --region=${REGION}  --role=$arn --group=$GROUP --name=$CLUSTER_NAME --username=$user
 done

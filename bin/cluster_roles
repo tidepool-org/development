@@ -6,9 +6,9 @@ then
 	exit
 fi
 
-if [ "$TIDEPOOL_AWS_ACCOUNT" == "" ]
+if [ "$AWS_ACCOUNT" == "" ]
 then
-	echo "Must set \$TIDEPOOL_AWS_ACCOUNT in enviroment"
+	echo "Must set \$AWS_ACCOUNT in enviroment"
 	exit
 fi
 	
@@ -27,4 +27,4 @@ NODEGROUP_STACK_NAME=eksctl-${CLUSTER_NAME}-nodegroup-ng-kiam
 STACK_NAME=eksctl-${CLUSTER_NAME}-roles
 
 set -x
-aws cloudformation create-stack --stack-name ${STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body ${CF_FILE} --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}     ParameterKey=NodeGroupStackName,ParameterValue=${NODEGROUP_STACK_NAME} ParameterKey=Region,ParameterValue=${REGION} ParameterKey=AccountNumber,ParameterValue=${TIDEPOOL_AWS_ACCOUNT}
+aws cloudformation create-stack --stack-name ${STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body ${CF_FILE} --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}     ParameterKey=NodeGroupStackName,ParameterValue=${NODEGROUP_STACK_NAME} ParameterKey=Region,ParameterValue=${REGION} ParameterKey=AccountNumber,ParameterValue=${AWS_ACCOUNT}
