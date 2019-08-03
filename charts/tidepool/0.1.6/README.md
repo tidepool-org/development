@@ -95,18 +95,18 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.clusterName`              | The name of the K8s cluster that hosts this env.| ``|
 | `global.environment`              | Node environment (passed as NODE_ENV)         | `production`|
 | `global.fullnameOverride`         |                                               | ``          |
-| `global.gateway.proxy.name`   | Name of the API gateway proxy                     | `gateway-proxy-v2`  |
-| `global.gateway.proxy.namespace`   | Namespace of the API gateway proxy           | `gloo-system`  |
-| `global.hosts.default.host`   | Host to use in email verification link.           | `localhost`  |
-| `global.hosts.default.protocol`   | If `http` use `http` for email verification link. If `https` use 	`https` for email verification links.          | `http`     |
-| `global.hosts.http.dnsNames`   | List of host[:port] to listen to                 | `localhost:8080`  |
+| `global.gateway.proxy.name`       | Name of the API gateway proxy                     | `gateway-proxy-v2`  |
+| `global.gateway.proxy.namespace`  | Namespace of the API gateway proxy           | `gloo-system`  |
+| `global.hosts.default.host`       | Host to use in email verification link.           | `localhost`  |
+| `global.hosts.default.protocol`   | If `http` use `http` for email verification link. If `https` use 	`https` for email verification links.        | `http`     |
+| `global.hosts.http.dnsNames`      | List of host to listen to                        | `localhost`  |
 | `global.hosts.https.commonName`   | DNS common name   | ``  |
-| `global.hosts.https.secretName`   | TLS secret name to use for authentication | ``  |
-| `global.hosts.https.dnsNames`   | List of Subject Alternative Names to use | `[]`  |
+| `global.hosts.https.secretName`   | TLS secret name to use for authentication | `` |
+| `global.hosts.https.dnsNames`     | List of Subject Alternative Names to use | `[]`  |
 | `global.hosts.https.certificateIssuer`        | Name of TLS certificate issuer, e.g. `letsencrypt-stating`, `letsencrypt-production` | `` |
-| `global.hosts.https.issuerKind`        | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer` | `ClusterIssuer` |
-| `global.hpa.enabled`            | If true, the allocate a horizontal pod autoscalers for all pods | 'true' |
-| `global.linkerd`                | If `enabled` use the `linkerd` service mesh     | `disabled`  |
+| `global.hosts.https.issuerKind`   | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer` | `ClusterIssuer` |
+| `global.hpa.enabled`              | If true, the allocate a horizontal pod autoscalers for all pods | 'true' |
+| `global.linkerd`                  | If `enabled` use the `linkerd` service mesh     | `disabled`  |
 | `global.mongo.hosts`              | Comma-separated list of Mongo hosts           | `mongodb`   |
 | `global.mongo.optParams`          | Additional Mongo connection params            | ``          |
 | `global.mongo.port`               | Mongo service port                            | `27017`     |
