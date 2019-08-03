@@ -1,6 +1,5 @@
 global:
   clusterName: yourClusterName
-  id: "123456789012"  # Amazon account id, should provide from secret
 
 kiam:
   enabled: true

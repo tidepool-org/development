@@ -49,6 +49,6 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{- define "charts.kiam.arn" -}}
-{{- printf "arn:aws:iam::%s:role/%s-kiam-server-role" .Values.global.id .Values.global.clusterName | quote -}}
+{{- printf "%s-kiam-server-role" .Values.global.clusterName | quote -}}
 {{- end -}}
 
