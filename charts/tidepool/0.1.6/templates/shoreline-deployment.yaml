@@ -92,7 +92,7 @@ spec:
         - name: MAILCHIMP_APIKEY
           valueFrom:
             secretKeyRef:
-              name: shoreline
+              name: mailchimp
               key: MailchimpApiKey
               optional: true
         - name: TIDEPOOL_SHORELINE_ENV
