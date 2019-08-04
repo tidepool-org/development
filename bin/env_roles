@@ -7,6 +7,7 @@ then
 	exit
 fi
 	
+AWS_ACCOUNT=${AWS_ACCOUNT:-$(get_account)}
 if [ -z ${AWS_ACCOUNT} ]
 then
 	echo "Must set \$AWS_ACCOUNT in environment"

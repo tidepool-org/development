@@ -2,6 +2,7 @@
 #
 # Create the IAM role for the Kiam server if it does not exist
 
+AWS_ACCOUNT=${AWS_ACCOUNT:-$(get_account)}
 if [ -z ${AWS_ACCOUNT+x} ]
 then
 	echo "\$AWS_ACCOUNT must be set."

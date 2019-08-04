@@ -4,6 +4,7 @@ USERS=${1:-"lennartgoedhart-cli benderr-cli derrick-cli mikeallgeier-cli"}
 # Create an Amazon EKS cluster using eksctl
 
 # Amazon account number
+AWS_ACCOUNT=${AWS_ACCOUNT:-$(get_account)}
 if [ -z ${AWS_ACCOUNT+x} ]
 then
 	echo "\${AWS_ACCOUNT} must be set."
