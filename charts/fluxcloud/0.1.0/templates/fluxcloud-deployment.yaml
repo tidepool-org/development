@@ -19,7 +19,10 @@ spec:
         - containerPort: {{ .Values.containerPort }}
         env:
         - name: SLACK_URL
-          value: "{{- .Values.slack.url -}}"
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.secretName }}
+              key: url
         - name: SLACK_CHANNEL
           value: "{{- .Values.slack.channel -}}"
         - name: SLACK_USERNAME

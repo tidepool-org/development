@@ -3,7 +3,7 @@ image: "justinbarrick/fluxcloud:v0.3.6"
 port: 80
 containerPort: 3032
 github: "https://github.com/tidepool-org/dev-ops"
+secretName: "slack"
 slack:
-  url: "https://hooks.slack.com/services/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"
   channel: "#flux"
   username: "derrickburns"
