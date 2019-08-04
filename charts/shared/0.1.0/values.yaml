@@ -41,9 +41,6 @@ fluxcloud:
     ref: k8s
   slack:
     username: "derrickburns"
-  secretKeyRef:
-    name: slack
-    key: values.yaml
 
 gloo:
   enabled: true
