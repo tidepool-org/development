@@ -7,6 +7,10 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.global.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "charts.mongo.secretname." }}
+{{ default 'mongo' .Values.global.mongo.secretName }}
+{{- end -}}
+
 {{- define "charts.externalSecrets.role" -}}
 {{ .Values.global.clusterName }}-{{ .Release.Namespace}}-secrets-role
 {{- end -}}
@@ -177,21 +181,38 @@ Create environment variables used by all platform services.
 
 {{ define "charts.mongo.params" }}
         - name: TIDEPOOL_STORE_SCHEME
-          value: '{{ .Values.global.mongo.scheme }}'
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "charts.mongo.secretName" . }}
+              key: scheme
         - name: TIDEPOOL_STORE_USERNAME
-          value: '{{ .Values.global.mongo.username }}'
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "charts.mongo.secretName" . }}
+              key: username
         - name: TIDEPOOL_STORE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.global.mongo.secretName }}
+              name: {{ include "charts.mongo.secretName" . }}
               key: password
               optional: true
         - name: TIDEPOOL_STORE_ADDRESSES
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "charts.mongo.secretName" . }}
+              key: addresses
           value: '{{ .Values.global.mongo.hosts }}'
         - name: TIDEPOOL_STORE_OPT_PARAMS
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "charts.mongo.secretName" . }}
+              key: optparams
           value: '{{.Values.global.mongo.optParams}}'
         - name: TIDEPOOL_STORE_TLS
-          value: '{{.Values.global.mongo.ssl}}'
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "charts.mongo.secretName" . }}
+              key: tls
 {{ end }}
 
 {{ define "charts.platform.env.mongo" }}

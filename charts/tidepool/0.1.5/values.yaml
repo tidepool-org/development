@@ -85,6 +85,7 @@ global:
     hosts: "mongodb"                                                  # comma-separated list of Mongo hosts
     port: 27017                                                       # the Mongo port
     username: ''                                                      # a username in the Mongo instance
+    password: ''                                                      # password associated with username
     ssl: 'false'                                                      # whether to use SSL to communicate with Mongo
     optParams: ''                                                     # optional parameters to pass on the Mongo connection string
   provider:

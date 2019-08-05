@@ -110,9 +110,10 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.mongo.hosts`              | Comma-separated list of Mongo hosts           | `mongodb`   |
 | `global.mongo.optParams`          | Additional Mongo connection params            | ``          |
 | `global.mongo.port`               | Mongo service port                            | `27017`     |
-| `global.mongo.secretName`         | Name of the K8s secret containing Mongo password | `mongo` |
+| `global.mongo.secretName`         | Name of the K8s secret containing Mongo connection parameters | `` |
 | `global.mongo.ssl`                | If true, use SSL on Mongo connection          | `false`     |
 | `global.mongo.username`           | If non-empty, Mongo username                  | ``          |
+| `global.mongo.password``          | If non-empty, Mongo password                  | ``          |
 | `global.nameOverride`             | If non-empty, Helm chart name to use          | ``          |
 | `global.namespace.create`         | If true, create namespace                     | `false`     |
 | `global.ports.auth`               | Auth service container port                   | `9222`      |

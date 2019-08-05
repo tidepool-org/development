@@ -34,21 +34,38 @@ spec:
         - name: INSTALL_MONGO
           value: 'false'
         - name: MONGO_SCHEME
-          value: '{{ .Values.global.mongo.scheme }}'
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "charts.mongo.secretName" . }}
+              key: scheme
         - name: MONGO_USERNAME
-          value: '{{ .Values.global.mongo.username }}'
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "charts.mongo.secretName" . }}
+              key: username
         - name: MONGO_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.global.mongo.secretName }}
+              name: {{ include "charts.mongo.secretName" . }}
               key: password
               optional: true
         - name: MONGO_ADDRESSES
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "charts.mongo.secretName" . }}
+              key: addresses
           value: '{{ .Values.global.mongo.hosts }}'
         - name: MONGO_OPT_PARAMS
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "charts.mongo.secretName" . }}
+              key: optparams
           value: '{{.Values.global.mongo.optParams}}'
         - name: MONGO_TLS
-          value: '{{.Values.global.mongo.ssl}}'
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "charts.mongo.secretName" . }}
+              key: tls
         image: "{{ .Values.nosqlclient.image }}"
         ports:
         - containerPort: 3000

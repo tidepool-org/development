@@ -1,13 +1,16 @@
+{{ if not .Values.global.mongo.secretName }}
 {{ with .Values.global.mongo }}
 apiVersion: v1
-kind: ConfigMap
+kind: Secret
 metadata:
   name: mongo
   namespace: {{ $.Release.Namespace }}
 data:
-  scheme: {{ .scheme | quote }}
-  hosts: {{ .hosts | quote }}
-  username: {{ .username | quote }}
-  ssl: {{ .ssl | quote }}
-  optParams: {{ .optParams | quote }}
+  scheme: {{ .scheme | b64enc }}
+  hosts: {{ .hosts | b64enc }}
+  username: {{ .username | b64enc }}
+  password: {{ .password | b64enc }}
+  ssl: {{ .ssl | b64enc }}
+  optParams: {{ .optParams | b64enc }}
 {{ end }} 
+{{ end }}
