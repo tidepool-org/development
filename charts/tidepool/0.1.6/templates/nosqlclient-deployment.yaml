@@ -59,7 +59,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ include "charts.mongo.secretName" . }}
-              key: optparams
+              key: optParams
           value: '{{.Values.global.mongo.optParams}}'
         - name: MONGO_TLS
           valueFrom:
