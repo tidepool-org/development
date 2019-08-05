@@ -38,20 +38,20 @@ spec:
           value: user
         - name: CLINIC_LISTS
           valueFrom:
-            configMapKeyRef:
-              name: shoreline
+            secretKeyRef:
+              name: mailchimp
               key: MailchimpClinicLists
               optional: true
         - name: MAILCHIMP_URL
           valueFrom:
-            configMapKeyRef:
-              name: shoreline
+            secretKeyRef:
+              name: mailchimp
               key: MailchimpURL
               optional: true
         - name: PERSONAL_LISTS
           valueFrom:
-            configMapKeyRef:
-              name: shoreline
+            secretKeyRef:
+              name: mailchimp
               key: MailchimpPersonalLists
               optional: true
         - name: DEMO_CLINIC_USER_ID
