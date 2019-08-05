@@ -107,9 +107,8 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.hosts.https.issuerKind`   | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer` | `ClusterIssuer` |
 | `global.hpa.enabled`              | If true, the allocate a horizontal pod autoscalers for all pods | 'true' |
 | `global.linkerd`                  | If `enabled` use the `linkerd` service mesh     | `disabled`  |
-| `global.mongo.hosts`              | Comma-separated list of Mongo hosts           | `mongodb`   |
+| `global.mongo.addresses`          | Comma-separated list of Mongo host[:port]       | `mongodb`   |
 | `global.mongo.optParams`          | Additional Mongo connection params            | ``          |
-| `global.mongo.port`               | Mongo service port                            | `27017`     |
 | `global.mongo.secretName`         | Name of the K8s secret containing Mongo connection parameters | `` |
 | `global.mongo.ssl`                | If true, use SSL on Mongo connection          | `false`     |
 | `global.mongo.username`           | If non-empty, Mongo username                  | ``          |

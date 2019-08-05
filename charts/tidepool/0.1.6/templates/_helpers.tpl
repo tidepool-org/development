@@ -201,7 +201,7 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: {{ include "charts.mongo.secretName" . }}
               key: addresses
-          value: '{{ .Values.global.mongo.hosts }}'
+          value: '{{ .Values.global.mongo.addresses }}'
         - name: TIDEPOOL_STORE_OPT_PARAMS
           valueFrom:
             secretKeyRef:
@@ -244,7 +244,7 @@ Create liveness and readiness probes for platform services.
 {{ if (eq .Values.global.mongo.await "true") }}
       - name: init-mongo
         image: busybox
-        command: ['sh', '-c', 'until nc -zvv {{ (split "," .Values.global.mongo.hosts)._0 }} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -zvv {{ (split "," .Values.global.mongo.addresses)._0 }} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
 {{ end }}
 {{- end -}} 
 {{- define "charts.init.shoreline" -}}

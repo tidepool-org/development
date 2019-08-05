@@ -54,7 +54,7 @@ spec:
             secretKeyRef:
               name: {{ include "charts.mongo.secretName" . }}
               key: addresses
-          value: '{{ .Values.global.mongo.hosts }}'
+          value: '{{ .Values.global.mongo.addresses }}'
         - name: MONGO_OPT_PARAMS
           valueFrom:
             secretKeyRef:
