@@ -1,12 +1,22 @@
 #!/bin/bash 
 # Install/upgrade Weave Flux to watch the current branch of the CONFIG repo
 #
-# Usage: install_flux ${SECRET:-.../flux-secret.yaml} ${BRANCH:-current branch} ${PATH:-.../flux}
+# Usage: install_flux ${FLUXCLOUD:-fluxcloud} ${SECRET:-../flux-secret.yaml} ${BRANCH:-current branch} ${PATH:-.../flux} 
 #
 # Current Kubectl context must point to cluster that you want to update.
 #
 # Provide CONFIG_REPO in env variable OR $(cwd) must be within config repo.
 # Provide CLUSTER_NAME in env variable OR $(cwd) must be within clusters subdir of config repo.
+
+FLUXCLOUD=${1:-false}
+
+if [ "${FLUXCLOUD}" != "" ]
+then
+  INSTALL_FLUXCLOUD=--set\ additionalArgs=\'{--connect=ws://${FLUXCLOUD}}\'
+else
+  INSTALL_FLUXCLOUD=
+fi
+
 
 CRDS_UNINSTALLED=$(kubectl get crds helmreleases.flux.weave.works >/dev/null; echo $?)
 if [ ${CRDS_UNINSTALLED} -eq 0 ]
@@ -40,9 +50,9 @@ fi
 
 # Pull the remote url and the branch from Git if not provided
 cd $CONFIG_REPO
-SOURCE_SECRET=${1:-${BASE}${CLUSTER_NAME}/flux-secret.yaml}
-SOURCE_BRANCH=${2:-$(git branch | grep \* | cut -d ' ' -f2)}
-SOURCE_PATH=${3:-clusters/${CLUSTER_NAME}/flux}
+SOURCE_SECRET=${2:-${BASE}${CLUSTER_NAME}/flux-secret.yaml}
+SOURCE_BRANCH=${3:-$(git branch | grep \* | cut -d ' ' -f2)}
+SOURCE_PATH=${4:-clusters/${CLUSTER_NAME}/flux}
 SOURCE_URL=$(git config --get remote.origin.url)
 
 if [ -f $SOURCE_SECRET ]
@@ -91,7 +101,7 @@ then
       --set git.timeoout=40s \
       --namespace flux \
       --reuse-values \
-      --set additionalArgs='{--connect=ws://fluxcloud}' \
+      ${INSTALL_FLUXCLOUD} \
       flux \
       chart/flux
 else
