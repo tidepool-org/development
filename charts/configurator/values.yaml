@@ -2,8 +2,10 @@ global:
   repo:
     directory:                                  # where to create the config repo
     name: ""                                    # name of the repo
+    create: true
   github:
     account: tidepool-org                       # your GitHub account
+    push: true
     token: ""                                   # a token that allows write/create access to your GitHub account
   logLevel: debug                               # the default log level for all services
   users: []                                     # the list of IAM users to provide master cluster access

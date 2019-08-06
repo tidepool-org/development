@@ -35,10 +35,19 @@ do
   helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/tidepool-helmrelease.yaml > $ENVIRONMENT/tidepool-helmrelease.yaml
 done
 
+CREATE=$(yq read ${VALUES_FILE} global.git.create)
+if [ "$CREATE" == "true" ]
+then
 # create config repo
-cd $CONFIG_REPO
-git init
+  cd $CONFIG_REPO
+  git init
+fi
 git add .
 git commit -m "Initial configuration"
 git remote add origin git@github.com:${GITHIB_ACCOUNT}/${CLUSTER_REPO_NAME}.git
-#git push
+
+PUSH=$(yq read ${VALUES_FILE} global.github.push)
+if [ "$PUSH" == "true" ]
+then
+  git push
+fi
