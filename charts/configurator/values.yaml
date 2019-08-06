@@ -14,6 +14,7 @@ global:
     name: foo
     k8sVersion: "1.13.0"
     region: "us-west-2"
+    cidr: ""
     nodegroup:
       instanceType: "m5.medium"
       desiredCapacity: 3
