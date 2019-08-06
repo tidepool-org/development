@@ -10,7 +10,7 @@
 # 4) You must be in a valid Git repo.
 #
 context=$(kubectl config current-context)
-github_access_token=$(cat ~/.secrets/github_access_token)
+github_access_token=${1:-(cat ~/.secrets/github_access_token)}
 key=$(fluxctl --k8s-fwd-ns=flux identity)
 rp=$(git rev-parse --is-inside-work-tree 2>/dev/null)
 
