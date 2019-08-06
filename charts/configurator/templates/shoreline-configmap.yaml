@@ -7,5 +7,5 @@ metadata:
   name: shoreline
   namespace: {{ $name }}
 data:
-  ClinicDemoUserId: {{ $spec.shoreline.ClinicDemoUserId }}
+  ClinicDemoUserId: {{ $spec.shoreline.ClinicDemoUserId | quote }}
 {{- end }}
