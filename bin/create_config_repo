@@ -32,7 +32,7 @@ export PATH=$PATH:${DEV_REPO}/bin
 mkdir -p $CONFIG_REPO/clusters/${CLUSTER_NAME}
 cd ${CONFIG_REPO}/clusters/${CLUSTER_NAME}
 
-CHARTDIR=${DEV_REPO}/charts/all
+CHARTDIR=${DEV_REPO}/charts/configurator
 
 # create and store secrets 
 external_secret <(helm template ${CHARTDIR} -x ${CHARTDIR}/secrets.yaml) create ${CLUSTER_NAME} encoded >${CONFIG_REPO}/flux/external-secrets.yaml
