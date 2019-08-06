@@ -1,26 +1,23 @@
 global:
   repo:
-    directory: # where to create the config repo
-    name: ""
+    directory:                                  # where to create the config repo
+    name: ""                                    # name of the repo
   github:
-    account: tidepool-org
-    token: "" # a token that allows write/create access to your GitHub account
-  logLevel: debug 
-  users: 
-  - derrickburns-cli
-  - benderr-cli
-  - lennartgoedhard-cli
+    account: tidepool-org                       # your GitHub account
+    token: ""                                   # a token that allows write/create access to your GitHub account
+  logLevel: debug                               # the default log level for all services
+  users: []                                     # the list of IAM users to provide master cluster access
   cluster:
-    name: foo
-    k8sVersion: "1.13.0"
-    region: "us-west-2"
-    cidr: ""
+    name: ""                                    # the name of the cluster
+    k8sVersion: "1.13.8"                        # the Kubernetes version >= 1.13.7
+    region: "us-west-2"                         # AWS region to deploy in
+    cidr: "10.47.0.0/16"                        # CIDR of AWS VPC
     nodegroup:
       instanceType: "m5.medium"
       desiredCapacity: 3
       minSize: 1
       maxSize: 10
-  hostnames: []
+  hostnames: []                                 # list of hosts to publish to DNS
   sumologic:
     enabled: false
     CollectorUrl:  ""
@@ -34,7 +31,7 @@ global:
 env:
   qa1:
     gitops:
-      branch: develop
+      branch: develop                           # branch to pull updates from
     auth:
       ServiceAuth:  ""
     blob:
@@ -84,7 +81,6 @@ env:
     hosts:
       default:
         protocol: https
-        host: 
       http:
         enabled: false
       https:
