@@ -45,10 +45,13 @@ spec:
       store:
         type: s3
       hosts:
-        default:
-          {{- $spec.hosts.default | toYaml | nindent 8 }}
-        http:
-          {{- $spec.hosts.http | toYaml | nindent 10 }}
+        default: 
+          protocol: {{ $spec.hosts.default.protocol }}
+{{ if eq $spec.hosts.default.protocol "http" }}
+          host: {{ $spec.hosts.http.dnsNames | first | quote }}
+{{- else }}
+          host: {{ $spec.hosts.https.dnsNames | first | quote }}
+{{- end -}}
 {{- if $spec.hosts.https.enabled }}
         https:
           enabled: true
@@ -57,9 +60,12 @@ spec:
           certificateIssuer: {{ $spec.hosts.https.certificateIssuer | quote }}
           dnsNames:
           {{- $spec.hosts.https.dnsNames | toYaml | nindent 10 }}
-{{- else }}
-        https:
-          enabled: false
+{{- end -}}
+{{ if $spec.hosts.http.enabled }}
+        http:
+          enabled: true
+          dnsNames:
+          {{- $spec.hosts.http.dnsNames | toYaml | nindent 10 }}
 {{- end }}
       namespace:
         create: false
