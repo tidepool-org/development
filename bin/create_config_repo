@@ -6,11 +6,17 @@
 cd $DEV_REPO
 git checkout k8s
 
-mkdir -p $CLUSTER_REPO
-cd ${CLUSTER_REPO}
+mkdir -p $CONFIG_REPO
+cd $CONFIG_REPO
+
+# create cluster config 
+helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/config.yaml > config.yaml
+
+mkdir -p $FLUX_REPO
+cd ${FLUX_REPO}
 
 # create and store secrets 
-external_secret <(helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/secrets.yaml) dryrun ${CLUSTER_NAME} encoded >${CLUSTER_REPO}/flux/external-secrets.yaml
+external_secret <(helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/secrets.yaml) dryrun ${CLUSTER_NAME} encoded >external-secrets.yaml
 
 # create shared services helmreleases
 helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/shared-helmrelease.yaml >shared-helmrelease.yaml
@@ -19,6 +25,8 @@ helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/shared-start-helmrelease.yaml >sha
 helm template --namespace flux ${DEV_REPO}/charts/flux-repositories >flux-repositories.yaml
 
 # create environments
+mkdir -p environments
+cd environments
 for ENVIRONMENT in ${ENVIRONMENTS}
 do
   mkdir -p $ENVIRONMENT
@@ -27,10 +35,10 @@ do
   helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/tidepool-helmrelease.yaml > $ENVIRONMENT/tidepool-helmrelease.yaml
 done
 
-# create cluster config 
-helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/config.yaml > config.yaml
-
 # create config repo
-git commit -am "Initial configuration"
+cd $CONFIG_REPO
+git init
+git add .
+git commit -m "Initial configuration"
 git remote add origin git@github.com:${GITHIB_ACCOUNT}/${CLUSTER_REPO_NAME}.git
-git push
+#git push
