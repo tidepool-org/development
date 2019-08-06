@@ -9,7 +9,7 @@ metadata:
   version: {{ $cluster.k8sVersion | quote }}
 
 vpc:
-  cidr: {{ $cluster.cidr }}
+  cidr: {{ $cluster.cidr | quote }}
 
 nodeGroups:
   - name: ng-1
