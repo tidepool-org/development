@@ -52,9 +52,9 @@ spec:
 {{- if $spec.hosts.https.enabled }}
         https:
           enabled: true
-          commonName: {{ $spec.hosts.https.dnsNames | first }}
+          commonName: {{ $spec.hosts.https.dnsNames | first | quote }}
           secretName: {{ $name }}-tls-secret
-          certificateIssuer: {{ $spec.hosts.http.certificateIssuer }}
+          certificateIssuer: {{ $spec.hosts.https.certificateIssuer | quote }}
           dnsNames:
           {{- $spec.hosts.https.dnsNames | toYaml | nindent 10 }}
 {{- else }}
