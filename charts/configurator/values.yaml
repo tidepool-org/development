@@ -1,7 +1,7 @@
 global:
   repo:
     directory: # where to create the config repo
-    #name: # the name of the config repo, leave blank for default
+    name: ""
   github:
     account: tidepool-org
     token: "" # a token that allows write/create access to your GitHub account
