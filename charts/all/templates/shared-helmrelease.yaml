@@ -1,0 +1,23 @@
+{{ $global := .Values.global }}
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: shared
+  namespace: default
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: shared
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: charts/shared/0.1.0
+    ref: k8s
+  values:
+    global:
+      clusterName: {{ $global.cluster.name }}
+      hostnames:
+      {{- $global.hostnames | toYaml | nindent 6 }}
+    gloo:
+      crds:
+        create: false

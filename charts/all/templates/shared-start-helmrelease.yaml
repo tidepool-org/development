@@ -1,0 +1,19 @@
+{{ $global := .Values.global }}
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: shared-start
+  namespace: default
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: shared-start
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: charts/shared-start/0.1.0
+    ref: k8s
+  values:
+    global:
+      clusterName: {{ $global.cluster.name }}
+      logLevel: {{ $global.logLevel }}

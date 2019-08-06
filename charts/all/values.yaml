@@ -1,0 +1,92 @@
+global:
+  repo:
+    directory: # where to create the config repo
+    #name: # the name of the config repo, leave blank for default
+  github:
+    account: tidepool-org
+    token: "" # a token that allows write/create access to your GitHub account
+  logLevel: debug 
+  users: 
+  - derrickburns-cli
+  - benderr-cli
+  - lennartgoedhard-cli
+  cluster:
+    name: foo
+    k8sVersion: "1.13.0"
+    region: "us-west-2"
+    nodegroup:
+      instanceType: "m5.medium"
+      desiredCapacity: 3
+      minSize: 1
+      maxSize: 10
+  hostnames: []
+  sumologic:
+    enabled: false
+    CollectorUrl:  ""
+  datadog:
+    enabled: false
+    APIKey: ""
+    AppKey: ""
+  fluxcloud:
+    enabled: false
+    url: ""
+env:
+  qa1:
+    gitops:
+      branch: develop
+    auth:
+      ServiceAuth:  ""
+    blob:
+      ServiceAuth: ""
+    data:
+      ServiceAuth: ""
+    task:
+      ServiceAuth: ""
+    image:
+      ServiceAuth: ""
+    user:
+      ServiceAuth: ""
+    gatekeeper:
+      ServiceAuth: ""
+    shoreline:
+      ServiceAuth: ""
+      UserLongTermKey: 
+      UserMailVerification: ""
+      UserPasswordSalt: ""
+      ClinicDemoUserId: ""
+    tidepoolServerSecret:
+      ServiceAuth: ""
+    highwater:
+      UserIdSalt: ""
+    notification:
+      ServiceAuth: ""
+    export:
+      SessionEncryptionKey: ""
+    mongo:
+      scheme: "mongodb"
+      addresses: "mongodb"
+      username: ""
+      password: ""
+      database: ""
+      tls: "true"
+      optParams: ""
+    dexcom:
+      enabled: false
+      ClientId: ""
+      ClientSecret: ""
+      StateSalt: ""
+    carelink:
+      enabled: false
+      CareLinkSalt: ""
+    nosqlclient:
+      enabled: true
+    hosts:
+      default:
+        protocol: https
+        host: 
+      http:
+        enabled: false
+      https:
+        enabled: true
+        dnsNames: []
+        certificateIssuer: letsencrypt-staging

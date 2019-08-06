@@ -1,0 +1,66 @@
+{{ $cluster := .Values.global.cluster }}
+{{ range $name, $spec := .Values.env }}
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: tidepool
+  namespace: {{ $name }}
+  annotations:
+    flux.weave.works/automated: "true"
+    flux.weave.works/tag.auth: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.blip: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.blob: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.data: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.export: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.gatekeeper: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.highwater: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.hydrophone: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.image: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.jellyfish: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.messageapi: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.migrations: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.notification: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.seagull: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.shoreline: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.task: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.tidewhisperer: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.tools: glob:{{ $spec.gitops.branch }}-*
+    flux.weave.works/tag.user: glob:{{ $spec.gitops.branch }}-*
+spec:
+  releaseName: {{ $name }}-tidepool
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: charts/tidepool/0.1.6
+    ref: k8s
+  values:
+    nosqlclient:
+      enabled: {{ $spec.nosqlclient.enabled }}
+    gloo:
+      enabled: false
+    mongodb:
+      enabled: false
+    global:
+      clusterName: {{ $cluster.name }}
+      store:
+        type: s3
+      hosts:
+        default:
+          {{- $spec.hosts.default | toYaml | nindent 8 }}
+        http:
+          {{- $spec.hosts.http | toYaml | nindent 10 }}
+{{- if $spec.hosts.https.enabled }}
+        https:
+          enabled: true
+          commonName: {{ $spec.hosts.https.dnsNames | first }}
+          secretName: {{ $name }}-tls-secret
+          certificateIssuer: {{ $spec.hosts.http.certificateIssuer }}
+          dnsNames:
+          {{- $spec.hosts.https.dnsNames | toYaml | nindent 10 }}
+{{- else }}
+        https:
+          enabled: false
+{{- end }}
+      namespace:
+        create: false
+{{- end }}

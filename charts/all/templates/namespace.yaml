@@ -1,0 +1,14 @@
+{{ $cluster := .Values.global.cluster }}
+{{ range $name, $spec := .Values.env }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ $name }}
+  labels:
+    istio-injection: disabled
+    global.linkerd.io/inject: enabled
+    discovery.solo.io/function_discovery: enabled
+  annotations:
+    iam.amazonaws.com/permitted: {{ $cluster.name }}-{{ $name }}-.*
+{{- end }}

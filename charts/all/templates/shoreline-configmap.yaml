@@ -1,0 +1,11 @@
+{{ $cluster := .Values.global.cluster }}
+{{ range $name, $spec := .Values.env }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shoreline
+  namespace: {{ $name }}
+data:
+  ClinicDemoUserId: {{ $spec.shoreline.ClinicDemoUserId }}
+{{- end }}
