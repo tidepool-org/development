@@ -1,12 +1,6 @@
 #!/bin/bash -xv
-INFO=${1:-values.yaml}
-export CONFIG_REPO=${2:-$(pwd)}
-export CLUSTER_NAME=$(yq read $INFO global.cluster.name)
-export AWS_REGION=$(yq read $INFO global.cluster.region)
-export USERS=$(yq read values.yaml global.users | sed -e "s/^- //" | paste -sd " " -)
-export ENVIRONMENTS=$(yq r values.yaml env | grep -v ' .*' | sed 's/.$//' | | paste -sd " " -)
-export FLUXCLOUD=$(yq read $INFO global.fluxcloud.enabled)
-export GITHUB_ACCESS_TOKEN=$(yq read $INFO global.github.token)
+
+. set_exports $*
 
 # create cluster
 create_cluster

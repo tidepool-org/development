@@ -1,64 +1,36 @@
 #!/bin/bash -xv
-# Usage: $0 ${DEV_REPO} ${VALUES_FILE:-values.yaml}
+# Usage: $0 ${VALUES_FILE:-values.yaml}
 
-export DEV_REPO=$1
-export VALUES_FILE=${2:-values.yaml}
+. set_exports $*
 
 cd $DEV_REPO
 git checkout k8s
 
-export PATH=$PATH:${DEV_REPO}/bin
-export CONFIG_REPO_DIR=${yq read $VALUES_FILE global.repo.directory}
-export CLUSTER_NAME=$(yq read $VALUES_FILE global.cluster.name)
-
-CONFIG_REPO_NAME=$(yq read $VALUES_FILE global.repo.name 2>/dev/null) 
-if [ $? -ne 0 ]
-then
-   CONFIG_REPO_NAME=${3:-cluster-${CLUSTER_NAME}}
-fi
-export CONFIG_REPO=${CONFIG_REPO_DIR}/${CONFIG_REPO_NAME}
-
-mkdir -p $CONFIG_REPO_DIR
-
-export AWS_REGION=$(yq read $VALUES_FILE global.cluster.region)
-export ENVIRONMENTS=$(yq r values.yaml env | grep -v ' .*' | sed 's/.$//' | | paste -sd " " -)
-
-# install standard tools
-brew bundle --file=${DEV_REPO}/Brewfile
-pip3 install boto3 --user
-
-mkdir -p $CONFIG_REPO/clusters/${CLUSTER_NAME}
-cd ${CONFIG_REPO}/clusters/${CLUSTER_NAME}
-
-CHARTDIR=${DEV_REPO}/charts/configurator
+mkdir -p $CLUSTER_REPO
+cd ${CLUSTER_REPO}
 
 # create and store secrets 
-external_secret <(helm template ${CHARTDIR} -x ${CHARTDIR}/secrets.yaml) create ${CLUSTER_NAME} encoded >${CONFIG_REPO}/flux/external-secrets.yaml
+external_secret <(helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/secrets.yaml) dryrun ${CLUSTER_NAME} encoded >${CLUSTER_REPO}/flux/external-secrets.yaml
 
 # create shared services helmreleases
-helm template ${CHARTDIR} -x ${CHARTDIR}/shared-helmrelease.yaml >shared-helmrelease.yaml
-helm template ${CHARTDIR} -x ${CHARTDIR}/shared-start-helmrelease.yaml >shared-start-helmrelease.yaml
+helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/shared-helmrelease.yaml >shared-helmrelease.yaml
+helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/shared-start-helmrelease.yaml >shared-start-helmrelease.yaml
 
 helm template --namespace flux ${DEV_REPO}/charts/flux-repositories >flux-repositories.yaml
 
+# create environments
 for ENVIRONMENT in ${ENVIRONMENTS}
 do
-  # create login assets
-  aws s3 mb s3://tidepool-${ENVIRONMENT}-asset
-  aws s3 cp s3://tidepool-dev-asset s3://tidepool-${ENVIRONMENT}-asset
-
-  # create environments
-  mkdir $ENVIRONMENT
-  helm template ${CHARTDIR} -x ${CHARTDIR}/namespace.yaml > $ENVIRONMENT/namespace.yaml
-  helm template ${CHARTDIR} -x ${CHARTDIR}/shoreline-configmap.yaml > $ENVIRONMENT/shoreline-configmap.yaml
-  helm template ${CHARTDIR} -x ${CHARTDIR}/tidepool-helmrelease.yaml > $ENVIRONMENT/tidepool-helmrelease.yaml
+  mkdir -p $ENVIRONMENT
+  helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/namespace.yaml > $ENVIRONMENT/namespace.yaml
+  helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/shoreline-configmap.yaml > $ENVIRONMENT/shoreline-configmap.yaml
+  helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/tidepool-helmrelease.yaml > $ENVIRONMENT/tidepool-helmrelease.yaml
 done
 
 # create cluster config 
-helm template ${CHARTDIR} -x ${CHARTDIR}/config.yaml > config.yaml
+helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/config.yaml > config.yaml
 
 # create config repo
 git commit -am "Initial configuration"
-git remote add origin git@github.com:${GITHIB_ACCOUNT}/${CONFIG_REPO_NAME}.git
-#git push
-
+git remote add origin git@github.com:${GITHIB_ACCOUNT}/${CLUSTER_REPO_NAME}.git
+git push

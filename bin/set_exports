@@ -1,0 +1,26 @@
+#!/bin/bash -xv
+# Usage: $0 ${VALUES_FILE:-values.yaml}
+
+export VALUES_FILE=$(realpath ${1:-values.yaml})
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+export DEV_REPO=$(realpath $DIR/..)
+
+export CONFIG_REPO=$(yq read $VALUES_FILE global.repo.directory)
+export CLUSTER_NAME=$(yq read $VALUES_FILE global.cluster.name)
+
+CONFIG_REPO_NAME=$(yq read $VALUES_FILE global.repo.name 2>/dev/null)
+if [ "$CONFIG_REPO_NAME" == "" ]
+then
+   CONFIG_REPO_NAME=cluster-${CLUSTER_NAME}
+fi
+export CLUSTER_REPO=${CONFIG_REPO}/clusters/${CONFIG_REPO_NAME}
+
+export AWS_REGION=$(yq read $VALUES_FILE global.cluster.region)
+export ENVIRONMENTS=$(yq r $VALUES_FILE env | grep -v ' .*' | sed 's/.$//' | paste -sd " " -)
+
+export CHART_DIR=${DEV_REPO}/charts/configurator
+export TEMPLATE_DIR=${DEV_REPO}/charts/configurator/templates
+
+export FLUXCLOUD=$(yq read $INFO global.fluxcloud.enabled)
+export GITHUB_ACCESS_TOKEN=$(yq read $INFO global.github.token)

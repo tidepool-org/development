@@ -1,0 +1,3 @@
+#!/bin/bash install standard tools
+brew bundle --file=${DEV_REPO}/Brewfile
+pip3 install boto3 --user
