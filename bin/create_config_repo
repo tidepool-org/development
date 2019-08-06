@@ -10,19 +10,19 @@ mkdir -p $CONFIG_REPO
 cd $CONFIG_REPO
 
 # create cluster config 
-helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/config.yaml > config.yaml
+helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/config.yaml > config.yaml
 
 mkdir -p $FLUX_REPO
 cd ${FLUX_REPO}
 
 # create and store secrets 
-external_secret <(helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/secrets.yaml) dryrun ${CLUSTER_NAME} encoded >external-secrets.yaml
+external_secret <(helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/secrets.yaml) dryrun ${CLUSTER_NAME} encoded >external-secrets.yaml
 
 # create shared services helmreleases
-helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/shared-helmrelease.yaml >shared-helmrelease.yaml
-helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/shared-start-helmrelease.yaml >shared-start-helmrelease.yaml
+helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/shared-helmrelease.yaml >shared-helmrelease.yaml
+helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/shared-start-helmrelease.yaml >shared-start-helmrelease.yaml
 
-helm template --namespace flux ${DEV_REPO}/charts/flux-repositories >flux-repositories.yaml
+helm template -f ${VALUES_FILE} --namespace flux ${DEV_REPO}/charts/flux-repositories >flux-repositories.yaml
 
 # create environments
 mkdir -p environments
@@ -30,9 +30,9 @@ cd environments
 for ENVIRONMENT in ${ENVIRONMENTS}
 do
   mkdir -p $ENVIRONMENT
-  helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/namespace.yaml > $ENVIRONMENT/namespace.yaml
-  helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/shoreline-configmap.yaml > $ENVIRONMENT/shoreline-configmap.yaml
-  helm template ${CHART_DIR} -x ${TEMPLATE_DIR}/tidepool-helmrelease.yaml > $ENVIRONMENT/tidepool-helmrelease.yaml
+  helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/namespace.yaml > $ENVIRONMENT/namespace.yaml
+  helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/shoreline-configmap.yaml > $ENVIRONMENT/shoreline-configmap.yaml
+  helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/tidepool-helmrelease.yaml > $ENVIRONMENT/tidepool-helmrelease.yaml
 done
 
 # create config repo
