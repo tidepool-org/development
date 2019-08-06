@@ -24,13 +24,13 @@ services:
     #   - ${TIDEPOOL_DOCKER_VIZ_DIR}:/@tidepool/viz:cached
     #   - viz-dist:/@tidepool/viz/dist:ro
     ports:
-      - '${TIDEPOOL_DOCKER_APP_PORT}:${TIDEPOOL_DOCKER_APP_PORT}'
+      - '3000:3000'
     environment:
-      API_HOST: http://${TIDEPOOL_DOCKER_API_HOST}:${TIDEPOOL_DOCKER_API_PORT}
+      API_HOST: http://${TIDEPOOL_DOCKER_API_HOST}:8009
       DEV_TOOLS: ${DEV_TOOLS:-true}
       DISCOVERY_HOST: ${TIDEPOOL_DOCKER_HAKKEN_HOST}:8000
       NODE_ENV: development
-      PORT: '${TIDEPOOL_DOCKER_APP_PORT}'
+      PORT: '3000'
       PUBLISH_HOST: ${TIDEPOOL_DOCKER_HAKKEN_HOST}
       SERVICE_NAME: blip
       WEBPACK_DEVTOOL: cheap-module-eval-source-map
@@ -101,15 +101,12 @@ services:
     # build:
     #   context: ${TIDEPOOL_DOCKER_HYDROPHONE_DIR}
     #   target: ${TIDEPOOL_DOCKER_HYDROPHONE_BUILD_TARGET}
-    volumes:
-      - ${HOME}/.aws:/home/tidepool/.aws
+    # volumes:
     #   - ${TIDEPOOL_DOCKER_HYDROPHONE_DIR}:/go/src/github.com/tidepool-org/hydrophone:cached
     #   - /go/src/github.com/tidepool-org/hydrophone/dist
     ports:
       - '${TIDEPOOL_DOCKER_HYDROPHONE_PORT_PREFIX}9157:${TIDEPOOL_DOCKER_HYDROPHONE_PORT_PREFIX}9157'
     environment:
-      AWS_REGION: us-west-2
-      AWS_PROFILE: default
       TIDEPOOL_HYDROPHONE_ENV: |
         {
             "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://${TIDEPOOL_DOCKER_GATEKEEPER_HOST}:9123"]}},
@@ -133,7 +130,7 @@ services:
             "hydrophone": {
                 "assetUrl": "https://s3-us-west-2.amazonaws.com/tidepool-dev-asset",
                 "serverSecret": "${TIDEPOOL_DOCKER_SERVER_SECRET}",
-                "webUrl": "http://${TIDEPOOL_DOCKER_APP_HOST}:${TIDEPOOL_DOCKER_APP_PORT}"
+                "webUrl": "http://${TIDEPOOL_DOCKER_API_HOST}:3000"
             },
             "mongo": {
                 "connectionString": "mongodb://${TIDEPOOL_DOCKER_MONGO_HOST}/confirm?ssl=${TIDEPOOL_DOCKER_MONGO_TLS}"
@@ -215,8 +212,6 @@ services:
     ports:
       - '${TIDEPOOL_DOCKER_PLATFORM_AUTH_PORT_PREFIX}9222:${TIDEPOOL_DOCKER_PLATFORM_AUTH_PORT_PREFIX}9222'
     environment: &platform-environment
-      AWS_REGION: us-west-2
-      AWS_PROFILE: default
       TIDEPOOL_ENV: local
       TIDEPOOL_LOGGER_LEVEL: debug
       TIDEPOOL_STORE_ADDRESSES: ${TIDEPOOL_DOCKER_MONGO_HOST}
@@ -239,12 +234,12 @@ services:
       TIDEPOOL_BLOB_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_BLOB_HOST}:9225
       TIDEPOOL_DATA_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220
       TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_DATA_HOST}:9220
-      TIDEPOOL_METRIC_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_STYX_HOST}:${TIDEPOOL_DOCKER_API_PORT}
+      TIDEPOOL_METRIC_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
       TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_NOTIFICATION_HOST}:9223
       TIDEPOOL_PERMISSION_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_GATEKEEPER_HOST}:9123
       TIDEPOOL_TASK_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_PLATFORM_TASK_HOST}:9224
-      TIDEPOOL_USER_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_STYX_HOST}:${TIDEPOOL_DOCKER_API_PORT}
-      TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS: http://${TIDEPOOL_DOCKER_STYX_HOST}:${TIDEPOOL_DOCKER_API_PORT}
+      TIDEPOOL_USER_CLIENT_ADDRESS: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
+      TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
       TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET: '${TIDEPOOL_DOCKER_SERVER_SECRET}'
       TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_AUTH_PORT_PREFIX}9222
       TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS: :${TIDEPOOL_DOCKER_PLATFORM_BLOB_PORT_PREFIX}9225
@@ -268,7 +263,7 @@ services:
       TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET: '${TIDEPOOL_DOCKER_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET}'
       TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL: https://api.dexcom.com/v1/oauth2/login
       TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL: https://api.dexcom.com/v1/oauth2/token
-      TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL: http://${TIDEPOOL_DOCKER_API_HOST}:${TIDEPOOL_DOCKER_API_PORT}/v1/oauth/dexcom/redirect
+      TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL: http://${TIDEPOOL_DOCKER_API_HOST}:8009/v1/oauth/dexcom/redirect
       TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES: offline_access
       TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT: '${TIDEPOOL_DOCKER_SERVICE_PROVIDER_DEXCOM_STATE_SALT}'
 
@@ -278,8 +273,7 @@ services:
     #   context: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_DIR}
     #   dockerfile: Dockerfile.blob
     #   target: ${TIDEPOOL_DOCKER_PLATFORM_BLOB_BUILD_TARGET}
-    volumes:
-      - ${HOME}/.aws:/home/tidepool/.aws
+    # volumes:
     #   - ${TIDEPOOL_DOCKER_PLATFORM_BLOB_DIR}:/go/src/github.com/tidepool-org/platform:cached
     #   - /go/src/github.com/tidepool-org/platform/_bin
     #   - /go/src/github.com/tidepool-org/platform/_data
@@ -444,12 +438,12 @@ services:
     #   - ${TIDEPOOL_DOCKER_STYX_DIR}:/app:cached
     #   - /app/node_modules
     ports:
-      - '${TIDEPOOL_DOCKER_STYX_PORT_PREFIX}${TIDEPOOL_DOCKER_API_PORT}-${TIDEPOOL_DOCKER_STYX_PORT_PREFIX}8010:${TIDEPOOL_DOCKER_STYX_PORT_PREFIX}${TIDEPOOL_DOCKER_API_PORT}-${TIDEPOOL_DOCKER_STYX_PORT_PREFIX}8010'
+      - '${TIDEPOOL_DOCKER_STYX_PORT_PREFIX}8009-${TIDEPOOL_DOCKER_STYX_PORT_PREFIX}8010:${TIDEPOOL_DOCKER_STYX_PORT_PREFIX}8009-${TIDEPOOL_DOCKER_STYX_PORT_PREFIX}8010'
     environment:
       DISCOVERY: '{"host": "${TIDEPOOL_DOCKER_HAKKEN_HOST}:8000"}'
       HTTPS_CONFIG: '{"cert": "${TIDEPOOL_DOCKER_STYX_TLS_CERTIFICATE}", "key": "${TIDEPOOL_DOCKER_STYX_TLS_PRIVATE_KEY}"}'
       HTTPS_PORT: '${TIDEPOOL_DOCKER_STYX_PORT_PREFIX}8010'
-      HTTP_PORT: '${TIDEPOOL_DOCKER_STYX_PORT_PREFIX}${TIDEPOOL_DOCKER_API_PORT}'
+      HTTP_PORT: '${TIDEPOOL_DOCKER_STYX_PORT_PREFIX}8009'
       NODE_ENV: development
       RULES: |
         {
@@ -497,7 +491,7 @@ services:
           },
           "https": {
             "*": [
-              {"type": "redirect", "host": "http://${TIDEPOOL_DOCKER_STYX_HOST}:${TIDEPOOL_DOCKER_API_PORT}"}
+              {"type": "redirect", "host": "http://${TIDEPOOL_DOCKER_STYX_HOST}:8009"}
             ]
           }
         }
@@ -571,7 +565,7 @@ services:
   #   ports:
   #     - '${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300:${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300'
   #   environment:
-  #     API_HOST: http://${TIDEPOOL_DOCKER_STYX_HOST}:${TIDEPOOL_DOCKER_API_PORT}
+  #     API_HOST: http://${TIDEPOOL_DOCKER_STYX_HOST}:8009
   #     DEBUG_LEVEL: debug
   #     HTTP_PORT: '${TIDEPOOL_DOCKER_EXPORT_PORT_PREFIX}9300'
   #     SESSION_SECRET: '${TIDEPOOL_DOCKER_EXPORT_SESSION_SECRET}'
