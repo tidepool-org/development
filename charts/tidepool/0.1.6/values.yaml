@@ -1,9 +1,17 @@
+nosqlclient:
+  enabled: false
+  image: tidepool/nosqlclient:2.3.2
+  port: 3000
 gloo:
   enabled: true
+  settings:
+    create: true
+  discovery:
+    fdsMode: WHITELIST
   namespace:
     create: false
   gatewayProxies:
-    gateway-proxy:
+    gatewayProxyV2:
       service:
         httpPort: 8080                                               # HTTP port to listen on
         #httpsPort: 8443                                             # HTTPS port to listen on
@@ -17,42 +25,43 @@ mongodb:
   persistence:
     enabled: false
   fullnameOverride: "mongodb"
-  usePassword: false
 global:
+  awsRegion: us-west-2
+  clusterName: "yourClusterNameHere"                                  # the cluster name
+  namespace:
+    create: false                                                     # whether to create the namespace
   hpa:
     enabled: true
-  iam:
-    suffix: "-Worker"
-    nameOverride: ""
   hosts:
     default:
       protocol: http                                                  # the protocol to use for signup emails
       host: localhost                                                 # a valid DNS name[:port] for the service
-    http:                                                             # a map of hosts that provide HTTP access to the service
-      localhost:                                                      # a simple identifier for a host providing HTTP access
-        name: 'localhost:8080'                                        # a DNS name[:port] for a host providing HTTP access.
-    #https:                                                           # a map of hosts that provide HTTPS access to the service
-      #dev:                                                           # a map of hosts that provide HTTPS access to the service
-        #name: dev.tidepool.org                                       # a simple identifier for a host providing HTTPS access
-        #tlssecret:                                                   # a TLS secret containing the Cert for the host
-          #name: tidepool-org                                         # the name of the TLS secret
-          #namespace: default                                         # the namespace of the TLS secret
+    http:                                                            
+      enabled: true
+      port: "8080"                                                    # default HTTP port - must be quoted
+      dnsNames: [ "localhost" ]                                       # list of DNS names
+    https:                                                           
+      enabled: false 
+      port: "8433"                                                    # default HTTPS port - must be quoted
+      commonName: ""                                                  # common name of the host
+      secretName:  ""                                                 # name of K8s secret containing the certificate
+      dnsNames: []                                                    # list of DNS names
+      certificateIssuer: ""                                           # the name of the certificate issuer
+      issuerKind: ClusterIssuer                                       # kind of the certificate issuer
   gateway:                                                            # only needed if need to expose the incoming IP address
-    #httpPort: 80                                                     # to create an external HTTP gateway on port 80
-    #httpsPort: 443                                                   # to create an external HTTPS gateway on port 443
     proxy:                                                            # proxy if embedded gloo gateway is disabled.
-      name: gateway-proxy                                             # the name of the API gateway service (unused if gloo.enabled)
+      name: gateway-proxy-v2                                             # the name of the API gateway service (unused if gloo.enabled)
       namespace: gloo-system                                          # the namespace of the API gateway proxy service  (unused if gloo.enabled)
   store: 
     #type: s3                                                         # store non-Mongo data in S3
     type: file                                                        # store non-Mongo data on file system
   secrets:
     external:
-      #source: "awsSecretsManager"                                     # external secrets are loaded from aws
-      source: "other"                                                # external secrets are by other means
+      source: "awsSecretsManager"                                     # external secrets are loaded from aws
+      #source: "other"                                                # external secrets are by other means
     internal:
-      #source: "awsSecretsManager"                                     # internal secrets are loaded from aws
-      source: "helm"                                                # internal secrets are provided by other means
+      source: "awsSecretsManager"                                     # internal secrets are loaded from aws
+      #source: "other"                                                # internal secrets are provided by other means
   linkerd: disabled
   ports:
     blip: 3000                                                        # blip service internal port
@@ -81,12 +90,13 @@ global:
   nameOverride: ""                                                    # the name to use for the helm chart, if given
   mongo:
     await: 'false'                                                    # whether to await for mongo to be ready before starting services
-    hosts: "mongodb"                                                  # comma-separated list of Mongo hosts
-    port: 27017                                                       # the Mongo port
+    scheme: "mongodb"
+    addresses: "mongodb"                                              # comma-separated list of Mongo hosts[:port]
     username: ''                                                      # a username in the Mongo instance
     password: ''                                                      # password associated with username
     ssl: 'false'                                                      # whether to use SSL to communicate with Mongo
     optParams: ''                                                     # optional parameters to pass on the Mongo connection string
+    secretName: 'mongo'
   provider:
     dexcom:
       token:
