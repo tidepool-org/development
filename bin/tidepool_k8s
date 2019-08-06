@@ -90,6 +90,7 @@ set_tilt_env() {
   case "$1" in
     --trap-shutdown) trap 'SHUTTING_DOWN=1 tilt down' EXIT;;
     --trap-shutdown-proxy) trap 'SHUTTING_DOWN=1 tilt --file=Tiltfile.proxy down' EXIT;;
+    --trap-shutdown-mongodb) trap 'SHUTTING_DOWN=1 tilt --file=Tiltfile.mongodb down' EXIT;;
     --shutdown) export SHUTTING_DOWN=1;;
   esac
 }
@@ -106,6 +107,7 @@ case ${1-help} in
   stop) (cd ${DIR} && run_docker_compose stop ${2-});;
   up) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up --port=0 ${2-});;
   proxy) (cd ${DIR} && set_tilt_env --trap-shutdown-proxy && tilt up --file=Tiltfile.proxy --port=0 ${2-});;
+  mongodb) (cd ${DIR} && set_tilt_env --trap-shutdown-mongodb && tilt up --file=Tiltfile.mongodb --port=0 ${2-});;
   down) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
   restart) restart ${2-};;
   destroy) (cd ${DIR} && run_docker_compose rm -fsv);;
