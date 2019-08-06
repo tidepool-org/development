@@ -1,11 +1,17 @@
 #!/bin/bash -xv
-# Usage: $0 ${VALUES_FILE} 
-#
-export INFO=${1:-values.yaml}
-export CONFIG_REPO_DIR=${yq read $INFO global.repo.directory}
-export CLUSTER_NAME=$(yq read $INFO global.cluster.name)
+# Usage: $0 ${DEV_REPO} ${VALUES_FILE:-values.yaml}
 
-CONFIG_REPO_NAME=$(yq read $INFO global.repo.name 2>/dev/null) 
+export DEV_REPO=$1
+export VALUES_FILE=${2:-values.yaml}
+
+cd $DEV_REPO
+git checkout k8s
+
+export PATH=$PATH:${DEV_REPO}/bin
+export CONFIG_REPO_DIR=${yq read $VALUES_FILE global.repo.directory}
+export CLUSTER_NAME=$(yq read $VALUES_FILE global.cluster.name)
+
+CONFIG_REPO_NAME=$(yq read $VALUES_FILE global.repo.name 2>/dev/null) 
 if [ $? -ne 0 ]
 then
    CONFIG_REPO_NAME=${3:-cluster-${CLUSTER_NAME}}
@@ -14,20 +20,12 @@ export CONFIG_REPO=${CONFIG_REPO_DIR}/${CONFIG_REPO_NAME}
 
 mkdir -p $CONFIG_REPO_DIR
 
-export AWS_REGION=$(yq read $INFO global.cluster.region)
+export AWS_REGION=$(yq read $VALUES_FILE global.cluster.region)
 export ENVIRONMENTS=$(yq r values.yaml env | grep -v ' .*' | sed 's/.$//' | | paste -sd " " -)
 
 # install standard tools
 brew bundle --file=${DEV_REPO}/Brewfile
 pip3 install boto3 --user
-
-# get custom tools
-mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
-cd $mytmpdir
-git clone git@github.com:tidepool-org/development.git
-git checkout k8s
-export DEV_REPO=$(pwd)/development
-export PATH=$PATH:${DEV_REPO}/bin
 
 mkdir -p $CONFIG_REPO/clusters/${CLUSTER_NAME}
 cd ${CONFIG_REPO}/clusters/${CLUSTER_NAME}
