@@ -103,7 +103,7 @@ global:
     requests:
       cpu: 50m
       memory: 32Mi
-    #
+
   securityContext:                                                    # the security context for all services
     allowPrivilegeEscalation: false
     runAsNonRoot: true                                                # we don't need root access

@@ -17,11 +17,22 @@ global:
     viz:
       stories: 8083
       typestories: 8082
-  resources: {} # Turn off resourse limits for development
+  resources: # Turn off resourse limits for development
+    limits:
+      cpu: null
+      memory: null
+    requests:
+      cpu: null
+      memory: null
   secrets:
     hostPath: './local/secrets'
   securityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
     runAsUser: 1000
+    capabilities:
+      drop:
+      - ALL
 ### Global Config End ###
 
 ### Gateway Config Start ###
@@ -71,7 +82,6 @@ blip:
       packageName: '@tidepool/viz'
       hostPath: ../viz
       enabled: false
-  resources: {} # Turn off resourse limits for blip to allow webpack dev server to run
 
 blob:
   # image: tidepool-k8s-blob
