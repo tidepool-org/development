@@ -55,16 +55,8 @@ spec:
 {{ range $key, $port := .Values.global.ports.viz }}
         - containerPort: {{ $port }}
 {{ end }}
-{{ if .Values.blip.resources }}
         resources:
-          {{- toYaml .Values.blip.resources | nindent 10 }}
-{{ else }}
           {{- toYaml .Values.global.resources | nindent 10 }}
-{{ end }}
         securityContext:
-{{ if .Values.blip.securityContext }}
-          {{- toYaml .Values.blip.securityContext | nindent 10 }}
-{{ else }}
           {{- toYaml .Values.global.securityContext | nindent 10 }}
-{{ end }}
       restartPolicy: Always

@@ -6,10 +6,6 @@
 tidepool_helm_charts_version: '0.1.5' # Version of the Tidepool helm charts to deploy.
 
 global:
-  ports:
-    viz:
-      stories: 8083
-      typestories: 8082
   hosts:
     default:
       protocol: http
@@ -17,15 +13,15 @@ global:
     http:
       localhost:
         name: "localhost:3000"
+  ports:
+    viz:
+      stories: 8083
+      typestories: 8082
+  resources: {} # Turn off resourse limits for development
   secrets:
     hostPath: './local/secrets'
   securityContext:
-    allowPrivilegeEscalation: false
-    runAsNonRoot: false
-    runAsUser: 0 # We need to run as root for some of the rebuild commands in development goLang services
-    capabilities:
-      drop:
-      - ALL
+    runAsUser: 1000
 ### Global Config End ###
 
 ### Gateway Config Start ###
@@ -75,8 +71,6 @@ blip:
       packageName: '@tidepool/viz'
       hostPath: ../viz
       enabled: false
-  securityContext:
-    runAsUser: 1000 # Needed to run as `node` user
   resources: {} # Turn off resourse limits for blip to allow webpack dev server to run
 
 blob:
