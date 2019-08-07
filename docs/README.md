@@ -16,7 +16,7 @@ These compressed instructions presume that you can figure out how to edit the `v
   export PATH=$PATH:${DEV_REPO}/bin
 
   cp $DEV_REPO/charts/configurator/values.yaml ..
-  export VALUES_FILE=../values.yaml
+  export VALUES_FILE=$(realpath ../values.yaml)
   $EDITOR ${VALUES_FILE}
 
   install_tools
