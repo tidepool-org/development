@@ -8,7 +8,7 @@
 
 if [ $# == 0 ]
 then
-    YQ="docker run -v ${PWD}:/workdir mikefarah/yq yq"
+    YQ=yq
     CLUSTER_NAME=$(${YQ} r $CONFIG_FILE metadata.name)
 else
     CLUSTER_NAME=$1
