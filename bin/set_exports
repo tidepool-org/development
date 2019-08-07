@@ -4,7 +4,7 @@
 #
 # Usage: $0 ${VALUES_FILE:-values.yaml}
 
-export VALUES_FILE=$(realpath ${1:-values.yaml})
+export VALUES_FILE=$(realpath ${1:-${VALUES_FILE:-values.yaml}})
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 export DEV_REPO=$(realpath $DIR/..)
