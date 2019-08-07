@@ -1,3 +1,5 @@
-#!/bin/bash install standard tools
+#!/bin/bash 
+# install standard tools
+. set_exports
 brew bundle --file=${DEV_REPO}/Brewfile
 pip3 install boto3 --user

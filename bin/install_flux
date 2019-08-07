@@ -8,9 +8,11 @@
 # Provide CONFIG_REPO in env variable OR $(cwd) must be within config repo.
 # Provide CLUSTER_NAME in env variable OR $(cwd) must be within clusters subdir of config repo.
 
+export PATH=/bin:/usr/bin:/usr/local/bin
+
 FLUXCLOUD=${1:-false}
 
-if [ "${FLUXCLOUD}" != "" ]
+if [ -n "${FLUXCLOUD}" ]
 then
   INSTALL_FLUXCLOUD=--set\ additionalArgs=\'{--connect=ws://${FLUXCLOUD}}\'
 else
@@ -36,7 +38,7 @@ fi
 BASE=${CONFIG_REPO}/clusters/
 CLUSTER_NAME=${CLUSTER_NAME:-$(pwd | sed -e "s#^$BASE##" -e "s#/.*##")}
 
-if [ "$CLUSTER_NAME" == "" ]
+if [ -z "$CLUSTER_NAME" ]
 then
     echo "\$CLUSTER_NAME cannot be inferred"
     exit 1
