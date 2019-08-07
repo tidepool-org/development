@@ -9,41 +9,50 @@ usage() {
 USAGE: tidepool_k8s command [service] [...additional args]
 
   commands:
-    start                           start (and provision if needed) the Kubernetes server
-    stop                            stop the Kubernetes server
-    up [service]                    start and/or (re)build the entire tidepool stack or the specified service
-    down                            shut down and remove the entire tidepool stack
-    set-kubeconfig                  save Kubernetes server config to ~/.kube/config
-    restart [service]               restart the entire tidepool stack or the specified service
+    start                           Start (and provision if needed) the Kubernetes server
+    stop                            Stop the Kubernetes server
 
-    fix                             run some necessary steps after stack is started to deal with some services
-                                    which may not start correctly due to race conditions (currently hydrophone)
+    up [service]                    Start and/or (re)build the entire tidepool stack or the
+                                    specified service
 
-    destroy                         Shut down and completely remove the local Kubernetes server and all services
-    logs [service]                  tail logs for the specified service
-    server-logs                     tail logs for the Kubernetes server
+    down                            Shut down and remove the entire tidepool stack
+    set-kubeconfig                  Save Kubernetes server config to ~/.kube/config
+    restart [service]               Restart the entire tidepool stack or the specified service
 
-    exec service [...cmds]          run arbitrary shell commands in the currently running service container
-                                      example: 'tidepool_docker exec blip sh'
-                                               (to enter a shell inside the blip container)
-                                      example: 'tidepool_docker exec blip "ls -lR /app/node_modules/ | grep ^l | uniq"'
-                                               (to list all symlinked npm packages, such as after yarn linking)
+    fix                             Run some necessary steps after stack is started to deal with
+                                    some services which may not start correctly due to race
+                                    conditions (currently hydrophone)
 
-    server-exec [...cmds]           run arbitrary shell commands in the Kubernetes server container
+    destroy                         Shut down and completely remove the local Kubernetes server and
+                                    all services
 
-    yarn [node_service] [...cmds]   shortcut to run yarn commands against the specified Node.js-based service
-                                    frontend node services are one of: [blip|viz|tideline|tidepool-platform-client]
-                                    NOTE: tideline and tidepool-platform-client are optional volume mounts
-                                    within the blip service
-                                      example: 'tidepool_docker tideline install'
-                                        ('install' is default yarn command, so it can be skipped here)
-                                      example: 'tidepool_docker viz run stories'
-                                        ('run' is implied in yarn scrips, so 'tidepool_docker viz stories' works too)
-                                      example: 'tidepool_docker tidepool-platform-client run test'
+    logs [service]                  Tail logs for the specified service
+    server-logs                     Tail logs for the Kubernetes server
 
-    docker [...cmds]                run docker commands within the context of the Kubernetes server
+    exec service [...cmds]          Run shell commands in the currently running service
+                                    container
+                                      example:
+                                        'tidepool_k8s exec blip sh'
+                                        (to enter a shell inside the blip container)
+                                      example:
+                                        'tidepool_k8s exec blip "ls -lR /app/node_modules/ | grep ^l | uniq"'
+                                        (to list all symlinked npm packages, such as after yarn linking)
+
+    server-exec [...cmds]           Run shell commands in the Kubernetes server container
+
+    yarn [node_service] [...cmds]   Run yarn commands against the specified Node.js-based service.
+                                    Service will be one of:
+                                      blip, @tidepool/viz, tideline, tidepool-platform-client,
+                                      export, gatekeeper, highwater, jellyfish, message-api, seagull
+                                    NOTE: tideline, @tidepool/viz, and tidepool-platform-client
+                                    are optional Tilt-provided mounts within the blip service
+                                      example: 'tidepool_k8s yarn @tidepool/viz stories'
+                                      example: 'tidepool_k8s yarn tidepool-platform-client test'
+
+    docker [...cmds]                Run docker commands within the context of the Kubernetes server
     port-forward [service] [port]   forward a port to a running service container
-    prune                           remove any unused images, containers, and volumes within the Kubernetes server
+    prune                           remove any unused images, containers, and volumes within the
+                                    Kubernetes server
 
     help                            show this help text
 
