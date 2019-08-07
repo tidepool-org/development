@@ -1,4 +1,4 @@
-#!/bin/bash -xv
+#!/bin/bash
 #
 # Create configuration repo from single values files.
 #
@@ -12,7 +12,7 @@ mkdir -p $CONFIG_REPO
 cd $CONFIG_REPO
 
 # create cluster config 
-helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/config.yaml > config.yaml
+helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/config.yaml > ${CLUSTER_REPO}/config.yaml
 
 mkdir -p $FLUX_REPO
 cd ${FLUX_REPO}
