@@ -33,23 +33,31 @@ def main():
   # Set up tidepool helm template command
   tidepool_helm_template_cmd = 'helm template --is-upgrade --name tidepool-tilt --namespace default '
 
+  gateway_port_forwards = getNested(config,'gateway-proxy.portForwards', ['3000'])
+  gateway_port_forward_host_port = gateway_port_forwards[0].split(':')[0]
+
+  mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
+  mongodb_port_forward_host_port = mongodb_port_forwards[0].split(':')[0]
+
   if not is_shutdown:
     prepareServer()
+    local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 &>/dev/null &')
+    local('tilt up --file=Tiltfile.proxy --hud=0 --port=0 &>/dev/null &')
+    local('while ! nc -G 1 -z localhost {}; do sleep 0.1; done'.format(mongodb_port_forward_host_port))
+    local('while ! nc -G 1 -z localhost {}; do sleep 0.1; done'.format(gateway_port_forward_host_port))
     # Fetch and/or apply generated secrets on startup
     tidepool_helm_template_cmd = setServerSecrets(tidepool_helm_template_cmd)
-
-  # Define local mongodb service
-  defineMongoService()
-
-  # Provision the gloo gateway service
-  # provisionGlooGateway(tidepool_helm_template_cmd)
+  else:
+    local('tilt down --file=Tiltfile.mongodb &>/dev/null &')
+    local('tilt down --file=Tiltfile.proxy &>/dev/null &')
+    local("for pid in $(ps -ef | awk '/tilt\ up/ {print $2}'); do kill -9 $pid; done; exit 0")
 
   # Apply any service overrides
   tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
   tidepool_helm_template_cmd = applyServiceOverrides(tidepool_helm_template_cmd)
 
-  # Don't provision the gloo gateway here - we do that in provisionGlooGateway() above
-  # tidepool_helm_template_cmd += '--set "gloo.enabled=false" '
+  # Don't provision the gloo gateway here - we do that in Tiltfile.proxy
+  tidepool_helm_template_cmd += '--set "gloo.enabled=false" '
 
   # Deploy and watch the helm charts
   k8s_yaml(local('{helmCmd} {chartDir}'.format(
@@ -57,10 +65,6 @@ def main():
     helmCmd=tidepool_helm_template_cmd
   )))
   watch_file(tidepool_helm_chart_dir)
-
-  # Expose the gateway proxy on a host port
-  gateway_port_forwards = getNested(config,'gateway-proxy.portForwards', ['3000'])
-  k8s_resource('gateway-proxy', port_forwards=gateway_port_forwards)
 
   # Back out of actual provisioning for debugging purposes by uncommenting below
   # fail('NOT YET ;)')
@@ -130,44 +134,6 @@ def setServerSecrets (tidepool_helm_template_cmd):
 
   return tidepool_helm_template_cmd
 ### Secrets End ###
-
-### MongoDB Start ###
-def defineMongoService ():
-  mongo_helm_template_cmd = 'helm template --is-upgrade --name tidepool-tilt --namespace default '
-
-  mongodb_data_dir = getNested(config, 'mongodb.hostPath')
-  if mongodb_data_dir:
-    mongo_helm_template_cmd += '--set "mongo.hostPath={}" '.format(mongodb_data_dir)
-
-  k8s_yaml(local(mongo_helm_template_cmd + mongo_helm_chart_dir))
-  k8s_resource('mongodb', port_forwards=[27017])
-  watch_file(mongo_helm_chart_dir)
-### MongoDB End ###
-
-### Gloo Gateway Start ###
-def provisionGlooGateway(tidepool_helm_template_cmd):
-  for chart in listdir('{}/charts'.format(tidepool_helm_chart_dir)):
-    if chart.find('gloo') >= 0:
-      gloo_chart_dir = './local/charts'
-      absolute_gloo_chart_dir = absolute_dir(gloo_chart_dir)
-      local('mkdir -p {}'.format(absolute_gloo_chart_dir))
-      local('tar -xzf {} -C {}'.format(chart, absolute_gloo_chart_dir));
-
-      k8s_yaml(local('{templateCmd} -f {overridesFile} {chartDir}/gloo'.format(
-        chartDir=absolute_gloo_chart_dir,
-        templateCmd=tidepool_helm_template_cmd,
-        overridesFile=tidepool_helm_overrides_file,
-      )))
-
-      k8s_yaml(local('templates=({chartDir}/templates/gloo-internal.yaml {chartDir}/templates/internal-gateway-service.yaml {chartDir}/templates/gloo-external-http.yaml) && helm template -x $templates -f {overridesFile} {chartDir}'.format(
-        chartDir=absolute_dir(tidepool_helm_chart_dir),
-        overridesFile=tidepool_helm_overrides_file,
-      )))
-
-      # Expose the gateway proxy on a host port
-      gateway_port_forwards = getNested(config,'gateway-proxy.portForwards', ['3000'])
-      k8s_resource('gateway-proxy', port_forwards=gateway_port_forwards)
-### Gloo Gateway End ###
 
 ### Service Overrides Start ###
 def applyServiceOverrides(tidepool_helm_template_cmd):
