@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Install users as Kubernetes system masters
+#
+# Usage: $0 "${USERS}"
+
 USERS=${1:-"lennartgoedhart-cli benderr-cli derrick-cli mikeallgeier-cli"}
 
 # Create an Amazon EKS cluster using eksctl
@@ -12,13 +17,11 @@ then
 fi
 
 # Users that will have system:master access (in addition to the user that creates the cluster)
-USERS=${1:-"lennartgoedhart-cli benderr-cli derrick-cli mikeallgeier-cli"}
 
 CONFIG_FILE=${2:-config.yaml}
 
-YQ="yq"
-CLUSTER_NAME=$(${YQ} r $CONFIG_FILE metadata.name)
-REGION=$(${YQ} r $CONFIG_FILE metadata.region)
+CLUSTER_NAME=$(yq r $CONFIG_FILE metadata.name)
+REGION=$(yq r $CONFIG_FILE metadata.region)
 
 # Kubernetes group to assign users to
 GROUP=system:masters

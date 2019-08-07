@@ -1,4 +1,5 @@
 #!/bin/bash 
+#
 # Install/upgrade Weave Flux to watch the current branch of the CONFIG repo
 #
 # Usage: install_flux ${FLUXCLOUD:-fluxcloud} ${SECRET:-../flux-secret.yaml} ${BRANCH:-current branch} ${PATH:-.../flux} 

@@ -1,4 +1,9 @@
-#!/bin/bash -xv
+#!/bin/bash
+#
+# Create and config cluster to service Tidepool environments
+#
+# Usage: $0 ${VALUES_FILE:-values.yaml}
+
 
 . set_exports $*
 

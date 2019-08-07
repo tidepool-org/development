@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Set standard IAM roles/policies  
+#
+# Usage: $0 $ENVIRONMENT $CLUSTER_NAME
+
 set -o errexit -o pipefail -o noclobber -o nounset
 
 if [ -z ${DEV_REPO+x} ]
@@ -14,7 +19,7 @@ then
 	exit
 fi
 
-TIDEPOOL_ENVIRONMENT=${1:-${TIDEPOOL_ENVIRONMENT:-""}}
+ENVIRONMENT=${1:-${TIDEPOOL_ENVIRONMENT:-""}}
 CLUSTER_NAME=${2:-${CLUSTER_NAME:-""}}
 
 bad=0
@@ -24,7 +29,7 @@ then
 	bad=1
 fi
 
-if [ "$TIDEPOOL_ENVIRONMENT" == "" ]
+if [ "$ENVIRONMENT" == "" ]
 then
 	echo "missing cluster name"
 	bad=1
@@ -32,15 +37,15 @@ fi
 
 if [ $bad -eq 1 ]
 then
-	echo "usage: env_roles \${TIDEPOOL_ENVIRONMENT} \${CLUSTER_NAME}"
+	echo "usage: $0 \${ENVIRONMENT} \${CLUSTER_NAME}" \${BUCKET_NAME} \${AWS_REGION}
 	exit 1
 fi
 
-BUCKET_NAME=${3:-tidepool-${TIDEPOOL_ENVIRONMENT}-data}
-AWS_REGION=${3:-${AWS_REGION:-us-west-2}}
+BUCKET_NAME=${3:-tidepool-${ENVIRONMENT}-data}
+AWS_REGION=${4:-${AWS_REGION:-us-west-2}}
 
 CF_FILE=file://${DEV_REPO}/cf/env-roles.yaml
-STACK_NAME=eksctl-${CLUSTER_NAME}-${TIDEPOOL_ENVIRONMENT}-roles
+STACK_NAME=eksctl-${CLUSTER_NAME}-${ENVIRONMENT}-roles
 
 set -x
-aws cloudformation create-stack --stack-name ${STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body ${CF_FILE} --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}  ParameterKey=EnvName,ParameterValue=${TIDEPOOL_ENVIRONMENT}   ParameterKey=ClusterRoleStackName,ParameterValue=eksctl-${CLUSTER_NAME}-roles ParameterKey=Region,ParameterValue=${AWS_REGION} ParameterKey=AccountNumber,ParameterValue=${AWS_ACCOUNT} ParameterKey=BucketName,ParameterValue=${BUCKET_NAME}
+aws cloudformation create-stack --stack-name ${STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body ${CF_FILE} --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}  ParameterKey=EnvName,ParameterValue=${ENVIRONMENT}   ParameterKey=ClusterRoleStackName,ParameterValue=eksctl-${CLUSTER_NAME}-roles ParameterKey=Region,ParameterValue=${AWS_REGION} ParameterKey=AccountNumber,ParameterValue=${AWS_ACCOUNT} ParameterKey=BucketName,ParameterValue=${BUCKET_NAME}

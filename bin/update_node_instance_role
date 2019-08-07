@@ -1,5 +1,10 @@
 #!/bin/bash
-STACK_NAME=${1:-eksctl-qae-nodegroup-ng-1}
+#
+# Apply update to IAM Role
+#
+# Usage: $0 ${STACK_NAME}
+
+STACK_NAME=$1
 current=$(aws cloudformation get-template --stack-name ${STACK_NAME})
 read -r -d '' update << EOM
 { 

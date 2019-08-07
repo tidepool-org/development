@@ -1,4 +1,8 @@
 #!/bin/bash 
+#
+# Stop all services running in the current cluster
+#
+# Usage $0
 
 for env in $1
 do

@@ -1,6 +1,9 @@
 #!/bin/bash 
+#
 # Report on whether the virtual services provided by the current K8s cluster are being routed via DNS
 # Assumes only one elb is present
+#
+# Usage: $0 
 
 ZONEID=$(get_zone_id)
 echo "current cluster: $(kubectl config current-context)"

@@ -1,4 +1,5 @@
 #!/bin/sh
+#
 # Retrieve key from flux and add it as a deploy key for the Git remote
 # write accesss allows flux to poll Docker Hub and update Git with the latest images
 # read access allows flux to poll Git for changes to the repo that it reflects in the cluster
@@ -9,6 +10,9 @@
 # 3) You must have fluxctl installed.
 # 4) You must be in a valid Git repo.
 #
+# Usage: $0 ${GITHUB_ACCESS_TOKEN:-(cat ~/.secrets/github_access_token)}
+#
+
 context=$(kubectl config current-context)
 github_access_token=${1:-(cat ~/.secrets/github_access_token)}
 key=$(fluxctl --k8s-fwd-ns=flux identity)

@@ -1,6 +1,10 @@
-#!/bin/bash -xv
-
+#!/bin/bash
+#
 # Create an Amazon EKS cluster using eksctl
+#
+# $0 ${CLUSTER_NAME} ${CONFIG_FILE}
+
+
 
 if [ $# == 0 ]
 then

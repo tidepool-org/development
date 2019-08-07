@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# Set IAM roles for Kiam
+#
+# Usage: $0 ${CLUSTER_NAME} ${REGION}
 
 if [ -z ${DEV_REPO+x} ]
 then

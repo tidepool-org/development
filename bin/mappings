@@ -1,4 +1,9 @@
 #!/usr/local/bin/python3
+#
+# Generate base Mappings from Ambassador Annotations
+#
+# Usage: $0 --input file
+
 
 import json
 import os

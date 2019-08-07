@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Create final Gloo config file from Ambassador annotations
+#
+# Usage: $0 ${CHART_DIR}
+
 rm -f $1/templates/gloo-*.yaml 
 
 templates="$(helm template --namespace=default $1)"

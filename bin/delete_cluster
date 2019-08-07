@@ -1,8 +1,13 @@
 #!/bin/bash 
+#
+# Delete an Amazon EKS cluster that was created by our tools.
+#
+# Usage: $0 ${CLUSTER_NAME ${ENVIRONMENTS} ${NODE_GROUPS:-ng-1 ng-kiam}
+#
 
 if [ $# -lt 2 ]
 then
-  echo "Usage:  delete_cluster \${CLUSTER_NAME} \${ENVIRONMENTS} \${NODE_GROUPS:-ng-1 ng-kiam}"
+  echo "Usage: $0 \${CLUSTER_NAME} \${ENVIRONMENTS} \${NODE_GROUPS:-ng-1 ng-kiam}"
   exit
 fi
 

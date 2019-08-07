@@ -1,5 +1,12 @@
-#!/bin/bash -xv
-export ENVIRONMENTS=$(yq r values.yaml env | grep -v ' .*' | sed 's/.$//' | | paste -sd " " -)
+#!/bin/bash
+#
+# Copy Tidepool S3 email assets to environment 
+#
+# Usage: $0
+
+VALUES_FILE=${1:-values.yaml}
+
+export ENVIRONMENTS=$(yq r $VALUES_FILE env | grep -v ' .*' | sed 's/.$//' | | paste -sd " " -)
 
 for ENVIRONMENT in ${ENVIRONMENTS}
 do

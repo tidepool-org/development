@@ -1,5 +1,6 @@
-#!/bin/bash -xv
-# This script is used to run integration tests of a new image of a service within an existing Kubernetes cluster.
+#!/bin/bash 
+#
+# Run integration tests of a new image of a service within an existing Kubernetes cluster.
 #
 # Pre-requisites:
 # 1) Set up a wildcard domain in Route53 for all *.integration-test.tidepool.org -> integration test K8s cluster

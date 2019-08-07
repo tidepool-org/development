@@ -1,5 +1,9 @@
 #!/bin/bash 
-# install standard tools
+#
+# install standard tools needed to create/install cluster
+#
+# Usage: $0 ${VALUES_FILE:-values.yaml}
+
 . set_exports
 brew bundle --file=${DEV_REPO}/Brewfile
 pip3 install boto3 --user

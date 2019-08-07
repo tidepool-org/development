@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# Install Tiller into cluster of kubectl context
+#
+#
 
 export PATH=/usr/local/bin
 kubectl -n kube-system create sa tiller

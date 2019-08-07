@@ -1,6 +1,8 @@
-#!/bin/bash -xv
-
+#!/bin/bash
+#
 # Create an Amazon EKS cluster using eksctl
+#
+# Usage: $0 ${CONFIG_FILE} ${KUBECONFIG}
 
 #File in which cluster config is stored
 CONFIG_FILE=${1:-config.yaml}

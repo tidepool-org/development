@@ -1,4 +1,9 @@
-#!/bin/bash -xv
+#!/bin/bash
+#
+# Run smoke test using GhostInspector
+#
+# Usage: $0 ${URL} ${GHOST_SUITE_ID} ${GHOST_API_KEY}
+
 # Smoke test a given ENVIRONMENT on a given CLUSTER using a given PROTOCOL
 
 URL=${1:-https://dev.tidepool.org}

@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Remove all Gloo CRDS
+#
+# Usage: $0
+
 kubectl delete crd virtualservices.gateway.solo.io
 kubectl delete crd gateways.gateway.solo.io
 kubectl delete crd proxies.gloo.solo.io

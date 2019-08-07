@@ -1,6 +1,9 @@
 #!/bin/bash 
-# reports the current URL/branch/path that weave is tracking
 #
+# Report the current URL/branch/path that weave is tracking
+#
+# Usage: $0`
+
 NS=${1:-flux}
 weaveargs=$(kubectl get pods -n ${NS} -o json | jq '.items[].spec.containers | .[] | select(.name=="flux") | .args')
 echo $weaveargs
