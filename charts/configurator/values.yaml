@@ -1,24 +1,26 @@
 global:
   repo:
-    directory:                                  # where to create the config repo
-    name: ""                                    # name of the repo
-    create: true
+    directory: "/tmp/configrepo"                # REQUIRED: where to create the config repo
+    name: "cluster-badass"                      # OPTIONAL: name of the repo
+    create: true                                # whether to create the config repo  directory
   github:
     account: tidepool-org                       # your GitHub account
-    push: true
-    token: ""                                   # a token that allows write/create access to your GitHub account
+    push: false                                 # whether to push the completed repo to GitHub
+    token: ""                                   # a GitHub token that allows repo read/write access  
   logLevel: debug                               # the default log level for all services
-  users: []                                     # the list of IAM users to provide master cluster access
+  users:                                        # the list of IAM users to provide master cluster access
+  - benderr-cli
+  - lennartgoedhard-cli
   cluster:
-    name: ""                                    # the name of the cluster
-    k8sVersion: "1.13.8"                        # the Kubernetes version >= 1.13.7
+    name: "badass"                              # the name of the cluster
+    k8sVersion: "1.13"                          # the Kubernetes version >= 1.13
     region: "us-west-2"                         # AWS region to deploy in
     cidr: "10.47.0.0/16"                        # CIDR of AWS VPC
     nodegroup:
-      instanceType: "m5.medium"
-      desiredCapacity: 3
-      minSize: 1
-      maxSize: 10
+      instanceType: "m5.medium"                 # AWS instance type for workers 
+      desiredCapacity: 3                        # initial capacity of auto scaling group of workers
+      minSize: 1                                # minimum size of auto scaling group of workers
+      maxSize: 10                               # maximum size of auto scaling group of workers
   hostnames: []                                 # list of hosts to publish to DNS
   sumologic:
     enabled: false
@@ -32,6 +34,26 @@ global:
     url: ""
 env:
   qa1:
+    mongo:                                      # MongoDB connection parameters
+      scheme: "mongodb"
+      addresses: "mongodb"
+      username: ""
+      password: ""
+      database: ""
+      tls: "true"
+      optParams: ""
+    hosts:
+      default:
+        protocol: https                         # protocol to use for email signups
+      http:
+        enabled: false
+        dnsNames:                               # list of DNS names supporting HTTP access on port 80
+        - badass.tidepool.org
+      https:
+        enabled: false
+        dnsNames:                               # list of DNS names supporting HTTPS access on port 443
+        - badass.tidepool.org
+        certificateIssuer: letsencrypt-staging   # certificate issuer, set to "" for no certificates
     gitops:
       branch: develop                           # branch to pull updates from
     auth:
@@ -62,14 +84,6 @@ env:
       ServiceAuth: ""
     export:
       SessionEncryptionKey: ""
-    mongo:
-      scheme: "mongodb"
-      addresses: "mongodb"
-      username: ""
-      password: ""
-      database: ""
-      tls: "true"
-      optParams: ""
     dexcom:
       enabled: false
       ClientId: ""
@@ -80,12 +94,4 @@ env:
       CareLinkSalt: ""
     nosqlclient:
       enabled: true
-    hosts:
-      default:
-        protocol: https
-      http:
-        enabled: false
-      https:
-        enabled: true
-        dnsNames: []
-        certificateIssuer: letsencrypt-staging
+
