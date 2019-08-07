@@ -4,11 +4,11 @@
 #
 # Usage: $0 ${VALUES_FILE:-values.yaml}
 
-
 . set_exports $*
 
 # create cluster
-create_cluster
+cd ${CLUSTER_REPO}
+create_cluster 
 sleep 600
 export KUBECONFIG=$(realpath ./kubeconfig.yaml)
 
