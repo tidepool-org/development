@@ -17,7 +17,7 @@ global:
     region: "us-west-2"                         # AWS region to deploy in
     cidr: "10.47.0.0/16"                        # CIDR of AWS VPC
     nodegroup:
-      instanceType: "m5.medium"                 # AWS instance type for workers 
+      instanceType: "m4.large"                  # AWS instance type for workers 
       desiredCapacity: 3                        # initial capacity of auto scaling group of workers
       minSize: 1                                # minimum size of auto scaling group of workers
       maxSize: 10                               # maximum size of auto scaling group of workers
