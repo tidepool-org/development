@@ -6,21 +6,22 @@ DIR=$(cd $(dirname $(dirname ${0})); pwd)
 usage() {
   cat <<EOF
 =======================================================
-USAGE: tidepool_docker command [service] [...additional args]
+USAGE: tidepool_k8s command [service] [...additional args]
 
   commands:
+    start                           start (and provision if needed) the Kubernetes server
+    stop                            stop the Kubernetes server
     up [service]                    start and/or (re)build the entire tidepool stack or the specified service
     down                            shut down and remove the entire tidepool stack
-    stop [service]                  shut down the entire tidepool stack or the specified service
-    rm [service]                    stops and removes containers and volumes for the entire tidepool stack or the specified service
+    set-kubeconfig                  save Kubernetes server config to ~/.kube/config
     restart [service]               restart the entire tidepool stack or the specified service
-    pull [service]                  pull the latest images for the entire tidepool stack or the specified service
-    logs [service]                  tail logs for the entire tidepool stack or the specified service
 
-    rebuild [service]               rebuild and run image for all services in the tidepool stack
-                                    or the specified service
-                                    NOTE: the service(s) must have a 'build' property in the 'docker-compose.yml'
-                                    file for this to have any effect.
+    fix                             run some necessary steps after stack is started to deal with some services
+                                    which may not start correctly due to race conditions (currently hydrophone)
+
+    destroy                         Shut down and completely remove the local Kubernetes server and all services
+    logs [service]                  tail logs for the specified service
+    server-logs                     tail logs for the Kubernetes server
 
     exec service [...cmds]          run arbitrary shell commands in the currently running service container
                                       example: 'tidepool_docker exec blip sh'
@@ -28,17 +29,7 @@ USAGE: tidepool_docker command [service] [...additional args]
                                       example: 'tidepool_docker exec blip "ls -lR /app/node_modules/ | grep ^l | uniq"'
                                                (to list all symlinked npm packages, such as after yarn linking)
 
-    link [node_service] package     yarn link a mounted package and restart the service
-                                    NOTE: the package must be mounted into a root directory that matches it's name
-                                      example: 'tidepool_docker link blip @tidepool/viz'
-                                        - will link the package mounted at /@tidepool/viz and link the
-                                          "@tidepool/viz" package in blip.
-
-    unlink [node_service] package   yarn unlink a mounted package, reinstall the remote package, and restart
-                                    NOTE: the package must be mounted into a root directory that matches it's name
-                                      example: 'tidepool_docker unlink blip tideline'
-                                        - will link the package mounted at /tideline and unlink
-                                          the "tideline" package in blip
+    server-exec [...cmds]           run arbitrary shell commands in the Kubernetes server container
 
     yarn [node_service] [...cmds]   shortcut to run yarn commands against the specified Node.js-based service
                                     frontend node services are one of: [blip|viz|tideline|tidepool-platform-client]
@@ -49,6 +40,10 @@ USAGE: tidepool_docker command [service] [...additional args]
                                       example: 'tidepool_docker viz run stories'
                                         ('run' is implied in yarn scrips, so 'tidepool_docker viz stories' works too)
                                       example: 'tidepool_docker tidepool-platform-client run test'
+
+    docker [...cmds]                run docker commands within the context of the Kubernetes server
+    port-forward [service] [port]   forward a port to a running service container
+    prune                           remove any unused images, containers, and volumes within the Kubernetes server
 
     help                            show this help text
 
@@ -64,7 +59,7 @@ restart() { (kubectl scale deployment ${1} --replicas=0 && kubectl scale deploym
 run_exec() { args="${@:2}" && (kubectl exec -ti svc/${1} -c ${1} -- /bin/sh -c "${args}") }
 
 run_yarn() {
-  NODE_SERVICES='@(blip)'
+  NODE_SERVICES='@(blip|export|gatekeeper|highwater|jellyfish|message-api|seagull)'
   BLIP_MOUNTED_NODE_SERVICES='@(tideline|tidepool-platform-client|@tidepool/viz)'
 
   if [[ ${BLIP_MOUNTED_NODE_SERVICES} =~ ${1} ]]; then
@@ -105,8 +100,9 @@ case ${1-help} in
   stop) (cd ${DIR} && run_docker_compose stop ${2-});;
   up) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up --port=0 ${2-});;
   down) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
-  fix) (restart hydrophone);;
+  set-kubeconfig) set_kubeconfig;;
   restart) restart ${2-};;
+  fix) (restart hydrophone);;
   destroy) (cd ${DIR} && run_docker_compose rm -fsv);;
   logs) (cd ${DIR} && kubectl logs svc/${2} --tail=20 -c ${2} -f);;
   server-logs) (cd ${DIR} && run_docker_compose logs --tail=20 -f server);;
@@ -116,6 +112,5 @@ case ${1-help} in
   docker) run_docker "${@:2}";;
   port-forward) (cd ${DIR} && kubectl port-forward svc/${2} ${3});;
   prune) (run_docker "system prune --volumes -af");;
-  set-kubeconfig) set_kubeconfig;;
   *|help) usage;;
 esac
