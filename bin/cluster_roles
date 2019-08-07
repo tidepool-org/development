@@ -33,3 +33,4 @@ STACK_NAME=eksctl-${CLUSTER_NAME}-roles
 
 set -x
 aws cloudformation create-stack --stack-name ${STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body ${CF_FILE} --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}     ParameterKey=NodeGroupStackName,ParameterValue=${NODEGROUP_STACK_NAME} ParameterKey=Region,ParameterValue=${REGION} ParameterKey=AccountNumber,ParameterValue=${AWS_ACCOUNT}
+aws cloudformation wait stack-delete-complete --stack-name ${STACK_NAME}

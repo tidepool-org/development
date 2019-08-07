@@ -10,6 +10,8 @@
 cd ${CLUSTER_REPO}
 create_cluster 
 sleep 600
+STACK_NAME=eksctl-${CLUSTER_NAME}-cluster
+aws cloudformation wait stack-delete-complete --stack-name $STACK_NAME
 export KUBECONFIG=$(realpath ./kubeconfig.yaml)
 
 # add authorized users
