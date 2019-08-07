@@ -22,4 +22,10 @@ export CHART_DIR=${DEV_REPO}/charts/configurator
 export TEMPLATE_DIR=${DEV_REPO}/charts/configurator/templates
 
 export FLUXCLOUD=$(yq read $VALUES_FILE global.fluxcloud.enabled)
-export GITHUB_ACCESS_TOKEN=$(yq read $VALUES_FILE global.github.token)
+
+if [ -f ~/.secrets/github_access_token ]
+then
+	export GITHUB_ACCESS_TOKEN=$(cat ~/.secrets/github_access_token)
+else
+    export GITHUB_ACCESS_TOKEN=$(yq read $VALUES_FILE global.github.token)
+fi
