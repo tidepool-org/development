@@ -31,18 +31,25 @@ is_shutdown = bool(int(str(local('printf ${SHUTTING_DOWN-0}'))))
 ### Main Start ###
 def main():
   # Set up tidepool helm template command
-  tidepool_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
+  tidepool_helm_template_cmd = 'helm template --is-upgrade --name tidepool-tilt --namespace default '
 
   if not is_shutdown:
+    prepareServer()
     # Fetch and/or apply generated secrets on startup
     tidepool_helm_template_cmd = setServerSecrets(tidepool_helm_template_cmd)
 
   # Define local mongodb service
   defineMongoService()
 
+  # Provision the gloo gateway service
+  # provisionGlooGateway(tidepool_helm_template_cmd)
+
   # Apply any service overrides
   tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
   tidepool_helm_template_cmd = applyServiceOverrides(tidepool_helm_template_cmd)
+
+  # Don't provision the gloo gateway here - we do that in provisionGlooGateway() above
+  # tidepool_helm_template_cmd += '--set "gloo.enabled=false" '
 
   # Deploy and watch the helm charts
   k8s_yaml(local('{helmCmd} {chartDir}'.format(
@@ -58,6 +65,14 @@ def main():
   # Back out of actual provisioning for debugging purposes by uncommenting below
   # fail('NOT YET ;)')
 ### Main End ###
+
+### Prepare Server Start ###
+def prepareServer():
+  # Ensure default-admin clusterrolebinding on default:default service account
+  default_admin_clusterrolebinding = local('kubectl get clusterrolebinding default-admin --ignore-not-found')
+  if not default_admin_clusterrolebinding:
+    local('kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:default')
+### Prepare Server End ###
 
 ### Secrets Start ###
 def setServerSecrets (tidepool_helm_template_cmd):
@@ -99,7 +114,7 @@ def setServerSecrets (tidepool_helm_template_cmd):
 
     else:
       # Generate the secret and apply it to the cluster
-      local('helm template -x {chartDir}/templates/{secret}-secret.yaml {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+      local('helm template --is-upgrade -x {chartDir}/templates/{secret}-secret.yaml {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
         chartDir=absolute_dir(tidepool_helm_chart_dir),
         secret=secret,
       ))
@@ -118,7 +133,7 @@ def setServerSecrets (tidepool_helm_template_cmd):
 
 ### MongoDB Start ###
 def defineMongoService ():
-  mongo_helm_template_cmd = 'helm template --name tidepool-local-db --namespace default '
+  mongo_helm_template_cmd = 'helm template --is-upgrade --name tidepool-tilt --namespace default '
 
   mongodb_data_dir = getNested(config, 'mongodb.hostPath')
   if mongodb_data_dir:
@@ -128,6 +143,31 @@ def defineMongoService ():
   k8s_resource('mongodb', port_forwards=[27017])
   watch_file(mongo_helm_chart_dir)
 ### MongoDB End ###
+
+### Gloo Gateway Start ###
+def provisionGlooGateway(tidepool_helm_template_cmd):
+  for chart in listdir('{}/charts'.format(tidepool_helm_chart_dir)):
+    if chart.find('gloo') >= 0:
+      gloo_chart_dir = './local/charts'
+      absolute_gloo_chart_dir = absolute_dir(gloo_chart_dir)
+      local('mkdir -p {}'.format(absolute_gloo_chart_dir))
+      local('tar -xzf {} -C {}'.format(chart, absolute_gloo_chart_dir));
+
+      k8s_yaml(local('{templateCmd} -f {overridesFile} {chartDir}/gloo'.format(
+        chartDir=absolute_gloo_chart_dir,
+        templateCmd=tidepool_helm_template_cmd,
+        overridesFile=tidepool_helm_overrides_file,
+      )))
+
+      k8s_yaml(local('templates=({chartDir}/templates/gloo-internal.yaml {chartDir}/templates/internal-gateway-service.yaml {chartDir}/templates/gloo-external-http.yaml) && helm template -x $templates -f {overridesFile} {chartDir}'.format(
+        chartDir=absolute_dir(tidepool_helm_chart_dir),
+        overridesFile=tidepool_helm_overrides_file,
+      )))
+
+      # Expose the gateway proxy on a host port
+      gateway_port_forwards = getNested(config,'gateway-proxy.portForwards', ['3000'])
+      k8s_resource('gateway-proxy', port_forwards=gateway_port_forwards)
+### Gloo Gateway End ###
 
 ### Service Overrides Start ###
 def applyServiceOverrides(tidepool_helm_template_cmd):

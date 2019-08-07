@@ -106,9 +106,9 @@ case ${1-help} in
   start) (cd ${DIR} && run_docker_compose up -d ${2-});;
   stop) (cd ${DIR} && run_docker_compose stop ${2-});;
   up) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up --port=0 ${2-});;
-  proxy) (cd ${DIR} && set_tilt_env --trap-shutdown-proxy && tilt up --file=Tiltfile.proxy --port=0 ${2-});;
-  mongodb) (cd ${DIR} && set_tilt_env --trap-shutdown-mongodb && tilt up --file=Tiltfile.mongodb --port=0 ${2-});;
-  down) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
+  # proxy) (cd ${DIR} && set_tilt_env --trap-shutdown-proxy && tilt up --file=Tiltfile.proxy --port=0 ${2-});;
+  proxy) (cd ${DIR} && nohup tilt up gloo gateway discovery gateway-proxy hydrophone --hud=0 --port=0 &>/dev/null & ${2-} && restart gateway-proxy);;
+  down) (cd ${DIR} && set_tilt_env --shutdown && tilt down && tilt down --file=Tiltfile.proxy);;
   restart) restart ${2-};;
   destroy) (cd ${DIR} && run_docker_compose rm -fsv);;
   pull) (cd ${DIR} && run_docker_compose pull ${2-server});;

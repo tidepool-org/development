@@ -36,7 +36,7 @@ def main():
 
 ### Gloo Gateway Start ###
 def provisionGlooGateway():
-  proxy_helm_template_cmd = 'helm template --name tidepool-tilt-proxy --namespace default '
+  proxy_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
 
   for chart in listdir('{}/charts'.format(tidepool_helm_chart_dir)):
     if chart.find('gloo') >= 0:
