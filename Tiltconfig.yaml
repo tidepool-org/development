@@ -6,10 +6,10 @@
 tidepool_helm_charts_version: '0.1.5' # Version of the Tidepool helm charts to deploy.
 
 global:
-  # ports:
-  #   viz:
-  #     stories: 8083
-  #     typestories: 8082
+  ports:
+    viz:
+      stories: 8083
+      typestories: 8082
   hosts:
     default:
       protocol: http
@@ -59,6 +59,7 @@ blip:
   containerPath: '/app'
   apiHost: 'http://localhost:3000'
   webpackDevTool: cheap-module-eval-source-map
+  webpackPublicPath: 'http://localhost:3000'
   linkedPackages:
     - name: tideline
       packageName: tideline
