@@ -15,8 +15,9 @@ These compressed instructions presume that you can figure out how to edit the `v
   git checkout k8s
   export PATH=$PATH:${DEV_REPO}/bin
 
-  cp $DEV_REPO/charts/configuration/values.yaml .
-  $EDITOR values.yaml
+  cp $DEV_REPO/charts/configurator/values.yaml ..
+  export VALUES_FILE=../values.yaml
+  $EDITOR ${VALUES_FILE}
 
   install_tools
   create_config_repo
