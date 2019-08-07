@@ -41,7 +41,7 @@ USAGE: tidepool_k8s command [service] [...additional args]
     server-exec [...cmds]           Run shell commands in the Kubernetes server container
 
     yarn [node_service] [...cmds]   Run yarn commands against the specified Node.js-based service.
-                                    Service will be one of:
+                                    [node_service] will be one of:
                                       blip, @tidepool/viz, tideline, tidepool-platform-client,
                                       export, gatekeeper, highwater, jellyfish, message-api, seagull
                                     NOTE: tideline, @tidepool/viz, and tidepool-platform-client
@@ -50,11 +50,12 @@ USAGE: tidepool_k8s command [service] [...additional args]
                                       example: 'tidepool_k8s yarn tidepool-platform-client test'
 
     docker [...cmds]                Run docker commands within the context of the Kubernetes server
-    port-forward [service] [port]   forward a port to a running service container
-    prune                           remove any unused images, containers, and volumes within the
+    port-forward [service] [port]   Forward a port to a running service container
+
+    prune                           Remove any unused images, containers, and volumes within the
                                     Kubernetes server
 
-    help                            show this help text
+    help                            Show this help text
 
 EOF
 }
