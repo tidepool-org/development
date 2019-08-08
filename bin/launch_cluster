@@ -40,7 +40,6 @@ fi
 # create cluster
 cd ${CLUSTER_DIR}
 create_cluster 
-sleep 600
 aws cloudformation wait stack-delete-complete --stack-name ${CLUSTER_STACK_NAME}
 
 # add authorized users
@@ -54,18 +53,15 @@ kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release
 
 # create IAM roles
 cluster_roles
-for ENVIRONMENT in ${ENVIRONMENTS}
-do
-  ENVIRONMENT=${ENVIRONMENT} env_roles
-export
+env_roles 
 
 # add helm repos
 kubectl apply -f flux-repositories.yaml
 
 # install flux for GitOps
-install_flux $FLUXCLOUD
+install_flux 
 
 # push deploy key to GitHub
-push_deploy_key $GITHUB_TOKEN
+push_deploy_key 
 
 

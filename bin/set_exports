@@ -32,9 +32,6 @@ AWS_REGION=${AWS_REGION:-us-west-2}
 
 export ENVIRONMENTS=$(yq r $VALUES_FILE env | grep -v ' .*' | sed 's/.$//' | paste -sd " " -)
 
-export CHART_DIR=${DEV_REPO}/charts/configurator
-export TEMPLATE_DIR=${DEV_REPO}/charts/configurator/templates
-
 export FLUXCLOUD=$(yq read $VALUES_FILE global.fluxcloud.enabled)
 if [ "${FLUXCLOUD}" == "null" ]
 then

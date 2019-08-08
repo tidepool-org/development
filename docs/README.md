@@ -143,6 +143,115 @@ To get your Tidepool services up and running in a new Amazon EKS cluster, you mu
 
 Following are instructions on how to do just that!
 
+## Export Values
+
+The instructions rely on the availability of certain environment variables. Please export these.
+
+1. Your Cluster Name
+
+   This name must be unique across all of your Kubernetes clusters.
+   ```bash
+   $ export CLUSTER_NAME=my-cluster-name
+   ```
+
+1. Your AWS Region
+
+   This is the [AWS region](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions) in which you will deploy your Kubernetes cluster.
+
+   ```bash
+   $ export AWS_REGION=us-west-2
+   ```
+  
+1. A GitHub Access Token
+
+   We will need to make adjustments to your GitHub config repo. To do this, we will need a [Git access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) with repo read/write permissions. Provide that token in an environment variable: 
+
+   ```bash
+   $ export GITHUB_TOKEN=...
+   ```
+
+## Clone Repos
+
+We will use tools and data already stored in GitHub to help you install your cluster.
+
+Please clone these repos.
+
+1. Clone the Development repo
+
+    We will use some simple tools available in the `bin` directory of the `git@github.com:tidepool-org/development.git`.  So, clone that repo and and place the `bin` directory into your path.
+
+    ```bash
+    $ git clone git@github.com:tidepool-org/development.git
+    $ export DEV_REPO=$(pwd)/development
+    $ cd ${DEV_REPO}
+    $ git checkout k8s
+    $ export PATH=$PATH:${DEV_REPO}/bin
+    ```
+
+    We will not modify this repo. We simply need a local copy of it to perform the installation.
+
+1. Clone this Config repo.  
+
+   We will start with this repo and modify it to be the configuration of your cluster. 
+
+   When we are done making adjustments, push the changes to GitHub. By convention, we name the Git Config repo `cluster-${CLUSTER_NAME}`. 
+
+    ```bash
+    $ git clone git@github.com:tidepool-org/cluster-development.git
+    $ export CONFIG_REPO=$(pwd)/cluster-development
+    ```
+    
+1. Rename the cluster directory to match your chosen name and change to that directory:
+
+    ```bash
+    $ mv ${CONFIG_REPO}/clusters/development ${CONFIG_REPO}/clusters/${CLUSTER_NAME}
+    $ cd ${CONFIG_REPO}/clusters/${CLUSTER_NAME}
+    ```
+
+## Install Dependencies
+
+There are a number of client-side tools that you will need in the installation process.  
+
+If you are on a Mac, you can use the `homebrew` tool to install all the packages and their dependencies.
+
+For your convenience, we have created a `Brewfile` with the needed packages.  Install as follows:
+
+   ```bash
+   $ brew bundle --file=${DEV_REPO}/Brewfile
+   ```
+You may want to copy the Brewfile to the standard location in your home directory to expedite future updates:
+
+   ```bash
+   $ cp ${DEV_REPO}/Brewfile ~/.Brewfile
+   ```
+See the instructions for [brew bundle](https://github.com/Homebrew/homebrew-bundle).
+
+This will install:
+1. [awscli](https://aws.amazon.com/cli/) 
+1. [helm](https://helm.sh/) 
+1. [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl) 
+1. [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator)
+1. [jq](https://stedolan.github.io/jq/)
+1. [yq](https://github.com/mikefarah/yq)
+1. [k9s](https://k9ss.io/)
+1. [fluxctl](https://www.weave.works/blog/install-fluxctl-and-manage-your-deployments-easily)
+1. [docker](https://gist.github.com/rstacruz/297fc799f094f55d062b982f7dac9e41)
+1. [python3](https://docs.python.org/3/)
+1. [hub](https://hub.github.com/)
+
+Install some python3 packages:
+
+   ```bash
+   $ pip3 install boto3 --user
+   ```
+
+You may also want to install some supplemental packages.  However,
+they are not required for the installation of the K8s cluster and Tidepool services.
+
+   ```bash
+   $ brew bundle --file=${DEV_REPO}/Brewfile-supplemental
+   ```
+
 ## Create Secret Manifests
 
 To connect with the third party service providers, you will need certain information.
@@ -399,111 +508,6 @@ You provide the information in the `mailchimp` `Secret` within the `${ENVIRONMEN
   -  `${MailchimpPersonalLists}` is the mailing list info to individuals
   -  `${MailchimpClinicLists}` is the mailing list info for clinics 
 
-## Export Values
-
-The instructions rely on the availability of certain environment variables. Please export these.
-
-1. Your Cluster Name
-
-   This name must be unique across all of your Kubernetes clusters.
-   ```bash
-   $ export CLUSTER_NAME=my-cluster-name
-   ```
-
-1. Your AWS Region
-
-   This is the [AWS region](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions) in which you will deploy your Kubernetes cluster.
-
-   ```bash
-   $ export AWS_REGION=us-west-2
-   ```
-
-Additionally, if you are using GitHub as the Git server for your config repo, you may use a tools that we provide to perform operations on your GitHub repo.  We will need access to your GitHub credentials:
-  
-1. Place a [Git access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) in `~/.secrets/github_access_token`.
-
-## Clone Repos
-
-We will use tools and data already stored in GitHub to help you install your cluster.
-
-Please clone these repos.
-
-1. Clone the Development repo
-
-    We will use some simple tools available in the `bin` directory of the `git@github.com:tidepool-org/development.git`.  So, clone that repo and and place the `bin` directory into your path.
-
-    ```bash
-    $ git clone git@github.com:tidepool-org/development.git
-    $ export DEV_REPO=$(pwd)/development
-    $ cd ${DEV_REPO}
-    $ git checkout k8s
-    $ export PATH=$PATH:${DEV_REPO}/bin
-    ```
-
-    We will not modify this repo. We simply need a local copy of it to perform the installation.
-
-1. Clone this Config repo.  
-
-   We will start with this repo and modify it to be the configuration of your cluster. 
-
-   When we are done making adjustments, push the changes to GitHub. By convention, we name the Git Config repo `cluster-${CLUSTER_NAME}`. 
-
-    ```bash
-    $ git clone git@github.com:tidepool-org/cluster-development.git
-    $ export CONFIG_REPO=$(pwd)/cluster-development
-    ```
-    
-1. Rename the cluster directory to match your chosen name and change to that directory:
-
-    ```bash
-    $ mv ${CONFIG_REPO}/clusters/development ${CONFIG_REPO}/clusters/${CLUSTER_NAME}
-    $ cd ${CONFIG_REPO}/clusters/${CLUSTER_NAME}
-    ```
-
-## Install Dependencies
-
-There are a number of client-side tools that you will need in the installation process.  
-
-If you are on a Mac, you can use the `homebrew` tool to install all the packages and their dependencies.
-
-For your convenience, we have created a `Brewfile` with the needed packages.  Install as follows:
-
-   ```bash
-   $ brew bundle --file=${DEV_REPO}/Brewfile
-   ```
-You may want to copy the Brewfile to the standard location in your home directory to expedite future updates:
-
-   ```bash
-   $ cp ${DEV_REPO}/Brewfile ~/.Brewfile
-   ```
-See the instructions for [brew bundle](https://github.com/Homebrew/homebrew-bundle).
-
-This will install:
-1. [awscli](https://aws.amazon.com/cli/) 
-1. [helm](https://helm.sh/) 
-1. [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl) 
-1. [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator)
-1. [jq](https://stedolan.github.io/jq/)
-1. [yq](https://github.com/mikefarah/yq)
-1. [k9s](https://k9ss.io/)
-1. [fluxctl](https://www.weave.works/blog/install-fluxctl-and-manage-your-deployments-easily)
-1. [docker](https://gist.github.com/rstacruz/297fc799f094f55d062b982f7dac9e41)
-1. [python3](https://docs.python.org/3/)
-1. [hub](https://hub.github.com/)
-
-Install some python3 packages:
-
-   ```bash
-   $ pip3 install boto3 --user
-   ```
-
-You may also want to install some supplemental packages.  However,
-they are not required for the installation of the K8s cluster and Tidepool services.
-
-   ```bash
-   $ brew bundle --file=${DEV_REPO}/Brewfile-supplemental
-   ```
-
 ## Persist Your Secrets
 
 Most of your Kubernetes services must be provided secrets, including API Keys for external services, encryption keys for data, etc.
@@ -635,7 +639,8 @@ to configure your cluster.  We use that approach.  In the file `${CONFIG_REPO}/c
 Edit this file before creating a cluster.
 
   ```bash
-  $ ${EDITOR} ${CONFIG_REPO}/clusters/${CLUSTER_NAME}/config.yaml
+  $ export CONFIG_FILE=${CONFIG_REPO}/clusters/${CLUSTER_NAME}/config.yaml
+  $ ${EDITOR} $CONFIG_FILE
   ```
 
 #### Cluster Name
@@ -672,6 +677,8 @@ If you connect to one of these environments for you MongoDB, you must avoid conf
 After you have modified the `config.yaml` file, you are ready to create your K8s cluster.
 
 You may set the `$KUBECONFIG` environment variable to select the destination.  Otherwise, by convention, the file `$CONFIG_REPO/clusters/$CLUSTER_NAME/kubeconfig.yaml` will be used.
+
+Also, export the absolute path to the configuration file:
 
   ```bash
   $ create_cluster 
@@ -1287,8 +1294,6 @@ For you convenience, you may configure those IAM roles with the following helper
     
   ```bash
   $ export ENVIRONMENTS=...
-  $ export CLUSTER_NAME=...
-  $ export AWS_REGION=...
   $ env_roles
   ```
 
@@ -1415,10 +1420,11 @@ Flux can install software from Git repos or Helm repos.  For the latter, you mus
 
 [Flux](https://flux-cd.readthedocs.io/en/latest/install/standalone-setup.html#add-an-ssh-deploy-key-to-the-repository) can update your config repo whenerer new images are published to your Docker image repot (e.g. DockerHub).  To do this, your Git server (e.g. GitHub) must be configured to allow flux permission to make changes.  You do this on GitHub by providing a [deploy key](https://developer.github.com/v3/guides/managing-deploy-keys/), which is the public key of your flux server.
 
-If you have provided your GitHub Access token as instructed above, then you may use the helper function to install the flux public key to your Git config repo so that Flux may read and write to the repo:
+If you have placed your GitHub token in the proper environment variable,
+then you may push the new key as follows:
  
   ```bash
-  $ push_deploy_key
+  $ GITHUB_TOKEN=... push_deploy_key
   ```
 
 You should see output similar to:

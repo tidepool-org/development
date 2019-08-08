@@ -27,12 +27,6 @@ then
 	exit
 fi
 
-if [ -z "$TEMPLATE_DIR" ]
-then
-	echo "\$TEMPLATE_DIR required."
-	exit
-fi
-
 if [ -z "$ENVIRONMENTS" ]
 then
 	echo "\$ENVIRONMENTS required."
@@ -45,13 +39,10 @@ then
 	exit
 fi
 
-if [ -z "$CHART_DIR" ]
-then
-	echo "\$CHART_DIR required."
-	exit
-fi
-
 cd $DEV_REPO
+
+CHART_DIR=${DEV_REPO}/charts/configurator
+TEMPLATE_DIR=${CHART_DIR}/templates
 
 mkdir -p $CLUSTER_DIR
 cd $CONFIG_DIR
