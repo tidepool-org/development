@@ -98,6 +98,7 @@ def setServerSecrets (tidepool_helm_template_cmd):
     'auth',
     'blob',
     'data',
+    'dexcom-api',
     'export',
     'gatekeeper',
     'highwater',
@@ -132,8 +133,9 @@ def setServerSecrets (tidepool_helm_template_cmd):
 
     else:
       # Generate the secret and apply it to the cluster
-      local('helm template --is-upgrade -x {chartDir}/templates/{secret}-secret.yaml {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+      local('helm template --is-upgrade -x {chartDir}/templates/{secret}-secret.yaml -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
         chartDir=absolute_dir(tidepool_helm_chart_dir),
+        overrides=tidepool_helm_overrides_file,
         secret=secret,
       ))
 

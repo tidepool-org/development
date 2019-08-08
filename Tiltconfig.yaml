@@ -26,6 +26,8 @@ global:
       memory: null
   secrets:
     hostPath: './local/secrets'
+    dexcomClientId: "Request from Tidepool Ops team"
+    dexcomClientSecret: "Request from Tidepool Ops team"
   securityContext:
     allowPrivilegeEscalation: false
     runAsNonRoot: true
