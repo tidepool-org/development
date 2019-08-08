@@ -94,7 +94,6 @@ then
 fi
 git add .
 git commit -m "Initial configuration"
-set -xv
 REMOTE=$(git config remote.origin.url)
 if [ -z "$REMOTE" ]
 then
