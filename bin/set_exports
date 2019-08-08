@@ -9,8 +9,8 @@ export VALUES_FILE=$(realpath ${1:-${VALUES_FILE:-values.yaml}})
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 export DEV_REPO=$(realpath $DIR/..)
 
-export CONFIG_DIR=$(yq read $VALUES_FILE global.repo.directory)
-if [ -z ${CONFIG_DIR} -o "${CONFIG_DIR}" == "null" ]
+CONFIG_PARENT_DIR=$(realpath $(yq read $VALUES_FILE global.repo.directory))
+if [ -z ${CONFIG_PARENT_DIR} -o "${CONFIG_PARENT_DIR}" == "null" ]
 then
 	echo "global.repo.directory missing."
 fi
@@ -20,6 +20,8 @@ if [ -z ${CLUSTER_NAME} -o "${CLUSTER_NAME}" == "null" ]
 then
 	echo "global.cluster.name missing."
 fi
+
+export CONFIG_DIR=${CONFIG_PARENT_DIR}/clusters-$CLUSTER_NAME
 
 export CLUSTER_DIR=${CONFIG_DIR}/clusters/${CLUSTER_NAME}
 export FLUX_DIR=${CLUSTER_DIR}/flux
@@ -69,8 +71,6 @@ if [ "$KUBECONFIG" == "null" ]
 then
 	KUBECONFIG=$CLUSTER_DIR/kubeconfig.yaml
 fi
-
-KUBECONFIG=$(realpath $KUBECONFIG)
 
 export NODEGROUP_STACK_NAME=eksctl-${CLUSTER_NAME}-nodegroup-ng-kiam
 export CLUSTER_STACK_NAME=eksctl-${CLUSTER_NAME}-cluster
