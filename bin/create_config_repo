@@ -87,11 +87,21 @@ if [ "$CREATE" == "true" ]
 then
 # create config repo
   cd $CONFIG_DIR
-  git init
+  if [ ! -d ".git" ]
+  then
+    git init
+  fi
 fi
 git add .
 git commit -m "Initial configuration"
-git remote add origin git@github.com:${GITHIB_ACCOUNT}/${CLUSTER_DIR_NAME}.git
+set -xv
+REMOTE=$(git config remote.origin.url)
+if [ -z "$REMOTE" ]
+then
+    	git remote add origin git@github.com:${GITHUB_ACCOUNT}/${GIT_REPO_NAME}.git
+else
+	echo "Using Git repo $REMOTE"
+fi
 
 PUSH=$(yq read ${VALUES_FILE} global.github.push)
 if [ "$PUSH" == "true" ]
