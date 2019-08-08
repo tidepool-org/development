@@ -366,10 +366,10 @@ where:
 
 - `${SLACK_URL}` is the webhook url that you got from the Slack App when you created it
 
-Finally, set the environment variable `$FLUXCLOUD` to `fluxcloud`:
+Finally, set the environment variable `$FLUXCLOUD` to `true`:
 
   ```bash
-  $ export FLUXCLOUD=fluxcloud
+  $ export FLUXCLOUD=true
   ```
 
 We use this variable later to configure Flux to provide updates to the Fluxcloud application, when sends those updates to your Slack channel.
@@ -988,7 +988,7 @@ Create a CF stack named `eksctl-${CLUSTER_NAME}-roles` as follows.
 For your convenience, we provide a helper function to create the IAM roles.
 
   ```bash
-  $ CLUSTER_NAME=${CLUSTER_NAME} AWS_REGION=${AWS_REGION} cluster_roles
+  $ cluster_roles
   ```
 
 You should see output similar to:
@@ -1283,8 +1283,7 @@ Above, we created IAM roles for the shared services.  Now, we must create IAM ro
 For you convenience, you may configure those IAM roles with the following helper function:
     
   ```bash
-  $ export ENVIRONMENTS=...
-  $ env_roles
+  $ ENVIRONMENTS=... env_roles
   ```
 
 This will create two IAM roles specific to the Tidepool environment using CloudFormation.
