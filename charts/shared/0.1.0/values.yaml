@@ -3,7 +3,6 @@ global:
   awsRegion: us-west-2
   email: derrick@tidepool.org
   logLevel: debug
-  id: "123456789012"  # Amazon account id, should provide from secret
   hostnames: []       # array of hostnames to alias to this loadbalancer on this cluster listening to 80 and 443
   secrets:
     source: "awsSecretsManager"     # external secrets are loaded from aws

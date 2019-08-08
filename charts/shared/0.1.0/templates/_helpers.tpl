@@ -85,8 +85,3 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- define "charts.fluxcloud.slack.channel" -}}
 {{- printf "#flux-%s" .Values.global.clusterName | quote -}}
 {{- end -}}
-
-{{- define "charts.kiam.arn" -}}
-{{- printf "arn:aws:iam::%s:role/%s-kiam-server-role" .Values.global.id .Values.global.clusterName | quote -}}
-{{- end -}}
-
