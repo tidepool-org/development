@@ -19,12 +19,12 @@ These compressed instructions presume that you can figure out how to edit the `v
   export VALUES_FILE=$(realpath ../values.yaml)
   $EDITOR ${VALUES_FILE}
 
+  . set_exports 
   install_tools
   create_config_repo
   export_secrets
   create_s3_assets
   launch_cluster 
-  export KUBECONFIG=$(realpath ./kubeconfig.yaml)
   ```
 
 ## Prerequisites
