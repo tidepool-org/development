@@ -17,6 +17,8 @@ These compressed instructions presume that you can figure out how to edit the `v
 
   cp $DEV_REPO/charts/configurator/values.yaml ..
   export VALUES_FILE=$(realpath ../values.yaml)
+
+  # The $VALUES_FILE lists the values that you must provide.
   $EDITOR ${VALUES_FILE}
 
   . set_exports 
@@ -487,6 +489,7 @@ This will install:
 1. [fluxctl](https://www.weave.works/blog/install-fluxctl-and-manage-your-deployments-easily)
 1. [docker](https://gist.github.com/rstacruz/297fc799f094f55d062b982f7dac9e41)
 1. [python3](https://docs.python.org/3/)
+1. [hub](https://hub.github.com/)
 
 Install some python3 packages:
 
@@ -668,8 +671,10 @@ If you connect to one of these environments for you MongoDB, you must avoid conf
 #### Create Cluster
 After you have modified the `config.yaml` file, you are ready to create your K8s cluster.
 
+You may set the `$KUBECONFIG` environment variable to select the destination.  Otherwise, by convention, the file `$CONFIG_REPO/clusters/$CLUSTER_NAME/kubeconfig.yaml` will be used.
+
   ```bash
-  $ create_cluster ${CONFIG_FILE:-config.yaml} ${KUBECONFIG:-kubeconfig.yaml}
+  $ create_cluster 
   ```
   > FIXME: We need to document the required IAM Policy to be able to run `create_cluster`.
   > FIXME: We may need some instructions (could be in a separate document), about what to do when `create_cluster` fails. I had to go and manually delete my CF Stack to try again. I got the policy instructions from https://github.com/weaveworks/eksctl/issues/204
@@ -767,14 +772,12 @@ Amazon EKS provides an integration between their identity management system (IAM
 For your convenience, we provide a helper function  `authorize_users` to provide Kubernetes `system:master` privileges to your operations staff.  Simply run this tool with a list of IAM users and the helper will update the ConfigMap accordingly:
 
   ```bash
-  $ authorize_users "${USERS}" ${CONFIG_FILE:-config.yaml}
+  $ IAM_USERS="${IAM_USERS}" authorize_users
   ```
 
   where 
        
-  - `${USERS}` is a whitespace-separated list of the AWS IAM users whom you would like to provide Kubernetes `system:master` access to the cluster (in addition to the AWS user that creates the cluster).  By default, this value will be replaced with the CLI IAM identities of the Tidepool Operations staff.
-
-  - `${CONFIG_FILE}` is the path to the config file
+  - `${IAM_USERS}` is a whitespace-separated list of the AWS IAM users whom you would like to provide Kubernetes `system:master` access to the cluster (in addition to the AWS user that creates the cluster).  By default, this value will be replaced with the CLI IAM identities of the Tidepool Operations staff.
 
   This helper uses the environment variable `${AWS_ACCOUNT}` if it is defined.  In this way you can allow users from any AWS account access 
   to access your cluster with full privileges if you desire.
@@ -988,7 +991,7 @@ Create a CF stack named `eksctl-${CLUSTER_NAME}-roles` as follows.
 For your convenience, we provide a helper function to create the IAM roles.
 
   ```bash
-  $ cluster_roles ${CLUSTER_NAME} ${AWS_REGION:-us-west-2}
+  $ CLUSTER_NAME=${CLUSTER_NAME} AWS_REGION=${AWS_REGION} cluster_roles
   ```
 
 You should see output similar to:
@@ -1283,7 +1286,10 @@ Above, we created IAM roles for the shared services.  Now, we must create IAM ro
 For you convenience, you may configure those IAM roles with the following helper function:
     
   ```bash
-  $ env_roles ${ENVIRONMENT} ${CLUSTER_NAME} ${BUCKET_NAME:-tidepool-${ENVIRONMENT}-data} ${REGION:-us-west-2}
+  $ export ENVIRONMENTS=...
+  $ export CLUSTER_NAME=...
+  $ export AWS_REGION=...
+  $ env_roles
   ```
 
 This will create two IAM roles specific to the Tidepool environment using CloudFormation.
@@ -1306,7 +1312,7 @@ Each separate Tidepool environment must live in its own namespace. If you have n
 have the namespace of the ${ENVIRONMENT} using a simple helper function.
 
   ```bash
-  $ change_namespace ${ENVIRONMENT}
+  $ ENVIRONMENT=... change_namespace 
   ```
 
 ## Create Intra-cluster Secrets
@@ -1695,7 +1701,7 @@ In order to allow the [kiam](https://github.com/uswitch/kiam) role to be assumed
 For your convenience, we provide a helper function:
 
   ```bash
-  $ set_kiam_trust {CLUSTER_NAME} ${CONFIG_FILE:-config.yaml}
+  $ set_kiam_trust ${CLUSTER_NAME} 
   ```
 
 ## How To Store Secrets in Your PRIVATE Git Repo

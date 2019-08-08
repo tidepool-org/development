@@ -28,14 +28,14 @@ global:
   hostnames: []                                 # list of hosts to publish to DNS
   sumologic:
     enabled: false
-    CollectorUrl:  ""
+    CollectorUrl:  ""                           # Sumologic collector URL
   datadog:
     enabled: false
-    APIKey: ""
-    AppKey: ""
+    APIKey: ""                                  # Datadog API key
+    AppKey: ""                                  # Datadog Application key
   fluxcloud:
     enabled: false
-    url: ""
+    url: ""                                     # Slack Webhook url
 env:
   qa1:
     mongo:                                      # MongoDB connection parameters
@@ -61,31 +61,31 @@ env:
     gitops:
       branch: develop                           # branch to pull updates from
     auth:
-      ServiceAuth:  ""
+      ServiceAuth:  ""				# intra-cluster secret
     blob:
-      ServiceAuth: ""
+      ServiceAuth: ""				# intra-cluster secret
     data:
-      ServiceAuth: ""
+      ServiceAuth: ""				# intra-cluster secret
     task:
-      ServiceAuth: ""
+      ServiceAuth: ""				# intra-cluster secret
     image:
-      ServiceAuth: ""
+      ServiceAuth: ""				# intra-cluster secret
     user:
-      ServiceAuth: ""
+      ServiceAuth: ""				# intra-cluster secret
     gatekeeper:
-      ServiceAuth: ""
+      ServiceAuth: ""				# intra-cluster secret
     shoreline:
-      ServiceAuth: ""
+      ServiceAuth: ""				# intra-cluster secret
       UserLongTermKey: 
       UserMailVerification: ""
       UserPasswordSalt: ""
       ClinicDemoUserId: ""
     tidepoolServerSecret:
-      ServiceAuth: ""
+      ServiceAuth: ""				# intra-cluster secret
     highwater:
       UserIdSalt: ""
     notification:
-      ServiceAuth: ""
+      ServiceAuth: ""				# intra-cluster secret
     export:
       SessionEncryptionKey: ""
     dexcom:
