@@ -56,10 +56,10 @@ then
 	exit
 fi
 
-export GITHUB_ACCOUNT=$(yq read $VALUES_FILE global.github.account)
-GITHUB_ACCOUNT=${GITHUB_ACCOUNT:-tidepool-org}
+export GITHUB_USER=$(yq read $VALUES_FILE global.github.account)
+GITHUB_USER=${GITHUB_USER:-tidepool-org}
 
-export GIT_REMOTE=git@github.com:${GITHUB_ACCOUNT}/${GIT_REPO_NAME}.git
+export GIT_REMOTE=git@github.com:${GITHUB_USER}/${GIT_REPO_NAME}.git
 
 export KUBECONFIG=$(yq read $VALUES_FILE global.kubeconfig)
 if [ "$KUBECONFIG" == "null" ]
@@ -80,7 +80,7 @@ fi
 
 if [ -f ~/.secrets/github_access_token ]
 then
-	export GITHUB_ACCESS_TOKEN=$(cat ~/.secrets/github_access_token)
+	export GITHUB_TOKEN=$(cat ~/.secrets/github_access_token)
 else
-    	export GITHUB_ACCESS_TOKEN=$(yq read $VALUES_FILE global.github.token)
+    	export GITHUB_TOKEN=$(yq read $VALUES_FILE global.github.token)
 fi

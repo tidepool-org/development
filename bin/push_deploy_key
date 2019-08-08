@@ -12,9 +12,9 @@
 #
 # Usage: $0
 
-if [ -z "$GITHUB_ACCESS_TOKEN" ]
+if [ -z "$GITHUB_TOKEN" ]
 then
-	echo "\$GITHUB_ACCESS_TOKEN" required."
+	echo "\$GITHUB_TOKEN" required."
 	exit
 fi
 
@@ -24,7 +24,7 @@ then
 	exit
 fi
 
-github_access_token=$GITHUB_ACCESS_TOKEN
+github_access_token=$GITHUB_TOKEN
 
 key=$(fluxctl --k8s-fwd-ns=flux identity)
 rp=$(git rev-parse --is-inside-work-tree 2>/dev/null)

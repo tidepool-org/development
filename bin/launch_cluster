@@ -30,9 +30,9 @@ then
 	exit
 fi
 
-if [ -z "$GITHUB_ACCESS_TOKEN" ]
+if [ -z "$GITHUB_TOKEN" ]
 then
-	echo "\$GITHUB_ACCESS_TOKEN required."
+	echo "\$GITHUB_TOKEN required."
 	exit
 fi
 
@@ -66,6 +66,6 @@ kubectl apply -f flux-repositories.yaml
 install_flux $FLUXCLOUD
 
 # push deploy key to GitHub
-push_deploy_key $GITHUB_ACCESS_TOKEN
+push_deploy_key $GITHUB_TOKEN
 
 
