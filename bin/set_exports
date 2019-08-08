@@ -2,9 +2,15 @@
 #
 # Set environment variables from values file
 #
-# Usage: $0 ${VALUES_FILE:-values.yaml}
+# Usage: $0 $VALUES_FILE
 
-export VALUES_FILE=$(realpath ${1:-${VALUES_FILE:-values.yaml}})
+if [ $# -ne 1 ]
+then
+	echo "Usage: $0 \$VALES_FILE"
+	exit
+fi
+
+export VALUES_FILE=$(realpath $1)
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 export DEV_REPO=$(realpath $DIR/..)

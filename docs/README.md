@@ -22,7 +22,7 @@ These compressed instructions presume that you can figure out how to edit the `v
   # The $VALUES_FILE lists the values that you must provide.
   $EDITOR ${VALUES_FILE}
 
-  . set_exports 
+  . set_exports ${VALUES_FILE}
   install_tools
   create_config_repo
   export_secrets
