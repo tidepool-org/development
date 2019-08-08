@@ -12,25 +12,45 @@ export DEV_REPO=$(realpath $DIR/..)
 CONFIG_PARENT_DIR=$(realpath $(yq read $VALUES_FILE global.repo.directory))
 if [ -z ${CONFIG_PARENT_DIR} -o "${CONFIG_PARENT_DIR}" == "null" ]
 then
-	echo "global.repo.directory missing."
+	echo "global.repo.directory required."
+	exit
 fi
 
 export CLUSTER_NAME=$(yq read $VALUES_FILE global.cluster.name)
 if [ -z ${CLUSTER_NAME} -o "${CLUSTER_NAME}" == "null" ]
 then
-	echo "global.cluster.name missing."
+	echo "global.cluster.name required."
 fi
 
-export CONFIG_DIR=${CONFIG_PARENT_DIR}/cluster-$CLUSTER_NAME
+export GITHUB_USER=$(yq read $VALUES_FILE global.github.user)
+if [ -z "$GITHUB_USER" -o "${GITHUB_USER}" == "null" ]
+then
+	echo "global.github.user required."
+	exit
+fi
 
+export GIT_REPO_NAME=$(yq read $VALUES_FILE global.repo.name)
+
+if [ -z "$GIT_REPO_NAME" -o "${GIT_REPO_NAME}" == "null" ]
+then
+        GIT_REPO_NAME=-cluster-${CLUSTER_NAME}
+fi
+
+export CONFIG_DIR=${CONFIG_PARENT_DIR}/${GIT_REPO_NAME}
 export CLUSTER_DIR=${CONFIG_DIR}/clusters/${CLUSTER_NAME}
 export FLUX_DIR=${CLUSTER_DIR}/flux
 
 export CONFIG_FILE=$(yq read $VALUES_FILE global.cluster.configFile)
-CONFIG_FILE=${CONFIG_FILE:-$CLUSTER_DIR/config.yaml}
+if [ -z "$CONFIG_FILE" -o "${CONFIG_FILE}" == "null" ]
+then
+	CONFIG_FILE=$CLUSTER_DIR/config.yaml
+fi
 
 export AWS_REGION=$(yq read $VALUES_FILE global.cluster.region)
-AWS_REGION=${AWS_REGION:-us-west-2}
+if [ -z "$CONFIG_FILE" -o "${CONFIG_FILE}" == "null" ]
+then
+    AWS_REGION=us-west-2
+fi
 
 export ENVIRONMENTS=$(yq r $VALUES_FILE env)
 if [ "$ENVIRONMENTS" == "null" -o "$ENVIROMMENTS" == "{}" ]
@@ -53,22 +73,10 @@ then
 	FLUX_BRANCH=master
 fi
 
-export GIT_REPO_NAME=$(yq read $VALUES_FILE global.repo.name)
-GIT_REPO_NAME=${GIT_REPO_NAME:-cluster-${CLUSTER_NAME}}
-
-if [ -z "$GIT_REPO_NAME" -o "${GIT_REPO_NAME}" == "null" ]
-then
-	echo "global.repo.name required."
-	exit
-fi
-
 export GITHUB_ACCOUNT=$(yq read $VALUES_FILE global.github.account)
-GITHUB_ACCOUNT=${GITHUB_ACCOUNT:-tidepool-org}
-
-export GITHUB_USER=$(yq read $VALUES_FILE global.github.user)
-if [ -z "GITHUB_USER" ]
+if [ -z "$GITHUB_ACCOUNT" -o "${GITHUB_ACCOUNT}" == "null" ]
 then
-	echo "global.github.user required."
+	GITHUB_ACCOUNT=tidepool-org
 fi
 
 export GIT_REMOTE=git@github.com:${GITHUB_ACCOUNT}/${GIT_REPO_NAME}.git
@@ -78,9 +86,6 @@ if [ "$KUBECONFIG" == "null" ]
 then
 	KUBECONFIG=$CLUSTER_DIR/kubeconfig.yaml
 fi
-
-export NODEGROUP_STACK_NAME=eksctl-${CLUSTER_NAME}-nodegroup-ng-kiam
-export CLUSTER_STACK_NAME=eksctl-${CLUSTER_NAME}-cluster
 
 export IAM_USERS=$(yq read $VALUES_FILE global.iamUsers)
 if [ "$IAM_USERS" == "null" ]

@@ -36,6 +36,8 @@ then
 	exit
 fi
 
+export CLUSTER_STACK_NAME=eksctl-${CLUSTER_NAME}-cluster
+
 
 # create cluster
 cd ${CLUSTER_DIR}
