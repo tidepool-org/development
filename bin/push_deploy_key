@@ -10,11 +10,22 @@
 # 3) You must have fluxctl installed.
 # 4) You must be in a valid Git repo.
 #
-# Usage: $0 ${GITHUB_ACCESS_TOKEN:-(cat ~/.secrets/github_access_token)}
-#
+# Usage: $0
 
-context=$(kubectl config current-context)
-github_access_token=${1:-(cat ~/.secrets/github_access_token)}
+if [ -z "$GITHUB_ACCESS_TOKEN" ]
+then
+	echo "\$GITHUB_ACCESS_TOKEN" required"
+	exit
+fi
+
+if [ -z "$GIT_REMOTE" ]
+then
+	echo "\$GIT_REMOTE required"
+	exit
+fi
+
+github_access_token=$GITHUB_ACCESS_TOKEN
+
 key=$(fluxctl --k8s-fwd-ns=flux identity)
 rp=$(git rev-parse --is-inside-work-tree 2>/dev/null)
 
@@ -23,8 +34,7 @@ if [ $? -ne 0 ] || [ "$rp" != "true" ]; then
         exit
 fi
 
-url="$(git config --get remote.origin.url)"
-reponame="$(echo $url | cut -d/ -f2 | sed -e 's/\.git//')"
+reponame="$(echo $GIT_REMOTE | cut -d/ -f2 | sed -e 's/\.git//')"
 echo $reponame
 
 curl -X POST -i\

@@ -2,51 +2,48 @@
 #
 # Set standard IAM roles/policies  
 #
-# Usage: $0 $ENVIRONMENT $CLUSTER_NAME
+# Usage: $0 
 
-set -o errexit -o pipefail -o noclobber -o nounset
-
-if [ -z ${DEV_REPO+x} ]
+if [ -z "${DEV_REPO}" ]
 then
-	echo "Must set \$DEV_REPO in environment"
+	echo "\$DEV_REPO required"
 	exit
 fi
 	
 AWS_ACCOUNT=${AWS_ACCOUNT:-$(get_account)}
-if [ -z ${AWS_ACCOUNT} ]
+if [ -z "$AWS_ACCOUNT" ]
 then
-	echo "Must set \$AWS_ACCOUNT in environment"
+	echo "\$AWS_ACCOUNT required"
 	exit
 fi
 
-ENVIRONMENT=${1:-${TIDEPOOL_ENVIRONMENT:-""}}
-CLUSTER_NAME=${2:-${CLUSTER_NAME:-""}}
-
-bad=0
-if [ "$CLUSTER_NAME" == "" ]
+if [ -z "$CLUSTER_NAME"  ]
 then
-	echo "missing cluster name"
-	bad=1
+	echo "\$CLUSTER_NAME required"
+	exit
 fi
 
-if [ "$ENVIRONMENT" == "" ]
+if [ -z "$AWS_REGION" ]
 then
-	echo "missing cluster name"
-	bad=1
+	echo "\$AWS_REGION required"
+	exit
 fi
 
-if [ $bad -eq 1 ]
-then
-	echo "usage: $0 \${ENVIRONMENT} \${CLUSTER_NAME}" \${BUCKET_NAME} \${AWS_REGION}
-	exit 1
-fi
-
-BUCKET_NAME=${3:-tidepool-${ENVIRONMENT}-data}
-AWS_REGION=${4:-${AWS_REGION:-us-west-2}}
 
 CF_FILE=file://${DEV_REPO}/cf/env-roles.yaml
-STACK_NAME=eksctl-${CLUSTER_NAME}-${ENVIRONMENT}-roles
 
 set -x
-aws cloudformation create-stack --stack-name ${STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body ${CF_FILE} --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}  ParameterKey=EnvName,ParameterValue=${ENVIRONMENT}   ParameterKey=ClusterRoleStackName,ParameterValue=eksctl-${CLUSTER_NAME}-roles ParameterKey=Region,ParameterValue=${AWS_REGION} ParameterKey=AccountNumber,ParameterValue=${AWS_ACCOUNT} ParameterKey=BucketName,ParameterValue=${BUCKET_NAME}
-aws cloudformation wait stack-delete-complete --stack-name ${STACK_NAME}
+for ENVIRONEMT in $ENVIRONMENTS
+do
+  	STACK_NAME=eksctl-${CLUSTER_NAME}-${ENVIRONMENT}-roles
+	BUCKET_NAME=${1:-tidepool-${ENVIRONMENT}-data}
+
+	aws cloudformation create-stack --stack-name ${STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body ${CF_FILE} --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}  ParameterKey=EnvName,ParameterValue=${ENVIRONMENT}   ParameterKey=ClusterRoleStackName,ParameterValue=eksctl-${CLUSTER_NAME}-roles ParameterKey=Region,ParameterValue=${AWS_REGION} ParameterKey=AccountNumber,ParameterValue=${AWS_ACCOUNT} ParameterKey=BucketName,ParameterValue=${BUCKET_NAME}
+
+done
+
+for ENVIRONEMT in $ENVIRONMENTS
+do
+  	STACK_NAME=eksctl-${CLUSTER_NAME}-${ENVIRONMENT}-roles
+  	aws cloudformation wait stack-delete-complete --stack-name ${STACK_NAME}
+done

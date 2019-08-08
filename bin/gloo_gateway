@@ -2,7 +2,7 @@
 #
 # Create final Gloo config file from Ambassador annotations
 #
-# Usage: $0 ${CHART_DIR}
+# Usage: $0 tidepoolChartDir
 
 rm -f $1/templates/gloo-*.yaml 
 

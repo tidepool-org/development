@@ -11,6 +11,6 @@ paths=$(echo $weaveargs | jq '.[] | select(startswith("--git-path"))' | sed -e "
 branch=$(echo $weaveargs | jq '.[] | select(startswith("--git-branch"))' | sed -e "s/--git-branch=//" -e "s/\"//g")
 repo=$(echo $weaveargs | jq '.[] | select(startswith("--git-url"))' | sed -e "s/--git-url=//" -e "s/\"//g")
 kubectl config current-context
-#echo $repo 
-#echo $branch
-#echo $paths
+echo $repo 
+echo $branch
+echo $paths

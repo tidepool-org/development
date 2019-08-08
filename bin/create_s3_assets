@@ -3,10 +3,8 @@
 # Copy Tidepool S3 email assets to environment 
 #
 # Usage: $0
-
-VALUES_FILE=${1:-values.yaml}
-
-export ENVIRONMENTS=$(yq r $VALUES_FILE env | grep -v ' .*' | sed 's/.$//' | | paste -sd " " -)
+#
+# Requires ENVIRONMENTS
 
 for ENVIRONMENT in ${ENVIRONMENTS}
 do

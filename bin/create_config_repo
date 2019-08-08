@@ -2,20 +2,65 @@
 #
 # Create configuration repo from single values files.
 #
-# Usage: $0 ${VALUES_FILE:-values.yaml}
 
-. set_exports $*
+if [ -z "$FLUX_DIR" ]
+then
+	echo "\$FLUX_DIR required."
+	exit
+fi
+
+if [ -z "$DEV_REPO" ]
+then
+	echo "\$DEV_REPO required."
+	exit
+fi
+
+if [ -z "$CONFIG_DIR" ]
+then
+	echo "\$CONFIG_DIR required."
+	exit
+fi
+
+if [ -z "$VALUES_FILE" ]
+then
+	echo "\$VALUES_FILE required."
+	exit
+fi
+
+if [ -z "$TEMPLATE_DIR" ]
+then
+	echo "\$TEMPLATE_DIR required."
+	exit
+fi
+
+if [ -z "$ENVIRONMENTS" ]
+then
+	echo "\$ENVIRONMENTS required."
+	exit
+fi
+
+if [ -z "$CLUSTER_DIR" ]
+then
+	echo "\$CLUSTER_DIR required."
+	exit
+fi
+
+if [ -z "$CHART_DIR" ]
+then
+	echo "\$CHART_DIR required."
+	exit
+fi
 
 cd $DEV_REPO
 
-mkdir -p $CONFIG_REPO
-cd $CONFIG_REPO
+mkdir -p $CONFIG_DIR
+cd $CONFIG_DIR
 
 # create cluster config 
-helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/config.yaml | tail -n +4 > ${CLUSTER_REPO}/config.yaml 
+helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/config.yaml | tail -n +4 > ${CLUSTER_DIR}/config.yaml 
 
-mkdir -p $FLUX_REPO
-cd ${FLUX_REPO}
+mkdir -p $FLUX_DIR
+cd ${FLUX_DIR}
 
 # create and store secrets 
 external_secret <(helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/secrets.yaml) dryrun ${CLUSTER_NAME} encoded >external-secrets.yaml
@@ -41,12 +86,12 @@ CREATE=$(yq read ${VALUES_FILE} global.repo.create)
 if [ "$CREATE" == "true" ]
 then
 # create config repo
-  cd $CONFIG_REPO
+  cd $CONFIG_DIR
   git init
 fi
 git add .
 git commit -m "Initial configuration"
-git remote add origin git@github.com:${GITHIB_ACCOUNT}/${CLUSTER_REPO_NAME}.git
+git remote add origin git@github.com:${GITHIB_ACCOUNT}/${CLUSTER_DIR_NAME}.git
 
 PUSH=$(yq read ${VALUES_FILE} global.github.push)
 if [ "$PUSH" == "true" ]

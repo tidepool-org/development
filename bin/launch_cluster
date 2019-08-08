@@ -2,20 +2,49 @@
 #
 # Create and config cluster to service Tidepool environments
 #
-# Usage: $0 ${VALUES_FILE:-values.yaml}
+# Usage: $0
+#
+#    FLUXCLOUD
 
-. set_exports $*
+if [ -z "$KUBECONFIG" ]
+then
+	echo "\$KUBECONFIG required."
+	exit
+fi
+
+if [ -z "$CLUSTER_DIR" ]
+then
+	echo "\$CLUSTER_DIR required."
+	exit
+fi
+
+if [ -z "$CLUSTER_NAME" ]
+then
+	echo "\$CLUSTER_NAME required."
+	exit
+fi
+
+if [ -z "$IAM_USERS" ]
+then
+	echo "\$IAM_USERS required."
+	exit
+fi
+
+if [ -z "$GITHUB_ACCESS_TOKEN" ]
+then
+	echo "\$GITHUB_ACCESS_TOKEN required."
+	exit
+fi
+
 
 # create cluster
-cd ${CLUSTER_REPO}
+cd ${CLUSTER_DIR}
 create_cluster 
 sleep 600
-STACK_NAME=eksctl-${CLUSTER_NAME}-cluster
-aws cloudformation wait stack-delete-complete --stack-name $STACK_NAME
-export KUBECONFIG=$(realpath ./kubeconfig.yaml)
+aws cloudformation wait stack-delete-complete --stack-name ${CLUSTER_STACK_NAME}
 
 # add authorized users
-authorize_users "${USERS}"
+authorize_users 
 
 # install tiller
 install_tiller

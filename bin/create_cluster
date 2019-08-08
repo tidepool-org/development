@@ -2,13 +2,19 @@
 #
 # Create an Amazon EKS cluster using eksctl
 #
-# Usage: $0 ${CONFIG_FILE} ${KUBECONFIG}
+# Usage: $0 
 
-#File in which cluster config is stored
-CONFIG_FILE=${1:-config.yaml}
+if [ -z "$CONFIG_FILE" ]
+then
+	echo "\$CONFIG_FILE required."
+	exit
+fi
 
-#File in which to store kubeconfig 
-KUBECONFIG=${2:-kubeconfig.yaml}
+if [ -z "$KUBECONFIG" ]
+then
+	echo "\$KUBECONFIG required."
+	exit
+fi
 
 eksctl create cluster --config-file=$CONFIG_FILE --kubeconfig $KUBECONFIG
 

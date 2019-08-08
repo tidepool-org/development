@@ -2,20 +2,19 @@
 #
 # Create an Amazon EKS cluster using eksctl
 #
-# $0 ${CLUSTER_NAME} ${CONFIG_FILE}
+# $0 
 
-
-
-if [ $# == 0 ]
+if [ -z "$CONFIG_FILE" ]
 then
-    YQ=yq
-    CLUSTER_NAME=$(${YQ} r $CONFIG_FILE metadata.name)
-else
-    CLUSTER_NAME=$1
+	echo "\$CONFIG_FILE required"
+	exit
 fi
 
-#File in which cluster config is stored
-CONFIG_FILE=${2:-config.yaml}
+if [ -z "$CLUSTER_NAME" ]
+then
+	echo "\$CLUSTER_NAME required"
+	exit
+fi
 
 KIAM_ROLE_NAME=/clusters/${CLUSTER_NAME}/kiam-server-role
 

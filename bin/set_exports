@@ -9,23 +9,78 @@ export VALUES_FILE=$(realpath ${1:-${VALUES_FILE:-values.yaml}})
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 export DEV_REPO=$(realpath $DIR/..)
 
-export CONFIG_REPO=$(yq read $VALUES_FILE global.repo.directory)
-export CLUSTER_NAME=$(yq read $VALUES_FILE global.cluster.name)
+export CONFIG_DIR=$(yq read $VALUES_FILE global.repo.directory)
+if [ -z ${CONFIG_DIR} -o "${CONFIG_DIR}" == "null" ]
+then
+	echo "global.repo.directory missing."
+fi
 
-export CLUSTER_REPO=${CONFIG_REPO}/clusters/${CLUSTER_NAME}
-export FLUX_REPO=${CLUSTER_REPO}/flux
+export CLUSTER_NAME=$(yq read $VALUES_FILE global.cluster.name)
+if [ -z ${CLUSTER_NAME} -o "${CLUSTER_NAME}" == "null" ]
+then
+	echo "global.cluster.name missing."
+fi
+
+export CLUSTER_DIR=${CONFIG_DIR}/clusters/${CLUSTER_NAME}
+export FLUX_DIR=${CLUSTER_DIR}/flux
+
+export CONFIG_FILE=$(yq read $VALUES_FILE global.cluster.configFile)
+CONFIG_FILE=${CONFIG_FILE:-$CLUSTER_DIR/config.yaml}
 
 export AWS_REGION=$(yq read $VALUES_FILE global.cluster.region)
+AWS_REGION=${AWS_REGION:-us-west-2}
+
 export ENVIRONMENTS=$(yq r $VALUES_FILE env | grep -v ' .*' | sed 's/.$//' | paste -sd " " -)
 
 export CHART_DIR=${DEV_REPO}/charts/configurator
 export TEMPLATE_DIR=${DEV_REPO}/charts/configurator/templates
 
 export FLUXCLOUD=$(yq read $VALUES_FILE global.fluxcloud.enabled)
+if [ "${FLUXCLOUD}" == "null" ]
+then
+	FLUXCLOUD=""
+fi
+
+export FLUX_BRANCH=$(yq read $VALUES_FILE global.repo.branch)
+if [ -z "$FLUX_BRANCH" -o "${FLUX_BRANCH}" == "null" ]
+then
+	FLUX_BRANCH=master
+fi
+
+export GIT_REPO_NAME=$(yq read $VALUES_FILE global.repo.name)
+GIT_REPO_NAME=${GIT_REPO_NAME:-cluster-${CLUSTER_NAME}}
+
+if [ -z "$GIT_REPO_NAME" -o "${GIT_REPO_NAME}" == "null" ]
+then
+	echo "global.repo.name required"
+	exit
+fi
+
+export GITHUB_ACCOUNT=$(yq read $VALUES_FILE global.github.account)
+GITHUB_ACCOUNT=${GITHUB_ACCOUNT:-tidepool-org}
+
+export GIT_REMOTE=git@github.com:${GITHUB_ACCOUNT}/${GIT_REPO_NAME}.git
+
+export KUBECONFIG=$(yq read $VALUES_FILE global.kubeconfig)
+if [ "$KUBECONFIG" == "null" ]
+then
+	KUBECONFIG=$CLUSTER_DIR/kubeconfig.yaml
+fi
+
+KUBECONFIG=$(realpath $KUBECONFIG)
+
+export NODEGROUP_STACK_NAME=eksctl-${CLUSTER_NAME}-nodegroup-ng-kiam
+export CLUSTER_STACK_NAME=eksctl-${CLUSTER_NAME}-cluster
+
+export IAM_USERS=$(yq read $VALUES_FILE global.iamUsers)
+if [ "$IAM_USERS" == "null" ]
+then
+	IAM_USERS=""
+fi
 
 if [ -f ~/.secrets/github_access_token ]
 then
 	export GITHUB_ACCESS_TOKEN=$(cat ~/.secrets/github_access_token)
 else
-    export GITHUB_ACCESS_TOKEN=$(yq read $VALUES_FILE global.github.token)
+    	export GITHUB_ACCESS_TOKEN=$(yq read $VALUES_FILE global.github.token)
 fi

@@ -2,35 +2,40 @@
 #
 # Set IAM roles for Kiam
 #
-# Usage: $0 ${CLUSTER_NAME} ${REGION}
+# Usage: $0 
+#
 
-if [ -z ${DEV_REPO+x} ]
+if [ -z "${DEV_REPO}" ]
 then
-	echo "Must set \$DEV_REPO in environment"
+	echo "\$DEV_REPO required"
 	exit
 fi
 
 AWS_ACCOUNT=${AWS_ACCOUNT:-$(get_account)}
-if [ "$AWS_ACCOUNT" == "" ]
+if [ -z "$AWS_ACCOUNT" ]
 then
 	echo "Must set \$AWS_ACCOUNT in enviroment"
 	exit
 fi
 	
-CLUSTER_NAME=${1:-${CLUSTER_NAME:-""}}
-
-if [ "$CLUSTER_NAME" == "" ]
+if [ -z "$AWS_REGION" ]
 then
-	echo "missing cluster name"
-	echo "usage: cluster_roles \${CLUSTER_NAME} \${AWS_REGION:-us-west-2}"
+	echo "\$AWS_REGION required"
+	exit
 fi
 
-REGION=${2:-${AWS_REGION:-us-west-2}}
+if [ -z "$CLUSTER_NAME" ]
+then
+	echo "\$CLUSTER_NAME required"
+	exit
+fi
 
 CF_FILE=file://${DEV_REPO}/cf/cluster-roles.yaml
+
 NODEGROUP_STACK_NAME=eksctl-${CLUSTER_NAME}-nodegroup-ng-kiam
-STACK_NAME=eksctl-${CLUSTER_NAME}-roles
+
+CLUSTER_STACK_NAME=eksctl-${CLUSTER_NAME}-roles
 
 set -x
-aws cloudformation create-stack --stack-name ${STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body ${CF_FILE} --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}     ParameterKey=NodeGroupStackName,ParameterValue=${NODEGROUP_STACK_NAME} ParameterKey=Region,ParameterValue=${REGION} ParameterKey=AccountNumber,ParameterValue=${AWS_ACCOUNT}
+aws cloudformation create-stack --stack-name ${CLUSTER_STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body ${CF_FILE} --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}     ParameterKey=NodeGroupStackName,ParameterValue=${NODEGROUP_STACK_NAME} ParameterKey=Region,ParameterValue=${AWS_REGION} ParameterKey=AccountNumber,ParameterValue=${AWS_ACCOUNT}
 aws cloudformation wait stack-delete-complete --stack-name ${STACK_NAME}

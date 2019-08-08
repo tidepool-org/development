@@ -2,32 +2,44 @@
 #
 # Install users as Kubernetes system masters
 #
-# Usage: $0 "${USERS}"
-
-USERS=${1:-"lennartgoedhart-cli benderr-cli derrick-cli mikeallgeier-cli"}
+# Usage: $0 
+#
 
 # Create an Amazon EKS cluster using eksctl
 
+if [ -z "${CLUSTER_NAME}" ]
+then
+	echo "\${CLUSTER_NAME} required"
+	exit 1
+fi
+
+if [ -z "${AWS_REGION}" ]
+then
+	echo "\${AWS_REGION} required"
+	exit 1
+fi
+
+if [ -z "${IAM_USERS}" ]
+then
+	echo "\${IAM_USERS} required"
+	exit 1
+fi
+
 # Amazon account number
 AWS_ACCOUNT=${AWS_ACCOUNT:-$(get_account)}
-if [ -z ${AWS_ACCOUNT+x} ]
+if [ -z "${AWS_ACCOUNT}" ]
 then
-	echo "\${AWS_ACCOUNT} must be set."
+	echo "\${AWS_ACCOUNT} required."
 	exit 1
 fi
 
 # Users that will have system:master access (in addition to the user that creates the cluster)
 
-CONFIG_FILE=${2:-config.yaml}
-
-CLUSTER_NAME=$(yq r $CONFIG_FILE metadata.name)
-REGION=$(yq r $CONFIG_FILE metadata.region)
-
 # Kubernetes group to assign users to
 GROUP=system:masters
 
-for user in $USERS
+for user in ${IAM_USERS}
 do
     arn=arn:aws:iam::${AWS_ACCOUNT}:user/${user}
-    eksctl create iamidentitymapping --region=${REGION}  --role=$arn --group=$GROUP --name=$CLUSTER_NAME --username=$user
+    eksctl create iamidentitymapping --region=${AWS_REGION}  --role=$arn --group=$GROUP --name=${CLUSTER_NAME} --username=$user
 done
