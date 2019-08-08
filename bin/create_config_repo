@@ -27,16 +27,15 @@ then
 	exit
 fi
 
-if [ -z "$ENVIRONMENTS" ]
-then
-	echo "\$ENVIRONMENTS required."
-	exit
-fi
-
 if [ -z "$CLUSTER_DIR" ]
 then
 	echo "\$CLUSTER_DIR required."
 	exit
+fi
+
+if [ -z "ENVIRONMENTS" ]
+then
+	echo "Warning: No \$ENVIRONMENTS configured."
 fi
 
 cd $DEV_REPO
@@ -65,7 +64,7 @@ helm template -f ${VALUES_FILE} --namespace flux ${DEV_REPO}/charts/flux-reposit
 # create environments
 mkdir -p environments
 cd environments
-for ENVIRONMENT in ${ENVIRONMENTS}
+for ENVIRONMENT in $ENVIRONMENTS
 do
   mkdir -p $ENVIRONMENT
   helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/namespace.yaml > $ENVIRONMENT/namespace.yaml

@@ -21,7 +21,7 @@ then
 	echo "global.cluster.name missing."
 fi
 
-export CONFIG_DIR=${CONFIG_PARENT_DIR}/clusters-$CLUSTER_NAME
+export CONFIG_DIR=${CONFIG_PARENT_DIR}/cluster-$CLUSTER_NAME
 
 export CLUSTER_DIR=${CONFIG_DIR}/clusters/${CLUSTER_NAME}
 export FLUX_DIR=${CLUSTER_DIR}/flux
@@ -32,7 +32,14 @@ CONFIG_FILE=${CONFIG_FILE:-$CLUSTER_DIR/config.yaml}
 export AWS_REGION=$(yq read $VALUES_FILE global.cluster.region)
 AWS_REGION=${AWS_REGION:-us-west-2}
 
-export ENVIRONMENTS=$(yq r $VALUES_FILE env | grep -v ' .*' | sed 's/.$//' | paste -sd " " -)
+export ENVIRONMENTS=$(yq r $VALUES_FILE env)
+if [ "$ENVIRONMENTS" == "null" -o "$ENVIROMMENTS" == "{}" ]
+then
+	ENVIRONMENTS=""
+else
+	ENVIRONMENTS=$(echo "$ENVIRONMENTS" | grep -v ' .*' | sed 's/.$//' | paste -sd " " -)
+fi
+
 
 export FLUXCLOUD=$(yq read $VALUES_FILE global.fluxcloud.enabled)
 if [ "${FLUXCLOUD}" == "null" ]
