@@ -6,6 +6,7 @@ This document describes how to install the Tidepool web service on an Amazon hos
 With suitable modification, one may install the service on another Kubernetes platform.  However, that is not contained in the scope of this document.
 
 ## TL;DR
+
 These compressed instructions presume that you can figure out how to edit the `values.yaml` file. :)
 
   ```bash
@@ -214,18 +215,11 @@ There are a number of client-side tools that you will need in the installation p
 
 If you are on a Mac, you can use the `homebrew` tool to install all the packages and their dependencies.
 
-For your convenience, we have created a `Brewfile` with the needed packages.  Install as follows:
+For your convenience, we have helper file that installs dependencies:
 
    ```bash
-   $ brew bundle --file=${DEV_REPO}/Brewfile
+   $ install_tools
    ```
-You may want to copy the Brewfile to the standard location in your home directory to expedite future updates:
-
-   ```bash
-   $ cp ${DEV_REPO}/Brewfile ~/.Brewfile
-   ```
-See the instructions for [brew bundle](https://github.com/Homebrew/homebrew-bundle).
-
 This will install:
 1. [awscli](https://aws.amazon.com/cli/) 
 1. [helm](https://helm.sh/) 
@@ -239,11 +233,7 @@ This will install:
 1. [python3](https://docs.python.org/3/)
 1. [hub](https://hub.github.com/)
 
-Install some python3 packages:
-
-   ```bash
-   $ pip3 install boto3 --user
-   ```
+It will also install some required python packages.
 
 You may also want to install some supplemental packages.  However,
 they are not required for the installation of the K8s cluster and Tidepool services.
