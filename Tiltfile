@@ -71,7 +71,7 @@ def main():
   tidepool_helm_template_cmd = applyServiceOverrides(tidepool_helm_template_cmd)
 
   # Don't provision the gloo gateway here - we do that in Tiltfile.proxy
-  tidepool_helm_template_cmd += '--set "gloo.enabled=false" '
+  tidepool_helm_template_cmd += '--set "gloo.enabled=false" --set "gloo.created=true" '
 
   # Deploy and watch the helm charts
   k8s_yaml(local('{helmCmd} {chartDir}'.format(

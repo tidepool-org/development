@@ -4,7 +4,7 @@ metadata:
   name: '{{- include "charts.host.internal.tp" . -}}'
   namespace: {{ .Release.Namespace }}
 spec:
-{{ if .Values.gloo.enabled }}
+{{ if or (.Values.gloo.enabled) (.Values.gloo.created) }}
   ports:
   - name: http
     port: 80
@@ -12,7 +12,7 @@ spec:
     targetPort: 8080
   selector:
     gloo: gateway-proxy
-  type: ClusterIP 
+  type: ClusterIP
 {{ else }}
   externalName: {{ .Values.global.gateway.proxy.name -}}.{{- .Values.global.gateway.proxy.namespace -}}.svc.cluster.local
   ports:

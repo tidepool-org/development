@@ -51,11 +51,6 @@ def provisionGlooGateway():
         overridesFile=tidepool_helm_overrides_file,
       )))
 
-      k8s_yaml(local('templates=({chartDir}/templates/gloo-internal.yaml {chartDir}/templates/internal-gateway-service.yaml {chartDir}/templates/gloo-external-http.yaml) && helm template -x $templates -f {overridesFile} {chartDir}'.format(
-        chartDir=absolute_dir(tidepool_helm_chart_dir),
-        overridesFile=tidepool_helm_overrides_file,
-      )))
-
   # Expose the gateway proxy on a host port
   gateway_port_forwards = getNested(config,'gateway-proxy.portForwards', ['3000'])
   k8s_resource('gateway-proxy', port_forwards=gateway_port_forwards)
