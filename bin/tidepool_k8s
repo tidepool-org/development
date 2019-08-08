@@ -19,10 +19,6 @@ USAGE: tidepool_k8s command [service] [...additional args]
     set-kubeconfig                  Save Kubernetes server config to ~/.kube/config
     restart [service]               Restart the entire tidepool stack or the specified service
 
-    fix                             Run some necessary steps after stack is started to deal with
-                                    some services which may not start correctly due to race
-                                    conditions (currently hydrophone)
-
     destroy                         Shut down and completely remove the local Kubernetes server and
                                     all services
 
@@ -112,7 +108,6 @@ case ${1-help} in
   down) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
   set-kubeconfig) set_kubeconfig;;
   restart) restart ${2-};;
-  fix) (restart hydrophone);;
   destroy) (cd ${DIR} && run_docker_compose rm -fsv);;
   logs) (cd ${DIR} && kubectl logs svc/${2} --tail=20 -c ${2} -f);;
   server-logs) (cd ${DIR} && run_docker_compose logs --tail=20 -f server);;
