@@ -91,7 +91,7 @@ then
   then
     git init
   fi
-  hub create "Creating K8s config repo."
+  hub create -d "Creating K8s config repo." $GITHUB_ACCOUNT/$GIT_REPO_NAME
 fi
 git add .
 git commit -m "Initial configuration"

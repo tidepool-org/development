@@ -52,14 +52,20 @@ GIT_REPO_NAME=${GIT_REPO_NAME:-cluster-${CLUSTER_NAME}}
 
 if [ -z "$GIT_REPO_NAME" -o "${GIT_REPO_NAME}" == "null" ]
 then
-	echo "global.repo.name required"
+	echo "global.repo.name required."
 	exit
 fi
 
-export GITHUB_USER=$(yq read $VALUES_FILE global.github.account)
-GITHUB_USER=${GITHUB_USER:-tidepool-org}
+export GITHUB_ACCOUNT=$(yq read $VALUES_FILE global.github.account)
+GITHUB_ACCOUNT=${GITHUB_ACCOUNT:-tidepool-org}
 
-export GIT_REMOTE=git@github.com:${GITHUB_USER}/${GIT_REPO_NAME}.git
+export GITHUB_USER=$(yq read $VALUES_FILE global.github.user)
+if [ -z "GITHUB_USER" ]
+then
+	echo "global.github.user required."
+fi
+
+export GIT_REMOTE=git@github.com:${GITHUB_ACCOUNT}/${GIT_REPO_NAME}.git
 
 export KUBECONFIG=$(yq read $VALUES_FILE global.kubeconfig)
 if [ "$KUBECONFIG" == "null" ]
