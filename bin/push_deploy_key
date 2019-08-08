@@ -5,10 +5,8 @@
 # read access allows flux to poll Git for changes to the repo that it reflects in the cluster
 #
 # Requirements:
-# 1) A Github access token must be stored in ~/.secret/github_access_token
-# 2) You must have write access to the Git remote.
-# 3) You must have fluxctl installed.
-# 4) You must be in a valid Git repo.
+# 1) You must have write access to the Git remote.
+# 2) You must have fluxctl installed.
 #
 # Usage: $0
 
@@ -18,30 +16,25 @@ then
 	exit
 fi
 
-if [ -z "$GIT_REMOTE" ]
+if [ -z "$CONFIG_REPO" ]
 then
-	echo "\$GIT_REMOTE required."
+	echo "\$CONFIG_REPO required."
 	exit
 fi
 
-github_access_token=$GITHUB_TOKEN
+cd $CONFIG_REPO
+GIT_REMOTE=$(git config remote.origin.url)
 
 key=$(fluxctl --k8s-fwd-ns=flux identity)
-rp=$(git rev-parse --is-inside-work-tree 2>/dev/null)
-
-if [ $? -ne 0 ] || [ "$rp" != "true" ]; then
-        echo 'Not a git repository'
-        exit
-fi
 
 reponame="$(echo $GIT_REMOTE | cut -d/ -f2 | sed -e 's/\.git//')"
 echo $reponame
 
 curl -X POST -i\
-	-H"Authorization: token $github_access_token"\
+	-H"Authorization: token $GITHUB_TOKEN"\
 	--data @- https://api.github.com/repos/tidepool-org/$reponame/keys << EOF
 {
-	"title" : "weave flux key for $context $(date)",
+	"title" : "flux key for $context $(date)",
 	"key" : "$key",
 	"read_only" : false
 }
