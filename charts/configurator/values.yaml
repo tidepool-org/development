@@ -6,6 +6,7 @@ global:
     branch: "master"                            # branch to monitor
   github:
     account: tidepool-org                       # your GitHub account
+    user: derrickburns                          # your GitHub user name
     push: false                                 # whether to push the completed repo to GitHub
     token: ""                                   # a GitHub token that allows repo read/write access  
   logLevel: debug                               # the default log level for all services
