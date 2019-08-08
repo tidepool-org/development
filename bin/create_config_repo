@@ -105,5 +105,5 @@ fi
 PUSH=$(yq read ${VALUES_FILE} global.github.push)
 if [ "$PUSH" == "true" ]
 then
-  git push
+  git push --set-upstream origin master
 fi
