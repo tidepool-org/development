@@ -53,7 +53,7 @@ fi
 
 cd $DEV_REPO
 
-mkdir -p $CONFIG_DIR
+mkdir -p $CLUSTER_DIR
 cd $CONFIG_DIR
 
 # create cluster config 

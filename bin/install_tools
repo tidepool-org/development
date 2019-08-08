@@ -3,8 +3,6 @@
 # install standard tools needed to create/install cluster
 #
 # Usage: $0
-#
-# Requires DEV_REPO
 
 if [ -z "$DEV_REPO" ]
 then

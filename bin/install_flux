@@ -38,9 +38,14 @@ then
 	exit
 fi
 
-if [ -n "${FLUXCLOUD}" ]
+if [ ! -d "$CLUSTER_DIR" ]
 then
-  INSTALL_FLUXCLOUD=--set\ additionalArgs=\'{--connect=ws://${FLUXCLOUD}}\'
+   echo "Warning: Cannot find directory for flux to watch at $CLUSTER_DIR"
+fi
+
+if [ "$FLUXCLOUD" == "true" ]
+then
+  INSTALL_FLUXCLOUD=--set\ additionalArgs=\'{--connect=ws://fluxcloud\'
 else
   INSTALL_FLUXCLOUD=
 fi
@@ -51,11 +56,6 @@ then
     INSTALL_CRDS=false
 else
     INSTALL_CRDS=true
-fi
-
-if [ ! -d "$CLUSTER_DIR" ]
-then
-   echo "Warning: Cannot find directory for flux to watch at $CLUSTER_DIR"
 fi
 
 # Pull the remote url and the branch from Git if not provided
@@ -79,23 +79,24 @@ else
 fi
 
 cd /tmp
-rm -rf flux
-git clone https://github.com/weaveworks/flux/
-cd flux
+helm repo add fluxcd https://fluxcd.github.io/flux
+if [ ${CRD_UNINSTALLED} -ne 0 ]
+then
+    kubectl apply -f https://raw.githubusercontent.com/fluxcd/flux/master/deploy-helm/flux-helm-release-crd.yaml
+fi
 
-read -p "Install Flux: install_crds=${INSTALL_CRDS} branch=${FLUX_BRANCH} path=${FLUX_DIR} repo=${GIT_REMOTE} cluster=${CLUSTER_NAME} ${SECRETARG}? (y|N)  " -n 1 -r
+read -p "Install Flux: branch=${FLUX_BRANCH} path=${FLUX_DIR} repo=${GIT_REMOTE} cluster=${CLUSTER_NAME} ${SECRETARG}? (y|N)  " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then 
     set -x
     helm delete flux --purge
-    helm upgrade \
-    --install \
+    helm upgrade -i flux \
       --set rbac.create=true \
       --set helmOperator.create=true \
       --set helmOperator.chartsSyncInterval=1m \
       --set helmOperator.replicaCount=1 \
       --set helmOperator.updateChartDeps=true \
-      --set helmOperator.createCRD=${INSTALL_CRDS} \
+      --set helmOperator.createCRD=false \
       --set helmOperator.configureRepositories.enable=true \
       --set syncGarbageCollection.enabled=true \
       --set git.url=${GIT_REMOTE} \
@@ -105,11 +106,10 @@ then
       ${SECRETARG} \
       --set git.pollInterval=1m \
       --set git.timeoout=40s \
-      --namespace flux \
       --reuse-values \
       ${INSTALL_FLUXCLOUD} \
-      flux \
-      chart/flux
+      --namespace flux \
+      fluxcd/flux
 else
 	echo "No action taken."
 fi

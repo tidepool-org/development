@@ -11,13 +11,13 @@ then
   exit
 fi
 
-if [ -z "${CLUSTER_NAME}" ]
+if [ -z "$CLUSTER_NAME" ]
 then
 	echo "\$CLUSTER_NAME required."
 	exit
 fi
 
-if [ -z "${ENVIRONMENTS}" ]
+if [ -z "$ENVIRONMENTS" ]
 then
 	echo "\$ENVIRONMENTS required."
 	exit
