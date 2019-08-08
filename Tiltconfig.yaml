@@ -11,8 +11,11 @@ global:
       protocol: http
       host: "localhost:3000"
     http:
-      localhost:
-        name: "localhost:3000"
+      dnsNames:
+      - localhost
+      port: '3000'
+    https:
+      enabled: false
   ports:
     viz:
       stories: 8083
