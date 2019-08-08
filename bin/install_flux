@@ -10,31 +10,31 @@ export PATH=/bin:/usr/bin:/usr/local/bin
 
 if [ -z "$CONFIG_DIR" ]
 then
-	echo "\$CONFIG_DIR required"
+	echo "\$CONFIG_DIR required."
 	exit
 fi
 
 if [ -z "$CLUSTER_NAME" ]
 then
-	echo "\$CLUSTER_NAME required"
+	echo "\$CLUSTER_NAME required."
 	exit
 fi
 
 if [ -z "$FLUX_DIR" ]
 then
-	echo "\$FLUX_DIR required"
+	echo "\$FLUX_DIR required."
 	exit
 fi
 
 if [ -z "$FLUX_BRANCH" ]
 then
-	echo "\$FLUX_BRANCH required"
+	echo "\$FLUX_BRANCH required."
 	exit
 fi
 
 if [ -z "$CLUSTER_DIR" ]
 then
-	echo "\$CLUSTER_DIR required"
+	echo "\$CLUSTER_DIR required."
 	exit
 fi
 

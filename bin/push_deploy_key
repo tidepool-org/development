@@ -14,13 +14,13 @@
 
 if [ -z "$GITHUB_ACCESS_TOKEN" ]
 then
-	echo "\$GITHUB_ACCESS_TOKEN" required"
+	echo "\$GITHUB_ACCESS_TOKEN" required."
 	exit
 fi
 
 if [ -z "$GIT_REMOTE" ]
 then
-	echo "\$GIT_REMOTE required"
+	echo "\$GIT_REMOTE required."
 	exit
 fi
 

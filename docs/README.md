@@ -432,8 +432,9 @@ Please clone these repos.
 
     ```bash
     $ git clone git@github.com:tidepool-org/development.git
-    $ git checkout k8s
     $ export DEV_REPO=$(pwd)/development
+    $ cd ${DEV_REPO}
+    $ git checkout k8s
     $ export PATH=$PATH:${DEV_REPO}/bin
     ```
 

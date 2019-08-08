@@ -5,9 +5,9 @@
 # Usage: $0 
 #
 
-if [ -z "${DEV_REPO}" ]
+if [ -z "$DEV_REPO" ]
 then
-	echo "\$DEV_REPO required"
+	echo "\$DEV_REPO required."
 	exit
 fi
 
@@ -20,13 +20,13 @@ fi
 	
 if [ -z "$AWS_REGION" ]
 then
-	echo "\$AWS_REGION required"
+	echo "\$AWS_REGION required."
 	exit
 fi
 
 if [ -z "$CLUSTER_NAME" ]
 then
-	echo "\$CLUSTER_NAME required"
+	echo "\$CLUSTER_NAME required."
 	exit
 fi
 

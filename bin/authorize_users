@@ -7,27 +7,27 @@
 
 # Create an Amazon EKS cluster using eksctl
 
-if [ -z "${CLUSTER_NAME}" ]
+if [ -z "$CLUSTER_NAME" ]
 then
-	echo "\${CLUSTER_NAME} required"
+	echo "\${CLUSTER_NAME} required."
 	exit 1
 fi
 
-if [ -z "${AWS_REGION}" ]
+if [ -z "$AWS_REGION" ]
 then
-	echo "\${AWS_REGION} required"
+	echo "\${AWS_REGION} required."
 	exit 1
 fi
 
-if [ -z "${IAM_USERS}" ]
+if [ -z "$IAM_USERS" ]
 then
-	echo "\${IAM_USERS} required"
+	echo "\${IAM_USERS} required."
 	exit 1
 fi
 
 # Amazon account number
 AWS_ACCOUNT=${AWS_ACCOUNT:-$(get_account)}
-if [ -z "${AWS_ACCOUNT}" ]
+if [ -z "$AWS_ACCOUNT" ]
 then
 	echo "\${AWS_ACCOUNT} required."
 	exit 1

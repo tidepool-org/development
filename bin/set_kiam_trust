@@ -6,13 +6,13 @@
 
 if [ -z "$CONFIG_FILE" ]
 then
-	echo "\$CONFIG_FILE required"
+	echo "\$CONFIG_FILE required."
 	exit
 fi
 
 if [ -z "$CLUSTER_NAME" ]
 then
-	echo "\$CLUSTER_NAME required"
+	echo "\$CLUSTER_NAME required."
 	exit
 fi
 

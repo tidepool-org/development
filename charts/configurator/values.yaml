@@ -3,16 +3,19 @@ global:
     directory: "/tmp/configrepo"                # REQUIRED: where to create the config repo
     name: "cluster-badass"                      # OPTIONAL: name of the repo
     create: true                                # whether to create the config repo  directory
+    branch: "master"                            # branch to monitor
   github:
     account: tidepool-org                       # your GitHub account
     push: false                                 # whether to push the completed repo to GitHub
     token: ""                                   # a GitHub token that allows repo read/write access  
   logLevel: debug                               # the default log level for all services
-  users:                                        # the list of IAM users to provide master cluster access
+  iamUsers:                                     # the list of IAM users to provide master cluster access
   - benderr-cli
   - lennartgoedhard-cli
   cluster:
     name: "badass"                              # the name of the cluster
+    kubeconfig: ""                              # place to put KUBECONFIG, default: $CONFIG_REPO/kubeconfig.yaml
+    configFile: ""                              # place to put cluster config, default $CONFIG_REPO/config.yaml
     k8sVersion: "1.13"                          # the Kubernetes version >= 1.13
     region: "us-west-2"                         # AWS region to deploy in
     cidr: "10.47.0.0/16"                        # CIDR of AWS VPC

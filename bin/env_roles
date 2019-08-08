@@ -6,26 +6,26 @@
 
 if [ -z "${DEV_REPO}" ]
 then
-	echo "\$DEV_REPO required"
+	echo "\$DEV_REPO required."
 	exit
 fi
 	
 AWS_ACCOUNT=${AWS_ACCOUNT:-$(get_account)}
 if [ -z "$AWS_ACCOUNT" ]
 then
-	echo "\$AWS_ACCOUNT required"
+	echo "\$AWS_ACCOUNT required."
 	exit
 fi
 
 if [ -z "$CLUSTER_NAME"  ]
 then
-	echo "\$CLUSTER_NAME required"
+	echo "\$CLUSTER_NAME required."
 	exit
 fi
 
 if [ -z "$AWS_REGION" ]
 then
-	echo "\$AWS_REGION required"
+	echo "\$AWS_REGION required."
 	exit
 fi
 

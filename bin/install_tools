@@ -8,7 +8,7 @@
 
 if [ -z "$DEV_REPO" ]
 then
-	echo "\$DEV_REPO required"
+	echo "\$DEV_REPO required."
 	exit
 fi
 
