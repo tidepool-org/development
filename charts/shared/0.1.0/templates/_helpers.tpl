@@ -78,7 +78,6 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- printf "%s-secrets-role"  .Values.global.cluster.name | quote -}}
 {{- end -}}
 
-
 {{- define "charts.fluxcloud.github" -}}
 {{= if .Values.global.repo.name -}}
 {{- printf "https://github.com/%s/%s" .Values.global.github.account .Values.global.repo.name | quote -}}

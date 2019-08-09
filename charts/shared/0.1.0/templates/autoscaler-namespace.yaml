@@ -1,4 +1,5 @@
 {{ if .Values.autoscaler.enabled }}
+---
 apiVersion: v1
 kind: Namespace
 metadata:

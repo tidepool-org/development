@@ -1,4 +1,5 @@
 {{ if .Values.gloo.enabled }}
+---
 apiVersion: gateway.solo.io.v2/v2
 kind: Gateway
 metadata:

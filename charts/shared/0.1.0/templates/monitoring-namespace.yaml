@@ -1,4 +1,5 @@
 {{ if .Values.prometheusOperator.enabled }}
+---
 apiVersion: v1
 kind: Namespace
 metadata:

@@ -1,4 +1,5 @@
 {{ if .Values.autoscaler.enabled }}
+---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
