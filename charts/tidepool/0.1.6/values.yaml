@@ -4,6 +4,10 @@ global:
     name: "yourClusterNameHere"                                       # the cluster name
   namespace:
     create: false                                                     # whether to create the namespace
+  secrets:
+    create: false
+  configmaps:
+    create: false
   hpa:
     enabled: true
   hosts:
@@ -29,8 +33,6 @@ global:
   store: 
     #type: s3                                                         # store non-Mongo data in S3
     type: file                                                        # store non-Mongo data on file system
-  secrets:
-    enabled: enabled
   linkerd: disabled
   ports:
     blip: 3000                                                        # blip service internal port
@@ -187,6 +189,8 @@ user:
 seagull:
   image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
 shoreline:
+  configmap:
+    ClinicDemoUserId: ""
   secrets:
     ServiceAuth: ""				
     UserLongTermKey: 
