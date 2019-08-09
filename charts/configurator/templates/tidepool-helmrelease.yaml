@@ -41,12 +41,8 @@ spec:
     mongodb:
       enabled: false
     global:
-      secrets:
-        internal:
-          source: "other"
-        external:
-          source: "other"
-      clusterName: {{ $cluster.name }}
+      cluster:
+        name: {{ $cluster.name }}
       store:
         type: s3
       hosts:

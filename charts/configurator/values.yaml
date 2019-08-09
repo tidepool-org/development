@@ -1,7 +1,5 @@
 global:
   email: derrick@tidepool.org
-  secrets:
-    source: "other"
   repo:
     directory: "/tmp/configrepo"                # REQUIRED: where to create the config repo
     name: "cluster-badass"                      # OPTIONAL: name of the repo
@@ -27,15 +25,18 @@ global:
       minSize: 1                                # minimum size of auto scaling group of workers
       maxSize: 10                               # maximum size of auto scaling group of workers
   hostnames: []                                 # list of hosts to publish to DNS
-  sumologic:
-    enabled: false
+sumologic:
+  enabled: false
+  secrets:
     CollectorUrl:  ""                           # Sumologic collector URL
-  datadog:
-    enabled: false
+datadog:
+  enabled: false
+  secrets:
     APIKey: ""                                  # Datadog API key
     AppKey: ""                                  # Datadog Application key
-  fluxcloud:
-    enabled: false
+fluxcloud:
+  enabled: false
+  secrets:
     url: ""                                     # Slack Webhook url
 env:
   qa1:

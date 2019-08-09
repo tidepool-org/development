@@ -81,7 +81,7 @@ global:
       - ALL
 
 mongo:  
-  secretName: 'mongo'
+  secretName: ''
   secrets:                                                          # MongoDB connection parameters
     scheme: "mongodb"
     addresses: "mongodb"
