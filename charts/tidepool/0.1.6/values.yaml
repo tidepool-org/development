@@ -9,7 +9,7 @@ global:
   configmaps:
     create: false
   hpa:
-    enabled: true
+    create: true
   hosts:
     default:
       protocol: http                                                  # the protocol to use for signup emails
@@ -54,8 +54,6 @@ global:
     tidewhisperer: 9127                                               # tidewhisperer service internal port
   environment: production                                             #
   fullnameOverride: ""                                                #
-  namespace:
-    create: false                                                     # whether to create the namespace for the service
   nameOverride: ""                                                    # the name to use for the helm chart, if given
   provider:
     dexcom:
