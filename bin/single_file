@@ -26,7 +26,7 @@ if header is not None:
 
 for name in sorted(input.keys()):
     manifest = input[name]
-    out.write("--- #file: " + name  +".yaml\n")
+    out.write("---\n# file: " + name  +".yaml\n")
     yaml.dump(manifest, out, explicit_start = True, default_style=None,default_flow_style=False, width=1000)
 if footer is not None:
     out.write(footer + "\n")
