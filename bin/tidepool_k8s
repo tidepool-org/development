@@ -8,50 +8,52 @@ usage() {
 =======================================================
 USAGE: tidepool_k8s command [service] [...additional args]
 
-  commands:
-    start                           Start (and provision if needed) the Kubernetes server
-    stop                            Stop the Kubernetes server
 
-    up [service]                    Start and/or (re)build the entire tidepool stack or the
-                                    specified service
+  ### Kubernetes Server Commands ###
 
-    down                            Shut down and remove the entire tidepool stack
-    set-kubeconfig                  Save Kubernetes server config to ~/.kube/config
-    restart [service]               Restart the entire tidepool stack or the specified service
+  server-start                    Start (and provision if needed) the Kubernetes server
+  server-stop                     Stop the Kubernetes server
+  server-logs                     Tail logs for the Kubernetes server
 
-    destroy                         Shut down and completely remove the local Kubernetes server and
-                                    all services
+  server-get-config               Save Kubernetes server config to ~/.kube/config. Required only
+                                  after the initial provisioning
 
-    logs [service]                  Tail logs for the specified service
-    server-logs                     Tail logs for the Kubernetes server
+  server-docker [...cmds]         Run docker commands within the context of the Kubernetes server
+  server-exec [...cmds]           Run shell commands in the Kubernetes server container
 
-    exec service [...cmds]          Run shell commands in the currently running service
-                                    container
-                                      example:
-                                        'tidepool_k8s exec blip sh'
-                                        (to enter a shell inside the blip container)
-                                      example:
-                                        'tidepool_k8s exec blip "ls -lR /app/node_modules/ | grep ^l | uniq"'
-                                        (to list all symlinked npm packages, such as after yarn linking)
+  server-prune                    Remove any unused images, containers, and volumes within the
+                                  Kubernetes server
 
-    server-exec [...cmds]           Run shell commands in the Kubernetes server container
+  server-destroy                  Shut down and completely remove the local Kubernetes server and
+                                  all services
 
-    yarn [node_service] [...cmds]   Run yarn commands against the specified Node.js-based service.
-                                    [node_service] will be one of:
-                                      blip, @tidepool/viz, tideline, tidepool-platform-client,
-                                      export, gatekeeper, highwater, jellyfish, message-api, seagull
-                                    NOTE: tideline, @tidepool/viz, and tidepool-platform-client
-                                    are optional Tilt-provided mounts within the blip service
-                                      example: 'tidepool_k8s yarn @tidepool/viz stories'
-                                      example: 'tidepool_k8s yarn tidepool-platform-client test'
 
-    docker [...cmds]                Run docker commands within the context of the Kubernetes server
-    port-forward [service] [port]   Forward a port to a running service container
+  ### Tidepool Services Commands ###
 
-    prune                           Remove any unused images, containers, and volumes within the
-                                    Kubernetes server
+  start                           Provision and start the Tidepool services
+  stop                            Stop and remove the Tidepool services
+  restart [service]               Restart the specified service
+  logs [service]                  Tail logs for the specified service
 
-    help                            Show this help text
+  exec service [...cmds]          Run shell commands in the currently running service
+                                  container
+                                    example:
+                                      'tidepool_k8s exec blip sh'
+                                      (to enter a shell inside the blip container)
+                                    example:
+                                      'tidepool_k8s exec blip "ls -lR /app/node_modules/ | grep ^l | uniq"'
+                                      (to list all symlinked npm packages, such as after yarn linking)
+
+  yarn [service] [...cmds]        Run yarn commands against the specified Node.js-based service.
+                                  [service] must be one of:
+                                    blip, @tidepool/viz, tideline, tidepool-platform-client,
+                                    export, gatekeeper, highwater, jellyfish, message-api, seagull
+                                  NOTE: tideline, @tidepool/viz, and tidepool-platform-client
+                                  are optional Tilt-provided mounts within the blip service
+                                    example: 'tidepool_k8s yarn @tidepool/viz stories'
+                                    example: 'tidepool_k8s yarn tidepool-platform-client test'
+
+  port-forward [service] [port]   Forward a port to a running service container
 
 EOF
 }
@@ -102,20 +104,20 @@ set_kubeconfig() {
 }
 
 case ${1-help} in
-  start) (cd ${DIR} && run_docker_compose up -d ${2-});;
-  stop) (cd ${DIR} && run_docker_compose stop ${2-});;
-  up) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up --port=0 ${2-});;
-  down) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
-  set-kubeconfig) set_kubeconfig;;
-  restart) restart ${2-};;
-  destroy) (cd ${DIR} && run_docker_compose rm -fsv);;
-  logs) (cd ${DIR} && kubectl logs svc/${2} --tail=20 -c ${2} -f);;
+  server-start) (cd ${DIR} && run_docker_compose up -d ${2-});;
+  server-stop) (cd ${DIR} && run_docker_compose stop ${2-});;
   server-logs) (cd ${DIR} && run_docker_compose logs --tail=20 -f server);;
-  exec) run_exec ${2} ${@:3};;
+  server-get-config) set_kubeconfig;;
+  server-docker) run_docker "${@:2}";;
   server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
+  server-prune) (run_docker "system prune --volumes -af");;
+  server-destroy) (cd ${DIR} && run_docker_compose rm -fsv);;
+  start) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up --port=0 ${2-});;
+  stop) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
+  restart) restart ${2-};;
+  logs) (cd ${DIR} && kubectl logs svc/${2} --tail=20 -c ${2} -f);;
+  exec) run_exec ${2} ${@:3};;
   yarn) run_yarn ${2} "${@:3}";;
-  docker) run_docker "${@:2}";;
   port-forward) (cd ${DIR} && kubectl port-forward svc/${2} ${3});;
-  prune) (run_docker "system prune --volumes -af");;
-  *|help) usage;;
+  *) usage;;
 esac
