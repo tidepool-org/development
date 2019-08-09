@@ -48,6 +48,7 @@ CONFIGURATOR_TEMPLATE_DIR=${CONFIGURATOR_CHART_DIR}/templates
 TIDEPOOL_CHART_DIR=${CHART_DIR}/tidepool
 SHARED_CHART_DIR=${CHART_DIR}/shared
 START_CHART_DIR=${CHART_DIR}/shared-start
+FLUX_CHART_DIR=${CHART_DIR}/flux-repositories
 
 mkdir -p $CLUSTER_DIR
 cd $CONFIG_DIR
@@ -58,11 +59,11 @@ helm template -f ${VALUES_FILE} ${CONFIGURATOR_CHART_DIR} -x ${CONFIGURATOR_TEMP
 mkdir -p $FLUX_DIR
 cd ${FLUX_DIR}
 
-# create shared services helmreleases
+# expand shared services helmreleases
+# we expand them to aid up updating the individual services
 helm template -f ${VALUES_FILE} ${SHARED_CHART_DIR} >shared-manifests.yaml
 helm template -f ${VALUES_FILE} ${START_CHART_DIR}  >start-manifests.yaml
-
-helm template -f ${VALUES_FILE} --namespace flux ${DEV_REPO}/charts/flux-repositories >flux-repositories.yaml
+helm template -f ${VALUES_FILE} --namespace flux ${FLUX_CHART_DIR} >flux-repositories.yaml
 
 # create environments
 mkdir -p environments
@@ -71,9 +72,9 @@ for ENVIRONMENT in $ENVIRONMENTS
 do
   mkdir -p $ENVIRONMENT
   external_secret <(helm template -f ${VALUES_FILE} --set global.secrets.enabled=true  --namespace $ENVIRONMENT \
-	  ${TIDEPOOL_CHART_DIR}) dryrun ${CLUSTER_NAME} encoded  | yq 'filter(.kind == "Secret")' | >$ENVIRONMENT/external-secrets.yaml
-  helm template -f ${VALUES_FILE} ${CONFIGURATOR_CHART_DIR} -x ${CONFIGURATOR_TEMPLATE_DIR}/namespace.yaml > $ENVIRONMENT/namespace.yaml
-  helm template -f ${VALUES_FILE} ${CONFIGURATOR_CHART_DIR} -x ${CONFIGURATOR_TEMPLATE_DIR}/shoreline-configmap.yaml > $ENVIRONMENT/shoreline-configmap.yaml
+	  ${TIDEPOOL_CHART_DIR}) dryrun ${CLUSTER_NAME} encoded  | yq 'filter(.kind == "Secret")' >$ENVIRONMENT/external-secrets.yaml
+  helm template -f ${VALUES_FILE} ${TIDEPOOL_CHART_DIR} | yq 'filter(.kind == "Namespace")' > $ENVIRONMENT/namespace.yaml
+  helm template -f ${VALUES_FILE} ${TIDEPOOL_CHART_DIR} | yq 'filter(.kind == "ConfigMap")' > $ENVIRONMENT/configmaps.yaml
   helm template -f ${VALUES_FILE} ${CONFIGURATOR_CHART_DIR} -x ${CONFIGURATOR_TEMPLATE_DIR}/tidepool-helmrelease.yaml > $ENVIRONMENT/tidepool-helmrelease.yaml
 done
 

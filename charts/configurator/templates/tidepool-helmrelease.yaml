@@ -56,15 +56,9 @@ spec:
       hosts:
         default: 
           protocol: {{ $spec.hosts.default.protocol }}
-{{ if eq $spec.hosts.default.protocol "http" }}
-          host: {{ $spec.hosts.http.dnsNames | first | quote }}
-{{- else }}
-          host: {{ $spec.hosts.https.dnsNames | first | quote }}
-{{- end -}}
 {{- if $spec.hosts.https.enabled }}
         https:
           enabled: true
-          commonName: {{ $spec.hosts.https.dnsNames | first | quote }}
           secretName: {{ $name }}-tls-secret
           certificateIssuer: {{ $spec.hosts.https.certificateIssuer | quote }}
           dnsNames:
