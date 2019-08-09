@@ -4,15 +4,15 @@ Expand the name of the chart.
 */}}
 
 {{- define "charts.default.host" -}}
-{{ if eq .Values.global.hosts.default.protocol "http" }}
-{{ .Values.global.hosts.http.dnsNames | first | quote }}
-{{- else }}
-{{ .Values.global.hosts.https.dnsNames | first | quote }}
+{{- if eq .Values.global.hosts.default.protocol "http" -}}
+{{- .Values.global.hosts.http.dnsNames | first -}}
+{{- else -}}
+{{- .Values.global.hosts.https.dnsNames | first -}}
 {{- end -}}
 {{- end }}
 
 {{- define "charts.host.external.tp" -}} 
-{{ .Values.global.hosts.default.protocol }}://{{ include "charts.default.host" . }}
+{{- .Values.global.hosts.default.protocol }}://{{ include "charts.default.host" . -}}
 {{- end }}
 
 {{- define "charts.certificate.secretName" -}}

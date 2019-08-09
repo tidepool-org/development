@@ -64,6 +64,7 @@ cd ${FLUX_DIR}
 helm template -f ${VALUES_FILE} ${SHARED_CHART_DIR} >shared-manifests.yaml
 helm template -f ${VALUES_FILE} ${START_CHART_DIR}  >start-manifests.yaml
 helm template -f ${VALUES_FILE} --namespace flux ${FLUX_CHART_DIR} >flux-repositories.yaml
+helm template -f ${VALUES_FILE} ${CONFIGURATOR_CHART_DIR} -x ${CONFIGURATOR_TEMPLATE_DIR}/tidepool-helmrelease.yaml > tidepool-manifests.yaml
 
 # create environments
 mkdir -p environments
@@ -75,7 +76,6 @@ do
 	  ${TIDEPOOL_CHART_DIR}) dryrun ${CLUSTER_NAME} encoded  | yq 'filter(.kind == "Secret")' >$ENVIRONMENT/external-secrets.yaml
   helm template -f ${VALUES_FILE} ${TIDEPOOL_CHART_DIR} | yq 'filter(.kind == "Namespace")' > $ENVIRONMENT/namespace.yaml
   helm template -f ${VALUES_FILE} ${TIDEPOOL_CHART_DIR} | yq 'filter(.kind == "ConfigMap")' > $ENVIRONMENT/configmaps.yaml
-  helm template -f ${VALUES_FILE} ${CONFIGURATOR_CHART_DIR} -x ${CONFIGURATOR_TEMPLATE_DIR}/tidepool-helmrelease.yaml > $ENVIRONMENT/tidepool-helmrelease.yaml
 done
 
 CREATE=$(yq read ${VALUES_FILE} global.repo.create)

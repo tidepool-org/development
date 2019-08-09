@@ -26,7 +26,7 @@ HOST='{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}} {{- else 
 EXTERNAL_HOST_NAME = '{{ $dnsName }}'
 
 """The name of the TLS secret containing the TLS cert"""
-TLS_SECRET_NAME = '{{ $.Values.global.hosts.https.secretName }}'
+TLS_SECRET_NAME = '{{ include "charts.certificate.secretName" . }}'
 
 """The namespace of the TLS secret containing the TLS cert"""
 TLS_SECRET_NAMESPACE = '{{ $.Release.Namespace }}'

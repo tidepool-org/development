@@ -54,20 +54,5 @@ spec:
       store:
         type: s3
       hosts:
-        default: 
-          protocol: {{ $spec.hosts.default.protocol }}
-{{- if $spec.hosts.https.enabled }}
-        https:
-          enabled: true
-          secretName: {{ $name }}-tls-secret
-          certificateIssuer: {{ $spec.hosts.https.certificateIssuer | quote }}
-          dnsNames:
-          {{- $spec.hosts.https.dnsNames | toYaml | nindent 10 }}
-{{- end -}}
-{{ if $spec.hosts.http.enabled }}
-        http:
-          enabled: true
-          dnsNames:
-          {{- $spec.hosts.http.dnsNames | toYaml | nindent 10 }}
-{{- end }}
+        {{- $spec.hosts | toYaml | nindent 8 }}
 {{- end }}
