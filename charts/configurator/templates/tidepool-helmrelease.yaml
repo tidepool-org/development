@@ -41,6 +41,14 @@ spec:
     mongodb:
       enabled: false
     global:
+      secrets:
+        create: false
+      namespace:
+        create: false
+      hpa:
+        create: true
+      configmaps:
+        create: false
       cluster:
         name: {{ $cluster.name }}
       store:
@@ -68,6 +76,4 @@ spec:
           dnsNames:
           {{- $spec.hosts.http.dnsNames | toYaml | nindent 10 }}
 {{- end }}
-      namespace:
-        create: false
 {{- end }}
