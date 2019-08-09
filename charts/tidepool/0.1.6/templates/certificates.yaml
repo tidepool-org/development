@@ -4,7 +4,7 @@
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
-  name: {{ $spec.commonName }}
+  name: {{ $spec.dnsNames | first | quote }}
   namespace: {{ $.Release.Namespace }}
 spec:
   secretName: {{ $spec.secretName }}
