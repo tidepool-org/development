@@ -3,6 +3,22 @@
 Expand the name of the chart.
 */}}
 
+{{- define "charts.default.host" -}}
+{{ if eq .Values.hosts.default.protocol "http" }}
+{{ .Values.hosts.http.dnsNames | first | quote }}
+{{- else }}
+{{ .Values.hosts.https.dnsNames | first | quote }}
+{{- end -}}
+{{- end }}
+
+{{- define "charts.host.external.tp" -}} 
+{{ Values.hosts.default.protocol }}://{{ include "charts.default.host" . }}
+{{- end }}
+
+{{- define "charts.certificate.secretName" -}}
+{{- .Release.Namespace -}}-tls-secret
+{{- end -}}
+
 {{- define "charts.name" -}}
 {{- default .Chart.Name .Values.global.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -27,14 +43,6 @@ Expand the name of the chart.
 
 {{ define "charts.host.internal.address" -}}
 http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
-{{- end }}
-
-{{- define "charts.host.external.tp" -}} 
-{{ if eq .hosts.default.protocol "http" }}
-http://{{ $spec.hosts.http.dnsNames | first | quote }}
-{{- else }}
-https://{{ $spec.hosts.https.dnsNames | first | quote }}
-{{- end -}}
 {{- end }}
 
 {{- define "charts.s3.url" -}} https://s3-{{.Values.global.cluster.region}}.amazonaws.com {{- end }}

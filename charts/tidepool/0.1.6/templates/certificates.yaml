@@ -1,17 +1,18 @@
 {{ $spec := .Values.global.hosts.https }}
 {{ if and $spec.enabled $spec.certificateIssuer }}
---- #file: {{ $spec.commonName }}-certificate.yaml
+---
+#file: {{ include "charts.default.host" . }}-certificate.yaml
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
-  name: {{ $spec.dnsNames | first | quote }}
+  name: {{ include "charts.default.host" . }}}
   namespace: {{ $.Release.Namespace }}
 spec:
-  secretName: {{ $spec.secretName }}
+  secretName: {{ include "charts.certificate.secretName" . }}
   issuerRef:
     name: {{ $spec.certificateIssuer }}
     kind: {{ $spec.issuerKind | default "ClusterIssuer" }}
-  commonName: {{ $spec.dnsNames | first | quote }}
+  commonName: {{ include "charts.default.host" . }}
   dnsNames:
   {{- $spec.dnsNames | toYaml | nindent 2 -}}
   acme:
