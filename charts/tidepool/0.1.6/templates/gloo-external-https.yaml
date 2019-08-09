@@ -6,8 +6,8 @@
 {{ if $spec.dnsNames }}
 {{- range $dnsName := $spec.dnsNames }}
 {{ $legalName := printf "%s-%s" $dnsName $port }}
---- #file: gloo-{{ $legalName }}-virtualservice.yaml
 ---
+#file: gloo-{{ $legalName }}-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:

@@ -1,4 +1,5 @@
 {{ if .Values.nosqlclient.enabled }}
+---
 apiVersion: v1
 kind: Service
 metadata:

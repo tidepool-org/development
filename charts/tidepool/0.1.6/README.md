@@ -33,7 +33,7 @@ This helm chart for Tidepool features:
 
 ## Prerequisites
 
-- Kubernetes 1.11+
+- Kubernetes 1.13+
 
 ## Quickstart
 
@@ -134,8 +134,6 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.resources.limits.memory`  | Memory Limit                                  | `128Mi`  |
 | `global.resources.requests.cpu`   | CPU Limit                                     | `50m`  |
 | `global.resources.requests.memory`   | Memory Limit                               | `32Mi`  |
-| `global.secrets.external.source`   | If `awsSecretsManager`, retrieve secrets shared with third parties from Amazon Secrets Manager. If `local`, you must provide these secrets as Kubernetes Secrets | `local`                            |
-| `global.secrets.internal.source`   | If `awsSecretsManager`, retrieve internally used secrets from Amazon Secrets Manager. If `helm`, these internal secrets will be generated when the Helm chart is installed. If `local`, you must provide these secrets as Kubernetes Secrets | `helm`                            |
 | `global.securityContext`   | Set Security Context for pods                        | `200m`  |
 | `global.store.type`                | If `s3`, store blob/image data in Amazon S3. If `file` store blob/image data in local files.               | `file`                            |
 | `gloo.enabled` | Whether to include an API Gateway with this installation         | `true` |
@@ -194,6 +192,5 @@ You must also set different host names by setting the values under `global.hosts
 
 ### Secrets
 
-To use external services such as DexcomAPI, Mailchimp, and KissMetrics, you must provide certain shared secrets.
-See the secrets manifest files for details.
+To use external services such as DexcomAPI, Mailchimp, and KissMetrics, you must provide certain secrets.
 
