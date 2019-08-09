@@ -105,7 +105,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.hosts.https.dnsNames`     | List of Subject Alternative Names to use | `[]`  |
 | `global.hosts.https.certificateIssuer`        | Name of TLS certificate issuer, e.g. `letsencrypt-stating`, `letsencrypt-production` | `` |
 | `global.hosts.https.issuerKind`   | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer` | `ClusterIssuer` |
-| `global.hpa.enabled`              | If true, the allocate a horizontal pod autoscalers for all pods | 'true' |
+| `global.hpa.create`              | If true, the allocate a horizontal pod autoscalers for all pods | 'true' |
 | `global.linkerd`                  | If `enabled` use the `linkerd` service mesh     | `disabled`  |
 | `global.mongodb.enabled`          | Whether to include an mongodb with this installation          | `true` |
 | `global.nameOverride`             | If non-empty, Helm chart name to use          | ``          |

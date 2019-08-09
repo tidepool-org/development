@@ -40,24 +40,27 @@ fi
 
 cd $DEV_REPO
 
-CHART_DIR=${DEV_REPO}/charts/configurator
-TEMPLATE_DIR=${CHART_DIR}/templates
+CHART_DIR=${DEV_REPO}/charts
+
+CONFIGURATOR_CHART_DIR=${CHART_DIR}/configurator
+CONFIGURATOR_TEMPLATE_DIR=${CONFIGURATOR_CHART_DIR}/templates
+
+TIDEPOOL_CHART_DIR=${CHART_DIR}/tidepool
+SHARED_CHART_DIR=${CHART_DIR}/shared
+START_CHART_DIR=${CHART_DIR}/shared-start
 
 mkdir -p $CLUSTER_DIR
 cd $CONFIG_DIR
 
 # create cluster config 
-helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/config.yaml | tail -n +4 > ${CLUSTER_DIR}/config.yaml 
+helm template -f ${VALUES_FILE} ${CONFIGURATOR_CHART_DIR} -x ${CONFIGURATOR_TEMPLATE_DIR}/config.yaml | tail -n +4 > ${CLUSTER_DIR}/config.yaml 
 
 mkdir -p $FLUX_DIR
 cd ${FLUX_DIR}
 
-# create and store secrets 
-external_secret <(helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/secrets.yaml) dryrun ${CLUSTER_NAME} encoded >external-secrets.yaml
-
 # create shared services helmreleases
-helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/shared-helmrelease.yaml >shared-helmrelease.yaml
-helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/shared-start-helmrelease.yaml >shared-start-helmrelease.yaml
+helm template -f ${VALUES_FILE} ${SHARED_CHART_DIR} >shared-manifests.yaml
+helm template -f ${VALUES_FILE} ${START_CHART_DIR}  >start-manifests.yaml
 
 helm template -f ${VALUES_FILE} --namespace flux ${DEV_REPO}/charts/flux-repositories >flux-repositories.yaml
 
@@ -67,9 +70,11 @@ cd environments
 for ENVIRONMENT in $ENVIRONMENTS
 do
   mkdir -p $ENVIRONMENT
-  helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/namespace.yaml > $ENVIRONMENT/namespace.yaml
-  helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/shoreline-configmap.yaml > $ENVIRONMENT/shoreline-configmap.yaml
-  helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/tidepool-helmrelease.yaml > $ENVIRONMENT/tidepool-helmrelease.yaml
+  external_secret <(helm template -f ${VALUES_FILE} --set global.secrets.enabled=true  --namespace $ENVIRONMENT \
+	  ${TIDEPOOL_CHART_DIR}) dryrun ${CLUSTER_NAME} encoded  | yq 'filter(.kind == "Secret")' | >$ENVIRONMENT/external-secrets.yaml
+  helm template -f ${VALUES_FILE} ${CONFIGURATOR_CHART_DIR} -x ${CONFIGURATOR_TEMPLATE_DIR}/namespace.yaml > $ENVIRONMENT/namespace.yaml
+  helm template -f ${VALUES_FILE} ${CONFIGURATOR_CHART_DIR} -x ${CONFIGURATOR_TEMPLATE_DIR}/shoreline-configmap.yaml > $ENVIRONMENT/shoreline-configmap.yaml
+  helm template -f ${VALUES_FILE} ${CONFIGURATOR_CHART_DIR} -x ${CONFIGURATOR_TEMPLATE_DIR}/tidepool-helmrelease.yaml > $ENVIRONMENT/tidepool-helmrelease.yaml
 done
 
 CREATE=$(yq read ${VALUES_FILE} global.repo.create)

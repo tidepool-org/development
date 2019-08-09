@@ -8,7 +8,7 @@ Expand the name of the chart.
 {{- end -}}
 
 {{- define "charts.mongo.secretname." }}
-{{ default 'mongo' .Values.global.mongo.secretName }}
+{{ default "mongo" .Values.global.mongo.secretName }}
 {{- end -}}
 
 {{- define "charts.externalSecrets.role" -}}
@@ -178,6 +178,10 @@ Create environment variables used by all platform services.
               name: auth
               key: ServiceAuth
 {{ end }}
+
+{{- define "charts.mongo.secretName" -}}
+{{- default "mongo" .Values.mongo.secretName -}}
+{{- end -}}
 
 {{ define "charts.mongo.params" }}
         - name: TIDEPOOL_STORE_SCHEME

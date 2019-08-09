@@ -7,12 +7,9 @@ To learn more about the release, try:
   $ helm status {{ .Release.Name }}
   $ helm get {{ .Release.Name }}
 
-{{ if eq  .Values.global.secrets.internal.source "helm"}}
-
+{{ if .Values.global.secrets.create }}
 The Tidepool services rely on various secrets to encrypt and decrypt
-data.  The app.tidepool.org web service stores and retrieves these secrets from
-the Amazon Secrets Manager.  If you are running locally, you need to provide
-those secrets.
+data. You need to provide those secrets.
 
 Some of those secrets are provided by or shared with third parties
 (e.g. Dexcom, Mailchimp, UCSF).  You need to supply these in the
@@ -28,26 +25,14 @@ generated.  This is fine, IF you throw away all you data between
 installations.  However, if you persist your data, then you need
 to keep the same secrets from one installation to the next.
 
-To do that, after the first successful helm installation, you will
-need to run this shell script so extract your secrets from your
-Kubernetes cluster and save them in local files:
+You may generate secrets using this helm chart and save them to a file with:
 
-for secret in $(kubectl get secrets -o=jsonpath='{.items[?(@.type=="Opaque")].metadata.name}')
-do
-    kubectl get secrets $secret -o yaml > $secret.yaml
-done
-
-These are the secrets that helm generated for you.  If you rerun
-helm install later, you will need to use these secrets and NOT the
-secrets that it would generate.  To turn off secret generation, add
-the setting when running `helm install`:
-
-  --set "global.secrets.internal.source=other"
+$ helm template -f values.yaml . | yq 'filter(.kind == "Secret")' >secrets.yaml
 
 To load the secret file, in the directory where you stored your secrets, run:
 
-  kubectl apply -f *.yaml
-{{ end }}
+  kubectl apply -f secrets.yaml
 
+{{ end }}
 
 
