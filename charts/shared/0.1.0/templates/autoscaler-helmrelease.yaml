@@ -14,8 +14,8 @@ spec:
     rbac:
       create: true
     autoDiscovery:
-      clusterName: {{ .Values.global.clusterName | quote }}
-    awsRegion: {{ .Values.global.awsRegion | quote }}
+      cluster.name: {{ .Values.global.cluster.name | quote }}
+    awsRegion: {{ .Values.global.cluster.region | quote }}
     serviceMonitor:
       enabled: true
     sslCertHostPath: /etc/ssl/certs/ca-bundle.crt

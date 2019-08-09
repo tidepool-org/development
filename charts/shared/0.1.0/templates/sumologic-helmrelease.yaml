@@ -13,7 +13,7 @@ spec:
   values:
     sumologic:
       collectorUrlExistingSecret:  sumologic
-      sourceCategoryPrefix: {{ .Values.global.clusterName }}
+      sourceCategoryPrefix: {{ .Values.global.cluster.name }}
       readFromHead: false
     rbac:
       create: true

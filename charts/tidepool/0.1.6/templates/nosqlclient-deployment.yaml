@@ -54,13 +54,11 @@ spec:
             secretKeyRef:
               name: {{ include "charts.mongo.secretName" . }}
               key: addresses
-          value: '{{ .Values.global.mongo.addresses }}'
         - name: MONGO_OPT_PARAMS
           valueFrom:
             secretKeyRef:
               name: {{ include "charts.mongo.secretName" . }}
               key: optParams
-          value: '{{.Values.global.mongo.optParams}}'
         - name: MONGO_TLS
           valueFrom:
             secretKeyRef:

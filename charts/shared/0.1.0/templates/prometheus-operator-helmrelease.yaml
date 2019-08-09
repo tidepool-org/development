@@ -17,7 +17,7 @@ spec:
           tag: "{{ .Values.prometheus.tag }}"     # use a specific version of Prometheus
         externalLabels:  # a cool way to add default labels to all metrics 
           geo: us          
-          region: {{ .Values.global.awsRegion | quote }}
+          region: {{ .Values.global.cluster.region | quote }}
         serviceMonitorNamespaceSelector:  # allows the operator to find target config from multiple namespaces
           any: true
         thanos:         # add Thanos Sidecar

@@ -1,6 +1,9 @@
 global:
-  clusterName: yourClusterName
-  awsRegion: us-west-2
+  github:
+    account: tidepool-org
+  cluster:
+    name: yourClusterName
+    region: us-west-2
   email: derrick@tidepool.org
   logLevel: debug
   hostnames: []       # array of hostnames to alias to this loadbalancer on this cluster listening to 80 and 443

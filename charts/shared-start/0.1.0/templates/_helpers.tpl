@@ -45,10 +45,10 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{- define "charts.externalSecrets.role" -}}
-{{- printf "%s-secrets-role"  .Values.global.clusterName | quote -}}
+{{- printf "%s-secrets-role"  .Values.global.cluster.name | quote -}}
 {{- end -}}
 
 {{- define "charts.kiam.arn" -}}
-{{- printf "%s-kiam-server-role" .Values.global.clusterName | quote -}}
+{{- printf "%s-kiam-server-role" .Values.global.cluster.name | quote -}}
 {{- end -}}
 

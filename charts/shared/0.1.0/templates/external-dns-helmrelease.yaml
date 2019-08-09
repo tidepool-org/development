@@ -25,6 +25,6 @@ spec:
     provider: aws
     awszonetype: public 
     aws:
-      region: {{ .Values.global.awsRegion | quote }}
-    txtOwnerId: {{ .Values.global.clusterName | quote }}
+      region: {{ .Values.global.cluster.region | quote }}
+    txtOwnerId: {{ .Values.global.cluster.name | quote }}
 {{ end }}

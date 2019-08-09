@@ -29,8 +29,6 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      initContainers:
-      {{ include "charts.init.mongo" .}}
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
@@ -69,7 +67,7 @@ spec:
         - name: SERVICE_NAME
           value: jellyfish
         - name: STORAGE_TYPES
-          value: '{"s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.global.aws.region}}", "bucket": "{{ include "charts.jellyfish.s3.bucket" .}}" }}'
+          value: '{"s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.global.cluster.region}}", "bucket": "{{ include "charts.jellyfish.s3.bucket" .}}" }}'
         - name: STORAGE_DEFAULT
           value: '{{ .Values.global.store.type }}'
         - name: USER_API_SERVICE

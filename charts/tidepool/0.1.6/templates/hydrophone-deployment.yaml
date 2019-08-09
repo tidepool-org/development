@@ -29,8 +29,6 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      initContainers:
-      {{ include "charts.init.mongo" .}}
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
@@ -42,7 +40,7 @@ spec:
               name: tidepool-server-secret
               key: ServiceAuth
         - name: REGION
-          value: {{.Values.global.aws.region}}            
+          value: {{.Values.global.cluster.region}}            
         - name: TIDEPOOL_HYDROPHONE_ENV
           value: |
             {

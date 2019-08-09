@@ -48,8 +48,8 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
     type: S3
     config:
       bucket: {{ .Values.thanos.bucket | quote }}
-      endpoint: {{ printf "s3.%s.amazonaws.com" .Values.global.awsRegion | quote }}
-      region: {{ .Values.global.awsRegion | quote }}
+      endpoint: {{ printf "s3.%s.amazonaws.com" .Values.global.cluster.region | quote }}
+      region: {{ .Values.global.cluster.region | quote }}
       insecure: false
       signature_version2: false
       encrypt_sse: false
@@ -63,25 +63,30 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ end }}
 
 {{- define "charts.autoscaler.role" -}}
-{{- printf "%s-autoscaler-role"  .Values.global.clusterName | quote -}}
+{{- printf "%s-autoscaler-role"  .Values.global.cluster.name | quote -}}
 {{- end -}}
 
 {{- define "charts.certmanager.role" -}}
-{{- printf "%s-certmanager-role"  .Values.global.clusterName | quote -}}
+{{- printf "%s-certmanager-role"  .Values.global.cluster.name | quote -}}
 {{- end -}}
 
 {{- define "charts.externalDNS.role" -}}
-{{- printf "%s-externalDNS-role"  .Values.global.clusterName | quote -}}
+{{- printf "%s-externalDNS-role"  .Values.global.cluster.name | quote -}}
 {{- end -}}
 
 {{- define "charts.externalSecrets.role" -}}
-{{- printf "%s-secrets-role"  .Values.global.clusterName | quote -}}
+{{- printf "%s-secrets-role"  .Values.global.cluster.name | quote -}}
 {{- end -}}
 
+
 {{- define "charts.fluxcloud.github" -}}
-{{- printf "https://github.com/tidepool-org/cluster-%s" .Values.global.clusterName | quote -}}
+{{= if .Values.global.repo.name -}}
+{{- printf "https://github.com/%s/%s" .Values.global.github.account .Values.global.repo.name | quote -}}
+{{- else -}}
+{{- printf "https://github.com/%s/cluster-%s" .Values.global.github.account .Values.global.cluster.name | quote -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "charts.fluxcloud.slack.channel" -}}
-{{- printf "#flux-%s" .Values.global.clusterName | quote -}}
+{{- printf "#flux-%s" .Values.global.cluster.name | quote -}}
 {{- end -}}

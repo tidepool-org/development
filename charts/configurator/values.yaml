@@ -1,4 +1,7 @@
 global:
+  email: derrick@tidepool.org
+  secrets:
+    source: "other"
   repo:
     directory: "/tmp/configrepo"                # REQUIRED: where to create the config repo
     name: "cluster-badass"                      # OPTIONAL: name of the repo
@@ -10,13 +13,11 @@ global:
     push: false                                 # whether to push the completed repo to GitHub
     token: ""                                   # a GitHub token that allows repo read/write access  
   logLevel: debug                               # the default log level for all services
-  iamUsers:                                     # the list of IAM users to provide master cluster access
-  - benderr-cli
-  - lennartgoedhard-cli
+  iamUsers: "benderr-cli lennartgoedhart-cli""  # the list of IAM users to provide master cluster access-
   cluster:
     name: "badass"                              # the name of the cluster
-    kubeconfig: ""                              # place to put KUBECONFIG, default: $CONFIG_REPO/kubeconfig.yaml
-    configFile: ""                              # place to put cluster config, default $CONFIG_REPO/config.yaml
+    kubeconfig: ""                              # place to put KUBECONFIG, default: $CLUSTER_DIR/kubeconfig.yaml
+    configFile: ""                              # place to put cluster config, default $CLUSTER_DIR/config.yaml
     k8sVersion: "1.13"                          # the Kubernetes version >= 1.13
     region: "us-west-2"                         # AWS region to deploy in
     cidr: "10.47.0.0/16"                        # CIDR of AWS VPC
@@ -61,41 +62,55 @@ env:
     gitops:
       branch: develop                           # branch to pull updates from
     auth:
-      ServiceAuth:  ""				# intra-cluster secret
+      secrets:
+        ServiceAuth:  ""				
     blob:
-      ServiceAuth: ""				# intra-cluster secret
+      secrets:
+        ServiceAuth: ""				
     data:
-      ServiceAuth: ""				# intra-cluster secret
+      secrets:
+        ServiceAuth: ""				
     task:
-      ServiceAuth: ""				# intra-cluster secret
+      secrets:
+        ServiceAuth: ""				
     image:
-      ServiceAuth: ""				# intra-cluster secret
+      secrets:
+        ServiceAuth: ""				
     user:
-      ServiceAuth: ""				# intra-cluster secret
+      secrets:
+        ServiceAuth: ""				
     gatekeeper:
-      ServiceAuth: ""				# intra-cluster secret
+      secrets:
+        ServiceAuth: ""				
     shoreline:
-      ServiceAuth: ""				# intra-cluster secret
-      UserLongTermKey: 
-      UserMailVerification: ""
-      UserPasswordSalt: ""
-      ClinicDemoUserId: ""
+      secrets:
+        ServiceAuth: ""				
+        UserLongTermKey: 
+        UserMailVerification: ""
+        UserPasswordSalt: ""
+        ClinicDemoUserId: ""
     tidepoolServerSecret:
-      ServiceAuth: ""				# intra-cluster secret
+      secrets:
+        ServiceAuth: ""				
     highwater:
-      UserIdSalt: ""
+      secrets:
+        UserIdSalt: ""
     notification:
-      ServiceAuth: ""				# intra-cluster secret
+      secrets:
+        ServiceAuth: ""				
     export:
-      SessionEncryptionKey: ""
+      secrets:
+        SessionEncryptionKey: ""
     dexcom:
       enabled: false
-      ClientId: ""
-      ClientSecret: ""
-      StateSalt: ""
+      secrets:
+        ClientId: ""
+        ClientSecret: ""
+        StateSalt: ""
     carelink:
       enabled: false
-      CareLinkSalt: ""
+      secrets:
+        CareLinkSalt: ""
     nosqlclient:
       enabled: true
 

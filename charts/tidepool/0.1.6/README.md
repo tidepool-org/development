@@ -107,12 +107,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.hosts.https.issuerKind`   | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer` | `ClusterIssuer` |
 | `global.hpa.enabled`              | If true, the allocate a horizontal pod autoscalers for all pods | 'true' |
 | `global.linkerd`                  | If `enabled` use the `linkerd` service mesh     | `disabled`  |
-| `global.mongo.addresses`          | Comma-separated list of Mongo host[:port]       | `mongodb`   |
-| `global.mongo.optParams`          | Additional Mongo connection params            | ``          |
-| `global.mongo.secretName`         | Name of the K8s secret containing Mongo connection parameters | `` |
-| `global.mongo.ssl`                | If true, use SSL on Mongo connection          | `false`     |
-| `global.mongo.username`           | If non-empty, Mongo username                  | ``          |
-| `global.mongo.password``          | If non-empty, Mongo password                  | ``          |
+| `global.mongodb.enabled`          | Whether to include an mongodb with this installation          | `true` |
 | `global.nameOverride`             | If non-empty, Helm chart name to use          | ``          |
 | `global.namespace.create`         | If true, create namespace                     | `false`     |
 | `global.ports.auth`               | Auth service container port                   | `9222`      |
@@ -147,6 +142,12 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `gloo.gatewayProxies.gateway-proxy-v2.service.httpPort` | The http port to listen to.| `80` |
 | `gloo.gatewayProxies.gateway-proxy-v2.service.httpsPort` | The https port to listen to.| `` |
 | `gloo.gatewayProxies.gateway-proxy-v2.service.type` | The Service type to expose. If `LoadBalancer`, then a LoadBalancer will be allocated. | `ServiceIP` |
+| `mongo.addresses`          | Comma-separated list of Mongo host[:port]       | `mongodb`   |
+| `mongo.optParams`          | Additional Mongo connection params            | ``          |
+| `mongo.secretName`         | Name of the K8s secret containing Mongo connection parameters | `` |
+| `mongo.ssl`                | If true, use SSL on Mongo connection          | `false`     |
+| `mongo.username`           | If non-empty, Mongo username                  | ``          |
+| `mongo.password``          | If non-empty, Mongo password                  | ``          |
 | `gloo.{name}`  | See [gloo values](https://github.com/solo-io/gloo/tree/master/install/helm/gloo) | `` |
 | `blob.directory` | Directory to use when storing blobs on file storage            | `_data/blobs` | 
 | `blob.prefix`  | File prefix to use when storing blobs on file storage            | `blobs` | 
@@ -159,8 +160,6 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `jellyfish.enabled`   | Enable jellyfish service if true                          | `true`  
 | `messageapi.window` |                                                             | `21` |
 | `migrations.enabled`   | Enable migrations service if true                        | `true`  |
-| `mongodb.enabled` | Whether to include an mongodb with this installation          | `true` |
-| `mongodb.{name}`  | See [mongodb values](https://github.com/helm/charts/tree/master/stable/mongodb) | `` |
 | `tools.enabled`   | Enable tools service if true                                  | `true`  |
 
 

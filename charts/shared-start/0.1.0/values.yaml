@@ -1,5 +1,7 @@
 global:
-  clusterName: yourClusterName
+  cluster:
+    name: yourClusterName
+    region: us-west-2
 
 kiam:
   enabled: true
