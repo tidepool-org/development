@@ -1,0 +1,98 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: auth
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: auth
+  namespace: {{.Release.Namespace}}
+  annotations:
+    secret.reloader.stakater.com/reload: "server,mongo,dexcom,auth"
+spec:
+  selector:
+    matchLabels:
+      app: auth
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: auth
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        linkerd.io/inject: "{{ .Values.global.linkerd }}"
+    spec:
+      initContainers:
+      {{ include "charts.init.shoreline" .}}
+      containers:
+      - env:
+        {{ include "charts.platform.env.mongo" .}}
+        {{ include "charts.platform.env.misc" .}}
+        {{ include "charts.platform.env.clients" .}}
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+            configMapKeyRef:
+              name: dexcom
+              key: AuthorizeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: Scopes
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: dexcom
+              key: ClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: dexcom
+              key: ClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: dexcom
+              key: StateSalt
+              optional: true
+        - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+          value: {{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
+        - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+          value: :{{.Values.global.auth.service.ports}}
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth
+              key: ServiceAuth
+        image: "{{ .Values.auth.image }}"
+        {{ template "charts.platform.probes" .Values.global.auth.service.port}}
+        name: auth
+        ports:
+        - containerPort: {{.Values.global.auth.service.port}}
+        environment.resources:
+          {{- toYaml .Values.global.environment.resources | nindent 10 }}
+        environment.securityContext:
+          {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
+      restartPolicy: Always

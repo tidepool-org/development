@@ -1,0 +1,310 @@
+global:
+  company: # was global
+    github:
+      account: tidepool-org                       # your GitHub account
+      user: derrickburns                          # your GitHub user name
+      token: ""                                   # a token that allows write/create access to your GitHub account
+
+cluster:
+  repo:
+    directory: "/Users/derrickburns/go/src/github.com/tidepool-org"
+    name: ""                                    # OPTIONAL: name of the repo
+    init: true # was create
+    branch: master
+    publish: true # was push
+  eks: # new level
+    iam:
+      administrators: # was iamUsers and string
+      - derrickburns-cli
+      - lennartgoedhard-cli
+      - benderr-cli
+    configFile: ""                              # location of configuration file
+    name: "shared"                              # the name of the cluster
+    k8sVersion: "1.13"                          # the Kubernetes version >= 1.13
+    region: "us-west-2"                         # AWS region to deploy in
+    cidr: "10.44.0.0/16"                        # CIDR of AWS VPC
+    nodegroup:
+      instanceType: "m4.large"
+      desiredCapacity: 3
+      minSize: 1
+      maxSize: 10
+  logLevel: debug                               # the default log level for all services
+  mesh:
+    name: linkerd
+    enabled: false
+  gateway:                                                          
+    proxy:                                                            
+      name: gateway-proxy-v2                                             
+      namespace: gloo-system  
+  third-party-services:
+    sumologic: 
+      enabled: false
+      secret:
+        CollectorUrl:  ""                           # Sumologic collector URL
+    datadog:
+      enabled: false
+      secret:
+        APIKey: ""                                  # Datadog API key
+        AppKey: ""                                  # Datadog Application key
+    fluxcloud: 
+      enabled: false
+      secret:
+        url: ""                                     # Slack Webhook url
+    externalDNS: # new level
+      enabled: false
+      hostnames: []                             # list of hosts to publish to DNS
+                                        
+environments:
+  qa1:
+    namespace:
+      create: false                                                     # whether to create the namespace
+    configmaps:
+      create: false
+    hpa:
+      create: true
+    hosts:
+      default:
+        protocol: https                                                 # the protocol to use for signup emails
+      http:                                                            
+        enabled: false
+      https:                                                           
+        enabled: true 
+        port: "433"                                                    # default HTTPS port - must be quoted
+        dnsNames:                                                      # list of DNS names
+        - qa1.tidepool.org
+        certificateIssuer: "letsencrypt-staging"                       # the name of the certificate issuer
+    store: 
+      type: s3                                                         # store non-Mongo data in S3
+    shared-internal-secrets:
+      userdata:
+        secret: 
+          UserPasswordSalt: ""
+          UserIdSalt: ""
+          GroupIdEncryptionKey: ""
+      server:
+        secret:
+          ServiceAuth: ""
+      mongo:  
+        secret:
+          Scheme: "mongodb"
+          Addresses: "mongodb"
+          Username: ""
+          Password: ""
+          Database: ""
+          Tls: "true"
+          OptParams: ""
+    tidepool-services:
+      blip:
+        deployment:
+          image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
+      export:
+        enabled: true
+        secret:
+           SessionEncryptionKey: ""
+        deployment:
+          image: tidepool/export:develop-c67e1425a4f6eb4c3f70f95284a24899a9ff986f
+        service:
+          port: 9300
+      gatekeeper:
+        deployment:
+          image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
+          env:
+            serverSecretName: "server"
+        service:
+          port: 9123
+      messageapi:
+        deployment:
+          image: tidepool/message-api:develop-448835b6be0c27185e487f582f9b47a784aa781f
+          env:
+            serverSecretName: "server"
+            window: 21
+        service:
+          port: 9119
+      seagull:
+        deployment:
+          image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
+          env:
+            serverSecretName: "server"
+        service:
+          port: 9120
+      highwater:
+        deployment:
+          image: tidepool/highwater:develop-aaefb43df9a132f6c012f7216952e8650e6f6b4a
+          env:
+            kissmetricsSecretName: "kissmetrics"
+            serverSecretName: "server"
+        secret:
+          UserIdSalt: ""
+        service:
+          port: 9191
+      auth:
+        secret:
+          ServiceAuth:  ""
+        deployment:
+          image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+          env:
+            dexcomSecretName: "dexcom"
+        service:
+          port: 9222
+      blob:
+        secret:
+          ServiceAuth: "" 
+        service:
+          port: 9225   
+        deployment:
+          image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+          env:
+            directory: "_data/blobs"                                            # directory to use if using local file storage
+            prefix: "blobs"                                             
+      data:
+        secret:
+          ServiceAuth: ""
+        service:
+          port: 9220
+        deployment:
+          image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+      image:
+        secret:
+          ServiceAuth: ""
+        service:
+          port: 9226 
+        deployment:
+          image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+          env:
+            directory: "_data/image"                                            # directory to use if using local file storage
+            prefix: "images" 
+      notification:
+        secret:
+          ServiceAuth: ""
+        service:
+          port: 9223 
+        deployment:
+          image: tidepool/platform-notification:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+      task:
+        secret:
+          ServiceAuth: ""
+        service:
+          port: 9224 
+        deployment:
+          image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+      user:
+        secret:
+          ServiceAuth: ""
+        deployment:
+          image: tidepool/platform-user:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+          env:
+            userdata: "userdata"
+        service:
+          port: 9221
+      tools: 
+        enabled: true
+        deployment:
+          image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+          env:
+            userdataSecretName: "userdata"
+      shoreline:
+        configmap:
+          ClinicDemoUserId: ""
+        secret:
+          ServiceAuth: ""
+          UserLongTermKey: 
+          UserMailVerification: ""
+          UserPasswordSalt: ""
+          ClinicDemoUserId: ""
+        deployment:
+          image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
+          env:
+            mailchimpSecretName: "mailchimp"
+            serverSecretName: "server"
+        service:
+          port: 9107
+      tideWhisperer:
+        deployment:
+          image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
+          env:
+            serverSecretName: "server"
+            authSecretName: "auth"
+        service:
+          port: 9127
+      jellyfish: 
+        enabled: true
+        deployment:
+          image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
+          env:
+            serverSecretName: "server"
+        service:
+          port: 9122
+      migrations: 
+        enabled: true
+        deployment:
+          image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+      hydrophone:
+        deployment:
+          image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
+          env:
+            fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send
+            serverSecretName: "server"
+            #bucket: '' 
+        service:
+          port: 9157
+    third-party-internal-services:
+      nosqlclient:
+        enabled: false
+        deployment:
+          image: tidepool/nosqlclient:2.3.2
+          env:
+            mongoSecretName: "mongo"
+        service:
+          port: 3000
+      gloo:
+        enabled: true
+        settings:
+          create: true
+        discovery:
+          fdsMode: WHITELIST
+        namespace:
+          create: false
+        gatewayProxies:
+          gatewayProxyV2:
+            service:
+              httpPort: 8080                                               # HTTP port to listen on
+              #httpsPort: 8443                                             # HTTPS port to listen on
+              type: ClusterIP                                              # Type of service to create (alternative: ClusterIP)
+              #extraAnnotations:                                           # Use to create an AWS Network Load Balancer 
+                #service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+      mongodb:
+        enabled: true
+        image:
+          tag: "3.6"
+        persistence:
+          enabled: false
+        fullnameOverride: "mongodb"
+    externally-shared-secrets:
+      dexcom:
+        enabled: false
+        secret:
+          ClientId: ""
+          ClientSecret: ""
+          StateSalt: ""
+        configmap:
+          TokenUrl: 'https://api.dexcom.com/v1/oauth2/token'                 # the url to retrieve an Oauth2 token from Dexcom
+          AuthorizeUrl: 'https://api.dexcom.com/v1/oauth2/login?prompt=login'    # the url to get authorization from Dexcom
+          ClientUrl: "https://api.dexcom.com"                                 # the Dexcom client API url
+      carelink:
+        enabled: false
+        secret:
+          CareLinkSalt: ""
+      mailchimp:
+        enabled: false
+        secret:
+          MailchimpClinicLists: ""
+          MailchimpURL: ""
+          MailchimpPersonalLists: ""
+          MailchimpApiKey: ""
+      kissmetrics:
+        enabled: false
+        secret:
+          KissmetricsAPIKey: ""
+          KissmetricsToken: ""
+          UCSFKissmetricsAPIKey: ""
+          UCSFWhitelist: ""

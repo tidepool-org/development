@@ -1,0 +1,17 @@
+{{if .Values.global.environment.namespace.create }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{.Release.Namespace}}
+  labels:
+  {{- if eq .Values.global.cluster.mesh.name "istio" }}
+    istio-injection: {{ .Values.global.cluster.mesh.enabled }}
+  {{ end }}
+  {{- if eq .Values.global.cluster.mesh.name "linkerd" }}
+    global.linkerd.io/inject: {{ .Values.global.cluster.mesh.enabled }}
+  {{- end }}
+  annotations:
+    iam.amazonaws.com/permitted: {{ include "charts.roles.permitted" . }}
+{{ end }}
+
