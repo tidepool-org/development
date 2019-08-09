@@ -30,7 +30,11 @@ http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
 {{- end }}
 
 {{- define "charts.host.external.tp" -}} 
-{{- .Values.global.hosts.default.protocol -}}://{{- .Values.global.hosts.default.host -}}
+{{ if eq .hosts.default.protocol "http" }}
+http://{{ $spec.hosts.http.dnsNames | first | quote }}
+{{- else }}
+https://{{ $spec.hosts.https.dnsNames | first | quote }}
+{{- end -}}
 {{- end }}
 
 {{- define "charts.s3.url" -}} https://s3-{{.Values.global.cluster.region}}.amazonaws.com {{- end }}
