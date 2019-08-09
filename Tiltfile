@@ -53,8 +53,8 @@ def main():
       local('tilt up --file=Tiltfile.proxy --hud=0 --port=0 &>/dev/null &')
 
     # Wait until mongodb and gateway-proxy services are forwarding before provisioning rest of stack
-    local('while ! nc -G 1 -z localhost {}; do sleep 0.1; done'.format(mongodb_port_forward_host_port))
-    local('while ! nc -G 1 -z localhost {}; do sleep 0.1; done'.format(gateway_port_forward_host_port))
+    local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
+    local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
 
     # Generate and/or apply server secrets on startup
     tidepool_helm_template_cmd = setServerSecrets(tidepool_helm_template_cmd)
@@ -176,6 +176,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       preBuildCommand = ''
       postBuildCommand = ''
 
+      # Force rebuild when Dockerfile changes
       fallback_commands.append(fall_back_on([
         '{}/{}'.format(hostPath, dockerFile),
       ]))
@@ -184,6 +185,11 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       sync_commands.append(sync(hostPath, containerPath))
 
       if service == 'blip':
+        # Force rebuild when webpack config changes
+        fallback_commands.append(fall_back_on([
+          '{}/{}'.format(hostPath, 'webpack.config.js'),
+        ]))
+
         # Run yarn install in container whenever yarn.lock changes on host
         run_commands.append(run(
           'cd {} && yarn install --silent'.format(containerPath),
@@ -201,6 +207,12 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
             if package.get('name') == 'viz':
               tidepool_helm_template_cmd += '--set "blip.command=[yarn]" --set "blip.args=[startWithViz]" '
 
+              # Force rebuild when webpack config changes
+              fallback_commands.append(fall_back_on([
+                '{}/{}'.format(packageHostPath, 'webpack.config.js'),
+                '{}/{}'.format(packageHostPath, 'package.config.js'),
+              ]))
+
             activeLinkedPackages.append(packageName)
             sync_commands.append(sync(packageHostPath, '/app/packageMounts/{}'.format(packageName)))
 
@@ -212,31 +224,19 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
 
             if not is_shutdown:
               # Copy the package source into the Dockerfile build context
-              local('cd {hostPath} && mkdir -p packageMounts/{packageName} && rsync -a --delete --exclude "node_modules" --exclude ".git" --exclude "dist" --exclude "coverage" {packageHostPath}/ {hostPath}/packageMounts/{packageName}'.format(
+              preBuildCommand += 'cd {hostPath} && mkdir -p packageMounts/{packageName} && rsync -a --delete --exclude "node_modules" --exclude ".git" --exclude "dist" --exclude "coverage" {packageHostPath}/ {hostPath}/packageMounts/{packageName};'.format(
                 hostPath=hostPath,
                 packageHostPath=packageHostPath,
                 packageName=packageName,
-              ))
+              )
 
-              # Copy package.json and yarn.lock files to the Dockerfile build context
-              local('cd {hostPath} && mkdir -p packageMountDeps/{packageName} && rsync -a --delete {packageHostPath}/package.json {hostPath}/packageMountDeps/{packageName}/'.format(
-                hostPath=hostPath,
-                packageHostPath=packageHostPath,
-                packageName=packageName,
-              ))
-
-              local('if [ -f {packageHostPath}/yarn.lock ]; then cd {hostPath} && mkdir -p packageMountDeps/{packageName} && rsync -a --delete {packageHostPath}/yarn.lock {hostPath}/packageMountDeps/{packageName}/; fi'.format(
-                hostPath=hostPath,
-                packageHostPath=packageHostPath,
-                packageName=packageName,
-              ))
           else:
             if not is_shutdown:
               # Remove the package source from the Dockerfile build context
-              local('cd {hostPath} && rm -rf packageMounts/{packageName} && rm -rf packageMountDeps/{packageName}/package.json && rm -rf packageMountDeps/{packageName}/yarn.lock'.format(
+              preBuildCommand += 'cd {hostPath} && rm -rf packageMounts/{packageName};'.format(
                 hostPath=hostPath,
                 packageName=packageName,
-              ))
+              );
 
         buildCommand += ' --build-arg LINKED_PKGS={}'.format(','.join(activeLinkedPackages))
 
