@@ -12,7 +12,7 @@ Expand the name of the chart.
 {{- end }}
 
 {{- define "charts.host.external.tp" -}} 
-{{ Values.hosts.default.protocol }}://{{ include "charts.default.host" . }}
+{{ .Values.hosts.default.protocol }}://{{ include "charts.default.host" . }}
 {{- end }}
 
 {{- define "charts.certificate.secretName" -}}
