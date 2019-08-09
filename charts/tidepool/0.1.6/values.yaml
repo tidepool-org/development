@@ -5,7 +5,7 @@ global:
   namespace:
     create: false                                                     # whether to create the namespace
   secrets:
-    create: false
+    create: true
   configmaps:
     create: false
   hpa:
