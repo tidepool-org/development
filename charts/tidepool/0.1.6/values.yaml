@@ -20,8 +20,6 @@ global:
     https:                                                           
       enabled: false 
       port: "8433"                                                    # default HTTPS port - must be quoted
-      commonName: ""                                                  # common name of the host
-      secretName:  ""                                                 # name of K8s secret containing the certificate
       dnsNames: []                                                    # list of DNS names
       certificateIssuer: ""                                           # the name of the certificate issuer
       issuerKind: ClusterIssuer                                       # kind of the certificate issuer
