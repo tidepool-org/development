@@ -18,7 +18,7 @@ spec:
       apiKeyExistingSecret: {{ .Values.datadog.secretName | default "datadog" }}
       appKeyExistingSecret: {{ .Values.datadog.secretName | default "datadog" }}
       cluster.name: {{ .Values.global.cluster.name }}
-      logLevel: {{ .Values.global.logLevel }}
+      logLevel: {{ .Values.global.cluster.logLevel }}
     clusterAgent:
       token: {{ randAlphaNum 32 | b64enc | quote }}
       enabled: true

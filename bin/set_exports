@@ -93,7 +93,7 @@ then
 	KUBECONFIG=$CLUSTER_DIR/kubeconfig.yaml
 fi
 
-export IAM_USERS=$(yq read $VALUES_FILE global.iamUsers)
+export IAM_USERS=$(yq read $VALUES_FILE global.cluster.iamUsers)
 if [ "$IAM_USERS" == "null" ]
 then
 	IAM_USERS=""

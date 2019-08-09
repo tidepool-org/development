@@ -22,7 +22,7 @@ spec:
     ownerid: external-dns 
     rbac:
       create: true
-    logLevel: {{ .Values.global.logLevel | quote }}
+    logLevel: {{ .Values.global.cluster.logLevel | quote }}
     provider: aws
     awszonetype: public 
     aws:

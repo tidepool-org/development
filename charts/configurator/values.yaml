@@ -10,8 +10,6 @@ global:
     user: derrickburns                          # your GitHub user name
     push: false                                 # whether to push the completed repo to GitHub
     token: ""                                   # a GitHub token that allows repo read/write access  
-  logLevel: debug                               # the default log level for all services
-  iamUsers: "benderr-cli lennartgoedhart-cli""  # the list of IAM users to provide master cluster access-
   cluster:
     name: "badass"                              # the name of the cluster
     kubeconfig: ""                              # place to put KUBECONFIG, default: $CLUSTER_DIR/kubeconfig.yaml
@@ -24,7 +22,9 @@ global:
       desiredCapacity: 3                        # initial capacity of auto scaling group of workers
       minSize: 1                                # minimum size of auto scaling group of workers
       maxSize: 10                               # maximum size of auto scaling group of workers
-  hostnames: []                                 # list of hosts to publish to DNS
+    logLevel: debug                               # the default log level for all services
+    iamUsers: "benderr-cli lennartgoedhart-cli""  # the list of IAM users to provide master cluster access-
+    hostnames: []                                 # list of hosts to publish to DNS
 sumologic:
   enabled: false
   secrets:

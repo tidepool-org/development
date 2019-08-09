@@ -32,7 +32,7 @@ spec:
         hostPath: /etc/pki/ca-trust/extracted/pem
         readOnly: true
       log:
-        level: {{ .Values.global.logLevel | quote }}
+        level: {{ .Values.global.cluster.logLevel | quote }}
     
     server:
       image:
@@ -61,5 +61,5 @@ spec:
         assume-role-arn: {{ include "charts.kiam.arn" . }}
       useHostNetwork: true
       log:
-        level: {{ .Values.global.logLevel | quote }}
+        level: {{ .Values.global.cluster.logLevel | quote }}
 {{ end }}

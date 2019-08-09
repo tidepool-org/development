@@ -72,8 +72,8 @@ cd environments
 for ENVIRONMENT in $ENVIRONMENTS
 do
   mkdir -p $ENVIRONMENT
-  external_secret <(helm template -f ${VALUES_FILE} --set global.secrets.enabled=true  --namespace $ENVIRONMENT \
-	  ${TIDEPOOL_CHART_DIR}) dryrun ${CLUSTER_NAME} encoded  | yq 'filter(.kind == "Secret")' >$ENVIRONMENT/external-secrets.yaml
+  yq read ${VALUES_FILE} "env."+$ENVIRONMENT >/tmp/$ENVIRONMENT
+  generate_external_secrets $ENVIRONMENT /tmp/$ENVIRONMENT > $ENVIRONMENT/external-secrets.yaml
   helm template -f ${VALUES_FILE} ${TIDEPOOL_CHART_DIR} | yq 'filter(.kind == "Namespace")' > $ENVIRONMENT/namespace.yaml
   helm template -f ${VALUES_FILE} ${TIDEPOOL_CHART_DIR} | yq 'filter(.kind == "ConfigMap")' > $ENVIRONMENT/configmaps.yaml
 done
