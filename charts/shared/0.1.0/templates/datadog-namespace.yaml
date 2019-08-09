@@ -1,4 +1,4 @@
-{{ if .Values.datadogAgent.enabled }}
+{{ if .Values.datadog.enabled }}
 ---
 apiVersion: v1
 kind: Namespace

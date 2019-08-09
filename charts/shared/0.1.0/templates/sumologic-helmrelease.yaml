@@ -1,4 +1,4 @@
-{{ if .Values.sumologicFluentd.enabled }}
+{{ if .Values.sumologic.enabled }}
 ---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
@@ -13,7 +13,7 @@ spec:
     {{- .Values.sumologicFluentd.chart | toYaml | nindent 4 }}
   values:
     sumologic:
-      collectorUrlExistingSecret:  sumologic
+      collectorUrlExistingSecret:  {{ .Values.sumologic.secretName | default "sumologic" }}
       sourceCategoryPrefix: {{ .Values.global.cluster.name }}
       readFromHead: false
     rbac:

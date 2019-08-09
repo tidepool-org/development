@@ -33,11 +33,14 @@ externalDNS:
   tag: latest
 
 fluxcloud:
-  enabled: true
+  enabled: false
   chart:
     git: git@github.com:tidepool-org/development
     path: charts/fluxcloud/0.1.0
     ref: k8s
+  secretName: ""
+  secrets:
+    url: ""
   slack:
     username: "derrickburns"
 
@@ -82,19 +85,26 @@ reloader:
     path: deployments/kubernetes/chart/reloader
     ref: master
 
-sumologicFluentd:
-  enabled: true
+sumologic:
+  enabled: false
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
     name: sumologic-fluentd
     version: 1.1.0
+  secretName: ""
+  secrets:
+    collectorUrl: ""
 
-datadogAgent:
-  enabled: true
+datadog:
+  enabled: false
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com/
     name: datadog
     version: 1.31.11
+  secretName: ""
+  secrets:
+    apiKey: ""
+    appKey: ""
 
 kubeStateMetrics:
   enabled: true
