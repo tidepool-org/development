@@ -13,7 +13,6 @@ global:
   hosts:
     default:
       protocol: http                                                  # the protocol to use for signup emails
-      host: localhost                                                 # a valid DNS name[:port] for the service
     http:                                                            
       enabled: true
       port: "8080"                                                    # default HTTP port - must be quoted
