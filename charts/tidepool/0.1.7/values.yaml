@@ -21,8 +21,6 @@ global:
       create: false                               # whether to create the HPAs
     secrets:
       create: true                                # whether to create the secrets
-    configmaps:
-      create: true                                # whether to create the configmaps
     hosts:
       default:
         protocol: http                            # the protocol to use for signup emails
