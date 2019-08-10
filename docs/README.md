@@ -42,7 +42,7 @@ In order to sail through this installation, we presume the following:
 * you are familiar with core [Kubernetes](https://kubernetes.io/) concepts; and,
 * you are familiar with [Helm, the Kubernetes package manager](https://helm.sh/).
 
-In addition, you should make yourself familiar with the base [Tidepool Helm Chart](https://github.com/tidepool-org/development/tree/k8s/charts/tidepool/0.1.6).
+In addition, you should make yourself familiar with the base [Tidepool Helm Chart](https://github.com/tidepool-org/development/tree/k8s/charts/tidepool/0.1.7).
 This is suitable for installing Tidepool on a local development environment.
 
 ## Ancillary Services
