@@ -88,8 +88,9 @@ helm install --name my-release --set gloo.crds.create=false .
 
 The following tables lists the configurable parameters of the Ambassador chart and their default values.
 
-| Parameter                                                | Description                                                                                  | Default                                               |
 
+| Parameter             | Description   | Default   |
+|-----------------------|--------------|-------------------------------------------------------|
 | `auth.deployment.image` | auth Docker image | `` |
 | `auth.service.port`                                      | Auth service container port                                                                  | `9222`                                                |
 | `blip.deployment.image` | blip Docker image | `` |
@@ -112,7 +113,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `dexcom.secret.ClientSecret`                                         | Oauth2 client secret | `false`                                               |
 | `dexcom.secret.StateSalt`                                         | Oauth2 state salt | `false`                                               |
 | `export.deployment.image` | export Docker image | `` |
-| `export.secret.SessionEncryptionKey | session encryption key | `` |
+| `export.secret.SessionEncryptionKey` | session encryption key | `` |
 | `export.service.port`                                    | Export service container port                                                                | `9300`                                                |
 | `externalDNS.enabled` | whether to use external-dns to publish DNS aliases | `false` |
 | `externalDNS.hostnames` | list of DNS aliases to publish | `false` |
@@ -211,7 +212,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `userdata.secret.UserPasswordSalt` | user password salt | `` |
 | `userdata.secret.UserIdSalt` | user id salt | `` |
 | `userdata.secret.GroupIdEncryptionKey` | group id encryption key| `` |
-|----------------------------------------------------------|----------------------------------------------------------------------------------------------|-------------------------------------------------------|
+
 
 
 ### Specifying Values
