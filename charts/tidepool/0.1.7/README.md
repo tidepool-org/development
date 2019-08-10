@@ -89,74 +89,129 @@ helm install --name my-release --set gloo.crds.create=false .
 The following tables lists the configurable parameters of the Ambassador chart and their default values.
 
 | Parameter                                                | Description                                                                                  | Default                                               |
-|----------------------------------------------------------|----------------------------------------------------------------------------------------------|-------------------------------------------------------|
-| `global.cluster.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
+
+| `auth.deployment.image` | auth Docker image | `` |
+| `auth.service.port`                                      | Auth service container port                                                                  | `9222`                                                |
+| `blip.deployment.image` | blip Docker image | `` |
+| `blip.service.port`                                      | Blip service container port                                                                  | `3000`                                                |
+| `blob.deployment.env.directory`                                         | Directory to use when storing blobs on file storage                                          | `_data/blobs`                                         |
+| `blob.deployment.env.prefix`                                            | File prefix to use when storing blobs on file storage                                        | `blobs`                                               |
+| `blob.deployment.image` | blob Docker image | `` |
+| `blob.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
+| `blob.service.port`                                      | Blob service container port                                                                  | `9225`                                                |
+| `carelink.enabled`                                       | Enable carelink                                                                              | `false`                                               |
+| `carelink.secret.CareLinkSalt`                                       | Carelink salt | `false`                                               |
+| `data.deployment.image` | data Docker image | `` |
+| `data.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
+| `data.service.port`                                      | Data service container port                                                                  | `9220`                                                |
+| `datadog.enabled` | whether to send data to Datadog | `false` |
+| `datadog.secret.APIKey` |Datadog API key | `` |
+| `datadog.secret.AppKey` |Datadog Application key | `` |
+| `dexcom.enabled`                                         | Enable dexcom data downloading                                                               | `false`                                               |
+| `dexcom.secret.ClientId`                                  | Oauth2 client id | ``                                               |
+| `dexcom.secret.ClientSecret`                                         | Oauth2 client secret | `false`                                               |
+| `dexcom.secret.StateSalt`                                         | Oauth2 state salt | `false`                                               |
+| `export.deployment.image` | export Docker image | `` |
+| `export.secret.SessionEncryptionKey | session encryption key | `` |
+| `export.service.port`                                    | Export service container port                                                                | `9300`                                                |
+| `externalDNS.enabled` | whether to use external-dns to publish DNS aliases | `false` |
+| `externalDNS.hostnames` | list of DNS aliases to publish | `false` |
+| `fluxcloud.enabled` | whether to enable Fluxcloud to send notifications to Slack | `false` |
+| `fluxcloud.secret.URL` | Slack webhook URL | `` |
+| `gatekeeper.deployment.image` | gatekeeper Docker image | `` |
+| `gatekeeper.service.port`                                | Gatekeeper service container port                                                            | `9123`                                                |
+| `global.cluster.mesh.enabled`                            | Whether the service mesh is enabled.                                                         | ``                                                    |
+| `global.cluster.mesh.name`                               | The name service mesh.                                                                       | ``                                                    |
 | `global.cluster.name`                                    | The name of the K8s cluster that hosts this env.                                             | ``                                                    |
+| `global.cluster.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
+| `global.environment.hosts.default.protocol`                          | Protocol to use for email verification.                                                      | ``                                                    |
+| `global.environment.hosts.http.dnsNames`                             | List of host to listen to                                                                    | `localhost`                                           |
+| `global.environment.hosts.http.enabled`                             |  Whether to provide HTTP access | `true`                                           |
+| `global.environment.hosts.http.port`                             |  Port to use for HTTP traffic | `8080`                                           |
+| `global.environment.hosts.https.certificateIssuer`                   | Name of TLS certificate issuer, e.g. `letsencrypt-stating`, `letsencrypt-production`         | ``                                                    |
+| `global.environment.hosts.https.dnsNames`                            | List of Subject Alternative Names to use                                                     | `[]`                                                  |
+| `global.environment.hosts.https.enabled`                             |  Whether to provide HTTPS access | `false`                                           |
+| `global.environment.hosts.https.issuerKind`                          | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer`                              | `ClusterIssuer`                                       |
+| `global.environment.hosts.https.port`                             |  Port to use for HTTPS traffic | `8443`                                           |
+| `global.environment.hpa.create`                                      | If true, create a horizontal pod autoscalers for all pods                                    | 'false'                                               |
+| `global.environment.namespace.create`                                | If true, create namespace                                                                    | `false`                                               |
+| `global.environment.resources.limits.cpu`                            | CPU Limit                                                                                    | `200m`                                                |
+| `global.environment.resources.limits.memory`                         | Memory Limit                                                                                 | `128Mi`                                               |
+| `global.environment.resources.requests.cpu`                          | CPU Limit                                                                                    | `50m`                                                 |
+| `global.environment.resources.requests.memory`                       | Memory Limit                                                                                 | `32Mi`                                                |
+| `global.environment.secrets.create`                                  | If true, create secrets manifests                                                            | `true`                                                |
+| `global.environment.securityContext`                                 | Set Security Context for pods                                                                | `200m`                                                |
+| `global.environment.store.type`                                      | If `s3`, store blob/image data in Amazon S3. If `file` store blob/image data in local files. | `file`                                                |
 | `global.environment`                                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
 | `global.fullnameOverride`                                |                                                                                              | ``                                                    |
 | `global.gateway.proxy.name`                              | Name of the API gateway proxy                                                                | `gateway-proxy-v2`                                    |
 | `global.gateway.proxy.namespace`                         | Namespace of the API gateway proxy                                                           | `gloo-system`                                         |
-| `global.hosts.default.protocol`                          | Protocol to use for email verification.                                                      | ``                                                    |
-| `global.hosts.http.dnsNames`                             | List of host to listen to                                                                    | `localhost`                                           |
-| `global.hosts.https.dnsNames`                            | List of Subject Alternative Names to use                                                     | `[]`                                                  |
-| `global.hosts.https.certificateIssuer`                   | Name of TLS certificate issuer, e.g. `letsencrypt-stating`, `letsencrypt-production`         | ``                                                    |
-| `global.hosts.https.issuerKind`                          | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer`                              | `ClusterIssuer`                                       |
-| `global.environment.hpa.create`                                      | If true, create a horizontal pod autoscalers for all pods                                    | 'false'                                               |
-| `global.namespace.create`                                | If true, create namespace                                                                    | `false`                                               |
-| `global.secrets.create`                                  | If true, create secrets manifests                                                            | `true`                                                |
-| `global.nameOverride`                                    | If non-empty, Helm chart name to use                                                         | ``                                                    |
-| `global.linkerd`                                         | If `enabled` use the `linkerd` service mesh                                                  | `disabled`                                            |
+| `global.gateway.proxy.type`                              | CluserIP or LoadBalancer                                                                     | `LoadBalancer`                                        |
 | `global.mongodb.enabled`                                 | Whether to include an mongodb with this installation                                         | `true`                                                |
-| `global.ports.auth`                                      | Auth service container port                                                                  | `9222`                                                |
-| `global.ports.blip`                                      | Blip service container port                                                                  | `3000`                                                |
-| `global.ports.blob`                                      | Blob service container port                                                                  | `9225`                                                |
-| `global.ports.data`                                      | Data service container port                                                                  | `9220`                                                |
-| `global.ports.export`                                    | Export service container port                                                                | `9300`                                                |
-| `global.ports.gatekeeper`                                | Gatekeeper service container port                                                            | `9123`                                                |
-| `global.ports.highwater`                                 | Highwater service container port                                                             | `9191`                                                |
-| `global.ports.image`                                     | Image service container port                                                                 | `9226`                                                |
-| `global.ports.jellyfish`                                 | Jellyfish service container port                                                             | `9122`                                                |
-| `global.ports.messageapi`                                | Message-Api service container port                                                           | `9119`                                                |
-| `global.ports.notification`                              | Notification service container port                                                          | `9223`                                                |
-| `global.ports.seagull`                                   | Seagull service container port                                                               | `9120`                                                |
-| `global.ports.seagull`                                   | Seagull service container port                                                               | `9120`                                                |
-| `global.ports.shoreline`                                 | Shoreline service container port                                                             | `9107`                                                |
-| `global.ports.task`                                      | Task service container port                                                                  | `9224`                                                |
-| `global.ports.tidewhisperer`                             | Tide whisperer service container port                                                        | `9127`                                                |
-| `global.ports.user`                                      | User service container port                                                                  | `9221`                                                |
-| `global.provider.dexcom.authorize.url`                   | The URL to authorization from Dexcom                                                         | `https://api.dexcom.com/v1/oauth2/login?prompt=login` |
-| `global.provider.dexcom.client.url`                      | The Dexcom client API URL                                                                    | `https://api.dexcom.com`                              |
-| `global.provider.dexcom.token.url`                       | The URL to retrieve an Dexcom Oauth2 token                                                   | `https://api.dexcom.com/v1/oauth2/token`              |
-| `global.resources.limits.cpu`                            | CPU Limit                                                                                    | `200m`                                                |
-| `global.resources.limits.memory`                         | Memory Limit                                                                                 | `128Mi`                                               |
-| `global.resources.requests.cpu`                          | CPU Limit                                                                                    | `50m`                                                 |
-| `global.resources.requests.memory`                       | Memory Limit                                                                                 | `32Mi`                                                |
-| `global.securityContext`                                 | Set Security Context for pods                                                                | `200m`                                                |
-| `global.store.type`                                      | If `s3`, store blob/image data in Amazon S3. If `file` store blob/image data in local files. | `file`                                                |
+| `global.nameOverride`                                    | If non-empty, Helm chart name to use                                                         | ``                                                    |
 | `gloo.enabled`                                           | Whether to include an API Gateway with this installation                                     | `true`                                                |
-| `gloo.gatewayProxies.gateway-proxy-v2.service.httpPort`  | The http port to listen to.                                                                  | `80`                                                  |
-| `gloo.gatewayProxies.gateway-proxy-v2.service.httpsPort` | The https port to listen to.                                                                 | ``                                                    |
-| `gloo.gatewayProxies.gateway-proxy-v2.service.type`      | The Service type to expose. If `LoadBalancer`, then a LoadBalancer will be allocated.        | `ServiceIP`                                           |
-| `mongo.addresses`                                        | Comma-separated list of Mongo host[:port]                                                    | `mongodb`                                             |
-| `mongo.optParams`                                        | Additional Mongo connection params                                                           | ``                                                    |
-| `mongo.secretName`                                       | Name of the K8s secret containing Mongo connection parameters                                | ``                                                    |
-| `mongo.ssl`                                              | If true, use SSL on Mongo connection                                                         | `false`                                               |
-| `mongo.username`                                         | If non-empty, Mongo username                                                                 | ``                                                    |
-| `mongo.password`                                         | If non-empty, Mongo password                                                                 | ``||                                                  |
-| `gloo.{name}`                                            | See [gloo values](https://github.com/solo-io/gloo/tree/master/install/helm/gloo)             | ``                                                    |
-| `blob.directory`                                         | Directory to use when storing blobs on file storage                                          | `_data/blobs`                                         |
-| `blob.prefix`                                            | File prefix to use when storing blobs on file storage                                        | `blobs`                                               |
-| `hydrophone.bucket`                                      | S3 bucket where email templates are stored                                                   | `tidepool-{env}`                                      |
-| `hydrophone.fromAddress`                                 | Email address to use for replies to sigups                                                   | `Tidepool <noreply@tidepool.org>`                     |
-| `image.directory`                                        | Directory to use when storing images on file storage                                         | `_data/image`                                         |
-| `image.prefix`                                           | File prefix to use when storing images on file storage                                       | `images`                                              |
-| `messageapi.window`                                      |                                                                                              | `21`                                                  |
+| `gloo.{name}`  | Values for Gloo API gateway.                                                                  | ``                                                  |
+| `highwater.deployment.image` | highwater Docker image | `` |
+| `highwater.service.port`                                 | Highwater service container port                                                             | `9191`                                                |
+| `hydrophone.deployment.env.bucket`                                      | S3 bucket where email templates are stored                                                   | `tidepool-{env}`                                      |
+| `hydrophone.deployment.env.fromAddress`                                 | Email address to use for replies to sigups                                                   | `Tidepool <noreply@tidepool.org>`                     |
+| `hydrophone.deployment.image` | hydrophone Docker image | `` |
+| `image.deployment.env.directory`                                        | Directory to use when storing images on file storage                                         | `_data/image`                                         |
+| `image.deployment.env.prefix`                                           | File prefix to use when storing images on file storage                                       | `images`                                              |
+| `image.deployment.image` | image Docker image | `` |
+| `image.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
+| `image.service.port`                                     | Image service container port                                                                 | `9226`                                                |
+| `jellyfish.deployment.image` | jellyfish Docker image | `` |
 | `jellyfish.enabled`                                      | Enable jellyfish service if true                                                             | `true`                                                |
+| `jellyfish.service.port`                                 | Jellyfish service container port                                                             | `9122`                                                |
+| `kissmetrics.enabled` | whether to use kissmetrics | `false` |
+| `kissmetrics.secret.KissmetricsAPIKey` | Kissmetrics API Key | `` |
+| `kissmetrics.secret.KissmetricsToken` | Kissmetrics Token | `` |
+| `kissmetrics.secret.UCSFKissmetricsAPIKey` | UCSF Kissmetrics Token | `` |
+| `kissmetrics.secret.UCSFWhitelist` | UCSF metrics whitelist | `` |
+| `mailchimp.enabled` | whether to use Mailchimp | `false` |
+| `mailchimp.secret.MailchimpClinicLists` | clinic mailing lists| `` |
+| `mailchimp.secret.MailchimpURL` | Mailchimp URL | `` |
+| `mailchimp.secret.MailchimpPersonalLists` | personal mailing lists| `` |
+| `mailchimp.secret.MailchimpApiKey` | Mailchimp API key | `` |
+| `messageapi.deployment.env.window`                                      |                                                                                              | `21`                                                  |
+| `messageapi.deployment.image` | message-api Docker image | `` |
+| `messageapi.service.port`                                | Message-Api service container port                                                           | `9119`                                                |
+| `migrations.deployment.image` | migrations Docker image | `` |
 | `migrations.enabled`                                     | Enable migrations service if true                                                            | `true`                                                |
-| `carelink.enabled`                                       | Enable carelink                                                                              | `false`                                               |
-| `dexcom.enabled`                                         | Enable dexcom data downloading                                                               | `false`                                               |
+| `mongo.secret.Addresses`                                        | Comma-separated list of Mongo host[:port]                                                    | `mongodb`                                             |
+| `mongo.secret.OptParams`                                        | Additional Mongo connection params                                                           | ``                                                    |
+| `mongo.secret.Password`                                         | If non-empty, Mongo password                                                                 | `` ||                                                  |
+| `mongo.secret.Scheme`                                        | Mongo DB scheme, either `mongodb` or `mongodb+srv`                                              | `mongodb`                                             |
+| `mongo.secret.Tls`                                              | If true, use SSL on Mongo connection                                                         | `false`                                               |
+| `mongo.secret.Username`                                         | If non-empty, Mongo username                                                                 | ``                                                    |
 | `nosqlclient.enabled`                                    | Enable nosqlclient                                                                           | `false`                                               |
+| `notification.deployment.image` | notification Docker image | `` |
+| `notification.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
+| `notification.service.port`                              | Notification service container port                                                          | `9223`                                                |
+| `seagull.deployment.image` | seagull Docker image | `` |
+| `seagull.service.port`                                   | Seagull service container port                                                               | `9120`                                                |
+| `seagull.service.port`                                   | Seagull service container port                                                               | `9120`                                                |
+| `sercer.secret.ServiceAuth` | service authorization |  `` |
+| `shoreline.deployment.image` | shoreline Docker image | `` |
+| `shoreline.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
+| `shoreline.service.port`                                 | Shoreline service container port                                                             | `9107`                                                |
+| `sumologic.enabled` | whether to use Sumologic | `false` |
+| `sumologic.secret.CollectorUrl` |  Sumologic collector URL | `false` |
+| `task.deployment.image` | task Docker image | `` |
+| `task.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
+| `task.service.port`                                      | Task service container port                                                                  | `9224`                                                |
+| `tidewhisperer.deployment.image` | tidewhisperer Docker image | `` |
+| `tidewhisperer.service.port`                             | Tide whisperer service container port                                                        | `9127`                                                |
+| `tools.deployment.image` | tools Docker image | `` |
 | `tools.enabled`                                          | Enable tools service if true                                                                 | `true`                                                |
+| `user.deployment.image` | user Docker image | `` |
+| `user.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
+| `user.service.poert`                                      | User service container port                                                                  | `9221`                                                |
+| `userdata.secret.UserPasswordSalt` | user password salt | `` |
+| `userdata.secret.UserIdSalt` | user id salt | `` |
+| `userdata.secret.GroupIdEncryptionKey` | group id encryption key| `` |
+|----------------------------------------------------------|----------------------------------------------------------------------------------------------|-------------------------------------------------------|
 
 
 ### Specifying Values
@@ -186,7 +241,7 @@ N.B If you are running Mongo on your local laptop and typically access it using 
 
 The Tidepool web service may be installed under multiple namespaces within the same cluster (using different host names).  However, the Gloo API Gateway may only be installed once.  You must disable the installation of Gloo for subsequent installations by setting the value `gloo.enabled` to `false`.
 
-You must also set different host names by setting the values under `global.hosts`
+You must also set different host names by setting the values under `global.environment.hosts`
 
 ### Secrets
 
