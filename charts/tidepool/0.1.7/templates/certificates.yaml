@@ -1,4 +1,4 @@
-{{ $spec := .Values.global.hosts.https }}
+{{ $spec := .Values.global.environment.hosts.https }}
 {{ if and $spec.enabled $spec.certificateIssuer }}
 ---
 #file: {{ include "charts.default.host" . }}-certificate.yaml

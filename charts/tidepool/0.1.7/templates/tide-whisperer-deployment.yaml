@@ -11,7 +11,7 @@ metadata:
   name: tide-whisperer
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "tidepool-server-secret,mongo,auth"
+    secret.reloader.stakater.com/reload: "server,mongo,auth"
 spec:
   selector:
     matchLabels:
@@ -27,7 +27,7 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        linkerd.io/inject: "{{ .Values.global.linkerd }}"
+        linkerd.io/inject: "{{ .Values.global.cluster.mesh.enabled }}"
     spec:
       initContainers:
       {{ include "charts.init.shoreline" . }}
@@ -39,7 +39,7 @@ spec:
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: tidepool-server-secret
+              name: server
               key: ServiceAuth
         - name: AUTH_SECRET
           valueFrom:
@@ -50,18 +50,18 @@ spec:
           value: |
             {
                 "auth": {
-                  "address": "http://auth:{{.Values.global.ports.auth}}",
+                  "address": "http://auth:{{.Values.auth.service.port}}",
                   "userAgent": "Tidepool-TideWhisperer"
                 },
-                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.global.ports.gatekeeper}}"]}},
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.gatekeeper.service.port}}"]}},
                 "hakken": {
                   "host": "hakken",
                   "skipHakken": true
                   },
-                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.global.ports.seagull}}"]}},
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.seagull.service.port}}"]}},
                 "shoreline": {
                     "name": "tide-whisperer",
-                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:{{.Values.global.ports.shoreline}}"]},
+                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:{{.Values.shoreline.service.port}}"]},
                     "tokenRefreshInterval": "1h"
                 }
             }
@@ -76,23 +76,23 @@ spec:
                     "minimum": 1
                 },
                 "service": {
-                    "host": "localhost:{{.Values.global.ports.tidewhisperer}}",
+                    "host": "localhost:{{.Values.tidewhisperer.service.port}}",
                     "protocol": "http",
                     "service": "tide-whisperer"
                 }
             }
-        image: "{{ .Values.tidewhisperer.image }}"
+        image: "{{ .Values.tidewhisperer.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.global.ports.tidewhisperer}}
+            port: {{.Values.tidewhisperer.service.port}}
           initialDelaySeconds: 30
           periodSeconds: 10
         name: tide-whisperer
         ports:
-        - containerPort: {{.Values.global.ports.tidewhisperer}}
+        - containerPort: {{.Values.tidewhisperer.service.port}}
         environment.resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
-        environment.securityContext:
+        securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
       restartPolicy: Always

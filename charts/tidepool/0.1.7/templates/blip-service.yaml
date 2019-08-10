@@ -13,7 +13,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -23,7 +23,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -33,7 +33,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}      
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}}      
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -43,7 +43,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -53,7 +53,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -63,7 +63,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -73,7 +73,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -83,7 +83,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -93,7 +93,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}      
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}}      
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -103,7 +103,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}} 
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}} 
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -113,7 +113,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -123,7 +123,7 @@ metadata:
       rewrite: ""
       method: "POST"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -133,7 +133,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}
+      service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}}
   labels:
     app: blip
     app.kubernetes.io/name: {{ include "charts.name" . }}
@@ -145,8 +145,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: {{.Values.global.ports.blip}}
-    targetPort: {{.Values.global.ports.blip}}
+    port: {{.Values.blip.service.port}}
+    targetPort: {{.Values.blip.service.port}}
   selector:
     app: blip
     app.kubernetes.io/name: {{ include "charts.name" . }}

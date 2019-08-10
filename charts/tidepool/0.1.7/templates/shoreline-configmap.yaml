@@ -1,10 +1,15 @@
-{{ if .Values.global.configmaps.create }}
+{{ if .Values.global.environment.configmaps.create }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: shoreline
   namespace: {{ .Release.Namespace }}
+  labels:
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 data:
   ClinicDemoUserId: {{ .Values.shoreline.configmap.ClinicDemoUserId | quote }}
 {{- end }}

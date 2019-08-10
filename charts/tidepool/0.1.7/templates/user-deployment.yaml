@@ -11,7 +11,7 @@ metadata:
   name: user
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "tidepool-server-secret,mongo,user,shoreline,gatekeeper"
+    secret.reloader.stakater.com/reload: "server,mongo,user,shoreline,gatekeeper"
 spec:
   selector:
     matchLabels:
@@ -27,7 +27,7 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        linkerd.io/inject: "{{ .Values.global.linkerd }}"
+        linkerd.io/inject: "{{ .Values.global.cluster.mesh.enabled }}"
     spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}
@@ -42,13 +42,13 @@ spec:
               name: user
               key: ServiceAuth
         - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.global.ports.user}}
+          value: :{{.Values.user.service.port}}
         - name: TIDEPOOL_USER_STORE_DATABASE
           value: user
         - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
           valueFrom:
             secretKeyRef:
-              name: shoreline
+              name: userdata
               key: UserPasswordSalt 
         - name: TIDEPOOL_PROFILE_STORE_DATABASE
           value: seagull
@@ -57,7 +57,7 @@ spec:
         - name: TIDEPOOL_PERMISSION_STORE_SECRET
           valueFrom:
             secretKeyRef:
-              name: gatekeeper
+              name: userdata
               key: GroupIdEncryptionKey
         - name: TIDEPOOL_MESSAGE_STORE_DATABASE
           value: messages
@@ -65,13 +65,13 @@ spec:
           value: user
         - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
           value: confirm
-        image: "{{ .Values.user.image }}"
-        {{ template "charts.platform.probes" .Values.global.ports.user }}
+        image: "{{ .Values.user.deployment.image }}"
+        {{ template "charts.platform.probes" .Values.user.service.port }}
         name: user
         ports:
-        - containerPort: {{.Values.global.ports.user}}
+        - containerPort: {{.Values.user.service.port}}
         environment.resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
-        environment.securityContext:
+        securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
       restartPolicy: Always

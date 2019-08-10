@@ -37,25 +37,25 @@ spec:
         - name: DEBUG_LEVEL
           value: debug
         - name: HTTP_PORT
-          value: "{{ .Values.global.ports.export }}"
+          value: "{{ .Values.export.service.port }}"
         - name: SESSION_SECRET
           valueFrom:
             secretKeyRef:
               name: export
               key: SessionEncryptionKey
-        image: "{{ .Values.export.image }}"
+        image: "{{ .Values.export.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /export/status
-            port: {{.Values.global.ports.export}}
+            port: {{ .Values.export.service.port }}
           initialDelaySeconds: 30
           periodSeconds: 10
         name: export
         ports:
-        - containerPort: {{.Values.global.ports.export}}
+        - containerPort: {{.Values.export.service.port}}
         environment.resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
-        environment.securityContext:
+        securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
       restartPolicy: Always
 {{ end }}

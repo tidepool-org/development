@@ -13,7 +13,7 @@ metadata:
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
       method_regex: true
       rewrite: ""
-      service: gatekeeper.{{ .Release.Namespace }}:{{.Values.global.ports.gatekeeper}}
+      service: gatekeeper.{{ .Release.Namespace }}:{{.Values.gatekeeper.service.port}}
   labels:
     app: gatekeeper
     helm.sh/chart: {{ include "charts.chart" . }}
@@ -25,8 +25,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: {{.Values.global.ports.gatekeeper}}
-    targetPort: {{.Values.global.ports.gatekeeper}}
+    port: {{.Values.gatekeeper.service.port}}
+    targetPort: {{.Values.gatekeeper.service.port}}
   selector:
     app: gatekeeper
     app.kubernetes.io/name: {{ include "charts.name" . }}

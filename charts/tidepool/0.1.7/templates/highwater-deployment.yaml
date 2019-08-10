@@ -10,7 +10,7 @@ metadata:
   name: highwater
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "tidepool-server-secret,highwater"
+    secret.reloader.stakater.com/reload: "server,highwater"
 spec:
   selector:
     matchLabels:
@@ -26,7 +26,7 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        linkerd.io/inject: "{{ .Values.global.linkerd }}"
+        linkerd.io/inject: "{{ .Values.global.cluster.mesh.enabled }}"
     spec:
       containers:
       - env:
@@ -59,37 +59,37 @@ spec:
               key: UCSFWhitelist
               optional: true
         - name: NODE_ENV
-          value: '{{.Values.global.environment}}'
+          value: '{{.Values.global.environment.nodeEnvironment}}'
         - name: PORT
-          value: "{{.Values.global.ports.highwater}}"
+          value: "{{.Values.highwater.service.port}}"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SALT_DEPLOY
           valueFrom:
             secretKeyRef:
-              name: highwater
+              name: userdata
               key: UserIdSalt
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: tidepool-server-secret
+              name: server
               key: ServiceAuth
         - name: SERVICE_NAME
           value: highwater
         - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
-        image: "{{ .Values.highwater.image }}"
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
+        image: "{{ .Values.highwater.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.global.ports.highwater}}
+            port: {{.Values.highwater.service.port}}
           initialDelaySeconds: 3
           periodSeconds: 10
         name: highwater
         ports:
-        - containerPort: {{.Values.global.ports.highwater}}
+        - containerPort: {{.Values.highwater.service.port}}
         environment.resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
-        environment.securityContext:
+        securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
       restartPolicy: Always

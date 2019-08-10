@@ -11,7 +11,7 @@ metadata:
   name: blob
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "tidepool-server-secret,mongo,blob"
+    secret.reloader.stakater.com/reload: "server,mongo,blob"
 spec:
   selector:
     matchLabels:
@@ -24,7 +24,7 @@ spec:
     metadata:
       annotations:
         iam.amazonaws.com/role: "{{ include "charts.worker.role" . }}"
-        linkerd.io/inject: "{{ .Values.global.linkerd }}"
+        linkerd.io/inject: "{{ .Values.global.cluster.mesh.enabled }}"
       labels:
         app: blob
         app.kubernetes.io/name: {{ include "charts.name" . }}
@@ -43,22 +43,22 @@ spec:
               name: blob
               key: ServiceAuth
         - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.global.ports.blob}}
+          value: :{{.Values.blob.service.port}}
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.blob.directory}}'
+          value: '{{.Values.blob.deployment.env.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
           value: '{{include "charts.blob.s3.bucket" .}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.blob.prefix}}'
+          value: '{{.Values.blob.deployment.env.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.global.store.type}}'
-        image: "{{ .Values.blob.image }}"
-        {{ template "charts.platform.probes" .Values.global.ports.blob}}
+          value: '{{.Values.global.environment.store.type}}'
+        image: "{{ .Values.blob.deployment.image }}"
+        {{ template "charts.platform.probes" .Values.blob.service.port}}
         name: blob
         ports:
-        - containerPort: {{.Values.global.ports.blob}}
+        - containerPort: {{.Values.blob.service.port}}
         environment.resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
-        environment.securityContext:
+        securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
       restartPolicy: Always

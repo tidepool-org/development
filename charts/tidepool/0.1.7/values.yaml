@@ -14,6 +14,7 @@ global:
       name: linkerd
       enabled: false
   gateway:                                        # gateway service                  
+    type: "LoadBalancer"
     proxy:                                                            
       name: gateway-proxy-v2                                             
       namespace: gloo-system  
@@ -44,7 +45,7 @@ global:
       #type: s3                                   # store non-Mongo data in S3
       type: file                                  # store non-Mongo data on file system
     linkerd: disabled
-    environment: production                       #
+    nodeEnvironment: production                   #
     resources:                                    # the resources for each service
       limits:
         cpu: 200m
@@ -52,6 +53,10 @@ global:
       requests:
         cpu: 50m
         memory: 32Mi
+    hpa:
+      maxReplicas: 10
+      minReplicas: 1
+      targetCPUUtilizationPercentage: 50
     securityContext:                              # the security context for all services
       allowPrivilegeEscalation: false
       runAsNonRoot: true                          # we don't need root access
@@ -159,6 +164,8 @@ mongodb:
 
 # Tidepool services
 blip:
+  service: 
+    port: 3000
   deployment:
     image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
 export:
@@ -253,6 +260,11 @@ task:
     port: 9224 
   deployment:
     image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+    env:
+      queue:
+        delay: 5
+        workers: 5
+      
 user:
   secret:
     ServiceAuth: ""
@@ -284,7 +296,7 @@ shoreline:
       serverSecretName: "server"
   service:
     port: 9107
-tideWhisperer:
+tidewhisperer:
   deployment:
     image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
     env:

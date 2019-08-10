@@ -7,9 +7,9 @@ To learn more about the release, try:
   $ helm status {{ .Release.Name }}
   $ helm get {{ .Release.Name }}
 
-{{ if .Values.global.secrets.create }}
+{{ if .Values.global.environment.secrets.create }}
 The Tidepool services rely on various secrets to encrypt and decrypt
-data. You need to provide those secrets.
+data. You need to provide those secret.
 
 Some of those secrets are provided by or shared with third parties
 (e.g. Dexcom, Mailchimp, UCSF).  You need to supply these in the
@@ -27,11 +27,11 @@ to keep the same secrets from one installation to the next.
 
 You may generate secrets using this helm chart and save them to a file with:
 
-$ helm template -f values.yaml . | yq 'filter(.kind == "Secret")' >secrets.yaml
+$ helm template -f values.yaml . | yq 'filter(.kind == "Secret")' >secret.yaml
 
 To load the secret file, in the directory where you stored your secrets, run:
 
-  kubectl apply -f secrets.yaml
+  kubectl apply -f secret.yaml
 
 {{ end }}
 

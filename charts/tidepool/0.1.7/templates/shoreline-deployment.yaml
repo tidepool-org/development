@@ -11,7 +11,7 @@ metadata:
   name: shoreline
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "tidepool-server-secret,mongo,shoreline"
+    secret.reloader.stakater.com/reload: "server,mongo,shoreline"
     configmap.reloader.stakater.com/reload: "shoreline"
 spec:
   selector:
@@ -28,7 +28,7 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        linkerd.io/inject: "{{ .Values.global.linkerd }}"
+        linkerd.io/inject: "{{ .Values.global.cluster.mesh.enabled }}"
     spec:
       containers:
       - env:
@@ -62,7 +62,7 @@ spec:
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: tidepool-server-secret
+              name: server
               key: ServiceAuth
         - name: API_SECRET
           valueFrom:
@@ -73,7 +73,7 @@ spec:
         - name: SALT
           valueFrom:
             secretKeyRef:
-              name: shoreline
+              name: userdata
               key: UserPasswordSalt
               optional: true
         - name: VERIFICATION_SECRET
@@ -97,7 +97,7 @@ spec:
         - name: TIDEPOOL_SHORELINE_ENV
           value: |
             {
-                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.global.ports.gatekeeper}}"]}},
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.gatekeeper.service.port}}"]}},
                 "hakken": {
                   "host": "hakken",
                   "skipHakken": true
@@ -106,7 +106,7 @@ spec:
                     "metricsSource": "shoreline",
                     "metricsVersion": "v0.0.1",
                     "name": "highwater",
-                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.global.ports.highwater}}"]}
+                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.highwater.service.port}}"]}
                 }
             }
         - name: TIDEPOOL_SHORELINE_SERVICE
@@ -119,7 +119,7 @@ spec:
                     "expireDays": 14
                 },
                 "service": {
-                    "host": "localhost:{{.Values.global.ports.shoreline}}",
+                    "host": "localhost:{{.Values.shoreline.service.port}}",
                     "protocol": "http",
                     "service": "shoreline"
                 },
@@ -128,18 +128,18 @@ spec:
                     "tokenDurationSecs": 2592000
                 }
             }
-        image: "{{ .Values.shoreline.image }}"
+        image: "{{ .Values.shoreline.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.global.ports.shoreline}}
+            port: {{ .Values.shoreline.service.port }}
           initialDelaySeconds: 3
           periodSeconds: 10
         name: shoreline
         ports:
-        - containerPort: {{.Values.global.ports.shoreline}}
+        - containerPort: {{ .Values.shoreline.service.port }}
         environment.resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
-        environment.securityContext:
+        securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
       restartPolicy: Always

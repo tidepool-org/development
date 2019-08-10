@@ -14,7 +14,7 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: message-api.{{ .Release.Namespace }}:{{.Values.global.ports.messageapi}}
+      service: message-api.{{ .Release.Namespace }}:{{.Values.messageapi.service.port}}
   labels:
     app: message-api
     helm.sh/chart: {{ include "charts.chart" . }}
@@ -26,8 +26,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: {{.Values.global.ports.messageapi}}
-    targetPort: {{.Values.global.ports.messageapi}}
+    port: {{.Values.messageapi.service.port}}
+    targetPort: {{.Values.messageapi.service.port}}
   selector:
     app: message-api
     app.kubernetes.io/name: {{ include "charts.name" . }}

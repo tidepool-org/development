@@ -25,18 +25,18 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        linkerd.io/inject: "{{ .Values.global.linkerd }}"
+        linkerd.io/inject: "{{ .Values.global.cluster.mesh.enabled }}"
     spec:
       containers:
-      - image: "{{ .Values.blip.image }}"
+      - image: "{{ .Values.blip.deployment.image }}"
         env:
         - name: SKIP_HAKKEN
           value: "true"
         name: blip
         ports:
-        - containerPort: {{.Values.global.ports.blip}}
+        - containerPort: {{.Values.blip.service.port}}
         environment.resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
-        environment.securityContext:
+        securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
       restartPolicy: Always

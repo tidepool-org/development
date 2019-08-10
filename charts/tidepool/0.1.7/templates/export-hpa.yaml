@@ -1,4 +1,4 @@
-{{ if .Values.global.hpa.create }}
+{{ if .Values.global.environment.hpa.create }}
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -7,11 +7,11 @@ metadata:
   name: export
   namespace: {{ .Release.Namespace }}
 spec:
-  maxReplicas: {{ .Values.export.maxReplicas | default 10 }}
-  minReplicas: {{ .Values.export.minReplicas | default 1 }}
+  maxReplicas: {{ .Values.global.environment.hpa.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.global.environment.hpa.minReplicas | default 1 }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: export
-  targetCPUUtilizationPercentage: {{ .Values.export.targetCPUUtilizationPercentage | default 50 }}
+  targetCPUUtilizationPercentage: {{ .Values.global.environment.hpa.targetCPUUtilizationPercentage | default 50 }}
 {{ end }}

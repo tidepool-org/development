@@ -14,7 +14,7 @@ metadata:
       method_regex: true
       rewrite: "/"
       path_redirect: "false"
-      service: highwater.{{ .Release.Namespace }}:{{.Values.global.ports.highwater}}
+      service: highwater.{{ .Release.Namespace }}:{{.Values.highwater.service.port}}
   labels:
     app: highwater
     helm.sh/chart: {{ include "charts.chart" . }}
@@ -26,8 +26,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: {{.Values.global.ports.highwater}}
-    targetPort: {{.Values.global.ports.highwater}}
+    port: {{.Values.highwater.service.port}}
+    targetPort: {{.Values.highwater.service.port}}
   selector:
     app: highwater
     app.kubernetes.io/name: {{ include "charts.name" . }}

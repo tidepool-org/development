@@ -40,15 +40,15 @@ spec:
         - name: TIDEPOOL_PERMISSION_STORE_SECRET
           valueFrom:
             secretKeyRef:
-              name: gatekeeper
+              name: userdata
               key: GroupIdEncryptionKey
         - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
           value: data
-        image: "{{ .Values.tools.image }}"
+        image: "{{ .Values.tools.deployment.image }}"
         name: tools
         environment.resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
-        environment.securityContext:
+        securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
       restartPolicy: Always
 {{ end }}

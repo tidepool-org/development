@@ -11,7 +11,7 @@ metadata:
   name: hydrophone
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "tidepool-server-secret,mongo"
+    secret.reloader.stakater.com/reload: "server,mongo"
 spec:
   selector:
     matchLabels:
@@ -24,7 +24,7 @@ spec:
     metadata:
       annotations:
         iam.amazonaws.com/role: "{{ include "charts.worker.role" . }}"
-        linkerd.io/inject: "{{ .Values.global.linkerd }}"
+        linkerd.io/inject: "{{ .Values.global.cluster.mesh.enabled }}"
       labels:
         app: hydrophone
         app.kubernetes.io/name: {{ include "charts.name" . }}
@@ -38,14 +38,14 @@ spec:
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
-              name: tidepool-server-secret
+              name: server
               key: ServiceAuth
         - name: REGION
           value: {{.Values.global.cluster.region}}            
         - name: TIDEPOOL_HYDROPHONE_ENV
           value: |
             {
-                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.global.ports.gatekeeper}}"]}},
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.gatekeeper.service.port}}"]}},
                 "hakken": {
                   "host": "hakken",
                   "skipHakken": true
@@ -54,48 +54,48 @@ spec:
                     "metricsSource": "hydrophone",
                     "metricsVersion": "v0.0.1",
                     "name": "highwater",
-                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.global.ports.highwater}}"]}
+                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.highwater.service.port}}"]}
                 },
-                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.global.ports.seagull}}"]}},
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.seagull.service.port}}"]}},
                 "shoreline": {
                     "name": "hydrophone",
-                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:{{.Values.global.ports.shoreline}}"]},
+                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:{{.Values.shoreline.service.port}}"]},
                     "tokenRefreshInterval": "1h"
                 }
             }
         - name: PROTOCOL
-          value: "{{.Values.global.hosts.default.protocol}}"
+          value: "{{.Values.global.environment.hosts.default.protocol}}"
         - name: TIDEPOOL_HYDROPHONE_SERVICE
           value: |
             {
                 "hydrophone": {
-                    "assetUrl": {{ include "charts.hydrophone.s3.url" . | quote }},
-                    "webUrl": "{{ .Values.global.hosts.default.protocol }}://{{ .Values.global.hosts.default.host }}"
+                    "assetUrl": {{- include "charts.hydrophone.s3.url" . | quote }},
+                    "webUrl": {{- include "charts.host.external.tp" . | quote }} 
                 },
                 "mongo": {
                     "connectionString": ""
                 },
                 "service": {
-                    "host": "localhost:{{.Values.global.ports.hydrophone}}",
+                    "host": "localhost:{{.Values.hydrophone.service.port}}",
                     "protocol": "http",
                     "service": "hydrophone"
                 },
                 "sesEmail": {
-                    "fromAddress": "{{.Values.hydrophone.fromAddress}}"
+                    "fromAddress": "{{.Values.hydrophone.deployment.env.fromAddress}}"
                 }
             }
-        image: "{{ .Values.hydrophone.image }}"
+        image: "{{ .Values.hydrophone.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.global.ports.hydrophone}}
+            port: {{.Values.hydrophone.service.port}}
           initialDelaySeconds: 30
           periodSeconds: 10
         name: hydrophone
         ports:
-        - containerPort: {{.Values.global.ports.hydrophone}}
+        - containerPort: {{.Values.hydrophone.service.port}}
         environment.resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
-        environment.securityContext:
+        securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
       restartPolicy: Always

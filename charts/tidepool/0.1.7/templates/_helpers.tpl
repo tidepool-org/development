@@ -44,32 +44,32 @@ http://internal.{{.Release.Namespace}}
 {{- define "charts.s3.url" -}} https://s3-{{.Values.global.cluster.region}}.amazonaws.com {{- end }}
 
 {{- define "charts.image.s3.bucket" -}}
-{{- if (.Values.image.env.bucket) and (ne .Values.image.env.bucket "") -}}
-{{ .Values.image.env.bucket }}
+{{- if (.Values.image.deployment.env.bucket) and (ne .Values.image.deployment.env.bucket "") -}}
+{{ .Values.image.deployment.env.bucket }}
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
 {{- end -}}
 
 {{- define "charts.blob.s3.bucket" -}}
-{{- if (.Values.blob.env.bucket) and (ne .Values.blob.env.bucket "") -}}
-{{ .Values.blob.env.bucket }}
+{{- if (.Values.blob.deployment.env.bucket) and (ne .Values.blob.deployment.env.bucket "") -}}
+{{ .Values.blob.deployment.env.bucket }}
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
 {{- end -}}
 
 {{- define "charts.hydrophone.s3.bucket" -}}
-{{- if (.Values.hydrophone.env.bucket) and (ne .Values.hydrophone.env.bucket "") -}}
-{{ .Values.hydrophone.env.bucket }}
+{{- if (.Values.hydrophone.deployment.env.bucket) and (ne .Values.hydrophone.deployment.env.bucket "") -}}
+{{ .Values.hydrophone.deployment.env.bucket }}
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-asset
 {{- end -}}
 {{- end -}}
 
 {{- define "charts.jellyfish.s3.bucket" -}}
-{{- if (.Values.jellyfish.env.bucket) and (ne .Values.jellyfish.env.bucket "") -}}
-{{ .Values.jellyfish.env.bucket }}
+{{- if (.Values.jellyfish.deployment.env.bucket) and (ne .Values.jellyfish.deployment.env.bucket "") -}}
+{{ .Values.jellyfish.deployment.env.bucket }}
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
@@ -229,5 +229,5 @@ Create liveness and readiness probes for platform services.
 {{- define "charts.init.shoreline" -}}
       - name: init-shoreline
         image: busybox
-        command: ['sh', '-c', 'until nc -zvv shoreline {{.Values.global.ports.shoreline}}; do echo waiting for shoreline; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -zvv shoreline {{.Values.shoreline.service.port}}; do echo waiting for shoreline; sleep 2; done;']
 {{- end -}} 

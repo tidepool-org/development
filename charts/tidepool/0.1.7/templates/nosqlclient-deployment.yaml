@@ -27,7 +27,7 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        linkerd.io/inject: enabled
+        linkerd.io/inject: {{ .Values.global.cluster.mesh.enabled }}
     spec:
       containers:
       - name: nosqlclient
@@ -37,37 +37,37 @@ spec:
         - name: MONGO_SCHEME
           valueFrom:
             secretKeyRef:
-              name: {{ include "charts.mongo.secretName" . }}
+              name: mongo
               key: scheme
         - name: MONGO_USERNAME
           valueFrom:
             secretKeyRef:
-              name: {{ include "charts.mongo.secretName" . }}
+              name: mongo
               key: username
         - name: MONGO_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ include "charts.mongo.secretName" . }}
+              name: mongo
               key: password
               optional: true
         - name: MONGO_ADDRESSES
           valueFrom:
             secretKeyRef:
-              name: {{ include "charts.mongo.secretName" . }}
+              name: mongo
               key: addresses
         - name: MONGO_OPT_PARAMS
           valueFrom:
             secretKeyRef:
-              name: {{ include "charts.mongo.secretName" . }}
+              name: mongo
               key: optParams
         - name: MONGO_TLS
           valueFrom:
             secretKeyRef:
-              name: {{ include "charts.mongo.secretName" . }}
+              name: mongo
               key: tls
         image: "{{ .Values.nosqlclient.image }}"
         ports:
-        - containerPort: 3000
+        - containerPort: {{ .Values.nosqlclient.service.port }}
       restartPolicy: Always
 
 {{ end }}

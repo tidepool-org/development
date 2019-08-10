@@ -1,4 +1,4 @@
-{{ if .Values.global.hpa.create }}
+{{ if .Values.global.environment.hpa.create }}
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -7,11 +7,11 @@ metadata:
   name: blip
   namespace: {{ .Release.Namespace }}
 spec:
-  maxReplicas: {{ .Values.blip.maxReplicas | default 10 }}
-  minReplicas: {{ .Values.blip.minReplicas | default 1 }}
+  maxReplicas: {{ .Values.global.environment.hpa.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.global.environment.hpa.minReplicas | default 1 }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: blip
-  targetCPUUtilizationPercentage: {{ .Values.blip.targetCPUUtilizationPercentage | default 50 }}
+  targetCPUUtilizationPercentage: {{ .Values.global.environment.hpa.targetCPUUtilizationPercentage | default 50 }}
 {{ end }}

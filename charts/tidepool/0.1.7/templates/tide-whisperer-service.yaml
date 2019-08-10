@@ -14,7 +14,7 @@ metadata:
       method_regex: false
       path_redirect: "false"
       rewrite: "/"
-      service: tide-whisperer.{{ .Release.Namespace }}:{{.Values.global.ports.tidewhisperer}}
+      service: tide-whisperer.{{ .Release.Namespace }}:{{.Values.tidewhisperer.service.port}}
   labels:
     app: tide-whisperer
     helm.sh/chart: {{ include "charts.chart" . }}
@@ -26,8 +26,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: {{.Values.global.ports.tidewhisperer}}
-    targetPort: {{.Values.global.ports.tidewhisperer}}
+    port: {{.Values.tidewhisperer.service.port}}
+    targetPort: {{.Values.tidewhisperer.service.port}}
   selector:
     app: tide-whisperer
     app.kubernetes.io/name: {{ include "charts.name" . }}

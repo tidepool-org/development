@@ -14,7 +14,7 @@ metadata:
       method_regex: true
       rewrite: "/"
       path_redirect: "false"
-      service: seagull.{{ .Release.Namespace }}:{{.Values.global.ports.seagull}}
+      service: seagull.{{ .Release.Namespace }}:{{.Values.seagull.service.port}}
   labels:
     app: seagull
     helm.sh/chart: {{ include "charts.chart" . }}
@@ -26,8 +26,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: {{.Values.global.ports.seagull}}
-    targetPort: {{.Values.global.ports.seagull}}
+    port: {{.Values.seagull.service.port}}
+    targetPort: {{.Values.seagull.service.port}}
   selector:
     app: seagull
     app.kubernetes.io/name: {{ include "charts.name" . }}
