@@ -1174,7 +1174,7 @@ For *testing*, you may install an embedded Mongo database using:
         secrets:
           Scheme: mongodb
           Hosts: localhost
-          Tll: "true"
+          Tls: "true"
   ```
 This will create a Mongo secret with the given Mongo connnection information and use that secret to connect to a local, embedded Mongo database. 
 
