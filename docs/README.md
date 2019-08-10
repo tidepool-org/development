@@ -385,12 +385,12 @@ Your Tidepool environments persists user data in MongoDB. We recommend that you 
   ```yaml
   apiVersion: v1
   data:
-    scheme: ${scheme}
-    addresses: ${addresses}
-    username: ${username}
-    password: ${password}
-    ssl: ${ssl}
-    optParams: ${optParams}
+    Scheme: ${scheme}
+    Addresses: ${addresses}
+    Username: ${username}
+    Password: ${password}
+    Tls: ${tls}
+    OptParams: ${optParams}
   kind: Secret
   metadata:
     name: mongo
@@ -404,7 +404,7 @@ Your Tidepool environments persists user data in MongoDB. We recommend that you 
   - `${addresses}` is a comma-separated list of Mongo host[:port]
   - `${username}` is the Mongo username in the Mongo database used to authenticate the connection
   - `${password}` is the Mongo password associated with Mongo username used for authentication
-  - `${ssl}` indicates whether to use SSL 
+  - `${tls}` indicates whether to use SSL 
   - `${optParams}` are the additional URL parameters needed for the connection (e.g replica set info)
 
 ####  KissMetrics [Optional]
@@ -934,7 +934,7 @@ You must identify your cluster name in both `HelmRelease` manifests.  Edit these
    spec:
      values:
        global:
-         cluster
+         cluster:
            name: ${CLUSTER_NAME}
    ```
 
@@ -1083,8 +1083,9 @@ default local file storage as follows in your `HelmRelease` manifest:
   spec:
     values:
       global:
-        store:
-          type: s3
+        environment:
+          store:
+            type: s3
   ```
 
 You may override the name of the S3 bucket used as described below.
@@ -1098,11 +1099,17 @@ for these fields in the HelmRelease for the environment. Here we show the defaul
   spec:
     values:
       blob:
-        bucket: tidepool-${ENVIRONMENT}-data
+        deployment:
+          env: 
+            bucket: tidepool-${ENVIRONMENT}-data
       image:
-        bucket: tidepool-${ENVIRONMENT}-data
+        deployment:
+          env: 
+            bucket: tidepool-${ENVIRONMENT}-data
       jellyfish:
-        bucket: tidepool-${ENVIRONMENT}-data
+        deployment:
+          env: 
+            bucket: tidepool-${ENVIRONMENT}-data
   ```
 
 You may override the bucket names to store your private data in another place.
@@ -1114,7 +1121,9 @@ In addition, the hydrophone services reads email templates for user signup purpo
   spec:
     values:
       hydrophone:
-        bucket: tidepool-${ENVIRONMENT}-asset`
+        deployment:
+          env:    
+            bucket: tidepool-${ENVIRONMENT}-asset`
   ```
 
 You may copy [this example](https://s3.console.aws.amazon.com/s3/buckets/tidepool-int-asset/?region=us-west-2&tab=overview) using the Amazon CLI:
@@ -1163,9 +1172,9 @@ For *testing*, you may install an embedded Mongo database using:
         enabled: true
       mongo:
         secrets:
-          scheme: mongodb
-          hosts: localhost
-          ssl: "true"
+          Scheme: mongodb
+          Hosts: localhost
+          Tll: "true"
   ```
 This will create a Mongo secret with the given Mongo connnection information and use that secret to connect to a local, embedded Mongo database. 
 
@@ -1186,45 +1195,47 @@ the namespace of your environment, `${ENVIRONMENT}`  This client will be pre-con
 
 You must configure your environment to support HTTP and/or HTTPS access.  By default, you are provided http access on port 8080:
 
-   ```yaml
-   spec:
-     values:
-       global:
-         hosts:
-            default:
-              protocol: http                          # the protocol to use for signup emails
-            http:
-              enabled: true
-              port: "8080"                            # HTTP port (must be quoted)
-              dnsNames:                               # list of DNS names to server 
-              - localhost              
-            https:
-              enabled: false
-   ```
+  ```yaml
+  spec:
+    values:
+      global:
+        environment:
+          hosts:
+             default:
+               protocol: http                          # the protocol to use for signup emails
+             http:
+               enabled: true
+               port: "8080"                            # HTTP port (must be quoted)
+               dnsNames:                               # list of DNS names to server 
+               - localhost              
+             https:
+               enabled: false
+  ```
 
 You may configure https access and generate TLS secrets by providing the `domains` for the hosts and a name in 
 which to store the TLS certificate.  Here is an example that turns off HTTP access and enables HTTPS access only, using
 5 DNS aliases, for two domains, and with automatic generation of a TLS certificate. The first name listed of the
 default protocol is used as the `common name` and the default host for email verifications.
-   ```yaml
-   spec:
-     values:
-       global:
-         hosts:
-            default:
-              protocol: https
-            http:
-              enabled: false
-            https:
-              enabled: true
-              port: "8443"
-              dnsNames:
-              - qa1.development.tidepool.org
-              - dev.tidepool.org
-              - dev-app.tidepool.org
-              - dev-api.tidepool.org
-              - dev-uploads.tidepool.org
-   ```
+  ```yaml
+  spec:
+    values:
+      global:
+        environment:
+          hosts:
+             default:
+               protocol: https
+             http:
+               enabled: false
+             https:
+               enabled: true
+               port: "8443"
+               dnsNames:
+               - qa1.development.tidepool.org
+               - dev.tidepool.org
+               - dev-app.tidepool.org
+               - dev-api.tidepool.org
+               - dev-uploads.tidepool.org
+  ```
 
 #### Configure Secrets Access
 
@@ -1264,8 +1275,9 @@ You may disable all of these by setting:
   spec:
     values:
       global:
-        hpa:
-          enabled: false
+        environment:
+          hpa:
+            create: false
   ```
 
 ### Create IAM Roles for Each Environment
