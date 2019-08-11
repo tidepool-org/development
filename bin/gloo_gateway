@@ -20,23 +20,23 @@ echo "$templates" | mappings | gloo_manifests internal http | single_file "# Aut
 " "" > $1/templates/gloo-internal.yaml
 
 echo "$templates" | mappings | gloo_manifests external http | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if .Values.global.hosts.http }}
-{{ \$spec := .Values.global.hosts.http }}
-{{ \$default := \"80\" }}
-{{ \$port := \$spec.port | default \$default }}
-{{ if \$spec.dnsNames }}
-{{- range \$dnsName := \$spec.dnsNames }}
-{{ \$legalName := printf \"%s-%s\" \$dnsName \$port }}" "{{ end }}
-{{ end }}
-{{ end }}" > $1/templates/gloo-external-http.yaml
+{{- if .Values.global.hosts.http -}}
+{{- \$spec := .Values.global.hosts.http -}}
+{{- \$default := \"80\" -}}
+{{- \$port := \$spec.port | default \$default -}}
+{{- if \$spec.dnsNames -}}
+{{- range \$dnsName := \$spec.dnsNames -}}
+{{- \$legalName := printf \"%s-%s\" \$dnsName \$port -}}" "{{ end }}
+{{- end -}}
+{{- end -}}" > $1/templates/gloo-external-http.yaml
 
 echo "$templates" | mappings | gloo_manifests external https | single_file "# Auto-generated file by $(basename $0). Do not edit.
-{{ if .Values.global.hosts.https.enabled }}
-{{ \$spec := .Values.global.hosts.https }}
-{{ \$default := \"443\" }}
-{{ \$port := \$spec.port | default \$default }}
-{{ if \$spec.dnsNames }}
-{{- range \$dnsName := \$spec.dnsNames }}
-{{ \$legalName := printf \"%s-%s\" \$dnsName \$port }}" "{{ end }}
-{{ end }}
-{{ end }}" > $1/templates/gloo-external-https.yaml
+{{- if .Values.global.hosts.https.enabled -}}
+{{- \$spec := .Values.global.hosts.https -}}
+{{- \$default := \"443\" -}}
+{{- \$port := \$spec.port | default \$default -}}
+{{- if \$spec.dnsNames -}}
+{{- range \$dnsName := \$spec.dnsNames -}}
+{{- \$legalName := printf \"%s-%s\" \$dnsName \$port -}}" "{{ end }}
+{{- end -}}
+{{- end -}}" > $1/templates/gloo-external-https.yaml

@@ -1,4 +1,4 @@
-{{ if .Values.nosqlclient.enabled}}
+{{ if .Values.nosqlclient.enabled -}}
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -70,4 +70,4 @@ spec:
         - containerPort: {{ .Values.nosqlclient.service.port }}
       restartPolicy: Always
 
-{{ end }}
+{{- end }}

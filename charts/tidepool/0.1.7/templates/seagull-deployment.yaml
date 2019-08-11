@@ -67,7 +67,7 @@ spec:
         name: seagull
         ports:
         - containerPort: {{.Values.seagull.service.port}}
-        environment.resources:
+        resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}

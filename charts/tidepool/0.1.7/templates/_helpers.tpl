@@ -16,7 +16,7 @@ Expand the name of the chart.
 {{- end }}
 
 {{- define "charts.certificate.secretName" -}}
-{{- .Release.Namespace -}}-tls-secret
+{{- $.Release.Namespace -}}-tls-secret
 {{- end -}}
 
 {{- define "charts.name" -}}

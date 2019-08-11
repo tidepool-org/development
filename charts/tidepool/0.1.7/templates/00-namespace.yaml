@@ -13,5 +13,5 @@ metadata:
   {{- end }}
   annotations:
     iam.amazonaws.com/permitted: {{ include "charts.roles.permitted" . }}
-{{ end }}
+{{- end }}
 

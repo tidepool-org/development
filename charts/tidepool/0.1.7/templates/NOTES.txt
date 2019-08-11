@@ -33,6 +33,6 @@ To load the secret file, in the directory where you stored your secrets, run:
 
   kubectl apply -f secret.yaml
 
-{{ end }}
+{{- end }}
 
 

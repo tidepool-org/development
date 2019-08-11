@@ -1,4 +1,5 @@
-local config  = import 'config.libsonnet';
+local config=std.extVar("CONFIG_DATA");
+
 local svcs = [ 
   "auth", "blip", "blob", "data", "export", "gatekeeper", "highwater", "hydrophone",
   "image", "jellyfish", "messageapi", "migrations", "notification", "seagull", "shoreline",
@@ -13,10 +14,10 @@ local toEnvironment(name, environment) = {
   apiVersion: "flux.weave.works/v1beta1",
   metadata: {
     name: "tidepool",
-    namespace: name
-  },
-  annotations: {
-    ['flux.weave.works/tag.'+k]: ("glob:" + environment.gitops.branch + "-*") for k in svcs
+    namespace: name,
+    annotations: {
+      ['flux.weave.works/tag.'+k]: ("glob:" + environment.gitops.branch + "-*") for k in svcs
+    }
   },
   spec: {
     releaseName: name + "-tidepool",
@@ -36,7 +37,7 @@ local toEnvironment(name, environment) = {
           gateway: config.cluster.gateway,
           logLevel: config.cluster.logLevel,
         },
-      }
+      } + environment.global
     } + environment.sharedInternalSecrets 
       + environment.tidepoolServices
       + environment.thirdPartyInternalServices
@@ -44,5 +45,8 @@ local toEnvironment(name, environment) = {
   }
 };
 
-std.prune(stripSecrets(std.mapWithKey(toEnvironment, config.environments)))
+local helmreleases=std.prune(std.mapWithKey(toEnvironment, config.environments));
 
+{
+  [k+"-helmrelease.json"] : helmreleases[k] for k in std.objectFields(helmreleases)
+}

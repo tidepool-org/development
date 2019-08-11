@@ -1,4 +1,4 @@
-{{ if .Values.global.environment.configmaps.create }}
+{{ if .Values.shoreline.configmap.ClinicDemoUserId -}}
 ---
 apiVersion: v1
 kind: ConfigMap

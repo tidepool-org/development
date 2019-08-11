@@ -1,4 +1,4 @@
-{{ if .Values.export.enabled }}
+{{ if .Values.export.enabled -}}
 ---
 apiVersion: v1
 kind: Service
@@ -33,4 +33,4 @@ spec:
     app: export
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-{{ end }}
+{{- end }}

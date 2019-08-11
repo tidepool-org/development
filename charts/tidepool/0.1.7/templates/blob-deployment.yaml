@@ -57,7 +57,7 @@ spec:
         name: blob
         ports:
         - containerPort: {{.Values.blob.service.port}}
-        environment.resources:
+        resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}

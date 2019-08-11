@@ -1,4 +1,4 @@
-{{ if .Values.tools.enabled }}
+{{ if .Values.tools.enabled -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -46,9 +46,9 @@ spec:
           value: data
         image: "{{ .Values.tools.deployment.image }}"
         name: tools
-        environment.resources:
+        resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
       restartPolicy: Always
-{{ end }}
+{{- end }}

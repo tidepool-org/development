@@ -1,4 +1,4 @@
-{{ if .Values.global.environment.hpa.create }}
+{{ if .Values.global.environment.hpa.create -}}
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -14,4 +14,4 @@ spec:
     kind: Deployment
     name: task
   targetCPUUtilizationPercentage: {{ .Values.global.environment.hpa.targetCPUUtilizationPercentage | default 50 }}
-{{ end }}
+{{- end }}

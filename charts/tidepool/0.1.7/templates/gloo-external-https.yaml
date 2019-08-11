@@ -1,11 +1,11 @@
 # Auto-generated file by gloo_gateway. Do not edit.
-{{ if .Values.global.environment.hosts.https.enabled }}
-{{ $spec := .Values.global.environment.hosts.https }}
-{{ $default := "443" }}
-{{ $port := $spec.port | default $default }}
-{{ if $spec.dnsNames }}
-{{- range $dnsName := $spec.dnsNames }}
-{{ $legalName := printf "%s-%s" $dnsName $port }}
+{{- if .Values.global.hosts.https.enabled -}}
+{{- $spec := .Values.global.hosts.https -}}
+{{- $default := "443" -}}
+{{- $port := $spec.port | default $default -}}
+{{- if $spec.dnsNames -}}
+{{- range $dnsName := $spec.dnsNames -}}
+{{- $legalName := printf "%s-%s" $dnsName $port -}}
 ---
 # file: gloo-{{ $legalName }}-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
@@ -17,7 +17,7 @@ spec:
   displayName: '{{ $legalName }}'
   sslConfig:
     secretRef:
-      name: '{{ include "charts.certificate.secretName" . }}'
+      name: '{{ include "charts.certificate.secretName" $ }}'
       namespace: '{{ $.Release.Namespace }}'
     sniDomains:
     - '{{ $dnsName }}'
@@ -635,5 +635,5 @@ spec:
             name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
 {{ end }}
-{{ end }}
-{{ end }}
+{{- end -}}
+{{- end -}}

@@ -1,4 +1,4 @@
-{{ if .Values.export.enabled }}
+{{ if .Values.export.enabled -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -53,9 +53,9 @@ spec:
         name: export
         ports:
         - containerPort: {{.Values.export.service.port}}
-        environment.resources:
+        resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
       restartPolicy: Always
-{{ end }}
+{{- end }}

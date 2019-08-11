@@ -1,29 +1,29 @@
-{{ if (or .Values.global.environment.hosts.http.enabled .Values.global.environment.hosts.https.enabled ) }}
+{{ if or .Values.global.environment.hosts.http.enabled .Values.global.environment.hosts.https.enabled -}}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: external-gateway-loadbalancer
-{{ if .Values.global.cluster.gateway.annotations }}
+{{- if .Values.global.cluster.gateway.annotations }}
   annotations:
     {{ .Values.global.cluster.gateway.annotations | toYaml | nindent 4 }}
-{{ end }}
+{{- end }}
 spec:
   externalTrafficPolicy: Local
   ports:
-{{ if .Values.global.environment.hosts.https.enabled }}
+{{- if .Values.global.environment.hosts.https.enabled }}
   - name: https
     port: {{ .Values.global.environment.hosts.https.port | default 443  }}
     protocol: TCP
     targetPort: 8443
-{{ end }}
+{{- end }}
 {{ if .Values.global.environment.hosts.http.enabled }}
   - name: http
     port: {{ .Values.global.environment.hosts.http.port | default 80 }}
     protocol: TCP
     targetPort: 8080
-{{ end }}
+{{- end }}
   selector:
     gloo: {{ .Values.global.cluster.gateway.proxy.name }}
   type: {{ .Values.global.cluster.gateway.type | default "LoadBalancer" }}
-{{ end }}
+{{- end }}

@@ -1,11 +1,11 @@
 # Auto-generated file by gloo_gateway. Do not edit.
-{{ if .Values.global.environment.hosts.http }}
-{{ $spec := .Values.global.environment.hosts.http }}
-{{ $default := "80" }}
-{{ $port := $spec.port | default $default }}
-{{ if $spec.dnsNames }}
-{{- range $dnsName := $spec.dnsNames }}
-{{ $legalName := printf "%s-%s" $dnsName $port }}
+{{- if .Values.global.hosts.http -}}
+{{- $spec := .Values.global.hosts.http -}}
+{{- $default := "80" -}}
+{{- $port := $spec.port | default $default -}}
+{{- if $spec.dnsNames -}}
+{{- range $dnsName := $spec.dnsNames -}}
+{{- $legalName := printf "%s-%s" $dnsName $port -}}
 ---
 # file: gloo-{{ $legalName }}-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
@@ -607,5 +607,5 @@ spec:
             name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
 {{ end }}
-{{ end }}
-{{ end }}
+{{- end -}}
+{{- end -}}

@@ -1,4 +1,4 @@
-{{ if .Values.migrations.enabled }}
+{{ if .Values.migrations.enabled -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -41,9 +41,9 @@ spec:
           value: user
         image: {{ .Values.migrations.deployment.image | quote}}
         name: migrations
-        environment.resources:
+        resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
       restartPolicy: Always
-{{ end }}
+{{- end }}

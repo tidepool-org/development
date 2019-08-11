@@ -266,7 +266,7 @@ environments:
               #extraAnnotations:                                           # Use to create an AWS Network Load Balancer 
                 #service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
       mongodb:
-        enabled: true
+        enabled: false
         image:
           tag: "3.6"
         persistence:

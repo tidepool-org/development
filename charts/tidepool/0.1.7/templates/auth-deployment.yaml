@@ -37,6 +37,7 @@ spec:
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+          valueFrom:
             configMapKeyRef:
               name: dexcom
               key: AuthorizeURL
@@ -91,7 +92,7 @@ spec:
         name: auth
         ports:
         - containerPort: {{.Values.auth.service.port}}
-        environment.resources:
+        resources:
           {{- toYaml .Values.global.environment.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
