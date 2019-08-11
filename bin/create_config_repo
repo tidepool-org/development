@@ -3,6 +3,16 @@
 # Create configuration repo from single values files.
 #
 
+if [ $# -ne 3 ]
+then
+	echo "Usage: $0 ${INIT_REPO:-false} ${CREATE_REPO:-false} ${PUSH_REPO:-false}"
+	exit 1
+fi
+
+INIT_REPO=${1:-false}
+CREATE_REPO=${2:-false}
+PUSH_REPO=${3:-false}
+
 if [ -z "$FLUX_DIR" ]
 then
 	echo "\$FLUX_DIR required."
@@ -78,19 +88,22 @@ do
   helm template -f ${VALUES_FILE} ${TIDEPOOL_CHART_DIR} | yq 'filter(.kind == "ConfigMap")' > $ENVIRONMENT/configmaps.yaml
 done
 
-INIT=$(yq read ${VALUES_FILE} cluster.repo.init)
 
 cd $CONFIG_DIR
-if [ "$INIT" == "true" ]
+if [ "$INIT_REPO" == "true" ]
 then
   git init
+fi
+
+if [ "$CREATE_REPO" == "true" ]
+then
   hub create -d "Creating K8s config repo." $GITHUB_ACCOUNT/$GIT_REPO_NAME
 fi
+
 git add .
 git commit -m "Initial configuration"
 
-PUSH=$(yq read ${VALUES_FILE} cluster.repo.publish)
-if [ "$PUSH" == "true" ]
+if [ "$PUSH_REPO" == "true" ]
 then
   git push --set-upstream origin master
 fi

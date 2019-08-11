@@ -4,9 +4,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: external-gateway-loadbalancer
-{{ if .Values.global.gateway.annotations }}
+{{ if .Values.global.cluster.gateway.annotations }}
   annotations:
-    {{ .Values.global.gateway.annotations | toYaml | nindent 4 }}
+    {{ .Values.global.cluster.gateway.annotations | toYaml | nindent 4 }}
 {{ end }}
 spec:
   externalTrafficPolicy: Local
@@ -24,6 +24,6 @@ spec:
     targetPort: 8080
 {{ end }}
   selector:
-    gloo: {{ .Values.global.gateway.proxy.name }}
-  type: {{ .Values.global.gateway.type | default "LoadBalancer" }}
+    gloo: {{ .Values.global.cluster.gateway.proxy.name }}
+  type: {{ .Values.global.cluster.gateway.type | default "LoadBalancer" }}
 {{ end }}

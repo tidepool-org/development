@@ -15,7 +15,7 @@ spec:
     gloo: gateway-proxy-v2
   type: ClusterIP 
 {{ else }}
-  externalName: {{ .Values.global.gateway.proxy.name -}}.{{- .Values.global.gateway.proxy.namespace -}}.svc.cluster.local
+  externalName: {{ .Values.global.cluster.gateway.proxy.name -}}.{{- .Values.global.cluster.gateway.proxy.namespace -}}.svc.cluster.local
   ports:
   - port: 80
   type: ExternalName

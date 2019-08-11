@@ -1,0 +1,187 @@
+default:
+    annotations:
+        flux.weave.works/tag.auth: glob:develop-*
+        flux.weave.works/tag.blip: glob:develop-*
+        flux.weave.works/tag.blob: glob:develop-*
+        flux.weave.works/tag.data: glob:develop-*
+        flux.weave.works/tag.export: glob:develop-*
+        flux.weave.works/tag.gatekeeper: glob:develop-*
+        flux.weave.works/tag.highwater: glob:develop-*
+        flux.weave.works/tag.hydrophone: glob:develop-*
+        flux.weave.works/tag.image: glob:develop-*
+        flux.weave.works/tag.jellyfish: glob:develop-*
+        flux.weave.works/tag.messageapi: glob:develop-*
+        flux.weave.works/tag.migrations: glob:develop-*
+        flux.weave.works/tag.notification: glob:develop-*
+        flux.weave.works/tag.seagull: glob:develop-*
+        flux.weave.works/tag.shoreline: glob:develop-*
+        flux.weave.works/tag.task: glob:develop-*
+        flux.weave.works/tag.tidewhisperer: glob:develop-*
+        flux.weave.works/tag.tools: glob:develop-*
+        flux.weave.works/tag.user: glob:develop-*
+    apiVersion: flux.weave.works/v1beta1
+    kind: HelmRelease
+    metadata:
+        name: tidepool
+        namespace: default
+    spec:
+        chart:
+            git: git@github.com:tidepool-org/development
+            path: charts/tidepool/0.1.7
+            ref: k8s
+        releaseName: default-tidepool
+        values:
+            auth:
+                deployment:
+                    image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+                service:
+                    port: 9222
+            blip:
+                deployment:
+                    image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
+            blob:
+                deployment:
+                    env:
+                        directory: _data/blobs
+                        prefix: blobs
+                    image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+                service:
+                    port: 9225
+            carelink:
+                enabled: false
+            data:
+                deployment:
+                    image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+                service:
+                    port: 9220
+            dexcom:
+                enabled: false
+            export:
+                deployment:
+                    image: tidepool/export:develop-c67e1425a4f6eb4c3f70f95284a24899a9ff986f
+                enabled: true
+                service:
+                    port: 9300
+            gatekeeper:
+                deployment:
+                    image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
+                service:
+                    port: 9123
+            global:
+                cluster:
+                    gateway:
+                        proxy:
+                            name: gateway-proxy-v2
+                            namespace: gloo-system
+                    logLevel: debug
+                    mesh:
+                        enabled: false
+                        name: linkerd
+                    name: shared
+                    region: us-west-2
+                fullnameOverride: ''
+                nameOverride: ''
+            gloo:
+                discovery:
+                    fdsMode: WHITELIST
+                enabled: true
+                gatewayProxies:
+                    gatewayProxyV2:
+                        service:
+                            httpPort: 8080
+                            type: ClusterIP
+                namespace:
+                    create: false
+                settings:
+                    create: true
+            highwater:
+                deployment:
+                    image: tidepool/highwater:develop-aaefb43df9a132f6c012f7216952e8650e6f6b4a
+                service:
+                    port: 9191
+            hydrophone:
+                deployment:
+                    env:
+                        bucket: ''
+                        fromAddress: Tidepool <noreply@tidepool.org>
+                    image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
+                service:
+                    port: 9157
+            image:
+                deployment:
+                    env:
+                        directory: _data/image
+                        prefix: images
+                    image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+                service:
+                    port: 9226
+            jellyfish:
+                deployment:
+                    image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
+                enabled: true
+                service:
+                    port: 9122
+            kissmetrics:
+                enabled: false
+            mailchimp:
+                enabled: false
+            messageapi:
+                deployment:
+                    env:
+                        window: 21
+                    image: tidepool/message-api:develop-448835b6be0c27185e487f582f9b47a784aa781f
+                service:
+                    port: 9119
+            migrations:
+                deployment:
+                    image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+                enabled: true
+            mongodb:
+                enabled: true
+                fullnameOverride: mongodb
+                image:
+                    tag: '3.6'
+                persistence:
+                    enabled: false
+            nosqlclient:
+                deployment:
+                    image: tidepool/nosqlclient:2.3.2
+                enabled: false
+                service:
+                    port: 3000
+            notification:
+                deployment:
+                    image: tidepool/platform-notification:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+                service:
+                    port: 9223
+            seagull:
+                deployment:
+                    image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
+                service:
+                    port: 9120
+            shoreline:
+                configmap:
+                    ClinicDemoUserId: ''
+                deployment:
+                    image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
+                service:
+                    port: 9107
+            task:
+                deployment:
+                    image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+                service:
+                    port: 9224
+            tidewhisperer:
+                deployment:
+                    image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
+                service:
+                    port: 9127
+            tools:
+                deployment:
+                    image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+                enabled: true
+            user:
+                deployment:
+                    image: tidepool/platform-user:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+                service:
+                    port: 9221

@@ -8,12 +8,12 @@ global:
     mesh:                                         # service mesh to use
       name: linkerd
       enabled: false
-  gateway:                                        # gateway service                  
-    type: "LoadBalancer"
-    proxy:                                                            
-      name: gateway-proxy-v2                                             
-      namespace: gloo-system  
-  logLevel: debug                               # the default log level for all services
+    gateway:                                        # gateway service                  
+      type: "LoadBalancer"
+      proxy:                                                            
+        name: gateway-proxy-v2                                             
+        namespace: gloo-system  
+    logLevel: info                               # the default log level for all services
   environment:                                    # the cluster name
     namespace:
       create: false                               # whether to create the namespace

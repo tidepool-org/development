@@ -1,0 +1,12 @@
+#!/bin/bash -xv
+
+VALUES_FILE=${1:-values.yaml}
+JSONNET_FILE=${DEV_REPO}/jsonnet/tidepool-helmreleases.jsonnet
+
+TO_YAML="
+python3 -c 'import sys, yaml, json; yaml.dump(json.load(sys.stdin), sys.stdout, indent=4)'"
+
+cat $VALUES_FILE | python3 -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout, indent=4)' > config.libsonnet
+
+jsonnet $JSONNET_FILE
+

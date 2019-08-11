@@ -1,28 +1,28 @@
-{{ $cluster := .Values.global.cluster }}
+{{ with .Values.cluster.eks }}
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: {{ $cluster.name }}
-  region: {{ $cluster.region }}
-  version: {{ $cluster.k8sVersion | quote }}
+  name: {{ .name }}
+  region: {{ .region }}
+  version: {{ .k8sVersion | quote }}
 
 vpc:
-  cidr: {{ $cluster.cidr | quote }}
+  cidr: {{ .cidr | quote }}
 
 nodeGroups:
   - name: ng-1
-    instanceType: {{ $cluster.nodegroup.instanceType }}
-    desiredCapacity: {{ $cluster.nodegroup.desiredCapacity }}
-    minSize: {{ $cluster.nodegroup.minSize }}
-    maxSize: {{ $cluster.nodegroup.maxSize }}
+    instanceType: {{ .nodegroup.instanceType }}
+    desiredCapacity: {{ .nodegroup.desiredCapacity }}
+    minSize: {{ .nodegroup.minSize }}
+    maxSize: {{ .nodegroup.maxSize }}
     labels:
       kiam-server: "false"
     tags:
       k8s.io/cluster-autoscaler/enabled: "true"
-      k8s.io/cluster-autoscaler/{{ $cluster.name }}: "true"
+      k8s.io/cluster-autoscaler/{{ .name }}: "true"
   - name: ng-kiam
-    instanceType: {{ $cluster.nodegroup.instanceType }}
+    instanceType: {{ .nodegroup.instanceType }}
     desiredCapacity: 1
     labels: 
       kiam-server: "true"

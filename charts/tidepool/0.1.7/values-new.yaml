@@ -58,8 +58,6 @@ environments:
   qa1:
     namespace:
       create: false                                                     # whether to create the namespace
-    configmaps:
-      create: false
     hpa:
       create: true
     hosts:
@@ -108,31 +106,23 @@ environments:
       gatekeeper:
         deployment:
           image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
-          env:
-            serverSecretName: "server"
         service:
           port: 9123
       messageapi:
         deployment:
           image: tidepool/message-api:develop-448835b6be0c27185e487f582f9b47a784aa781f
           env:
-            serverSecretName: "server"
             window: 21
         service:
           port: 9119
       seagull:
         deployment:
           image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
-          env:
-            serverSecretName: "server"
         service:
           port: 9120
       highwater:
         deployment:
           image: tidepool/highwater:develop-aaefb43df9a132f6c012f7216952e8650e6f6b4a
-          env:
-            kissmetricsSecretName: "kissmetrics"
-            serverSecretName: "server"
         secret:
           UserIdSalt: ""
         service:
@@ -142,8 +132,6 @@ environments:
           ServiceAuth:  ""
         deployment:
           image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-          env:
-            dexcomSecretName: "dexcom"
         service:
           port: 9222
       blob:
@@ -192,16 +180,12 @@ environments:
           ServiceAuth: ""
         deployment:
           image: tidepool/platform-user:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-          env:
-            userdata: "userdata"
         service:
           port: 9221
       tools: 
         enabled: true
         deployment:
           image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-          env:
-            userdataSecretName: "userdata"
       shoreline:
         configmap:
           ClinicDemoUserId: ""
@@ -213,25 +197,17 @@ environments:
           ClinicDemoUserId: ""
         deployment:
           image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
-          env:
-            mailchimpSecretName: "mailchimp"
-            serverSecretName: "server"
         service:
           port: 9107
       tidewhisperer:
         deployment:
           image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
-          env:
-            serverSecretName: "server"
-            authSecretName: "auth"
         service:
           port: 9127
       jellyfish: 
         enabled: true
         deployment:
           image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
-          env:
-            serverSecretName: "server"
         service:
           port: 9122
       migrations: 
@@ -243,8 +219,7 @@ environments:
           image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
           env:
             fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send
-            serverSecretName: "server"
-            #bucket: '' 
+            bucket: ""
         service:
           port: 9157
     third-party-internal-services:
@@ -252,8 +227,6 @@ environments:
         enabled: false
         deployment:
           image: tidepool/nosqlclient:2.3.2
-          env:
-            mongoSecretName: "mongo"
         service:
           port: 3000
       gloo:
@@ -286,10 +259,6 @@ environments:
           ClientId: ""
           ClientSecret: ""
           StateSalt: ""
-        configmap:
-          TokenUrl: 'https://api.dexcom.com/v1/oauth2/token'                 # the url to retrieve an Oauth2 token from Dexcom
-          AuthorizeUrl: 'https://api.dexcom.com/v1/oauth2/login?prompt=login'    # the url to get authorization from Dexcom
-          ClientUrl: "https://api.dexcom.com"                                 # the Dexcom client API url
       carelink:
         enabled: false
         secret:
