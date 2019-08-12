@@ -1,13 +1,12 @@
-local config=std.extVar("CONFIG_DATA");
+local emptyConfig={ environments: {}};
+local config=emptyConfig;
+#local config=std.extVar("CONFIG_DATA");
+
 
 local svcs = [ 
   "auth", "blip", "blob", "data", "export", "gatekeeper", "highwater", "hydrophone",
   "image", "jellyfish", "messageapi", "migrations", "notification", "seagull", "shoreline",
   "task", "tidewhisperer", "tools", "user" ];
-
-local stripSecrets(obj) = 
-{ [k]: obj[k] for k in std.objectFields(obj) if k != "secret" && ! std.isObject(obj[k]) } +
-{ [k]: stripSecrets(obj[k]) for k in std.objectFields(obj) if k != "secret" && std.isObject(obj[k]) };
 
 local toEnvironment(name, environment) = {
   kind: "HelmRelease",

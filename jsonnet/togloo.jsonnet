@@ -250,4 +250,4 @@ local AsDict(manifests) = {
     ["gloo-" + ServiceName(manifest) + "-" + std.asciiLower(manifest.kind)] : manifest for manifest in manifests
 };
 
-if std.length(config) > 0 then AsDict( Manifests(kind, config)) else {}
+if std.length(config) > 0 then std.prune(AsDict( Manifests(kind, config))) else {}
