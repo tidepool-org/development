@@ -38,10 +38,10 @@ USAGE: tidepool command [service] [...additional args]
   exec service [...cmds]          Run shell commands in the currently running service
                                   container
                                     example:
-                                      'tidepool_k8s exec blip sh'
+                                      tidepool exec blip sh
                                       (to enter a shell inside the blip container)
                                     example:
-                                      'tidepool_k8s exec blip "ls -lR /app/node_modules/ | grep ^l | uniq"'
+                                      tidepool exec blip "ls -lR /app/node_modules/ | grep ^l | uniq"
                                       (to list all symlinked npm packages, such as after yarn linking)
 
   yarn [service] [...cmds]        Run yarn commands against the specified Node.js-based service.
@@ -50,8 +50,8 @@ USAGE: tidepool command [service] [...additional args]
                                     export, gatekeeper, highwater, jellyfish, message-api, seagull
                                   NOTE: tideline, @tidepool/viz, and tidepool-platform-client
                                   are optional Tilt-provided mounts within the blip service
-                                    example: 'tidepool_k8s yarn @tidepool/viz stories'
-                                    example: 'tidepool_k8s yarn tidepool-platform-client test'
+                                    example: tidepool yarn @tidepool/viz stories
+                                    example: tidepool yarn tidepool-platform-client test
 
   port-forward [service] [port]   Forward a port to a running service container
 
