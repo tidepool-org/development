@@ -171,7 +171,7 @@ local GatewayProxyService(service_type, useSSL) = {
     } else error 'Bad service type'
 };
 
-local service_and_port(mapping) = {
+local ServiceAndPort(mapping) = {
     local indices = std.findSubstr(":", mapping.service ),
     local parts = 
         if std.length(indices) == 1 
@@ -181,15 +181,6 @@ local service_and_port(mapping) = {
     port: std.parseInt(parts[1])
 };
 
-local service_name(manifest) = 
-    std.strReplace(
-        std.strReplace( manifest.metadata.name, ENVIRONMENT + "-", ""),
-        INTERNAL_VS_NAME, 
-        "internal");
-
-local ManifestsDict(manifest) = {
-    ["gloo-" + service_name(manifest) + "-" + std.asciiLower(manifest.kind)] : manifest
-};
 
 local Route(mapping) = {
     local found = 'rewrite' in mapping,
@@ -212,7 +203,7 @@ local Route(mapping) = {
     },
     
     routeAction: {
-        local svc_port = service_and_port(mapping),
+        local svc_port = ServiceAndPort(mapping),
         single: {
             upstream: metadata_spec(ENVIRONMENT + "-" + svc_port.service + "-" + std.toString(svc_port.port), ENVIRONMENT)
         }
@@ -220,36 +211,43 @@ local Route(mapping) = {
 };
 
 
-local withKey(route) = route + {
-    local matcher = route["matcher"],
-    key:: 
-        if "regex" in matcher then
-            std.length(matcher["regex"])
-        else if "prefix" in matcher then
-            std.length(matcher["prefix"])
-        else if "exact" in matcher then
-            std.length(matcher["exact"])
-        else
-            0
+local ToKey(route) = (
+    local matcher = route.matcher;
+    if "regex" in matcher then
+        -std.length(matcher.regex)
+    else if "prefix" in matcher then
+        -std.length(matcher.prefix)
+    else if "exact" in matcher then
+        -std.length(matcher.exact)
+    else
+        0
+);
+
+local Routes(mappings) = [ Route(mapping) for mapping in mappings ];
+
+local OrderedRoutes(routes) = std.sort(routes, ToKey);
+
+local Upstreams(mappings) = [ Upstream(ServiceAndPort(mapping)) for mapping in mappings ];
+
+local Manifests(kind, mappings) = (
+    local ordered = OrderedRoutes(Routes(mappings));
+    if kind == "internal" then
+        Upstreams(config) +
+        [ VirtualService(ordered, INTERNAL_VS_NAME, null, "http", [ INTERNAL_VS_NAME + "." + ENVIRONMENT]) ]
+    else if protocol == "https" then
+        [ VirtualService(ordered, VIRTUAL_HOST_KEY, CORS_POLICY, "https", [HOST]) ]
+    else
+        [ VirtualService(ordered, VIRTUAL_HOST_KEY, null, "http", [HOST]) ]
+);
+
+local ServiceName(manifest) = 
+    std.strReplace(
+        std.strReplace( manifest.metadata.name, ENVIRONMENT + "-", ""),
+        INTERNAL_VS_NAME, 
+        "internal");
+
+local AsDict(manifests) = {
+    ["gloo-" + ServiceName(manifest) + "-" + std.asciiLower(manifest.kind)] : manifest for manifest in manifests
 };
 
-local fold_func(x,y) = x + ManifestsDict(y);
-
-local ordered(routes) = 
-    std.sort([ withKey(route) for route in routes ], function(x) -x.key);
-
-local sortedRoutes(mappings) = ordered([ Route(mapping) for mapping in mappings]);
-
-local sorted = sortedRoutes(config);
-
-if std.length(sorted) > 0 then
-    if kind == "internal" then
-        std.foldl(fold_func, 
-            [ Upstream(service_and_port(mapping)) for mapping in config ], 
-             ManifestsDict(VirtualService(sorted, INTERNAL_VS_NAME, null, "http", [ INTERNAL_VS_NAME + "." + ENVIRONMENT])) )
-    else if protocol == "https" then
-            ManifestsDict(VirtualService(sorted, VIRTUAL_HOST_KEY, CORS_POLICY, "https", [HOST]))
-    else
-            ManifestsDict(VirtualService(sorted, VIRTUAL_HOST_KEY, null, "http", [HOST]))
-else 
-    {}
+if std.length(config) > 0 then AsDict( Manifests(kind, config)) else {}
