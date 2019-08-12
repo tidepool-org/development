@@ -5,7 +5,7 @@ This document describes how to install the Tidepool web service on an Amazon hos
 
 With suitable modification, one may install the service on another Kubernetes platform.  However, that is not contained in the scope of this document.
 
-## TL;DR
+## TL;DR [ UNDER CONSTRUCTION ]
 
 These compressed instructions presume that you can figure out how to edit the `values.yaml` file. :)
 
