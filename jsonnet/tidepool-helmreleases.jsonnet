@@ -1,8 +1,3 @@
-local emptyConfig = { environments: {} };
-local config = emptyConfig;
-//local config=std.extVar("CONFIG_DATA");
-
-
 local svcs = [
   'auth',
   'blip',
@@ -25,7 +20,7 @@ local svcs = [
   'user',
 ];
 
-local toEnvironment(name, environment) = {
+local toEnvironment(name, environment, config) = {
   kind: 'HelmRelease',
   apiVersion: 'flux.weave.works/v1beta1',
   metadata: {
@@ -62,9 +57,11 @@ local toEnvironment(name, environment) = {
   },
 };
 
-local helmreleases = std.prune(std.mapWithKey(toEnvironment, config.environments));
-
-{
-  [k + '-helmrelease.json']: helmreleases[k]
-  for k in std.objectFields(helmreleases)
-}
+function(config) (
+  local converter(name, environment) = toEnvironment(name, environment, config);
+  local helmreleases =  std.prune(std.mapWithKey(converter, config.environments));
+  
+  {
+    [k + '-helmrelease.json']: helmreleases[k] for k in std.objectFields(helmreleases)
+  }
+)

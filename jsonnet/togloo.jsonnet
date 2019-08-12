@@ -1,11 +1,3 @@
-//local config=std.extVar("CONFIG_DATA");
-//local kind  = std.extVar("KIND");
-//local protocol = std.extVar("PROTOCOL");
-
-local kind = 'internal';
-local protocol = 'http';
-local config = [];
-
 local VIRTUAL_HOST_KEY = '{{ $legalName }}';
 
 // The host served by the API Gateway
@@ -228,10 +220,10 @@ local OrderedRoutes(routes) = std.sort(routes, ToKey);
 
 local Upstreams(mappings) = [Upstream(ServiceAndPort(mapping)) for mapping in mappings];
 
-local Manifests(kind, mappings) = (
+local Manifests(kind, protocol, mappings) = (
   local ordered = OrderedRoutes(Routes(mappings));
   if kind == 'internal' then
-    Upstreams(config) +
+    Upstreams(mappings) +
     [VirtualService(ordered, INTERNAL_VS_NAME, null, 'http', [INTERNAL_VS_NAME + '.' + ENVIRONMENT])]
   else if protocol == 'https' then
     [VirtualService(ordered, VIRTUAL_HOST_KEY, CORS_POLICY, 'https', [HOST])]
@@ -251,4 +243,5 @@ local AsDict(manifests) = {
   for manifest in manifests
 };
 
-if std.length(config) > 0 then std.prune(AsDict(Manifests(kind, config))) else {}
+function(kind, protocol, mappings)
+  if std.length(mappings) > 0 then std.prune(AsDict(Manifests(kind, protocol, mappings))) else {}
