@@ -1,16 +1,16 @@
-{{ if .Values.certmanager.enabled }}
+{{ if .Values.certmanager.helmrelease.create }}
 ---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
-  name: cert-manager
-  namespace: cert-manager
+  name: certmanager
+  namespace: {{ .Values.certmanager.namespace.name }}
   annotations:
     flux.weave.works/automated: "false"
 spec:
-  releaseName: cert-manager
+  releaseName: certmanager
   chart:
-    {{- .Values.certmanager.chart | toYaml | nindent 4 }}
+    {{- .Values.certmanager.helmrelease.chart | toYaml | nindent 4 }}
   values:
     podAnnotations:
       iam.amazonaws.com/role: {{ include "charts.certmanager.role" . }}

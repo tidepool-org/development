@@ -35,7 +35,7 @@ cluster:
     proxy:                                                            
       name: gateway-proxy-v2                                             
       namespace: gloo-system  
-  third-party-services:
+  thirdPartyServices:
     sumologic: 
       enabled: false
       secret:
@@ -53,18 +53,19 @@ cluster:
       enabled: false
       hostnames: []                             # list of hosts to publish to DNS
 environments:
-  default:
+  qa1:
     gitops: 
-      branch: develop
+      automated: true
+      selector: glob
+      filter: "develop-*"
+      #selector: regex
+      #filter: "^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$"
+ 
     secrets:
       src: helm
       dest: awsSecretsManager
       operation: upsert
     global:
-      namespace:
-        create: false                                                     # whether to create the namespace
-      hpa:
-        create: true
       hosts:
         default:
           protocol: https                                                 # the protocol to use for signup emails
@@ -72,36 +73,14 @@ environments:
           enabled: false
         https:                                                           
           enabled: true 
-          port: "433"                                                    # default HTTPS port - must be quoted
+          port: "443"                                                    # default HTTPS port - must be quoted
           dnsNames:                                                      # list of DNS names
-          - default.tidepool.org
+          - qa1.tidepool.org
           certificateIssuer: "letsencrypt-staging"                       # the name of the certificate issuer
       store: 
         type: s3                                                         # store non-Mongo data in S3
       nodeEnvironment: production                   #
-      resources:                                    # the resources for each service
-        limits:
-          cpu: 200m
-          memory: 128Mi
-        requests:
-          cpu: 50m
-          memory: 32Mi
-      hpa:
-        maxReplicas: 10
-        minReplicas: 1
-        targetCPUUtilizationPercentage: 50
-      securityContext:                              # the security context for all services
-        allowPrivilegeEscalation: false
-        runAsNonRoot: true                          # we don't need root access
     sharedInternalSecrets:
-      userdata:
-        secret: 
-          UserPasswordSalt: ""
-          UserIdSalt: ""
-          GroupIdEncryptionKey: ""
-      server:
-        secret:
-          ServiceAuth: ""
       mongo:  
         secret:
           Scheme: mongodb
@@ -110,145 +89,6 @@ environments:
           Tls: "true"
           Password: ""
           Database: ""
-    tidepoolServices:
-      blip:
-        deployment:
-          image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
-      export:
-        enabled: true
-        secret:
-           SessionEncryptionKey: ""
-        deployment:
-          image: tidepool/export:develop-c67e1425a4f6eb4c3f70f95284a24899a9ff986f
-        service:
-          port: 9300
-      gatekeeper:
-        deployment:
-          image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
-        service:
-          port: 9123
-
-      messageapi:
-        deployment:
-          image: tidepool/message-api:develop-448835b6be0c27185e487f582f9b47a784aa781f
-          env:
-            window: 21
-        service:
-          port: 9119
-      seagull:
-        deployment:
-          image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
-        service:
-          port: 9120
-      highwater:
-        deployment:
-          image: tidepool/highwater:develop-aaefb43df9a132f6c012f7216952e8650e6f6b4a
-        secret:
-          UserIdSalt: ""
-        service:
-          port: 9191
-      auth:
-        secret:
-          ServiceAuth:  ""
-        deployment:
-          image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-        service:
-          port: 9222
-      blob:
-        secret:
-          ServiceAuth: "" 
-        service:
-          port: 9225   
-        deployment:
-          image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-          env:
-            directory: "_data/blobs"                                            # directory to use if using local file storage
-            prefix: "blobs"                                             
-      data:
-        secret:
-          ServiceAuth: ""
-        service:
-          port: 9220
-        deployment:
-          image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-      image:
-        secret:
-          ServiceAuth: ""
-        service:
-          port: 9226 
-        deployment:
-          image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-          env:
-            directory: "_data/image"                                            # directory to use if using local file storage
-            prefix: "images" 
-      notification:
-        secret:
-          ServiceAuth: ""
-        service:
-          port: 9223 
-        deployment:
-          image: tidepool/platform-notification:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-      task:
-        secret:
-          ServiceAuth: ""
-        service:
-          port: 9224 
-        deployment:
-          image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-      user:
-        secret:
-          ServiceAuth: ""
-        deployment:
-          image: tidepool/platform-user:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-        service:
-          port: 9221
-      tools: 
-        enabled: true
-        deployment:
-          image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-      shoreline:
-        configmap:
-          ClinicDemoUserId: ""
-        secret:
-          ServiceAuth: ""
-          UserLongTermKey: 
-          UserMailVerification: ""
-          UserPasswordSalt: ""
-          ClinicDemoUserId: ""
-        deployment:
-          image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
-        service:
-          port: 9107
-      tidewhisperer:
-        deployment:
-          image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
-        service:
-          port: 9127
-      jellyfish: 
-        enabled: true
-        deployment:
-          image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
-        service:
-          port: 9122
-      migrations: 
-        enabled: true
-        deployment:
-          image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-      hydrophone:
-        deployment:
-          image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
-          env:
-            fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send
-            bucket: ""
-        service:
-          port: 9157
-    thirdPartyInternalServices:
-      nosqlclient:
-        enabled: false
-        deployment:
-          image: tidepool/nosqlclient:2.3.2
-        service:
-          port: 3000
       gloo:
         enabled: true
         settings:
@@ -272,28 +112,4 @@ environments:
         persistence:
           enabled: false
         fullnameOverride: "mongodb"
-    externallySharedSecrets:
-      dexcom:
-        enabled: false
-        secret:
-          ClientId: ""
-          ClientSecret: ""
-          StateSalt: ""
-      carelink:
-        enabled: false
-        secret:
-          CareLinkSalt: ""
-      mailchimp:
-        enabled: false
-        secret:
-          MailchimpClinicLists: ""
-          MailchimpURL: ""
-          MailchimpPersonalLists: ""
-          MailchimpApiKey: ""
-      kissmetrics:
-        enabled: false
-        secret:
-          KissmetricsAPIKey: ""
-          KissmetricsToken: ""
-          UCSFKissmetricsAPIKey: ""
-          UCSFWhitelist: ""
+    externallySharedSecrets: {}

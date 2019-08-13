@@ -1,115 +1,183 @@
-global:
-  github:
-    account: tidepool-org
-  cluster:
+company:
+  email: derrick@tidepool.org
+github:
+  account: tidepool-org
+cluster:
+  eks:
     name: yourClusterName
     region: us-west-2
-    logLevel: debug
-    hostnames: []       # array of hostnames to alias to this loadbalancer on this cluster listening to 80 and 443
-  email: derrick@tidepool.org
+  logLevel: debug
+  hostnames: [] 
+  mesh:
+    create: false
+    name: istio
 
 autoscaler:
-  enabled: true
-  chart:
-    repository: https://kubernetes-charts.storage.googleapis.com/
-    name: cluster-autoscaler
-    version: 0.14.2
+  namespace: 
+    name: autoscaler
+    create: true
+  helmrelease:
+    create: true
+    chart:
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      name: cluster-autoscaler
+      version: 0.14.2
 
 certmanager:
-  enabled: true
-  chart:
-    repository: https://charts.jetstack.io
-    name: cert-manager
-    version: v0.8.1
+  namespace:
+    name: certmanager
+    create: true
+  helmrelease:
+    create: true
+    chart:
+      repository: https://charts.jetstack.io
+      name: cert-manager
+      version: v0.8.1
+  clusterIssuer:
+    create: true
 
 externalDNS:
-  enabled: true
-  chart:
-    repository: https://kubernetes-charts.storage.googleapis.com/
-    name: external-dns
-    version: 1.7.9
-  domainfilter: tidepool.org
-  image: registry.opensource.zalan.do/teapot/external-dns
-  tag: latest
+  namespace:
+    name: externalDNS
+    create: true
+  helmrelease:
+    create: true
+    chart:
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      name: external-dns
+      version: 1.7.9
+  deployment:
+    image: registry.opensource.zalan.do/teapot/external-dns
+    tag: latest
+    env:
+      domainfilter: tidepool.org
 
 fluxcloud:
-  enabled: false
-  chart:
-    git: git@github.com:tidepool-org/development
-    path: charts/fluxcloud/0.1.0
-    ref: k8s
-  secretName: ""
-  secrets:
-    url: ""
+  namespace:
+    name: flux
+    create: false
+  helmrelease:
+    create: false
+    chart:
+      git: git@github.com:tidepool-org/development
+      path: charts/fluxcloud/0.1.0
+      ref: k8s
+  secret:
+    create: false
+    name: "slack"
+    data:
+      url: ""
   slack:
     username: "derrickburns"
 
 gloo:
-  enabled: true
-  chart:
-    repository: https://storage.googleapis.com/solo-public-helm/
-    name: gloo
-    version: "0.18.12"
+  namespace: 
+    name: gloo-system
+    create: true
+  gateway:
+    create: true
+  gatewayProxy:
+    hostnames: []
+  helmrelease:
+    create: true
+    chart:
+      repository: https://storage.googleapis.com/solo-public-helm/
+      name: gloo
+      version: "0.18.12"
   crds:
     create: false
   discovery:
     fdsMode: WHITELIST
 
 metricsServer:
-  enabled: true
-  chart:
-    repository: https://kubernetes-charts.storage.googleapis.com/
-    name: metrics-server
-    version: "2.8.2"
+  namespace:
+    name: monitoring
+  helmrelease:
+    create: true
+    chart:
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      name: metrics-server
+      version: "2.8.2"
 
 prometheusOperator:
-  enabled: true
-  chart:
-    repository: https://kubernetes-charts.storage.googleapis.com/
-    name: prometheus-operator
-    version: "5.13.0"
-
+  namespace:
+    name: monitoring
+  helmrelease:
+    create: true
+    chart:
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      name: prometheus-operator
+      version: "5.13.0"
+  
 prometheus:
-  tag: "v2.8.0"
-  replicaCount: 2
-  retention: 12h
+  deployment:
+    tag: "v2.8.0"
+    replicaCount: 2
+    retention: 12h
 
 thanos:
+  namespace:
+    name: monitoring
+    create: false
+  secret:
+    create: true
+    name: thanos-objstore-config
   bucket: tidepool-thanos
-  tag: "v0.3.1"
+  deployment:
+    tag: "v0.3.1"
 
 reloader:
-  enabled: true
-  chart:
-    git: git@github.com:stakater/Reloader
-    path: deployments/kubernetes/chart/reloader
-    ref: master
+  namespace:
+    name: reloader
+    create: true
+  helmrelease:
+    create: true
+    chart:
+      git: git@github.com:stakater/Reloader
+      path: deployments/kubernetes/chart/reloader
+      ref: master
 
 sumologic:
-  enabled: false
-  chart:
-    repository: https://kubernetes-charts.storage.googleapis.com/
-    name: sumologic-fluentd
-    version: 1.1.0
-  secretName: ""
-  secrets:
-    collectorUrl: ""
+  namespace:
+    name: sumologic
+    create: true
+  helmrelease:
+    create: false
+    chart:
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      name: sumologic-fluentd
+      version: 1.1.0
+  secret:
+    create: false
+    name: "sumologic"
+    data:
+      collectorUrl: ""
 
 datadog:
-  enabled: false
-  chart:
-    repository: https://kubernetes-charts.storage.googleapis.com/
-    name: datadog
-    version: 1.31.11
-  secretName: ""
-  secrets:
-    apiKey: ""
-    appKey: ""
+  namespace:
+    name: monitoring
+    create: false
+  helmrelease:
+    create: false
+    chart:
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      name: datadog
+      version: 1.31.11
+  secret:
+    create: false
+    name: "datadog"
+    data:
+      apiKey: ""
+      appKey: ""
 
 kubeStateMetrics:
-  enabled: true
-  chart:
-    repository: https://kubernetes-charts.storage.googleapis.com/
-    name: kube-state-metrics
-    version: 2.2.1
+  namespace:
+    name: monitoring
+    create: false
+  helmrelease:
+    create: true
+    chart:
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      name: kube-state-metrics
+      version: 2.2.1
           

@@ -1,17 +1,17 @@
-{{ if .Values.metricsServer.enabled }}
+{{ if .Values.metricsServer.helmrelease.create }}
 ---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: metrics-server
-  namespace: metrics-server
+  namespace: {{ .Values.metricsServer.namespace.name }}
   annotations:
     flux.weave.works/automated: "false"
 spec:
   releaseName: metrics-server
   chart:
-    {{- .Values.metricsServer.chart | toYaml | nindent 4 }}
+    {{- .Values.metricsServer.helmrelease.chart | toYaml | nindent 4 }}
   values: 
     hostNetwork:
-      enabled: true
+      helmrelease.create: true
 {{ end }}

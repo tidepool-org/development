@@ -1,31 +1,31 @@
-{{ if .Values.externalDNS.enabled }}
+{{ if .Values.externalDNS.helmrelease.create }}
 ---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: external-dns
-  namespace: external-dns-system
+  namespace: {{ .Values.externalDNS.namespace.name }}
   annotations:
     flux.weave.works/automated: "false"
 spec:
   releaseName: external-dns
   chart:
-    {{- .Values.externalDNS.chart | toYaml | nindent 4 }}
+    {{- .Values.externalDNS.helmrelease.chart | toYaml | nindent 4 }}
   values:
     podAnnotations:
       iam.amazonaws.com/role: {{ include "charts.externalDNS.role" . }}
-    domainfilter: {{ .Values.externalDNS.domainfilter | quote }}
+    domainfilter: {{ .Values.externalDNS.deployment.env.domainfilter | quote }}
     image:
-      name: {{ .Values.externalDNS.image | quote }}
+      name: {{ .Values.externalDNS.deployment.image | quote }}
       pullSecrets: {}
-    tag: {{ .Values.externalDNS.tag | quote }}
+    tag: {{ .Values.externalDNS.deployment.tag | quote }}
     ownerid: external-dns 
     rbac:
       create: true
-    logLevel: {{ .Values.global.cluster.logLevel | quote }}
+    logLevel: {{ .Values.cluster.logLevel | quote }}
     provider: aws
     awszonetype: public 
     aws:
-      region: {{ .Values.global.cluster.region | quote }}
-    txtOwnerId: {{ .Values.global.cluster.name | quote }}
+      region: {{ .Values.cluster.eks.region | quote }}
+    txtOwnerId: {{ .Values.cluster.eks.name | quote }}
 {{ end }}

@@ -66,15 +66,14 @@ local metadata_spec(name, namespace) = {
   namespace: namespace,
 };
 
-local VirtualService(routes, name, cors, protocol, hosts_served) = {
-  useSSL:: protocol == 'https',
-
-  virtual_service: if routes then {
+local VirtualService(routes, name, cors, protocol, hosts_served) = 
+  if routes then {
+    local useSSL = protocol == 'https',
     apiVersion: GATEWAY_API_VERSION,
     kind: 'VirtualService',
     metadata: metadata_spec(name, ENVIRONMENT),
     spec: {
-      sslConfig: if self.useSSL then {
+      sslConfig: if useSSL then {
         sniDomains: [EXTERNAL_HOST_NAME],
         secretRef: metadata_spec(TLS_SECRET_NAME, TLS_SECRET_NAMESPACE),
       },
@@ -86,8 +85,7 @@ local VirtualService(routes, name, cors, protocol, hosts_served) = {
       },
       displayName: name,
     },
-  },
-};
+  };
 
 local Upstream(ref) = {
   apiVersion: GLOO_API_VERSION,

@@ -27,8 +27,10 @@ local toEnvironment(name, environment, config) = {
     name: 'tidepool',
     namespace: name,
     annotations: {
-      ['flux.weave.works/tag.' + k]: ('glob:' + environment.gitops.branch + '-*')
+      ['flux.weave.works/tag.' + k]: (environment.gitops.selector + ':' + environment.gitops.filter)
       for k in svcs
+    } + {
+      "flux.weave.works/automated": environment.gitops.automated
     },
   },
   spec: {

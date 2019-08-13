@@ -1,12 +1,11 @@
-{{ if .Values.externalDNS.enabled }}
+{{ if .Values.externalDNS.namespace.create }}
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: external-dns-system
+  name: {{ .Values.externalDNS.namespace.name }}
   labels:
-    istio-injection: disabled
-    linkerd.io/inject: enabled
+{{ include "charts.mesh.labels" . }}
   annotations:
     iam.amazonaws.com/permitted: {{ include "charts.externalDNS.role" . }}
-  {{ end }}
+{{ end }}

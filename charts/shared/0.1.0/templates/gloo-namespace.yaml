@@ -1,11 +1,10 @@
-{{ if .Values.gloo.enabled }}
+{{ if .Values.gloo.namespace.create }}
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: gloo-system
+  name: {{ .Values.gloo.namespace.name }}
   labels:
-      istio-injection: disabled
-      linkerd.io/inject: disabled
+{{ include "charts.mesh.labels" . }}
 {{ end }}
 

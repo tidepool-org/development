@@ -1,27 +1,28 @@
-{{ if .Values.datadog.enabled }}
+{{ if .Values.datadog.helmrelease.create }}
 ---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
-  name: datadog-agent
-  namespace: datadog
+  name: datadog
+  namespace: {{ .Values.datadog.namespace.name }}
   annotations:
     flux.weave.works/automated: "false"
 spec:
   releaseName: datadog
   chart:
-    {{- .Values.datadog.chart | toYaml | nindent 4 }}
+    {{- .Values.datadog.helmrelease.chart | toYaml | nindent 4 }}
   values:
     kubeStateMetrics:
-      enabled: false
+      helmrelease:
+        create: false
     datadog:
-      apiKeyExistingSecret: {{ .Values.datadog.secretName | default "datadog" }}
-      appKeyExistingSecret: {{ .Values.datadog.secretName | default "datadog" }}
-      cluster.name: {{ .Values.global.cluster.name }}
-      logLevel: {{ .Values.global.cluster.logLevel }}
+      apiKeyExistingSecret: {{ .Values.datadog.secret.name }}
+      appKeyExistingSecret: {{ .Values.datadog.secret.name }}
+      cluster.eks.name: {{ .Values.cluster.eks.name }}
+      logLevel: {{ .Values.cluster.logLevel }}
     clusterAgent:
       token: {{ randAlphaNum 32 | b64enc | quote }}
       enabled: true
       metricsProvider:
-        enabled: true
+        enabled: {{ .Values.metricsProvider.helmrelease.cerate }}
 {{ end }}

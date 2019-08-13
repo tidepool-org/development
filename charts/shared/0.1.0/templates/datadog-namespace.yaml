@@ -1,10 +1,9 @@
-{{ if .Values.datadog.enabled }}
+{{ if .Values.datadog.namespace.create }}
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: datadog
+  name: {{ .Values.datadog.namespace.name }}
   labels:
-    istio-injection: disabled
-    linkerd.io/inject: disabled
+{{ include "charts.mesh.labels" . }}
 {{ end }}

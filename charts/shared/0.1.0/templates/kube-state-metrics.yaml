@@ -1,10 +1,10 @@
-{{ if .Values.kubeStateMetrics.enabled }}
+{{ if .Values.kubeStateMetrics.namespace.create }}
 ---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: kube-state-metrics
-  namespace: datadog
+  namespace: {{ .Values.kubeStateMetrics.namespace.name }}
   annotations:
     flux.weave.works/automated: "false"
 spec:

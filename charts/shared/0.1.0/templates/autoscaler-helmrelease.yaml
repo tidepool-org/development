@@ -1,24 +1,24 @@
-{{ if .Values.autoscaler.enabled }}
+{{ if .Values.autoscaler.helmrelease.create }}
 ---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: autoscaler
-  namespace: autoscaler
+  namespace: {{ .Values.autoscaler.namespace.name }}
   annotations:
     flux.weave.works/automated: "false"
 spec:
   releaseName: autoscaler
   chart:
-    {{- .Values.autoscaler.chart | toYaml | nindent 4 }}
+    {{- .Values.autoscaler.helmrelease.chart | toYaml | nindent 4 }}
   values: 
     rbac:
       create: true
     autoDiscovery:
-      cluster.name: {{ .Values.global.cluster.name | quote }}
-    awsRegion: {{ .Values.global.cluster.region | quote }}
+      cluster.eks.name: {{ .Values.cluster.eks.name | quote }}
+    awsRegion: {{ .Values.cluster.eks.region | quote }}
     serviceMonitor:
-      enabled: true
+      helmrelease.create: true
     sslCertHostPath: /etc/ssl/certs/ca-bundle.crt
     extraArgs:
       v: 4

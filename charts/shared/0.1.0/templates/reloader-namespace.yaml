@@ -1,10 +1,9 @@
-{{ if .Values.reloader.enabled }}
+{{ if .Values.reloader.namespace.create }}
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: reloader
+  name: {{ .Values.reloader.namespace.name }}
   labels:
-    istio-injection: disabled
-    linkerd.io/inject: enabled
+{{ include "charts.mesh.labels" . }}
 {{ end }}

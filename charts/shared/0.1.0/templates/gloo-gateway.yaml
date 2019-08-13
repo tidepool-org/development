@@ -1,4 +1,4 @@
-{{ if .Values.gloo.enabled }}
+{{ if .Values.gloo.gateway.create }}
 ---
 apiVersion: gateway.solo.io.v2/v2
 kind: Gateway
@@ -6,7 +6,7 @@ metadata:
   annotations:
     origin: default
   name: gateway-ssl
-  namespace: gloo-system
+  namespace: {{ .Values.gloo.namespace.name }}
 spec:
   ssl: true
   bindAddress: '::'

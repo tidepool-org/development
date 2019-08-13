@@ -1,10 +1,9 @@
-{{ if .Values.sumologic.enabled }}
+{{ if .Values.sumologic.namespace.create }}
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: sumologic
+  name: {{ .Values.sumologic.namespace.name }}
   labels:
-    istio-injection: disabled
-    linkerd.io/inject: disabled
+{{ include "charts.mesh.labels" . }}
 {{ end }}

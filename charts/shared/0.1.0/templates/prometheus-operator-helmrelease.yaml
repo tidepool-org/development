@@ -1,31 +1,32 @@
-{{ if .Values.prometheusOperator.enabled }}
+{{ if .Values.prometheusOperator.helmrelease.create }}
 ---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: prometheus-operator
-  namespace: monitoring
+  namespace: {{ .Values.prometheusOperator.namespace.name }}
 spec:
   releaseName: prometheus-operator
   chart:
-    {{- .Values.prometheusOperator.chart | toYaml | nindent 4 }}
+    {{- .Values.prometheusOperator.helmrelease.chart | toYaml | nindent 4 }}
   values:
     prometheus:
       prometheusSpec:
-        replicas: {{ .Values.prometheus.replicaCount }}      # work in High-Availability mode
-        retention: "{{ .Values.prometheus.retention }}"    # we only need a few hours of retention, since the rest is uploaded to blob
+        replicas: {{ .Values.prometheus.deployment.replicaCount }}      # work in High-Availability mode
+        retention: "{{ .Values.prometheus.deployment.retention }}"    # we only need a few hours of retention, since the rest is uploaded to blob
         image:
-          tag: "{{ .Values.prometheus.tag }}"     # use a specific version of Prometheus
+          tag: "{{ .Values.prometheus.deployment.tag }}"     # use a specific version of Prometheus
         externalLabels:  # a cool way to add default labels to all metrics 
           geo: us          
-          region: {{ .Values.global.cluster.region | quote }}
+          region: {{ .Values.cluster.eks.region | quote }}
         serviceMonitorNamespaceSelector:  # allows the operator to find target config from multiple namespaces
           any: true
         thanos:         # add Thanos Sidecar
-          tag: "{{ .Values.thanos.tag }}"    # a specific version of Thanos
+          tag: "{{ .Values.thanos.deployment.tag }}"    # a specific version of Thanos
           objectStorageConfig: # blob storage configuration to upload metrics 
             key: thanos.yaml
-            name: thanos-objstore-config
+            name: {{ .Values.thanos.secret.name }}
     grafana:           # (optional) we don't need Grafana in all clusters
-      enabled: false
+      helmrelease:
+        create: false
 {{ end }}

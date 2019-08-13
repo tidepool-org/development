@@ -3,10 +3,9 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 DEV_REPO=${DEV_REPO:-$DIR/..}
 
-
 TO_GLOO_JSONNET=$DEV_REPO/jsonnet/togloo.jsonnet
 
 export CONFIG_DATA=$(helm template --namespace=default ${DEV_REPO}/charts/tidepool/0.1.7  | mappings | yq read -j -)
 
 # create complete HelmReleases in a directory, with one file per helm release
-jsonnet $TO_GLOO_JSONNET  --ext-code CONFIG_DATA="$CONFIG_DATA" 
+jsonnet $TO_GLOO_JSONNET  --ext-code config="$CONFIG_DATA" 

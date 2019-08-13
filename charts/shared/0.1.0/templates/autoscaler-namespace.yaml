@@ -1,12 +1,11 @@
-{{ if .Values.autoscaler.enabled }}
+{{ if .Values.autoscaler.namespace.create }}
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: autoscaler
   labels:
-    istio-injection: disabled
-    linkerd.io/inject: disabled
+{{ include "charts.mesh.labels" . }}
   annotations:
     iam.amazonaws.com/permitted: {{ include "charts.autoscaler.role" . }}
 {{ end }}

@@ -1,20 +1,20 @@
-{{ if .Values.sumologic.enabled }}
+{{ if .Values.sumologic.helmrelease.create }}
 ---
 apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
-  name: sumologic-fluentd
-  namespace: sumologic
+  name: sumologic
+  namespace: {{ .Values.sumologic.namespace.name }}
   annotations:
     flux.weave.works/automated: "true" 
 spec:
-  releaseName: sumologic-fluentd
+  releaseName: sumologic
   chart:
-    {{- .Values.sumologicFluentd.chart | toYaml | nindent 4 }}
+    {{- .Values.sumologic.helmrelease.chart | toYaml | nindent 4 }}
   values:
     sumologic:
-      collectorUrlExistingSecret:  {{ .Values.sumologic.secretName | default "sumologic" }}
-      sourceCategoryPrefix: {{ .Values.global.cluster.name }}
+      collectorUrlExistingSecret:  {{ .Values.sumologic.secret.name }}
+      sourceCategoryPrefix: {{ .Values.cluster.eks.name }}
       readFromHead: false
     rbac:
       create: true
