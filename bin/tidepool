@@ -103,6 +103,17 @@ set_kubeconfig() {
   curl http://127.0.0.1:10080/config > ~/.kube/config
 }
 
+destroy() {
+  read -p "Are you sure you want to destroy the local tidepool server? [N|y] " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]
+  then
+    run_docker_compose rm -fsv
+  else
+    echo "Destroy command aborted"
+  fi
+}
+
 case ${1-help} in
   server-start) (cd ${DIR} && run_docker_compose up -d ${2-});;
   server-stop) (cd ${DIR} && run_docker_compose stop ${2-});;
@@ -111,7 +122,7 @@ case ${1-help} in
   server-docker) run_docker "${@:2}";;
   server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
   server-prune) (run_docker "system prune --volumes -af");;
-  server-destroy) (cd ${DIR} && run_docker_compose rm -fsv);;
+  server-destroy) (cd ${DIR} && destroy);;
   start) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up --port=0 ${2-});;
   stop) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
   restart) restart ${2-};;
