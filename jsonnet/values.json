@@ -71,6 +71,15 @@
 				},
 				"values": {
 					"global": {
+						"hpa" : {
+							"create": true,
+							"maxReplicas": 10,
+							"minReplicas": 1,
+							"targetCPUUtilizationPercentage": 50
+						},
+						"secrets" : {
+							"create": false
+						},
 						"hosts": {
 							"default": {
 								"protocol": "https"

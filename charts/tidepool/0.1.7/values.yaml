@@ -1,26 +1,28 @@
 global:
-  fullnameOverride: ""                          #
-  nameOverride: ""                              # the name to use for the helm chart, if given
+  fullnameOverride: ""                            #
+  nameOverride: ""                                # the name to use for the helm chart, if given
     
   cluster:
-    region: "us-west-2"                           # AWS region
-    name: "foobar"                                # K8s cluster name
+    eks:
+      region: "us-west-2"                         # AWS region
+      name: "foobar"                              # K8s cluster name
     mesh:                                         # service mesh to use
       name: linkerd
       enabled: false
-    gateway:                                        # gateway service                  
+    gateway:                                      # gateway service                  
       type: "LoadBalancer"
       proxy:                                                            
         name: gateway-proxy-v2                                             
         namespace: gloo-system  
-    logLevel: info                               # the default log level for all services
+    logLevel: info                                # the default log level for all services
   environment:                                    # the cluster name
     namespace:
       create: false                               # whether to create the namespace
     hpa:
       create: false                               # whether to create the HPAs
-    secrets:
-      create: true                                # whether to create the secrets
+      maxReplicas: 10
+      minReplicas: 1
+      targetCPUUtilizationPercentage: 50
     hosts:
       default:
         protocol: http                            # the protocol to use for signup emails
@@ -45,10 +47,6 @@ global:
       requests:
         cpu: 50m
         memory: 32Mi
-    hpa:
-      maxReplicas: 10
-      minReplicas: 1
-      targetCPUUtilizationPercentage: 50
     securityContext:                              # the security context for all services
       allowPrivilegeEscalation: false
       runAsNonRoot: true                          # we don't need root access
@@ -57,69 +55,60 @@ global:
         drop:
         - ALL
 
-
 # environment-wide secrets
 userdata:
   secret: 
-    UserPasswordSalt: ""
-    UserIdSalt: ""
-    GroupIdEncryptionKey: ""
+    create: false
+    data_: 
+      UserPasswordSalt: ""
+      UserIdSalt: ""
+      GroupIdEncryptionKey: ""
 server:
   secret:
-    ServiceAuth: ""
+    create: false
+    data_:
+      ServiceAuth: ""
 mongo:  
   secret:
-    Scheme: "mongodb"
-    Addresses: "mongodb"
-    Username: ""
-    Password: ""
-    Database: ""
-    Tls: "true"
-    OptParams: ""
+    create: false
+    data_:
+      Scheme: "mongodb"
+      Addresses: "mongodb"
+      Username: ""
+      Password: ""
+      Database: ""
+      Tls: "true"
+      OptParams: ""
 
 # per-enviroment externally-shared-secrets
 dexcom:
-  enabled: false
   secret:
-    ClientId: ""
-    ClientSecret: ""
-    StateSalt: ""                            # the Dexcom client API url
+    create: false
+    data_:
+      ClientId: ""
+      ClientSecret: ""
+      StateSalt: ""                            # the Dexcom client API url
 carelink:
-  enabled: false
   secret:
-    CareLinkSalt: ""
+    create: false
+    data_:
+      CareLinkSalt: ""
 mailchimp:
-  enabled: false
   secret:
-    MailchimpClinicLists: ""
-    MailchimpURL: ""
-    MailchimpPersonalLists: ""
-    MailchimpApiKey: ""
+    create: false
+    data_:
+      MailchimpClinicLists: ""
+      MailchimpURL: ""
+      MailchimpPersonalLists: ""
+      MailchimpApiKey: ""
 kissmetrics:
-  enabled: false
   secret:
-    KissmetricsAPIKey: ""
-    KissmetricsToken: ""
-    UCSFKissmetricsAPIKey: ""
-    UCSFWhitelist: ""
-
-# cluster-wide third-party services
-sumologic: 
-  enabled: false
-  secret:
-    CollectorUrl:  ""                           # Sumologic collector URL
-datadog:
-  enabled: false
-  secret:
-    APIKey: ""                                  # Datadog API key
-    AppKey: ""                                  # Datadog Application key
-fluxcloud: 
-  enabled: false
-  secret:
-    url: ""                                     # Slack Webhook url
-externalDNS: # new level
-  enabled: false
-  hostnames: []                                 # list of hosts to publish to DNS
+    create: false
+    data_:
+      KissmetricsAPIKey: ""
+      KissmetricsToken: ""
+      UCSFKissmetricsAPIKey: ""
+      UCSFWhitelist: ""
 
 # per environment, third-party-internal-services
 nosqlclient:
@@ -192,16 +181,18 @@ highwater:
     port: 9191
 auth:
   secret:
-    ServiceAuth:  ""
+    create: false
+    data_:
+      ServiceAuth:  ""
   deployment:
     image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-    env:
-      dexcomSecretName: "dexcom"
   service:
     port: 9222
 blob:
   secret:
-    ServiceAuth: "" 
+    create: false
+    data_:
+      ServiceAuth: "" 
   service:
     port: 9225   
   deployment:
@@ -212,14 +203,18 @@ blob:
       bucket: ""                                            
 data:
   secret:
-    ServiceAuth: ""
+    create: false
+    data_:
+      ServiceAuth: ""
   service:
     port: 9220
   deployment:
     image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 image:
   secret:
-    ServiceAuth: ""
+    create: false
+    data_:
+      ServiceAuth: ""
   service:
     port: 9226 
   deployment:
@@ -230,14 +225,18 @@ image:
       bucket:  ""
 notification:
   secret:
-    ServiceAuth: ""
+    create: false
+    data_:
+      ServiceAuth: ""
   service:
     port: 9223 
   deployment:
     image: tidepool/platform-notification:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 task:
   secret:
-    ServiceAuth: ""
+    create: false
+    data_:
+      ServiceAuth: ""
   service:
     port: 9224 
   deployment:
@@ -246,10 +245,11 @@ task:
       queue:
         delay: 5
         workers: 5
-      
 user:
   secret:
-    ServiceAuth: ""
+    create: false
+    data_:
+      ServiceAuth: ""
   deployment:
     image: tidepool/platform-user:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
   service:
@@ -260,13 +260,17 @@ tools:
     image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 shoreline:
   configmap:
-    ClinicDemoUserId: ""
+    create: false
+    data:
+      ClinicDemoUserId: ""
   secret:
-    ServiceAuth: ""
-    UserLongTermKey: 
-    UserMailVerification: ""
-    UserPasswordSalt: ""
-    ClinicDemoUserId: ""
+    create: false
+    data_:
+      ServiceAuth: ""
+      UserLongTermKey: 
+      UserMailVerification: ""
+      UserPasswordSalt: ""
+      ClinicDemoUserId: ""
   deployment:
     image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
   service:

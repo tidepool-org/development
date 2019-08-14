@@ -1,4 +1,4 @@
-{{ if .Values.shoreline.configmap.ClinicDemoUserId -}}
+{{ if .Values.shoreline.configmap.create -}}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -11,5 +11,5 @@ metadata:
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 data:
-  ClinicDemoUserId: {{ .Values.shoreline.configmap.ClinicDemoUserId | quote }}
+  ClinicDemoUserId: {{ .Values.shoreline.configmap.data.ClinicDemoUserId | quote }}
 {{- end }}

@@ -1,9 +1,0 @@
-{{ if .Values.prometheusOperator.namespace.create }}
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ .Values.prometheusOperator.namespace.name }}
-  labels:
-{{ include "charts.mesh.labels" . }}
-{{ end }}

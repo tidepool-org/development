@@ -1,9 +1,0 @@
-{{ if .Values.datadog.namespace.create }}
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ .Values.datadog.namespace.name }}
-  labels:
-{{ include "charts.mesh.labels" . }}
-{{ end }}
