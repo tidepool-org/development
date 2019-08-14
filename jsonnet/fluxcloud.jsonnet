@@ -16,6 +16,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'fluxcloud', se
         channel: channel(config),
         username: config.slack.username,
       },
+      secretName: service.secret.name
     },
   },
 };
