@@ -7,7 +7,6 @@ cluster:
     name: yourClusterName
     region: us-west-2
   logLevel: debug
-  hostnames: [] 
   mesh:
     create: false
     name: istio
@@ -113,7 +112,8 @@ prometheus:
   deployment:
     tag: "v2.8.0"
     replicaCount: 2
-    retention: 12h
+    env:
+      retention: 12h
 
 thanos:
   namespace:

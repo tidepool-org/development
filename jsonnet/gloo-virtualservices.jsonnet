@@ -66,7 +66,7 @@ local metadata_spec(name, namespace) = {
   namespace: namespace,
 };
 
-local VirtualService(routes, name, cors, protocol, hosts_served) = 
+local VirtualService(routes, name, cors, protocol, hosts_served) =
   if routes then {
     local useSSL = protocol == 'https',
     apiVersion: GATEWAY_API_VERSION,

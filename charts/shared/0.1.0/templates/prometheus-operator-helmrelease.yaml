@@ -13,7 +13,7 @@ spec:
     prometheus:
       prometheusSpec:
         replicas: {{ .Values.prometheus.deployment.replicaCount }}      # work in High-Availability mode
-        retention: "{{ .Values.prometheus.deployment.retention }}"    # we only need a few hours of retention, since the rest is uploaded to blob
+        retention: "{{ .Values.prometheus.deployment.env.retention }}"    # we only need a few hours of retention, since the rest is uploaded to blob
         image:
           tag: "{{ .Values.prometheus.deployment.tag }}"     # use a specific version of Prometheus
         externalLabels:  # a cool way to add default labels to all metrics 
