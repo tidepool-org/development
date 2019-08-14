@@ -7,6 +7,8 @@ kind: Certificate
 metadata:
   name: {{ include "charts.default.host" . }}}
   namespace: {{ $.Release.Namespace }}
+  labels:
+{{ include "charts.labels.standard .}}
 spec:
   secretName: {{ include "charts.certificate.secretName" . }}
   issuerRef:

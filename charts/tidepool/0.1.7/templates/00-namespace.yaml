@@ -5,6 +5,7 @@ kind: Namespace
 metadata:
   name: {{.Release.Namespace}}
   labels:
+{{ include "charts.labels.standard .}}
   {{- if eq .Values.global.cluster.mesh.name "istio" }}
     istio-injection: {{ .Values.global.cluster.mesh.enabled }}
   {{ end }}

@@ -4,10 +4,7 @@ metadata:
   name: dexcom
   namespace: {{ .Release.Namespace }}
   labels:
-    helm.sh/chart: {{ include "charts.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/name: {{ include "charts.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "charts.labels.standard .}}
 data:
   RedirectURL: "{{include "charts.host.external.tp" .}}/v1/oauth/dexcom/redirect"
   TokenURL: "https://api.dexcom.com/v1/oauth2/token"                

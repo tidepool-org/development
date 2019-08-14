@@ -6,6 +6,8 @@ metadata:
   annotations:
   name: user
   namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "charts.labels.standard .}}
 spec:
   maxReplicas: {{ .Values.global.environment.hpa.maxReplicas | default 10 }}
   minReplicas: {{ .Values.global.environment.hpa.minReplicas | default 1 }}

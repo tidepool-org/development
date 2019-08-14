@@ -5,10 +5,7 @@ kind: Deployment
 metadata:
   labels:
     app: nosqlclient
-    helm.sh/chart: {{ include "charts.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/name: {{ include "charts.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "charts.labels.standard .}}
   name: nosqlclient
   namespace: {{.Release.Namespace}}
 spec:

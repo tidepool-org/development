@@ -136,10 +136,7 @@ metadata:
       service: blip.{{ .Release.Namespace }}:{{.Values.blip.service.port}}
   labels:
     app: blip
-    app.kubernetes.io/name: {{ include "charts.name" . }}
-    helm.sh/chart: {{ include "charts.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "charts.labels.standard .}}
   name: blip
   namespace: {{.Release.Namespace}}
 spec:

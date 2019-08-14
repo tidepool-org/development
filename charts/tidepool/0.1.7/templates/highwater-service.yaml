@@ -17,10 +17,7 @@ metadata:
       service: highwater.{{ .Release.Namespace }}:{{.Values.highwater.service.port}}
   labels:
     app: highwater
-    helm.sh/chart: {{ include "charts.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/name: {{ include "charts.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "charts.labels.standard .}}
   name: highwater
   namespace: {{.Release.Namespace}}
 spec:

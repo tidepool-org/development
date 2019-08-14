@@ -13,6 +13,9 @@ kind: VirtualService
 metadata:
   name: '{{ $legalName }}'
   namespace: '{{ $.Release.Namespace }}'
+  labels:
+    app: gloo
+{{ include "charts.labels.standard .}}
 spec:
   displayName: '{{ $legalName }}'
   virtualHost:

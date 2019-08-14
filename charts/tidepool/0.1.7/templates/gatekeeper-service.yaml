@@ -16,10 +16,7 @@ metadata:
       service: gatekeeper.{{ .Release.Namespace }}:{{.Values.gatekeeper.service.port}}
   labels:
     app: gatekeeper
-    helm.sh/chart: {{ include "charts.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/name: {{ include "charts.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "charts.labels.standard .}}
   name: gatekeeper
   namespace: {{.Release.Namespace}}
 spec:

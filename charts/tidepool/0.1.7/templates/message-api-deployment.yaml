@@ -4,10 +4,7 @@ kind: Deployment
 metadata:
   labels:
     app: message-api
-    helm.sh/chart: {{ include "charts.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/name: {{ include "charts.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "charts.labels.standard .}}
   name: message-api
   namespace: {{.Release.Namespace}}
   annotations:

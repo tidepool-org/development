@@ -8,6 +8,8 @@ metadata:
   annotations:
     {{ .Values.global.cluster.gateway.annotations | toYaml | nindent 4 }}
 {{- end }}
+  labels:
+{{ include "charts.labels.standard .}}
 spec:
   externalTrafficPolicy: Local
   ports:

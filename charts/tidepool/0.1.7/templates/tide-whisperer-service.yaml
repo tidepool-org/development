@@ -17,10 +17,7 @@ metadata:
       service: tide-whisperer.{{ .Release.Namespace }}:{{.Values.tidewhisperer.service.port}}
   labels:
     app: tide-whisperer
-    helm.sh/chart: {{ include "charts.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/name: {{ include "charts.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "charts.labels.standard .}}
   name: tide-whisperer
   namespace: {{.Release.Namespace}}
 spec:

@@ -231,3 +231,11 @@ Create liveness and readiness probes for platform services.
         image: busybox
         command: ['sh', '-c', 'until nc -zvv shoreline {{.Values.shoreline.service.port}}; do echo waiting for shoreline; sleep 2; done;']
 {{- end -}} 
+
+{{- define "charts.labels.standard" -}}
+    cluster: {{ .Values.global.cluster.eks.name }}
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{ end }}
