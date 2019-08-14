@@ -59,4 +59,34 @@
       annotations: this.permittedAnnotation(config, service.namespace.name),
     },
   },
+
+  externalSecret(config, env, base, service):: $._Object('kubernetes-client.io/v1', 'ExternalSecret', base) {
+    local  key = config.eks.cluster.name + "/" + env + "/" + base,
+    secretDescriptor : {
+      backendType: "secretsManager",
+      data: [ 
+        {
+          key: key,
+          name: name,
+          property: name
+        } for name in std.objectFields(service.secret.data_)
+      ]
+    }
+  },
+
+  hpa(name, namespace, min=1, max=10, targetCPUUtilizationPercentage=50):: $._Object('autoscaling/v1', 'HorizontalPodAutoscaler', name) {
+    metadata+: {
+      namespace: namespace
+    },
+    spec+: {
+      maxReplicas: max,
+      minReplicas: min,
+      scaleTargetRef: {
+        apiVersion: "extensions/v1beta1",
+        kind: "Deployment",
+        name: name
+      },
+      targetCPUUtilizationPercentage: targetCPUUtilizationPercentage 
+    }
+  }
 }

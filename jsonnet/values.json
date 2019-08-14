@@ -48,6 +48,9 @@
 				"name": "gateway-proxy-v2",
 				"namespace": "gloo-system"
 			}
+		},
+		"hpa" : {
+			"create": true
 		}
 	},
 	"tidepool": {

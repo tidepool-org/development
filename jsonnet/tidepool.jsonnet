@@ -48,7 +48,11 @@ local HelmRelease(config, name, service) = helpers.helmrelease(config, name, ser
   },
 };
 
+local HPAs(namespace) = { [namespace + "-" + name+ "-HPA"] : helpers.hpa(name, namespace) for name in svcs };
+
 function(config) (
   local converter(name, service) = if service.helmrelease.create then HelmRelease(config, name, service);
+  // add HPAs
+  // add externalSecrets
   std.prune(std.mapWithKey(converter, config.tidepool.services))
 )
