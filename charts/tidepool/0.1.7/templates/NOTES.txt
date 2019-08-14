@@ -7,32 +7,40 @@ To learn more about the release, try:
   $ helm status {{ .Release.Name }}
   $ helm get {{ .Release.Name }}
 
-{{ if .Values.global.environment.secrets.create }}
-The Tidepool services rely on various secrets to encrypt and decrypt
-data. You need to provide those secret.
+{{ if .Values.userdata.secret.create }}
 
-Some of those secrets are provided by or shared with third parties
-(e.g. Dexcom, Mailchimp, UCSF).  You need to supply these in the
-form of Kubernetes Secret manifests.  If you do not provide them,
-then the associated services are not available.  Look in the
-deployment files for secrets that are marked optional.
+{{ if not .Values.userdata.secret.data_.GroupIdEncryptionKey }}
+WARNING: You have elected to randomly generate the `userdata` `GroupIdEncryptionKey`. If you persist any data to your Tidepool instance, the
+user data will be encrypted with this key. If you then restart your Tidepool instance, a new key will be generated and you will
+not be able to decrypt data that was encrypted with the old key. 
+{{ end }}
 
-Other secrets are for used only within your Tidepool environments.
-You have just generated those with Helm.
+{{ if not .Values.userdata.secret.data_.UserIdSalt }}
+WARNING: You have elected to randomly generate the `userdata` `UserIdSalt`. If you persist any data to your Tidepool instance, the
+user ids will be salted with this value. If you then restart your Tidepool instance, any user ides that were created will not match new user id because the salt values will be different.
+{{ end }}
 
-Each time you install this Helm chart, a new set of secrets are
-generated.  This is fine, IF you throw away all you data between
-installations.  However, if you persist your data, then you need
-to keep the same secrets from one installation to the next.
+{{ if not .Values.userdata.secret.data_.UserPasswordSalt }}
+WARNING: You have elected to randomly generate the `userdata` `UserPasswordSalt`. If you persist any data to your Tidepool instance, the
+user passwords will be salted with this value. If you then restart your Tidepool instance, any passwords that were created will not match any new passwords entered because the salt values will be different.
+{{ end }}
 
-You may generate secrets using this helm chart and save them to a file with:
+If you are simply testing Tidepool, this is fine.  However, if you are plan to store data persistenly in Tidepool, then you 
+need to generate secrets separately from installing them into your cluster:
 
-$ helm template -f values.yaml . | yq 'filter(.kind == "Secret")' >secret.yaml
+To generate your secrets:
+```bash
+helm template . -x templates/userdata-secret.yaml > userdata-secret.yaml
+```
 
-To load the secret file, in the directory where you stored your secrets, run:
+To install your cluster, install the secrets file `userdata-secret.yaml` file using `kubectl` and the rest of the
+Tidepool manifests with `helm`:
 
-  kubectl apply -f secret.yaml
-
-{{- end }}
+Override the default values in `value.yaml` with:
+```bash
+kubectl apply -f userdata-secret.yaml
+helm install --set "userdata.secret.create=false"
+```
+{{-end }}
 
 
