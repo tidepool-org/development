@@ -43,14 +43,16 @@ local ClusterIssuer(config, service, server, name) = {
 
 function(config) {
   local service = config.services.certmanager,
-  certmanagerHelmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  certmanagerNamespace: if service.namespace.create then helpers.namespace(config, 'certmanager', service),
-  certmanagerStagingClusterissuer:
-    ClusterIssuer(config, service,
+  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
+  Namespace: if service.namespace.create then helpers.namespace(config, 'certmanager', service),
+  StagingClusterIssuer:
+    ClusterIssuer(config,
+                  service,
                   'https://acme-staging-v02.api.letsencrypt.org/directory',
                   'letsencrypt-staging'),
-  certmanagerProductionClusterissuer:
-    ClusterIssuer(config, service,
+  ProductionClusterIssuer:
+    ClusterIssuer(config,
+                  service,
                   'https://acme-v02.api.letsencrypt.org/directory',
                   'letsencrypt-production'),
 }

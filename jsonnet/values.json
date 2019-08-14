@@ -117,7 +117,7 @@
 	"services": {
 		"kiam": {
 			"namespace": {
-				"name": "default",
+				"name": "kube-system",
 				"create": false
 			},
 			"helmrelease": {

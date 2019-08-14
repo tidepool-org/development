@@ -67,7 +67,7 @@ local Secret(config, service) = helpers.secret(config, 'thanos', service) {
 
 function(config) {
   local service = config.services.prometheusOperator,
-  PrometheusOperatorHelmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  PrometheusOperatorNamespace: if service.namespace.create then helpers.namespace(config, 'prometheusOperator', service),
+  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
+  Namespace: if service.namespace.create then helpers.namespace(config, 'prometheusOperator', service),
   //ThanosSecret: Secret(config, service), // XXX
 }

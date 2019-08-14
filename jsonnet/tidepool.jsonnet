@@ -50,9 +50,5 @@ local HelmRelease(config, name, service) = helpers.helmrelease(config, name, ser
 
 function(config) (
   local converter(name, service) = if service.helmrelease.create then HelmRelease(config, name, service);
-  local helmreleases = std.prune(std.mapWithKey(converter, config.tidepool.services));
-  {
-    [k + '-helmrelease.json']: helmreleases[k]
-    for k in std.objectFields(helmreleases)
-  }
+  std.prune(std.mapWithKey(converter, config.tidepool.services))
 )

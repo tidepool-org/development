@@ -80,7 +80,7 @@ local Gateway(config, service) = {
 function(config) {
   local service = config.services.gloo,
 
-  GlooHelmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  GlooNamespace: if service.namespace.create then helpers.namespace(config, 'gloo', service),
-  GlooGateway: if service.gateway.create then Gateway(config, service),
+  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
+  Namespace: if service.namespace.create then helpers.namespace(config, 'gloo', service),
+  Gateway: if service.gateway.create then Gateway(config, service),
 }

@@ -23,7 +23,7 @@ local Helmrelease(config, service) =
         clusterAgent: {
           enabled: true,
           metricsProvider: {
-            enabled: true, // XXX
+            enabled: true,  // XXX
           },
         },
       },
@@ -32,7 +32,7 @@ local Helmrelease(config, service) =
 
 function(config) {
   local service = config.services.datadog,
-  DatadogHelmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  DatadogSecret: if service.secret.create then helpers.secret(config, 'datadog', service),
-  DatadogNamespace: if service.namespace.create then helpers.namespace(config, 'datadog', service),
+  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
+  Secret: if service.secret.create then helpers.secret(config, 'datadog', service),
+  Namespace: if service.namespace.create then helpers.namespace(config, 'datadog', service),
 }

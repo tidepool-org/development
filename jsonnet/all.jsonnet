@@ -1,31 +1,27 @@
 local config = import 'values.json';
 
-local autoscaler = import 'autoscaler.jsonnet';
-local certmanager = import 'certmanager.jsonnet';
-local clusterconfig = import 'clusterconfig.jsonnet';
-local datadog = import 'datadog.jsonnet';
-local externalDNS = import 'externalDNS.jsonnet';
-local fluxcloud = import 'fluxcloud.jsonnet';
-local gloo = import 'gloo.jsonnet';
-local kiam = import 'kiam.jsonnet';
-local kubeStateMetrics = import 'kubeStateMetrics.jsonnet';
-local metricsServer = import 'metricsServer.jsonnet';
-local prometheusOperator = import 'prometheusOperator.jsonnet';
-local reloader = import 'reloader.jsonnet';
-local sumologic = import 'sumologic.jsonnet';
-local tidepool = import 'tidepool.jsonnet';
+local services = [
+  import 'autoscaler.jsonnet',
+  import 'certmanager.jsonnet',
+  import 'datadog.jsonnet',
+  import 'externalDNS.jsonnet',
+  import 'fluxcloud.jsonnet',
+  import 'gloo.jsonnet',
+  import 'kiam.jsonnet',
+  import 'kubeStateMetrics.jsonnet',
+  import 'metricsServer.jsonnet',
+  import 'prometheusOperator.jsonnet',
+  import 'reloader.jsonnet',
+  import 'sumologic.jsonnet',
+  import 'tidepool.jsonnet',
+];
 
-std.prune(autoscaler(config)+
-certmanager(config) +
-clusterconfig(config) +
-datadog(config) +
-externalDNS(config) +
-fluxcloud(config) +
-gloo(config) +
-kiam(config) +
-kubeStateMetrics(config) +
-metricsServer(config) +
-prometheusOperator(config) +
-reloader(config) +
-sumologic(config) +
-tidepool(config))
+local name(m) = if m.kind == 'Namespace' || m.metadata.name == m.metadata.namespace
+then m.metadata.name + '-' + m.kind
+else m.metadata.namespace + '-' + m.metadata.name + '-' + m.kind;
+
+local Manifests(svcs, conf) = [std.prune(s(conf)) for s in svcs];
+
+local Rename(m) = { [name(m[field]) + '.json']: m[field] for field in std.objectFields(m) };
+
+std.foldl(function(x, y) x + Rename(y), Manifests(services, config), {})

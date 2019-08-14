@@ -30,6 +30,6 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'autoscaler', s
 
 function(config) {
   local service = config.services.autoscaler,
-  AutoscalerHelmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  AutoscalerNamespace: if service.namespace.create then helpers.namespace(config, 'autoscaler', service),
+  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
+  Namespace: if service.namespace.create then helpers.namespace(config, 'autoscaler', service),
 }

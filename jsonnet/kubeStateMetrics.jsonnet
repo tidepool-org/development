@@ -17,5 +17,5 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'kubeStateMetri
 
 function(config) {
   local service = config.services.kubeStateMetrics,
-  KubeStateMetricsHelmrelease: if service.helmrelease.create then Helmrelease(config, service),
+  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
 }

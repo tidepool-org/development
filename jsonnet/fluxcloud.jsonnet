@@ -22,6 +22,6 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'fluxcloud', se
 
 function(config) {
   local service = config.services.fluxcloud,
-  FluxcloudHelmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  FluxcloudSecret: if service.secret.create then helpers.secret(config, 'fluxcloud', service),
+  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
+  Secret: if service.secret.create then helpers.secret(config, 'fluxcloud', service),
 }

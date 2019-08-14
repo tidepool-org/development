@@ -12,6 +12,6 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'metricsServer'
 
 function(config) {
   local service = config.services.metricsServer,
-  MetricsServerHelmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  MetricsServerNamespace: if service.namespace.create then helpers.namespace(config, 'metricsServer', service),
+  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
+  Namespace: if service.namespace.create then helpers.namespace(config, 'metricsServer', service),
 }

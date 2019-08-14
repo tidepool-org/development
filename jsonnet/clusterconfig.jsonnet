@@ -41,5 +41,5 @@ local ClusterConfig(config) = {
 };
 
 function(config) {
-  EksctlClusterConfig: ClusterConfig(config),
+  ClusterConfig: ClusterConfig(config),
 }

@@ -6,12 +6,15 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'externalSecret
       git: 'git@github.com:godaddy/kubernetes-external-secrets',
       path: 'charts/kubernetes-external-secrets',
       ref: 'master',
+      values+: {
+        podAnnotations: helpers.roleAnnotation(config, 'externalSecrets'),
+      },
     },
   },
 };
 
 function(config) {
   local service = config.services.sumologic,
-  ExternalSecretsHelmrelease: if service.helmrelease.create then  Helmrelease(config, service),
-  ExternalSecretsNamespace: if service.namespace.create then  helpers.namespace(config, 'externalSecrets', service),
+  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
+  Namespace: if service.namespace.create then helpers.namespace(config, 'externalSecrets', service),
 }

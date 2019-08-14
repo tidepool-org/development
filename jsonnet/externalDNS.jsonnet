@@ -34,6 +34,6 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'externalDNS', 
 
 function(config) {
   local service = config.services.externalDNS,
-  ExternalDNSHelmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  ExternalDNSNamespace: if service.namespace.create then helpers.namespace(config, 'externalDNS', service),
+  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
+  Namespace: if service.namespace.create then helpers.namespace(config, 'externalDNS', service),
 }

@@ -12,6 +12,6 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'reloader', ser
 
 function(config) {
   local service = config.services.reloader,
-  ReloaderHelmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  ReloaderNamespace: if service.namespace.create then helpers.namespace(config, 'reloader', service),
+  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
+  Namespace: if service.namespace.create then helpers.namespace(config, 'reloader', service),
 }
