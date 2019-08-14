@@ -1,7 +1,7 @@
 local helpers = import 'helpers.jsonnet';
 
 local Helmrelease(config, service) =
-  helpers.helmrelease(config, 'gloo', service) {
+  helpers.helmrelease(config, service) {
     spec+: {
       chart: {
         repository: 'https://storage.googleapis.com/solo-public-helm/',
@@ -78,9 +78,8 @@ local Gateway(config, service) = {
 };
 
 function(config) {
-  local service = config.services.gloo,
-
+  local service = config.services.gloo { name: 'gloo' },
   Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Namespace: if service.namespace.create then helpers.namespace(config, 'gloo', service),
+  Namespace: if service.namespace.create then helpers.namespace(config, service),
   Gateway: if service.gateway.create then Gateway(config, service),
 }

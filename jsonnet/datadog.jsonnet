@@ -1,7 +1,7 @@
 local helpers = import 'helpers.jsonnet';
 
 local Helmrelease(config, service) =
-  helpers.helmrelease(config, 'datadog', service) {
+  helpers.helmrelease(config, service) {
     local datadog = service,
     spec+: {
       chart: {
@@ -31,8 +31,8 @@ local Helmrelease(config, service) =
   };
 
 function(config) {
-  local service = config.services.datadog,
+  local service = config.services.datadog { name: 'datadog' },
   Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Secret: if service.secret.create then helpers.secret(config, 'datadog', service),
-  Namespace: if service.namespace.create then helpers.namespace(config, 'datadog', service),
+  Secret: if service.secret.create then helpers.secret(config, service),
+  Namespace: if service.namespace.create then helpers.namespace(config, service),
 }

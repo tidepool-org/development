@@ -1,6 +1,6 @@
 local helpers = import 'helpers.jsonnet';
 
-local Helmrelease(config, service) = helpers.helmrelease(config, 'externalDNS', service) {
+local Helmrelease(config, service) = helpers.helmrelease(config, service) {
 
   spec+: {
     chart: {
@@ -9,7 +9,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'externalDNS', 
       version: '1.7.9',
     },
     values+: {
-      podAnnotations: helpers.roleAnnotation(config, 'externalDNS'),
+      podAnnotations: helpers.roleAnnotation(config, service.name),
       domainfilter: config.company.domain,
       image: {
         name: 'registry.opensource.zalan.do/teapot/external-dns',
@@ -17,7 +17,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'externalDNS', 
         pullSecrets: {},
       },
       tag: service.values.tag,
-      ownerid: 'externalDNS',
+      ownerid: service.name,
       rbac: {
         create: true,
       },
@@ -33,7 +33,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'externalDNS', 
 };
 
 function(config) {
-  local service = config.services.externalDNS,
+  local service = config.services.externalDNS { name: 'externalDNS' },
   Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Namespace: if service.namespace.create then helpers.namespace(config, 'externalDNS', service),
+  Namespace: if service.namespace.create then helpers.namespace(config, service),
 }

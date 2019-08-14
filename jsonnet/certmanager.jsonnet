@@ -1,7 +1,7 @@
 local helpers = import 'helpers.jsonnet';
 
 local Helmrelease(config, service) =
-  helpers.helmrelease(config, 'certmanager', service) {
+  helpers.helmrelease(config, service) {
     spec+: {
       chart: {
         repository: 'https://charts.jetstack.io',
@@ -9,7 +9,7 @@ local Helmrelease(config, service) =
         version: 'v0.8.1',
       },
       values+: {
-        podAnnotations: helpers.roleAnnotation(config, 'certmanager'),
+        podAnnotations: helpers.roleAnnotation(config, service.name),
       },
     },
   };
@@ -42,9 +42,9 @@ local ClusterIssuer(config, service, server, name) = {
 };
 
 function(config) {
-  local service = config.services.certmanager,
+  local service = config.services.certmanager { name: 'certmanager' },
   Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Namespace: if service.namespace.create then helpers.namespace(config, 'certmanager', service),
+  Namespace: if service.namespace.create then helpers.namespace(config, service),
   StagingClusterIssuer:
     ClusterIssuer(config,
                   service,

@@ -1,6 +1,6 @@
 local helpers = import 'helpers.jsonnet';
 
-local Helmrelease(config, service) = helpers.helmrelease(config, 'fluxcloud', service) {
+local Helmrelease(config, service) = helpers.helmrelease(config, service) {
   local repo(config) = 'https://github.com/%s/cluster-%s' % [config.github.account, config.global.clusterName],
   local channel(config) = '#flux-%s' % [config.global.clusterName],
   spec+: {
@@ -10,7 +10,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'fluxcloud', se
       ref: 'k8s',
     },
     values+: {
-      name: 'fluxcloud',
+      name: service.name,
       github: repo(config),
       slack: {
         channel: channel(config),
@@ -22,7 +22,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'fluxcloud', se
 };
 
 function(config) {
-  local service = config.services.fluxcloud,
+  local service = config.services.fluxcloud { name: 'fluxcloud' },
   Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Secret: if service.secret.create then helpers.secret(config, 'fluxcloud', service),
+  Secret: if service.secret.create then helpers.secret(config, service),
 }

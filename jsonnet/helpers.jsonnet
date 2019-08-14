@@ -29,8 +29,9 @@
     'iam.amazonaws.com/permitted': this.role(config, name),
   },
 
-  helmrelease(config, name, service):: $._Object('flux.weave.works/v1beta1', 'HelmRelease', name) {
+  helmrelease(config, service):: $._Object('flux.weave.works/v1beta1', 'HelmRelease', service.name) {
     local namespace = service.namespace.name,
+    local name = service.name,
     metadata+: {
       namespace: namespace,
       annotations: {
@@ -43,7 +44,7 @@
     },
   },
 
-  secret(config, name, service):: $._Object('v1', 'Secret', name) {
+  secret(config, service):: $._Object('v1', 'Secret', service.name) {
     local secret = self,
     type: 'Opaque',
     metadata+: {
@@ -53,15 +54,15 @@
     data: { [k]: std.base64(secret.data_[k]) for k in std.objectFields(secret.data_) },
   },
 
-  namespace(config, name, service):: $._Object('v1', 'Namespace', service.namespace.name) {
+  namespace(config, service):: $._Object('v1', 'Namespace', service.namespace.name) {
     metadata+: {
       labels: this.labels(config),
       annotations: this.permittedAnnotation(config, service.namespace.name),
     },
   },
 
-  externalSecret(config, env, base, service):: $._Object('kubernetes-client.io/v1', 'ExternalSecret', base) {
-    local  key = config.eks.cluster.name + "/" + env + "/" + base,
+  externalSecret(config, env, service):: $._Object('kubernetes-client.io/v1', 'ExternalSecret', service.name) {
+    local  key = config.eks.cluster.name + "/" + env + "/" + service.name,
     secretDescriptor : {
       backendType: "secretsManager",
       data: [ 
@@ -74,9 +75,9 @@
     }
   },
 
-  hpa(name, namespace, min=1, max=10, targetCPUUtilizationPercentage=50):: $._Object('autoscaling/v1', 'HorizontalPodAutoscaler', name) {
+  hpa(config, service, min=1, max=10, targetCPUUtilizationPercentage=50):: $._Object('autoscaling/v1', 'HorizontalPodAutoscaler', service.name) {
     metadata+: {
-      namespace: namespace
+      namespace: service.namespace.name
     },
     spec+: {
       maxReplicas: max,
@@ -84,7 +85,7 @@
       scaleTargetRef: {
         apiVersion: "extensions/v1beta1",
         kind: "Deployment",
-        name: name
+        name: service.name
       },
       targetCPUUtilizationPercentage: targetCPUUtilizationPercentage 
     }

@@ -22,10 +22,10 @@ local svcs = [
   'user',
 ];
 
-local HelmRelease(config, name, service) = helpers.helmrelease(config, name, service) {
+local HelmRelease(config, service) = helpers.helmrelease(config, service) {
   metadata+: {
     name: 'tidepool',
-    namespace: name,
+    namespace: service.name,
     annotations: {
       ['flux.weave.works/tag.' + k]: (service.gitops.selector + ':' + service.gitops.filter)
       for k in svcs
@@ -34,7 +34,7 @@ local HelmRelease(config, name, service) = helpers.helmrelease(config, name, ser
     },
   },
   spec: {
-    releaseName: name + '-tidepool',
+    releaseName: service.name + '-tidepool',
     chart: {
       git: 'git@github.com:tidepool-org/development',
       path: 'charts/tidepool/0.1.7',
@@ -51,7 +51,9 @@ local HelmRelease(config, name, service) = helpers.helmrelease(config, name, ser
 local HPAs(namespace) = { [namespace + "-" + name+ "-HPA"] : helpers.hpa(name, namespace) for name in svcs };
 
 function(config) (
-  local converter(name, service) = if service.helmrelease.create then HelmRelease(config, name, service);
+  local converter(name, service) = if service.helmrelease.create then HelmRelease(config, service { name: "tidepool-" + name });
+  
+    
   // add HPAs
   // add externalSecrets
   std.prune(std.mapWithKey(converter, config.tidepool.services))

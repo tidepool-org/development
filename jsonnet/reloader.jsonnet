@@ -1,6 +1,6 @@
 local helpers = import 'helpers.jsonnet';
 
-local Helmrelease(config, service) = helpers.helmrelease(config, 'reloader', service) {
+local Helmrelease(config, service) = helpers.helmrelease(config, service) {
   spec+: {
     chart: {
       git: 'git@github.com:stakater/Reloader',
@@ -11,7 +11,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'reloader', ser
 };
 
 function(config) {
-  local service = config.services.reloader,
+  local service = config.services.reloader { name: 'reloader' },
   Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Namespace: if service.namespace.create then helpers.namespace(config, 'reloader', service),
+  Namespace: if service.namespace.create then helpers.namespace(config, service),
 }

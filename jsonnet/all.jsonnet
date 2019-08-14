@@ -14,6 +14,7 @@ local services = [
   import 'reloader.jsonnet',
   import 'sumologic.jsonnet',
   import 'tidepool.jsonnet',
+  //import 'thanos.jsonnet',
 ];
 
 local name(m) = if m.kind == 'Namespace' || m.metadata.name == m.metadata.namespace

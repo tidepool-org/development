@@ -1,6 +1,6 @@
 local helpers = import 'helpers.jsonnet';
 
-local Helmrelease(config, service) = helpers.helmrelease(config, 'prometheusOperator', service) {
+local Helmrelease(config, service) = helpers.helmrelease(config, service) {
   local thanos = config.services.thanos,
 
   spec+: {
@@ -40,34 +40,8 @@ local Helmrelease(config, service) = helpers.helmrelease(config, 'prometheusOper
   },
 };
 
-local Secret(config, service) = helpers.secret(config, 'thanos', service) {
-  data_+:: {
-    'thanos.yaml': {
-      type: 'S3',
-      config: {
-        bucket: service.secret.values.bucket,
-        endpoint: 's3.%s.amazonaws.com' % config.cluster.eks.region,
-        region: config.cluster.eks.region,
-        insecure: false,
-        signature_version2: false,
-        encrypt_sse: false,
-        put_user_metadata: {},
-        http_config: {
-          idle_conn_timeout: '0s',
-          response_header_timeout: '0s',
-          insecure_skip_verify: false,
-        },
-        trace: {
-          enable: false,
-        },
-      },
-    },
-  },
-};
-
 function(config) {
-  local service = config.services.prometheusOperator,
+  local service = config.services.prometheusOperator { name: 'prometheusOperator' },
   Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Namespace: if service.namespace.create then helpers.namespace(config, 'prometheusOperator', service),
-  //ThanosSecret: Secret(config, service), // XXX
+  Namespace: if service.namespace.create then helpers.namespace(config, service),
 }
