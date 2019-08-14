@@ -543,7 +543,7 @@ To support your use of `ExternalSecrets`, we provide a helper function called `e
 2. generates `ExternalSecret` manifests, following naming conventions suggested in the above example.  
 
 
-![secret creation flow](https://docs.google.com/drawings/d/e/2PACX-1vRNAMa_N0IQZr51u5cbCoC91pd7bYpkDZE-altY9i9A5Iew6HYOq4aEKzfstGmqtmwDVJymNuBJ1iZE/pub?w=960&amp;h=721 "Logo Title Text 1")
+![secret creation flow](https://docs.google.com/drawings/d/e/2PACX-1vRNAMa_N0IQZr51u5cbCoC91pd7bYpkDZE-altY9i9A5Iew6HYOq4aEKzfstGmqtmwDVJymNuBJ1iZE/pub?w=960&amp;h=720 "Secrets Creation Flow")
 
 Above you created your `Secret` manifests. We provide a helper function called `external_secrets` to
 help you upload them to AWS Secrets Manager using the aforementioned naming conventions: 
