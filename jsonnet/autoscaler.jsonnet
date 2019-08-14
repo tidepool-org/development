@@ -1,6 +1,6 @@
 local helpers = import 'helpers.jsonnet';
 
-local Helmrelease(config, service) = helpers.helmrelease(config,  service) {
+local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   spec+: {
     chart: {
       repository: 'https://kubernetes-charts.storage.googleapis.com/',
@@ -15,7 +15,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config,  service) {
         clusterName: config.cluster.eks.name,
       },
       awsRegion: config.cluster.eks.region,
-      serviceMonitor: 'enabled',
+      groupMonitor: 'enabled',
       sslCertHostPath: '/etc/ssl/certs/ca-bundle.crt',
       extraArgs: {
         v: 4,
@@ -23,13 +23,12 @@ local Helmrelease(config, service) = helpers.helmrelease(config,  service) {
         logtostderr: true,
         'skip-nodes-with-local-storage': false,
       },
-      podAnnotations: helpers.roleAnnotation(config, service.name),
     },
   },
 };
 
 function(config) {
-  local service = config.services.autoscaler { name: 'autoscaler' },
-  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Namespace: if service.namespace.create then helpers.namespace(config, service),
+  local group = config.groups.autoscaler { name: 'autoscaler' },
+  Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+  Namespace: if group.namespace.create then helpers.namespace(config, group),
 }

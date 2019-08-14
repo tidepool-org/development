@@ -1,7 +1,6 @@
 local helpers = import 'helpers.jsonnet';
 
-local Helmrelease(config, service) = helpers.helmrelease(config, service) {
-
+local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   spec+: {
     chart: {
       repository: 'https://kubernetes-charts.storage.googleapis.com/',
@@ -9,15 +8,14 @@ local Helmrelease(config, service) = helpers.helmrelease(config, service) {
       version: '1.7.9',
     },
     values+: {
-      podAnnotations: helpers.roleAnnotation(config, service.name),
       domainfilter: config.company.domain,
       image: {
         name: 'registry.opensource.zalan.do/teapot/external-dns',
         tag: 'latest',
         pullSecrets: {},
       },
-      tag: service.values.tag,
-      ownerid: service.name,
+      tag: group.values.tag,
+      ownerid: group.name,
       rbac: {
         create: true,
       },
@@ -33,7 +31,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config, service) {
 };
 
 function(config) {
-  local service = config.services.externalDNS { name: 'externalDNS' },
-  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Namespace: if service.namespace.create then helpers.namespace(config, service),
+  local group = config.groups.externalDNS { name: 'externalDNS' },
+  Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+  Namespace: if group.namespace.create then helpers.namespace(config, group),
 }

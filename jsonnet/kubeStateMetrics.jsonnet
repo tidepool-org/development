@@ -1,6 +1,6 @@
 local helpers = import 'helpers.jsonnet';
 
-local Helmrelease(config, service) = helpers.helmrelease(config, service) {
+local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   spec+: {
     chart: {
       repository: 'https://kubernetes-charts.storage.googleapis.com/',
@@ -16,6 +16,6 @@ local Helmrelease(config, service) = helpers.helmrelease(config, service) {
 };
 
 function(config) {
-  local service = config.services.kubeStateMetrics { name: 'kubeStateMetrics' },
-  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
+  local group = config.groups.kubeStateMetrics { name: 'kubeStateMetrics' },
+  Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
 }

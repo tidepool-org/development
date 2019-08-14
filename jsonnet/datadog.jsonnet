@@ -1,8 +1,8 @@
 local helpers = import 'helpers.jsonnet';
 
-local Helmrelease(config, service) =
-  helpers.helmrelease(config, service) {
-    local datadog = service,
+local Helmrelease(config, group) =
+  helpers.helmrelease(config, group) {
+    local datadog = group,
     spec+: {
       chart: {
         repository: 'https://kubernetes-charts.storage.googleapis.com/',
@@ -11,7 +11,7 @@ local Helmrelease(config, service) =
       },
       values+: {
         kubeStateMetrics: {
-          enabled: config.services.kubeStateMetrics.helmrelease.create,
+          enabled: config.groups.kubeStateMetrics.helmrelease.create,
         },
         datadog: {
           apiKeyExistingSecret: datadog.secret.name,
@@ -31,8 +31,8 @@ local Helmrelease(config, service) =
   };
 
 function(config) {
-  local service = config.services.datadog { name: 'datadog' },
-  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Secret: if service.secret.create then helpers.secret(config, service),
-  Namespace: if service.namespace.create then helpers.namespace(config, service),
+  local group = config.groups.datadog { name: 'datadog' },
+  Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+  Secret: if group.secret.create then helpers.secret(config, group),
+  Namespace: if group.namespace.create then helpers.namespace(config, group),
 }

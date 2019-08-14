@@ -54,7 +54,7 @@
 		}
 	},
 	"tidepool": {
-		"services": {
+		"groups": {
 			"qa1": {
 				"namespace": {
 					"create": true
@@ -67,11 +67,6 @@
 					"selector": "glob",
 					"filter": "develop-*"
 				},
-				"secrets": {
-					"src": "helm",
-					"dest": "awsSecretsManager",
-					"operation": "upsert"
-				},
 				"values": {
 					"global": {
 						"hpa" : {
@@ -79,9 +74,6 @@
 							"maxReplicas": 10,
 							"minReplicas": 1,
 							"targetCPUUtilizationPercentage": 50
-						},
-						"secrets" : {
-							"create": false
 						},
 						"hosts": {
 							"default": {
@@ -126,8 +118,11 @@
 			}
 		}
 	},
-	"services": {
+	"groups": {
 		"kiam": {
+			"iam": {
+				"create": true
+			},
 			"namespace": {
 				"name": "kube-system",
 				"create": false
@@ -137,6 +132,9 @@
 			}
 		},
 		"externalSecrets": {
+			"iam": {
+				"create": true
+			},
 			"namespace": {
 				"name": "default",
 				"create": false
@@ -146,6 +144,9 @@
 			}
 		},
 		"autoscaler": {
+			"iam": {
+				"create": true
+			},
 			"namespace": {
 				"name": "autoscaler",
 				"create": true
@@ -155,6 +156,9 @@
 			}
 		},
 		"certmanager": {
+			"iam": {
+				"create": true
+			},
 			"namespace": {
 				"name": "certmanager",
 				"create": true
@@ -167,16 +171,19 @@
 			}
 		},
 		"externalDNS": {
+			"iam": {
+				"create": true
+			},
 			"namespace": {
 				"name": "externalDNS",
 				"create": true
 			},
 			"helmrelease": {
 				"create": true
-            },
-            "values": {
-                "tag": "latest"
-            }
+            		},
+            		"values": {
+                		"tag": "latest"
+            		}
 		},
 		"fluxcloud": {
 			"namespace": {
@@ -237,6 +244,10 @@
 			}
 		},
 		"thanos": {
+			"namespace" : {
+				"name": "monitoring",
+				"create": false
+			},
 			"secret": {
 				"create": true,
 				"name": "thanos-objstore-config",

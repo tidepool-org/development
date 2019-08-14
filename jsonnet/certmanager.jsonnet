@@ -1,25 +1,21 @@
 local helpers = import 'helpers.jsonnet';
 
-local Helmrelease(config, service) =
-  helpers.helmrelease(config, service) {
-    spec+: {
-      chart: {
-        repository: 'https://charts.jetstack.io',
-        name: 'cert-manager',
-        version: 'v0.8.1',
-      },
-      values+: {
-        podAnnotations: helpers.roleAnnotation(config, service.name),
-      },
-    },
-  };
+local Helmrelease(config, group) = helpers.helmrelease(config, group) {
+  spec+: {
+    chart: {
+      repository: 'https://charts.jetstack.io',
+      name: 'cert-manager',
+      version: 'v0.8.1',
+    }
+  },
+};
 
-local ClusterIssuer(config, service, server, name) = {
+local ClusterIssuer(config, group, server, name) = {
   apiVersion: 'certmanager.k8s.io/v1alpha1',
   kind: 'ClusterIssuer',
   metadata: {
     name: name,
-    namespace: service.namespace.name,
+    namespace: group.namespace.name,
   },
   spec: {
     acme: {
@@ -42,17 +38,17 @@ local ClusterIssuer(config, service, server, name) = {
 };
 
 function(config) {
-  local service = config.services.certmanager { name: 'certmanager' },
-  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Namespace: if service.namespace.create then helpers.namespace(config, service),
+  local group = config.groups.certmanager { name: 'certmanager' },
+  Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+  Namespace: if group.namespace.create then helpers.namespace(config, group),
   StagingClusterIssuer:
     ClusterIssuer(config,
-                  service,
+                  group,
                   'https://acme-staging-v02.api.letsencrypt.org/directory',
                   'letsencrypt-staging'),
   ProductionClusterIssuer:
     ClusterIssuer(config,
-                  service,
+                  group,
                   'https://acme-v02.api.letsencrypt.org/directory',
                   'letsencrypt-production'),
 }

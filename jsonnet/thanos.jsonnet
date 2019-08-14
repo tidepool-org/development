@@ -1,11 +1,11 @@
 local helpers = import 'helpers.jsonnet';
 
-local Secret(config, service) = helpers.secret(config, service) {
+local Secret(config, group) = helpers.secret(config, group) {
   data_+:: {
-    'thanos.yaml': {
+    'thanos.yaml': std.manifestYamlDoc({
       type: 'S3',
-      config: std.manifestYamlDoc ({
-        bucket: service.secret.values.bucket,
+      config: {
+        bucket: group.secret.values.bucket,
         endpoint: 's3.%s.amazonaws.com' % config.cluster.eks.region,
         region: config.cluster.eks.region,
         insecure: false,
@@ -20,12 +20,12 @@ local Secret(config, service) = helpers.secret(config, service) {
         trace: {
           enable: false,
         },
-      }),
-    },
+      },
+    }),
   },
 };
 
 function(config) {
-  local service = config.services.thanos { name: 'thanos' },
-  Secret: Secret(config, service), 
+  local group = config.groups.thanos { name: 'thanos' },
+  Secret: Secret(config, group),
 }

@@ -1,7 +1,7 @@
 local helpers = import 'helpers.jsonnet';
 
-local Helmrelease(config, service) = helpers.helmrelease(config, service) {
-  local thanos = config.services.thanos,
+local Helmrelease(config, group) = helpers.helmrelease(config, group) {
+  local thanos = config.groups.thanos,
 
   spec+: {
     chart: {
@@ -12,8 +12,8 @@ local Helmrelease(config, service) = helpers.helmrelease(config, service) {
     values+: {
       prometheus: {
         prometheusSpec: {
-          replicas: service.values.prometheus.replicaCount,  // work in High-Availability mode
-          retention: service.values.prometheus.retention,  // we only need a few hours of retention, since the rest is uploaded to blob
+          replicas: group.values.prometheus.replicaCount,  // work in High-Availability mode
+          retention: group.values.prometheus.retention,  // we only need a few hours of retention, since the rest is uploaded to blob
           image: {
             tag: 'v2.8.0',  // use a specific version of Prometheus
           },
@@ -21,7 +21,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config, service) {
             geo: 'us',
             region: config.cluster.eks.region,
           },
-          serviceMonitorNamespaceSelector: {  // allows the operator to find target config from multiple namespaces
+          groupMonitorNamespaceSelector: {  // allows the operator to find target config from multiple namespaces
             any: true,
           },
           thanos: {  // add Thanos Sidecar
@@ -41,7 +41,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config, service) {
 };
 
 function(config) {
-  local service = config.services.prometheusOperator { name: 'prometheusOperator' },
-  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Namespace: if service.namespace.create then helpers.namespace(config, service),
+  local group = config.groups.prometheusOperator { name: 'prometheusOperator' },
+  Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+  Namespace: if group.namespace.create then helpers.namespace(config, group),
 }

@@ -22,25 +22,25 @@ local svcs = [
   'user',
 ];
 
-local HelmRelease(config, service) = helpers.helmrelease(config, service) {
+local HelmRelease(config, group) = helpers.helmrelease(config, group) {
   metadata+: {
     name: 'tidepool',
-    namespace: service.name,
+    namespace: group.name,
     annotations: {
-      ['flux.weave.works/tag.' + k]: (service.gitops.selector + ':' + service.gitops.filter)
+      ['flux.weave.works/tag.' + k]: (group.gitops.selector + ':' + group.gitops.filter)
       for k in svcs
     } + {
-      'flux.weave.works/automated': service.gitops.automated,
+      'flux.weave.works/automated': group.gitops.automated,
     },
   },
   spec: {
-    releaseName: service.name + '-tidepool',
+    releaseName: group.name + '-tidepool',
     chart: {
       git: 'git@github.com:tidepool-org/development',
       path: 'charts/tidepool/0.1.7',
       ref: 'k8s',
     },
-    values: service.values {
+    values: group.values {
       globals: {
         cluster: config.cluster,
       },
@@ -48,13 +48,13 @@ local HelmRelease(config, service) = helpers.helmrelease(config, service) {
   },
 };
 
-local HPAs(namespace) = { [namespace + "-" + name+ "-HPA"] : helpers.hpa(name, namespace) for name in svcs };
+local HPAs(namespace) = { [namespace + '-' + name + '-HPA']: helpers.hpa(name, namespace) for name in svcs };
 
 function(config) (
-  local converter(name, service) = if service.helmrelease.create then HelmRelease(config, service { name: "tidepool-" + name });
-  
-    
+  local converter(name, group) = if group.helmrelease.create then HelmRelease(config, group { name: 'tidepool-' + name });
+
+
   // add HPAs
   // add externalSecrets
-  std.prune(std.mapWithKey(converter, config.tidepool.services))
+  std.prune(std.mapWithKey(converter, config.tidepool.groups))
 )

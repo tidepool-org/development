@@ -1,7 +1,7 @@
 local helpers = import 'helpers.jsonnet';
 
-local Helmrelease(config, service) =
-  helpers.helmrelease(config, service) {
+local Helmrelease(config, group) =
+  helpers.helmrelease(config, group) {
     spec+: {
       chart: {
         repository: 'https://storage.googleapis.com/solo-public-helm/',
@@ -10,7 +10,7 @@ local Helmrelease(config, service) =
       },
       values+: {
         crds: {
-          create: service.crds.create,
+          create: group.crds.create,
         },
         settings: {
           create: true,
@@ -20,12 +20,12 @@ local Helmrelease(config, service) =
         },
         gatewayProxies: {
           gatewayProxyV2: {
-            service: {
+            group: {
               extraAnnotations: {
-                'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
+                'group.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
                 'external-dns.alpha.kubernetes.io/alias': true,
-                'external-dns.alpha.kubernetes.io/hostname': std.join(',', service.gatewayProxy.hostnames),
-                'service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags': 'cluster:' + config.cluster.eks.name,
+                'external-dns.alpha.kubernetes.io/hostname': std.join(',', group.gatewayProxy.hostnames),
+                'group.beta.kubernetes.io/aws-load-balancer-additional-resource-tags': 'cluster:' + config.cluster.eks.name,
               },
             },
           },
@@ -34,7 +34,7 @@ local Helmrelease(config, service) =
     },
   };
 
-local Gateway(config, service) = {
+local Gateway(config, group) = {
   apiVersion: 'gateway.solo.io.v2/v2',
   kind: 'Gateway',
   metadata: {
@@ -42,7 +42,7 @@ local Gateway(config, service) = {
       origin: 'default',
     },
     name: 'gateway-ssl',
-    namespace: service.namespace.name,
+    namespace: group.namespace.name,
   },
   spec: {
     ssl: true,
@@ -78,8 +78,8 @@ local Gateway(config, service) = {
 };
 
 function(config) {
-  local service = config.services.gloo { name: 'gloo' },
-  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Namespace: if service.namespace.create then helpers.namespace(config, service),
-  Gateway: if service.gateway.create then Gateway(config, service),
+  local group = config.groups.gloo { name: 'gloo' },
+  Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+  Namespace: if group.namespace.create then helpers.namespace(config, group),
+  Gateway: if group.gateway.create then Gateway(config, group),
 }

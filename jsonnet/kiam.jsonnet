@@ -1,6 +1,6 @@
 local helpers = import 'helpers.jsonnet';
 
-local Helmrelease(config, service) = helpers.helmrelease(config, service) {
+local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   spec+: {
     chart: {
       repository: 'https://kubernetes-charts.storage.googleapis.com/',
@@ -10,7 +10,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config, service) {
     values+: {
       agent: {
         image: {
-          tag: 'd999e61e28befb872cd1875812c9d1bf37dc4f37',
+          tag: 'd999e61e28befb872cd1875812c9d1bf37dc4f37',  // contains the fix for assume-role-arn
         },
         enabled: true,
         host: {
@@ -41,7 +41,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config, service) {
 
         server: {
           image: {
-            tag: 'd999e61e28befb872cd1875812c9d1bf37dc4f37',
+            tag: 'd999e61e28befb872cd1875812c9d1bf37dc4f37',  // contains the fix for assume-role-arn
           },
           enabled: true,
           // This is to choose a different node for agent vs server. Without it, the kiam-server pods
@@ -82,7 +82,7 @@ local Helmrelease(config, service) = helpers.helmrelease(config, service) {
 };
 
 function(config) {
-  local service = config.services.kiam { name: 'kiam' },
-  Helmrelease: if service.helmrelease.create then Helmrelease(config, service),
-  Namespace: if service.namespace.create then helpers.namespace(config, service),
+  local group = config.groups.kiam { name: 'kiam' },
+  Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+  Namespace: if group.namespace.create then helpers.namespace(config, group),
 }

@@ -1,6 +1,6 @@
 local config = import 'values.json';
 
-local services = [
+local groups = [
   import 'autoscaler.jsonnet',
   import 'certmanager.jsonnet',
   import 'datadog.jsonnet',
@@ -14,7 +14,7 @@ local services = [
   import 'reloader.jsonnet',
   import 'sumologic.jsonnet',
   import 'tidepool.jsonnet',
-  //import 'thanos.jsonnet',
+  import 'thanos.jsonnet',
 ];
 
 local name(m) = if m.kind == 'Namespace' || m.metadata.name == m.metadata.namespace
@@ -25,4 +25,4 @@ local Manifests(svcs, conf) = [std.prune(s(conf)) for s in svcs];
 
 local Rename(m) = { [name(m[field]) + '.json']: m[field] for field in std.objectFields(m) };
 
-std.foldl(function(x, y) x + Rename(y), Manifests(services, config), {})
+std.foldl(function(x, y) x + Rename(y), Manifests(groups, config), {})

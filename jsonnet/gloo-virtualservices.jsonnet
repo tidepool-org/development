@@ -21,10 +21,10 @@ local GATEWAY_PROXY_NAMESPACE = '{{ $.Values.global.proxy.namespace }}';
 // The environment being instantiated
 local ENVIRONMENT = '{{ $.Release.Namespace }}';
 
-// The name used to access the virtual service from other services
+// The name used to access the virtual group from other groups
 local INTERNAL_VS_NAME = 'internal';
 
-// The name used to access the virtual service from the LoadBalancer.
+// The name used to access the virtual group from the LoadBalancer.
 local EXTERNAL_VS_NAME = ENVIRONMENT + '-external';
 
 
@@ -90,13 +90,13 @@ local VirtualService(routes, name, cors, protocol, hosts_served) =
 local Upstream(ref) = {
   apiVersion: GLOO_API_VERSION,
   kind: 'Upstream',
-  metadata: metadata_spec(ENVIRONMENT + '-' + ref.service + '-' + ref.port, ENVIRONMENT),
+  metadata: metadata_spec(ENVIRONMENT + '-' + ref.group + '-' + ref.port, ENVIRONMENT),
   spec: {
     upstreamSpec: {
       kube: {
-        serviceName: ref.service,
-        serviceNamespace: ENVIRONMENT,
-        servicePort: ref.port,
+        groupName: ref.group,
+        groupNamespace: ENVIRONMENT,
+        groupPort: ref.port,
       },
     },
   },
@@ -123,7 +123,7 @@ local Gateway(useSSL) = {
   bindPort: if useSSL then 8443 else 8080,
 };
 
-local GatewayProxyService(service_type, useSSL) = {
+local GatewayProxyService(group_type, useSSL) = {
   apiVersion: 'v1',
   kind: 'Service',
   metadata:
@@ -147,27 +147,27 @@ local GatewayProxyService(service_type, useSSL) = {
       targetPort: 8080,
     },
     selector: { gloo: GATEWAY_PROXY_NAME },
-  } + if service_type == 'elb' then {
+  } + if group_type == 'elb' then {
     externalTrafficPolicy: 'Local',
     type: 'LoadBalancer',
-  } else if service_type == 'nlb' then {
+  } else if group_type == 'nlb' then {
     externalTrafficPolicy: 'Local',
     type: 'LoadBalancer',
     annotations: {
-      'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
+      'group.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
     },
-  } else if service_type == 'cluster' then {
+  } else if group_type == 'cluster' then {
     type: 'ClusterIP',
-  } else error 'Bad service type',
+  } else error 'Bad group type',
 };
 
 local ServiceAndPort(mapping) = {
-  local indices = std.findSubstr(':', mapping.service),
+  local indices = std.findSubstr(':', mapping.group),
   local parts =
     if std.length(indices) == 1
     then std.split(':')
-    else [mapping.service, '80'],
-  service: std.strReplace(parts[0], '.default', ''),
+    else [mapping.group, '80'],
+  group: std.strReplace(parts[0], '.default', ''),
   port: std.parseInt(parts[1]),
 };
 
@@ -194,7 +194,7 @@ local Route(mapping) = {
   routeAction: {
     local svc_port = ServiceAndPort(mapping),
     single: {
-      upstream: metadata_spec(ENVIRONMENT + '-' + svc_port.service + '-' + std.toString(svc_port.port), ENVIRONMENT),
+      upstream: metadata_spec(ENVIRONMENT + '-' + svc_port.group + '-' + std.toString(svc_port.port), ENVIRONMENT),
     },
   },
 };
