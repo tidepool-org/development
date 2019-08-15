@@ -12,8 +12,8 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
     values+: {
       prometheus: {
         prometheusSpec: {
-          replicas: group.values.prometheus.replicaCount,  // work in High-Availability mode
-          retention: group.values.prometheus.retention,  // we only need a few hours of retention, since the rest is uploaded to blob
+          replicas: group.helmrelease.values.prometheus.replicaCount,  // work in High-Availability mode
+          retention: group.helmrelease.values.prometheus.retention,  // we only need a few hours of retention, since the rest is uploaded to blob
           image: {
             tag: 'v2.8.0',  // use a specific version of Prometheus
           },
@@ -40,8 +40,10 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   },
 };
 
-function(config) {
-  local group = config.groups.prometheusOperator { name: 'prometheusOperator' },
-  Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
-  Namespace: if group.namespace.create then helpers.namespace(config, group),
-}
+function(config) (
+  local group = config.groups.prometheusOperator { name: 'prometheusOperator' };
+  if group.enabled then {
+    Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+    Namespace: if group.namespace.create then helpers.namespace(config, group),
+  }
+)

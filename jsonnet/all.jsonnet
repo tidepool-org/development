@@ -3,6 +3,7 @@ local config = import 'values.json';
 local groups = [
   import 'autoscaler.jsonnet',
   import 'certmanager.jsonnet',
+  import 'clusterconfig.jsonnet',
   import 'datadog.jsonnet',
   import 'externalDNS.jsonnet',
   import 'fluxcloud.jsonnet',
@@ -15,9 +16,10 @@ local groups = [
   import 'sumologic.jsonnet',
   import 'tidepool.jsonnet',
   import 'thanos.jsonnet',
+  import 'flux.jsonnet',
 ];
 
-local name(m) = if m.kind == 'Namespace' || m.metadata.name == m.metadata.namespace
+local name(m) = if m.kind == 'Namespace' || (!('namespace' in m.metadata)) || m.metadata.name == m.metadata.namespace
 then m.metadata.name + '-' + m.kind
 else m.metadata.namespace + '-' + m.metadata.name + '-' + m.kind;
 

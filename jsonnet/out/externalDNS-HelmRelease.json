@@ -1,0 +1,44 @@
+{
+   "apiVersion": "flux.weave.works/v1beta1",
+   "kind": "HelmRelease",
+   "metadata": {
+      "annotations": {
+         "flux.weave.works/automated": "false"
+      },
+      "labels": {
+         "name": "externalDNS"
+      },
+      "name": "externalDNS",
+      "namespace": "externalDNS"
+   },
+   "spec": {
+      "chart": {
+         "name": "external-dns",
+         "repository": "https://kubernetes-charts.storage.googleapis.com/",
+         "version": "1.7.9"
+      },
+      "releaseName": "externalDNS",
+      "values": {
+         "aws": {
+            "region": "us-west-2"
+         },
+         "awszonetype": "public",
+         "domainfilter": "tidepool.org",
+         "image": {
+            "name": "registry.opensource.zalan.do/teapot/external-dns",
+            "tag": "latest"
+         },
+         "logLevel": "debug",
+         "ownerid": "externalDNS",
+         "podAnnotations": {
+            "iam.amazonaws.com/role": "shared-externalDNS-role"
+         },
+         "provider": "aws",
+         "rbac": {
+            "create": true
+         },
+         "tag": "latest",
+         "txtOwnerId": "shared"
+      }
+   }
+}

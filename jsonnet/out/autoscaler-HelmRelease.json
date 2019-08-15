@@ -1,0 +1,42 @@
+{
+   "apiVersion": "flux.weave.works/v1beta1",
+   "kind": "HelmRelease",
+   "metadata": {
+      "annotations": {
+         "flux.weave.works/automated": "false"
+      },
+      "labels": {
+         "name": "autoscaler"
+      },
+      "name": "autoscaler",
+      "namespace": "autoscaler"
+   },
+   "spec": {
+      "chart": {
+         "name": "cluster-autoscaler",
+         "repository": "https://kubernetes-charts.storage.googleapis.com/",
+         "version": "0.14.2"
+      },
+      "releaseName": "autoscaler",
+      "values": {
+         "autoDiscovery": {
+            "clusterName": "shared"
+         },
+         "awsRegion": "us-west-2",
+         "extraArgs": {
+            "logtostderr": true,
+            "skip-nodes-with-local-storage": false,
+            "stderrthreshold": "info",
+            "v": 4
+         },
+         "groupMonitor": "enabled",
+         "podAnnotations": {
+            "iam.amazonaws.com/role": "shared-autoscaler-role"
+         },
+         "rbac": {
+            "create": true
+         },
+         "sslCertHostPath": "/etc/ssl/certs/ca-bundle.crt"
+      }
+   }
+}

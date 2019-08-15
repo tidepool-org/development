@@ -1,0 +1,27 @@
+{
+   "apiVersion": "flux.weave.works/v1beta1",
+   "kind": "HelmRelease",
+   "metadata": {
+      "annotations": {
+         "flux.weave.works/automated": "false"
+      },
+      "labels": {
+         "name": "certmanager"
+      },
+      "name": "certmanager",
+      "namespace": "certmanager"
+   },
+   "spec": {
+      "chart": {
+         "name": "cert-manager",
+         "repository": "https://charts.jetstack.io",
+         "version": "v0.8.1"
+      },
+      "releaseName": "certmanager",
+      "values": {
+         "podAnnotations": {
+            "iam.amazonaws.com/role": "shared-certmanager-role"
+         }
+      }
+   }
+}

@@ -1,12 +1,9 @@
 local helpers = import 'helpers.jsonnet';
 
-local ClusterConfig(config) = {
-  apiVersion: 'eksctl.io/v1alpha5',
-  kind: 'ClusterConfig',
-  metadata: {
-    name: config.cluster.eks.name,
+local ClusterConfig(config) = helpers._Object('eksctl.io/v1alpha5', 'ClusterConfig', config.cluster.name) {
+  metadata+: {
     region: config.cluster.eks.region,
-    version: config.cluster.eks.k8sVersion,
+    version: config.cluster.k8sVersion,
   },
   vpc: {
     cidr: config.cluster.eks.cidr,
@@ -23,7 +20,7 @@ local ClusterConfig(config) = {
       },
       tags: {
         'k8s.io/cluster-autoscaler/enabled': 'true',
-        ['k8s.io/cluster-autoscaler/' + config.cluster.eks.name]: 'true',
+        ['k8s.io/cluster-autoscaler/' + config.cluster.name]: 'true',
       },
     },
     {

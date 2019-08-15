@@ -1,0 +1,42 @@
+{
+   "apiVersion": "eksctl.io/v1alpha5",
+   "kind": "ClusterConfig",
+   "metadata": {
+      "labels": {
+         "name": "shared"
+      },
+      "name": "shared",
+      "region": "us-west-2",
+      "version": "1.13"
+   },
+   "nodeGroups": [
+      {
+         "desiredCapacity": 3,
+         "instanceType": "m4.large",
+         "labels": {
+            "kiam-server": "false"
+         },
+         "maxSize": 10,
+         "minSize": 1,
+         "name": "ng-1",
+         "tags": {
+            "k8s.io/cluster-autoscaler/enabled": "true",
+            "k8s.io/cluster-autoscaler/shared": "true"
+         }
+      },
+      {
+         "desiredCapacity": 1,
+         "instanceType": "m4.large",
+         "labels": {
+            "kiam-server": "true"
+         },
+         "name": "ng-kiam",
+         "taints": {
+            "kiam-server": "false:NoExecute"
+         }
+      }
+   ],
+   "vpc": {
+      "cidr": "10.44.0.0/16"
+   }
+}

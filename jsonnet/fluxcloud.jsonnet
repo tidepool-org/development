@@ -21,8 +21,10 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   },
 };
 
-function(config) {
-  local group = config.groups.fluxcloud { name: 'fluxcloud' },
-  Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
-  Secret: if group.secret.create then helpers.secret(config, group),
-}
+function(config) (
+  local group = config.groups.fluxcloud { name: 'fluxcloud' };
+  if group.enabled then {
+    Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+    Secret: if group.secret.create then helpers.secret(config, group),
+  }
+)

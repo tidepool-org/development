@@ -23,14 +23,15 @@ local svcs = [
 ];
 
 local HelmRelease(config, group) = helpers.helmrelease(config, group) {
+  local hr = group.helmrelease,
   metadata+: {
     name: 'tidepool',
     namespace: group.name,
     annotations: {
-      ['flux.weave.works/tag.' + k]: (group.gitops.selector + ':' + group.gitops.filter)
+      ['flux.weave.works/tag.' + k]: (hr.gitops.selector + ':' + hr.gitops.filter)
       for k in svcs
     } + {
-      'flux.weave.works/automated': group.gitops.automated,
+      'flux.weave.works/automated': hr.gitops.automated,
     },
   },
   spec: {
@@ -40,8 +41,8 @@ local HelmRelease(config, group) = helpers.helmrelease(config, group) {
       path: 'charts/tidepool/0.1.7',
       ref: 'k8s',
     },
-    values: group.values {
-      globals: {
+    values: helpers.StripSecrets(hr.values) {
+      global+: {
         cluster: config.cluster,
       },
     },
@@ -51,10 +52,9 @@ local HelmRelease(config, group) = helpers.helmrelease(config, group) {
 local HPAs(namespace) = { [namespace + '-' + name + '-HPA']: helpers.hpa(name, namespace) for name in svcs };
 
 function(config) (
-  local converter(name, group) = if group.helmrelease.create then HelmRelease(config, group { name: 'tidepool-' + name });
+  local converter(name, group) = if group.helmrelease.create then HelmRelease(config, group { name: name });
 
 
   // add HPAs
-  // add externalSecrets
   std.prune(std.mapWithKey(converter, config.tidepool.groups))
 )

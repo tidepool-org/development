@@ -1,16 +1,33 @@
 local helpers = import 'helpers.jsonnet';
 
+local eksAnnotations(config) =
+  if config.cluster.provider == 'eks' && config.cluster.gateway.type == 'LoadBalancer' then {
+    'group.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
+    'group.beta.kubernetes.io/aws-load-balancer-additional-resource-tags': 'cluster:' + config.cluster.name,
+  } else {
+
+  };
+
+local externalDNSAnnotations(config) =
+  if config.groups.externalDNS.enabled then {
+    'external-dns.alpha.kubernetes.io/alias': true,
+    'external-dns.alpha.kubernetes.io/hostname': std.join(',', config.cluster.gateway.hostnames),
+  } else
+    {
+
+    };
+
 local Helmrelease(config, group) =
   helpers.helmrelease(config, group) {
     spec+: {
       chart: {
         repository: 'https://storage.googleapis.com/solo-public-helm/',
         name: 'gloo',
-        version: '0.18.12',
+        version: '0.18.16',
       },
       values+: {
         crds: {
-          create: group.crds.create,
+          create: group.helmrelease.values.crds.create,  // XXX
         },
         settings: {
           create: true,
@@ -20,13 +37,11 @@ local Helmrelease(config, group) =
         },
         gatewayProxies: {
           gatewayProxyV2: {
-            group: {
-              extraAnnotations: {
-                'group.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
-                'external-dns.alpha.kubernetes.io/alias': true,
-                'external-dns.alpha.kubernetes.io/hostname': std.join(',', group.gatewayProxy.hostnames),
-                'group.beta.kubernetes.io/aws-load-balancer-additional-resource-tags': 'cluster:' + config.cluster.eks.name,
-              },
+            service: {
+              httpPort: config.cluster.gateway.httpPort,  // HTTP port to listen on
+              httpsPort: config.cluster.gateway.httpsPort,  // HTTPS port to listen on
+              type: config.cluster.gateway.type,
+              extraAnnotations: eksAnnotations(config) + externalDNSAnnotations(config),
             },
           },
         },
@@ -48,7 +63,7 @@ local Gateway(config, group) = {
     ssl: true,
     bindAddress: '::',
     bindPort: 8443,
-    gatewayProxyName: 'gateway-proxy-v2',
+    gatewayProxyName: config.cluster.gateway.proxy.name,
     httpGateway: {},
     useProxyProto: false,
     plugins: {
@@ -77,9 +92,11 @@ local Gateway(config, group) = {
   },
 };
 
-function(config) {
-  local group = config.groups.gloo { name: 'gloo' },
-  Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
-  Namespace: if group.namespace.create then helpers.namespace(config, group),
-  Gateway: if group.gateway.create then Gateway(config, group),
-}
+function(config) (
+  local group = config.groups.gloo { name: 'gloo' };
+  if group.enabled then {
+    Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+    Namespace: if group.namespace.create then helpers.namespace(config, group),
+    Gateway: if group.gateway.create then Gateway(config, group),
+  }
+)

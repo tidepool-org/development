@@ -6,7 +6,7 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
       repository: 'https://charts.jetstack.io',
       name: 'cert-manager',
       version: 'v0.8.1',
-    }
+    },
   },
 };
 
@@ -37,18 +37,20 @@ local ClusterIssuer(config, group, server, name) = {
   },
 };
 
-function(config) {
-  local group = config.groups.certmanager { name: 'certmanager' },
-  Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
-  Namespace: if group.namespace.create then helpers.namespace(config, group),
-  StagingClusterIssuer:
-    ClusterIssuer(config,
-                  group,
-                  'https://acme-staging-v02.api.letsencrypt.org/directory',
-                  'letsencrypt-staging'),
-  ProductionClusterIssuer:
-    ClusterIssuer(config,
-                  group,
-                  'https://acme-v02.api.letsencrypt.org/directory',
-                  'letsencrypt-production'),
-}
+function(config) (
+  local group = config.groups.certmanager { name: 'certmanager' };
+  if group.enabled then {
+    Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+    Namespace: if group.namespace.create then helpers.namespace(config, group),
+    StagingClusterIssuer:
+      ClusterIssuer(config,
+                    group,
+                    'https://acme-staging-v02.api.letsencrypt.org/directory',
+                    'letsencrypt-staging'),
+    ProductionClusterIssuer:
+      ClusterIssuer(config,
+                    group,
+                    'https://acme-v02.api.letsencrypt.org/directory',
+                    'letsencrypt-production'),
+  }
+)

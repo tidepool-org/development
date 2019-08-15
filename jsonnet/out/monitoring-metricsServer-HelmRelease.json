@@ -1,0 +1,22 @@
+{
+   "apiVersion": "flux.weave.works/v1beta1",
+   "kind": "HelmRelease",
+   "metadata": {
+      "annotations": {
+         "flux.weave.works/automated": "false"
+      },
+      "labels": {
+         "name": "metricsServer"
+      },
+      "name": "metricsServer",
+      "namespace": "monitoring"
+   },
+   "spec": {
+      "chart": {
+         "name": "metrics-server",
+         "repository": "https://kubernetes-charts.storage.googleapis.com/",
+         "version": "2.8.2"
+      },
+      "releaseName": "monitoring-metricsServer"
+   }
+}

@@ -41,8 +41,8 @@
     spec: {
       releaseName: if name == namespace then name else namespace + '-' + name,
       values: {
-          podAnnotations: if 'iam' in group && group.iam.create then this.roleAnnotation(config, group.name),
-      }
+        podAnnotations: if 'iam' in group && group.iam.create then this.roleAnnotation(config, group.name),
+      },
     },
   },
 
@@ -93,4 +93,10 @@
       targetCPUUtilizationPercentage: targetCPUUtilizationPercentage,
     },
   },
+
+  stripSecrets(obj)::
+    { [k]: obj[k] for k in std.objectFields(obj) if k != 'secret' && !std.isObject(obj[k]) } +
+    { [k]: this.stripSecrets(obj[k]) for k in std.objectFields(obj) if k != 'secret' && std.isObject(obj[k]) },
+
+  StripSecrets(obj):: std.prune(this.stripSecrets(obj)),
 }

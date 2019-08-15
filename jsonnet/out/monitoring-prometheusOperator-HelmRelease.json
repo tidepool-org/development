@@ -1,0 +1,50 @@
+{
+   "apiVersion": "flux.weave.works/v1beta1",
+   "kind": "HelmRelease",
+   "metadata": {
+      "annotations": {
+         "flux.weave.works/automated": "false"
+      },
+      "labels": {
+         "name": "prometheusOperator"
+      },
+      "name": "prometheusOperator",
+      "namespace": "monitoring"
+   },
+   "spec": {
+      "chart": {
+         "name": "prometheus-operator",
+         "repository": "https://kubernetes-charts.storage.googleapis.com/",
+         "version": "5.13.0"
+      },
+      "releaseName": "monitoring-prometheusOperator",
+      "values": {
+         "grafana": {
+            "enabled": false
+         },
+         "prometheus": {
+            "prometheusSpec": {
+               "externalLabels": {
+                  "geo": "us",
+                  "region": "us-west-2"
+               },
+               "groupMonitorNamespaceSelector": {
+                  "any": true
+               },
+               "image": {
+                  "tag": "v2.8.0"
+               },
+               "replicas": 2,
+               "retention": "12h",
+               "thanos": {
+                  "objectStorageConfig": {
+                     "key": "thanos.yaml",
+                     "name": "thanos-objstore-config"
+                  },
+                  "tag": "v0.3.1"
+               }
+            }
+         }
+      }
+   }
+}

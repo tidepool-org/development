@@ -12,7 +12,7 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
         create: true,
       },
       autoDiscovery: {
-        clusterName: config.cluster.eks.name,
+        clusterName: config.cluster.name,
       },
       awsRegion: config.cluster.eks.region,
       groupMonitor: 'enabled',
@@ -27,8 +27,10 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   },
 };
 
-function(config) {
-  local group = config.groups.autoscaler { name: 'autoscaler' },
-  Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
-  Namespace: if group.namespace.create then helpers.namespace(config, group),
-}
+function(config) (
+  local group = config.groups.autoscaler { name: 'autoscaler' };
+  if group.enabled then {
+    Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+    Namespace: if group.namespace.create then helpers.namespace(config, group),
+  }
+)

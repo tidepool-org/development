@@ -1,0 +1,41 @@
+{
+   "apiVersion": "gateway.solo.io.v2/v2",
+   "kind": "Gateway",
+   "metadata": {
+      "annotations": {
+         "origin": "default"
+      },
+      "name": "gateway-ssl",
+      "namespace": "gloo-system"
+   },
+   "spec": {
+      "bindAddress": "::",
+      "bindPort": 8443,
+      "gatewayProxyName": "gateway-proxy-v2",
+      "plugins": {
+         "accessLoggingService": {
+            "accessLog": [
+               {
+                  "fileSink": {
+                     "jsonFormat": {
+                        "authority": "%REQ(:AUTHORITY)%",
+                        "bytesReceived": "%BYTES_RECEIVED%",
+                        "bytesSent": "%BYTES_SENT%",
+                        "duration": "%DURATION%",
+                        "method": "%REQ(:METHOD)%",
+                        "path": "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%",
+                        "protocol": "%PROTOCOL%",
+                        "responseCode": "%RESPONSE_CODE%",
+                        "sessionToken": "%REQ(x-tidepool-session-token)%",
+                        "startTime": "%START_TIME(%Y/%m/%dT%H:%M:%S%z %s)%"
+                     },
+                     "path": "/dev/stdout"
+                  }
+               }
+            ]
+         }
+      },
+      "ssl": true,
+      "useProxyProto": false
+   }
+}
