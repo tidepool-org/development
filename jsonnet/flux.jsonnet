@@ -7,7 +7,7 @@ local HelmRelease(config, group) = helpers.helmrelease(config, group) {
       name: 'flux',
       version: '0.10.2',
     },
-    values+: group.helm.values + {
+    values+: group.helmrelease.values + {
       local path =
         if 'path' in config.gitops.git
         then config.gitops.git.path

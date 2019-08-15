@@ -5,7 +5,7 @@ local Secret(config, group) = helpers.secret(config, group) {
     'thanos.yaml': std.manifestYamlDoc({
       type: 'S3',
       config: {
-        bucket: group.secret.values.bucket,
+        bucket: group.secret.input.bucket,
         endpoint: 's3.%s.amazonaws.com' % config.cluster.eks.region,
         region: config.cluster.eks.region,
         insecure: false,

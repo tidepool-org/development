@@ -12,8 +12,8 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
     values+: {
       prometheus: {
         prometheusSpec: {
-          replicas: group.helmrelease.values.prometheus.replicaCount,  // work in High-Availability mode
-          retention: group.helmrelease.values.prometheus.retention,  // we only need a few hours of retention, since the rest is uploaded to blob
+          replicas: group.helmrelease.data.prometheus.replicaCount,  // work in High-Availability mode
+          retention: group.helmrelease.data.prometheus.retention,  // we only need a few hours of retention, since the rest is uploaded to blob
           image: {
             tag: 'v2.8.0',  // use a specific version of Prometheus
           },

@@ -121,7 +121,7 @@
                 "gitops": {
                     "automated": false
                 },
-                "values": {
+                "data": {
                     "tag": "latest"
                 }
             },
@@ -151,7 +151,9 @@
         },
         "flux": {
             "enabled": true,
-            "helm": {
+            "helmrelease": {
+		"create": true,
+		"bootstrap": true,
                 "values": {
                     "rbac": {
                         "create": true
@@ -384,7 +386,7 @@
                 "gitops": {
                     "automated": false
                 },
-                "values": {
+                "data": {
                     "prometheus": {
                         "replicaCount": 2,
                         "retention": "12h"
@@ -441,7 +443,7 @@
             "secret": {
                 "create": true,
                 "name": "thanos-objstore-config",
-                "values": {
+                "input": {
                     "bucket": "tidepool-thanos"
                 }
             }
@@ -572,7 +574,7 @@
                             },
                             "hpa": {
                                 "create": true,
-                                "values": {
+                                "data": {
                                     "maxReplicas": 10,
                                     "minReplicas": 1,
                                     "targetCPUUtilizationPercentage": 50
@@ -694,7 +696,7 @@
                                 "image": {
                                     "tag": "3.6"
                                 },
-                                "values": {
+                                "data": {
                                     "persistence": {
                                         "enabled": false
                                     }

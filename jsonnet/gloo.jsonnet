@@ -26,15 +26,6 @@ local Helmrelease(config, group) =
         version: '0.18.16',
       },
       values+: {
-        crds: {
-          create: group.helmrelease.values.crds.create,  // XXX
-        },
-        settings: {
-          create: true,
-        },
-        discovery: {
-          fdsMode: 'WHITELIST',
-        },
         gatewayProxies: {
           gatewayProxyV2: {
             service: {

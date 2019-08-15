@@ -42,7 +42,7 @@
       releaseName: if name == namespace then name else namespace + '-' + name,
       values: {
         podAnnotations: if 'iam' in group && group.iam.create then this.roleAnnotation(config, group.name),
-      },
+      } + if "values" in group.helmrelease then group.helmrelease.values else {},
     },
   },
 

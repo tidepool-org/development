@@ -14,7 +14,7 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
         tag: 'latest',
         pullSecrets: {},
       },
-      tag: group.helmrelease.values.tag,
+      tag: group.helmrelease.data.tag,
       ownerid: group.name,
       rbac: {
         create: true,
