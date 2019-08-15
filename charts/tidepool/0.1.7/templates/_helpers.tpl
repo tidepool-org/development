@@ -24,7 +24,7 @@ Expand the name of the chart.
 {{- end -}}
 
 {{- define "charts.externalSecrets.role" -}}
-{{ .Values.global.cluster.name }}-{{ .Release.Namespace}}-secrets-role
+{{ .Values.global.cluster.eks.name }}-{{ .Release.Namespace}}-secrets-role
 {{- end -}}
 
 {{- define "charts.roles.permitted" -}}
@@ -32,7 +32,7 @@ Expand the name of the chart.
 {{- end -}}
 
 {{- define "charts.worker.role" -}}
-{{ .Values.global.cluster.name }}-{{ .Release.Namespace}}-worker-role
+{{ .Values.global.cluster.eks.name }}-{{ .Release.Namespace}}-worker-role
 {{- end -}}
 
 {{- define "charts.host.internal.tp" -}} internal {{- end }}
@@ -41,7 +41,7 @@ Expand the name of the chart.
 http://internal.{{.Release.Namespace}}
 {{- end }}
 
-{{- define "charts.s3.url" -}} https://s3-{{.Values.global.cluster.region}}.amazonaws.com {{- end }}
+{{- define "charts.s3.url" -}} https://s3-{{.Values.global.cluster.eks.region}}.amazonaws.com {{- end }}
 
 {{- define "charts.image.s3.bucket" -}}
 {{- if (.Values.image.deployment.env.bucket) and (ne .Values.image.deployment.env.bucket "") -}}
@@ -105,7 +105,7 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{- define "charts.secret.prefix" -}}
-{{ .Values.global.cluster.name }}/{{ .Release.Namespace }}
+{{ .Values.global.cluster.eks.name }}/{{ .Release.Namespace }}
 {{- end -}}
 
 {{/*
