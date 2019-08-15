@@ -21,7 +21,7 @@ spec:
     metadata:
       annotations:
         iam.amazonaws.com/role: "{{ include "charts.worker.role" . }}"
-        linkerd.io/inject: "{{ .Values.global.cluster.mesh.enabled }}"
+        linkerd.io/inject: "{{ .Values.global.cluster.mesh.create }}"
       labels:
         app: hydrophone
         app.kubernetes.io/name: {{ include "charts.name" . }}

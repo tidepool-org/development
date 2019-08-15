@@ -22,7 +22,7 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        linkerd.io/inject: "{{ .Values.global.cluster.mesh.enabled }}"
+        linkerd.io/inject: "{{ .Values.global.cluster.mesh.create }}"
     spec:
       containers:
       - image: "{{ .Values.blip.deployment.image }}"
