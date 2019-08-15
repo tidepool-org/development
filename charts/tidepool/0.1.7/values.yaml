@@ -15,14 +15,11 @@ global:
         name: gateway-proxy-v2                                             
         namespace: gloo-system  
     logLevel: info                                # the default log level for all services
+    hpa:
+      create: false
   environment:                                    # the cluster name
     namespace:
       create: false                               # whether to create the namespace
-    hpa:
-      create: false                               # whether to create the HPAs
-      maxReplicas: 10
-      minReplicas: 1
-      targetCPUUtilizationPercentage: 50
     hosts:
       default:
         protocol: http                            # the protocol to use for signup emails

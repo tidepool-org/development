@@ -1,8 +1,17 @@
 local helpers = import 'helpers.jsonnet';
 
 local Helmrelease(config, group) = helpers.helmrelease(config, group) {
-  local repo(config) = 'https://github.com/%s/cluster-%s' % [config.github.account, config.global.clusterName],
-  local channel(config) = '#flux-%s' % [config.global.clusterName],
+  local gitops = config.gitops,
+  local repoBase =
+    if 'name' in gitops.git
+    then gitops.git.name
+    else 'cluster-%s' % config.cluster.name,
+  local repoName = '%s/%s' % [gitops.git.server, repoBase],
+  local channelName =
+    if 'channel' in gitops.notifications.slack
+    then gitops.notifications.slack.channel
+    else '#flux-%s' % config.cluster.name,
+
   spec+: {
     chart: {
       git: 'git@github.com:tidepool-org/development',
@@ -11,10 +20,10 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
     },
     values+: {
       name: group.name,
-      github: repo(config),
+      github: repoName,
       slack: {
-        channel: channel(config),
-        username: config.slack.username,
+        channel: channelName,
+        username: gitops.notifications.slack.username,
       },
       secretName: group.secret.name,
     },

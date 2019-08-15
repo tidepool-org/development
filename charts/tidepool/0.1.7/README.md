@@ -98,30 +98,25 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `blob.deployment.env.directory`                                         | Directory to use when storing blobs on file storage                                          | `_data/blobs`                                         |
 | `blob.deployment.env.prefix`                                            | File prefix to use when storing blobs on file storage                                        | `blobs`                                               |
 | `blob.deployment.image` | blob Docker image | `` |
-| `blob.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
+| `blob.secret.create`                                         | whether to create blob secret | ``                                         |
+| `blob.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `blob.service.port`                                      | Blob service container port                                                                  | `9225`                                                |
 | `carelink.enabled`                                       | Enable carelink                                                                              | `false`                                               |
-| `carelink.secret.CareLinkSalt`                                       | Carelink salt | `false`                                               |
+| `carelink.secret.create`                                       | whether to create carelink secret| `false`                                               |
+| `carelink.secret.data_.CareLinkSalt`                                       | plaintext Carelink salt | `false`                                               |
 | `data.deployment.image` | data Docker image | `` |
 | `data.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
 | `data.service.port`                                      | Data service container port                                                                  | `9220`                                                |
-| `datadog.enabled` | whether to send data to Datadog | `false` |
-| `datadog.secret.APIKey` |Datadog API key | `` |
-| `datadog.secret.AppKey` |Datadog Application key | `` |
-| `dexcom.enabled`                                         | Enable dexcom data downloading                                                               | `false`                                               |
-| `dexcom.secret.ClientId`                                  | Oauth2 client id | ``                                               |
-| `dexcom.secret.ClientSecret`                                         | Oauth2 client secret | `false`                                               |
-| `dexcom.secret.StateSalt`                                         | Oauth2 state salt | `false`                                               |
+| `dexcom.secret.create`                                         | whether to create dexcom secret| `false`                                               |
+| `dexcom.secret.data_.ClientId`                                  | plaintext Oauth2 client id | ``                                               |
+| `dexcom.secret.data_.ClientSecret`                                         | plaintext Oauth2 client secret | `false`                                               |
+| `dexcom.secret.data_.StateSalt`                                         | plaintext Oauth2 state salt | `false`                                               |
 | `export.deployment.image` | export Docker image | `` |
 | `export.secret.SessionEncryptionKey` | session encryption key | `` |
 | `export.service.port`                                    | Export service container port                                                                | `9300`                                                |
-| `externalDNS.enabled` | whether to use external-dns to publish DNS aliases | `false` |
-| `externalDNS.hostnames` | list of DNS aliases to publish | `false` |
-| `fluxcloud.enabled` | whether to enable Fluxcloud to send notifications to Slack | `false` |
-| `fluxcloud.secret.URL` | Slack webhook URL | `` |
 | `gatekeeper.deployment.image` | gatekeeper Docker image | `` |
 | `gatekeeper.service.port`                                | Gatekeeper service container port                                                            | `9123`                                                |
-| `global.cluster.mesh.enabled`                            | Whether the service mesh is enabled.                                                         | ``                                                    |
+| `global.cluster.mesh.create`                            | Whether the service mesh is enabled.                                                         | ``                                                    |
 | `global.cluster.mesh.name`                               | The name service mesh.                                                                       | ``                                                    |
 | `global.cluster.name`                                    | The name of the K8s cluster that hosts this env.                                             | ``                                                    |
 | `global.cluster.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
@@ -134,7 +129,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.environment.hosts.https.enabled`                             |  Whether to provide HTTPS access | `false`                                           |
 | `global.environment.hosts.https.issuerKind`                          | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer`                              | `ClusterIssuer`                                       |
 | `global.environment.hosts.https.port`                             |  Port to use for HTTPS traffic | `8443`                                           |
-| `global.environment.hpa.create`                                      | If true, create a horizontal pod autoscalers for all pods                                    | 'false'                                               |
+| `global.cluster.hpa.create`                                      | If true, create a horizontal pod autoscalers for all pods                                    | 'false'                                               |
 | `global.environment.namespace.create`                                | If true, create namespace                                                                    | `false`                                               |
 | `global.environment.resources.limits.cpu`                            | CPU Limit                                                                                    | `200m`                                                |
 | `global.environment.resources.limits.memory`                         | Memory Limit                                                                                 | `128Mi`                                               |
@@ -161,58 +156,64 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `image.deployment.env.directory`                                        | Directory to use when storing images on file storage                                         | `_data/image`                                         |
 | `image.deployment.env.prefix`                                           | File prefix to use when storing images on file storage                                       | `images`                                              |
 | `image.deployment.image` | image Docker image | `` |
-| `image.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
+| `image.secret.create`                                         | whether to create image secret| ``                                         |
+| `image.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `image.service.port`                                     | Image service container port                                                                 | `9226`                                                |
 | `jellyfish.deployment.image` | jellyfish Docker image | `` |
 | `jellyfish.enabled`                                      | Enable jellyfish service if true                                                             | `true`                                                |
 | `jellyfish.service.port`                                 | Jellyfish service container port                                                             | `9122`                                                |
-| `kissmetrics.enabled` | whether to use kissmetrics | `false` |
-| `kissmetrics.secret.KissmetricsAPIKey` | Kissmetrics API Key | `` |
-| `kissmetrics.secret.KissmetricsToken` | Kissmetrics Token | `` |
-| `kissmetrics.secret.UCSFKissmetricsAPIKey` | UCSF Kissmetrics Token | `` |
-| `kissmetrics.secret.UCSFWhitelist` | UCSF metrics whitelist | `` |
-| `mailchimp.enabled` | whether to use Mailchimp | `false` |
-| `mailchimp.secret.MailchimpClinicLists` | clinic mailing lists| `` |
-| `mailchimp.secret.MailchimpURL` | Mailchimp URL | `` |
-| `mailchimp.secret.MailchimpPersonalLists` | personal mailing lists| `` |
-| `mailchimp.secret.MailchimpApiKey` | Mailchimp API key | `` |
+| `kissmetrics.secret.create` | whether to use create kissmetrics secret | `false` |
+| `kissmetrics.secret.data_.KissmetricsAPIKey` | plaintext Kissmetrics API Key | `` |
+| `kissmetrics.secret.data_.KissmetricsToken` | plaintext Kissmetrics Token | `` |
+| `kissmetrics.secret.data_.UCSFKissmetricsAPIKey` | plaintext UCSF Kissmetrics Token | `` |
+| `kissmetrics.secret.data_.UCSFWhitelist` | plaintext UCSF metrics whitelist | `` |
+| `mailchimp.secret.create` | whether to create Mailchimp secret | `false` |
+| `mailchimp.secret.data_.MailchimpClinicLists` | plaintext clinic mailing lists| `` |
+| `mailchimp.secret.data_.MailchimpURL` | plaintext Mailchimp URL | `` |
+| `mailchimp.secret.data_.MailchimpPersonalLists` | plaintext personal mailing lists| `` |
+| `mailchimp.secret.data_.MailchimpApiKey` | plaintext Mailchimp API key | `` |
 | `messageapi.deployment.env.window`                                      |                                                                                              | `21`                                                  |
 | `messageapi.deployment.image` | message-api Docker image | `` |
 | `messageapi.service.port`                                | Message-Api service container port                                                           | `9119`                                                |
 | `migrations.deployment.image` | migrations Docker image | `` |
 | `migrations.enabled`                                     | Enable migrations service if true                                                            | `true`                                                |
-| `mongo.secret.Addresses`                                        | Comma-separated list of Mongo host[:port]                                                    | `mongodb`                                             |
-| `mongo.secret.OptParams`                                        | Additional Mongo connection params                                                           | ``                                                    |
-| `mongo.secret.Password`                                         | If non-empty, Mongo password                                                                 | `` ||                                                  |
-| `mongo.secret.Scheme`                                        | Mongo DB scheme, either `mongodb` or `mongodb+srv`                                              | `mongodb`                                             |
-| `mongo.secret.Tls`                                              | If true, use SSL on Mongo connection                                                         | `false`                                               |
-| `mongo.secret.Username`                                         | If non-empty, Mongo username                                                                 | ``                                                    |
+| `mongo.secret.create`                                        | Whether to create mongo secret | `false`                                             |
+| `mongo.secret.data_.Addresses`                                        | plaintext comma-separated list of Mongo host[:port]                                                    | `mongodb`                                             |
+| `mongo.secret.data_.OptParams`                                        | plaintext additional Mongo connection params                                                           | ``                                                    |
+| `mongo.secret.data_.Password`                                         | plaintext Mongo password                                                                 | `` ||                                                  |
+| `mongo.secret.data_.Scheme`                                        | plaintext Mongo DB scheme, either `mongodb` or `mongodb+srv`                                              | `mongodb`                                             |
+| `mongo.secret.data_.Tls`                                              | plaintext, If true, use SSL on Mongo connection                                                         | `false`                                               |
+| `mongo.secret.data_.Username`                                         | plaintext, If non-empty, Mongo username                                                                 | ``                                                    |
 | `nosqlclient.enabled`                                    | Enable nosqlclient                                                                           | `false`                                               |
 | `notification.deployment.image` | notification Docker image | `` |
-| `notification.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
+| `notification.secret.create`                                         | wheter to create notification secret | ``                                         |
+| `notification.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `notification.service.port`                              | Notification service container port                                                          | `9223`                                                |
 | `seagull.deployment.image` | seagull Docker image | `` |
 | `seagull.service.port`                                   | Seagull service container port                                                               | `9120`                                                |
 | `seagull.service.port`                                   | Seagull service container port                                                               | `9120`                                                |
-| `sercer.secret.ServiceAuth` | service authorization |  `` |
+| `server.secret.create` | whether to cerate secret |  `` |
+| `server.secret.data_.ServiceAuth` | service authorization, if empty, random value is generated |  `` |
 | `shoreline.deployment.image` | shoreline Docker image | `` |
 | `shoreline.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
 | `shoreline.service.port`                                 | Shoreline service container port                                                             | `9107`                                                |
 | `sumologic.enabled` | whether to use Sumologic | `false` |
 | `sumologic.secret.CollectorUrl` |  Sumologic collector URL | `false` |
 | `task.deployment.image` | task Docker image | `` |
-| `task.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
+| `task.secret.data_.ServiceAuth` | task authorization, if empty, random value is generated |  `` |
 | `task.service.port`                                      | Task service container port                                                                  | `9224`                                                |
 | `tidewhisperer.deployment.image` | tidewhisperer Docker image | `` |
 | `tidewhisperer.service.port`                             | Tide whisperer service container port                                                        | `9127`                                                |
 | `tools.deployment.image` | tools Docker image | `` |
 | `tools.enabled`                                          | Enable tools service if true                                                                 | `true`                                                |
 | `user.deployment.image` | user Docker image | `` |
-| `user.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
-| `user.service.poert`                                      | User service container port                                                                  | `9221`                                                |
-| `userdata.secret.UserPasswordSalt` | user password salt | `` |
-| `userdata.secret.UserIdSalt` | user id salt | `` |
-| `userdata.secret.GroupIdEncryptionKey` | group id encryption key| `` |
+| `user.secret.create` | whether to generate user secret |  `` |
+| `user.secret.data_.ServiceAuth` | user authorization, if empty, random value is generated |  `` |
+| `user.service.port`                                      | User service container port                                                                  | `9221`                                                |
+| `userdata.secret.create` | whethe to create userdata secret | `` |
+| `userdata.secret.data_.UserPasswordSalt` | plaintext user password salt | `` |
+| `userdata.secret.data_.UserIdSalt` | plaintext user id salt | `` |
+| `userdata.secret.data_.GroupIdEncryptionKey` | plaintext group id encryption key| `` |
 
 
 

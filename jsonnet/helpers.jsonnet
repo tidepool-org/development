@@ -46,6 +46,16 @@
     },
   },
 
+  secretEntry(config, group, entry):: $._Object('v1', 'Secret', group[entry].name) {
+    local secret = group[entry],
+    type: 'Opaque',
+    metadata+: {
+      namespace: group.namespace.name,
+    },
+    data_:: {},
+    data: { [k]: std.base64(secret.data_[k]) for k in std.objectFields(secret.data_) },
+  },
+
   secret(config, group):: $._Object('v1', 'Secret', group.name) {
     local secret = self,
     type: 'Opaque',
