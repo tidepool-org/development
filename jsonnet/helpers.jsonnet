@@ -29,6 +29,10 @@
     'iam.amazonaws.com/permitted': this.role(config, name),
   },
 
+  urlrelease(config, group):: $._Object('tidepool/v1beta1', 'URLRelease', group.name) {
+    url: group.urlrelease.url
+  },
+
   helmrelease(config, group):: $._Object('flux.weave.works/v1beta1', 'HelmRelease', group.name) {
     local namespace = group.namespace.name,
     local name = group.name,

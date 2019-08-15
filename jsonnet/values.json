@@ -151,9 +151,14 @@
         },
         "flux": {
             "enabled": true,
+	    "urlrelease": {
+        "create": true,
+        "bootstrap": true,
+	        "url": "https://raw.githubusercontent.com/fluxcd/flux/master/deploy-helm/flux-helm-release-crd.yaml"
+	    },
             "helmrelease": {
-		"create": true,
-		"bootstrap": true,
+		        "create": true,
+		        "bootstrap": true,
                 "values": {
                     "rbac": {
                         "create": true
