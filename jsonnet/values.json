@@ -60,12 +60,12 @@
 		"autoscaler": {
 			"enabled": true,
 			"helmrelease": {
-                "chart": {
-                    "repository": "https://kubernetes-charts.storage.googleapis.com/",
+				"chart": {
+					"repository": "https://kubernetes-charts.storage.googleapis.com/",
 					"name": "cluster-autoscaler",
 					"index": "stable",
-                    "version": "0.14.2"
-                  },
+					"version": "0.14.2"
+				},
 				"create": true,
 				"gitops": {
 					"automated": false
@@ -85,13 +85,13 @@
 				"create": true
 			},
 			"helmrelease": {
-                "create": true,
-                "chart": {
-                    "repository": "https://charts.jetstack.io",
-                    "index": "jetstack",
-                    "name": "cert-manager",
-                    "version": "v0.8.1"
-                },
+				"create": true,
+				"chart": {
+					"repository": "https://charts.jetstack.io",
+					"index": "jetstack",
+					"name": "cert-manager",
+					"version": "v0.8.1"
+				},
 				"gitops": {
 					"automated": false
 				}
@@ -108,11 +108,11 @@
 			"enabled": true,
 			"helmrelease": {
 				"chart": {
-                    "repository": "https://kubernetes-charts.storage.googleapis.com/",
-                    "index": "stable",
-                    "name": "datadog",
-                    "version": "1.32.2"
-                },
+					"repository": "https://kubernetes-charts.storage.googleapis.com/",
+					"index": "stable",
+					"name": "datadog",
+					"version": "1.32.2"
+				},
 				"create": true,
 				"gitops": {
 					"automated": false
@@ -136,11 +136,11 @@
 			"enabled": true,
 			"helmrelease": {
 				"chart": {
-                    "repository": "https://kubernetes-charts.storage.googleapis.com/",
-                    "index": "stable",
-                    "name": "external-dns",
-                    "version": "1.7.9"
-                },
+					"repository": "https://kubernetes-charts.storage.googleapis.com/",
+					"index": "stable",
+					"name": "external-dns",
+					"version": "1.7.9"
+				},
 				"create": true,
 				"gitops": {
 					"automated": false
@@ -164,7 +164,7 @@
 					"git": "git@github.com:godaddy/kubernetes-external-secrets",
 					"path": "charts/kubernetes-external-secrets",
 					"ref": "master"
-                },
+				},
 				"create": true,
 				"gitops": {
 					"automated": false
@@ -187,22 +187,20 @@
 			},
 			"helmrelease": {
 				"create": true,
-                "bootstrap": true,
-                "chart": {
-                    "repository": "https://fluxcd.github.io/",
-                    "name": "flux",
+				"bootstrap": true,
+				"chart": {
+					"repository": "https://fluxcd.github.io/",
+					"name": "flux",
 					"version": "0.10.2",
 					"index": "fluxcd"
-                },
+				},
 				"values": {
 					"rbac": {
 						"create": true
 					},
 					"customRepositories": {
 						"apiVersion": "v1",
-						"repositories": [
-
-						]
+						"repositories": []
 					}
 				},
 				"helmOperator": {
@@ -238,7 +236,7 @@
 					"git": "git@github.com:tidepool-org/development",
 					"path": "charts/fluxcloud/0.1.0",
 					"ref": "k8s"
-                },
+				},
 				"create": true,
 				"gitops": {
 					"automated": false
@@ -264,11 +262,11 @@
 			"helmrelease": {
 				"create": true,
 				"chart": {
-                    "repository": "https://storage.googleapis.com/solo-public-helm/",
-                    "name": "gloo",
+					"repository": "https://storage.googleapis.com/solo-public-helm/",
+					"name": "gloo",
 					"version": "0.18.16",
 					"index": "gloo"
-                },
+				},
 				"gitops": {
 					"automated": false
 				},
@@ -293,11 +291,11 @@
 			"enabled": true,
 			"helmrelease": {
 				"chart": {
-                    "repository": "https://kubernetes-charts.storage.googleapis.com/",
-                    "name": "kiam",
+					"repository": "https://kubernetes-charts.storage.googleapis.com/",
+					"name": "kiam",
 					"version": "2.3.0",
 					"index": "stable"
-                },
+				},
 				"create": true,
 				"gitops": {
 					"automated": false
@@ -316,11 +314,11 @@
 			"helmrelease": {
 				"create": true,
 				"chart": {
-                    "repository": "https://kubernetes-charts.storage.googleapis.com/",
-                    "name": "kube-state-metrics",
+					"repository": "https://kubernetes-charts.storage.googleapis.com/",
+					"name": "kube-state-metrics",
 					"version": "2.2.1",
 					"index": "stable"
-                },
+				},
 				"gitops": {
 					"automated": false
 				}
@@ -335,11 +333,11 @@
 			"helmrelease": {
 				"create": true,
 				"chart": {
-                    "repository": "https://kubernetes-charts.storage.googleapis.com/",
-                    "name": "metrics-server",
+					"repository": "https://kubernetes-charts.storage.googleapis.com/",
+					"name": "metrics-server",
 					"version": "2.8.2",
 					"index": "stable"
-                },
+				},
 				"gitops": {
 					"automated": false
 				}
@@ -354,11 +352,11 @@
 			"helmrelease": {
 				"create": true,
 				"chart": {
-                    "repository": "https://kubernetes-charts.storage.googleapis.com/",
-                    "name": "prometheus-operator",
+					"repository": "https://kubernetes-charts.storage.googleapis.com/",
+					"name": "prometheus-operator",
 					"version": "5.13.0",
 					"index": "stable"
-                },
+				},
 				"gitops": {
 					"automated": false
 				},
@@ -381,11 +379,11 @@
 			"helmrelease": {
 				"create": true,
 				"chart": {
-                    "repository": "https://stakater.github.io/stakater-charts/",
-                    "name": "reloader",
+					"repository": "https://stakater.github.io/stakater-charts/",
+					"name": "reloader",
 					"version": "v0.0.38",
 					"index": "stakater"
-                },
+				},
 				"gitops": {
 					"automated": false
 				}
@@ -398,13 +396,13 @@
 		"sumologic": {
 			"enabled": true,
 			"helmrelease": {
-                "create": true,
-                "chart": {
-                    "repository": "https://kubernetes-charts.storage.googleapis.com/",
-                    "name": "sumologic-fluentd",
+				"create": true,
+				"chart": {
+					"repository": "https://kubernetes-charts.storage.googleapis.com/",
+					"name": "sumologic-fluentd",
 					"version": "1.1.0",
 					"index": "stable"
-                },
+				},
 				"gitops": {
 					"automated": false
 				}
@@ -446,12 +444,12 @@
 		"groups": {
 			"qa1": {
 				"helmrelease": {
-                    "create": true,
-                    "chart": {
-                        "git": "git@github.com:tidepool-org/development",
-                        "path": "charts/tidepool/0.1.7",
-                        "ref": "k8s"
-                      },
+					"create": true,
+					"chart": {
+						"git": "git@github.com:tidepool-org/development",
+						"path": "charts/tidepool/0.1.7",
+						"ref": "k8s"
+					},
 					"gitops": {
 						"automated": true,
 						"filter": "develop-*",
