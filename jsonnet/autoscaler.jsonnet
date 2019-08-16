@@ -10,7 +10,9 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
         clusterName: config.cluster.name,
       },
       awsRegion: config.cluster.eks.region,
-      groupMonitor: 'enabled',
+      serviceMonitor: {
+        'enabled': true 
+      },
       sslCertHostPath: '/etc/ssl/certs/ca-bundle.crt',
       extraArgs: {
         v: 4,

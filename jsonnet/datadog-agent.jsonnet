@@ -25,7 +25,7 @@ local Helmrelease(config, group) =
   };
 
 function(config) (
-  local group = config.groups.datadog { name: 'datadog' };
+  local group = config.groups.datadogAgent { name: 'datadog-agent' };
   if group.enabled then {
     Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
     Secret: if group.secret.create then helpers.secret(config, group),

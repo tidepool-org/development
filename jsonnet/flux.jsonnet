@@ -43,7 +43,6 @@ local asRepoList(config) = values(uniqueRepositories(config));
 
 local HelmRelease(config, group) = helpers.helmrelease(config, group) {
   spec+: {
-    chart: group.helmrelease.chart,
     values+: group.helmrelease.values {
       local path =
         if std.objectHas(config.gitops.git, 'path')

@@ -30,11 +30,14 @@
 		"k8sVersion": "1.13",
 		"kubeconfig": "",
 		"logLevel": "debug",
+		"metrics": {
+			"enabled" : true
+		},
 		"mesh": {
 			"create": false,
 			"name": "linkerd"
 		},
-		"name": "shared",
+		"name": "development",
 		"provider": "eks"
 	},
 	"company": {
@@ -79,7 +82,7 @@
 				"name": "autoscaler"
 			}
 		},
-		"certmanager": {
+		"certManager": {
 			"enabled": true,
 			"clusterIssuer": {
 				"create": true
@@ -101,10 +104,10 @@
 			},
 			"namespace": {
 				"create": true,
-				"name": "certmanager"
+				"name": "cert-manager"
 			}
 		},
-		"datadog": {
+		"datadogAgent": {
 			"enabled": true,
 			"helmrelease": {
 				"chart": {
@@ -119,8 +122,8 @@
 				}
 			},
 			"namespace": {
-				"create": false,
-				"name": "monitoring"
+				"create": true,
+				"name": "datadog"
 			},
 			"secret": {
 				"create": false,
@@ -139,14 +142,11 @@
 					"repository": "https://kubernetes-charts.storage.googleapis.com/",
 					"index": "stable",
 					"name": "external-dns",
-					"version": "1.7.9"
+					"version": "2.5.3"
 				},
 				"create": true,
 				"gitops": {
 					"automated": false
-				},
-				"data": {
-					"tag": "latest"
 				}
 			},
 			"iam": {
@@ -154,7 +154,7 @@
 			},
 			"namespace": {
 				"create": true,
-				"name": "externalDNS"
+				"name": "external-dns-system"
 			}
 		},
 		"externalSecrets": {
@@ -174,8 +174,8 @@
 				"create": true
 			},
 			"namespace": {
-				"create": false,
-				"name": "default"
+				"create": true,
+				"name": "external-secrets"
 			}
 		},
 		"flux": {
@@ -301,9 +301,6 @@
 					"automated": false
 				}
 			},
-			"iam": {
-				"create": true
-			},
 			"namespace": {
 				"create": false,
 				"name": "kube-system"
@@ -325,7 +322,7 @@
 			},
 			"namespace": {
 				"create": false,
-				"name": "monitoring"
+				"name": "datadog"
 			}
 		},
 		"metricsServer": {
@@ -343,8 +340,8 @@
 				}
 			},
 			"namespace": {
-				"create": false,
-				"name": "monitoring"
+				"create": true,
+				"name": "metrics-server"
 			}
 		},
 		"prometheusOperator": {
@@ -393,7 +390,7 @@
 				"name": "reloader"
 			}
 		},
-		"sumologic": {
+		"sumologicFluentd": {
 			"enabled": true,
 			"helmrelease": {
 				"create": true,

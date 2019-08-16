@@ -32,44 +32,43 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
         ],
         log: {
           level: config.cluster.logLevel,
+        }
+      },
+      server: {
+        image: {
+          tag: 'd999e61e28befb872cd1875812c9d1bf37dc4f37',  // contains the fix for assume-role-arn
         },
-
-        server: {
-          image: {
-            tag: 'd999e61e28befb872cd1875812c9d1bf37dc4f37',  // contains the fix for assume-role-arn
+        enabled: true,
+        // This is to choose a different node for agent vs server. Without it, the kiam-server pods
+        // would be scheduled on all nodes, including the ones that are running the kiam-agents
+        nodeSelector: {
+          'kiam-server': 'true',
+        },
+        // This states that the server pods can withstand the taint on the second node group that prevents
+        // other pods from being scheduled there.
+        tolerations: [
+          {
+            key: 'kiam-server',
+            operator: 'Equal',
+            value: 'false',
+            effect: 'NoExecute',
           },
-          enabled: true,
-          // This is to choose a different node for agent vs server. Without it, the kiam-server pods
-          // would be scheduled on all nodes, including the ones that are running the kiam-agents
-          nodeSelector: {
-            'kiam-server': 'true',
+        ],
+        extraHostPathMounts: [
+          {
+            name: 'ssl-certs',
+            mountPath: '/etc/ssl/certs',
+            hostPath: '/etc/pki/ca-trust/extracted/pem',
+            readOnly: true,
           },
-          // This states that the server pods can withstand the taint on the second node group that prevents
-          // other pods from being scheduled there.
-          tolerations: [
-            {
-              key: 'kiam-server',
-              operator: 'Equal',
-              value: 'false',
-              effect: 'NoExecute',
-            },
-          ],
-          extraHostPathMounts: [
-            {
-              name: 'ssl-certs',
-              mountPath: '/etc/ssl/certs',
-              hostPath: '/etc/pki/ca-trust/extracted/pem',
-              readOnly: true,
-            },
-          ],
-          extraArgs: {
-            region: config.cluster.eks.region,
-            'assume-role-arn': '%s-kiam-server-role' % config.cluster.name,
-          },
-          useHostNetwork: true,
-          log: {
-            level: config.cluster.logLevel,
-          },
+        ],
+        extraArgs: {
+          region: config.cluster.eks.region,
+          'assume-role-arn': '%s-kiam-server-role' % config.cluster.name,
+        },
+        useHostNetwork: true,
+        log: {
+          level: config.cluster.logLevel,
         },
       },
     },

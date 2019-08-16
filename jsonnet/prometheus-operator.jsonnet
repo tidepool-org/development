@@ -14,7 +14,7 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
             geo: 'us',
             region: config.cluster.eks.region,
           },
-          groupMonitorNamespaceSelector: {  // allows the operator to find target config from multiple namespaces
+          serviceMonitorNamespaceSelector: {  // allows the operator to find target config from multiple namespaces
             any: true,
           },
           thanos: {  // add Thanos Sidecar
@@ -34,7 +34,7 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
 };
 
 function(config) (
-  local group = config.groups.prometheusOperator { name: 'prometheusOperator' };
+  local group = config.groups.prometheusOperator { name: 'prometheus-operator' };
   if group.enabled then {
     Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
     Namespace: if group.namespace.create then helpers.namespace(config, group),

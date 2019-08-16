@@ -2,8 +2,8 @@ local helpers = import 'helpers.jsonnet';
 
 local eksAnnotations(config) =
   if config.cluster.provider == 'eks' && config.cluster.gateway.type == 'LoadBalancer' then {
-    'group.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
-    'group.beta.kubernetes.io/aws-load-balancer-additional-resource-tags': 'cluster:' + config.cluster.name,
+    'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
+    'service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags': 'cluster:' + config.cluster.name,
   } else {
 
   };
