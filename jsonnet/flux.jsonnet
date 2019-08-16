@@ -28,14 +28,16 @@ local toEntry(name, group) =
      std.objectHas(group, 'helmrelease') &&
      group.helmrelease.create &&
      std.objectHas(group.helmrelease, 'chart') &&
-     (!group.helmrelease.bootstrap)
+     (! std.objectHas(group.helmrelease, 'bootstrap'))
   then asRepository(group.helmrelease.chart);
+  
+local merge(a,b) = if std.isObject(b) then a+b else a;
 
-local dedup(entries) = std.foldr(function(a,b) if b then a+b else a, entries, {});
-
-local uniqueRepositories(config) = dedup(std.mapWithKey(toEntry, config.groups));
+local dedup(entries) = std.foldl(merge, entries, {});
 
 local values(map) = [ map[v] for v in std.objectFields(map)];
+
+local uniqueRepositories(config) = dedup(values(std.mapWithKey(toEntry, config.groups)));
 
 local asRepoList(config) = values(uniqueRepositories(config));
 
@@ -65,7 +67,7 @@ local HelmRelease(config, group) = helpers.helmrelease(config, group) {
         label: config.cluster.name,
         secretName: group.secret.name,
       },
-      additionalArgs: if config.fluxcloud.enabled then [
+      additionalArgs: if config.groups.fluxcloud.enabled then [
         '--connect=ws://fluxcloud',
       ],
       customRepositories: {

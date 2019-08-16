@@ -1,7 +1,7 @@
 local config = import 'values.json';
 
 local groups = [
-  #import 'autoscaler.jsonnet',
+  import 'autoscaler.jsonnet',
   #import 'certmanager.jsonnet',
   #import 'clusterconfig.jsonnet',
   #import 'datadog.jsonnet',

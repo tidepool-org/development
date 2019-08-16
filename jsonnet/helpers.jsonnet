@@ -19,7 +19,7 @@
       'istio-injection': 'disabled',
     },
 
-  role(config, name):: config.cluster.eks.name + '-' + name + '-role',
+  role(config, name):: config.cluster.name + '-' + name + '-role',
 
   roleAnnotation(config, name):: {
     'iam.amazonaws.com/role': this.role(config, name),
