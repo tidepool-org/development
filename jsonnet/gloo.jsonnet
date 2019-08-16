@@ -18,9 +18,10 @@ local externalDNSAnnotations(config) =
     };
 
 local toKebabCase(word) = (
-  local merge(a,b) = { 
-    word: a + if a.toUpper then std.asciiUpper(b) else b,
-    toUpper: b == '-'
+  local merge(a,b) = {
+    local isHyphen = (b == '-'),
+    word: if isHyphen then a else a + (if a.toUpper then std.asciiUpper(b) else b),
+    toUpper: isHyphen
   };
   std.foldl(merge, std.stringChars(word), { word: "", b: false }).word
 );
