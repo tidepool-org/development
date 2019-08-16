@@ -63,7 +63,7 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       RoleName: 
-        Fn::Sub: "${ClusterName}-externalDNS-role"
+        Fn::Sub: "${ClusterName}-external-dns-role"
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -86,7 +86,7 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       RoleName: 
-        Fn::Sub: "${ClusterName}-certmanager-role"
+        Fn::Sub: "${ClusterName}-cert-manager-role"
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -158,7 +158,7 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       RoleName: 
-        Fn::Sub: "${ClusterName}-secrets-role"
+        Fn::Sub: "${ClusterName}-external-secrets-role"
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:

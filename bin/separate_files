@@ -15,7 +15,7 @@ input = yaml.safe_load(sys.stdin)
 for name, manifest in input.items():
 
     with open(name + ".yaml", "w") as out:
-       if "kind" in manifest and manifest["kind"] == "Secret":
+       if "kind" in manifest:
             yaml.dump(manifest, out)
        out.flush()
     

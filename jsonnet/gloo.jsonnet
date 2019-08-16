@@ -17,12 +17,38 @@ local externalDNSAnnotations(config) =
 
     };
 
+local toKebabCase(word) = (
+  local merge(a,b) = { 
+    word: a + if a.toUpper then std.asciiUpper(b) else b,
+    toUpper: b == '-'
+  };
+  std.foldl(merge, std.stringChars(word), { word: "", b: false }).word
+);
+
 local Helmrelease(config, group) =
   helpers.helmrelease(config, group) {
     spec+: {
       values+: {
+        gateway: {
+          deployment: {
+            stats: config.cluster.metrics.enabled
+          }
+        },
+        gloo:  {
+          deployment: {
+            stats: config.cluster.metrics.enabled
+          }
+        },
+        discovery:  {
+          deployment: {
+            stats: config.cluster.metrics.enabled
+          }
+        },
         gatewayProxies: {
-          gatewayProxyV2: {
+          [toKebabCase(config.cluster.gateway.proxy.name)]: {
+            podTemplate: {
+              stats: config.cluster.metrics.enabled
+            },
             service: {
               httpPort: config.cluster.gateway.httpPort,  // HTTP port to listen on
               httpsPort: config.cluster.gateway.httpsPort,  // HTTPS port to listen on
