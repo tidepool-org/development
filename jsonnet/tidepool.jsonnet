@@ -34,13 +34,8 @@ local HelmRelease(config, group) = helpers.helmrelease(config, group) {
       'flux.weave.works/automated': hr.gitops.automated,
     },
   },
-  spec: {
+  spec+: {
     releaseName: group.name + '-tidepool',
-    chart: {
-      git: 'git@github.com:tidepool-org/development',
-      path: 'charts/tidepool/0.1.7',
-      ref: 'k8s',
-    },
     values: helpers.StripSecrets(hr.values) {
       global+: {
         cluster: config.cluster,

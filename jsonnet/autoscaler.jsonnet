@@ -2,11 +2,6 @@ local helpers = import 'helpers.jsonnet';
 
 local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   spec+: {
-    chart: {
-      repository: 'https://kubernetes-charts.storage.googleapis.com/',
-      name: 'cluster-autoscaler',
-      version: '0.14.2',
-    },
     values+: {
       rbac: {
         create: true,

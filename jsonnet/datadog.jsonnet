@@ -3,11 +3,6 @@ local helpers = import 'helpers.jsonnet';
 local Helmrelease(config, group) =
   helpers.helmrelease(config, group) {
     spec+: {
-      chart: {
-        repository: 'https://kubernetes-charts.storage.googleapis.com/',
-        name: 'datadog',
-        version: '1.32.2',
-      },
       values+: {
         kubeStateMetrics: {
           enabled: config.groups.kubeStateMetrics.helmrelease.create,

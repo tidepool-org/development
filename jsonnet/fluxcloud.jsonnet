@@ -3,12 +3,12 @@ local helpers = import 'helpers.jsonnet';
 local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   local gitops = config.gitops,
   local repoBase =
-    if 'name' in gitops.git
+    if std.objectHas(gitops.git, 'name') 
     then gitops.git.name
     else 'cluster-%s' % config.cluster.name,
   local repoName = '%s/%s' % [gitops.git.server, repoBase],
   local channelName =
-    if 'channel' in gitops.notifications.slack
+    if std.objectHas(gitops.notifications.slack, 'channel')
     then gitops.notifications.slack.channel
     else '#flux-%s' % config.cluster.name,
 

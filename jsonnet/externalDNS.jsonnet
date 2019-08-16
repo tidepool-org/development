@@ -2,11 +2,6 @@ local helpers = import 'helpers.jsonnet';
 
 local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   spec+: {
-    chart: {
-      repository: 'https://kubernetes-charts.storage.googleapis.com/',
-      name: 'external-dns',
-      version: '1.7.9',
-    },
     values+: {
       domainfilter: config.company.domain,
       image: {

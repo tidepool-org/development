@@ -4,16 +4,9 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   local thanos = config.groups.thanos,
 
   spec+: {
-    chart: {
-      repository: 'https://kubernetes-charts.storage.googleapis.com/',
-      name: 'prometheus-operator',
-      version: '5.13.0',
-    },
     values+: {
-      prometheus: {
-        prometheusSpec: {
-          replicas: group.helmrelease.data.prometheus.replicaCount,  // work in High-Availability mode
-          retention: group.helmrelease.data.prometheus.retention,  // we only need a few hours of retention, since the rest is uploaded to blob
+      prometheus+: {
+        prometheusSpec+: {
           image: {
             tag: 'v2.8.0',  // use a specific version of Prometheus
           },

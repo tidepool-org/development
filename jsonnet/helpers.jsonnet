@@ -33,6 +33,8 @@
     url: group.urlrelease.url
   },
 
+  ignore(x,exclude):: { [f]:x[f] for f in std.objectFields(x) if f != exclude },
+
   helmrelease(config, group):: $._Object('flux.weave.works/v1beta1', 'HelmRelease', group.name) {
     local namespace = group.namespace.name,
     local name = group.name,
@@ -43,10 +45,11 @@
       },
     },
     spec: {
+      chart: this.ignore(group.helmrelease.chart, 'index'),
       releaseName: if name == namespace then name else namespace + '-' + name,
       values: {
-        podAnnotations: if 'iam' in group && group.iam.create then this.roleAnnotation(config, group.name),
-      } + if "values" in group.helmrelease then group.helmrelease.values else {},
+        podAnnotations: if std.objectHas(group, 'iam') && group.iam.create then this.roleAnnotation(config, group.name),
+      } + if std.objectHas(group.helmrelease, 'values') then group.helmrelease.values else {},
     },
   },
 
@@ -73,7 +76,7 @@
   namespace(config, group):: $._Object('v1', 'Namespace', group.namespace.name) {
     metadata+: {
       labels: this.labels(config),
-      annotations: if 'iam' in group && group.iam.create then this.permittedAnnotation(config, group.namespace.name),
+      annotations: if std.objectHas(group, 'iam') && group.iam.create then this.permittedAnnotation(config, group.namespace.name),
     },
   },
 

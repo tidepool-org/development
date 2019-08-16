@@ -19,7 +19,7 @@ local groups = [
   import 'flux.jsonnet',
 ];
 
-local name(m) = if m.kind == 'Namespace' || (!('namespace' in m.metadata)) || m.metadata.name == m.metadata.namespace
+local name(m) = if m.kind == 'Namespace' || (!std.objectHas(m.metadata, 'namespace')) || m.metadata.name == m.metadata.namespace
 then m.metadata.name + '-' + m.kind
 else m.metadata.namespace + '-' + m.metadata.name + '-' + m.kind;
 

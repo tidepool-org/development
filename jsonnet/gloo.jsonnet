@@ -20,11 +20,6 @@ local externalDNSAnnotations(config) =
 local Helmrelease(config, group) =
   helpers.helmrelease(config, group) {
     spec+: {
-      chart: {
-        repository: 'https://storage.googleapis.com/solo-public-helm/',
-        name: 'gloo',
-        version: '0.18.16',
-      },
       values+: {
         gatewayProxies: {
           gatewayProxyV2: {

@@ -3,10 +3,10 @@ local helpers = import 'helpers.jsonnet';
 local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   spec+: {
     chart: {
-      git: 'git@github.com:stakater/Reloader',
-      path: 'deployments/kubernetes/chart/reloader',
-      ref: 'master',
-    },
+      repository: 'https://stakater.github.io/stakater-charts/',
+      name: 'reloader',
+      version: 'v0.0.38',
+    }
   },
 };
 
