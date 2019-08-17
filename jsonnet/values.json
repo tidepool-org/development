@@ -440,6 +440,7 @@
 	"tidepool": {
 		"groups": {
 			"qa1": {
+				"enabled": false,
 				"helmrelease": {
 					"create": true,
 					"chart": {

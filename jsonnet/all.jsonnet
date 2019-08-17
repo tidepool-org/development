@@ -1,5 +1,3 @@
-local config = import 'values.json';
-
 local groups = [
   import 'autoscaler.jsonnet',
   import 'cert-manager.jsonnet',
@@ -28,4 +26,6 @@ local Manifests(svcs, conf) = [std.prune(s(conf)) for s in svcs];
 
 local Rename(m) = { [name(m[field]) + '.json']: m[field] for field in std.objectFields(m) };
 
-std.foldl(function(x, y) x + Rename(y), Manifests(groups, config), {})
+function(config) std.foldl(function(x, y) x + Rename(y), Manifests(groups, config), {})
+
+

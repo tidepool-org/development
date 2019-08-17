@@ -47,7 +47,7 @@ local HelmRelease(config, group) = helpers.helmrelease(config, group) {
 local HPAs(namespace) = { [namespace + '-' + name + '-HPA']: helpers.hpa(name, namespace) for name in svcs };
 
 function(config) (
-  local converter(name, group) = if group.helmrelease.create then HelmRelease(config, group { name: name });
+  local converter(name, group) = if group.enabled && group.helmrelease.create then HelmRelease(config, group { name: name });
 
 
   // add HPAs

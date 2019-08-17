@@ -35,6 +35,14 @@
 
   ignore(x,exclude):: { [f]:x[f] for f in std.objectFields(x) if f != exclude },
 
+  merge(a,b):: if std.isObject(a) && std.isObject(b) then ({ // merge two objects recursively.  Choose be if conflict.
+    [x]: a[x] for x in std.objectFields(a) if ! std.objectHas(b, x)
+  } + {
+    [x]: b[x] for x in std.objectFields(b) if ! std.objectHas(a, x)
+  } + {
+    [x]: this.merge(a[x], b[x]) for x in std.objectFields(b) if std.objectHas(a, x)
+  }) else b,
+
   helmrelease(config, group):: $._Object('flux.weave.works/v1beta1', 'HelmRelease', group.name) {
     local namespace = group.namespace.name,
     local name = group.name,

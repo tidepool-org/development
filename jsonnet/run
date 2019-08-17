@@ -1,0 +1,2 @@
+#!/bin/bash
+jsonnet  --tla-code-file config=<(combine input) all.jsonnet

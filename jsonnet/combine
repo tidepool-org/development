@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# combine independent yaml/json files in directory and all subdirectories together
+# File names and directory names are ignored.
+#
+# Usage: $0 dir
+#
+result="{}"
+input=${1:-.}
+files=$(find $input -name \*.yaml -print)
+files="$files $(find $input -name \*.json -print)"
+for file in $files
+do
+	result=$(jsonnet \
+	--tla-code input="$(yq read $file -j)" \
+	--tla-code result="$result" \
+	-e "local helpers = import 'helpers.jsonnet'; function(input, result) helpers.merge(input,result)")
+done
+echo $result
