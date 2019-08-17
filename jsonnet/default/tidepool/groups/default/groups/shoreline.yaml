@@ -1,0 +1,22 @@
+tidepool:
+  groups:
+    default:
+      helmrelease:
+        values:
+          shoreline:
+            configmap:
+              create: false
+              data:
+                ClinicDemoUserId: ""
+            deployment:
+              image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
+            secret:
+              create: false
+              data_:
+                ClinicDemoUserId: ""
+                ServiceAuth: ""
+                UserLongTermKey: null
+                UserMailVerification: ""
+                UserPasswordSalt: ""
+            service:
+              port: 9107

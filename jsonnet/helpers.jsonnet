@@ -12,6 +12,17 @@
     },
   },
 
+  kebabCase(word, initialUpper=false):: (
+    local merge(a, b) = {
+      local isHyphen = (b == '-'),
+      word: if isHyphen then a.word else a.word + (if a.toUpper then std.asciiUpper(b) else b),
+      toUpper: isHyphen,
+    };
+    std.foldl(merge, std.stringChars(word), { word: '', toUpper: initialUpper }).word
+  ),
+
+  camelCase(word):: this.kebabCase(word, true),
+
   labels(config):: if config.cluster.mesh.create then
     if config.cluster.mesh.name == 'linkerd' then {
       'linkerd.io/inject': 'disabled',
@@ -30,18 +41,84 @@
   },
 
   urlrelease(config, group):: $._Object('tidepool/v1beta1', 'URLRelease', group.name) {
-    url: group.urlrelease.url
+    url: group.urlrelease.url,
   },
 
-  ignore(x,exclude):: { [f]:x[f] for f in std.objectFields(x) if f != exclude },
+  ignore(x, exclude):: { [f]: x[f] for f in std.objectFields(x) if f != exclude },
 
-  merge(a,b):: if std.isObject(a) && std.isObject(b) then ({ // merge two objects recursively.  Choose be if conflict.
-    [x]: a[x] for x in std.objectFields(a) if ! std.objectHas(b, x)
-  } + {
-    [x]: b[x] for x in std.objectFields(b) if ! std.objectHas(a, x)
-  } + {
-    [x]: this.merge(a[x], b[x]) for x in std.objectFields(b) if std.objectHas(a, x)
-  }) else b,
+  merge(a, b):: if std.isObject(a) && std.isObject(b) then ({  // merge two objects recursively.  Choose be if conflict.
+                                                              [x]: a[x]
+                                                              for x in std.objectFields(a)
+                                                              if !std.objectHas(b, x)
+                                                            } + {
+                                                              [x]: b[x]
+                                                              for x in std.objectFields(b)
+                                                              if !std.objectHas(a, x)
+                                                            } + {
+                                                              [x]: this.merge(a[x], b[x])
+                                                              for x in std.objectFields(b)
+                                                              if std.objectHas(a, x)
+                                                            }) else b,
+
+
+  iamObject(config, group, iamKind):: $._Object('2012-10-17', 'AWS::IAM::' + iamKind, group) {
+    local this = self,
+    apiVersion:: this.apiVersion,
+    kind:: this.kind,
+    values:: {
+      Type: this.kind,
+    },
+    [self.iamName(config, group, iamKind)]: this.values,
+  },
+
+  iamName(config, group, iamKind):: this.camelCase(group.name) + this.camelCase(iamKind),
+
+  iamManagedPolicy(config, group):: $.iamObject(config, group, 'ManagedPolicy') {
+    local this = self,
+    values+:: {
+      Properties: {
+        PolicyDocument: {
+          Version: this.apiVersion,
+        },
+      },
+    },
+  },
+
+  iamRole(config, group):: $.iamObject(config, group, 'Role') {
+    local this = self,
+    values+:: {
+      Properties: {
+        RoleName: '%s-%s-role' % [config.cluster.name, group.name],
+        ManagedPolicyArns: {
+          Ref: this.iamName(config, group, 'ManagedPolicy'),
+        },
+        AssumeRolePolicyDocument: {
+          Version: this.apiVersion,
+          Statement: [
+            {
+              Action: 'sts:AssumeRole',
+              Effect: 'Allow',
+              Principal: {
+                Service: 'ec2.amazonaws.com',
+              },
+            },
+            {
+              Action: 'sts:AssumeRole',
+              Effect: 'Allow',
+              Principal: {
+                AWS: {
+                  'Fn::GetAtt': [
+                    this.iamName(config, config.groups.kiam, 'Role'),
+                    'Arn',
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
 
   helmrelease(config, group):: $._Object('flux.weave.works/v1beta1', 'HelmRelease', group.name) {
     local namespace = group.namespace.name,

@@ -1,0 +1,12 @@
+tidepool:
+  groups:
+    default:
+      helmrelease:
+        values:
+          dexcom:
+            secret:
+              create: false
+              data_:
+                ClientId: ""
+                ClientSecret: ""
+                StateSalt: ""

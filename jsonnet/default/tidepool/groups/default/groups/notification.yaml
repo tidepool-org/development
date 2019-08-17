@@ -1,0 +1,14 @@
+tidepool:
+  groups:
+    default:
+      helmrelease:
+        values:
+          notification:
+            deployment:
+              image: tidepool/platform-notification:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+            secret:
+              create: false
+              data_:
+                ServiceAuth: ""
+            service:
+              port: 9223

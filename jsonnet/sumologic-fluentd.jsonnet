@@ -3,16 +3,16 @@ local helpers = import 'helpers.jsonnet';
 local Helmrelease(config, group) =
   helpers.helmrelease(config, group) {
     spec+: {
-      values+: { 
-        rbac: { 
-          'create': true 
+      values+: {
+        rbac: {
+          create: true,
         },
-        sumologic: { 
-          collectorUrlExistingSecret: group.secret.name 
+        sumologic: {
+          collectorUrlExistingSecret: group.secret.name,
         },
         readFromHead: false,
-        sourceCategoryPrefix: config.cluster.name
-      }
+        sourceCategoryPrefix: config.cluster.name,
+      },
     },
   };
 
@@ -24,4 +24,3 @@ function(config) (
     Namespace: if group.namespace.create then helpers.namespace(config, group),
   }
 )
-

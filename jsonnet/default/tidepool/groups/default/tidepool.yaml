@@ -1,0 +1,37 @@
+tidepool:
+  groups:
+    default:
+      enabled: false
+      namespace:
+        create: true
+      helmrelease:
+        create: true
+        chart:
+          git: git@github.com:tidepool-org/development
+          path: charts/tidepool/0.1.7
+          ref: k8s
+        gitops:
+          automated: true
+          filter: develop-*
+          selector: glob
+        values:
+          global:
+            hosts:
+              default:
+                protocol: https
+              http:
+                enabled: false
+              https:
+                certificateIssuer: letsencrypt-staging
+                dnsNames:
+                - default.tidepool.org
+                enabled: true
+            hpa:
+              create: true
+              data:
+                maxReplicas: 10
+                minReplicas: 1
+                targetCPUUtilizationPercentage: 50
+            nodeEnvironment: production
+            store:
+              type: s3

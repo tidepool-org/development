@@ -15,3 +15,7 @@ groups:
     namespace:
       create: true
       name: external-dns-system
+    cfrole:
+      create: true
+    crmanagedpolicy:
+      create: true

@@ -1,5 +1,38 @@
 local helpers = import 'helpers.jsonnet';
 
+local ManagedPolicy(config, group) = helpers.iamManagedPolicy(config, group) {
+  values+:: {
+    Properties+: {
+      PolicyDocument+: {
+        Statement: [
+          {
+            Effect: 'Allow',
+            Action: [
+              'autoscaling:DescribeAutoScalingInstances',
+              'autoscaling:SetDesiredCapacity',
+              'autoscaling:DescribeAutoScalingGroups',
+              'autoscaling:DescribeTags',
+              'autoscaling:DescribeLaunchConfigurations',
+              'autoscaling:TerminateInstanceInAutoScalingGroup',
+            ],
+            Resource: '*',
+          },
+        ],
+      },
+    },
+  },
+};
+
+local Role(config, group) = helpers.iamRole(config, group) {
+  values+:: {
+    Properties+: {
+      ManagedPolicyArns: {
+        Ref: helpers.iamName(config, group, 'ManagedPolicy'),
+      },
+    },
+  },
+};
+
 local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   spec+: {
     values+: {
@@ -11,7 +44,7 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
       },
       awsRegion: config.cluster.eks.region,
       serviceMonitor: {
-        'enabled': true 
+        enabled: true,
       },
       sslCertHostPath: '/etc/ssl/certs/ca-bundle.crt',
       extraArgs: {

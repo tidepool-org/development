@@ -1,0 +1,14 @@
+tidepool:
+  groups:
+    default:
+      helmrelease:
+        values:
+          mongodb:
+            deployment:
+              image:
+                tag: "3.6"
+              data:
+                persistence:
+                  enabled: false
+            enabled: false
+            fullnameOverride: mongodb

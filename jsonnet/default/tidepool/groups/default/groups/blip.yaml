@@ -1,0 +1,10 @@
+tidepool:
+  groups:
+    default:
+      helmrelease:
+        values:
+          blip:
+            deployment:
+              image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
+            service:
+              port: 3000

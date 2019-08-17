@@ -3,7 +3,7 @@ local helpers = import 'helpers.jsonnet';
 local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   local gitops = config.gitops,
   local repoBase =
-    if std.objectHas(gitops.git, 'name') 
+    if std.objectHas(gitops.git, 'name')
     then gitops.git.name
     else 'cluster-%s' % config.cluster.name,
   local repoName = '%s/%s' % [gitops.git.server, repoBase],

@@ -13,3 +13,7 @@ groups:
     namespace:
       create: false
       name: kube-system
+    cfrole:
+      create: true
+    cfmanagedpolicy:
+      create: true

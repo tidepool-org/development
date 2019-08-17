@@ -6,7 +6,7 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
       repository: 'https://stakater.github.io/stakater-charts/',
       name: 'reloader',
       version: 'v0.0.38',
-    }
+    },
   },
 };
 

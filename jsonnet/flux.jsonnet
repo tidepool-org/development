@@ -1,16 +1,16 @@
 local helpers = import 'helpers.jsonnet';
 
-local toUrl(chart) = 
+local toUrl(chart) =
   if std.endsWith(chart.repository, '/')
   then chart.repository
   else '%s/' % chart.repository;
 
-local asRepository(chart) = 
+local asRepository(chart) =
   if std.objectHas(chart, 'repository') then (
     local url = toUrl(chart);
-    local uniqKey =  "%s:::%s" % [ url, chart.index ];
+    local uniqKey = '%s:::%s' % [url, chart.index];
     {
-      [uniqKey] : {
+      [uniqKey]: {
         caFile: '',
         cache: '%s-index.yaml' % chart.index,
         certFile: '',
@@ -19,23 +19,23 @@ local asRepository(chart) =
         password: '',
         url: url,
         username: '',
-      }
+      },
     }
- );
+  );
 
 local toEntry(name, group) =
   if group.enabled &&
      std.objectHas(group, 'helmrelease') &&
      group.helmrelease.create &&
      std.objectHas(group.helmrelease, 'chart') &&
-     (! std.objectHas(group.helmrelease, 'bootstrap'))
+     (!std.objectHas(group.helmrelease, 'bootstrap'))
   then asRepository(group.helmrelease.chart);
-  
-local merge(a,b) = if std.isObject(b) then a+b else a;
+
+local merge(a, b) = if std.isObject(b) then a + b else a;
 
 local dedup(entries) = std.foldl(merge, entries, {});
 
-local values(map) = [ map[v] for v in std.objectFields(map)];
+local values(map) = [map[v] for v in std.objectFields(map)];
 
 local uniqueRepositories(config) = dedup(values(std.mapWithKey(toEntry, config.groups)));
 

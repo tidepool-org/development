@@ -1,5 +1,55 @@
 local helpers = import 'helpers.jsonnet';
 
+local NODEGROUP_STACK_NAME(config) = 'eksctl-%s-nodegroup-ng-kiam' % config.cluster.name;
+
+local CLUSTER_STACK_NAME(config) = 'eksctl-%s-roles' % config.cluster.name;
+
+local ManagedPolicy(config, group) = helpers.iamManagedPolicy(config, group) {
+  values+:: {
+    Properties+: {
+      PolicyDocument+: {
+        Statement: [
+          {
+            Effect: 'Allow',
+            Action: 'sts:AssumeRole',
+            Resource: '*',
+          },
+        ],
+      },
+    },
+  },
+};
+
+local Role(config, group) = helpers.iamRole(config, group) {
+  values+:: {
+    Properties+: {
+      AssumeRolePolicyDocument+: {
+        Statement: [
+          {
+            Effect: 'Allow',
+            Principal: {
+              AWS: {
+                'Fn::ImportValue': '%s::InstanceRoleARN' % NODEGROUP_STACK_NAME(config),
+              },
+            },
+            Action: 'sts:AssumeRole',
+          },
+          {
+            Effect: 'Allow',
+            Principal: {
+              Service: 'ec2.amazonaws.com',
+            },
+            Action: 'sts:AssumeRole',
+          },
+        ],
+      },
+      ManagedPolicyArns: {
+        Ref: helpers.iamName(config, group, 'ManagedPolicy'),
+      },
+    },
+  },
+};
+
 local Helmrelease(config, group) = helpers.helmrelease(config, group) {
   spec+: {
     values+: {
@@ -32,7 +82,7 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
         ],
         log: {
           level: config.cluster.logLevel,
-        }
+        },
       },
       server: {
         image: {
@@ -64,7 +114,7 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
         ],
         extraArgs: {
           region: config.cluster.eks.region,
-          'assume-role-arn': '%s-kiam-server-role' % config.cluster.name,
+          'assume-role-arn': helpers.role(config, group.name),
         },
         useHostNetwork: true,
         log: {
@@ -80,6 +130,7 @@ function(config) (
   if group.enabled then {
     Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
     Namespace: if group.namespace.create then helpers.namespace(config, group),
-
+    Role: if group.cfrole.create then Role(config, group),
+    ManagedPolicy: if group.cfmanagedpolicy.create then ManagedPolicy(config, group),
   }
 )

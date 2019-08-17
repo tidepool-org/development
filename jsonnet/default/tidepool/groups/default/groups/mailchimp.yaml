@@ -1,0 +1,13 @@
+tidepool:
+  groups:
+    default:
+      helmrelease:
+        values:
+          mailchimp:
+            secret:
+              create: false
+              data_:
+                MailchimpApiKey: ""
+                MailchimpClinicLists: ""
+                MailchimpPersonalLists: ""
+                MailchimpURL: ""

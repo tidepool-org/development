@@ -1,5 +1,31 @@
 local helpers = import 'helpers.jsonnet';
 
+local ManagedPolicy(config, group) = helpers.iamManagedPolicy(config, group) {
+  values+:: {
+    Properties+: {
+      PolicyDocument+: {
+        Statement: [
+          {
+            Effect: 'Allow',
+            Action: 'route53:ChangeResourceRecordSets',
+            Resource: 'arn:aws:route53:::hostedzone/*',
+          },
+          {
+            Effect: 'Allow',
+            Action: [
+              'route53:GetChange',
+              'route53:ListHostedZones',
+              'route53:ListResourceRecordSets',
+              'route53:ListHostedZonesByName',
+            ],
+            Resource: '*',
+          },
+        ],
+      },
+    },
+  },
+};
+
 local ClusterIssuer(config, group, server, name) = {
   apiVersion: 'certmanager.k8s.io/v1alpha1',
   kind: 'ClusterIssuer',
@@ -42,5 +68,7 @@ function(config) (
                     group,
                     'https://acme-v02.api.letsencrypt.org/directory',
                     'letsencrypt-production'),
+    Role: if group.cfrole.create then helpers.iamRole(config, group),
+    ManagedPolicy: if group.cfmanagedpolicy.create then ManagedPolicy(config, group),
   }
 )
