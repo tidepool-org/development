@@ -1,6 +1,6 @@
 tidepool:
   groups:
-    qa1:
+    default:
       enabled: false
       helmrelease:
         create: true

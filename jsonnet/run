@@ -1,2 +1,10 @@
 #!/bin/bash
-jsonnet  --tla-code-file config=<(combine input) all.jsonnet
+#
+# 
+default=$(combine default)
+if [ $# == 1 ]
+then
+    jsonnet  --tla-code-file config=<(combine $1 "$default") all.jsonnet
+else
+    jsonnet  --tla-code config="${default}" all.jsonnet
+fi

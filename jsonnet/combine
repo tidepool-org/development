@@ -3,10 +3,10 @@
 # combine independent yaml/json files in directory and all subdirectories together
 # File names and directory names are ignored.
 #
-# Usage: $0 dir
+# Usage: $0 ${file}|${directory} ${initialValue:-"{}"}
 #
-result="{}"
 input=${1:-.}
+result=${2:-"{}"}
 files=$(find $input -name \*.yaml -print)
 files="$files $(find $input -name \*.json -print)"
 for file in $files
