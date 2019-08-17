@@ -1,0 +1,10 @@
+gitops:
+  git:
+    server: https://github.com/tidepool-org
+  github:
+    token: ""
+    user: derrickburns
+  notifications:
+    slack:
+      username: derrickburns
+      #channel: '#flux-development'

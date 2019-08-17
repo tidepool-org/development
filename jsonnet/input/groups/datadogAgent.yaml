@@ -1,0 +1,22 @@
+groups:
+  datadogAgent:
+    enabled: true
+    helmrelease:
+      chart:
+        repository: https://kubernetes-charts.storage.googleapis.com/
+        index: stable
+        name: datadog
+        version: 1.32.2
+      create: true
+      gitops:
+        automated: false
+    namespace:
+      create: true
+      name: datadog
+    secret:
+      create: false
+      data_:
+        apiKey: ""
+        appKey: ""
+        token: ""
+      name: datadog

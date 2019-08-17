@@ -1,0 +1,32 @@
+cluster:
+  eks:
+    cidr: 10.44.0.0/16
+    configFile: ""
+    iam:
+      administrators:
+      - derrickburns-cli
+      - lennartgoedhard-cli
+      - benderr-cli
+    nodegroup:
+      desiredCapacity: 3
+      instanceType: m4.large
+      maxSize: 10
+      minSize: 1
+    region: us-west-2
+  gateway:
+    httpPort: 80
+    httpsPort: 443
+    proxy:
+      name: gateway-proxy-v2
+    type: LoadBalancer
+    hostnames: []
+  k8sVersion: "1.13"
+  kubeconfig: ""
+  logLevel: debug
+  metrics:
+    enabled: true
+  mesh:
+    create: false
+    name: linkerd
+  name: development
+  provider: eks

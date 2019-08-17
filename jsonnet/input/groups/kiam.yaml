@@ -1,0 +1,15 @@
+groups:
+  kiam:
+    enabled: true
+    helmrelease:
+      chart:
+        repository: https://kubernetes-charts.storage.googleapis.com/
+        name: kiam
+        version: 2.3.0
+        index: stable
+      create: true
+      gitops:
+        automated: false
+    namespace:
+      create: false
+      name: kube-system

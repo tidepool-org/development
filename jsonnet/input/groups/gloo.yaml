@@ -1,0 +1,24 @@
+groups:
+  gloo:
+    enabled: true
+    gateway:
+      create: true
+    helmrelease:
+      create: true
+      chart:
+        repository: https://storage.googleapis.com/solo-public-helm/
+        name: gloo
+        version: 0.18.16
+        index: gloo
+      gitops:
+        automated: false
+      values:
+        crds:
+          create: false
+        discovery:
+          fdsMode: WHITELIST
+        settings:
+          create: true
+    namespace:
+      create: true
+      name: gloo-system

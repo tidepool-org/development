@@ -1,0 +1,19 @@
+groups:
+  certManager:
+    enabled: true
+    clusterIssuer:
+      create: true
+    helmrelease:
+      create: true
+      chart:
+        repository: https://charts.jetstack.io
+        index: jetstack
+        name: cert-manager
+        version: v0.8.1
+      gitops:
+        automated: false
+    iam:
+      create: true
+    namespace:
+      create: true
+      name: cert-manager
