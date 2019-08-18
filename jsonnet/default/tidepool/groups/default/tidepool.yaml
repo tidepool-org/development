@@ -2,6 +2,8 @@ tidepool:
   groups:
     default:
       enabled: false
+      iam:
+        create: true
       namespace:
         create: true
       helmrelease:

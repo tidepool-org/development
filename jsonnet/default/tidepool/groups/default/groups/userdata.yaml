@@ -1,12 +1,11 @@
 tidepool:
   groups:
     default:
-      helmrelease:
-        values:
-          userdata:
-            secret:
-              create: false
-              data_:
-                GroupIdEncryptionKey: ""
-                UserIdSalt: ""
-                UserPasswordSalt: ""
+      groups:
+        userdata:
+          secret:
+            create: false
+            data_:
+              GroupIdEncryptionKey: ""
+              UserIdSalt: ""
+              UserPasswordSalt: ""

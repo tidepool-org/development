@@ -186,6 +186,7 @@ auth:
   service:
     port: 9222
 blob:
+  iamRole: ""
   secret:
     create: false
     data_:
@@ -208,6 +209,7 @@ data:
   deployment:
     image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 image:
+  iamRole: ""
   secret:
     create: false
     data_:
@@ -278,6 +280,7 @@ tidewhisperer:
   service:
     port: 9127
 jellyfish: 
+  iamRole: ""
   enabled: true
   deployment:
     image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
@@ -290,6 +293,7 @@ migrations:
   deployment:
     image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 hydrophone:
+  iamRole: ""
   deployment:
     image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
     env:

@@ -1,12 +1,11 @@
 tidepool:
   groups:
     default:
-      helmrelease:
-        values:
-          highwater:
-            deployment:
-              image: tidepool/highwater:develop-aaefb43df9a132f6c012f7216952e8650e6f6b4a
-            secret:
-              UserIdSalt: ""
-            service:
-              port: 9191
+      groups:
+        highwater:
+          deployment:
+            image: tidepool/highwater:develop-aaefb43df9a132f6c012f7216952e8650e6f6b4a
+          secret:
+            UserIdSalt: ""
+          service:
+            port: 9191

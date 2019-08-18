@@ -13,6 +13,10 @@ metadata:
     global.linkerd.io/inject: {{ .Values.global.cluster.mesh.create }}
   {{- end }}
   annotations:
-    iam.amazonaws.com/permitted: {{ include "charts.roles.permitted" . }}
+{{- if .Values.namespace.iamPermitted }}
+    iam.amazonaws.com/permitted: {{ .Values.namespace.iamPermitted | quote }}
+{{- else }}
+    iam.amazonaws.com/permitted: "{{- .Values.global.cluster.name -}}.*"
+{{- end }}
 {{- end }}
 

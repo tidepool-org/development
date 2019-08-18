@@ -23,18 +23,6 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.global.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "charts.externalSecrets.role" -}}
-{{ .Values.global.cluster.eks.name }}-{{ .Release.Namespace}}-secrets-role
-{{- end -}}
-
-{{- define "charts.roles.permitted" -}}
-{{- .Release.Namespace -}}/.*
-{{- end -}}
-
-{{- define "charts.worker.role" -}}
-{{ .Values.global.cluster.eks.name }}-{{ .Release.Namespace}}-worker-role
-{{- end -}}
-
 {{- define "charts.host.internal.tp" -}} internal {{- end }}
 
 {{ define "charts.host.internal.address" -}}
@@ -42,42 +30,6 @@ http://internal.{{.Release.Namespace}}
 {{- end }}
 
 {{- define "charts.s3.url" -}} https://s3-{{.Values.global.cluster.eks.region}}.amazonaws.com {{- end }}
-
-{{- define "charts.image.s3.bucket" -}}
-{{- if (.Values.image.deployment.env.bucket) and (ne .Values.image.deployment.env.bucket "") -}}
-{{ .Values.image.deployment.env.bucket }}
-{{- else -}}
-tidepool-{{ .Release.Namespace }}-data
-{{- end -}}
-{{- end -}}
-
-{{- define "charts.blob.s3.bucket" -}}
-{{- if (.Values.blob.deployment.env.bucket) and (ne .Values.blob.deployment.env.bucket "") -}}
-{{ .Values.blob.deployment.env.bucket }}
-{{- else -}}
-tidepool-{{ .Release.Namespace }}-data
-{{- end -}}
-{{- end -}}
-
-{{- define "charts.hydrophone.s3.bucket" -}}
-{{- if (.Values.hydrophone.deployment.env.bucket) and (ne .Values.hydrophone.deployment.env.bucket "") -}}
-{{ .Values.hydrophone.deployment.env.bucket }}
-{{- else -}}
-tidepool-{{ .Release.Namespace }}-asset
-{{- end -}}
-{{- end -}}
-
-{{- define "charts.jellyfish.s3.bucket" -}}
-{{- if (.Values.jellyfish.deployment.env.bucket) and (ne .Values.jellyfish.deployment.env.bucket "") -}}
-{{ .Values.jellyfish.deployment.env.bucket }}
-{{- else -}}
-tidepool-{{ .Release.Namespace }}-data
-{{- end -}}
-{{- end -}}
-
-{{- define "charts.image.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.image.s3.bucket" .}} {{- end }}
-{{- define "charts.blob.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.blob.s3.bucket" .}} {{- end }}
-{{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.hydrophone.s3.bucket" .}} {{- end }}
 
 {{/*
 Create a default fully qualified app name.
@@ -105,7 +57,7 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{- define "charts.secret.prefix" -}}
-{{ .Values.global.cluster.eks.name }}/{{ .Release.Namespace }}
+{{ .Values.global.cluster.name }}/{{ .Release.Namespace }}
 {{- end -}}
 
 {{/*
@@ -233,7 +185,7 @@ Create liveness and readiness probes for platform services.
 {{- end -}} 
 
 {{- define "charts.labels.standard" -}}
-    cluster: {{ .Values.global.cluster.eks.name }}
+    cluster: {{ .Values.global.cluster.name }}
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}

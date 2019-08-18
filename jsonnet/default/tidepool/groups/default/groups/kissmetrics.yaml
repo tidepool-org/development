@@ -1,13 +1,12 @@
 tidepool:
   groups:
     default:
-      helmrelease:
-        values:
-          kissmetrics:
-            secret:
-              create: false
-              data_:
-                KissmetricsAPIKey: ""
-                KissmetricsToken: ""
-                UCSFKissmetricsAPIKey: ""
-                UCSFWhitelist: ""
+      groups:
+        kissmetrics:
+          secret:
+            create: false
+            data_:
+              KissmetricsAPIKey: ""
+              KissmetricsToken: ""
+              UCSFKissmetricsAPIKey: ""
+              UCSFWhitelist: ""

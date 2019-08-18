@@ -1,10 +1,9 @@
 tidepool:
   groups:
     default:
-      helmrelease:
-        values:
-          carelink:
-            secret:
-              create: false
-              data_:
-                CareLinkSalt: ""
+      groups:
+        carelink:
+          secret:
+            create: false
+            data_:
+              CareLinkSalt: ""

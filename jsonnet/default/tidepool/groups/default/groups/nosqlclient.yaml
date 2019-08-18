@@ -1,11 +1,10 @@
 tidepool:
   groups:
     default:
-      helmrelease:
-        values:
-          nosqlclient:
-            deployment:
-              image: tidepool/nosqlclient:2.3.2
-            enabled: false
-            service:
-              port: 3000
+      groups:
+        nosqlclient:
+          deployment:
+            image: tidepool/nosqlclient:2.3.2
+          enabled: false
+          service:
+            port: 3000

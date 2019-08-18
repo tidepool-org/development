@@ -1,4 +1,14 @@
 ---
+{{- define "charts.image.s3.bucket" -}}
+{{- if (.Values.image.deployment.env.bucket) and (ne .Values.image.deployment.env.bucket "") -}}
+{{ .Values.image.deployment.env.bucket }}
+{{- else -}}
+tidepool-{{ .Release.Namespace }}-data
+{{- end -}}
+{{- end -}}
+
+{{- define "charts.image.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.image.s3.bucket" .}} {{- end }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,7 +30,9 @@ spec:
   template:
     metadata:
       annotations:
-        iam.amazonaws.com/role: "{{ include "charts.worker.role" . }}"
+{{- if .Values.image.iamRole }}
+        iam.amazonaws.com/role: {{ .Values.image.iamRole | quote }}
+{{- end }}
         linkerd.io/inject: "{{ .Values.global.cluster.mesh.create }}"
       labels:
         app: image

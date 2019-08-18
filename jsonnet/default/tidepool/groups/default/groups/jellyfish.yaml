@@ -1,13 +1,14 @@
 tidepool:
   groups:
     default:
-      helmrelease:
-        values:
-          jellyfish:
-            deployment:
-              env:
-                bucket: ""
-              image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
-            enabled: true
-            service:
-              port: 9122
+      groups:
+        jellyfish:
+          iam:
+            create: true
+          deployment:
+            env:
+              bucket: ""
+            image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
+          enabled: true
+          service:
+            port: 9122

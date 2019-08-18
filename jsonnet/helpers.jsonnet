@@ -46,19 +46,24 @@
 
   ignore(x, exclude):: { [f]: x[f] for f in std.objectFields(x) if f != exclude },
 
-  merge(a, b):: if std.isObject(a) && std.isObject(b) then ({  // merge two objects recursively.  Choose be if conflict.
-                                                              [x]: a[x]
-                                                              for x in std.objectFields(a)
-                                                              if !std.objectHas(b, x)
-                                                            } + {
-                                                              [x]: b[x]
-                                                              for x in std.objectFields(b)
-                                                              if !std.objectHas(a, x)
-                                                            } + {
-                                                              [x]: this.merge(a[x], b[x])
-                                                              for x in std.objectFields(b)
-                                                              if std.objectHas(a, x)
-                                                            }) else b,
+  merge(a, b)::
+    if (std.isObject(a) && std.isObject(b))
+    then (
+      {  // merge two objects recursively.  Choose be if conflict.
+        [x]: a[x]
+        for x in std.objectFields(a)
+        if !std.objectHas(b, x)
+      } + {
+        [x]: b[x]
+        for x in std.objectFields(b)
+        if !std.objectHas(a, x)
+      } + {
+        [x]: this.merge(a[x], b[x])
+        for x in std.objectFields(b)
+        if std.objectHas(a, x)
+      }
+    )
+    else b,
 
 
   iamObject(config, group, iamKind):: $._Object('2012-10-17', 'AWS::IAM::' + iamKind, group) {
