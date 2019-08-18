@@ -1,7 +1,7 @@
 ---
 {{- define "charts.jellyfish.s3.bucket" -}}
-{{- if (.Values.jellyfish.deployment.env.bucket) and (ne .Values.jellyfish.deployment.env.bucket "") -}}
-{{ .Values.jellyfish.deployment.env.bucket }}
+{{- if (.Values.jellyfish.deployment.env.store.bucket) and (ne .Values.jellyfish.deployment.env.store.bucket "") -}}
+{{ .Values.jellyfish.deployment.env.store.bucket }}
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
@@ -47,7 +47,7 @@ spec:
         - name: MINIMUM_UPLOADER_VERSION
           value: 0.251.0
         - name: NODE_ENV
-          value: '{{.Values.global.environment.nodeEnvironment}}'
+          value: '{{.Values.jellyfish.nodeEnvironment}}'
         - name: PORT
           value: "{{.Values.jellyfish.service.port}}"
         - name: PUBLISH_HOST
@@ -73,7 +73,7 @@ spec:
         - name: STORAGE_TYPES
           value: '{"s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.global.cluster.region}}", "bucket": "{{ include "charts.jellyfish.s3.bucket" .}}" }}'
         - name: STORAGE_DEFAULT
-          value: '{{ .Values.global.environment.store.type }}'
+          value: '{{ .Values.jellyfish.deployment.env.store.type }}'
         - name: USER_API_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
         image: "{{ .Values.jellyfish.deployment.image }}"
@@ -87,7 +87,7 @@ spec:
         ports:
         - containerPort: {{ .Values.jellyfish.service.port }}
         resources:
-          {{- toYaml .Values.global.environment.resources | nindent 10 }}
+          {{- toYaml .Values.jellyfish.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
+          {{- toYaml .Values.jellyfish.securityContext | nindent 10 }}
       restartPolicy: Always

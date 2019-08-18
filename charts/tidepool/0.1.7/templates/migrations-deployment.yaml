@@ -39,8 +39,8 @@ spec:
         image: {{ .Values.migrations.deployment.image | quote}}
         name: migrations
         resources:
-          {{- toYaml .Values.global.environment.resources | nindent 10 }}
+          {{- toYaml .Values.migrations.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
+          {{- toYaml .Values.migrations.securityContext | nindent 10 }}
       restartPolicy: Always
 {{- end }}

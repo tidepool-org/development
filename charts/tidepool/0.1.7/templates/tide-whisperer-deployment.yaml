@@ -89,7 +89,7 @@ spec:
         ports:
         - containerPort: {{.Values.tidewhisperer.service.port}}
         resources:
-          {{- toYaml .Values.global.environment.resources | nindent 10 }}
+          {{- toYaml .Values.tide-whisperer.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
+          {{- toYaml .Values.tide-whisperer.securityContext | nindent 10 }}
       restartPolicy: Always

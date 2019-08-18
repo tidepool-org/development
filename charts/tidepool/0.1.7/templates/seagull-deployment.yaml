@@ -38,7 +38,7 @@ spec:
         - name: METRICS_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater:{{.Values.highwater.service.port}}"}]}'
         - name: NODE_ENV
-          value: '{{.Values.global.environment.nodeEnvironment}}'
+          value: '{{.Values.seagull.nodeEnvironment}}'
         - name: PORT
           value: "{{.Values.seagull.service.port}}"
         - name: PUBLISH_HOST
@@ -65,7 +65,7 @@ spec:
         ports:
         - containerPort: {{.Values.seagull.service.port}}
         resources:
-          {{- toYaml .Values.global.environment.resources | nindent 10 }}
+          {{- toYaml .Values.seagull.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
+          {{- toYaml .Values.seagull.securityContext | nindent 10 }}
       restartPolicy: Always

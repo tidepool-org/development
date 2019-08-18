@@ -37,24 +37,6 @@ global:
           issuer: ""                              # the name of the certificate issuer
           secretName: ""                          # secret name to hold secret in
           issuerKind: ClusterIssuer               # kind of the certificate issuer
-    store: 
-      #type: s3                                   # store non-Mongo data in S3
-      type: file                                  # store non-Mongo data on file system
-    nodeEnvironment: production                   #
-    resources:                                    # the resources for each service
-      limits:
-        cpu: 200m
-        memory: 128Mi
-      requests:
-        cpu: 50m
-        memory: 32Mi
-    securityContext:                              # the security context for all services
-      allowPrivilegeEscalation: false
-      runAsNonRoot: true                          # we don't need root access
-      runAsUser: 10101
-      capabilities:
-        drop:
-        - ALL
 
 # environment-wide secrets
 userdata:
@@ -149,6 +131,10 @@ blip:
   deployment:
     podAnnotations: {}
     image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
 export:
   enabled: true
   secret:
@@ -158,12 +144,21 @@ export:
     image: tidepool/export:develop-c67e1425a4f6eb4c3f70f95284a24899a9ff986f
   service:
     port: 9300
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
 gatekeeper:
   deployment:
     podAnnotations: {}
     image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
   service:
     port: 9123
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
+  nodeEnvironment: production 
 messageapi:
   deployment:
     podAnnotations: {}
@@ -172,12 +167,22 @@ messageapi:
       window: 21
   service:
     port: 9119
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
+  nodeEnvironment: production 
 seagull:
   deployment:
     podAnnotations: {}
     image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
   service:
     port: 9120
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
+  nodeEnvironment: production 
 highwater:
   deployment:
     podAnnotations: {}
@@ -186,6 +191,11 @@ highwater:
     UserIdSalt: ""
   service:
     port: 9191
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
+  nodeEnvironment: production 
 auth:
   secret:
     create: false
@@ -196,6 +206,10 @@ auth:
     podAnnotations: {}
   service:
     port: 9222
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
 blob:
   iamRole: ""
   secret:
@@ -208,9 +222,16 @@ blob:
     podAnnotations: {}
     image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     env:
-      directory: "_data/blobs"                                            # directory to use if using local file storage
-      prefix: "blobs" 
-      bucket: ""                                            
+      store: 
+        bucket: ""                                            
+        prefix: "blobs" 
+        directory: "_data/blobs"                                            # directory to use if using local file storage
+        type: file
+        #type: s3
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
 data:
   secret:
     create: false
@@ -221,6 +242,10 @@ data:
   deployment:
     podAnnotations: {}
     image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
 image:
   iamRole: ""
   secret:
@@ -233,9 +258,16 @@ image:
     podAnnotations: {}
     image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     env:
-      directory: "_data/image"                                            # directory to use if using local file storage
-      prefix: "images"
-      bucket:  ""
+      store: 
+        directory: "_data/image"                                            # directory to use if using local file storage
+        prefix: "images"
+        bucket:  ""
+        type: file
+        #type: s3
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
 notification:
   secret:
     create: false
@@ -246,6 +278,10 @@ notification:
   deployment:
     podAnnotations: {}
     image: tidepool/platform-notification:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
 task:
   secret:
     create: false
@@ -260,6 +296,10 @@ task:
       queue:
         delay: 5
         workers: 5
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
 user:
   secret:
     create: false
@@ -270,11 +310,19 @@ user:
     image: tidepool/platform-user:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
   service:
     port: 9221
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
 tools: 
   enabled: true
   deployment:
     podAnnotations: {}
     image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
 shoreline:
   configmap:
     create: false
@@ -293,12 +341,20 @@ shoreline:
     image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
   service:
     port: 9107
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
 tidewhisperer:
   deployment:
     podAnnotations: {}
     image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
   service:
     port: 9127
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
 jellyfish: 
   iamRole: ""
   enabled: true
@@ -306,14 +362,26 @@ jellyfish:
     podAnnotations: {}
     image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
     env:
-      bucket: ""
+      store: 
+        bucket: ""
+        type: file
+        #type: s3
   service:
     port: 9122
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
+  nodeEnvironment: production 
 migrations: 
   enabled: true
   deployment:
     podAnnotations: {}
     image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false
 hydrophone:
   iamRole: ""
   deployment:
@@ -324,3 +392,7 @@ hydrophone:
       bucket: "" 
   service:
     port: 9157
+  resources: {}
+  securityContext: {}
+  hpa:
+    enabled: false

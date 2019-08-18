@@ -45,8 +45,8 @@ spec:
         image: "{{ .Values.tools.deployment.image }}"
         name: tools
         resources:
-          {{- toYaml .Values.global.environment.resources | nindent 10 }}
+          {{- toYaml .Values.tools.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
+          {{- toYaml .Values.tools.securityContext | nindent 10 }}
       restartPolicy: Always
 {{- end }}

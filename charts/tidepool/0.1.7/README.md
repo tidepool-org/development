@@ -101,6 +101,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `blob.secret.create`                                         | whether to create blob secret | ``                                         |
 | `blob.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `blob.service.port`                                      | Blob service container port                                                                  | `9225`                                                |
+| `blob.store.type`                                      | If `s3`, store blob data in Amazon S3. If `file` store blob data in local files. | `file`                                                |
 | `carelink.enabled`                                       | Enable carelink                                                                              | `false`                                               |
 | `carelink.secret.create`                                       | whether to create carelink secret| `false`                                               |
 | `carelink.secret.data_.CareLinkSalt`                                       | plaintext Carelink salt | `false`                                               |
@@ -115,44 +116,35 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `export.secret.SessionEncryptionKey` | session encryption key | `` |
 | `export.service.port`                                    | Export service container port                                                                | `9300`                                                |
 | `gatekeeper.deployment.image` | gatekeeper Docker image | `` |
+| `gatekeeper.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
 | `gatekeeper.service.port`                                | Gatekeeper service container port                                                            | `9123`                                                |
-| `global.cluster.mesh.create`                            | Whether the service mesh is enabled.                                                         | ``                                                    |
-| `global.cluster.mesh.name`                               | The name service mesh.                                                                       | ``                                                    |
-| `global.cluster.name`                                    | The name of the K8s cluster that hosts this env.                                             | ``                                                    |
-| `global.cluster.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
-| `global.environment.hosts.default.protocol`                          | Protocol to use for email verification.                                                      | ``                                                    |
-| `global.environment.hosts.default.host`                          | Host to use for email verification                                                      | ``                                                    |
-
-| `global.environment.hosts.http.dnsNames`                             | List of host to listen to                                                                    | `localhost`                                           |
-| `global.environment.hosts.http.enabled`                             |  Whether to provide HTTP access | `true`                                           |
-| `global.environment.hosts.http.port`                             |  Port to use for HTTP traffic | `8080`                                           |
-| `global.environment.hosts.https.certificate.issuer`                   | Name of TLS certificate issuer, e.g. `letsencrypt-stating`, `letsencrypt-production`         | ``                                                    |
-| `global.environment.hosts.https.certificate.issuerKind`                          | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer`                              | `ClusterIssuer`                                       |
-| `global.environment.hosts.https.certificate.secretName`                          | `Name of secret to store cert in`
-                              | ``                                       |
-| `global.environment.hosts.https.dnsNames`                            | List of Subject Alternative Names to use                                                     | `[]`                                                  |
-| `global.environment.hosts.https.enabled`                             |  Whether to provide HTTPS access | `false`                                           |
-| `global.environment.hosts.https.port`                             |  Port to use for HTTPS traffic | `8443`                                           |
-| `global.cluster.hpa.create`                                      | If true, create a horizontal pod autoscalers for all pods                                    | 'false'                                               |
-| `global.environment.namespace.create`                                | If true, create namespace                                                                    | `false`                                               |
-| `global.environment.resources.limits.cpu`                            | CPU Limit                                                                                    | `200m`                                                |
-| `global.environment.resources.limits.memory`                         | Memory Limit                                                                                 | `128Mi`                                               |
-| `global.environment.resources.requests.cpu`                          | CPU Limit                                                                                    | `50m`                                                 |
-| `global.environment.resources.requests.memory`                       | Memory Limit                                                                                 | `32Mi`                                                |
-| `global.environment.secrets.create`                                  | If true, create secrets manifests                                                            | `true`                                                |
-| `global.environment.securityContext`                                 | Set Security Context for pods                                                                | `200m`                                                |
-| `global.environment.store.type`                                      | If `s3`, store blob/image data in Amazon S3. If `file` store blob/image data in local files. | `file`                                                |
-| `global.environment.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
-| `global.fullnameOverride`                                |                                                                                              | ``                                                    |
 | `global.cluster.gateway.proxy.name`                              | Name of the API gateway proxy                                                                | `gateway-proxy-v2`                                    |
 | `global.cluster.gateway.proxy.namespace`                         | Namespace of the API gateway proxy                                                           | `gloo-system`                                         |
 | `global.cluster.gateway.proxy.type`                              | CluserIP or LoadBalancer                                                                     | `LoadBalancer`                                        |
 | `global.cluster.logLevel`                              | Default log level | `info`                                        |
+| `global.cluster.mesh.create`                            | Whether the service mesh is enabled.                                                         | ``                                                    |
+| `global.cluster.mesh.name`                               | The name service mesh.                                                                       | ``                                                    |
+| `global.cluster.name`                                    | The name of the K8s cluster that hosts this env.                                             | ``                                                    |
+| `global.cluster.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
+| `global.environment.hosts.default.host`                          | Host to use for email verification                                                      | ``                                                    |
+| `global.environment.hosts.default.protocol`                          | Protocol to use for email verification.                                                      | ``                                                    |
+| `global.environment.hosts.http.dnsNames`                             | List of host to listen to                                                                    | `localhost`                                           |
+| `global.environment.hosts.http.enabled`                             |  Whether to provide HTTP access | `true`                                           |
+| `global.environment.hosts.http.port`                             |  Port to use for HTTP traffic | `8080`                                           |
+| `global.environment.hosts.https.certificate.issuerKind`                          | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer`                              | `ClusterIssuer`                                       |
+| `global.environment.hosts.https.certificate.issuer`                   | Name of TLS certificate issuer, e.g. `letsencrypt-stating`, `letsencrypt-production`         | ``                                                    |
+| `global.environment.hosts.https.certificate.secretName`                          | `Name of secret to store cert in`
+| `global.environment.hosts.https.dnsNames`                            | List of Subject Alternative Names to use                                                     | `[]`                                                  |
+| `global.environment.hosts.https.enabled`                             |  Whether to provide HTTPS access | `false`                                           |
+| `global.environment.hosts.https.port`                             |  Port to use for HTTPS traffic | `8443`                                           |
+| `global.environment.namespace.create`                                | If true, create namespace                                                                    | `false`                                               |
+| `global.fullnameOverride`                                |                                                                                              | ``                                                    |
 | `global.mongodb.enabled`                                 | Whether to include an mongodb with this installation                                         | `true`                                                |
 | `global.nameOverride`                                    | If non-empty, Helm chart name to use                                                         | ``                                                    |
 | `gloo.enabled`                                           | Whether to include an API Gateway with this installation                                     | `true`                                                |
 | `gloo.{name}`  | Values for Gloo API gateway.                                                                  | ``                                                  |
 | `highwater.deployment.image` | highwater Docker image | `` |
+| `highwater.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
 | `highwater.service.port`                                 | Highwater service container port                                                             | `9191`                                                |
 | `hydrophone.deployment.env.bucket`                                      | S3 bucket where email templates are stored                                                   | `tidepool-{env}`                                      |
 | `hydrophone.deployment.env.fromAddress`                                 | Email address to use for replies to sigups                                                   | `Tidepool <noreply@tidepool.org>`                     |
@@ -163,21 +155,25 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `image.secret.create`                                         | whether to create image secret| ``                                         |
 | `image.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `image.service.port`                                     | Image service container port                                                                 | `9226`                                                |
+| `image.store.type`                                      | If `s3`, store image data in Amazon S3. If `file` store image data in local files. | `file`                                                |
 | `jellyfish.deployment.image` | jellyfish Docker image | `` |
 | `jellyfish.enabled`                                      | Enable jellyfish service if true                                                             | `true`                                                |
+| `jellyfish.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
 | `jellyfish.service.port`                                 | Jellyfish service container port                                                             | `9122`                                                |
+| `jellyfish.store.type`                                      | If `s3`, store jellyfish data in Amazon S3. If `file` store jellyfishdata in local files. | `file`                                                |
 | `kissmetrics.secret.create` | whether to use create kissmetrics secret | `false` |
 | `kissmetrics.secret.data_.KissmetricsAPIKey` | plaintext Kissmetrics API Key | `` |
 | `kissmetrics.secret.data_.KissmetricsToken` | plaintext Kissmetrics Token | `` |
 | `kissmetrics.secret.data_.UCSFKissmetricsAPIKey` | plaintext UCSF Kissmetrics Token | `` |
 | `kissmetrics.secret.data_.UCSFWhitelist` | plaintext UCSF metrics whitelist | `` |
 | `mailchimp.secret.create` | whether to create Mailchimp secret | `false` |
-| `mailchimp.secret.data_.MailchimpClinicLists` | plaintext clinic mailing lists| `` |
-| `mailchimp.secret.data_.MailchimpURL` | plaintext Mailchimp URL | `` |
-| `mailchimp.secret.data_.MailchimpPersonalLists` | plaintext personal mailing lists| `` |
 | `mailchimp.secret.data_.MailchimpApiKey` | plaintext Mailchimp API key | `` |
+| `mailchimp.secret.data_.MailchimpClinicLists` | plaintext clinic mailing lists| `` |
+| `mailchimp.secret.data_.MailchimpPersonalLists` | plaintext personal mailing lists| `` |
+| `mailchimp.secret.data_.MailchimpURL` | plaintext Mailchimp URL | `` |
 | `messageapi.deployment.env.window`                                      |                                                                                              | `21`                                                  |
 | `messageapi.deployment.image` | message-api Docker image | `` |
+| `messageapi.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
 | `messageapi.service.port`                                | Message-Api service container port                                                           | `9119`                                                |
 | `migrations.deployment.image` | migrations Docker image | `` |
 | `migrations.enabled`                                     | Enable migrations service if true                                                            | `true`                                                |
@@ -194,6 +190,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `notification.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `notification.service.port`                              | Notification service container port                                                          | `9223`                                                |
 | `seagull.deployment.image` | seagull Docker image | `` |
+| `seagull.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
 | `seagull.service.port`                                   | Seagull service container port                                                               | `9120`                                                |
 | `seagull.service.port`                                   | Seagull service container port                                                               | `9120`                                                |
 | `server.secret.create` | whether to cerate secret |  `` |
@@ -215,9 +212,15 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `user.secret.data_.ServiceAuth` | user authorization, if empty, random value is generated |  `` |
 | `user.service.port`                                      | User service container port                                                                  | `9221`                                                |
 | `userdata.secret.create` | whethe to create userdata secret | `` |
-| `userdata.secret.data_.UserPasswordSalt` | plaintext user password salt | `` |
-| `userdata.secret.data_.UserIdSalt` | plaintext user id salt | `` |
 | `userdata.secret.data_.GroupIdEncryptionKey` | plaintext group id encryption key| `` |
+| `userdata.secret.data_.UserIdSalt` | plaintext user id salt | `` |
+| `userdata.secret.data_.UserPasswordSalt` | plaintext user password salt | `` |
+| `{name}.hpa.create`                                      | If true, create a horizontal pod autoscalers for all pods of given deployment                                    | 'false'                                               |
+| `{name}.resources.limits.cpu`                            | CPU Limit                                                                                    | `200m`                                                |
+| `{name}.resources.limits.memory`                         | Memory Limit                                                                                 | `128Mi`                                               |
+| `{name}.resources.requests.cpu`                          | CPU Limit                                                                                    | `50m`                                                 |
+| `{name}.resources.requests.memory`                       | Memory Limit                                                                                 | `32Mi`                                                |
+| `{name}.securityContext`                                 | Set Security Context for pods of given name                                                                | `200m`                                                |
 
 
 
@@ -226,9 +229,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```console
-$ helm upgrade --install --wait my-release \
-    --set global.resources.limit.cpu=400m \
-    .
+$ helm upgrade --install --wait my-release .
 ```
 
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,

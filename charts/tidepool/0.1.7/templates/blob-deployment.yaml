@@ -1,7 +1,7 @@
 ---
 {{- define "charts.blob.s3.bucket" -}}
-{{- if (.Values.blob.deployment.env.bucket) and (ne .Values.blob.deployment.env.bucket "") -}}
-{{ .Values.blob.deployment.env.bucket }}
+{{- if (.Values.blob.deployment.env.store.bucket) and (ne .Values.blob.deployment.env.store.bucket "") -}}
+{{ .Values.blob.deployment.env.store.bucket }}
 {{- else -}}
 tidepool-{{ .Release.Namespace }}-data
 {{- end -}}
@@ -49,20 +49,20 @@ spec:
         - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
           value: :{{.Values.blob.service.port}}
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.blob.deployment.env.directory}}'
+          value: '{{.Values.blob.deployment.env.store.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
           value: '{{include "charts.blob.s3.bucket" .}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.blob.deployment.env.prefix}}'
+          value: '{{.Values.blob.deployment.env.store.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.global.environment.store.type}}'
+          value: '{{.Values.blob.deployment.env.store.type}}'
         image: "{{ .Values.blob.deployment.image }}"
         {{ template "charts.platform.probes" .Values.blob.service.port}}
         name: blob
         ports:
         - containerPort: {{.Values.blob.service.port}}
         resources:
-          {{- toYaml .Values.global.environment.resources | nindent 10 }}
+          {{- toYaml .Values.blob.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
+          {{- toYaml .Values.blob.securityContext | nindent 10 }}
       restartPolicy: Always

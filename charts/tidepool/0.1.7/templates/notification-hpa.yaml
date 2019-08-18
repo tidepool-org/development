@@ -1,4 +1,4 @@
-{{ if .Values.global.cluster.hpa.create -}}
+{{ if .Values.notification.hpa.create -}}
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -9,11 +9,11 @@ metadata:
   labels:
 {{ include "charts.labels.standard .}}
 spec:
-  maxReplicas: {{ .Values.global.cluster.hpa.maxReplicas | default 10 }}
-  minReplicas: {{ .Values.global.cluster.hpa.minReplicas | default 1 }}
+  maxReplicas: {{ .Values.notification.hpa.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.notification.hpa.minReplicas | default 1 }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: notification
-  targetCPUUtilizationPercentage: {{ .Values.global.cluster.hpa.targetCPUUtilizationPercentage | default 50 }}
+  targetCPUUtilizationPercentage: {{ .Values.notification.hpa.targetCPUUtilizationPercentage | default 50 }}
 {{- end }}

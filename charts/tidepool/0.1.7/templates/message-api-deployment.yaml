@@ -38,7 +38,7 @@ spec:
         - name: METRICS_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater:{{.Values.highwater.service.port}}"}]}'
         - name: NODE_ENV
-          value: '{{.Values.global.environment.nodeEnvironment}}'
+          value: '{{.Values.message-api.nodeEnvironment}}'
         - name: PORT
           value: "{{.Values.messageapi.service.port}}"
         - name: PUBLISH_HOST
@@ -71,7 +71,7 @@ spec:
         ports:
         - containerPort: {{.Values.messageapi.service.port}}
         resources:
-          {{- toYaml .Values.global.environment.resources | nindent 10 }}
+          {{- toYaml .Values.message-api.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.global.environment.securityContext | nindent 10 }}
+          {{- toYaml .Values.message-api.securityContext | nindent 10 }}
       restartPolicy: Always
