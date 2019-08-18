@@ -50,13 +50,13 @@ local IamMangedPolicy(config, env) = helpers.iamManagedPolicy(config, env) {
   },
 };
 
-local roleRequired(config, group) = 
- config.groups.kiam.enabled && std.objectHas(group, 'iamRole') && group.iamRole.create;
+local roleRequired(config, group) =
+  config.groups.kiam.enabled && std.objectHas(group, 'iamRole') && group.iamRole.create;
 
-local iamPermissions(config, env) = 
+local iamPermissions(config, env) =
   if config.groups.kiam.enabled
   then {
-    "iam.amazonaws.com/permitted": "%s/.*" % env.name
+    'iam.amazonaws.com/permitted': '%s/.*' % env.name,
   } else {
   };
 
@@ -68,24 +68,36 @@ local iamAnnotations(config, env, group) =
   then {
     deployment+: {
       podAnnotations+: {
-        'iam.amazonaws.com/role':  '%s-%s-%s' % [config.cluster.name, env.name, group.name],
-      }
-    }
+        'iam.amazonaws.com/role': '%s-%s-%s' % [config.cluster.name, env.name, group.name],
+      },
+    },
   } else {
   };
 
 // Compute Linkerd annotations
 local linkerdAnnotations(config, env, group) =
-  if config.cluster.mesh.enabled && config.cluster.mesh.name == "linkerd"
+  if config.cluster.mesh.enabled && config.cluster.mesh.name == 'linkerd'
   then {
     deployment+: {
       podAnnotations+: {
-        'linkerd.io/inject': "enabled",
+        'linkerd.io/inject': 'enabled',
       },
     },
   }
   else {
   };
+
+local combine(config, env, group, key) = {
+ config.cluster[key]
+ + if std.objectHas(env, key) then env[key] else {}
+ + if std.objectHas(group, key) then group[key] else {}
+}
+
+local resources(config, env, group) = combine(config,env,group, "resources");
+
+local securityContext(config, env, group) = combine(config,env,group, "securityContext");
+
+local storage(config, env, group) = combine(config,env,group, "store");
 
 local HelmRelease(config, env) = helpers.helmrelease(config, env) {
   local hr = env.helmrelease,
@@ -103,7 +115,7 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
     releaseName: env.name + '-tidepool',
     values: helpers.StripSecrets(hr.values) {
       namespace+: {
-        annotations+: iamPermissions(config, env)
+        annotations+: iamPermissions(config, env),
       },
       global+: {
         cluster: config.cluster,
@@ -122,7 +134,12 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
       },
     } + {
       [svc]: (local group = withGroup(env.groups, svc);
-        group + iamAnnotations(config, env, group) + linkerdAnnotations(config, env, group))
+              group +
+              iamAnnotations(config, env, group) +
+              linkerdAnnotations(config, env, group) +
+              securityContext(config, env, group) +
+              resources(config, env, group) +
+              storage(config, env, group))
       for svc in helpers.tidepoolServices
     },
   },

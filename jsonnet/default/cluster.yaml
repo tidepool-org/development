@@ -31,3 +31,18 @@ cluster:
     name: linkerd
   name: development
   provider: eks
+  securityContext: 
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 10101
+    capabilities: 
+      drop: ['ALL']
+  resources: 
+    limits: 
+      cpu: '200m'
+      memory: '128Mi'
+    requests: 
+      cpu: '50m'
+      memory: '32Mi'
+  store: 
+    type: "s3"

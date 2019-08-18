@@ -4,9 +4,18 @@ tidepool:
       enabled: false
       iam:
         create: true
-        #regex: ""                                # the IAM role premissions regex
       namespace:
         create: true
+      node:
+        environment: production
+      store:
+        type: s3
+      hpa:
+        create: true
+        data:
+          maxReplicas: 10
+          minReplicas: 1
+          targetCPUUtilizationPercentage: 50
       helmrelease:
         create: true
         chart:
@@ -29,12 +38,3 @@ tidepool:
                 dnsNames:
                 - default.tidepool.org
                 enabled: true
-            hpa:
-              create: true
-              data:
-                maxReplicas: 10
-                minReplicas: 1
-                targetCPUUtilizationPercentage: 50
-            nodeEnvironment: production
-            store:
-              type: s3
