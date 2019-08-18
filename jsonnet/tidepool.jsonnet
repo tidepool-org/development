@@ -33,7 +33,7 @@ local host(config, env) =
 
 local certificateSecretName(config,env) = 
   if std.objectHas(env.hosts.https, 'certificateSecretName')
-    then env.hosts.https.certificateSecretName
+    then env.hosts.https.certificate.secretName
     else "%s-tls-secret" % env.name;
 
 local bucketName(config, env) =
@@ -42,7 +42,7 @@ local bucketName(config, env) =
   else 'tidepool-%s-%s-data' % [config.cluster.name, env.name];
 
 local s3URL(config, env) = 
-  "https://s3-%s.amazonaws.com" % config.cluster.eks.region
+  "https://s3-%s.amazonaws.com" % config.cluster.eks.region;
 
 local IamMangedPolicy(config, env) = helpers.iamManagedPolicy(config, env) {
   values+:: {
@@ -104,7 +104,9 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
             default+: {
               host: host(config, env),
               https+: {
-                certificateSecretName: certificateSecretName(config,env)
+                certificate+: {
+                  secretName: certificateSecretName(config,env)
+                }
               }
             }
           }
