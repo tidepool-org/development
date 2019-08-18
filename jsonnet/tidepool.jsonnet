@@ -22,9 +22,7 @@ local svcs = [
   'user',
 ];
 
-//{{- if .Values.hydrophone.iamRole }}
-//iam.amazonaws.com/role: {{ .Values.hydrophone.iamRole | quote }}
-//{{- end }}
+
 //linkerd.io/inject: "{{ .Values.global.cluster.mesh.create }}"
 
 //
@@ -85,8 +83,14 @@ local IamMangedPolicy(config, env) = helpers.iamManagedPolicy(config, env) {
   },
 };
 
-local withGroup(groups, name) = groups[name] { name:: name };
+local iamPermissions(config, env ) = 
+  if std.objectHas(env, 'iam') && env.iam.create 
+  then {
+    "iam.amazonaws.com/permitted": "%s/.*" % env.name
+  } else
+  {};
 
+local withGroup(groups, name) = groups[name] { name:: name };
 
 // Compute IAM annotation for group
 local iamAnnotations(config, env, group) =
@@ -122,6 +126,9 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
   spec+: {
     releaseName: env.name + '-tidepool',
     values: helpers.StripSecrets(hr.values) {
+      namespace+: {
+        annotations+: iamPermissions(config, env )
+      },
       global+: {
         cluster: config.cluster,
         environment+: {
