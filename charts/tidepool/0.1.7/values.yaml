@@ -20,6 +20,7 @@ global:
   environment:                                    # the cluster name
     namespace:
       create: false                               # whether to create the namespace
+      annotations: {}                             # namespace annotations
     hosts:
       default:
         protocol: http                            # the protocol to use for signup emails
@@ -146,22 +147,26 @@ blip:
   service: 
     port: 3000
   deployment:
+    podAnnotations: {}
     image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
 export:
   enabled: true
   secret:
      SessionEncryptionKey: ""
   deployment:
+    podAnnotations: {}
     image: tidepool/export:develop-c67e1425a4f6eb4c3f70f95284a24899a9ff986f
   service:
     port: 9300
 gatekeeper:
   deployment:
+    podAnnotations: {}
     image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
   service:
     port: 9123
 messageapi:
   deployment:
+    podAnnotations: {}
     image: tidepool/message-api:develop-448835b6be0c27185e487f582f9b47a784aa781f
     env:
       window: 21
@@ -169,11 +174,13 @@ messageapi:
     port: 9119
 seagull:
   deployment:
+    podAnnotations: {}
     image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
   service:
     port: 9120
 highwater:
   deployment:
+    podAnnotations: {}
     image: tidepool/highwater:develop-aaefb43df9a132f6c012f7216952e8650e6f6b4a
   secret:
     UserIdSalt: ""
@@ -186,6 +193,7 @@ auth:
       ServiceAuth:  ""
   deployment:
     image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+    podAnnotations: {}
   service:
     port: 9222
 blob:
@@ -197,6 +205,7 @@ blob:
   service:
     port: 9225   
   deployment:
+    podAnnotations: {}
     image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     env:
       directory: "_data/blobs"                                            # directory to use if using local file storage
@@ -210,6 +219,7 @@ data:
   service:
     port: 9220
   deployment:
+    podAnnotations: {}
     image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 image:
   iamRole: ""
@@ -220,6 +230,7 @@ image:
   service:
     port: 9226 
   deployment:
+    podAnnotations: {}
     image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     env:
       directory: "_data/image"                                            # directory to use if using local file storage
@@ -233,6 +244,7 @@ notification:
   service:
     port: 9223 
   deployment:
+    podAnnotations: {}
     image: tidepool/platform-notification:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 task:
   secret:
@@ -242,6 +254,7 @@ task:
   service:
     port: 9224 
   deployment:
+    podAnnotations: {}
     image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     env:
       queue:
@@ -253,12 +266,14 @@ user:
     data_:
       ServiceAuth: ""
   deployment:
+    podAnnotations: {}
     image: tidepool/platform-user:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
   service:
     port: 9221
 tools: 
   enabled: true
   deployment:
+    podAnnotations: {}
     image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 shoreline:
   configmap:
@@ -274,11 +289,13 @@ shoreline:
       UserPasswordSalt: ""
       ClinicDemoUserId: ""
   deployment:
+    podAnnotations: {}
     image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
   service:
     port: 9107
 tidewhisperer:
   deployment:
+    podAnnotations: {}
     image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
   service:
     port: 9127
@@ -286,6 +303,7 @@ jellyfish:
   iamRole: ""
   enabled: true
   deployment:
+    podAnnotations: {}
     image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
     env:
       bucket: ""
@@ -294,10 +312,12 @@ jellyfish:
 migrations: 
   enabled: true
   deployment:
+    podAnnotations: {}
     image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
 hydrophone:
   iamRole: ""
   deployment:
+    podAnnotations: {}
     image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
     env:
       fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send

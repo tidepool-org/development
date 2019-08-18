@@ -6,17 +6,7 @@ metadata:
   name: {{.Release.Namespace}}
   labels:
 {{ include "charts.labels.standard .}}
-  {{- if eq .Values.global.cluster.mesh.name "istio" }}
-    istio-injection: {{ .Values.global.cluster.mesh.create }}
-  {{ end }}
-  {{- if eq .Values.global.cluster.mesh.name "linkerd" }}
-    global.linkerd.io/inject: {{ .Values.global.cluster.mesh.create }}
-  {{- end }}
   annotations:
-{{- if .Values.namespace.iamPermitted }}
-    iam.amazonaws.com/permitted: {{ .Values.namespace.iamPermitted | quote }}
-{{- else }}
-    iam.amazonaws.com/permitted: "{{- .Values.global.cluster.name -}}.*"
-{{- end }}
+    {{- .Values.namespace.annotations | toYaml | nindent 4 }}
 {{- end }}
 
