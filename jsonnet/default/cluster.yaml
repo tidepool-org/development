@@ -21,6 +21,12 @@ cluster:
       name: gateway-proxy-v2
     type: LoadBalancer
     hostnames: []
+  hpa:
+    enable: true
+    data:
+      maxReplicas: 10
+      minReplicas: 1
+      targetCPUUtilizationPercentage: 50
   k8sVersion: "1.13"
   kubeconfig: ""
   logLevel: debug

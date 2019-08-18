@@ -9,11 +9,11 @@ metadata:
   labels:
 {{ include "charts.labels.standard .}}
 spec:
-  maxReplicas: {{ .Values.image.hpa.maxReplicas | default 10 }}
-  minReplicas: {{ .Values.image.hpa.minReplicas | default 1 }}
+  maxReplicas: {{ .Values.image.hpa.data.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.image.hpa.data.minReplicas | default 1 }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: image
-  targetCPUUtilizationPercentage: {{ .Values.image.hpa.targetCPUUtilizationPercentage | default 50 }}
+  targetCPUUtilizationPercentage: {{ .Values.image.hpa.data.targetCPUUtilizationPercentage | default 50 }}
 {{- end }}

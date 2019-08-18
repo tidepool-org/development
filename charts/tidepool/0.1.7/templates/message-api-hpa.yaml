@@ -9,11 +9,11 @@ metadata:
   labels:
 {{ include "charts.labels.standard .}}
 spec:
-  maxReplicas: {{ .Values.message-api.hpa.maxReplicas | default 10 }}
-  minReplicas: {{ .Values.message-api.hpa.minReplicas | default 1 }}
+  maxReplicas: {{ .Values.message-api.hpa.data.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.message-api.hpa.data.minReplicas | default 1 }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: messageapi
-  targetCPUUtilizationPercentage: {{ .Values.message-api.hpa.targetCPUUtilizationPercentage | default 50 }}
+  targetCPUUtilizationPercentage: {{ .Values.message-api.hpa.data.targetCPUUtilizationPercentage | default 50 }}
 {{- end }}

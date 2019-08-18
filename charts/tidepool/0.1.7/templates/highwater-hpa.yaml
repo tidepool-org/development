@@ -9,11 +9,11 @@ metadata:
   labels:
 {{ include "charts.labels.standard .}}
 spec:
-  maxReplicas: {{ .Values.highwater.hpa.maxReplicas | default 10 }}
-  minReplicas: {{ .Values.highwater.hpa.minReplicas | default 1 }}
+  maxReplicas: {{ .Values.highwater.hpa.data.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.highwater.hpa.data.minReplicas | default 1 }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: highwater
-  targetCPUUtilizationPercentage: {{ .Values.highwater.hpa.targetCPUUtilizationPercentage | default 50 }}
+  targetCPUUtilizationPercentage: {{ .Values.highwater.hpa.data.targetCPUUtilizationPercentage | default 50 }}
 {{- end }}

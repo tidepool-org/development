@@ -87,17 +87,18 @@ local linkerdAnnotations(config, env, group) =
   else {
   };
 
-local combine(config, env, group, key) = {
- config.cluster[key]
- + if std.objectHas(env, key) then env[key] else {}
- + if std.objectHas(group, key) then group[key] else {}
-}
+local combine(config, env, group, key) =
+  config.cluster[key]
+  + if std.objectHas(env, key) then env[key] else {}
+                                                  + if std.objectHas(group, key) then group[key] else {};
 
-local resources(config, env, group) = combine(config,env,group, "resources");
+local resources(config, env, group) = combine(config, env, group, 'resources');
 
-local securityContext(config, env, group) = combine(config,env,group, "securityContext");
+local securityContext(config, env, group) = combine(config, env, group, 'securityContext');
 
-local storage(config, env, group) = combine(config,env,group, "store");
+local storage(config, env, group) = combine(config, env, group, 'store');
+
+local hpas(config, env, group) = combine(config, env, group, 'hpa');
 
 local HelmRelease(config, env) = helpers.helmrelease(config, env) {
   local hr = env.helmrelease,
@@ -133,13 +134,16 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
         },
       },
     } + {
-      [svc]: (local group = withGroup(env.groups, svc);
-              group +
-              iamAnnotations(config, env, group) +
-              linkerdAnnotations(config, env, group) +
-              securityContext(config, env, group) +
-              resources(config, env, group) +
-              storage(config, env, group))
+      [svc]: (
+        local group = withGroup(env.groups, svc);
+        group
+        + iamAnnotations(config, env, group)
+        + linkerdAnnotations(config, env, group)
+        + securityContext(config, env, group)
+        + resources(config, env, group)
+        + storage(config, env, group)
+        + hpa(config, env, group)
+      )
       for svc in helpers.tidepoolServices
     },
   },

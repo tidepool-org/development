@@ -216,6 +216,9 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `userdata.secret.data_.UserIdSalt` | plaintext user id salt | `` |
 | `userdata.secret.data_.UserPasswordSalt` | plaintext user password salt | `` |
 | `{name}.hpa.create`                                      | If true, create a horizontal pod autoscalers for all pods of given deployment                                    | 'false'                                               |
+| `{name}.hpa.data.minReplicas`                                      | Minimum number of replicase that HPA will maintain | 'false'                                               |
+| `{name}.hpa.data.maxReplicas`                                      | Maximum number of replicase that HPA will maintain | 'false'                                               |
+| `{name}.hpa.data.targetCPUUtilizationPercentage`                     | Target CPU utilization percentage for HPA to maintain| 'false'                                               |
 | `{name}.resources.limits.cpu`                            | CPU Limit                                                                                    | `200m`                                                |
 | `{name}.resources.limits.memory`                         | Memory Limit                                                                                 | `128Mi`                                               |
 | `{name}.resources.requests.cpu`                          | CPU Limit                                                                                    | `50m`                                                 |

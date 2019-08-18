@@ -9,11 +9,11 @@ metadata:
   labels:
 {{ include "charts.labels.standard .}}
 spec:
-  maxReplicas: {{ .Values.seagull.hpa.maxReplicas | default 10 }}
-  minReplicas: {{ .Values.seagull.hpa.minReplicas | default 1 }}
+  maxReplicas: {{ .Values.seagull.hpa.data.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.seagull.hpa.data.minReplicas | default 1 }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: seagull
-  targetCPUUtilizationPercentage: {{ .Values.seagull.hpa.targetCPUUtilizationPercentage | default 50 }}
+  targetCPUUtilizationPercentage: {{ .Values.seagull.hpa.data.targetCPUUtilizationPercentage | default 50 }}
 {{- end }}

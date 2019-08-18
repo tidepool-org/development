@@ -9,11 +9,11 @@ metadata:
   labels:
 {{ include "charts.labels.standard .}}
 spec:
-  maxReplicas: {{ .Values.gatekeeper.hpa.maxReplicas | default 10 }}
-  minReplicas: {{ .Values.gatekeeper.hpa.minReplicas | default 1 }}
+  maxReplicas: {{ .Values.gatekeeper.hpa.data.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.gatekeeper.hpa.data.minReplicas | default 1 }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: gatekeeper
-  targetCPUUtilizationPercentage: {{ .Values.gatekeeper.hpa.targetCPUUtilizationPercentage | default 50 }}
+  targetCPUUtilizationPercentage: {{ .Values.gatekeeper.hpa.data.targetCPUUtilizationPercentage | default 50 }}
 {{- end }}
