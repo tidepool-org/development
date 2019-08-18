@@ -1,31 +1,32 @@
 local helpers = import 'helpers.jsonnet';
 
 local ClusterConfig(config) = helpers._Object('eksctl.io/v1alpha5', 'ClusterConfig', config.cluster.name) {
+  local cluster = config.cluster,
   metadata+: {
-    region: config.cluster.eks.region,
-    version: config.cluster.k8sVersion,
+    region: cluster.eks.region,
+    version: cluster.k8sVersion,
   },
   vpc: {
-    cidr: config.cluster.eks.cidr,
+    cidr: cluster.eks.cidr,
   },
   nodeGroups: [
     {
       name: 'ng-1',
-      instanceType: config.cluster.eks.nodegroup.instanceType,
-      desiredCapacity: config.cluster.eks.nodegroup.desiredCapacity,
-      minSize: config.cluster.eks.nodegroup.minSize,
-      maxSize: config.cluster.eks.nodegroup.maxSize,
+      instanceType: cluster.eks.nodegroup.instanceType,
+      desiredCapacity: cluster.eks.nodegroup.desiredCapacity,
+      minSize: cluster.eks.nodegroup.minSize,
+      maxSize: cluster.eks.nodegroup.maxSize,
       labels: {
         'kiam-server': 'false',
       },
       tags: {
         'k8s.io/cluster-autoscaler/enabled': 'true',
-        ['k8s.io/cluster-autoscaler/' + config.cluster.name]: 'true',
+        ['k8s.io/cluster-autoscaler/' + cluster.name]: 'true',
       },
     },
     {
       name: 'ng-kiam',
-      instanceType: config.cluster.eks.nodegroup.instanceType,
+      instanceType: cluster.eks.nodegroup.instanceType,
       desiredCapacity: 1,
       labels: {
         'kiam-server': 'true',
@@ -38,5 +39,5 @@ local ClusterConfig(config) = helpers._Object('eksctl.io/v1alpha5', 'ClusterConf
 };
 
 function(config) {
-  ClusterConfig: ClusterConfig(config),
+  ClusterConfig: ClusterConfig(config, config.cluster),
 }

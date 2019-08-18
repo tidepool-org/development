@@ -22,6 +22,19 @@ local svcs = [
   'user',
 ];
 
+//{{- if .Values.hydrophone.iamRole }}
+//iam.amazonaws.com/role: {{ .Values.hydrophone.iamRole | quote }}
+//{{- end }}
+//linkerd.io/inject: "{{ .Values.global.cluster.mesh.create }}"
+
+//
+// {{- if eq .Values.global.cluster.mesh.name "istio" }}
+//   istio-injection: {{ .Values.global.cluster.mesh.create }}
+// {{ end }}
+// {{- if eq .Values.global.cluster.mesh.name "linkerd" }}
+//   global.linkerd.io/inject: {{ .Values.global.cluster.mesh.create }}
+// {{- end }}
+
 local host(config, env) =
   if std.objectHas(env.hosts.default, 'host')
   then env.hosts.default.host
@@ -31,18 +44,18 @@ local host(config, env) =
     else env.hosts.https.dnsNames[0]
   );
 
-local certificateSecretName(config,env) = 
+local certificateSecretName(config, env) =
   if std.objectHas(env.hosts.https, 'certificateSecretName')
-    then env.hosts.https.certificate.secretName
-    else "%s-tls-secret" % env.name;
+  then env.hosts.https.certificate.secretName
+  else '%s-tls-secret' % env.name;
 
 local bucketName(config, env) =
   if env.bucket.name
   then env.bucket.name
   else 'tidepool-%s-%s-data' % [config.cluster.name, env.name];
 
-local s3URL(config, env) = 
-  "https://s3-%s.amazonaws.com" % config.cluster.eks.region;
+local s3URL(config, env) =
+  'https://s3-%s.amazonaws.com' % config.cluster.eks.region;
 
 local IamMangedPolicy(config, env) = helpers.iamManagedPolicy(config, env) {
   values+:: {
@@ -74,13 +87,25 @@ local IamMangedPolicy(config, env) = helpers.iamManagedPolicy(config, env) {
 
 local withGroup(groups, name) = groups[name] { name:: name };
 
-// Compute IAM name
-local withIam(config, env, group) =
+
+// Compute IAM annotation for group
+local iamAnnotations(config, env, group) =
   if std.objectHas(group, 'iam') && group.iam.create
-  then group {
-    iam+: { name: if 'name' in super then super.name else '%s-%s-%s' % [config.cluster.name, env.name, group.name] },
-  }
-  else group;
+  then (
+    local roleName =
+      if std.objectHas(group.iam, 'name')
+      then group.iam.name
+      else '%s-%s-%s' % [config.cluster.name, env.name, group.name];
+    {
+      deployment+: {
+        podAnnotations+: {
+          'iam.amazonaws.com/role': roleName,
+        },
+      },
+    }
+  )
+  else {
+  };
 
 local HelmRelease(config, env) = helpers.helmrelease(config, env) {
   local hr = env.helmrelease,
@@ -105,15 +130,16 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
               host: host(config, env),
               https+: {
                 certificate+: {
-                  secretName: certificateSecretName(config,env)
-                }
-              }
-            }
-          }
-        }
+                  secretName: certificateSecretName(config, env),
+                },
+              },
+            },
+          },
+        },
       },
     } + {
-      [svc]: withIam(config, env, withGroup(env.groups, svc)) 
+      [svc]: (local group = withGroup(env.groups, svc);
+        group + iamAnnotations(config, env, group))
       for svc in svcs
     },
   },
