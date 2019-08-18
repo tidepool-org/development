@@ -4,6 +4,7 @@ tidepool:
       enabled: false
       iam:
         create: true
+        #regex: ""                                # the IAM role premissions regex
       namespace:
         create: true
       helmrelease:

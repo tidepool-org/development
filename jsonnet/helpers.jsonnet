@@ -1,6 +1,28 @@
 {
   local this = self,
 
+  tidepoolServices: [
+  'auth',
+  'blip',
+  'blob',
+  'data',
+  'export',
+  'gatekeeper',
+  'highwater',
+  'hydrophone',
+  'image',
+  'jellyfish',
+  'messageapi',
+  'migrations',
+  'notification',
+  'seagull',
+  'shoreline',
+  'task',
+  'tidewhisperer',
+  'tools',
+  'user',
+],
+
   _Object(apiVersion, kind, name):: {
     local this = self,
     apiVersion: apiVersion,

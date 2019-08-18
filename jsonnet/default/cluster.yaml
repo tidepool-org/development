@@ -27,7 +27,7 @@ cluster:
   metrics:
     enabled: true
   mesh:
-    create: false
+    enabled: false
     name: linkerd
   name: development
   provider: eks

@@ -3,7 +3,7 @@ tidepool:
     default:
       groups:
         image:
-          iam:
+          iamRole:
             create: true
           deployment:
             env:

@@ -6,7 +6,7 @@ tidepool:
           bucket:
             create: true
             name: "blob-bucket"
-          iam:
+          iamRole:
             create: true
           deployment:
             env:

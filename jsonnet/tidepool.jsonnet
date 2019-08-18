@@ -1,38 +1,5 @@
 local helpers = import 'helpers.jsonnet';
 
-local svcs = [
-  'auth',
-  'blip',
-  'blob',
-  'data',
-  'export',
-  'gatekeeper',
-  'highwater',
-  'hydrophone',
-  'image',
-  'jellyfish',
-  'messageapi',
-  'migrations',
-  'notification',
-  'seagull',
-  'shoreline',
-  'task',
-  'tidewhisperer',
-  'tools',
-  'user',
-];
-
-
-//linkerd.io/inject: "{{ .Values.global.cluster.mesh.create }}"
-
-//
-// {{- if eq .Values.global.cluster.mesh.name "istio" }}
-//   istio-injection: {{ .Values.global.cluster.mesh.create }}
-// {{ end }}
-// {{- if eq .Values.global.cluster.mesh.name "linkerd" }}
-//   global.linkerd.io/inject: {{ .Values.global.cluster.mesh.create }}
-// {{- end }}
-
 local host(config, env) =
   if std.objectHas(env.hosts.default, 'host')
   then env.hosts.default.host
@@ -83,31 +50,40 @@ local IamMangedPolicy(config, env) = helpers.iamManagedPolicy(config, env) {
   },
 };
 
-local iamPermissions(config, env ) = 
-  if std.objectHas(env, 'iam') && env.iam.create 
+local roleRequired(config, group) = 
+ config.groups.kiam.enabled && std.objectHas(group, 'iamRole') && group.iamRole.create;
+
+local iamPermissions(config, env) = 
+  if config.groups.kiam.enabled
   then {
     "iam.amazonaws.com/permitted": "%s/.*" % env.name
-  } else
-  {};
+  } else {
+  };
 
 local withGroup(groups, name) = groups[name] { name:: name };
 
 // Compute IAM annotation for group
 local iamAnnotations(config, env, group) =
-  if std.objectHas(group, 'iam') && group.iam.create
-  then (
-    local roleName =
-      if std.objectHas(group.iam, 'name')
-      then group.iam.name
-      else '%s-%s-%s' % [config.cluster.name, env.name, group.name];
-    {
-      deployment+: {
-        podAnnotations+: {
-          'iam.amazonaws.com/role': roleName,
-        },
-      },
+  if roleRequired(config, env, group)
+  then {
+    deployment+: {
+      podAnnotations+: {
+        'iam.amazonaws.com/role':  '%s-%s-%s' % [config.cluster.name, env.name, group.name],
+      }
     }
-  )
+  } else {
+  };
+
+// Compute Linkerd annotations
+local linkerdAnnotations(config, env, group) =
+  if config.cluster.mesh.enabled && config.cluster.mesh.name == "linkerd"
+  then {
+    deployment+: {
+      podAnnotations+: {
+        'linkerd.io/inject': "enabled",
+      },
+    },
+  }
   else {
   };
 
@@ -118,7 +94,7 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
     namespace: env.name,
     annotations: {
       ['flux.weave.works/tag.' + k]: (hr.gitops.selector + ':' + hr.gitops.filter)
-      for k in svcs
+      for k in helpers.tidepoolServices
     } + {
       'flux.weave.works/automated': hr.gitops.automated,
     },
@@ -127,7 +103,7 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
     releaseName: env.name + '-tidepool',
     values: helpers.StripSecrets(hr.values) {
       namespace+: {
-        annotations+: iamPermissions(config, env )
+        annotations+: iamPermissions(config, env)
       },
       global+: {
         cluster: config.cluster,
@@ -146,13 +122,13 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
       },
     } + {
       [svc]: (local group = withGroup(env.groups, svc);
-        group + iamAnnotations(config, env, group))
-      for svc in svcs
+        group + iamAnnotations(config, env, group) + linkerdAnnotations(config, env, group))
+      for svc in helpers.tidepoolServices
     },
   },
 };
 
-local HPAs(namespace) = { [namespace + '-' + name + '-HPA']: helpers.hpa(name, namespace) for name in svcs };
+local HPAs(namespace) = { [namespace + '-' + name + '-HPA']: helpers.hpa(name, namespace) for name in helpers.tidepoolServices };
 
 function(config) (
   local helmRelease(name, env) = if env.enabled && env.helmrelease.create then HelmRelease(config, env { name: name });
