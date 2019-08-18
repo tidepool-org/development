@@ -22,12 +22,29 @@ local svcs = [
   'user',
 ];
 
+local host(config, env) =
+  if std.objectHas(env.hosts.default, 'host')
+  then env.hosts.default.host
+  else (
+    if env.hosts.default.protocol == 'http'
+    then env.hosts.http.dnsNames[0]
+    else env.hosts.https.dnsNames[0]
+  );
+
+local certificateSecretName(config,env) = 
+  if std.objectHas(env.hosts.https, 'certificateSecretName')
+    then env.hosts.https.certificateSecretName
+    else "%s-tls-secret" % env.name;
+
 local bucketName(config, env) =
   if env.bucket.name
   then env.bucket.name
   else 'tidepool-%s-%s-data' % [config.cluster.name, env.name];
 
-local IamMangedPolicy(config, env) = helpers.iamManagedPolicy(config, env) { 
+local s3URL(config, env) = 
+  "https://s3-%s.amazonaws.com" % config.cluster.eks.region
+
+local IamMangedPolicy(config, env) = helpers.iamManagedPolicy(config, env) {
   values+:: {
     Properties+: {
       Statements: [
@@ -82,9 +99,19 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
     values: helpers.StripSecrets(hr.values) {
       global+: {
         cluster: config.cluster,
+        environment+: {
+          hosts+: {
+            default+: {
+              host: host(config, env),
+              https+: {
+                certificateSecretName: certificateSecretName(config,env)
+              }
+            }
+          }
+        }
       },
     } + {
-      [svc]: withIam(config, env, withGroup(env.groups, svc))
+      [svc]: withIam(config, env, withGroup(env.groups, svc)) 
       for svc in svcs
     },
   },

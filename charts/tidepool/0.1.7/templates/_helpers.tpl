@@ -3,20 +3,12 @@
 Expand the name of the chart.
 */}}
 
-{{- define "charts.default.host" -}}
-{{- if eq .Values.global.environment.hosts.default.protocol "http" -}}
-{{- .Values.global.environment.hosts.http.dnsNames | first -}}
-{{- else -}}
-{{- .Values.global.environment.hosts.https.dnsNames | first -}}
-{{- end -}}
-{{- end }}
-
 {{- define "charts.host.external.tp" -}} 
-{{- .Values.global.environment.hosts.default.protocol }}://{{ include "charts.default.host" . -}}
+{{- .Values.global.environment.hosts.default.protocol -}}:{{- .Values.global.environment.hosts.default.host }}
 {{- end }}
 
 {{- define "charts.certificate.secretName" -}}
-{{- $.Release.Namespace -}}-tls-secret
+{{- .Values.global.environment.hosts.https.certificate.secretName -}}
 {{- end -}}
 
 {{- define "charts.name" -}}
@@ -54,10 +46,6 @@ Create chart name and version as used by the chart label.
 */}}
 {{- define "charts.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "charts.secret.prefix" -}}
-{{ .Values.global.cluster.name }}/{{ .Release.Namespace }}
 {{- end -}}
 
 {{/*

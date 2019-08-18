@@ -32,10 +32,10 @@ TLS_SECRET_NAME = '{{ include "charts.certificate.secretName" . }}'
 TLS_SECRET_NAMESPACE = '{{ $.Release.Namespace }}'
 
 """The name of the Gateway Proxy Service"""
-GATEWAY_PROXY_NAME = '{{ $.Value.globals.proxy.name }}'
+GATEWAY_PROXY_NAME = '{{ $.Value.global.cluster.gateway..proxy.name }}'
 
 """The namespace of the Gateway Proxy Service"""
-GATEWAY_PROXY_NAMESPACE = '{{ $.Values.global.proxy.namespace }}'
+GATEWAY_PROXY_NAMESPACE = '{{ $.Values.global.cluster.gateway.proxy.namespace }}'
 
 """The environment being instantiated"""
 ENVIRONMENT = '{{ $.Release.Namespace }}'

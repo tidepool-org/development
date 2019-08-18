@@ -12,8 +12,8 @@ metadata:
 spec:
   secretName: {{ include "charts.certificate.secretName" . }}
   issuerRef:
-    name: {{ $spec.certificateIssuer }}
-    kind: {{ $spec.issuerKind | default "ClusterIssuer" }}
+    name: {{ $spec.certificate.issuer }}
+    kind: {{ $spec.certificate.issuerKind | default "ClusterIssuer" }}
   commonName: {{ include "charts.default.host" . }}
   dnsNames:
   {{- $spec.dnsNames | toYaml | nindent 2 -}}

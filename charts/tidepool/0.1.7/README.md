@@ -121,13 +121,17 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.cluster.name`                                    | The name of the K8s cluster that hosts this env.                                             | ``                                                    |
 | `global.cluster.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
 | `global.environment.hosts.default.protocol`                          | Protocol to use for email verification.                                                      | ``                                                    |
+| `global.environment.hosts.default.host`                          | Host to use for email verification                                                      | ``                                                    |
+
 | `global.environment.hosts.http.dnsNames`                             | List of host to listen to                                                                    | `localhost`                                           |
 | `global.environment.hosts.http.enabled`                             |  Whether to provide HTTP access | `true`                                           |
 | `global.environment.hosts.http.port`                             |  Port to use for HTTP traffic | `8080`                                           |
-| `global.environment.hosts.https.certificateIssuer`                   | Name of TLS certificate issuer, e.g. `letsencrypt-stating`, `letsencrypt-production`         | ``                                                    |
+| `global.environment.hosts.https.certificate.issuer`                   | Name of TLS certificate issuer, e.g. `letsencrypt-stating`, `letsencrypt-production`         | ``                                                    |
+| `global.environment.hosts.https.certificate.issuerKind`                          | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer`                              | `ClusterIssuer`                                       |
+| `global.environment.hosts.https.certificate.secretName`                          | `Name of secret to store cert in`
+                              | ``                                       |
 | `global.environment.hosts.https.dnsNames`                            | List of Subject Alternative Names to use                                                     | `[]`                                                  |
 | `global.environment.hosts.https.enabled`                             |  Whether to provide HTTPS access | `false`                                           |
-| `global.environment.hosts.https.issuerKind`                          | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer`                              | `ClusterIssuer`                                       |
 | `global.environment.hosts.https.port`                             |  Port to use for HTTPS traffic | `8443`                                           |
 | `global.cluster.hpa.create`                                      | If true, create a horizontal pod autoscalers for all pods                                    | 'false'                                               |
 | `global.environment.namespace.create`                                | If true, create namespace                                                                    | `false`                                               |

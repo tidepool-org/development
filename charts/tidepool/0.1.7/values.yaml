@@ -23,6 +23,7 @@ global:
     hosts:
       default:
         protocol: http                            # the protocol to use for signup emails
+        #host:                                    # default host. 
       http:                                                            
         enabled: true
         port: "8080"                              # default HTTP port - must be quoted
@@ -31,8 +32,10 @@ global:
         enabled: false 
         port: "8433"                              # default HTTPS port - must be quoted
         dnsNames: []                              # list of DNS names
-        certificateIssuer: ""                     # the name of the certificate issuer
-        issuerKind: ClusterIssuer                 # kind of the certificate issuer
+        certificate:
+          issuer: ""                              # the name of the certificate issuer
+          secretName:                             # secret name to hold secret in
+          issuerKind: ClusterIssuer               # kind of the certificate issuer
     store: 
       #type: s3                                   # store non-Mongo data in S3
       type: file                                  # store non-Mongo data on file system
