@@ -15,12 +15,6 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.global.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "charts.host.internal.tp" -}} internal {{- end }}
-
-{{ define "charts.host.internal.address" -}}
-http://internal.{{.Release.Namespace}}
-{{- end }}
-
 {{- define "charts.s3.url" -}} https://s3-{{.Values.global.cluster.eks.region}}.amazonaws.com {{- end }}
 
 {{/*
@@ -57,7 +51,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://auth:{{.Values.auth.service.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: "{{ include "charts.host.internal.address" .}}"
+          value: "http://internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
@@ -82,7 +76,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
           value: http://image:{{.Values.image.service.port}}
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
-          value: "{{ include "charts.host.internal.address" .}}"
+          value: "http://internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
           value: http://notification:{{.Values.notification.service.port}}
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
@@ -90,7 +84,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS
           value: http://task:{{.Values.task.service.port}}
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
-          value: "{{ include "charts.host.internal.address" .}}"
+          value: "http://internal.{{.Release.Namespace}}"
 {{ end }}
 
 {{ define "charts.platform.env.misc" }}

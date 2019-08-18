@@ -16,7 +16,6 @@ spec:
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: 1
-  strategy: {}
   template:
     metadata:
       labels:
@@ -24,7 +23,7 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        linkerd.io/inject: "{{ .Values.global.cluster.mesh.create }}"
+        {{- .Values.messageapi.podAnnotations | toYaml | nindent 8 }}
     spec:
       containers:
       - env:

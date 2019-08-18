@@ -25,12 +25,12 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        linkerd.io/inject: "{{ .Values.global.linkerd }}"
+        {{- .Values.export.podAnnotations | toYaml | nindent 8 }}
     spec:
       containers:
       - env:
         - name: API_HOST
-          value: "{{ include "charts.host.internal.address" .}}"
+          value: "internal.{{.Release.Namespace}}"
         - name: DEBUG_LEVEL
           value: debug
         - name: HTTP_PORT

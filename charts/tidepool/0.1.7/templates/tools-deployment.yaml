@@ -17,13 +17,14 @@ spec:
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: 1
-  strategy: {}
   template:
     metadata:
       labels:
         app: tools
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        {{- .Values.tools.podAnnotations | toYaml | nindent 8 }}
     spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}

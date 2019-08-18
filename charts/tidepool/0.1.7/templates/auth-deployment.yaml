@@ -24,7 +24,7 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        linkerd.io/inject: "{{ .Values.global.cluster.mesh.create }}"
+        {{- .Values.auth.podAnnotations | toYaml | nindent 8 }}
     spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}
@@ -76,7 +76,7 @@ spec:
               key: StateSalt
               optional: true
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
-          value: {{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
+          value: "internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
           value: :{{.Values.auth.service.port}}
         - name: TIDEPOOL_AUTH_SERVICE_SECRET

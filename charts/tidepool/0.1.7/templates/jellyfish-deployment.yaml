@@ -27,10 +27,7 @@ spec:
   template:
     metadata:
       annotations:
-{{- if .Values.jellyfish.iamRole }}
-        iam.amazonaws.com/role: {{ .Values.jellyfish.iamRole | quote }}
-{{- end }}
-        linkerd.io/inject: "{{ .Values.global.cluster.mesh.create }}"
+        {{- .Values.jellyfish.podAnnotations | toYaml | nindent 8 }}
       labels:
         app: jellyfish
         app.kubernetes.io/name: {{ include "charts.name" . }}

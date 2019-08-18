@@ -28,10 +28,7 @@ spec:
   template:
     metadata:
       annotations:
-{{- if .Values.blob.iamRole }}
-        iam.amazonaws.com/role: {{ .Values.blob.iamRole | quote }}
-{{- end }}
-        linkerd.io/inject: "{{ .Values.global.cluster.mesh.create }}"
+        {{- .Values.blob.podAnnotations | toYaml | nindent 8 }}
       labels:
         app: blob
         app.kubernetes.io/name: {{ include "charts.name" . }}

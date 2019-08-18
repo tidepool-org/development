@@ -26,14 +26,10 @@ spec:
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: 1
-  strategy: {}
   template:
     metadata:
       annotations:
-{{- if .Values.image.iamRole }}
-        iam.amazonaws.com/role: {{ .Values.image.iamRole | quote }}
-{{- end }}
-        linkerd.io/inject: "{{ .Values.global.cluster.mesh.create }}"
+        {{- .Values.image.podAnnotations | toYaml | nindent 8 }}
       labels:
         app: image
         app.kubernetes.io/name: {{ include "charts.name" . }}
