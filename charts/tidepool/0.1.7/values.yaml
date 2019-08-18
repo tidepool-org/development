@@ -34,7 +34,7 @@ global:
         dnsNames: []                              # list of DNS names
         certificate:
           issuer: ""                              # the name of the certificate issuer
-          secretName:                             # secret name to hold secret in
+          secretName: ""                          # secret name to hold secret in
           issuerKind: ClusterIssuer               # kind of the certificate issuer
     store: 
       #type: s3                                   # store non-Mongo data in S3
