@@ -18,7 +18,6 @@ local Rename(m) = {
   [name(m[field]) + '.cf']: m[field] for field in std.objectFields(m) 
   };
 
-function(config) (
-  local configWithNames = helpers.withGroupNames(config);
-  std.foldl(function(x, y) x + Rename(y), Manifests(groups, configWithNames), {})
-)
+function(config)
+  std.foldl(function(x, y) x + Rename(y), Manifests(groups, config), {})
+

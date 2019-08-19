@@ -1,5 +1,6 @@
 groups:
   kiam:
+    name: kiam
     enabled: true
     helmrelease:
       chart:

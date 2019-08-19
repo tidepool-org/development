@@ -1,5 +1,6 @@
 groups:
   reloader:
+    name: reloader
     enabled: true
     helmrelease:
       create: true

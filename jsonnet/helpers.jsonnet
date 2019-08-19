@@ -62,10 +62,6 @@
     std.foldl(merge, std.stringChars(kebabCaseWord), { word: '', toUpper: initialUpper }).word
   ),
 
-  withGroupNames(config):: config + {
-    groups: std.mapWithKey( function(n,g) g {name: $.kebabCase(n)}, config.groups)
-  },
-
   pascalCase(kebabCaseWord):: this.camelCase(word, kebabCaseWord),
 
   labels(config):: if config.cluster.mesh.enabled then
@@ -231,22 +227,6 @@
         }
         for name in std.objectFieldsAll(group.secret.data_)
       ],
-    },
-  },
-
-  hpa(config, group, min=1, max=10, targetCPUUtilizationPercentage=50):: $._Object('autoscaling/v1', 'HorizontalPodAutoscaler', group.name) {
-    metadata+: {
-      namespace: group.namespace.name,
-    },
-    spec+: {
-      maxReplicas: max,
-      minReplicas: min,
-      scaleTargetRef: {
-        apiVersion: 'extensions/v1beta1',
-        kind: 'Deployment',
-        name: group.name,
-      },
-      targetCPUUtilizationPercentage: targetCPUUtilizationPercentage,
     },
   },
 

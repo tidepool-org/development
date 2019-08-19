@@ -1,5 +1,6 @@
 groups:
   flux:
+    name: flux
     enabled: true
     urlrelease:
       create: true

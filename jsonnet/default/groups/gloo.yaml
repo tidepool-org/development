@@ -1,5 +1,6 @@
 groups:
   gloo:
+    name: gloo
     enabled: true
     gateway:
       create: true

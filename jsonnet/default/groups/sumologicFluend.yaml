@@ -1,5 +1,6 @@
 groups:
   sumologicFluentd:
+    name: sumologic-fluentd
     enabled: true
     helmrelease:
       create: true

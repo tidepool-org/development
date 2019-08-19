@@ -1,5 +1,6 @@
 groups:
   externalDNS:
+    name: external-dns
     enabled: true
     helmrelease:
       chart:

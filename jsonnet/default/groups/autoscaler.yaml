@@ -1,5 +1,6 @@
 groups:
   autoscaler:
+    name: autoscaler
     enabled: true
     helmrelease:
       chart:

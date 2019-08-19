@@ -1,5 +1,6 @@
 groups:
   thanos:
+    name: thanos
     enabled: true
     deployment:
       tag: v0.3.1

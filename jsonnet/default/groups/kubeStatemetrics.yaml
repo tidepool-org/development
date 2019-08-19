@@ -1,5 +1,6 @@
 groups:
   kubeStateMetrics:
+    name: kube-state-metrics
     enabled: true
     helmrelease:
       create: true

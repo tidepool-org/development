@@ -1,5 +1,6 @@
 groups:
   datadogAgent:
+    name: datadog-agent
     enabled: true
     helmrelease:
       chart:

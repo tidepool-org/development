@@ -1,5 +1,6 @@
 groups:
   fluxcloud:
+    name: fluxcloud
     enabled: true
     helmrelease:
       chart:

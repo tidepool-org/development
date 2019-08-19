@@ -1,5 +1,6 @@
 groups:
   prometheusOperator:
+    name: prometheus-operator
     enabled: true
     helmrelease:
       create: true

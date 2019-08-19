@@ -1,5 +1,6 @@
 groups:
   certManager:
+    name: cert-manager
     enabled: true
     clusterIssuer:
       create: true
