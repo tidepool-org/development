@@ -7,10 +7,15 @@ local ManagedPolicy(config, group) = helpers.iamManagedPolicy(config, group) {
         Statement: [
           {
             Effect: 'Allow',
-            Action: 'secretsmanager:GetSecretValue',
-            Resource: [
-              'arn:aws:secretsmanager:%s:%s:secret:%s/*' % [config.cluster.eks.region, config.cluster.eks.accountNumber, config.cluster.name],
+            Action: [
+              'autoscaling:DescribeAutoScalingInstances',
+              'autoscaling:SetDesiredCapacity',
+              'autoscaling:DescribeAutoScalingGroups',
+              'autoscaling:DescribeTags',
+              'autoscaling:DescribeLaunchConfigurations',
+              'autoscaling:TerminateInstanceInAutoScalingGroup',
             ],
+            Resource: '*',
           },
         ],
       },
@@ -19,7 +24,7 @@ local ManagedPolicy(config, group) = helpers.iamManagedPolicy(config, group) {
 };
 
 function(config) (
-  local group = config.groups.externalSecrets;
+  local group = config.groups.autoscaler;
   if group.enabled then
     [helpers.iamRole(config, group), ManagedPolicy(config, group)]
   else []

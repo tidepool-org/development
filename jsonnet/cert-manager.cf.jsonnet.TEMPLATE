@@ -28,8 +28,7 @@ local ManagedPolicy(config, group) = helpers.iamManagedPolicy(config, group) {
 
 function(config) (
   local group = config.groups.certManager;
-  if group.enabled then {
-    Role: helpers.iamRole(config, group),
-    ManagedPolicy: ManagedPolicy(config, group),
-  }
+  if group.enabled then
+    [helpers.iamRole(config, group), ManagedPolicy(config, group)]
+  else []
 )

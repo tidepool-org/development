@@ -51,9 +51,9 @@ local Role(config, group) = helpers.iamRole(config, group) {
 };
 
 function(config) (
-  local group = config.groups.kiam { name: 'kiam' };
-  if group.enabled then {
-    Role: Role(config, group),
-    ManagedPolicy: ManagedPolicy(config, group),
-  }
+  local group = config.groups.kiam;
+
+  if group.enabled then
+    [Role(config, group), ManagedPolicy(config, group)]
+  else []
 )

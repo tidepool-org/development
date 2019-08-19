@@ -6,7 +6,7 @@ local IamMangedPolicy(config, env) = helpers.iamManagedPolicy(config, env) {
       Statements: [
         {
           Action: 's3:ListBucket',
-          Resource: ['arn:aws:s3:::%s/*' %  helpers.bucketName(config, env)],
+          Resource: ['arn:aws:s3:::%s/*' % helpers.bucketName(config, env)],
           Effect: 'Allow',
         },
         {
@@ -29,11 +29,11 @@ local IamMangedPolicy(config, env) = helpers.iamManagedPolicy(config, env) {
 };
 
 function(config) (
-  local iamManagedPolicy(name, env) = if env.enabled  then IamMangedPolicy(config, env { name: name });
+  local iamManagedPolicy(name, env) = if env.enabled then IamMangedPolicy(config, env { name: name });
   local iamManagedPolicies = std.mapWithKey(iamManagedPolicy, config.tidepool.groups);
 
-  local iamRole(name, env) = if env.enabled then helpers.iamRole(config, env);
-  local iamRoles = std.mapWithKey(iamManagedPolicy, config.tidepool.groups);
+  local iamRole(name, env) = if env.enabled then helpers.iamRole(config, env { name: name });
+  local iamRoles = std.mapWithKey(iamRole, config.tidepool.groups);
 
-  std.prune(iamManagedPolicies + iamRoles)
+  helpers.values(std.prune(iamManagedPolicies)) + helpers.values(std.prune(iamRoles))
 )

@@ -28,7 +28,7 @@ local iamPermissions(config, env) =
   } else {
   };
 
-local withGroup(groups, name) = (groups[name] + { name: name });
+local withGroup(groups, name) = (groups[name] { name: name });
 
 // Compute IAM annotation for group
 local iamAnnotations(config, env, group) = (
@@ -43,7 +43,8 @@ local iamAnnotations(config, env, group) = (
       },
     },
   } else {
-  });
+  }
+);
 
 // Compute Linkerd annotations
 local linkerdAnnotations(config, env, group) =
@@ -59,12 +60,12 @@ local linkerdAnnotations(config, env, group) =
   };
 
 local combine(config, env, group, key) = {
-  [key] : 
-  std.foldl( helpers.merge, [
-    config.cluster[key],
-    if std.objectHas(env, key) then env[key] else {},
-    if std.objectHas(group, key) then group[key] else {}
-  ], {})
+  [key]:
+    std.foldl(helpers.merge, [
+      config.cluster[key],
+      if std.objectHas(env, key) then env[key] else {},
+      if std.objectHas(group, key) then group[key] else {},
+    ], {}),
 };
 
 local resources(config, env, group) = combine(config, env, group, 'resources');
@@ -76,11 +77,11 @@ local storage(config, env, group) = combine(config, env, group, 'store');
 local hpas(config, env, group) = combine(config, env, group, 'hpa');
 
 // add default bucket
-local getBucket(config, env) = 
+local getBucket(config, env) =
   {
     store+: {
-      bucket: helpers.bucketName(config, env)
-    }
+      bucket: helpers.bucketName(config, env),
+    },
   };
 
 local HelmRelease(config, env) = helpers.helmrelease(config, env) {

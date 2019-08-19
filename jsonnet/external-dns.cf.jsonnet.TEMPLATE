@@ -27,9 +27,8 @@ local ManagedPolicy(config, group) = helpers.iamManagedPolicy(config, group) {
 };
 
 function(config) (
-  local group = config.groups.externalDNS { name: 'external-dns' };
-  if group.enabled then {
-    Role: helpers.iamRole(config, group),
-    ManagedPolicy: ManagedPolicy(config, group),
-  }
+  local group = config.groups.externalDNS;
+  if group.enabled then
+    [helpers.iamRole(config, group), ManagedPolicy(config, group)]
+  else []
 )

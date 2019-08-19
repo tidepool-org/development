@@ -1,3 +1,3 @@
-local helpers = import 'helpers.jsonnet'; 
+local helpers = import 'helpers.jsonnet';
 
-function(input, result) helpers.merge(input,result)
+function(input, result) helpers.merge(input, result)

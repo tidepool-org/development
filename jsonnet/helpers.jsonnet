@@ -34,20 +34,22 @@
     },
   },
 
-  bucketName(config, env):: 
-    if std.objectHas(env.store, 'bucket') && env.store.bucket != ""
+  values(obj):: [ obj[field] for field in std.objectFields(obj) ],
+
+  bucketName(config, env)::
+    if std.objectHas(env.store, 'bucket') && env.store.bucket != ''
     then env.store.bucket
     else 'tidepool-%s-%s-data' % [config.cluster.name, env.name],
 
-  isUpper(c) :: (
-		local cp = std.codepoint(c);
-		cp >= 97 && cp < 123
+  isUpper(c):: (
+    local cp = std.codepoint(c);
+    cp >= 97 && cp < 123
   ),
 
-  kebabCase(camelCaseWord) :: (
+  kebabCase(camelCaseWord):: (
     local merge(a, b) = {
       local isUpper = $.isUpper(b),
-      word: (if isUpper && !a.wasUpper then "%s-%s" else "%s%s") % [a.word, std.asciiLower(b)],
+      word: (if isUpper && !a.wasUpper then '%s-%s' else '%s%s') % [a.word, std.asciiLower(b)],
       wasUpper: isUpper,
     };
     std.foldl(merge, std.stringChars(camelCaseWord), { word: '', wasUpper: true }).word
@@ -87,10 +89,10 @@
 
   ignore(x, exclude):: { [f]: x[f] for f in std.objectFieldsAll(x) if f != exclude },
 
-  merge(a, b):: // merge two objects recursively.  Choose b if conflict.
+  merge(a, b)::  // merge two objects recursively.  Choose b if conflict.
     if (std.isObject(a) && std.isObject(b))
     then (
-      {  
+      {
         [x]: a[x]
         for x in std.objectFieldsAll(a)
         if !std.objectHas(b, x)
