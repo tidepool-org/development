@@ -7,9 +7,10 @@ tidepool:
             create: true
           deployment:
             env:
-              bucket: ""
-              directory: _data/image
-              prefix: images
+              store:
+                bucket: ""
+                directory: _data/image
+                prefix: images
             image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
           secret:
             create: false

@@ -60,7 +60,7 @@ local linkerdAnnotations(config, env, group) =
   };
 
 local combine(config, env, group, key) = {
-  [key]:
+  [key]+:
     std.foldl(helpers.merge, [
       config.cluster[key],
       if std.objectHas(env, key) then env[key] else {},
@@ -72,7 +72,16 @@ local resources(config, env, group) = combine(config, env, group, 'resources');
 
 local securityContext(config, env, group) = combine(config, env, group, 'securityContext');
 
-local storage(config, env, group) = combine(config, env, group, 'store');
+local deployment(config, env, group) =
+   if std.objectHas(group, 'deployment') && std.objectHas(group.deployment, 'env')
+   then {
+     deployment+: {
+       env+: combine(config, env, group.deployment.env, 'store')
+     }  
+   }
+   else {
+   };
+
 
 local hpas(config, env, group) = combine(config, env, group, 'hpa');
 
@@ -126,7 +135,7 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
         + linkerdAnnotations(config, envWithBucket, group)
         + securityContext(config, envWithBucket, group)
         + resources(config, envWithBucket, group)
-        + storage(config, envWithBucket, group)
+        + deployment(config, envWithBucket, group)
         + hpas(config, envWithBucket, group)
       )
       for svc in helpers.tidepoolServices

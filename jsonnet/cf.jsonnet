@@ -9,13 +9,10 @@ local groups = [
   import 'tidepool.cf.jsonnet.TEMPLATE',
 ];
 
-local name(m) = if m.kind == 'Namespace' || (!std.objectHas(m.metadata, 'namespace')) || m.metadata.name == m.metadata.namespace
-then m.metadata.name + '-' + m.kind
-else m.metadata.namespace + '-' + m.metadata.name + '-' + m.kind;
-
 local Manifests(svcs, conf) = [std.prune(s(conf)) for s in svcs];
 
-function(config) (
-  local manifests = Manifests(groups, config);
-  std.foldl(function(x, y) x + y, manifests, [])
-)
+function(config) 
+  std.foldr(
+    function(a,b) a + b,
+    std.flattenArrays(Manifests(groups, config)),
+    {})
