@@ -5,15 +5,18 @@
 #
 # Usage: $0 ${file}|${directory} ${initialValue:-"{}"}
 #
+
+ARGS=$(jsonnet_path)
+
 input=${1:-.}
 result=${2:-"{}"}
 files=$(find $input -name \*.yaml -print)
 files="$files $(find $input -name \*.json -print)"
 for file in $files
 do
-	result=$(jsonnet \
+	result=$(jsonnet $ARGS \
 	--tla-code input="$(yq read $file -j)" \
 	--tla-code result="$result" \
-	merge.jsonnet)
+	lib/merge.jsonnet)
 done
 echo $result
