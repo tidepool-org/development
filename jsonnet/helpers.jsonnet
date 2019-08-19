@@ -50,7 +50,7 @@
       word: (if isUpper && !a.wasUpper then "%s-%s" else "%s%s") % [a.word, std.asciiLower(b)],
       wasUpper: isUpper,
     };
-    std.foldl(merge, std.stringChars(kebabCaseWord), { word: '', wasUpper: true }).word
+    std.foldl(merge, std.stringChars(camelCaseWord), { word: '', wasUpper: true }).word
   ),
 
   camelCase(kebabCaseWord, initialUpper=false):: (
@@ -62,7 +62,7 @@
     std.foldl(merge, std.stringChars(kebabCaseWord), { word: '', toUpper: initialUpper }).word
   ),
 
-  pascalCase(kebabCaseWord):: this.camelCase(word, kebabCaseWord),
+  pascalCase(kebabCaseWord):: this.camelCase(kebabCaseWord, true),
 
   labels(config):: if config.cluster.mesh.enabled then
     if config.cluster.mesh.name == 'linkerd' then {

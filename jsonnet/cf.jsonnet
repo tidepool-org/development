@@ -2,10 +2,10 @@ local helpers = import 'helpers.jsonnet';
 
 local groups = [
   import 'cert-manager.cf.jsonnet.TEMPLATE',
-  // import 'external-dns.cf.jsonnet.TEMPLATE',
-  // import 'external-secrets.cf.jsonnet.TEMPLATE',
-  // import 'kiam.cf.jsonnet.TEMPLATE',
-  // import 'tidepool.cf.jsonnet.TEMPLATE',
+  import 'external-dns.cf.jsonnet.TEMPLATE',
+  import 'external-secrets.cf.jsonnet.TEMPLATE',
+  import 'kiam.cf.jsonnet.TEMPLATE',
+  import 'tidepool.cf.jsonnet.TEMPLATE',
 ];
 
 local name(m) = if m.kind == 'Namespace' || (!std.objectHas(m.metadata, 'namespace')) || m.metadata.name == m.metadata.namespace

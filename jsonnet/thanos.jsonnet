@@ -26,7 +26,7 @@ local Secret(config, group) = helpers.secret(config, group) {
 };
 
 function(config) (
-  local group = config.groups.thanos { name: 'thanos' };
+  local group = config.groups.thanos;
   if group.enabled then {
     Secret: Secret(config, group),
   }

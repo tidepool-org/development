@@ -76,7 +76,7 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
 };
 
 function(config) (
-  local group = config.groups.kiam { name: 'kiam' };
+  local group = config.groups.kiam;
   if group.enabled then {
     Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
     Namespace: if group.namespace.create then helpers.namespace(config, group),

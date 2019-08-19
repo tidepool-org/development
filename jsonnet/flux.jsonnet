@@ -78,7 +78,7 @@ local HelmRelease(config, group) = helpers.helmrelease(config, group) {
 };
 
 function(config) (
-  local group = config.groups.flux { name: 'flux' };
+  local group = config.groups.flux;
   if group.enabled then {
     URLRelease: if group.urlrelease.create then helpers.urlrelease(config, group),
     HelmRelease: HelmRelease(config, group),

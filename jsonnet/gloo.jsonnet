@@ -97,7 +97,7 @@ local Gateway(config, group) = {
 };
 
 function(config) (
-  local group = config.groups.gloo { name: 'gloo' };
+  local group = config.groups.gloo;
   if group.enabled then {
     Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
     Namespace: if group.namespace.create then helpers.namespace(config, group),

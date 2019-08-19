@@ -46,7 +46,7 @@ local Helmrelease(config, group) = helpers.helmrelease(config, group) {
 };
 
 function(config) (
-  local group = config.groups.externalDNS { name: 'external-dns' };
+  local group = config.groups.externalDNS;
   if group.enabled then {
     Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
     Namespace: if group.namespace.create then helpers.namespace(config, group),

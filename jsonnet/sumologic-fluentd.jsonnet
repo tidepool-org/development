@@ -17,7 +17,7 @@ local Helmrelease(config, group) =
   };
 
 function(config) (
-  local group = config.groups.sumologicFluentd { name: 'sumologic-fluentd' };
+  local group = config.groups.sumologicFluentd;
   if group.enabled then {
     Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
     Secret: if group.secret.create then helpers.secret(config, group),

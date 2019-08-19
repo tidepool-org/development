@@ -28,7 +28,7 @@ local ClusterIssuer(config, group, server, name) = {
 };
 
 function(config) (
-  local group = config.groups.certManager { name: 'cert-manager' };
+  local group = config.groups.certManager;
   if group.enabled then {
     Helmrelease: if group.helmrelease.create then helpers.helmrelease(config, group),
     Namespace: if group.namespace.create then helpers.namespace(config, group),
