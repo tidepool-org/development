@@ -11,9 +11,15 @@ local groups = [
 
 local Manifests(svcs, conf) = [std.prune(s(conf)) for s in svcs];
 
-function(config)
-  std.foldr(
+local resources(config) =
+  std.foldl(
     function(a, b) a + b,
     std.flattenArrays(Manifests(groups, config)),
     {}
-  )
+  );
+
+function(config) {
+  AWSTemplateFormatVersion: "2010-09-09",
+  Description: "Cluster %s" % config.cluster.name,
+  Resources: resources(config)
+}

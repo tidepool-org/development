@@ -22,7 +22,7 @@ cluster:
     type: LoadBalancer
     hostnames: []
   hpa:
-    enable: true
+    create: true
     data:
       maxReplicas: 10
       minReplicas: 1

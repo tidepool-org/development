@@ -46,6 +46,12 @@
     cp >= 97 && cp < 123
   ),
 
+  capitalize(word):: (
+    assert std.isString(word) : "can only capitalize string";
+    local chars = std.stringChars(word);
+    std.asciiUpper(chars[0]) + std.foldl( function(a,b) a + b, chars[1:std.length(chars)], "")
+  ),
+
   kebabCase(camelCaseWord):: (
     local merge(a, b) = {
       local isUpper = $.isUpper(b),
@@ -123,7 +129,7 @@
     [self.iamName(config, group, iamKind)]: this.values,
   },
 
-  iamName(config, group, iamKind):: $.camelCase(group.name) + $.camelCase(iamKind),
+  iamName(config, group, iamKind):: $.capitalize($.camelCase(group.name) + $.camelCase(iamKind)),
 
   iamManagedPolicy(config, group):: $.iamObject(config, group, 'ManagedPolicy') {
     local this = self,
