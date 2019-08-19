@@ -1,0 +1,1234 @@
+apiVersion: v1
+items:
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: autoscaler
+    name: autoscaler
+    namespace: autoscaler
+  spec:
+    chart:
+      name: cluster-autoscaler
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 0.14.2
+    releaseName: autoscaler
+    values:
+      autoDiscovery:
+        clusterName: development
+      awsRegion: us-west-2
+      extraArgs:
+        logtostderr: true
+        skip-nodes-with-local-storage: false
+        stderrthreshold: info
+        v: 4
+      podAnnotations:
+        iam.amazonaws.com/role: development-autoscaler-role
+      rbac:
+        create: true
+      serviceMonitor:
+        enabled: true
+      sslCertHostPath: /etc/ssl/certs/ca-bundle.crt
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    annotations:
+      iam.amazonaws.com/permitted: development-autoscaler-role
+    name: autoscaler
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: cert-manager
+    name: cert-manager
+    namespace: cert-manager
+  spec:
+    chart:
+      name: cert-manager
+      repository: https://charts.jetstack.io
+      version: v0.8.1
+    releaseName: cert-manager
+    values:
+      podAnnotations:
+        iam.amazonaws.com/role: development-cert-manager-role
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    annotations:
+      iam.amazonaws.com/permitted: development-cert-manager-role
+    name: cert-manager
+- apiVersion: certmanager.k8s.io/v1alpha1
+  kind: ClusterIssuer
+  metadata:
+    name: letsencrypt-production
+    namespace: cert-manager
+  spec:
+    acme:
+      email: derrick@tidepool.org
+      privateKeySecretRef:
+        name: letsencrypt-production
+      server: https://acme-v02.api.letsencrypt.org/directory
+      solvers:
+      - dns01:
+          route53:
+            region: us-west-2
+- apiVersion: certmanager.k8s.io/v1alpha1
+  kind: ClusterIssuer
+  metadata:
+    name: letsencrypt-staging
+    namespace: cert-manager
+  spec:
+    acme:
+      email: derrick@tidepool.org
+      privateKeySecretRef:
+        name: letsencrypt-staging
+      server: https://acme-staging-v02.api.letsencrypt.org/directory
+      solvers:
+      - dns01:
+          route53:
+            region: us-west-2
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: datadog-agent
+    name: datadog-agent
+    namespace: datadog
+  spec:
+    chart:
+      name: datadog
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 1.32.2
+    releaseName: datadog-datadog-agent
+    values:
+      clusterAgent:
+        enabled: true
+        metricsProvider:
+          enabled: true
+      datadog:
+        apiKeyExistingSecret: datadog
+        appKeyExistingSecret: datadog
+        clusterName: development
+        logLevel: debug
+        tokenExistingSecret: datadog
+      kubeStateMetrics:
+        enabled: true
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: datadog
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: external-dns
+    name: external-dns
+    namespace: external-dns-system
+  spec:
+    chart:
+      name: external-dns
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 2.5.3
+    releaseName: external-dns-system-external-dns
+    values:
+      aws:
+        region: us-west-2
+        zoneType: public
+      logLevel: debug
+      metrics:
+        enabled: true
+      podAnnotations:
+        iam.amazonaws.com/role: development-external-dns-role
+      rbac:
+        create: true
+      txtOwnerId: development
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    annotations:
+      iam.amazonaws.com/permitted: development-external-dns-system-role
+    name: external-dns-system
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: external-secrets
+    name: external-secrets
+    namespace: external-secrets
+  spec:
+    chart:
+      git: git@github.com:godaddy/kubernetes-external-secrets
+      path: charts/kubernetes-external-secrets
+      ref: master
+    releaseName: external-secrets
+    values:
+      podAnnotations:
+        iam.amazonaws.com/role: development-external-secrets-role
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    annotations:
+      iam.amazonaws.com/permitted: development-external-secrets-role
+    name: external-secrets
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: fluxcloud
+    name: fluxcloud
+    namespace: flux
+  spec:
+    chart:
+      git: git@github.com:tidepool-org/development
+      path: charts/fluxcloud/0.1.0
+      ref: k8s
+    releaseName: flux-fluxcloud
+    values:
+      github: https://github.com/tidepool-org/cluster-development
+      name: fluxcloud
+      secretName: slack
+      slack:
+        channel: '#flux-development'
+        username: derrickburns
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    labels:
+      name: fluxcloud
+    name: fluxcloud
+    namespace: flux
+  type: Opaque
+- apiVersion: gateway.solo.io.v2/v2
+  kind: Gateway
+  metadata:
+    annotations:
+      origin: default
+    name: gateway-ssl
+    namespace: gloo-system
+  spec:
+    bindAddress: '::'
+    bindPort: 8443
+    gatewayProxyName: gateway-proxy-v2
+    plugins:
+      accessLoggingService:
+        accessLog:
+        - fileSink:
+            jsonFormat:
+              authority: '%REQ(:AUTHORITY)%'
+              bytesReceived: '%BYTES_RECEIVED%'
+              bytesSent: '%BYTES_SENT%'
+              duration: '%DURATION%'
+              method: '%REQ(:METHOD)%'
+              path: '%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%'
+              protocol: '%PROTOCOL%'
+              responseCode: '%RESPONSE_CODE%'
+              sessionToken: '%REQ(x-tidepool-session-token)%'
+              startTime: '%START_TIME(%Y/%m/%dT%H:%M:%S%z %s)%'
+            path: /dev/stdout
+    ssl: true
+    useProxyProto: false
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: gloo
+    name: gloo
+    namespace: gloo-system
+  spec:
+    chart:
+      name: gloo
+      repository: https://storage.googleapis.com/solo-public-helm/
+      version: 0.18.16
+    releaseName: gloo-system-gloo
+    values:
+      crds:
+        create: false
+      discovery:
+        deployment:
+          stats: true
+      gateway:
+        deployment:
+          stats: true
+      gatewayProxies:
+        gatewayProxyV2:
+          podTemplate:
+            stats: true
+          service:
+            extraAnnotations:
+              external-dns.alpha.kubernetes.io/alias: true
+              external-dns.alpha.kubernetes.io/hostname: ""
+              service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: cluster:development
+              service.beta.kubernetes.io/aws-load-balancer-type: nlb
+            httpPort: 80
+            httpsPort: 443
+            type: LoadBalancer
+      gloo:
+        deployment:
+          stats: true
+      settings:
+        create: true
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: gloo-system
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: kiam
+    name: kiam
+    namespace: kube-system
+  spec:
+    chart:
+      name: kiam
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 2.3.0
+    releaseName: kube-system-kiam
+    values:
+      agent:
+        enabled: true
+        extraHostPathMounts:
+        - hostPath: /etc/pki/ca-trust/extracted/pem
+          mountPath: /etc/ssl/certs
+          name: ssl-certs
+          readOnly: true
+        gatewayTimeoutCreation: 1s
+        host:
+          interface: '!eth0'
+          iptables: true
+        image:
+          tag: d999e61e28befb872cd1875812c9d1bf37dc4f37
+        log:
+          level: debug
+      server:
+        enabled: true
+        extraArgs:
+          assume-role-arn: development-kiam-role
+          region: us-west-2
+        extraHostPathMounts:
+        - hostPath: /etc/pki/ca-trust/extracted/pem
+          mountPath: /etc/ssl/certs
+          name: ssl-certs
+          readOnly: true
+        image:
+          tag: d999e61e28befb872cd1875812c9d1bf37dc4f37
+        log:
+          level: debug
+        nodeSelector:
+          kiam-server: "true"
+        tolerations:
+        - effect: NoExecute
+          key: kiam-server
+          operator: Equal
+          value: "false"
+        useHostNetwork: true
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: kube-state-metrics
+    name: kube-state-metrics
+    namespace: datadog
+  spec:
+    chart:
+      name: kube-state-metrics
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 2.2.1
+    releaseName: datadog-kube-state-metrics
+    values:
+      hostNetwork:
+        enabled: true
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: metrics-server
+    name: metrics-server
+    namespace: metrics-server
+  spec:
+    chart:
+      name: metrics-server
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 2.8.2
+    releaseName: metrics-server
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: metrics-server
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: prometheus-operator
+    name: prometheus-operator
+    namespace: monitoring
+  spec:
+    chart:
+      name: prometheus-operator
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 5.13.0
+    releaseName: monitoring-prometheus-operator
+    values:
+      grafana:
+        enabled: false
+      prometheus:
+        prometheusSpec:
+          externalLabels:
+            geo: us
+            region: us-west-2
+          image:
+            tag: v2.8.0
+          replicas: 2
+          retention: 12h
+          serviceMonitorNamespaceSelector:
+            any: true
+          thanos:
+            objectStorageConfig:
+              key: thanos.yaml
+              name: thanos-objstore-config
+            tag: v0.3.1
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: monitoring
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: reloader
+    name: reloader
+    namespace: reloader
+  spec:
+    chart:
+      name: reloader
+      repository: https://stakater.github.io/stakater-charts/
+      version: v0.0.38
+    releaseName: reloader
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: reloader
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: sumologic-fluentd
+    name: sumologic-fluentd
+    namespace: sumologic
+  spec:
+    chart:
+      name: sumologic-fluentd
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 1.1.0
+    releaseName: sumologic-sumologic-fluentd
+    values:
+      rbac:
+        create: true
+      readFromHead: false
+      sourceCategoryPrefix: development
+      sumologic:
+        collectorUrlExistingSecret: sumologic
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: sumologic
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: true
+      flux.weave.works/tag.auth: glob:develop-*
+      flux.weave.works/tag.blip: glob:develop-*
+      flux.weave.works/tag.blob: glob:develop-*
+      flux.weave.works/tag.data: glob:develop-*
+      flux.weave.works/tag.export: glob:develop-*
+      flux.weave.works/tag.gatekeeper: glob:develop-*
+      flux.weave.works/tag.highwater: glob:develop-*
+      flux.weave.works/tag.hydrophone: glob:develop-*
+      flux.weave.works/tag.image: glob:develop-*
+      flux.weave.works/tag.jellyfish: glob:develop-*
+      flux.weave.works/tag.messageapi: glob:develop-*
+      flux.weave.works/tag.migrations: glob:develop-*
+      flux.weave.works/tag.notification: glob:develop-*
+      flux.weave.works/tag.seagull: glob:develop-*
+      flux.weave.works/tag.shoreline: glob:develop-*
+      flux.weave.works/tag.task: glob:develop-*
+      flux.weave.works/tag.tidewhisperer: glob:develop-*
+      flux.weave.works/tag.tools: glob:develop-*
+      flux.weave.works/tag.user: glob:develop-*
+    labels:
+      name: tidepool
+    name: tidepool
+    namespace: default
+  spec:
+    chart:
+      git: git@github.com:tidepool-org/development
+      path: charts/tidepool/0.1.7
+      ref: k8s
+    releaseName: default-tidepool
+    values:
+      auth:
+        deployment:
+          image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: auth
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        secret:
+          create: false
+          data_:
+            ServiceAuth: ""
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9222
+      blip:
+        deployment:
+          image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: blip
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 3000
+      blob:
+        deployment:
+          env:
+            store:
+              bucket: ""
+              directory: _data/blobs
+              prefix: blobs
+              type: s3
+          image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+          podAnnotations:
+            iam.amazonaws.com/role: development-default-blob
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        iamRole:
+          create: true
+        name: blob
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        secret:
+          create: false
+          data_:
+            ServiceAuth: ""
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9225
+      data:
+        deployment:
+          image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: data
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        secret:
+          create: false
+          data_:
+            ServiceAuth: ""
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9220
+      export:
+        deployment:
+          image: tidepool/export:develop-c67e1425a4f6eb4c3f70f95284a24899a9ff986f
+        enabled: true
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: export
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        secret:
+          SessionEncryptionKey: ""
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9300
+      gatekeeper:
+        deployment:
+          image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: gatekeeper
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9123
+      global:
+        cluster:
+          eks:
+            accountNumber: 123456789012
+            cidr: 10.44.0.0/16
+            configFile: ""
+            iam:
+              administrators:
+              - derrickburns-cli
+              - lennartgoedhard-cli
+              - benderr-cli
+            nodegroup:
+              desiredCapacity: 3
+              instanceType: m4.large
+              maxSize: 10
+              minSize: 1
+            region: us-west-2
+          gateway:
+            httpPort: 80
+            httpsPort: 443
+            proxy:
+              name: gateway-proxy-v2
+            type: LoadBalancer
+          hpa:
+            create: true
+            data:
+              maxReplicas: 10
+              minReplicas: 1
+              targetCPUUtilizationPercentage: 50
+          k8sVersion: "1.13"
+          kubeconfig: ""
+          logLevel: debug
+          mesh:
+            enabled: false
+            name: linkerd
+          metrics:
+            enabled: true
+          name: development
+          provider: eks
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            runAsNonRoot: true
+            runAsUser: 10101
+          store:
+            type: s3
+        environment:
+          hosts:
+            default:
+              host: default.tidepool.org
+              https:
+                certificate:
+                  secretName: default-tls-secret
+      highwater:
+        deployment:
+          image: tidepool/highwater:develop-aaefb43df9a132f6c012f7216952e8650e6f6b4a
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: highwater
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        secret:
+          UserIdSalt: ""
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9191
+      hydrophone:
+        deployment:
+          env:
+            bucket: ""
+            fromAddress: Tidepool <noreply@tidepool.org>
+            store:
+              bucket: tidepool-development-default-data
+              type: s3
+          image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
+          podAnnotations:
+            iam.amazonaws.com/role: development-default-hydrophone
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        iamRole:
+          create: true
+        name: hydrophone
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9157
+      image:
+        deployment:
+          env:
+            store:
+              bucket: ""
+              directory: _data/image
+              prefix: images
+              type: s3
+          image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+          podAnnotations:
+            iam.amazonaws.com/role: development-default-image
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        iamRole:
+          create: true
+        name: image
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        secret:
+          create: false
+          data_:
+            ServiceAuth: ""
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9226
+      jellyfish:
+        deployment:
+          env:
+            store:
+              bucket: ""
+              type: s3
+          image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
+          podAnnotations:
+            iam.amazonaws.com/role: development-default-jellyfish
+        enabled: true
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        iamRole:
+          create: true
+        name: jellyfish
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9122
+      messageapi:
+        deployment:
+          env:
+            store:
+              bucket: tidepool-development-default-data
+              type: s3
+            window: 21
+          image: tidepool/message-api:develop-448835b6be0c27185e487f582f9b47a784aa781f
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: messageapi
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9119
+      migrations:
+        deployment:
+          image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        enabled: true
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: migrations
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+      namespace:
+        annotations:
+          iam.amazonaws.com/permitted: default/.*
+      notification:
+        deployment:
+          image: tidepool/platform-notification:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: notification
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        secret:
+          create: false
+          data_:
+            ServiceAuth: ""
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9223
+      seagull:
+        deployment:
+          image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: seagull
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9120
+      shoreline:
+        configmap:
+          create: false
+          data:
+            ClinicDemoUserId: ""
+        deployment:
+          image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: shoreline
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        secret:
+          create: false
+          data_:
+            ClinicDemoUserId: ""
+            ServiceAuth: ""
+            UserMailVerification: ""
+            UserPasswordSalt: ""
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9107
+      task:
+        deployment:
+          env:
+            queue:
+              delay: 5
+              workers: 5
+            store:
+              bucket: tidepool-development-default-data
+              type: s3
+          image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: task
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        secret:
+          create: false
+          data_:
+            ServiceAuth: ""
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9224
+      tidewhisperer:
+        deployment:
+          image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: tidewhisperer
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9127
+      tools:
+        deployment:
+          image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        enabled: true
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: tools
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+      user:
+        deployment:
+          image: tidepool/platform-user:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: user
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        secret:
+          create: false
+          data_:
+            ServiceAuth: ""
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9221
+- apiVersion: v1
+  data:
+    thanos.yaml: ImNvbmZpZyI6CiAgImJ1Y2tldCI6ICJ0aWRlcG9vbC10aGFub3MiCiAgImVuY3J5cHRfc3NlIjogZmFsc2UKICAiZW5kcG9pbnQiOiAiczMudXMtd2VzdC0yLmFtYXpvbmF3cy5jb20iCiAgImh0dHBfY29uZmlnIjoKICAgICJpZGxlX2Nvbm5fdGltZW91dCI6ICIwcyIKICAgICJpbnNlY3VyZV9za2lwX3ZlcmlmeSI6IGZhbHNlCiAgICAicmVzcG9uc2VfaGVhZGVyX3RpbWVvdXQiOiAiMHMiCiAgImluc2VjdXJlIjogZmFsc2UKICAicHV0X3VzZXJfbWV0YWRhdGEiOiB7fQogICJyZWdpb24iOiAidXMtd2VzdC0yIgogICJzaWduYXR1cmVfdmVyc2lvbjIiOiBmYWxzZQogICJ0cmFjZSI6CiAgICAiZW5hYmxlIjogZmFsc2UKInR5cGUiOiAiUzMi
+  kind: Secret
+  metadata:
+    labels:
+      name: thanos
+    name: thanos
+    namespace: monitoring
+  type: Opaque
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: "false"
+    labels:
+      name: flux
+    name: flux
+    namespace: flux
+  spec:
+    chart:
+      name: flux
+      repository: https://fluxcd.github.io/
+      version: 0.10.2
+    releaseName: flux
+    values:
+      additionalArgs:
+      - --connect=ws://fluxcloud
+      customRepositories:
+        apiVersion: v1
+        repositories:
+        - caFile: ""
+          cache: jetstack-index.yaml
+          certFile: ""
+          keyFile: ""
+          name: jetstack
+          password: ""
+          url: https://charts.jetstack.io/
+          username: ""
+        - caFile: ""
+          cache: stable-index.yaml
+          certFile: ""
+          keyFile: ""
+          name: stable
+          password: ""
+          url: https://kubernetes-charts.storage.googleapis.com/
+          username: ""
+        - caFile: ""
+          cache: stakater-index.yaml
+          certFile: ""
+          keyFile: ""
+          name: stakater
+          password: ""
+          url: https://stakater.github.io/stakater-charts/
+          username: ""
+        - caFile: ""
+          cache: gloo-index.yaml
+          certFile: ""
+          keyFile: ""
+          name: gloo
+          password: ""
+          url: https://storage.googleapis.com/solo-public-helm/
+          username: ""
+      git:
+        branch: master
+        label: development
+        path: cluster/development/flux
+        secretName: git-deploy-secret
+        url: https://github.com/tidepool-org/cluster-development
+      rbac:
+        create: true
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    labels:
+      name: flux
+    name: flux
+    namespace: flux
+  type: Opaque
+- apiVersion: tidepool/v1beta1
+  kind: URLRelease
+  metadata:
+    labels:
+      name: flux
+    name: flux
+  url: https://raw.githubusercontent.com/fluxcd/flux/master/deploy-helm/flux-helm-release-crd.yaml
+kind: List

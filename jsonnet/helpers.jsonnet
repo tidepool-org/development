@@ -147,9 +147,9 @@
     values+:: {
       Properties: {
         RoleName: '%s-%s-role' % [config.cluster.name, group.name],
-        ManagedPolicyArns: {
+        ManagedPolicyArns: [{
           Ref: $.iamName(config, group, 'ManagedPolicy'),
-        },
+        }],
         AssumeRolePolicyDocument: {
           Version: this.apiVersion,
           Statement: [

@@ -38,6 +38,4 @@ local ClusterConfig(config) = helpers._Object('eksctl.io/v1alpha5', 'ClusterConf
   ],
 };
 
-function(config) {
-  ClusterConfig: ClusterConfig(config),
-}
+function(config) ClusterConfig(config)

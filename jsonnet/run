@@ -12,5 +12,5 @@ do
       combined=$(combine default)
   fi
   
-  sjsonnet  --tla-code config="$combined" $x.jsonnet >$x.out
+  sjsonnet  --tla-code config="$combined" $x.jsonnet | yq read - >$x.yaml
 done
