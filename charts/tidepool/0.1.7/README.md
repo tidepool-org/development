@@ -95,13 +95,14 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `auth.service.port`                                      | Auth service container port                                                                  | `9222`                                                |
 | `blip.deployment.image` | blip Docker image | `` |
 | `blip.service.port`                                      | Blip service container port                                                                  | `3000`                                                |
-| `blob.deployment.env.directory`                                         | Directory to use when storing blobs on file storage                                          | `_data/blobs`                                         |
-| `blob.deployment.env.prefix`                                            | File prefix to use when storing blobs on file storage                                        | `blobs`                                               |
+| `blob.deployment.env.store.directory`                                         | Directory to use when storing blobs on file storage                                          | `_data/blobs`                                         |
+| `blob.deployment.env.store.bucket`                                      | S3 bucket where blob data is written | `data`                                      |
+| `blob.deployment.env.store.prefix`                                            | File prefix to use when storing blobs on file storage                                        | `blobs`                                               |
+| `blob.deployment.env.store.type`                                      | If `s3`, store blob data in Amazon S3. If `file` store blob data in local files. | `file`                                                |
 | `blob.deployment.image` | blob Docker image | `` |
 | `blob.secret.create`                                         | whether to create blob secret | ``                                         |
 | `blob.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `blob.service.port`                                      | Blob service container port                                                                  | `9225`                                                |
-| `blob.store.type`                                      | If `s3`, store blob data in Amazon S3. If `file` store blob data in local files. | `file`                                                |
 | `carelink.enabled`                                       | Enable carelink                                                                              | `false`                                               |
 | `carelink.secret.create`                                       | whether to create carelink secret| `false`                                               |
 | `carelink.secret.data_.CareLinkSalt`                                       | plaintext Carelink salt | `false`                                               |
@@ -146,21 +147,23 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `highwater.deployment.image` | highwater Docker image | `` |
 | `highwater.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
 | `highwater.service.port`                                 | Highwater service container port                                                             | `9191`                                                |
-| `hydrophone.deployment.env.bucket`                                      | S3 bucket where email templates are stored                                                   | `tidepool-{env}`                                      |
+| `hydrophone.deployment.env.store.bucket`                                      | S3 bucket where email templates are stored                                                   | `asset`                                      |
 | `hydrophone.deployment.env.fromAddress`                                 | Email address to use for replies to sigups                                                   | `Tidepool <noreply@tidepool.org>`                     |
 | `hydrophone.deployment.image` | hydrophone Docker image | `` |
-| `image.deployment.env.directory`                                        | Directory to use when storing images on file storage                                         | `_data/image`                                         |
-| `image.deployment.env.prefix`                                           | File prefix to use when storing images on file storage                                       | `images`                                              |
+| `image.deployment.env.store.bucket`                                      | S3 bucket where image data is written | `data`                                      |
+| `image.deployment.env.store.directory`                                        | Directory to use when storing images on file storage                                         | `_data/image`                                         |
+| `image.deployment.env.store.prefix`                                           | File prefix to use when storing images on file storage                                       | `images`                                              |
+| `image.deployment.env.store.type`                                      | If `s3`, store image data in Amazon S3. If `file` store image data in local files. | `file`                                                |
 | `image.deployment.image` | image Docker image | `` |
 | `image.secret.create`                                         | whether to create image secret| ``                                         |
 | `image.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `image.service.port`                                     | Image service container port                                                                 | `9226`                                                |
-| `image.store.type`                                      | If `s3`, store image data in Amazon S3. If `file` store image data in local files. | `file`                                                |
 | `jellyfish.deployment.image` | jellyfish Docker image | `` |
+| `jellyfish.deployment.env.store.bucket`                                      | S3 bucket where jellyfish data is written | `data`                                      |
+| `jellyfish.deployment.env.store.type`                                      | If `s3`, store jellyfish data in Amazon S3. If `file` store jellyfishdata in local files. | `file`                                                |
 | `jellyfish.enabled`                                      | Enable jellyfish service if true                                                             | `true`                                                |
 | `jellyfish.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
 | `jellyfish.service.port`                                 | Jellyfish service container port                                                             | `9122`                                                |
-| `jellyfish.store.type`                                      | If `s3`, store jellyfish data in Amazon S3. If `file` store jellyfishdata in local files. | `file`                                                |
 | `kissmetrics.secret.create` | whether to use create kissmetrics secret | `false` |
 | `kissmetrics.secret.data_.KissmetricsAPIKey` | plaintext Kissmetrics API Key | `` |
 | `kissmetrics.secret.data_.KissmetricsToken` | plaintext Kissmetrics Token | `` |

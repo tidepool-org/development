@@ -221,7 +221,7 @@ blob:
     image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     env:
       store: 
-        bucket: ""                                            
+        bucket: "data"                                            
         prefix: "blobs" 
         directory: "_data/blobs"                                            # directory to use if using local file storage
         type: file
@@ -259,7 +259,7 @@ image:
       store: 
         directory: "_data/image"                                            # directory to use if using local file storage
         prefix: "images"
-        bucket:  ""
+        bucket:  "data"
         type: file
         #type: s3
   resources: {}
@@ -361,7 +361,7 @@ jellyfish:
     image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
     env:
       store: 
-        bucket: ""
+        bucket: "data"
         type: file
         #type: s3
   service:
@@ -387,7 +387,7 @@ hydrophone:
     image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
     env:
       fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send
-      bucket: "" 
+      bucket: "asset" 
   service:
     port: 9157
   resources: {}
