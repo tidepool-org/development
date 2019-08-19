@@ -37,7 +37,7 @@ local Helmrelease(config, group) =
           },
         },
         gatewayProxies: {
-          [helpers.kebabCase(config.cluster.gateway.proxy.name)]: {
+          [helpers.camelCase(config.cluster.gateway.proxy.name)]: {
             podTemplate: {
               stats: config.cluster.metrics.enabled,
             },

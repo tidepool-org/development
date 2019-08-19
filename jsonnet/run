@@ -1,12 +1,16 @@
-#!/bin/bash
+#!/bin/bash 
 #
 # Create Manifests from input directory.
 # Use defaults in defaults directory.
 
-default=$(combine default)
-if [ $# == 1 ]
-then
-    jsonnet  --tla-code-file config=<(combine $1 "$default") all.jsonnet
-else
-    jsonnet  --tla-code config="${default}" all.jsonnet
-fi
+for x in kubernetes cf eksctl
+do
+  if [ $# == 1 ]
+  then
+      combined=$(combine $1 "default")
+  else
+      combined=$(combine default)
+  fi
+  
+  sjsonnet  --tla-code config="$combined" $x.jsonnet >$x.out
+done

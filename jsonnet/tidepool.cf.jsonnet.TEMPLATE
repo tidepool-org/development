@@ -1,0 +1,39 @@
+local helpers = import 'helpers.jsonnet';
+
+local IamMangedPolicy(config, env) = helpers.iamManagedPolicy(config, env) {
+  values+:: {
+    Properties+: {
+      Statements: [
+        {
+          Action: 's3:ListBucket',
+          Resource: ['arn:aws:s3:::%s/*' %  helpers.bucketName(config, env)],
+          Effect: 'Allow',
+        },
+        {
+          Action: [
+            's3:GetObject',
+            's3:PutObject',
+            's3:DeleteObject',
+          ],
+          Resource: ['arn:aws:s3:::%s/*' % helpers.bucketName(config, env)],
+          Effect: 'Allow',
+        },
+        {
+          Effect: 'Allow',
+          Action: 'ses:*',
+          Resource: '*',
+        },
+      ],
+    },
+  },
+};
+
+function(config) (
+  local iamManagedPolicy(name, env) = if env.enabled  then IamMangedPolicy(config, env { name: name });
+  local iamManagedPolicies = std.mapWithKey(iamManagedPolicy, config.tidepool.groups);
+
+  local iamRole(name, env) = if env.enabled then helpers.iamRole(config, env);
+  local iamRoles = std.mapWithKey(iamManagedPolicy, config.tidepool.groups);
+
+  std.prune(iamManagedPolicies + iamRoles)
+)

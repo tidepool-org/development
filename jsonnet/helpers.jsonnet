@@ -34,18 +34,41 @@
     },
   },
 
-  kebabCase(word, initialUpper=false):: (
+  bucketName(config, env):: 
+    if std.objectHas(env.store, 'bucket') && env.store.bucket != ""
+    then env.store.bucket
+    else 'tidepool-%s-%s-data' % [config.cluster.name, env.name],
+
+  isUpper(c) :: (
+		local cp = std.codepoint(c);
+		cp >= 97 && cp < 123
+  ),
+
+  kebabCase(camelCaseWord) :: (
+    local merge(a, b) = {
+      local isUpper = $.isUpper(b),
+      word: (if isUpper && !a.wasUpper then "%s-%s" else "%s%s") % [a.word, std.asciiLower(b)],
+      wasUpper: isUpper,
+    };
+    std.foldl(merge, std.stringChars(kebabCaseWord), { word: '', wasUpper: true }).word
+  ),
+
+  camelCase(kebabCaseWord, initialUpper=false):: (
     local merge(a, b) = {
       local isHyphen = (b == '-'),
       word: if isHyphen then a.word else a.word + (if a.toUpper then std.asciiUpper(b) else b),
       toUpper: isHyphen,
     };
-    std.foldl(merge, std.stringChars(word), { word: '', toUpper: initialUpper }).word
+    std.foldl(merge, std.stringChars(kebabCaseWord), { word: '', toUpper: initialUpper }).word
   ),
 
-  camelCase(word):: this.kebabCase(word, true),
+  withGroupNames(config):: config + {
+    groups: std.mapWithKey( function(n,g) g {name: $.kebabCase(n)}, config.groups)
+  },
 
-  labels(config):: if config.cluster.mesh.create then
+  pascalCase(kebabCaseWord):: this.camelCase(word, kebabCaseWord),
+
+  labels(config):: if config.cluster.mesh.enabled then
     if config.cluster.mesh.name == 'linkerd' then {
       'linkerd.io/inject': 'disabled',
     } else if config.cluster.mesh.name == 'istio' then {
@@ -66,39 +89,43 @@
     url: group.urlrelease.url,
   },
 
-  ignore(x, exclude):: { [f]: x[f] for f in std.objectFields(x) if f != exclude },
+  ignore(x, exclude):: { [f]: x[f] for f in std.objectFieldsAll(x) if f != exclude },
 
-  merge(a, b)::
+  merge(a, b):: // merge two objects recursively.  Choose b if conflict.
     if (std.isObject(a) && std.isObject(b))
     then (
-      {  // merge two objects recursively.  Choose be if conflict.
+      {  
         [x]: a[x]
-        for x in std.objectFields(a)
+        for x in std.objectFieldsAll(a)
         if !std.objectHas(b, x)
       } + {
         [x]: b[x]
-        for x in std.objectFields(b)
+        for x in std.objectFieldsAll(b)
         if !std.objectHas(a, x)
       } + {
         [x]: this.merge(a[x], b[x])
-        for x in std.objectFields(b)
+        for x in std.objectFieldsAll(b)
         if std.objectHas(a, x)
       }
     )
     else b,
 
 
-  iamObject(config, group, iamKind):: $._Object('2012-10-17', 'AWS::IAM::' + iamKind, group) {
+  iamObject(config, group, iamKind):: {
     local this = self,
-    apiVersion:: this.apiVersion,
-    kind:: this.kind,
+    apiVersion:: '2012-10-17',
+    kind:: 'AWS::IAM::' + iamKind,
+    metadata:: {
+      name:: group.name,
+    },
+
     values:: {
       Type: this.kind,
     },
     [self.iamName(config, group, iamKind)]: this.values,
   },
 
-  iamName(config, group, iamKind):: this.camelCase(group.name) + this.camelCase(iamKind),
+  iamName(config, group, iamKind):: $.camelCase(group.name) + $.camelCase(iamKind),
 
   iamManagedPolicy(config, group):: $.iamObject(config, group, 'ManagedPolicy') {
     local this = self,
@@ -117,7 +144,7 @@
       Properties: {
         RoleName: '%s-%s-role' % [config.cluster.name, group.name],
         ManagedPolicyArns: {
-          Ref: this.iamName(config, group, 'ManagedPolicy'),
+          Ref: $.iamName(config, group, 'ManagedPolicy'),
         },
         AssumeRolePolicyDocument: {
           Version: this.apiVersion,
@@ -135,7 +162,7 @@
               Principal: {
                 AWS: {
                   'Fn::GetAtt': [
-                    this.iamName(config, config.groups.kiam, 'Role'),
+                    $.iamName(config, config.groups.kiam, 'Role'),
                     'Arn',
                   ],
                 },
@@ -172,7 +199,7 @@
       namespace: group.namespace.name,
     },
     data_:: {},
-    data: { [k]: std.base64(secret.data_[k]) for k in std.objectFields(secret.data_) },
+    data: { [k]: std.base64(secret.data_[k]) for k in std.objectFieldsAll(secret.data_) },
   },
 
   secret(config, group):: $._Object('v1', 'Secret', group.name) {
@@ -182,7 +209,7 @@
       namespace: group.namespace.name,
     },
     data_:: {},
-    data: { [k]: std.base64(secret.data_[k]) for k in std.objectFields(secret.data_) },
+    data: { [k]: std.base64(secret.data_[k]) for k in std.objectFieldsAll(secret.data_) },
   },
 
   namespace(config, group):: $._Object('v1', 'Namespace', group.namespace.name) {
@@ -202,7 +229,7 @@
           name: name,
           property: name,
         }
-        for name in std.objectFields(group.secret.data_)
+        for name in std.objectFieldsAll(group.secret.data_)
       ],
     },
   },
@@ -224,8 +251,8 @@
   },
 
   stripSecrets(obj)::
-    { [k]: obj[k] for k in std.objectFields(obj) if k != 'secret' && !std.isObject(obj[k]) } +
-    { [k]: this.stripSecrets(obj[k]) for k in std.objectFields(obj) if k != 'secret' && std.isObject(obj[k]) },
+    { [k]: obj[k] for k in std.objectFieldsAll(obj) if k != 'secret' && !std.isObject(obj[k]) } +
+    { [k]: this.stripSecrets(obj[k]) for k in std.objectFieldsAll(obj) if k != 'secret' && std.isObject(obj[k]) },
 
   StripSecrets(obj):: std.prune(this.stripSecrets(obj)),
 }

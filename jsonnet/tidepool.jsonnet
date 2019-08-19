@@ -14,41 +14,9 @@ local certificateSecretName(config, env) =
   then env.hosts.https.certificate.secretName
   else '%s-tls-secret' % env.name;
 
-local bucketName(config, env) =
-  if env.bucket.name
-  then env.bucket.name
-  else 'tidepool-%s-%s-data' % [config.cluster.name, env.name];
-
 local s3URL(config, env) =
   'https://s3-%s.amazonaws.com' % config.cluster.eks.region;
 
-local IamMangedPolicy(config, env) = helpers.iamManagedPolicy(config, env) {
-  values+:: {
-    Properties+: {
-      Statements: [
-        {
-          Action: 's3:ListBucket',
-          Resource: ['arn:aws:s3:::%s/*' % bucketName(config, env)],
-          Effect: 'Allow',
-        },
-        {
-          Action: [
-            's3:GetObject',
-            's3:PutObject',
-            's3:DeleteObject',
-          ],
-          Resource: ['arn:aws:s3:::%s/*' % bucketName(config, env)],
-          Effect: 'Allow',
-        },
-        {
-          Effect: 'Allow',
-          Action: 'ses:*',
-          Resource: '*',
-        },
-      ],
-    },
-  },
-};
 
 local roleRequired(config, group) =
   config.groups.kiam.enabled && std.objectHas(group, 'iamRole') && group.iamRole.create;
@@ -60,19 +28,22 @@ local iamPermissions(config, env) =
   } else {
   };
 
-local withGroup(groups, name) = groups[name] { name:: name };
+local withGroup(groups, name) = (groups[name] + { name: name });
 
 // Compute IAM annotation for group
-local iamAnnotations(config, env, group) =
-  if roleRequired(config, env, group)
+local iamAnnotations(config, env, group) = (
+  local clusterName = config.cluster.name;
+  local envName = env.name;
+  local groupName = group.name;
+  if roleRequired(config, group)
   then {
     deployment+: {
       podAnnotations+: {
-        'iam.amazonaws.com/role': '%s-%s-%s' % [config.cluster.name, env.name, group.name],
+        'iam.amazonaws.com/role': '%s-%s-%s' % [clusterName, envName, groupName],
       },
     },
   } else {
-  };
+  });
 
 // Compute Linkerd annotations
 local linkerdAnnotations(config, env, group) =
@@ -87,10 +58,14 @@ local linkerdAnnotations(config, env, group) =
   else {
   };
 
-local combine(config, env, group, key) =
-  config.cluster[key]
-  + if std.objectHas(env, key) then env[key] else {}
-                                                  + if std.objectHas(group, key) then group[key] else {};
+local combine(config, env, group, key) = {
+  [key] : 
+  std.foldl( helpers.merge, [
+    config.cluster[key],
+    if std.objectHas(env, key) then env[key] else {},
+    if std.objectHas(group, key) then group[key] else {}
+  ], {})
+};
 
 local resources(config, env, group) = combine(config, env, group, 'resources');
 
@@ -99,6 +74,14 @@ local securityContext(config, env, group) = combine(config, env, group, 'securit
 local storage(config, env, group) = combine(config, env, group, 'store');
 
 local hpas(config, env, group) = combine(config, env, group, 'hpa');
+
+// add default bucket
+local getBucket(config, env) = 
+  {
+    store+: {
+      bucket: helpers.bucketName(config, env)
+    }
+  };
 
 local HelmRelease(config, env) = helpers.helmrelease(config, env) {
   local hr = env.helmrelease,
@@ -136,30 +119,22 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
     } + {
       [svc]: (
         local group = withGroup(env.groups, svc);
+        local envWithBucket = env + getBucket(config, env);
         group
-        + iamAnnotations(config, env, group)
-        + linkerdAnnotations(config, env, group)
-        + securityContext(config, env, group)
-        + resources(config, env, group)
-        + storage(config, env, group)
-        + hpa(config, env, group)
+        + iamAnnotations(config, envWithBucket, group)
+        + linkerdAnnotations(config, envWithBucket, group)
+        + securityContext(config, envWithBucket, group)
+        + resources(config, envWithBucket, group)
+        + storage(config, envWithBucket, group)
+        + hpas(config, envWithBucket, group)
       )
       for svc in helpers.tidepoolServices
     },
   },
 };
 
-local HPAs(namespace) = { [namespace + '-' + name + '-HPA']: helpers.hpa(name, namespace) for name in helpers.tidepoolServices };
-
 function(config) (
-  local helmRelease(name, env) = if env.enabled && env.helmrelease.create then HelmRelease(config, env { name: name });
+  local helmRelease(name, env) = if env.enabled then HelmRelease(config, env { name: name });
   local helmReleases = std.mapWithKey(helmRelease, config.tidepool.groups);
-
-  local iamManagedPolicy(name, env) = if env.enabled && env.iam.create then IamMangedPolicy(config, env { name: name });
-  local iamManagedPolicies = std.mapWithKey(iamManagedPolicy, config.tidepool.groups);
-
-  local iamRole(name, env) = if env.enabled && env.iam.create then helpers.iamRole(config, env);
-  local iamRoles = std.mapWithKey(iamManagedPolicy, config.tidepool.groups);
-
-  std.prune(helmReleases + iamManagedPolicies + iamRoles)
+  std.prune(helmReleases)
 )
