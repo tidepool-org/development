@@ -510,10 +510,6 @@ items:
           requests:
             cpu: 50m
             memory: 32Mi
-        secret:
-          create: false
-          data_:
-            ServiceAuth: ""
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -553,7 +549,7 @@ items:
         deployment:
           env:
             store:
-              bucket: ""
+              bucket: tidepool-development-default-data
               directory: _data/blobs
               prefix: blobs
               type: s3
@@ -576,10 +572,6 @@ items:
           requests:
             cpu: 50m
             memory: 32Mi
-        secret:
-          create: false
-          data_:
-            ServiceAuth: ""
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -606,10 +598,6 @@ items:
           requests:
             cpu: 50m
             memory: 32Mi
-        secret:
-          create: false
-          data_:
-            ServiceAuth: ""
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -637,8 +625,6 @@ items:
           requests:
             cpu: 50m
             memory: 32Mi
-        secret:
-          SessionEncryptionKey: ""
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -753,8 +739,6 @@ items:
           requests:
             cpu: 50m
             memory: 32Mi
-        secret:
-          UserIdSalt: ""
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -767,7 +751,6 @@ items:
       hydrophone:
         deployment:
           env:
-            bucket: ""
             fromAddress: Tidepool <noreply@tidepool.org>
             store:
               bucket: tidepool-development-default-data
@@ -804,7 +787,7 @@ items:
         deployment:
           env:
             store:
-              bucket: ""
+              bucket: tidepool-development-default-data
               directory: _data/image
               prefix: images
               type: s3
@@ -827,10 +810,6 @@ items:
           requests:
             cpu: 50m
             memory: 32Mi
-        secret:
-          create: false
-          data_:
-            ServiceAuth: ""
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -844,7 +823,7 @@ items:
         deployment:
           env:
             store:
-              bucket: ""
+              bucket: tidepool-development-default-data
               type: s3
           image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
           podAnnotations:
@@ -951,10 +930,6 @@ items:
           requests:
             cpu: 50m
             memory: 32Mi
-        secret:
-          create: false
-          data_:
-            ServiceAuth: ""
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -1011,13 +986,6 @@ items:
           requests:
             cpu: 50m
             memory: 32Mi
-        secret:
-          create: false
-          data_:
-            ClinicDemoUserId: ""
-            ServiceAuth: ""
-            UserMailVerification: ""
-            UserPasswordSalt: ""
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -1051,10 +1019,6 @@ items:
           requests:
             cpu: 50m
             memory: 32Mi
-        secret:
-          create: false
-          data_:
-            ServiceAuth: ""
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -1132,10 +1096,6 @@ items:
           requests:
             cpu: 50m
             memory: 32Mi
-        secret:
-          create: false
-          data_:
-            ServiceAuth: ""
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

@@ -7,14 +7,15 @@ export JSONNET_PATH=$(realpath .):$(realpath ./lib):$(realpath ./cf):$(realpath 
 
 ARGS=$(jsonnet_path)
 
+if [ $# == 1 ]
+then
+  combined=$(combine $1 "default")
+else
+  combined=$(combine default)
+fi
+
 for x in k8s/kubernetes cf/cf eksctl/eksctl
 do
-  if [ $# == 1 ]
-  then
-      combined=$(combine $1 "default")
-  else
-      combined=$(combine default)
-  fi
   
   jsonnet $ARGS --tla-code config="$combined" $x.jsonnet | yq read - >$x.yaml
 done

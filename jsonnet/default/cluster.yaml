@@ -1,6 +1,6 @@
 cluster:
   eks:
-    accountNumber: 123456789012
+    accountNumber: 123456789012    # 12 digit AWS account number
     cidr: 10.44.0.0/16
     configFile: ""
     iam:

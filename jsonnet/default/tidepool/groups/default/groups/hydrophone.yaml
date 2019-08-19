@@ -7,7 +7,6 @@ tidepool:
             create: true
           deployment:
             env:
-              bucket: ""
               fromAddress: Tidepool <noreply@tidepool.org>
             image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
           service:

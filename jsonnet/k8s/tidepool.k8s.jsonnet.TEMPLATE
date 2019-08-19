@@ -130,14 +130,14 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
       [svc]: (
         local group = withGroup(env.groups, svc);
         local envWithBucket = env + getBucket(config, env);
-        group
+        helpers.StripSecrets(group
         + iamAnnotations(config, envWithBucket, group)
         + linkerdAnnotations(config, envWithBucket, group)
         + securityContext(config, envWithBucket, group)
         + resources(config, envWithBucket, group)
         + deployment(config, envWithBucket, group)
         + hpas(config, envWithBucket, group)
-      )
+      ))
       for svc in helpers.tidepoolServices
     },
   },

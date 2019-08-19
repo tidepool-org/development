@@ -5,7 +5,7 @@ local Helmrelease(config, group) =
     spec+: {
       values+: {
         kubeStateMetrics: {
-          enabled: config.groups.kubeStateMetrics.helmrelease.create,
+          enabled: config.groups.kubeStateMetrics.enabled,
         },
         datadog: {
           apiKeyExistingSecret: group.secret.name,
