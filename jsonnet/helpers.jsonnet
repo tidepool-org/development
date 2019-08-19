@@ -34,7 +34,7 @@
     },
   },
 
-  values(obj):: [ obj[field] for field in std.objectFields(obj) ],
+  values(obj):: [obj[field] for field in std.objectFields(obj)],
 
   bucketName(config, env)::
     if std.objectHas(env.store, 'bucket') && env.store.bucket != ''

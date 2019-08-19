@@ -73,14 +73,14 @@ local resources(config, env, group) = combine(config, env, group, 'resources');
 local securityContext(config, env, group) = combine(config, env, group, 'securityContext');
 
 local deployment(config, env, group) =
-   if std.objectHas(group, 'deployment') && std.objectHas(group.deployment, 'env')
-   then {
-     deployment+: {
-       env+: combine(config, env, group.deployment.env, 'store')
-     }  
-   }
-   else {
-   };
+  if std.objectHas(group, 'deployment') && std.objectHas(group.deployment, 'env')
+  then {
+    deployment+: {
+      env+: combine(config, env, group.deployment.env, 'store'),
+    },
+  }
+  else {
+  };
 
 
 local hpas(config, env, group) = combine(config, env, group, 'hpa');

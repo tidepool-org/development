@@ -11,8 +11,9 @@ local groups = [
 
 local Manifests(svcs, conf) = [std.prune(s(conf)) for s in svcs];
 
-function(config) 
+function(config)
   std.foldr(
-    function(a,b) a + b,
+    function(a, b) a + b,
     std.flattenArrays(Manifests(groups, config)),
-    {})
+    {}
+  )
