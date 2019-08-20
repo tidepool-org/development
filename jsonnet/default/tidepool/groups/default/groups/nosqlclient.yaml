@@ -7,6 +7,8 @@ tidepool:
           iamRole:
             create: false
           deployment:
+            gitops:
+              automated: true
             image: tidepool/nosqlclient:2.3.2
           enabled: false
           service:

@@ -1,6 +1,6 @@
-local helpers = import 'helpers.jsonnet';
+local kube = import 'kube.jsonnet';
 
-local ClusterConfig(config) = helpers._Object('eksctl.io/v1alpha5', 'ClusterConfig', config.cluster.name) {
+local ClusterConfig(config) = kube.kubeobj('eksctl.io/v1alpha5', 'ClusterConfig', config.cluster.name) {
   local cluster = config.cluster,
   metadata+: {
     region: cluster.eks.region,

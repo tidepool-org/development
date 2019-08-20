@@ -1,4 +1,4 @@
-local helpers = import 'helpers.jsonnet';
+local obj = import 'obj.jsonnet';
 
 local groups = [
   import 'autoscaler.k8s.jsonnet.TEMPLATE',
@@ -18,7 +18,7 @@ local groups = [
   import 'flux.k8s.jsonnet.TEMPLATE',
 ];
 
-local Manifests(svcs, conf) = [helpers.values(std.prune(s(conf))) for s in svcs];
+local Manifests(svcs, conf) = [obj.values(std.prune(s(conf))) for s in svcs];
 
 function(config) {
   apiVersion: 'v1',

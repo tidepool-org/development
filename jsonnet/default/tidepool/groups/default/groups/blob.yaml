@@ -7,6 +7,8 @@ tidepool:
           iamRole:
             create: true
           deployment:
+            gitops:
+              automated: true
             env:
               store:
                 #bucket: ""

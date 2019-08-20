@@ -1,32 +1,6 @@
-local helpers = import 'helpers.jsonnet';
+local kube = import 'kube.jsonnet';
 
-local ManagedPolicy(config, group) = helpers.iamManagedPolicy(config, group) {
-  values+:: {
-    Properties+: {
-      PolicyDocument+: {
-        Statement: [
-          {
-            Effect: 'Allow',
-            Action: 'route53:ChangeResourceRecordSets',
-            Resource: 'arn:aws:route53:::hostedzone/*',
-          },
-          {
-            Effect: 'Allow',
-            Action: [
-              'route53:GetChange',
-              'route53:ListHostedZones',
-              'route53:ListResourceRecordSets',
-              'route53:ListHostedZonesByName',
-            ],
-            Resource: '*',
-          },
-        ],
-      },
-    },
-  },
-};
-
-local Helmrelease(config, group) = helpers.helmrelease(config, group) {
+local Helmrelease(config, group) = kube.helmrelease(config, group) {
   spec+: {
     values+: {
       rbac: {
@@ -49,6 +23,6 @@ function(config) (
   local group = config.groups.externalDNS;
   if group.enabled then {
     Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
-    Namespace: if group.namespace.create then helpers.namespace(config, group),
+    Namespace: if group.namespace.create then kube.namespace(config, group),
   }
 )

@@ -1,6 +1,6 @@
-local helpers = import 'helpers.jsonnet';
+local kube = import 'kube.jsonnet';
 
-local Secret(config, group) = helpers.secret(config, group) {
+local Secret(config, group) = kube.secret(config, group) {
   data_+:: {
     'thanos.yaml': std.manifestYamlDoc({
       type: 'S3',

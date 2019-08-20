@@ -1,10 +1,10 @@
-local helpers = import 'helpers.jsonnet';
+local obj = import 'obj.jsonnet';
 
 local groups = [
   import 'tidepool.k8s.jsonnet.TEMPLATE',
 ];
 
-local Manifests(svcs, conf) = [helpers.values(std.prune(s(conf))) for s in svcs];
+local Manifests(svcs, conf) = [obj.values(std.prune(s(conf))) for s in svcs];
 
 function(config) {
   apiVersion: 'v1',

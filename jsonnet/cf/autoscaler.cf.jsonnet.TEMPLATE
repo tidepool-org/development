@@ -1,6 +1,6 @@
-local helpers = import 'helpers.jsonnet';
+local aws = import 'aws.jsonnet';
 
-local ManagedPolicy(config, group) = helpers.iamManagedPolicy(config, group) {
+local ManagedPolicy(config, group) = aws.iamManagedPolicy(config, group) {
   values+:: {
     Properties+: {
       PolicyDocument+: {
@@ -26,6 +26,6 @@ local ManagedPolicy(config, group) = helpers.iamManagedPolicy(config, group) {
 function(config) (
   local group = config.groups.autoscaler;
   if group.enabled then
-    [helpers.iamRole(config, group), ManagedPolicy(config, group)]
+    [aws.iamRole(config, group), ManagedPolicy(config, group)]
   else []
 )

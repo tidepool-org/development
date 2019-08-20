@@ -1,6 +1,6 @@
-local helpers = import 'helpers.jsonnet';
+local kube = import 'kube.jsonnet';
 
-local Helmrelease(config, group) = helpers.helmrelease(config, group) {
+local Helmrelease(config, group) = kube.helmrelease(config, group) {
   spec+: {
     values+: {
       rbac: {
@@ -28,6 +28,6 @@ function(config) (
   local group = config.groups.autoscaler;
   if group.enabled then {
     Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
-    Namespace: if group.namespace.create then helpers.namespace(config, group),
+    Namespace: if group.namespace.create then kube.namespace(config, group),
   }
 )

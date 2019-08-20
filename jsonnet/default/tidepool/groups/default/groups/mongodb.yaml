@@ -7,6 +7,8 @@ tidepool:
           iamRole:
             create: false
           deployment:
+            gitops:
+              automated: false
             image:
               tag: "3.6"
             data:

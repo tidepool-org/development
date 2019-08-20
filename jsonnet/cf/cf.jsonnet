@@ -1,5 +1,3 @@
-local helpers = import 'helpers.jsonnet';
-
 local groups = [
   import 'autoscaler.cf.jsonnet.TEMPLATE',
   import 'cert-manager.cf.jsonnet.TEMPLATE',

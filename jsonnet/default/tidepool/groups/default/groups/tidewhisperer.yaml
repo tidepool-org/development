@@ -7,6 +7,8 @@ tidepool:
           iamRole:
             create: false
           deployment:
+            gitops:
+              automated: true
             image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
           service:
             port: 9127

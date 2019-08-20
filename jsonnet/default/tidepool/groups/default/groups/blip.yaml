@@ -7,6 +7,8 @@ tidepool:
           iamRole:
             create: false
           deployment:
+            gitops:
+              automated: true
             image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
           service:
             port: 3000

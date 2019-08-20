@@ -1,4 +1,6 @@
-local helpers = import 'helpers.jsonnet';
+local obj = import 'obj.jsonnet';
+local kube = import 'kube.jsonnet';
+local aws = import 'aws.jsonnet';
 
 local host(config, env) =
   if std.objectHas(env.hosts.default, 'host')
@@ -59,7 +61,7 @@ local linkerdAnnotations(config, env, group) =
 
 local combine(config, env, group, key) = {
   [key]+:
-    std.foldl(helpers.merge, [
+    std.foldl(obj.merge, [
       config.cluster[key],
       if std.objectHas(env, key) then env[key] else {},
       if std.objectHas(group, key) then group[key] else {},
@@ -87,25 +89,30 @@ local hpas(config, env, group) = combine(config, env, group, 'hpa');
 local getBucket(config, env) =
   {
     store+: {
-      bucket: helpers.bucketName(config, env),
+      bucket: aws.bucketName(config, env),
     },
   };
 
-local HelmRelease(config, env) = helpers.helmrelease(config, env) {
+local isAutomated(group) =
+  std.objectHas(group, 'deployment') &&
+  std.objectHas(group.deployment, 'gitops') &&
+  group.deployment.gitops.automated;
+
+local HelmRelease(config, env) = kube.helmrelease(config, env) {
   local hr = env.helmrelease,
   metadata+: {
     name: 'tidepool',
     namespace: env.name,
     annotations: {
-      ['flux.weave.works/tag.' + k]: (hr.gitops.selector + ':' + hr.gitops.filter)
-      for k in helpers.tidepoolServices
+      ['flux.weave.works/tag.' + group.name]: (hr.gitops.selector + ':' + hr.gitops.filter)
+      for group in obj.values(env.groups) if isAutomated(group)
     } + {
       'flux.weave.works/automated': hr.gitops.automated,
     },
   },
   spec+: {
     releaseName: env.name + '-tidepool',
-    values: helpers.StripSecrets(hr.values) {
+    values: obj.strip(hr.values, 'secrets') {
       namespace+: {
         annotations+: iamPermissions(config, env),
       },
@@ -125,20 +132,19 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
         },
       },
     } + {
-      [svc]: (
-        local group = env.groups[svc];
+      [group.name]: (
         local envWithBucket = env + getBucket(config, env);
-        helpers.strip(helpers.StripSecrets(
+        obj.strip(obj.strip(
           group
           + iamAnnotations(config, envWithBucket, group)
           + linkerdAnnotations(config, envWithBucket, group)
           + securityContext(config, envWithBucket, group)
           + resources(config, envWithBucket, group)
           + deployment(config, envWithBucket, group)
-          + hpas(config, envWithBucket, group)
-        ), 'iamRole')
+          + hpas(config, envWithBucket, group),
+        'secret'), 'iamRole')
       )
-      for svc in helpers.tidepoolServices
+      for group in obj.values(env.groups) if std.objectHas(group, 'deployment')
     },
   },
 };

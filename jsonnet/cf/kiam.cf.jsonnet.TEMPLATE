@@ -1,10 +1,10 @@
-local helpers = import 'helpers.jsonnet';
+local aws = import 'aws.jsonnet';
 
 local NODEGROUP_STACK_NAME(config) = 'eksctl-%s-nodegroup-ng-kiam' % config.cluster.name;
 
 local CLUSTER_STACK_NAME(config) = 'eksctl-%s-roles' % config.cluster.name;
 
-local ManagedPolicy(config, group) = helpers.iamManagedPolicy(config, group) {
+local ManagedPolicy(config, group) = aws.iamManagedPolicy(config, group) {
   values+:: {
     Properties+: {
       PolicyDocument+: {
@@ -20,7 +20,7 @@ local ManagedPolicy(config, group) = helpers.iamManagedPolicy(config, group) {
   },
 };
 
-local Role(config, group) = helpers.iamRole(config, group) {
+local Role(config, group) = aws.iamRole(config, group) {
   values+:: {
     Properties+: {
       AssumeRolePolicyDocument+: {
@@ -44,7 +44,7 @@ local Role(config, group) = helpers.iamRole(config, group) {
         ],
       },
       ManagedPolicyArns: [{
-        Ref: helpers.iamName(config, group, 'ManagedPolicy'),
+        Ref: aws.iamName(config, group, 'ManagedPolicy'),
       }],
     },
   },

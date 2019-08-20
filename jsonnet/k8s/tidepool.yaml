@@ -15,13 +15,14 @@ items:
       flux.weave.works/tag.hydrophone: glob:develop-*
       flux.weave.works/tag.image: glob:develop-*
       flux.weave.works/tag.jellyfish: glob:develop-*
-      flux.weave.works/tag.messageapi: glob:develop-*
+      flux.weave.works/tag.message-api: glob:develop-*
       flux.weave.works/tag.migrations: glob:develop-*
+      flux.weave.works/tag.nosqlclient: glob:develop-*
       flux.weave.works/tag.notification: glob:develop-*
       flux.weave.works/tag.seagull: glob:develop-*
       flux.weave.works/tag.shoreline: glob:develop-*
       flux.weave.works/tag.task: glob:develop-*
-      flux.weave.works/tag.tidewhisperer: glob:develop-*
+      flux.weave.works/tag.tide-whisperer: glob:develop-*
       flux.weave.works/tag.tools: glob:develop-*
       flux.weave.works/tag.user: glob:develop-*
     labels:
@@ -37,6 +38,8 @@ items:
     values:
       auth:
         deployment:
+          gitops:
+            automated: true
           image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
         hpa:
           create: true
@@ -63,6 +66,8 @@ items:
           port: 9222
       blip:
         deployment:
+          gitops:
+            automated: true
           image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
         hpa:
           create: true
@@ -95,6 +100,8 @@ items:
               directory: _data/blobs
               prefix: blobs
               type: s3
+          gitops:
+            automated: true
           image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
           podAnnotations:
             iam.amazonaws.com/role: development-default-blob
@@ -123,6 +130,8 @@ items:
           port: 9225
       data:
         deployment:
+          gitops:
+            automated: true
           image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
         hpa:
           create: true
@@ -149,6 +158,8 @@ items:
           port: 9220
       export:
         deployment:
+          gitops:
+            automated: true
           image: tidepool/export:develop-c67e1425a4f6eb4c3f70f95284a24899a9ff986f
         enabled: true
         hpa:
@@ -176,6 +187,8 @@ items:
           port: 9300
       gatekeeper:
         deployment:
+          gitops:
+            automated: true
           image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
         hpa:
           create: true
@@ -264,6 +277,8 @@ items:
                   secretName: default-tls-secret
       highwater:
         deployment:
+          gitops:
+            automated: true
           image: tidepool/highwater:develop-aaefb43df9a132f6c012f7216952e8650e6f6b4a
         hpa:
           create: true
@@ -295,6 +310,8 @@ items:
             store:
               bucket: tidepool-development-default-data
               type: s3
+          gitops:
+            automated: true
           image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
           podAnnotations:
             iam.amazonaws.com/role: development-default-hydrophone
@@ -329,6 +346,8 @@ items:
               directory: _data/image
               prefix: images
               type: s3
+          gitops:
+            automated: true
           image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
           podAnnotations:
             iam.amazonaws.com/role: development-default-image
@@ -361,6 +380,8 @@ items:
             store:
               bucket: tidepool-development-default-data
               type: s3
+          gitops:
+            automated: true
           image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
           podAnnotations:
             iam.amazonaws.com/role: development-default-jellyfish
@@ -388,13 +409,15 @@ items:
           runAsUser: 10101
         service:
           port: 9122
-      messageapi:
+      message-api:
         deployment:
           env:
             store:
               bucket: tidepool-development-default-data
               type: s3
             window: 21
+          gitops:
+            automated: true
           image: tidepool/message-api:develop-448835b6be0c27185e487f582f9b47a784aa781f
         hpa:
           create: true
@@ -421,6 +444,8 @@ items:
           port: 9119
       migrations:
         deployment:
+          gitops:
+            automated: true
           image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
         enabled: true
         hpa:
@@ -444,11 +469,74 @@ items:
             - ALL
           runAsNonRoot: true
           runAsUser: 10101
+      mongodb:
+        deployment:
+          data:
+            persistence:
+              enabled: false
+          gitops:
+            automated: false
+          image:
+            tag: "3.6"
+        enabled: false
+        fullnameOverride: mongodb
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: mongodb
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
       namespace:
         annotations:
           iam.amazonaws.com/permitted: default/.*
+      nosqlclient:
+        deployment:
+          gitops:
+            automated: true
+          image: tidepool/nosqlclient:2.3.2
+        enabled: false
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: nosqlclient
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 3000
       notification:
         deployment:
+          gitops:
+            automated: true
           image: tidepool/platform-notification:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
         hpa:
           create: true
@@ -475,6 +563,8 @@ items:
           port: 9223
       seagull:
         deployment:
+          gitops:
+            automated: true
           image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
         hpa:
           create: true
@@ -505,6 +595,8 @@ items:
           data:
             ClinicDemoUserId: ""
         deployment:
+          gitops:
+            automated: true
           image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
         hpa:
           create: true
@@ -538,6 +630,8 @@ items:
             store:
               bucket: tidepool-development-default-data
               type: s3
+          gitops:
+            automated: true
           image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
         hpa:
           create: true
@@ -562,8 +656,10 @@ items:
           runAsUser: 10101
         service:
           port: 9224
-      tidewhisperer:
+      tide-whisperer:
         deployment:
+          gitops:
+            automated: true
           image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
         hpa:
           create: true
@@ -590,6 +686,8 @@ items:
           port: 9127
       tools:
         deployment:
+          gitops:
+            automated: true
           image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
         enabled: true
         hpa:
@@ -615,6 +713,8 @@ items:
           runAsUser: 10101
       user:
         deployment:
+          gitops:
+            automated: true
           image: tidepool/platform-user:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
         hpa:
           create: true

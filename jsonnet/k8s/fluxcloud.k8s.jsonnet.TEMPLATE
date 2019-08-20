@@ -1,6 +1,6 @@
-local helpers = import 'helpers.jsonnet';
+local kube = import 'kube.jsonnet';
 
-local Helmrelease(config, group) = helpers.helmrelease(config, group) {
+local Helmrelease(config, group) = kube.helmrelease(config, group) {
   local gitops = config.gitops,
   local repoBase =
     if std.objectHas(gitops.git, 'name')

@@ -1,4 +1,5 @@
-local helpers = import 'helpers.jsonnet';
+local str = import 'str.jsonnet';
+local kube = import 'kube.jsonnet';
 
 local eksAnnotations(config) =
   if config.cluster.provider == 'eks' && config.cluster.gateway.type == 'LoadBalancer' then {
@@ -18,7 +19,7 @@ local externalDNSAnnotations(config) =
     };
 
 local Helmrelease(config, group) =
-  helpers.helmrelease(config, group) {
+  kube.helmrelease(config, group) {
     spec+: {
       values+: {
         gateway: {
@@ -37,7 +38,7 @@ local Helmrelease(config, group) =
           },
         },
         gatewayProxies: {
-          [helpers.camelCase(config.cluster.gateway.proxy.name)]: {
+          [str.camelCase(config.cluster.gateway.proxy.name)]: {
             podTemplate: {
               stats: config.cluster.metrics.enabled,
             },
@@ -100,7 +101,7 @@ function(config) (
   local group = config.groups.gloo;
   if group.enabled then {
     Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
-    Namespace: if group.namespace.create then helpers.namespace(config, group),
+    Namespace: if group.namespace.create then kube.namespace(config, group),
     Gateway: if group.gateway.create then Gateway(config, group),
   }
 )
