@@ -18,7 +18,3 @@ groups:
     namespace:
       create: true
       name: cert-manager
-    cfrole:
-      create: true
-    cfmanagedpolicy:
-      create: true

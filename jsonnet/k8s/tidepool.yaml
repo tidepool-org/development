@@ -1,0 +1,642 @@
+apiVersion: v1
+items:
+- apiVersion: flux.weave.works/v1beta1
+  kind: HelmRelease
+  metadata:
+    annotations:
+      flux.weave.works/automated: true
+      flux.weave.works/tag.auth: glob:develop-*
+      flux.weave.works/tag.blip: glob:develop-*
+      flux.weave.works/tag.blob: glob:develop-*
+      flux.weave.works/tag.data: glob:develop-*
+      flux.weave.works/tag.export: glob:develop-*
+      flux.weave.works/tag.gatekeeper: glob:develop-*
+      flux.weave.works/tag.highwater: glob:develop-*
+      flux.weave.works/tag.hydrophone: glob:develop-*
+      flux.weave.works/tag.image: glob:develop-*
+      flux.weave.works/tag.jellyfish: glob:develop-*
+      flux.weave.works/tag.messageapi: glob:develop-*
+      flux.weave.works/tag.migrations: glob:develop-*
+      flux.weave.works/tag.notification: glob:develop-*
+      flux.weave.works/tag.seagull: glob:develop-*
+      flux.weave.works/tag.shoreline: glob:develop-*
+      flux.weave.works/tag.task: glob:develop-*
+      flux.weave.works/tag.tidewhisperer: glob:develop-*
+      flux.weave.works/tag.tools: glob:develop-*
+      flux.weave.works/tag.user: glob:develop-*
+    labels:
+      name: tidepool
+    name: tidepool
+    namespace: default
+  spec:
+    chart:
+      git: git@github.com:tidepool-org/development
+      path: charts/tidepool/0.1.7
+      ref: k8s
+    releaseName: default-tidepool
+    values:
+      auth:
+        deployment:
+          image: tidepool/platform-auth:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: auth
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9222
+      blip:
+        deployment:
+          image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: blip
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 3000
+      blob:
+        deployment:
+          env:
+            store:
+              bucket: tidepool-development-default-data
+              directory: _data/blobs
+              prefix: blobs
+              type: s3
+          image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+          podAnnotations:
+            iam.amazonaws.com/role: development-default-blob
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: blob
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9225
+      data:
+        deployment:
+          image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: data
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9220
+      export:
+        deployment:
+          image: tidepool/export:develop-c67e1425a4f6eb4c3f70f95284a24899a9ff986f
+        enabled: true
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: export
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9300
+      gatekeeper:
+        deployment:
+          image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: gatekeeper
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9123
+      global:
+        cluster:
+          eks:
+            accountNumber: 123456789012
+            cidr: 10.44.0.0/16
+            configFile: ""
+            iam:
+              administrators:
+              - derrickburns-cli
+              - lennartgoedhard-cli
+              - benderr-cli
+            nodegroup:
+              desiredCapacity: 3
+              instanceType: m4.large
+              maxSize: 10
+              minSize: 1
+            region: us-west-2
+          gateway:
+            httpPort: 80
+            httpsPort: 443
+            proxy:
+              name: gateway-proxy-v2
+            type: LoadBalancer
+          hpa:
+            create: true
+            data:
+              maxReplicas: 10
+              minReplicas: 1
+              targetCPUUtilizationPercentage: 50
+          k8sVersion: "1.13"
+          kubeconfig: ""
+          logLevel: debug
+          mesh:
+            enabled: false
+            name: linkerd
+          metrics:
+            enabled: true
+          name: development
+          provider: eks
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            runAsNonRoot: true
+            runAsUser: 10101
+          store:
+            type: s3
+        environment:
+          hosts:
+            default:
+              host: default.tidepool.org
+              https:
+                certificate:
+                  secretName: default-tls-secret
+      highwater:
+        deployment:
+          image: tidepool/highwater:develop-aaefb43df9a132f6c012f7216952e8650e6f6b4a
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: highwater
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9191
+      hydrophone:
+        deployment:
+          env:
+            fromAddress: Tidepool <noreply@tidepool.org>
+            store:
+              bucket: tidepool-development-default-data
+              type: s3
+          image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
+          podAnnotations:
+            iam.amazonaws.com/role: development-default-hydrophone
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: hydrophone
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9157
+      image:
+        deployment:
+          env:
+            store:
+              bucket: tidepool-development-default-data
+              directory: _data/image
+              prefix: images
+              type: s3
+          image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+          podAnnotations:
+            iam.amazonaws.com/role: development-default-image
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: image
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9226
+      jellyfish:
+        deployment:
+          env:
+            store:
+              bucket: tidepool-development-default-data
+              type: s3
+          image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
+          podAnnotations:
+            iam.amazonaws.com/role: development-default-jellyfish
+        enabled: true
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: jellyfish
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9122
+      messageapi:
+        deployment:
+          env:
+            store:
+              bucket: tidepool-development-default-data
+              type: s3
+            window: 21
+          image: tidepool/message-api:develop-448835b6be0c27185e487f582f9b47a784aa781f
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: messageapi
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9119
+      migrations:
+        deployment:
+          image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        enabled: true
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: migrations
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+      namespace:
+        annotations:
+          iam.amazonaws.com/permitted: default/.*
+      notification:
+        deployment:
+          image: tidepool/platform-notification:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: notification
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9223
+      seagull:
+        deployment:
+          image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: seagull
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9120
+      shoreline:
+        configmap:
+          create: false
+          data:
+            ClinicDemoUserId: ""
+        deployment:
+          image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: shoreline
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9107
+      task:
+        deployment:
+          env:
+            queue:
+              delay: 5
+              workers: 5
+            store:
+              bucket: tidepool-development-default-data
+              type: s3
+          image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: task
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9224
+      tidewhisperer:
+        deployment:
+          image: tidepool/tide-whisperer:develop-3d9d8e6b3417c70679ec43420f2a5e4a69cf9098
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: tidewhisperer
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9127
+      tools:
+        deployment:
+          image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        enabled: true
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: tools
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+      user:
+        deployment:
+          image: tidepool/platform-user:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+        hpa:
+          create: true
+          data:
+            maxReplicas: 10
+            minReplicas: 1
+            targetCPUUtilizationPercentage: 50
+        name: user
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 10101
+        service:
+          port: 9221
+kind: List

@@ -3,6 +3,8 @@ tidepool:
     default:
       groups:
         nosqlclient:
+          iamRole:
+            create: false
           deployment:
             image: tidepool/nosqlclient:2.3.2
           enabled: false

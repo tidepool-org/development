@@ -3,6 +3,8 @@ tidepool:
     default:
       groups:
         userdata:
+          iamRole:
+            create: false
           secret:
             create: false
             data_:

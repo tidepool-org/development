@@ -3,6 +3,8 @@ tidepool:
     default:
       groups:
         mailchimp:
+          iamRole:
+            create: false
           secret:
             create: false
             data_:

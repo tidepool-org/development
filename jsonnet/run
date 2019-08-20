@@ -14,7 +14,7 @@ else
   combined=$(combine default)
 fi
 
-for x in k8s/kubernetes cf/cf eksctl/eksctl
+for x in k8s/secrets # k8s/kubernetes k8s/tidepool cf/cf eksctl/eksctl
 do
   
   jsonnet $ARGS --tla-code config="$combined" $x.jsonnet | yq read - >$x.yaml

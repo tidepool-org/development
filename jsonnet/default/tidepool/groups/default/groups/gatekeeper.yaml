@@ -3,6 +3,8 @@ tidepool:
     default:
       groups:
         gatekeeper:
+          iamRole:
+            create: false
           deployment:
             image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
           service:

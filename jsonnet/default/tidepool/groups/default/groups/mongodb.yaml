@@ -3,6 +3,8 @@ tidepool:
     default:
       groups:
         mongodb:
+          iamRole:
+            create: false
           deployment:
             image:
               tag: "3.6"

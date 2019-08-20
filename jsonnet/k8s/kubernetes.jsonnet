@@ -14,7 +14,6 @@ local groups = [
   import 'prometheus-operator.k8s.jsonnet.TEMPLATE',
   import 'reloader.k8s.jsonnet.TEMPLATE',
   import 'sumologic-fluentd.k8s.jsonnet.TEMPLATE',
-  import 'tidepool.k8s.jsonnet.TEMPLATE',
   import 'thanos.k8s.jsonnet.TEMPLATE',
   import 'flux.k8s.jsonnet.TEMPLATE',
 ];

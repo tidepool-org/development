@@ -3,6 +3,8 @@ tidepool:
     default:
       groups:
         mongo:
+          iamRole:
+            create: false
           secret:
             create: true
             data_:

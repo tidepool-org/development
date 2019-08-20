@@ -206,14 +206,17 @@
     data: { [k]: std.base64(secret.data_[k]) for k in std.objectFieldsAll(secret.data_) },
   },
 
-  secret(config, group):: $._Object('v1', 'Secret', group.name) {
-    local secret = self,
+  secret(config, namespace, group):: $._Object('v1', 'Secret', group.name) {
+    local this  = self,
     type: 'Opaque',
     metadata+: {
-      namespace: group.namespace.name,
+      namespace: if std.objectHas(group, "namespace") then group.namespace.name else namespace,
+      labels: {
+         cluster: config.cluster.name
+      }
     },
-    data_:: {},
-    data: { [k]: std.base64(secret.data_[k]) for k in std.objectFieldsAll(secret.data_) },
+    data_:: if std.objectHas(group.secret, "data_") then group.secret.data_ else {},
+    data: { [k]: std.base64(this.data_[k]) for k in std.objectFields(this.data_) },
   },
 
   namespace(config, group):: $._Object('v1', 'Namespace', group.namespace.name) {
@@ -224,7 +227,7 @@
   },
 
   externalSecret(config, env, group):: $._Object('kubernetes-client.io/v1', 'ExternalSecret', group.name) {
-    local key = config.eks.cluster.name + '/' + env + '/' + group.name,
+    local key = config.eks.cluster.name + '/' + env.name + '/' + group.name,
     secretDescriptor: {
       backendType: 'secretsManager',
       data: [
@@ -238,9 +241,9 @@
     },
   },
 
-  stripSecrets(obj)::
-    { [k]: obj[k] for k in std.objectFieldsAll(obj) if k != 'secret' && !std.isObject(obj[k]) } +
-    { [k]: this.stripSecrets(obj[k]) for k in std.objectFieldsAll(obj) if k != 'secret' && std.isObject(obj[k]) },
+  strip(obj,key)::
+    { [k]: obj[k] for k in std.objectFieldsAll(obj) if k != key && !std.isObject(obj[k]) } +
+    { [k]: this.strip(obj[k], key) for k in std.objectFieldsAll(obj) if k != key && std.isObject(obj[k]) },
 
-  StripSecrets(obj):: std.prune(this.stripSecrets(obj)),
+  StripSecrets(obj):: std.prune(this.strip(obj,"secret")),
 }
