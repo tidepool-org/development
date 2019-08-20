@@ -82,6 +82,5 @@ function(config) (
   if group.enabled then {
     URLRelease: if group.urlrelease.create then helpers.urlrelease(config, group),
     HelmRelease: HelmRelease(config, group),
-    Secret: helpers.secret(config, group),
   }
 )

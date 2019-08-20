@@ -505,16 +505,6 @@ items:
       slack:
         channel: '#flux-development'
         username: derrickburns
-- apiVersion: v1
-  data:
-    url: ""
-  kind: Secret
-  metadata:
-    labels:
-      cluster: development
-    name: fluxcloud
-    namespace: flux
-  type: Opaque
 - apiVersion: gateway.solo.io.v2/v2
   kind: Gateway
   metadata:
@@ -834,14 +824,6 @@ items:
         url: https://github.com/tidepool-org/cluster-development
       rbac:
         create: true
-- apiVersion: v1
-  kind: Secret
-  metadata:
-    labels:
-      cluster: development
-    name: flux
-    namespace: flux
-  type: Opaque
 - apiVersion: tidepool/v1beta1
   kind: URLRelease
   metadata:
