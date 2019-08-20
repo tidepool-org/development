@@ -35,7 +35,7 @@ items:
   kind: Namespace
   metadata:
     annotations:
-      iam.amazonaws.com/permitted: development-autoscaler-role
+      iam.amazonaws.com/permitted: development-.*
     name: autoscaler
 - apiVersion: flux.weave.works/v1beta1
   kind: HelmRelease
@@ -59,7 +59,7 @@ items:
   kind: Namespace
   metadata:
     annotations:
-      iam.amazonaws.com/permitted: development-cert-manager-role
+      iam.amazonaws.com/permitted: development-.*
     name: cert-manager
 - apiVersion: certmanager.k8s.io/v1alpha1
   kind: ClusterIssuer
@@ -154,7 +154,7 @@ items:
   kind: Namespace
   metadata:
     annotations:
-      iam.amazonaws.com/permitted: development-external-dns-system-role
+      iam.amazonaws.com/permitted: development-.*
     name: external-dns-system
 - - apiVersion: kubernetes-client.io/v1
     kind: ExternalSecret
@@ -481,7 +481,7 @@ items:
   kind: Namespace
   metadata:
     annotations:
-      iam.amazonaws.com/permitted: development-external-secrets-role
+      iam.amazonaws.com/permitted: development-.*
     name: external-secrets
 - apiVersion: flux.weave.works/v1beta1
   kind: HelmRelease

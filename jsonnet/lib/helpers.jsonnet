@@ -87,7 +87,7 @@
   },
 
   permittedAnnotation(config, name):: {
-    'iam.amazonaws.com/permitted': this.role(config, name),
+    'iam.amazonaws.com/permitted': "%s-.*" % config.cluster.name 
   },
 
   urlrelease(config, group):: $._Object('tidepool/v1beta1', 'URLRelease', group.name) {
