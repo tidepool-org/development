@@ -1,6 +1,5 @@
 {
   local obj = import "obj.jsonnet",
-  local aws = import "aws.jsonnet",
 
   kubeobj(apiVersion, kind, name):: {
     local this = self,
@@ -13,6 +12,9 @@
     },
   },
 
+  namespaceName(group, defaultNamespace):: 
+    if std.objectHas(group, 'namespace') then group.namespace.name else defaultNamespace,
+
   labels(config):: if config.cluster.mesh.enabled then
     if config.cluster.mesh.name == 'linkerd' then {
       'linkerd.io/inject': 'disabled',
@@ -20,9 +22,6 @@
       'istio-injection': 'disabled',
     },
 
-  urlrelease(config, group):: $.kubeobj('tidepool/v1beta1', 'URLRelease', group.name) {
-    url: group.urlrelease.url,
-  },
 
   helmrelease(config, group):: if group.helmrelease.create then $.kubeobj('flux.weave.works/v1beta1', 'HelmRelease', group.name) {
     local namespace = group.namespace.name,
@@ -30,26 +29,24 @@
     metadata+: {
       namespace: namespace,
       annotations: {
-        'flux.weave.works/automated': 'false',
+        'flux.weave.works/automated': 'false', // XXX
       },
     },
     spec: {
       chart: obj.ignore(group.helmrelease.chart, 'index'),
       releaseName: if name == namespace then name else namespace + '-' + name,
-      values: {
-        podAnnotations: if std.objectHas(group, 'iam') && group.iam.create then aws.roleAnnotation(config, group.name),
-      } + if std.objectHas(group.helmrelease, 'values') then group.helmrelease.values else {},
+      values: if std.objectHas(group.helmrelease, 'values') then group.helmrelease.values else {},
     },
   },
 
   secret(config, group, defaultNamespace="default"):: $.kubeobj('v1', 'Secret', group.name) {
     local this = self,
-    local namespace = if std.objectHas(group, 'namespace') then group.namespace.name else defaultNamespace,
     type: 'Opaque',
     metadata+: {
-      namespace: namespace,
+      namespace: $.namespaceName(group, defaultNamespace),
       labels: {
         cluster: config.cluster.name,
+        dest: config.secrets.dest,
       },
     },
     data_:: if std.objectHas(group.secret, 'data_') then group.secret.data_ else {},
@@ -59,12 +56,11 @@
   namespace(config, group):: $.kubeobj('v1', 'Namespace', group.namespace.name) {
     metadata+: {
       labels: $.labels(config),
-      annotations: if std.objectHas(group, 'iam') && group.iam.create then aws.permittedAnnotation(config, group.namespace.name),
     },
   },
 
   externalSecret(config, group, defaultNamespace="default"):: $.kubeobj('kubernetes-client.io/v1', 'ExternalSecret', group.name) {
-    local namespace = if std.objectHas(group, 'namespace') then group.namespace.name else defaultNamespace,
+    local namespace = $.namespaceName(group, defaultNamespace),
     local key = config.cluster.name + '/' + namespace + '/' + group.name,
     secretDescriptor: {
       backendType: 'secretsManager',

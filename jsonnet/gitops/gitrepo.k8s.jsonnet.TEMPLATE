@@ -1,0 +1,14 @@
+local GitRepo(config) = {
+   kind: "GitRepo",
+   apiVersion: "tidepool/v1beta1",
+   data: {
+     repo: "%s/%s" % [ 
+       config.gitops.git.homedir, 
+       if std.objectHas(config.gitops.git, 'name') 
+       then config.gitops.git.name
+       else "cluster-%s" % config.cluster.name
+     ]
+   }
+};
+
+function(config) if config.gitops.git.create then [ GitRepo(config) ] else []

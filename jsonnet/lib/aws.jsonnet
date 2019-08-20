@@ -1,4 +1,5 @@
 local str = import "str.jsonnet";
+local kube = import "kube.jsonnet";
 
 {
   bucketName(config, env)::
@@ -16,10 +17,10 @@ local str = import "str.jsonnet";
     'iam.amazonaws.com/permitted': "%s-.*" % config.cluster.name 
   },
 
-  iamObject(config, group, iamKind):: {
+  cfObject(config, group, cfKind):: {
     local this = self,
     apiVersion:: '2012-10-17',
-    kind:: 'AWS::IAM::' + iamKind,
+    kind:: cfKind,
     metadata:: {
       name:: group.name,
     },
@@ -27,12 +28,14 @@ local str = import "str.jsonnet";
     values:: {
       Type: this.kind,
     },
-    [self.iamName(config, group, iamKind)]: this.values,
+    [self.iamName(config, group, cfKind)]: this.values,
   },
 
-  iamName(config, group, iamKind):: str.capitalize(str.camelCase(group.name) + str.camelCase(iamKind)),
+  kindToName(cfKind):: std.strReplace(cfKind, "::", "-"),
 
-  iamManagedPolicy(config, group):: $.iamObject(config, group, 'ManagedPolicy') {
+  iamName(config, group, cfKind):: str.capitalize(str.camelCase(group.name) + str.camelCase($.kindToName(cfKind))),
+
+  iamManagedPolicy(config, group):: $.cfObject(config, group, 'AWS::IAM::ManagedPolicy') {
     local this = self,
     values+:: {
       Properties: {
@@ -43,13 +46,50 @@ local str = import "str.jsonnet";
     },
   },
 
-  iamRole(config, group):: $.iamObject(config, group, 'Role') {
+   helmrelease(config, group):: kube.helmrelease(config, group) {
+    spec: {
+      values+: 
+        if std.objectHas(group, 'iam') && group.iam.create 
+        then { podAnnotations: $.roleAnnotation(config, group.name) } 
+        else {}
+    },
+  },
+
+  namespace(config, group):: kube.namespace(config, group) {
+    metadata+: {
+      annotations+: if std.objectHas(group, 'iam') && group.iam.create then $.permittedAnnotation(config, group.namespace.name) else {},
+    },
+  },
+
+  secret(config, group, defaultNamespace="default"):: $.cfObject(config, group, 'AWS::SecretsManager::Secret') {
+    local this = self,
+    values+:: {
+      Properties: {
+        Name: group.secret.name,
+        SecretString: std.manifestJson(this.data),
+        Tags: [
+        {
+            Key: "Cluster",
+            Value: config.cluster.name
+        },
+        {
+            Key: "Namespace",
+            Value: kube.namespaceName(group, defaultNamespace)
+        }
+        ]
+      }
+    },
+    data_:: if std.objectHas(group.secret, 'data_') then group.secret.data_ else {},
+    data: { [k]: std.base64(this.data_[k]) for k in std.objectFields(this.data_) },
+  },
+
+  iamRole(config, group):: $.cfObject(config, group, 'AWS::IAM::Role') {
     local this = self,
     values+:: {
       Properties: {
         RoleName: '%s-%s-role' % [config.cluster.name, group.name],
         ManagedPolicyArns: [{
-          Ref: $.iamName(config, group, 'ManagedPolicy'),
+          Ref: $.iamName(config, group, 'AWS::IAM::ManagedPolicy'),
         }],
         AssumeRolePolicyDocument: {
           Version: this.apiVersion,
@@ -67,7 +107,7 @@ local str = import "str.jsonnet";
               Principal: {
                 AWS: {
                   'Fn::GetAtt': [
-                    $.iamName(config, config.groups.kiam, 'Role'),
+                    $.iamName(config, config.groups.kiam, 'AWS::IAM::Role'),
                     'Arn',
                   ],
                 },

@@ -10,11 +10,6 @@ items:
     name: autoscaler
     namespace: autoscaler
   spec:
-    chart:
-      name: cluster-autoscaler
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 0.14.2
-    releaseName: autoscaler
     values:
       autoDiscovery:
         clusterName: development
@@ -47,11 +42,6 @@ items:
     name: cert-manager
     namespace: cert-manager
   spec:
-    chart:
-      name: cert-manager
-      repository: https://charts.jetstack.io
-      version: v0.8.1
-    releaseName: cert-manager
     values:
       podAnnotations:
         iam.amazonaws.com/role: development-cert-manager-role
@@ -101,11 +91,6 @@ items:
     name: datadog-agent
     namespace: datadog
   spec:
-    chart:
-      name: datadog
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 1.32.2
-    releaseName: datadog-datadog-agent
     values:
       clusterAgent:
         enabled: true
@@ -133,11 +118,6 @@ items:
     name: external-dns
     namespace: external-dns-system
   spec:
-    chart:
-      name: external-dns
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 2.5.3
-    releaseName: external-dns-system-external-dns
     values:
       aws:
         region: us-west-2
@@ -469,11 +449,6 @@ items:
     name: external-secrets
     namespace: external-secrets
   spec:
-    chart:
-      git: git@github.com:godaddy/kubernetes-external-secrets
-      path: charts/kubernetes-external-secrets
-      ref: master
-    releaseName: external-secrets
     values:
       podAnnotations:
         iam.amazonaws.com/role: development-external-secrets-role
@@ -497,7 +472,6 @@ items:
       git: git@github.com:tidepool-org/development
       path: charts/fluxcloud/0.1.0
       ref: k8s
-    releaseName: flux-fluxcloud
     values:
       github: https://github.com/tidepool-org/cluster-development
       name: fluxcloud
@@ -544,14 +518,7 @@ items:
     name: gloo
     namespace: gloo-system
   spec:
-    chart:
-      name: gloo
-      repository: https://storage.googleapis.com/solo-public-helm/
-      version: 0.18.16
-    releaseName: gloo-system-gloo
     values:
-      crds:
-        create: false
       discovery:
         deployment:
           stats: true
@@ -574,8 +541,6 @@ items:
       gloo:
         deployment:
           stats: true
-      settings:
-        create: true
 - apiVersion: v1
   kind: Namespace
   metadata:
@@ -590,11 +555,6 @@ items:
     name: kiam
     namespace: kube-system
   spec:
-    chart:
-      name: kiam
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 2.3.0
-    releaseName: kube-system-kiam
     values:
       agent:
         enabled: true
@@ -643,11 +603,6 @@ items:
     name: kube-state-metrics
     namespace: datadog
   spec:
-    chart:
-      name: kube-state-metrics
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 2.2.1
-    releaseName: datadog-kube-state-metrics
     values:
       hostNetwork:
         enabled: true
@@ -660,12 +615,6 @@ items:
       name: metrics-server
     name: metrics-server
     namespace: metrics-server
-  spec:
-    chart:
-      name: metrics-server
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 2.8.2
-    releaseName: metrics-server
 - apiVersion: v1
   kind: Namespace
   metadata:
@@ -680,11 +629,6 @@ items:
     name: prometheus-operator
     namespace: monitoring
   spec:
-    chart:
-      name: prometheus-operator
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 5.13.0
-    releaseName: monitoring-prometheus-operator
     values:
       grafana:
         enabled: false
@@ -695,8 +639,6 @@ items:
             region: us-west-2
           image:
             tag: v2.8.0
-          replicas: 2
-          retention: 12h
           serviceMonitorNamespaceSelector:
             any: true
           thanos:
@@ -722,7 +664,6 @@ items:
       name: reloader
       repository: https://stakater.github.io/stakater-charts/
       version: v0.0.38
-    releaseName: reloader
 - apiVersion: v1
   kind: Namespace
   metadata:
@@ -737,11 +678,6 @@ items:
     name: sumologic-fluentd
     namespace: sumologic
   spec:
-    chart:
-      name: sumologic-fluentd
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 1.1.0
-    releaseName: sumologic-sumologic-fluentd
     values:
       rbac:
         create: true
@@ -760,6 +696,7 @@ items:
   metadata:
     labels:
       cluster: development
+      dest: AWSSecretsManager
     name: thanos
     namespace: monitoring
   type: Opaque
@@ -773,11 +710,6 @@ items:
     name: flux
     namespace: flux
   spec:
-    chart:
-      name: flux
-      repository: https://fluxcd.github.io/
-      version: 0.10.2
-    releaseName: flux
     values:
       additionalArgs:
       - --connect=ws://fluxcloud

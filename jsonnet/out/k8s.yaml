@@ -30,10 +30,6 @@ items:
     name: tidepool
     namespace: default
   spec:
-    chart:
-      git: git@github.com:tidepool-org/development
-      path: charts/tidepool/0.1.7
-      ref: k8s
     releaseName: default-tidepool
     values:
       auth:

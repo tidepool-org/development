@@ -1,4 +1,5 @@
 local kube = import 'kube.jsonnet';
+local aws = import 'aws.jsonnet';
 
 local ClusterIssuer(config, group, server, name) = {
   apiVersion: 'certmanager.k8s.io/v1alpha1',
@@ -30,8 +31,8 @@ local ClusterIssuer(config, group, server, name) = {
 function(config) (
   local group = config.groups.certManager;
   if group.enabled then {
-    Helmrelease: if group.helmrelease.create then kube.helmrelease(config, group),
-    Namespace: if group.namespace.create then kube.namespace(config, group),
+    Helmrelease: if group.helmrelease.create then aws.helmrelease(config, group),
+    Namespace: if group.namespace.create then aws.namespace(config, group),
     StagingClusterIssuer:
       ClusterIssuer(config,
                     group,

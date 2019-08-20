@@ -1,10 +1,14 @@
 gitops:
   git:
     server: https://github.com/tidepool-org
+    create: true
+    homedir: "~"
+    #name: "cluster-default"
   github:
     token: ""
     user: derrickburns
   notifications:
     slack:
+      create: true
       username: derrickburns
       #channel: '#flux-development'

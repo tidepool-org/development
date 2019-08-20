@@ -1,9 +1,9 @@
-local kube = import 'kube.jsonnet';
+local aws = import 'aws.jsonnet';
 
 function(config) (
   local group = config.groups.metricsServer;
   if group.enabled then {
-    Helmrelease: if group.helmrelease.create then kube.helmrelease(config, group),
-    Namespace: if group.namespace.create then kube.namespace(config, group),
+    Helmrelease: if group.helmrelease.create then aws.helmrelease(config, group),
+    Namespace: if group.namespace.create then aws.namespace(config, group),
   }
 )

@@ -1,4 +1,6 @@
 local kube = import 'kube.jsonnet';
+local aws = import 'aws.jsonnet';
+local tidepool = import 'tidepool.jsonnet';
 
 local toUrl(chart) =
   if std.endsWith(chart.repository, '/')
@@ -41,7 +43,7 @@ local uniqueRepositories(config) = dedup(values(std.mapWithKey(toEntry, config.g
 
 local asRepoList(config) = values(uniqueRepositories(config));
 
-local HelmRelease(config, group) = kube.helmrelease(config, group) {
+local HelmRelease(config, group) = aws.helmrelease(config, group) {
   spec+: {
     values+: group.helmrelease.values {
       local path =
@@ -80,7 +82,7 @@ local HelmRelease(config, group) = kube.helmrelease(config, group) {
 function(config) (
   local group = config.groups.flux;
   if group.enabled then {
-    URLRelease: if group.urlrelease.create then kube.urlrelease(config, group),
+    URLRelease: if group.urlrelease.create then tidepool.urlrelease(config, group),
     HelmRelease: HelmRelease(config, group),
   }
 )

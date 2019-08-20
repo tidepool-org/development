@@ -1,7 +1,8 @@
 local kube = import 'kube.jsonnet';
+local aws = import 'aws.jsonnet';
 
 local Helmrelease(config, group) =
-  kube.helmrelease(config, group) {
+  aws.helmrelease(config, group) {
     spec+: {
       values+: {
         kubeStateMetrics: {
@@ -28,6 +29,6 @@ function(config) (
   local group = config.groups.datadogAgent;
   if group.enabled then {
     Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
-    Namespace: if group.namespace.create then kube.namespace(config, group),
+    Namespace: if group.namespace.create then aws.namespace(config, group),
   }
 )

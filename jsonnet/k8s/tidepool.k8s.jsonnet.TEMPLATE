@@ -98,7 +98,7 @@ local isAutomated(group) =
   std.objectHas(group.deployment, 'gitops') &&
   group.deployment.gitops.automated;
 
-local HelmRelease(config, env) = kube.helmrelease(config, env) {
+local HelmRelease(config, env) = aws.helmrelease(config, env) {
   local hr = env.helmrelease,
   metadata+: {
     name: 'tidepool',

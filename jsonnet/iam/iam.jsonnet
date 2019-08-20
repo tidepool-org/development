@@ -16,8 +16,14 @@ local resources(config) =
     {}
   );
 
-function(config) {
-  AWSTemplateFormatVersion: "2010-09-09",
-  Description: "Cluster %s" % config.cluster.name,
-  Resources: resources(config)
-}
+local CFTemplate(config) = {
+  kind: "CFTemplate",
+  apiVersion: "tidepool/v1beta1",
+  data: {
+    AWSTemplateFormatVersion: "2010-09-09",
+    Description: "Cluster %s" % config.cluster.name,
+    Resources: resources(config)
+  }
+};
+
+function(config) CFTemplate(config)

@@ -1,6 +1,6 @@
-local kube = import 'kube.jsonnet';
+local aws = import 'aws.jsonnet';
 
-local Helmrelease(config, group) = kube.helmrelease(config, group) {
+local Helmrelease(config, group) = aws.helmrelease(config, group) {
   spec+: {
     values+: {
       hostNetwork: {
