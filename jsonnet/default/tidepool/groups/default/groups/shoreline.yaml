@@ -3,6 +3,7 @@ tidepool:
     default:
       groups:
         shoreline:
+          name: shoreline
           iamRole:
             create: false
           configmap:
@@ -12,6 +13,7 @@ tidepool:
           deployment:
             image: tidepool/shoreline:develop-169c2a61c33d31bb185663cf0033fd2a364d3492
           secret:
+            name: shoreline
             create: false
             data_:
               ClinicDemoUserId: ""

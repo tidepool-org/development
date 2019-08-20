@@ -3,9 +3,11 @@ tidepool:
     default:
       groups:
         dexcom:
+          name: dexcom
           iamRole:
             create: false
           secret:
+            name: dexcom
             create: false
             data_:
               ClientId: ""

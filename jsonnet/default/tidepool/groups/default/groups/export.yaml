@@ -3,12 +3,14 @@ tidepool:
     default:
       groups:
         export:
+          name: export
           iamRole:
             create: false
           deployment:
             image: tidepool/export:develop-c67e1425a4f6eb4c3f70f95284a24899a9ff986f
           enabled: true
           secret:
+            name: export
             create: false
             data_:
               SessionEncryptionKey: ""

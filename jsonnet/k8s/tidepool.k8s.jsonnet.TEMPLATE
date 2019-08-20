@@ -28,8 +28,6 @@ local iamPermissions(config, env) =
   } else {
   };
 
-local withGroup(groups, name) = (groups[name] { name: name });
-
 // Compute IAM annotation for group
 local iamAnnotations(config, env, group) = (
   local clusterName = config.cluster.name;
@@ -128,23 +126,25 @@ local HelmRelease(config, env) = helpers.helmrelease(config, env) {
       },
     } + {
       [svc]: (
-        local group = withGroup(env.groups, svc);
+        local group = env.groups[svc];
         local envWithBucket = env + getBucket(config, env);
-        helpers.strip(helpers.StripSecrets(group
-        + iamAnnotations(config, envWithBucket, group)
-        + linkerdAnnotations(config, envWithBucket, group)
-        + securityContext(config, envWithBucket, group)
-        + resources(config, envWithBucket, group)
-        + deployment(config, envWithBucket, group)
-        + hpas(config, envWithBucket, group)
-      ), "iamRole"))
+        helpers.strip(helpers.StripSecrets(
+          group
+          + iamAnnotations(config, envWithBucket, group)
+          + linkerdAnnotations(config, envWithBucket, group)
+          + securityContext(config, envWithBucket, group)
+          + resources(config, envWithBucket, group)
+          + deployment(config, envWithBucket, group)
+          + hpas(config, envWithBucket, group)
+        ), 'iamRole')
+      )
       for svc in helpers.tidepoolServices
     },
   },
 };
 
 function(config) (
-  local helmRelease(name, env) = if env.enabled then HelmRelease(config, env { name: name });
+  local helmRelease(name, env) = if env.enabled then HelmRelease(config, env);
   local helmReleases = std.mapWithKey(helmRelease, config.tidepool.groups);
   std.prune(helmReleases)
 )

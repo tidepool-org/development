@@ -3,9 +3,11 @@ tidepool:
     default:
       groups:
         carelink:
+          name: carelink
           iamRole:
             create: false
           secret:
+            name: carelink
             create: false
             data_:
               CareLinkSalt: ""

@@ -3,9 +3,11 @@ tidepool:
     default:
       groups:
         mongo:
+          name: mongo
           iamRole:
             create: false
           secret:
+            name: mongo
             create: true
             data_:
               Addresses: cluster0-shard-00-01-hu2cn.mongodb.net:27017,cluster0-shard-00-00-hu2cn.mongodb.net:27017,cluster0-shard-00-02-hu2cn.mongodb.net:27017

@@ -3,6 +3,7 @@ tidepool:
     default:
       groups:
         blip:
+          name: blip
           iamRole:
             create: false
           deployment:

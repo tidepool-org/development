@@ -1,6 +1,7 @@
 tidepool:
   groups:
     default:
+      name: default
       enabled: true
       iam:
         create: true

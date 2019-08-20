@@ -47,9 +47,10 @@
   ),
 
   capitalize(word):: (
-    assert std.isString(word) : "can only capitalize string";
+    assert std.isString(word) : 'can only capitalize string';
+    assert std.length(word) > 0 : 'cannot capitalize empty string';
     local chars = std.stringChars(word);
-    std.asciiUpper(chars[0]) + std.foldl( function(a,b) a + b, chars[1:std.length(chars)], "")
+    std.asciiUpper(chars[0]) + std.foldl(function(a, b) a + b, chars[1:std.length(chars)], '')
   ),
 
   kebabCase(camelCaseWord):: (
@@ -196,26 +197,17 @@
     },
   },
 
-  secretEntry(config, group, entry):: $._Object('v1', 'Secret', group[entry].name) {
-    local secret = group[entry],
+  secret(config, group, defaultNamespace="default"):: $._Object('v1', 'Secret', group.name) {
+    local this = self,
+    local namespace = if std.objectHas(group, 'namespace') then group.namespace.name else defaultNamespace,
     type: 'Opaque',
     metadata+: {
-      namespace: group.namespace.name,
-    },
-    data_:: {},
-    data: { [k]: std.base64(secret.data_[k]) for k in std.objectFieldsAll(secret.data_) },
-  },
-
-  secret(config, namespace, group):: $._Object('v1', 'Secret', group.name) {
-    local this  = self,
-    type: 'Opaque',
-    metadata+: {
-      namespace: if std.objectHas(group, "namespace") then group.namespace.name else namespace,
+      namespace: namespace,
       labels: {
-         cluster: config.cluster.name
-      }
+        cluster: config.cluster.name,
+      },
     },
-    data_:: if std.objectHas(group.secret, "data_") then group.secret.data_ else {},
+    data_:: if std.objectHas(group.secret, 'data_') then group.secret.data_ else {},
     data: { [k]: std.base64(this.data_[k]) for k in std.objectFields(this.data_) },
   },
 
@@ -226,8 +218,9 @@
     },
   },
 
-  externalSecret(config, env, group):: $._Object('kubernetes-client.io/v1', 'ExternalSecret', group.name) {
-    local key = config.eks.cluster.name + '/' + env.name + '/' + group.name,
+  externalSecret(config, group, defaultNamespace="default"):: $._Object('kubernetes-client.io/v1', 'ExternalSecret', group.name) {
+    local namespace = if std.objectHas(group, 'namespace') then group.namespace.name else defaultNamespace,
+    local key = config.cluster.name + '/' + namespace + '/' + group.name,
     secretDescriptor: {
       backendType: 'secretsManager',
       data: [
@@ -241,9 +234,9 @@
     },
   },
 
-  strip(obj,key)::
+  strip(obj, key)::
     { [k]: obj[k] for k in std.objectFieldsAll(obj) if k != key && !std.isObject(obj[k]) } +
     { [k]: this.strip(obj[k], key) for k in std.objectFieldsAll(obj) if k != key && std.isObject(obj[k]) },
 
-  StripSecrets(obj):: std.prune(this.strip(obj,"secret")),
+  StripSecrets(obj):: std.prune(this.strip(obj, 'secret')),
 }

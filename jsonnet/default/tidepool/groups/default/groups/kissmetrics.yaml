@@ -3,9 +3,11 @@ tidepool:
     default:
       groups:
         kissmetrics:
+          name: kissmetrics
           iamRole:
             create: false
           secret:
+            name: kissmetrics
             create: false
             data_:
               KissmetricsAPIKey: ""

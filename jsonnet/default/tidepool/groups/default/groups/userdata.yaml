@@ -3,9 +3,11 @@ tidepool:
     default:
       groups:
         userdata:
+          name: user-data
           iamRole:
             create: false
           secret:
+            name: userdata
             create: false
             data_:
               GroupIdEncryptionKey: ""

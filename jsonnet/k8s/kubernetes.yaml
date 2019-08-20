@@ -156,6 +156,309 @@ items:
     annotations:
       iam.amazonaws.com/permitted: development-external-dns-system-role
     name: external-dns-system
+- - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: auth
+      name: auth
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/auth
+        name: ServiceAuth
+        property: ServiceAuth
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: blob
+      name: blob
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/blob
+        name: ServiceAuth
+        property: ServiceAuth
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: carelink
+      name: carelink
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/carelink
+        name: CareLinkSalt
+        property: CareLinkSalt
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: data
+      name: data
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/data
+        name: ServiceAuth
+        property: ServiceAuth
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: dexcom
+      name: dexcom
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/dexcom
+        name: ClientId
+        property: ClientId
+      - key: development/default/dexcom
+        name: ClientSecret
+        property: ClientSecret
+      - key: development/default/dexcom
+        name: StateSalt
+        property: StateSalt
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: export
+      name: export
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/export
+        name: SessionEncryptionKey
+        property: SessionEncryptionKey
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: highwater
+      name: highwater
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/highwater
+        name: UserIdSalt
+        property: UserIdSalt
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: image
+      name: image
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/image
+        name: ServiceAuth
+        property: ServiceAuth
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: kissmetrics
+      name: kissmetrics
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/kissmetrics
+        name: KissmetricsAPIKey
+        property: KissmetricsAPIKey
+      - key: development/default/kissmetrics
+        name: KissmetricsToken
+        property: KissmetricsToken
+      - key: development/default/kissmetrics
+        name: UCSFKissmetricsAPIKey
+        property: UCSFKissmetricsAPIKey
+      - key: development/default/kissmetrics
+        name: UCSFWhitelist
+        property: UCSFWhitelist
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: mailchimp
+      name: mailchimp
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/mailchimp
+        name: MailchimpApiKey
+        property: MailchimpApiKey
+      - key: development/default/mailchimp
+        name: MailchimpClinicLists
+        property: MailchimpClinicLists
+      - key: development/default/mailchimp
+        name: MailchimpPersonalLists
+        property: MailchimpPersonalLists
+      - key: development/default/mailchimp
+        name: MailchimpURL
+        property: MailchimpURL
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: mongo
+      name: mongo
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/mongo
+        name: Addresses
+        property: Addresses
+      - key: development/default/mongo
+        name: Database
+        property: Database
+      - key: development/default/mongo
+        name: Password
+        property: Password
+      - key: development/default/mongo
+        name: Scheme
+        property: Scheme
+      - key: development/default/mongo
+        name: Tls
+        property: Tls
+      - key: development/default/mongo
+        name: Username
+        property: Username
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: notification
+      name: notification
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/notification
+        name: ServiceAuth
+        property: ServiceAuth
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: server
+      name: server
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/server
+        name: ServiceAuth
+        property: ServiceAuth
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: shoreline
+      name: shoreline
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/shoreline
+        name: ClinicDemoUserId
+        property: ClinicDemoUserId
+      - key: development/default/shoreline
+        name: ServiceAuth
+        property: ServiceAuth
+      - key: development/default/shoreline
+        name: UserLongTermKey
+        property: UserLongTermKey
+      - key: development/default/shoreline
+        name: UserMailVerification
+        property: UserMailVerification
+      - key: development/default/shoreline
+        name: UserPasswordSalt
+        property: UserPasswordSalt
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: task
+      name: task
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/task
+        name: ServiceAuth
+        property: ServiceAuth
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: user
+      name: user
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/user
+        name: ServiceAuth
+        property: ServiceAuth
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: user-data
+      name: user-data
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/default/user-data
+        name: GroupIdEncryptionKey
+        property: GroupIdEncryptionKey
+      - key: development/default/user-data
+        name: UserIdSalt
+        property: UserIdSalt
+      - key: development/default/user-data
+        name: UserPasswordSalt
+        property: UserPasswordSalt
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: datadog-agent
+      name: datadog-agent
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/datadog/datadog-agent
+        name: apiKey
+        property: apiKey
+      - key: development/datadog/datadog-agent
+        name: appKey
+        property: appKey
+      - key: development/datadog/datadog-agent
+        name: token
+        property: token
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: fluxcloud
+      name: fluxcloud
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/flux/fluxcloud
+        name: url
+        property: url
+  - apiVersion: kubernetes-client.io/v1
+    kind: ExternalSecret
+    metadata:
+      labels:
+        name: sumologic-fluentd
+      name: sumologic-fluentd
+    secretDescriptor:
+      backendType: secretsManager
+      data:
+      - key: development/sumologic/sumologic-fluentd
+        name: collectorUrl
+        property: collectorUrl
 - apiVersion: flux.weave.works/v1beta1
   kind: HelmRelease
   metadata:
@@ -203,10 +506,12 @@ items:
         channel: '#flux-development'
         username: derrickburns
 - apiVersion: v1
+  data:
+    url: ""
   kind: Secret
   metadata:
     labels:
-      name: fluxcloud
+      cluster: development
     name: fluxcloud
     namespace: flux
   type: Opaque
@@ -464,7 +769,7 @@ items:
   kind: Secret
   metadata:
     labels:
-      name: thanos
+      cluster: development
     name: thanos
     namespace: monitoring
   type: Opaque
@@ -533,7 +838,7 @@ items:
   kind: Secret
   metadata:
     labels:
-      name: flux
+      cluster: development
     name: flux
     namespace: flux
   type: Opaque

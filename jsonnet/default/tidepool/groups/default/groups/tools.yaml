@@ -3,6 +3,7 @@ tidepool:
     default:
       groups:
         tools:
+          name: tools
           iamRole:
             create: false
           deployment:

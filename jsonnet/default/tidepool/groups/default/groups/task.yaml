@@ -3,6 +3,7 @@ tidepool:
     default:
       groups:
         task:
+          name: task
           iamRole:
             create: false
           deployment:
@@ -12,6 +13,7 @@ tidepool:
                 workers: 5
             image: tidepool/platform-task:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
           secret:
+            name: task
             create: false
             data_:
               ServiceAuth: ""

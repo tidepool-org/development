@@ -3,6 +3,7 @@ tidepool:
     default:
       groups:
         mongodb:
+          name: mongodb
           iamRole:
             create: false
           deployment:

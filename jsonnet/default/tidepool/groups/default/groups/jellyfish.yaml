@@ -3,6 +3,7 @@ tidepool:
     default:
       groups:
         jellyfish:
+          name: jellyfish
           iamRole:
             create: true
           deployment:

@@ -1,13 +1,13 @@
-local helpers = import "helpers.jsonnet";
+local helpers = import 'helpers.jsonnet';
 
 local a = {
-  secret: "b",
-  c:  {
+  secret: 'b',
+  c: {
     e: 134,
     secret: {
-       d: "e"
-    }
-}
+      d: 'e',
+    },
+  },
 };
 
 helpers.StripSecrets(a)

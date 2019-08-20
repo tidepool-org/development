@@ -3,6 +3,7 @@ tidepool:
     default:
       groups:
         gatekeeper:
+          name: gatekeeper
           iamRole:
             create: false
           deployment:

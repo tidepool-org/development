@@ -3,6 +3,7 @@ tidepool:
     default:
       groups:
         hydrophone:
+          name: hydrophone
           iamRole:
             create: true
           deployment:

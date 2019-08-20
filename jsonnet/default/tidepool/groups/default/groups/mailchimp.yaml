@@ -3,9 +3,11 @@ tidepool:
     default:
       groups:
         mailchimp:
+          name: mailchimp
           iamRole:
             create: false
           secret:
+            name: mailchimp
             create: false
             data_:
               MailchimpApiKey: ""

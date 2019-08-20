@@ -3,6 +3,7 @@ tidepool:
     default:
       groups:
         messageapi:
+          name: message-api
           iamRole:
             create: false
           deployment:

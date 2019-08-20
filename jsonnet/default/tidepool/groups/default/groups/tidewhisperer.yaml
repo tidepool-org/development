@@ -3,6 +3,7 @@ tidepool:
     default:
       groups:
         tidewhisperer:
+          name: tide-whisperer
           iamRole:
             create: false
           deployment:
