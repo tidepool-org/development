@@ -116,16 +116,14 @@ local getBucket(config, env) =
 
 local groupConfig(config, env, group) = (
   local envWithBucket = env + getBucket(config, env);
-  obj.strip(obj.strip(
-    group
+  local merged = group
     + iamAnnotations(config, envWithBucket, group)
     + linkerdAnnotations(config, envWithBucket, group)
     + securityContext(config, envWithBucket, group)
     + resources(config, envWithBucket, group)
     + deployment(config, envWithBucket, group)
-    + hpas(config, envWithBucket, group),
-    'secret'
-  ), 'iamRole')
+    + hpas(config, envWithBucket, group);
+  obj.strip(merged, ['secret','iamRole'])
 );
 
 local isAutomated(group) =

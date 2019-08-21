@@ -1,4 +1,6 @@
 {
+  contains(list, value):: std.foldl(function(a,b) (a || (b == value)), list, false),
+  
   values(obj):: [obj[field] for field in std.objectFields(obj)],
 
   ignore(x, exclude):: { [f]: x[f] for f in std.objectFieldsAll(x) if f != exclude },
@@ -22,7 +24,7 @@
     )
     else b,
 
-  strip(obj, key)::
-    { [k]: obj[k] for k in std.objectFieldsAll(obj) if k != key && !std.isObject(obj[k]) } +
-    { [k]: $.strip(obj[k], key) for k in std.objectFieldsAll(obj) if k != key && std.isObject(obj[k]) },
+  strip(obj, list)::
+    { [k]: obj[k] for k in std.objectFieldsAll(obj) if ! $.contains(list, k) && !std.isObject(obj[k]) } +
+    { [k]: $.strip(obj[k], list) for k in std.objectFieldsAll(obj) if ! $.contains(list, k) && std.isObject(obj[k]) },
 }
