@@ -1,12 +1,4 @@
 ---
-{{- define "charts.blob.s3.bucket" -}}
-{{- if (.Values.blob.deployment.env.store.bucket) and (ne .Values.blob.deployment.env.store.bucket "") -}}
-{{ .Values.blob.deployment.env.store.bucket }}
-{{- else -}}
-tidepool-{{ .Release.Namespace }}-data
-{{- end -}}
-{{- end -}}
-{{- define "charts.blob.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.blob.s3.bucket" .}} {{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -53,7 +45,7 @@ spec:
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
           value: '{{.Values.blob.deployment.env.store.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
-          value: '{{include "charts.blob.s3.bucket" .}}'
+          value: '{{ .Values.blob.deployment.env.store.bucket }}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
           value: '{{.Values.blob.deployment.env.store.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE

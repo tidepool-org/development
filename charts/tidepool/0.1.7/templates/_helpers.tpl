@@ -11,7 +11,7 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.global.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "charts.s3.url" -}} https://s3-{{.Values.global.cluster.eks.region}}.amazonaws.com {{- end }}
+{{- define "charts.s3.url" -}} https://s3-{{.Values.global.region}}.amazonaws.com {{- end }}
 
 {{/*
 Create a default fully qualified app name.
@@ -87,7 +87,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_ENV
           value: local
         - name: TIDEPOOL_LOGGER_LEVEL
-          value: {{ .Values.global.cluster.logLevel }}
+          value: {{ .Values.global.logLevel }}
         - name: TIDEPOOL_SERVER_TLS
           value: "false"
         - name: TIDEPOOL_AUTH_SERVICE_SECRET

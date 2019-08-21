@@ -1,5 +1,5 @@
 local aws = import 'aws.jsonnet';
-local kube = import 'kube.jsonnet';
+eocal kube = import 'kube.jsonnet';
 local obj = import 'obj.jsonnet';
 
 local host(config, env) =
@@ -123,13 +123,8 @@ local HelmRelease(config, env) = aws.helmrelease(config, env) {
         },
       },
       global+: {
-        cluster: {
-          name: config.cluster.name,
-          eks: {
-            region: config.cluster.eks.region,
-          },
-          logLevel: config.cluster.logLevel,
-        },
+        region: config.cluster.eks.region,
+        logLevel: config.cluster.logLevel,
       },
     } + {
       values+: {

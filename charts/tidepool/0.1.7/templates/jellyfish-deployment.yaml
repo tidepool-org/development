@@ -1,11 +1,4 @@
 ---
-{{- define "charts.jellyfish.s3.bucket" -}}
-{{- if (.Values.jellyfish.deployment.env.store.bucket) and (ne .Values.jellyfish.deployment.env.store.bucket "") -}}
-{{ .Values.jellyfish.deployment.env.store.bucket }}
-{{- else -}}
-tidepool-{{ .Release.Namespace }}-data
-{{- end -}}
-{{- end -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -73,7 +66,7 @@ spec:
         - name: SERVICE_NAME
           value: jellyfish
         - name: STORAGE_TYPES
-          value: '{"s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.global.cluster.region}}", "bucket": "{{ include "charts.jellyfish.s3.bucket" .}}" }}'
+          value: '{"s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.global.region}}", "bucket": "{{ .Values.jellyfish.deployment.env.store.bucket }}" }}'
         - name: STORAGE_DEFAULT
           value: '{{ .Values.jellyfish.deployment.env.store.type }}'
         - name: USER_API_SERVICE

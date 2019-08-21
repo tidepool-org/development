@@ -105,9 +105,8 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `dexcom.secret.data_.StateSalt`                                         | plaintext Oauth2 state salt | `false`                                               |
 | `gatekeeper.deployment.image` | gatekeeper Docker image | `` |
 | `gatekeeper.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
-| `global.cluster.logLevel`                              | Default log level | `info`                                        |
-| `global.cluster.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
-| `global.environment.namespace.create`                                | If true, create namespace                                                                    | `false`                                               |
+| `global.logLevel`                              | Default log level | `info`                                        |
+| `global.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
 | `global.fullnameOverride`                                |                                                                                              | ``                                                    |
 | `global.mongodb.enabled`                                 | Whether to include an mongodb with this installation                                         | `true`                                                |
 | `global.nameOverride`                                    | If non-empty, Helm chart name to use                                                         | ``                                                    |
@@ -176,6 +175,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `sumologic.secret.CollectorUrl` |  Sumologic collector URL | `false` |
 | `task.deployment.image` | task Docker image | `` |
 | `task.secret.data_.ServiceAuth` | task authorization, if empty, random value is generated |  `` |
+| `tidepool.namespace.create`                                | If true, create namespace                                                                    | `false`                                               |
 | `tidewhisperer.deployment.image` | tidewhisperer Docker image | `` |
 | `tools.deployment.image` | tools Docker image | `` |
 | `tools.enabled`                                          | Enable tools service if true                                                                 | `true`                                                |

@@ -1,11 +1,8 @@
 global:
   fullnameOverride: ""                            #
   nameOverride: ""                                # the name to use for the helm chart, if given
-  cluster:
-    name: "foobar"                                # K8s cluster name
-    eks:
-      region: "us-west-2"                         # AWS region
-    logLevel: info                                # the default log level for all services
+  region: "us-west-2"                         # AWS region
+  logLevel: info                                # the default log level for all services
 
 # environment-wide secrets
 tidepool:

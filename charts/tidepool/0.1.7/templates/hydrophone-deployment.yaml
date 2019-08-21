@@ -1,12 +1,5 @@
 ---
-{{- define "charts.hydrophone.s3.bucket" -}}
-{{- if (.Values.hydrophone.deployment.env.bucket) and (ne .Values.hydrophone.deployment.env.bucket "") -}}
-{{ .Values.hydrophone.deployment.env.bucket }}
-{{- else -}}
-tidepool-{{ .Release.Namespace }}-asset
-{{- end -}}
-{{- end -}}
-{{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{include "charts.hydrophone.s3.bucket" .}} {{- end }}
+{{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{ .Values.hydrophone.deployment.env.bucket }} {{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -46,7 +39,7 @@ spec:
               name: server
               key: ServiceAuth
         - name: REGION
-          value: {{.Values.global.cluster.region}}            
+          value: {{.Values.global.region}}            
         - name: TIDEPOOL_HYDROPHONE_ENV
           value: |
             {
