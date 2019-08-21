@@ -33,7 +33,7 @@ spec:
           value: "true"
         name: blip
         ports:
-        - containerPort: 80
+        - containerPort: {{.Values.blip.service.port}}
         resources:
           {{- toYaml .Values.blip.resources | nindent 10 }}
         securityContext:

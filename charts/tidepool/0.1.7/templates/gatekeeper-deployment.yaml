@@ -43,7 +43,7 @@ spec:
         - name: NODE_ENV
           value: '{{.Values.gatekeeper.nodeEnvironment}}'
         - name: PORT
-          value: "80"
+          value: "{{.Values.gatekeeper.service.port}}"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SKIP_HAKKEN
@@ -56,17 +56,17 @@ spec:
         - name: SERVICE_NAME
           value: gatekeeper
         - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
         image: "{{ .Values.gatekeeper.deployment.image }}"
         livenessProbe:
            httpGet:
              path: /status
-             port: 80
+             port: {{.Values.gatekeeper.service.port}}
            initialDelaySeconds: 3
            periodSeconds: 10
         name: gatekeeper
         ports:
-        - containerPort: 80
+        - containerPort: {{.Values.gatekeeper.service.port}}
         resources:
           {{- toYaml .Values.gatekeeper.resources | nindent 10 }}
         securityContext:

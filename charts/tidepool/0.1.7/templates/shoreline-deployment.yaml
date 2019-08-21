@@ -96,7 +96,7 @@ spec:
         - name: TIDEPOOL_SHORELINE_ENV
           value: |
             {
-                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper"]}},
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.gatekeeper.service.port}}"]}},
                 "hakken": {
                   "host": "hakken",
                   "skipHakken": true
@@ -105,7 +105,7 @@ spec:
                     "metricsSource": "shoreline",
                     "metricsVersion": "v0.0.1",
                     "name": "highwater",
-                    "serviceSpec": {"type": "static", "hosts": ["http://highwater"]}
+                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.highwater.service.port}}"]}
                 }
             }
         - name: TIDEPOOL_SHORELINE_SERVICE
@@ -118,7 +118,7 @@ spec:
                     "expireDays": 14
                 },
                 "service": {
-                    "host": "localhost",
+                    "host": "localhost:{{.Values.shoreline.service.port}}",
                     "protocol": "http",
                     "service": "shoreline"
                 },
@@ -131,12 +131,12 @@ spec:
         livenessProbe:
           httpGet:
             path: /status
-            port: 80
+            port: {{ .Values.shoreline.service.port }}
           initialDelaySeconds: 3
           periodSeconds: 10
         name: shoreline
         ports:
-        - containerPort: 80
+        - containerPort: {{ .Values.shoreline.service.port }}
         resources:
           {{- toYaml .Values.shoreline.resources | nindent 10 }}
         securityContext:

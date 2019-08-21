@@ -43,7 +43,7 @@ spec:
         - name: TIDEPOOL_HYDROPHONE_ENV
           value: |
             {
-                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper"]}},
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.gatekeeper.service.port}}"]}},
                 "hakken": {
                   "host": "hakken",
                   "skipHakken": true
@@ -52,12 +52,12 @@ spec:
                     "metricsSource": "hydrophone",
                     "metricsVersion": "v0.0.1",
                     "name": "highwater",
-                    "serviceSpec": {"type": "static", "hosts": ["http://highwater"]}
+                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.highwater.service.port}}"]}
                 },
-                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull"]}},
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.seagull.service.port}}"]}},
                 "shoreline": {
                     "name": "hydrophone",
-                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline"]},
+                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:{{.Values.shoreline.service.port}}"]},
                     "tokenRefreshInterval": "1h"
                 }
             }
@@ -74,7 +74,7 @@ spec:
                     "connectionString": ""
                 },
                 "service": {
-                    "host": "localhost",
+                    "host": "localhost:{{.Values.hydrophone.service.port}}",
                     "protocol": "http",
                     "service": "hydrophone"
                 },
@@ -86,12 +86,12 @@ spec:
         livenessProbe:
           httpGet:
             path: /status
-            port: 80
+            port: {{.Values.hydrophone.service.port}}
           initialDelaySeconds: 30
           periodSeconds: 10
         name: hydrophone
         ports:
-        - containerPort: 80
+        - containerPort: {{.Values.hydrophone.service.port}}
         resources:
           {{- toYaml .Values.hydrophone.resources | nindent 10 }}
         securityContext:

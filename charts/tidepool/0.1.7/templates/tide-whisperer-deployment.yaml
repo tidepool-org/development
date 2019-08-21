@@ -49,18 +49,18 @@ spec:
           value: |
             {
                 "auth": {
-                  "address": "http://auth,
+                  "address": "http://auth:{{.Values.auth.service.port}}",
                   "userAgent": "Tidepool-TideWhisperer"
                 },
-                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper"]}},
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.gatekeeper.service.port}}"]}},
                 "hakken": {
                   "host": "hakken",
                   "skipHakken": true
                   },
-                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull"]}},
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.seagull.service.port}}"]}},
                 "shoreline": {
                     "name": "tide-whisperer",
-                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline"]},
+                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:{{.Values.shoreline.service.port}}"]},
                     "tokenRefreshInterval": "1h"
                 }
             }
@@ -75,7 +75,7 @@ spec:
                     "minimum": 1
                 },
                 "service": {
-                    "host": "localhost",
+                    "host": "localhost:{{.Values.tidewhisperer.service.port}}",
                     "protocol": "http",
                     "service": "tide-whisperer"
                 }
@@ -84,12 +84,12 @@ spec:
         livenessProbe:
           httpGet:
             path: /status
-            port: 80
+            port: {{.Values.tidewhisperer.service.port}}
           initialDelaySeconds: 30
           periodSeconds: 10
         name: tide-whisperer
         ports:
-        - containerPort: 80
+        - containerPort: {{.Values.tidewhisperer.service.port}}
         resources:
           {{- toYaml .Values.tidewhisperer.resources | nindent 10 }}
         securityContext:

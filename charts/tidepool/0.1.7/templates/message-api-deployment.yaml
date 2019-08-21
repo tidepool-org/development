@@ -36,17 +36,17 @@ spec:
           value: 'hakken'
         - name: GATEKEEPER_SERVICE
           value: '{
-                  "type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper"}]}'
+                  "type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.gatekeeper.service.port}}"}]}'
         - name: METRICS_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater:{{.Values.highwater.service.port}}"}]}'
         - name: NODE_ENV
           value: '{{.Values.messageapi.nodeEnvironment}}'
         - name: PORT
-          value: "80"
+          value: "{{.Values.messageapi.service.port}}"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SEAGULL_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:{{.Values.seagull.service.port}}"}]}'
         - name: SERVER_NAME
           value: message-api
         - name: SERVER_SECRET
@@ -59,19 +59,19 @@ spec:
         - name: DELETE_TIME_WINDOW
           value: '{{.Values.messageapi.window}}'
         - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
         - name: SKIP_HAKKEN
           value: "true"
         image: "{{ .Values.messageapi.deployment.image }}" 
         livenessProbe:
           httpGet:
             path: /status
-            port: 80
+            port: {{.Values.messageapi.service.port}}
           initialDelaySeconds: 3
           periodSeconds: 10
         name: message-api
         ports:
-        - containerPort: 80
+        - containerPort: {{.Values.messageapi.service.port}}
         resources:
           {{- toYaml .Values.messageapi.resources | nindent 10 }}
         securityContext:

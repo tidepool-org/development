@@ -14,7 +14,7 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: user.{{ .Release.Namespace }}
+      service: user.{{ .Release.Namespace }}:{{.Values.user.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -25,7 +25,7 @@ metadata:
       method: "GET|DELETE"
       method_regex: true
       rewrite: ""
-      service: user.{{ .Release.Namespace }}
+      service: user.{{ .Release.Namespace }}:{{.Values.user.service.port}}
   labels:
     app: user
 {{ include "charts.labels.standard" .}}
@@ -34,8 +34,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: 80
-    targetPort: 80
+    port: {{.Values.user.service.port}}
+    targetPort: {{.Values.user.service.port}}
   selector:
     app: user
     app.kubernetes.io/name: {{ include "charts.name" . }}

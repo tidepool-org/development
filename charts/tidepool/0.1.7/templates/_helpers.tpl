@@ -45,7 +45,7 @@ Create environment variables used by all platform services.
 
 {{ define "charts.platform.env.clients" }}
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
-          value: http://auth
+          value: http://auth:{{.Values.auth.service.port}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
           value: "http://internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
@@ -54,11 +54,11 @@ Create environment variables used by all platform services.
               name: server
               key: ServiceAuth
         - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
-          value: http://blob
+          value: http://blob:{{.Values.blob.service.port}}
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
-          value: http://data
+          value: http://data:{{.Values.data.service.port}}
         - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
-          value: http://data
+          value: http://data:{{.Values.data.service.port}}
         - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
           valueFrom:
             configMapKeyRef:
@@ -70,15 +70,15 @@ Create environment variables used by all platform services.
               name: dexcom
               key: AuthorizeURL
         - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
-          value: http://image
+          value: http://image:{{.Values.image.service.port}}
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
           value: "http://internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
-          value: http://notification
+          value: http://notification:{{.Values.notification.service.port}}
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
-          value: http://gatekeeper
+          value: http://gatekeeper:{{.Values.gatekeeper.service.port}}
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS
-          value: http://task
+          value: http://task:{{.Values.task.service.port}}
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
           value: "http://internal.{{.Release.Namespace}}"
 {{ end }}
@@ -144,14 +144,14 @@ Create liveness and readiness probes for platform services.
         livenessProbe:
           httpGet:
             path: /status
-            port: 80
+            port: {{.}}
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
         readinessProbe:
           httpGet:
             path: /status
-            port: 80
+            port: {{.}}
           initialDelaySeconds: 5
           periodSeconds: 10
           timeoutSeconds: 5
@@ -159,7 +159,7 @@ Create liveness and readiness probes for platform services.
 {{- define "charts.init.shoreline" -}}
       - name: init-shoreline
         image: busybox
-        command: ['sh', '-c', 'until nc -zvv shoreline 80 ; do echo waiting for shoreline; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -zvv shoreline {{.Values.shoreline.service.port}}; do echo waiting for shoreline; sleep 2; done;']
 {{- end -}} 
 
 {{- define "charts.labels.standard" }} 
@@ -177,6 +177,6 @@ Create liveness and readiness probes for platform services.
 {{ .Values.gloo.gatewayProxies.gatewayProxyV2.service.httpPort }}
 {{ end }}
 
-{{- define "charts.service.http.type" -}} 
+{{- define "charts.service.type" -}} 
 {{ .Values.gloo.gatewayProxies.gatewayProxyV2.service.type }}
 {{ end }}

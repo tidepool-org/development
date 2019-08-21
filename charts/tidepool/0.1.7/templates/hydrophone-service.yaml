@@ -14,7 +14,7 @@ metadata:
       method_regex: true
       rewrite: "/"
       path_redirect: "false"
-      service: hydrophone.{{ .Release.Namespace }}
+      service: hydrophone.{{ .Release.Namespace }}:{{ .Values.hydrophone.service.port }}
   labels:
     app: hydrophone
 {{ include "charts.labels.standard" .}}
@@ -23,8 +23,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: 80
-    targetPort: 80
+    port: {{.Values.hydrophone.service.port}}
+    targetPort: {{.Values.hydrophone.service.port}}
   selector:
     app: hydrophone
     app.kubernetes.io/name: {{ include "charts.name" . }}

@@ -60,7 +60,7 @@ spec:
         - name: NODE_ENV
           value: '{{.Values.highwater.nodeEnvironment}}'
         - name: PORT
-          value: "80"
+          value: "{{.Values.highwater.service.port}}"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SALT_DEPLOY
@@ -76,17 +76,17 @@ spec:
         - name: SERVICE_NAME
           value: highwater
         - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
         image: "{{ .Values.highwater.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: 80
+            port: {{.Values.highwater.service.port}}
           initialDelaySeconds: 3
           periodSeconds: 10
         name: highwater
         ports:
-        - containerPort: 80
+        - containerPort: {{.Values.highwater.service.port}}
         resources:
           {{- toYaml .Values.highwater.resources | nindent 10 }}
         securityContext:

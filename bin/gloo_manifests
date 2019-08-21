@@ -26,16 +26,16 @@ HOST='{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}} {{- else 
 EXTERNAL_HOST_NAME = '{{ $dnsName }}'
 
 """The name of the TLS secret containing the TLS cert"""
-TLS_SECRET_NAME = '{{ include "charts.certificate.secretName" . }}'
+TLS_SECRET_NAME = '{{ $.Values.ingress.certificate.secretName }}'
 
 """The namespace of the TLS secret containing the TLS cert"""
 TLS_SECRET_NAMESPACE = '{{ $.Release.Namespace }}'
 
 """The name of the Gateway Proxy Service"""
-GATEWAY_PROXY_NAME = '{{ $.Value.global.cluster.gateway..proxy.name }}'
+GATEWAY_PROXY_NAME = '{{ $.Value.ingress.deployment.name }}'
 
 """The namespace of the Gateway Proxy Service"""
-GATEWAY_PROXY_NAMESPACE = '{{ $.Values.global.cluster.gateway.proxy.namespace }}'
+GATEWAY_PROXY_NAMESPACE = '{{ $.Values.ingress.deployment.namespace }}'
 
 """The environment being instantiated"""
 ENVIRONMENT = '{{ $.Release.Namespace }}'
@@ -360,7 +360,6 @@ class RoutesBuilder:
     def service_and_port(mapping):
         """Return a service and port"""
         s = mapping["service"]
-        name = mapping["name"]
         if ":" in s:
             (svc_with_namespace,port) = s.split(":")
         else:

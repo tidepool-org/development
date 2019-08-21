@@ -41,7 +41,7 @@ spec:
               name: blob
               key: ServiceAuth
         - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
-          value: 80
+          value: :{{.Values.blob.service.port}}
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
           value: '{{.Values.blob.deployment.env.store.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
@@ -51,10 +51,10 @@ spec:
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
           value: '{{.Values.blob.deployment.env.store.type}}'
         image: "{{ .Values.blob.deployment.image }}"
-        {{ template "charts.platform.probes" . }}
+        {{ template "charts.platform.probes" .Values.blob.service.port}}
         name: blob
         ports:
-        - containerPort: 80
+        - containerPort: {{.Values.blob.service.port}}
         resources:
           {{- toYaml .Values.blob.resources | nindent 10 }}
         securityContext:

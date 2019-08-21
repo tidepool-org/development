@@ -40,7 +40,7 @@ spec:
               name: image
               key: ServiceAuth 
         - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
-          value: 80
+          value: :{{.Values.image.service.port}}
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
           value: '{{.Values.image.deployment.env.store.type}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
@@ -50,10 +50,10 @@ spec:
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
           value: '{{.Values.image.deployment.env.store.prefix}}' 
         image: "{{ .Values.image.deployment.image }}"
-        {{ template "charts.platform.probes" . }}
+        {{ template "charts.platform.probes" .Values.image.service.port }}
         name: image
         ports:
-        - containerPort: 80
+        - containerPort: {{.Values.image.service.port}}
         resources:
           {{- toYaml .Values.image.resources | nindent 10 }}
         securityContext:

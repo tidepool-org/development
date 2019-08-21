@@ -36,13 +36,13 @@ spec:
         - name: DISCOVERY_HOST
           value: 'hakken'
         - name: GATEKEEPER_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.gatekeeper.service.port}}"}]}'
         - name: METRICS_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater:{{.Values.highwater.service.port}}"}]}'
         - name: NODE_ENV
           value: '{{.Values.seagull.nodeEnvironment}}'
         - name: PORT
-          value: "80"
+          value: "{{.Values.seagull.service.port}}"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SERVER_SECRET
@@ -53,19 +53,19 @@ spec:
         - name: SERVICE_NAME
           value: seagull
         - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
         - name: SKIP_HAKKEN
           value: "true"
         image: "{{ .Values.seagull.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: 80
+            port: {{.Values.seagull.service.port}}
           initialDelaySeconds: 30
           periodSeconds: 10
         name: seagull
         ports:
-        - containerPort: 80
+        - containerPort: {{.Values.seagull.service.port}}
         resources:
           {{- toYaml .Values.seagull.resources | nindent 10 }}
         securityContext:

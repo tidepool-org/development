@@ -2,135 +2,122 @@
 {{- $relname := .Release.Name -}}
 
 ---
-# file: gloo-auth-80-upstream.yaml
+# file: gloo-auth-9222-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-auth-80'
+  name: '{{ $.Release.Namespace }}-auth-9222'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: auth
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9222
 ---
-# file: gloo-auth:80-80-upstream.yaml
+# file: gloo-blip-3000-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-auth:80-80'
-  namespace: '{{ $.Release.Namespace }}'
-spec:
-  upstreamSpec:
-    kube:
-      serviceName: auth:80
-      serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
----
-# file: gloo-blip-80-upstream.yaml
-apiVersion: gloo.solo.io/v1
-kind: Upstream
-metadata:
-  name: '{{ $.Release.Namespace }}-blip-80'
+  name: '{{ $.Release.Namespace }}-blip-3000'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: blip
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 3000
 ---
-# file: gloo-blob-80-upstream.yaml
+# file: gloo-blob-9225-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-blob-80'
+  name: '{{ $.Release.Namespace }}-blob-9225'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: blob
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9225
 ---
-# file: gloo-data-80-upstream.yaml
+# file: gloo-data-9220-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-data-80'
+  name: '{{ $.Release.Namespace }}-data-9220'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: data
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9220
 ---
-# file: gloo-export-80-upstream.yaml
+# file: gloo-export-9300-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-export-80'
+  name: '{{ $.Release.Namespace }}-export-9300'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: export
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9300
 ---
-# file: gloo-gatekeeper-80-upstream.yaml
+# file: gloo-gatekeeper-9123-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-gatekeeper-80'
+  name: '{{ $.Release.Namespace }}-gatekeeper-9123'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: gatekeeper
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9123
 ---
-# file: gloo-highwater-80-upstream.yaml
+# file: gloo-highwater-9191-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-highwater-80'
+  name: '{{ $.Release.Namespace }}-highwater-9191'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: highwater
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9191
 ---
-# file: gloo-hydrophone-80-upstream.yaml
+# file: gloo-hydrophone-9157-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-hydrophone-80'
+  name: '{{ $.Release.Namespace }}-hydrophone-9157'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: hydrophone
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9157
 ---
-# file: gloo-image-80-upstream.yaml
+# file: gloo-image-9226-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-image-80'
+  name: '{{ $.Release.Namespace }}-image-9226'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: image
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9226
 ---
 # file: gloo-internal-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
@@ -153,7 +140,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-auth-80'
+            name: '{{ $.Release.Namespace }}-auth-9222'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -164,7 +151,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-auth-80'
+            name: '{{ $.Release.Namespace }}-auth-9222'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -173,7 +160,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-80'
+            name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -185,7 +172,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-80'
+            name: '{{ $.Release.Namespace }}-data-9220'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -196,7 +183,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-auth-80'
+            name: '{{ $.Release.Namespace }}-auth-9222'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -205,7 +192,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-80'
+            name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -214,7 +201,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-80'
+            name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -224,7 +211,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-auth-80'
+            name: '{{ $.Release.Namespace }}-auth-9222'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -233,7 +220,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-80'
+            name: '{{ $.Release.Namespace }}-data-9220'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -244,7 +231,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-image-80'
+            name: '{{ $.Release.Namespace }}-image-9226'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -253,7 +240,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-auth:80-80'
+            name: '{{ $.Release.Namespace }}-auth-9222'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -263,7 +250,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-80'
+            name: '{{ $.Release.Namespace }}-data-9220'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -272,7 +259,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-80'
+            name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -281,7 +268,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-80'
+            name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -290,7 +277,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blob-80'
+            name: '{{ $.Release.Namespace }}-blob-9225'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -301,7 +288,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-80'
+            name: '{{ $.Release.Namespace }}-data-9220'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -312,7 +299,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-image-80'
+            name: '{{ $.Release.Namespace }}-image-9226'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -323,7 +310,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-auth-80'
+            name: '{{ $.Release.Namespace }}-auth-9222'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -334,7 +321,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blob-80'
+            name: '{{ $.Release.Namespace }}-blob-9225'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -343,7 +330,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-80'
+            name: '{{ $.Release.Namespace }}-data-9220'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -352,7 +339,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-jellyfish-80'
+            name: '{{ $.Release.Namespace }}-jellyfish-9122'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -361,7 +348,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-80'
+            name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -370,7 +357,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-80'
+            name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -379,7 +366,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-jellyfish-80'
+            name: '{{ $.Release.Namespace }}-jellyfish-9122'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -388,7 +375,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-80'
+            name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -398,7 +385,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blob-80'
+            name: '{{ $.Release.Namespace }}-blob-9225'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -409,7 +396,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-task-80'
+            name: '{{ $.Release.Namespace }}-task-9224'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -419,7 +406,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-user-80'
+            name: '{{ $.Release.Namespace }}-user-9221'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -433,7 +420,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-80'
+            name: '{{ $.Release.Namespace }}-data-9220'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -445,7 +432,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-jellyfish-80'
+            name: '{{ $.Release.Namespace }}-jellyfish-9122'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -459,7 +446,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-user-80'
+            name: '{{ $.Release.Namespace }}-user-9221'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -471,7 +458,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-80'
+            name: '{{ $.Release.Namespace }}-data-9220'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -482,7 +469,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-80'
+            name: '{{ $.Release.Namespace }}-data-9220'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -491,7 +478,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-shoreline-80'
+            name: '{{ $.Release.Namespace }}-shoreline-9107'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -502,7 +489,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-image-80'
+            name: '{{ $.Release.Namespace }}-image-9226'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -516,7 +503,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-seagull-80'
+            name: '{{ $.Release.Namespace }}-seagull-9120'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -528,7 +515,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-80'
+            name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -542,7 +529,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-80'
+            name: '{{ $.Release.Namespace }}-data-9220'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -559,7 +546,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-highwater-80'
+            name: '{{ $.Release.Namespace }}-highwater-9191'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -576,7 +563,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-hydrophone-80'
+            name: '{{ $.Release.Namespace }}-hydrophone-9157'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -593,7 +580,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-message-api-80'
+            name: '{{ $.Release.Namespace }}-message-api-9119'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -606,7 +593,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-task-80'
+            name: '{{ $.Release.Namespace }}-task-9224'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -615,7 +602,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-80'
+            name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -624,7 +611,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-80'
+            name: '{{ $.Release.Namespace }}-data-9220'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -638,7 +625,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-export-80'
+            name: '{{ $.Release.Namespace }}-export-9300'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -655,7 +642,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-gatekeeper-80'
+            name: '{{ $.Release.Namespace }}-gatekeeper-9123'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -664,7 +651,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-80'
+            name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -673,7 +660,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-80'
+            name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -682,7 +669,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-jellyfish-80'
+            name: '{{ $.Release.Namespace }}-jellyfish-9122'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -696,7 +683,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-shoreline-80'
+            name: '{{ $.Release.Namespace }}-shoreline-9107'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -708,7 +695,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-tide-whisperer-80'
+            name: '{{ $.Release.Namespace }}-tide-whisperer-9127'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -720,7 +707,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-jellyfish-80'
+            name: '{{ $.Release.Namespace }}-jellyfish-9122'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -729,97 +716,97 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-80'
+            name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
 ---
-# file: gloo-jellyfish-80-upstream.yaml
+# file: gloo-jellyfish-9122-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-jellyfish-80'
+  name: '{{ $.Release.Namespace }}-jellyfish-9122'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: jellyfish
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9122
 ---
-# file: gloo-message-api-80-upstream.yaml
+# file: gloo-message-api-9119-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-message-api-80'
+  name: '{{ $.Release.Namespace }}-message-api-9119'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: message-api
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9119
 ---
-# file: gloo-seagull-80-upstream.yaml
+# file: gloo-seagull-9120-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-seagull-80'
+  name: '{{ $.Release.Namespace }}-seagull-9120'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: seagull
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9120
 ---
-# file: gloo-shoreline-80-upstream.yaml
+# file: gloo-shoreline-9107-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-shoreline-80'
+  name: '{{ $.Release.Namespace }}-shoreline-9107'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: shoreline
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9107
 ---
-# file: gloo-task-80-upstream.yaml
+# file: gloo-task-9224-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-task-80'
+  name: '{{ $.Release.Namespace }}-task-9224'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: task
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9224
 ---
-# file: gloo-tide-whisperer-80-upstream.yaml
+# file: gloo-tide-whisperer-9127-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-tide-whisperer-80'
+  name: '{{ $.Release.Namespace }}-tide-whisperer-9127'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: tide-whisperer
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9127
 ---
-# file: gloo-user-80-upstream.yaml
+# file: gloo-user-9221-upstream.yaml
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: '{{ $.Release.Namespace }}-user-80'
+  name: '{{ $.Release.Namespace }}-user-9221'
   namespace: '{{ $.Release.Namespace }}'
 spec:
   upstreamSpec:
     kube:
       serviceName: user
       serviceNamespace: '{{ $.Release.Namespace }}'
-      servicePort: 80
+      servicePort: 9221
 

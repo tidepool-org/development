@@ -14,7 +14,7 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: data.{{ .Release.Namespace }}
+      service: data.{{ .Release.Namespace }}:{{.Values.data.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -25,7 +25,7 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: data.{{ .Release.Namespace }}
+      service: data.{{ .Release.Namespace }}:{{.Values.data.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -36,7 +36,7 @@ metadata:
       method: "GET|POST|DELETE|OPTIONS"
       method_regex: true
       rewrite: ""
-      service: data.{{ .Release.Namespace }}
+      service: data.{{ .Release.Namespace }}:{{.Values.data.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -46,7 +46,7 @@ metadata:
       prefix_regex: true
       method: "GET"
       rewrite: ""
-      service: data.{{ .Release.Namespace }}
+      service: data.{{ .Release.Namespace }}:{{.Values.data.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -57,7 +57,7 @@ metadata:
       method: "GET|POST"
       method_regex: true
       rewrite: ""
-      service: data.{{ .Release.Namespace }}
+      service: data.{{ .Release.Namespace }}:{{.Values.data.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -67,7 +67,7 @@ metadata:
       prefix_regex: true
       method: "DELETE"
       rewrite: ""
-      service: data.{{ .Release.Namespace }}
+      service: data.{{ .Release.Namespace }}:{{.Values.data.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -76,7 +76,7 @@ metadata:
       prefix: "/v1/time"
       method: "GET"
       rewrite: ""
-      service: data.{{ .Release.Namespace }}
+      service: data.{{ .Release.Namespace }}:{{.Values.data.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -87,7 +87,7 @@ metadata:
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: data.{{ .Release.Namespace }}
+      service: data.{{ .Release.Namespace }}:{{.Values.data.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -96,7 +96,7 @@ metadata:
       prefix: "/v1/data_sets"
       method: "GET"
       rewrite: ""
-      service: data.{{ .Release.Namespace }}
+      service: data.{{ .Release.Namespace }}:{{.Values.data.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -106,7 +106,7 @@ metadata:
       method: "POST|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: data.{{ .Release.Namespace }}
+      service: data.{{ .Release.Namespace }}:{{.Values.data.service.port}}
   labels:
     app: data
 {{ include "charts.labels.standard" .}}
@@ -115,8 +115,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: 80
-    targetPort: 80
+    port: {{.Values.data.service.port}}
+    targetPort: {{.Values.data.service.port}}
   selector:
     app: data
     app.kubernetes.io/name: {{ include "charts.name" . }}

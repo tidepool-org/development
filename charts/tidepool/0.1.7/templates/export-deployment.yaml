@@ -36,7 +36,7 @@ spec:
         - name: DEBUG_LEVEL
           value: debug
         - name: HTTP_PORT
-          value: "80"
+          value: "{{ .Values.export.service.port }}"
         - name: SESSION_SECRET
           valueFrom:
             secretKeyRef:
@@ -46,12 +46,12 @@ spec:
         livenessProbe:
           httpGet:
             path: /export/status
-            port: 80
+            port: {{ .Values.export.service.port }}
           initialDelaySeconds: 30
           periodSeconds: 10
         name: export
         ports:
-        - containerPort: 80
+        - containerPort: {{.Values.export.service.port}}
         resources:
           {{- toYaml .Values.export.resources | nindent 10 }}
         securityContext:

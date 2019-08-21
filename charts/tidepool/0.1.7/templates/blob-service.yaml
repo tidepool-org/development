@@ -14,7 +14,7 @@ metadata:
       method: "GET|POST|DELETE"
       method_regex: true
       rewrite: ""
-      service: blob.{{ .Release.Namespace }}
+      service: blob.{{ .Release.Namespace }}:{{.Values.blob.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -25,7 +25,7 @@ metadata:
       method: "GET|DELETE"
       method_regex: true
       rewrite: ""
-      service: blob.{{ .Release.Namespace }}
+      service: blob.{{ .Release.Namespace }}:{{.Values.blob.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -35,7 +35,7 @@ metadata:
       prefix_regex: true
       method: "GET"
       rewrite: ""
-      service: blob.{{ .Release.Namespace }}
+      service: blob.{{ .Release.Namespace }}:{{.Values.blob.service.port}}
   labels:
     app: blob
 {{ include "charts.labels.standard" .}}
@@ -44,8 +44,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: 80
-    targetPort: 80
+    port: {{.Values.blob.service.port}}
+    targetPort: {{.Values.blob.service.port}}
   selector:
     app: blob
     app.kubernetes.io/name: {{ include "charts.name" . }}
