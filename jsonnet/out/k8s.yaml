@@ -95,8 +95,6 @@ items:
               bucket: tidepool-development-default-data
               directory: _data/blobs
               prefix: blobs
-              s3:
-                bucketNamePrefix: tidepool
               type: s3
           gitops:
             automated: true
@@ -250,8 +248,6 @@ items:
             fromAddress: Tidepool <noreply@tidepool.org>
             store:
               bucket: tidepool-development-default-data
-              s3:
-                bucketNamePrefix: tidepool
               type: s3
           gitops:
             automated: true
@@ -288,8 +284,6 @@ items:
               bucket: tidepool-development-default-data
               directory: _data/image
               prefix: images
-              s3:
-                bucketNamePrefix: tidepool
               type: s3
           gitops:
             automated: true
@@ -340,8 +334,6 @@ items:
           env:
             store:
               bucket: tidepool-development-default-data
-              s3:
-                bucketNamePrefix: tidepool
               type: s3
           gitops:
             automated: true
@@ -377,8 +369,6 @@ items:
           env:
             store:
               bucket: tidepool-development-default-data
-              s3:
-                bucketNamePrefix: tidepool
               type: s3
             window: 21
           gitops:
@@ -561,8 +551,6 @@ items:
               workers: 5
             store:
               bucket: tidepool-development-default-data
-              s3:
-                bucketNamePrefix: tidepool
               type: s3
           gitops:
             automated: true

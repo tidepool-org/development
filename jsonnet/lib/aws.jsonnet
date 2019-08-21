@@ -5,7 +5,7 @@ local kube = import "kube.jsonnet";
   bucketName(config, env)::
     if std.objectHas(env.store, 'bucket') && env.store.bucket != ''
     then env.store.bucket
-    else '%s-%s-%s-data' % [config.cluster.store.s3.bucketNamePrefix, config.cluster.name, env.name],
+    else '%s-%s-%s-data' % [config.cluster.aws.s3.bucketNamePrefix, config.cluster.name, env.name],
 
   role(config, name):: config.cluster.name + '-' + name + '-role',
 
