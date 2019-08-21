@@ -95,14 +95,13 @@ local ingress(config,env) = {
     https: {
       enabled: ingress.service.https.enabled,
     },
-    gateway+: {
-      default+: {
-        host: host(config, env),
-      },
-    },
   },
   deployment: ingress.deployment,
-  gateway: env.groups.ingress.gateway,
+  gateway: env.groups.ingress.gateway + {
+    default+: {
+        host: host(config, env),
+    },
+  }
 };
 
 local hpas(config, env, group) = combine(config, env, group, 'hpa');
@@ -163,14 +162,14 @@ local HelmRelease(config, env) = aws.helmrelease(config, env) {
         logLevel: config.cluster.logLevel,
       },
     } + {
-      values+: {
-        [group.name]: groupConfig(config, env, group) for group in obj.values(env.groups) if std.objectHas(group, 'deployment')
-      },
+      [group.name]: groupConfig(config, env, group) for group in obj.values(env.groups) if std.objectHas(group, 'deployment')
     } + {
-      values+: {
-        ingress: ingress(config, env),
-      },
-    },
+      ingress: ingress(config, env),
+    } + {
+      mongodb: {
+        enabled: false // XXX
+      }
+    }
   },
 };
 

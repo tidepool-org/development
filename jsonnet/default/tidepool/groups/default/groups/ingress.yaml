@@ -12,7 +12,7 @@ tidepool:
               protocol: https
               #host: ""
             http:
-              dnsNames: [ "localhost" ]
+              dnsNames: [ ]
             https:
               dnsNames:
               - default.tidepool.org
