@@ -1,5 +1,5 @@
-local str = import 'str.jsonnet';
 local aws = import 'aws.jsonnet';
+local str = import 'str.jsonnet';
 
 local eksAnnotations(config) =
   if config.cluster.provider == 'eks' && config.cluster.gateway.type == 'LoadBalancer' then {
@@ -43,9 +43,9 @@ local Helmrelease(config, group) =
               stats: config.cluster.metrics.enabled,
             },
             service: {
-              httpPort: config.cluster.gateway.httpPort,  // HTTP port to listen on
-              httpsPort: config.cluster.gateway.httpsPort,  // HTTPS port to listen on
-              type: config.cluster.gateway.type,
+              httpPort: config.cluster.ingress.service.http.port,
+              httpsPort: config.cluster.ingress.service.https.port,
+              type: config.cluster.ingress.service.type,
               extraAnnotations: eksAnnotations(config) + externalDNSAnnotations(config),
             },
           },

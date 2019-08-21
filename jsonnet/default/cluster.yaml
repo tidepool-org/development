@@ -14,13 +14,17 @@ cluster:
       maxSize: 10
       minSize: 1
     region: us-west-2
-  gateway:
-    httpPort: 80
-    httpsPort: 443
-    proxy:
-      name: gateway-proxy-v2
-    type: LoadBalancer
-    hostnames: []
+  ingress:
+    dns:
+      hostnames: []
+    service:
+      http:
+        port: 80
+        enabled: false
+      https:
+        enabled: true
+        port: 443
+      type: LoadBalancer
   hpa:
     create: true
     data:
@@ -52,3 +56,5 @@ cluster:
       memory: '32Mi'
   store: 
     type: "s3"
+    s3:
+      bucketNamePrefix: "tidepool"

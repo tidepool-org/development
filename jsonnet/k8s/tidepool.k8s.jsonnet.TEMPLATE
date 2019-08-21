@@ -1,6 +1,6 @@
-local obj = import 'obj.jsonnet';
-local kube = import 'kube.jsonnet';
 local aws = import 'aws.jsonnet';
+local kube = import 'kube.jsonnet';
+local obj = import 'obj.jsonnet';
 
 local host(config, env) =
   if std.objectHas(env.hosts.default, 'host')
@@ -105,52 +105,77 @@ local HelmRelease(config, env) = aws.helmrelease(config, env) {
     namespace: env.name,
     annotations: {
       ['flux.weave.works/tag.' + group.name]: (hr.gitops.selector + ':' + hr.gitops.filter)
-      for group in obj.values(env.groups) if isAutomated(group)
+      for group in obj.values(env.groups)
+      if isAutomated(group)
     } + {
       'flux.weave.works/automated': hr.gitops.automated,
     },
   },
   spec+: {
     releaseName: env.name + '-tidepool',
-    values: obj.strip(hr.values, 'secrets') {
-      namespace+: {
-        annotations+: iamPermissions(config, env),
+    values: {
+      gloo: {
+        enabled: false,
+      },
+      tidepool: {
+        namespace+: {
+          annotations+: iamPermissions(config, env),
+        },
       },
       global+: {
-        cluster: config.cluster,
-        environment+: {
-          hosts+: {
-            default+: {
-              host: host(config, env),
-              https+: {
-                certificate+: {
-                  secretName: certificateSecretName(config, env),
-                },
-              },
-            },
+        cluster: {
+          name: config.cluster.name,
+          eks: {
+            region: config.cluster.eks.region,
           },
+          logLevel: config.cluster.logLevel,
         },
       },
     } + {
-      [group.name]: (
-        local envWithBucket = env + getBucket(config, env);
-        obj.strip(obj.strip(
-          group
-          + iamAnnotations(config, envWithBucket, group)
-          + linkerdAnnotations(config, envWithBucket, group)
-          + securityContext(config, envWithBucket, group)
-          + resources(config, envWithBucket, group)
-          + deployment(config, envWithBucket, group)
-          + hpas(config, envWithBucket, group),
-        'secret'), 'iamRole')
-      )
-      for group in obj.values(env.groups) if std.objectHas(group, 'deployment')
+      values+: {
+        [group.name]: (
+          local envWithBucket = env + getBucket(config, env);
+          obj.strip(obj.strip(
+            group
+            + iamAnnotations(config, envWithBucket, group)
+            + linkerdAnnotations(config, envWithBucket, group)
+            + securityContext(config, envWithBucket, group)
+            + resources(config, envWithBucket, group)
+            + deployment(config, envWithBucket, group)
+            + hpas(config, envWithBucket, group),
+            'secret'
+          ), 'iamRole')
+        )
+        for group in obj.values(env.groups)
+        if std.objectHas(group, 'deployment')
+      },
+    } + {
+      values+: {
+        ingress: {
+          service+: {
+            http: {
+              enabled: config.cluster.ingress.service.http.enabled,
+            },
+            https: {
+              enabled: config.cluster.ingress.service.https.enabled,
+            },
+            gateway+: {
+              default+: {
+                host: host(config, env),
+              },
+            },
+          },
+          deployment: env.ingress.deployment,
+          gateway: env.ingress.gateway,
+        },
+      },
     },
   },
 };
 
+local namespace(name, env) = if env.namespace.create then aws.namespace(config, env);
+
 function(config) (
-  local helmRelease(name, env) = if env.enabled then HelmRelease(config, env);
   local helmReleases = std.mapWithKey(helmRelease, config.tidepool.groups);
-  std.prune(helmReleases)
+  obj.values(std.prune(helmReleases)) + obj.values(std.prune(namespaces))
 )

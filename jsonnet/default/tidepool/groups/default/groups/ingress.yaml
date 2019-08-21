@@ -1,0 +1,23 @@
+tidepool:
+  groups:
+    default:
+      groups:
+        ingress:
+          deployment:
+            name: gateway-proxy-v2
+            namespace: gloo-system
+          gateway:
+            default:
+              protocol: https
+              #host: ""
+            http:
+              dnsNames: [ "localhost" ]
+            https:
+              dnsNames:
+              - default.tidepool.org
+          certificate:
+            create: false
+            #issuer:
+              #name: letsencrypt-staging
+              #kind: ClusterIssuer
+            #secretName: ""

@@ -1,5 +1,5 @@
-local kube = import 'kube.jsonnet';
 local aws = import 'aws.jsonnet';
+local kube = import 'kube.jsonnet';
 
 local ClusterIssuer(config, group, server, name) = {
   apiVersion: 'certmanager.k8s.io/v1alpha1',

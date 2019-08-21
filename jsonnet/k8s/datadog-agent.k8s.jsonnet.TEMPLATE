@@ -1,5 +1,5 @@
-local kube = import 'kube.jsonnet';
 local aws = import 'aws.jsonnet';
+local kube = import 'kube.jsonnet';
 
 local Helmrelease(config, group) =
   aws.helmrelease(config, group) {

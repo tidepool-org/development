@@ -1,4 +1,4 @@
-{{if .Values.global.environment.namespace.create }}
+{{if .Values.tidepool.namespace.create }}
 ---
 apiVersion: v1
 kind: Namespace
@@ -7,6 +7,6 @@ metadata:
   labels:
 {{ include "charts.labels.standard" .}}
   annotations:
-    {{- .Values.namespace.annotations | toYaml | nindent 4 }}
+    {{- .Values.tidepool.namespace.annotations | toYaml | nindent 4 }}
 {{- end }}
 

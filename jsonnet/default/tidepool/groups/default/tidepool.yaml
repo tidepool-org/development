@@ -17,16 +17,6 @@ tidepool:
           maxReplicas: 10
           minReplicas: 1
           targetCPUUtilizationPercentage: 50
-      hosts:
-        default:
-          protocol: https
-        http:
-          enabled: false
-        https:
-          certificateIssuer: letsencrypt-staging
-          dnsNames:
-          - default.tidepool.org
-          enabled: true
       helmrelease:
         create: true
         chart:

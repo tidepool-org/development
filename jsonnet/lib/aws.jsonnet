@@ -5,7 +5,7 @@ local kube = import "kube.jsonnet";
   bucketName(config, env)::
     if std.objectHas(env.store, 'bucket') && env.store.bucket != ''
     then env.store.bucket
-    else 'tidepool-%s-%s-data' % [config.cluster.name, env.name],
+    else '%s-%s-%s-data' % [config.store.s3.bucketNamePrefix, config.cluster.name, env.name],
 
   role(config, name):: config.cluster.name + '-' + name + '-role',
 
@@ -81,6 +81,85 @@ local kube = import "kube.jsonnet";
     },
     data_:: if std.objectHas(group.secret, 'data_') then group.secret.data_ else {},
     data: { [k]: std.base64(this.data_[k]) for k in std.objectFields(this.data_) },
+  },
+
+  loggedS3Bucket(config,group):: $.cfObject(config, group, 'AWS::S3::Bucket') {
+    values+:: {
+      local name = bucketName(config,group),
+      Condition: "EC2RoleVersion1",
+      DeletionPolicy: "Retain",
+      Properties: {
+        AccessControl: "Private",
+        BucketName: name,
+        LoggingConfiguration: {
+          LogFilePrefix: 'AWSLogs/%s/S3/%s/' % [ config.cluster.eks.accountNumber, name ]
+        },
+        Tags:  [
+          {
+            Key: "Name",
+            Value: "%s-%s-DataBucket" % [ config.cluster.eks.name, group.name ]
+          }, {
+            Key: "Tidepool-Env",
+            Value: {
+              'Fn::GetAtt': group.name
+            }
+          }, {
+            Key: "Tidepool-Stack",
+            Value: {
+              Ref: "AWS::StackName"
+            }
+          }
+        ]
+      }
+    }
+  },
+
+  publicRoute(config,group):: $.cfObject(config, group, 'AWS::EC2::Route') {
+    values+:: {
+      DependsOn: "OpsVPCPeeringConnection",
+      Properties: {
+        DestinationCidrBlock: {
+          'Fn::Sub': '${OpsNetStackOutputs.IpPrefix}.0.0/16'
+        },
+        VpcPeeringConnectionId: {
+          Ref: "OpsVPCPeeringConnection"
+        },
+        RouteTableId: {
+          'Fn::GetAtt': "EnvNetStackOutputs.PublicRouteTableId" 
+        },
+      }
+    }
+  },
+
+  peeringConnection(config,group):: $.cfObject(config, group, 'AWS::EC2::VPCPeeringConnection') {
+    values+:: {
+      Condition: "EC2RoleVersion1",
+      DeletionPolicy: "Retain",
+      Properties: {
+        VpcId: {
+          'Fn::GetAtt': "EnvNetStackOutputs.VPCId" // XXX - get this from eksctl
+        },
+        PeerVpcId: {
+          'Fn::GetAtt': "OpsNetStackOutputs.VPCId" // XXX
+        },
+        Tags: [
+          {
+            Key: "Name",
+            Value: "%s-%s-DBPeeringConnection" % [ config.cluster.eks.name, group.name ]
+          }, {
+            Key: "Tidepool-Env",
+            Value: {
+              'Fn::GetAtt': group.name
+            }
+          }, {
+            Key: "Tidepool-Stack",
+            Value: {
+              Ref: "AWS::StackName"
+            }
+          }
+        ]
+      }
+    }
   },
 
   iamRole(config, group):: $.cfObject(config, group, 'AWS::IAM::Role') {

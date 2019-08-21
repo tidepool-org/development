@@ -2,19 +2,16 @@ global:
   fullnameOverride: ""                            #
   nameOverride: ""                                # the name to use for the helm chart, if given
   cluster:
+    name: "foobar"                                # K8s cluster name
     eks:
       region: "us-west-2"                         # AWS region
-      name: "foobar"                              # K8s cluster name
-    mesh:                                         # service mesh to use
-      name: linkerd
-      enabled: false
     logLevel: info                                # the default log level for all services
-  environment:                                    # the cluster name
-    namespace:
-      create: false                               # whether to create the namespace
-      annotations: {}                             # namespace annotations
 
 # environment-wide secrets
+tidepool:
+  namespace:
+    create: true
+    annotations: {}                             # namespace annotations
 userdata:
   secret: 
     create: false
