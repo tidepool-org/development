@@ -108,7 +108,6 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.logLevel`                              | Default log level | `info`                                        |
 | `global.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
 | `global.fullnameOverride`                                |                                                                                              | ``                                                    |
-| `global.mongodb.enabled`                                 | Whether to include an mongodb with this installation                                         | `true`                                                |
 | `global.nameOverride`                                    | If non-empty, Helm chart name to use                                                         | ``                                                    |
 | `gloo.enabled`                                           | Whether to include an API Gateway with this installation                                     | `true`                                                |
 | `gloo.gatewayProxies.gatewayProxyV2.service.httpPort`  | HTTP port to listen to | `8080`                                                  |
@@ -161,6 +160,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `mongo.secret.data_.Scheme`                                        | plaintext Mongo DB scheme, either `mongodb` or `mongodb+srv`                                              | `mongodb`                                             |
 | `mongo.secret.data_.Tls`                                              | plaintext, If true, use SSL on Mongo connection                                                         | `false`                                               |
 | `mongo.secret.data_.Username`                                         | plaintext, If non-empty, Mongo username                                                                 | ``                                                    |
+| `mongodb.enabled`                                 | Whether to include an mongodb with this installation                                         | `true`                                                |
 | `nosqlclient.enabled`                                    | Enable nosqlclient                                                                           | `false`                                               |
 | `notification.deployment.image` | notification Docker image | `` |
 | `notification.secret.create`                                         | wheter to create notification secret | ``                                         |
@@ -222,8 +222,6 @@ N.B If you are running Mongo on your local laptop and typically access it using 
 ### Multiple Instantiations
 
 The Tidepool web service may be installed under multiple namespaces within the same cluster (using different host names).  However, the Gloo API Gateway may only be installed once.  You must disable the installation of Gloo for subsequent installations by setting the value `gloo.enabled` to `false`.
-
-You must also set different host names by setting the values under `global.environment.hosts`
 
 ### Secrets
 
