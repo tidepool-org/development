@@ -129,14 +129,13 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `image.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `ingress.deployment.name`                              | Name of the API gateway proxy                                                                | `gateway-proxy-v2`                                    |
 | `ingress.deployment.namespace`                         | Namespace of the API gateway proxy                                                           | `gloo-system`                                         |
-| `ingress.gateway.default.host`                          | Host to use for email verification                                                      | ``                                                    |
-| `ingress.gateway.default.protocol`                          | Protocol to use for email verification.                                                      | ``                                                    |
+| `ingress.gateway.default.host`                          | Host to use for email verification                                                      | `localhost`   |
+| `ingress.gateway.default.protocol`                          | Protocol to use for email verification.                                                      | `http`                                                    |
 | `ingress.gateway.http.dnsNames`                             | List of host to listen to                                                                    | `localhost`                                           |
 | `ingress.gateway.https.dnsNames`                            | List of Subject Alternative Names to use                                                     | `[]`                                                  |
 | `ingress.service.annotations`                             |  The service annotations | `{}`                                           |
-| `ingress.service.http.enabled`                             |  Whether to provide HTTP access | `false`                                           |
-| `ingress.service.https.enabled`                             |  Whether to provide HTTPS access | `true`                                           |
-| `ingress.service.type` | Type of service to use for the ingress | `LoadBalancer` |
+| `ingress.service.http.enabled`                             |  Whether to provide HTTP access | `true`                                           |
+| `ingress.service.https.enabled`                             |  Whether to provide HTTPS access | `false`                                           |
 | `jellyfish.deployment.env.store.bucket`                                      | S3 bucket where jellyfish data is written | `data`                                      |
 | `jellyfish.deployment.env.store.type`                                      | If `s3`, store jellyfish data in Amazon S3. If `file` store jellyfishdata in local files. | `file`                                                |
 | `jellyfish.deployment.image` | jellyfish Docker image | `` |
