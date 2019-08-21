@@ -5,7 +5,7 @@ kind: Deployment
 metadata:
   labels:
     app: nosqlclient
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: nosqlclient
   namespace: {{.Release.Namespace}}
 spec:
@@ -23,8 +23,10 @@ spec:
         app: nosqlclient
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+{{ if .Values.nosqlclient.podAnnotations }}
       annotations:
         {{- .Values.nosqlclient.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
     spec:
       containers:
       - name: nosqlclient
@@ -64,7 +66,7 @@ spec:
               key: tls
         image: "{{ .Values.nosqlclient.image }}"
         ports:
-        - containerPort: {{ .Values.nosqlclient.service.port }}
+        - containerPort: 80
       restartPolicy: Always
 
 {{- end }}

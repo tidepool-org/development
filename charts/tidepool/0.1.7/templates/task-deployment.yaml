@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   labels:
     app: task
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: task
   namespace: {{.Release.Namespace}}
   annotations:
@@ -23,8 +23,10 @@ spec:
         app: task
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+{{ if .Values.task.podAnnotations }}
       annotations:
         {{- .Values.task.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
     spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}
@@ -43,12 +45,12 @@ spec:
               name: task
               key: ServiceAuth
         - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
-          value: :{{ .Values.task.service.port }}
+          value: :80
         image: "{{ .Values.task.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.task.service.port}}
+        {{ template "charts.platform.probes" . }}
         name: task
         ports:
-        - containerPort: {{.Values.task.service.port}}
+        - containerPort: 80
         resources:
           {{- toYaml .Values.task.resources | nindent 10 }}
         securityContext:

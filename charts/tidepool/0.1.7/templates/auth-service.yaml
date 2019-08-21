@@ -14,7 +14,7 @@ metadata:
       method: "GET|POST|DELETE"
       method_regex: true
       rewrite: ""
-      service: auth.{{ .Release.Namespace }}:{{.Values.auth.service.port}}
+      service: auth.{{ .Release.Namespace }}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -25,7 +25,7 @@ metadata:
       method: "GET|POST|DELETE"
       method_regex: true
       rewrite: ""
-      service: auth.{{ .Release.Namespace }}:{{.Values.auth.service.port}}
+      service: auth.{{ .Release.Namespace }}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -35,7 +35,7 @@ metadata:
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: auth.{{ .Release.Namespace }}:{{.Values.auth.service.port}}
+      service: auth.{{ .Release.Namespace }}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -46,7 +46,7 @@ metadata:
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: auth.{{ .Release.Namespace }}:{{.Values.auth.service.port}}
+      service: auth.{{ .Release.Namespace }}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -57,7 +57,7 @@ metadata:
       method: "GET|DELETE"
       method_regex: true
       rewrite: ""
-      service: auth.{{ .Release.Namespace }}:{{.Values.auth.service.port}}
+      service: auth.{{ .Release.Namespace }}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -67,17 +67,17 @@ metadata:
       prefix_regex: true
       method: "GET"
       rewrite: ""
-      service: auth.{{ .Release.Namespace }}:{{ .Values.auth.service.port }}
+      service: auth.{{ .Release.Namespace }}
   labels:
     app: auth
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: auth
   namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "http"
-    port: {{ .Values.auth.service.port }}
-    targetPort: {{ .Values.auth.service.port }}
+    port: 80
+    targetPort: 80
   selector:
     app: auth
     app.kubernetes.io/name: {{ include "charts.name" . }}

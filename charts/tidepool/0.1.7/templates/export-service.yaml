@@ -15,17 +15,17 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: export.{{ .Release.Namespace }}:{{.Values.export.service.port}}
+      service: export.{{ .Release.Namespace }}
   labels:
     app: export
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: export
   namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "http"
-    port: {{.Values.export.service.port}}
-    targetPort: {{.Values.export.service.port}}
+    port: 80
+    targetPort: 80
   selector:
     app: export
     app.kubernetes.io/name: {{ include "charts.name" . }}

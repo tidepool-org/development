@@ -1,6 +1,6 @@
 # Auto-generated file by gloo_gateway. Do not edit.
-{{- if .Values.global.environment.hosts.http -}}
-{{- $spec := .Values.global.environment.hosts.http -}}
+{{- if .Values.ingress.service.http.enabled -}}
+{{- $spec := .Values.ingress.gateway.http -}}
 {{- $default := "80" -}}
 {{- $port := $spec.port | default $default -}}
 {{- if $spec.dnsNames -}}
@@ -13,9 +13,6 @@ kind: VirtualService
 metadata:
   name: '{{ $legalName }}'
   namespace: '{{ $.Release.Namespace }}'
-  labels:
-    app: gloo
-{{ include "charts.labels.standard .}}
 spec:
   displayName: '{{ $legalName }}'
   virtualHost:
@@ -31,7 +28,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-auth-9222'
+            name: '{{ $.Release.Namespace }}-auth-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -42,7 +39,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-auth-9222'
+            name: '{{ $.Release.Namespace }}-auth-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -51,7 +48,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-3000'
+            name: '{{ $.Release.Namespace }}-blip-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -63,7 +60,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-9220'
+            name: '{{ $.Release.Namespace }}-data-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -74,7 +71,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-auth-9222'
+            name: '{{ $.Release.Namespace }}-auth-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -83,7 +80,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-3000'
+            name: '{{ $.Release.Namespace }}-blip-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -92,7 +89,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-3000'
+            name: '{{ $.Release.Namespace }}-blip-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -102,7 +99,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-auth-9222'
+            name: '{{ $.Release.Namespace }}-auth-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -111,7 +108,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-9220'
+            name: '{{ $.Release.Namespace }}-data-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -122,7 +119,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-image-9226'
+            name: '{{ $.Release.Namespace }}-image-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -131,7 +128,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-auth-9222'
+            name: '{{ $.Release.Namespace }}-auth:80-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -141,7 +138,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-9220'
+            name: '{{ $.Release.Namespace }}-data-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -150,7 +147,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-3000'
+            name: '{{ $.Release.Namespace }}-blip-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -159,7 +156,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-3000'
+            name: '{{ $.Release.Namespace }}-blip-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -168,7 +165,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blob-9225'
+            name: '{{ $.Release.Namespace }}-blob-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -179,7 +176,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-9220'
+            name: '{{ $.Release.Namespace }}-data-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -190,7 +187,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-image-9226'
+            name: '{{ $.Release.Namespace }}-image-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -201,7 +198,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-auth-9222'
+            name: '{{ $.Release.Namespace }}-auth-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -212,7 +209,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blob-9225'
+            name: '{{ $.Release.Namespace }}-blob-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -221,7 +218,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-9220'
+            name: '{{ $.Release.Namespace }}-data-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -230,7 +227,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-jellyfish-9122'
+            name: '{{ $.Release.Namespace }}-jellyfish-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -239,7 +236,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-3000'
+            name: '{{ $.Release.Namespace }}-blip-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -248,7 +245,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-3000'
+            name: '{{ $.Release.Namespace }}-blip-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -257,7 +254,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-jellyfish-9122'
+            name: '{{ $.Release.Namespace }}-jellyfish-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -266,7 +263,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-3000'
+            name: '{{ $.Release.Namespace }}-blip-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -276,7 +273,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blob-9225'
+            name: '{{ $.Release.Namespace }}-blob-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -287,7 +284,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-task-9224'
+            name: '{{ $.Release.Namespace }}-task-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -297,7 +294,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-user-9221'
+            name: '{{ $.Release.Namespace }}-user-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -311,7 +308,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-9220'
+            name: '{{ $.Release.Namespace }}-data-80'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -323,7 +320,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-jellyfish-9122'
+            name: '{{ $.Release.Namespace }}-jellyfish-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -337,7 +334,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-user-9221'
+            name: '{{ $.Release.Namespace }}-user-80'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -349,7 +346,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-9220'
+            name: '{{ $.Release.Namespace }}-data-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -360,7 +357,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-9220'
+            name: '{{ $.Release.Namespace }}-data-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -369,7 +366,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-shoreline-9107'
+            name: '{{ $.Release.Namespace }}-shoreline-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -380,7 +377,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-image-9226'
+            name: '{{ $.Release.Namespace }}-image-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -394,7 +391,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-seagull-9120'
+            name: '{{ $.Release.Namespace }}-seagull-80'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -406,7 +403,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-3000'
+            name: '{{ $.Release.Namespace }}-blip-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -420,7 +417,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-9220'
+            name: '{{ $.Release.Namespace }}-data-80'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -437,7 +434,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-highwater-9191'
+            name: '{{ $.Release.Namespace }}-highwater-80'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -454,7 +451,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-hydrophone-9157'
+            name: '{{ $.Release.Namespace }}-hydrophone-80'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -471,7 +468,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-message-api-9119'
+            name: '{{ $.Release.Namespace }}-message-api-80'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -484,7 +481,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-task-9224'
+            name: '{{ $.Release.Namespace }}-task-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -493,7 +490,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-3000'
+            name: '{{ $.Release.Namespace }}-blip-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -502,7 +499,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-data-9220'
+            name: '{{ $.Release.Namespace }}-data-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -516,7 +513,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-export-9300'
+            name: '{{ $.Release.Namespace }}-export-80'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -533,7 +530,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-gatekeeper-9123'
+            name: '{{ $.Release.Namespace }}-gatekeeper-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -542,7 +539,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-3000'
+            name: '{{ $.Release.Namespace }}-blip-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -551,7 +548,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-3000'
+            name: '{{ $.Release.Namespace }}-blip-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -560,7 +557,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-jellyfish-9122'
+            name: '{{ $.Release.Namespace }}-jellyfish-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -574,7 +571,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-shoreline-9107'
+            name: '{{ $.Release.Namespace }}-shoreline-80'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -586,7 +583,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-tide-whisperer-9127'
+            name: '{{ $.Release.Namespace }}-tide-whisperer-80'
             namespace: '{{ $.Release.Namespace }}'
       routePlugins:
         prefixRewrite:
@@ -598,7 +595,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-jellyfish-9122'
+            name: '{{ $.Release.Namespace }}-jellyfish-80'
             namespace: '{{ $.Release.Namespace }}'
     - matcher:
         methods:
@@ -607,7 +604,7 @@ spec:
       routeAction:
         single:
           upstream:
-            name: '{{ $.Release.Namespace }}-blip-3000'
+            name: '{{ $.Release.Namespace }}-blip-80'
             namespace: '{{ $.Release.Namespace }}'
 {{ end }}
 {{- end -}}

@@ -14,17 +14,17 @@ metadata:
       method_regex: false
       path_redirect: "false"
       rewrite: "/"
-      service: tide-whisperer.{{ .Release.Namespace }}:{{.Values.tidewhisperer.service.port}}
+      service: tide-whisperer.{{ .Release.Namespace }}
   labels:
     app: tide-whisperer
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: tide-whisperer
   namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "http"
-    port: {{.Values.tidewhisperer.service.port}}
-    targetPort: {{.Values.tidewhisperer.service.port}}
+    port: 80
+    targetPort: 80
   selector:
     app: tide-whisperer
     app.kubernetes.io/name: {{ include "charts.name" . }}

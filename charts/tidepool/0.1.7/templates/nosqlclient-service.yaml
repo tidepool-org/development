@@ -5,13 +5,13 @@ kind: Service
 metadata:
   labels:
     app: nosqlclient
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: nosqlclient
   namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "http"
-    port: {{.Values.nosqlclient.service.port}}
+    port: 80
     targetPort: 3000
   selector:
     app: nosqlclient

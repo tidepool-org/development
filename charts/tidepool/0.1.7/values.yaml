@@ -1,7 +1,6 @@
 global:
   fullnameOverride: ""                            #
   nameOverride: ""                                # the name to use for the helm chart, if given
-    
   cluster:
     eks:
       region: "us-west-2"                         # AWS region
@@ -9,32 +8,11 @@ global:
     mesh:                                         # service mesh to use
       name: linkerd
       enabled: false
-    gateway:                                      # gateway service                  
-      type: "LoadBalancer"
-      proxy:                                                            
-        name: gateway-proxy-v2                                             
-        namespace: gloo-system  
     logLevel: info                                # the default log level for all services
   environment:                                    # the cluster name
     namespace:
       create: false                               # whether to create the namespace
       annotations: {}                             # namespace annotations
-    hosts:
-      default:
-        protocol: http                            # the protocol to use for signup emails
-        #host:                                    # default host. 
-      http:                                                            
-        enabled: true
-        port: "8080"                              # default HTTP port - must be quoted
-        dnsNames: [ "localhost" ]                 # list of DNS names
-      https:                                                           
-        enabled: false 
-        port: "8433"                              # default HTTPS port - must be quoted
-        dnsNames: []                              # list of DNS names
-        certificate:
-          issuer: ""                              # the name of the certificate issuer
-          secretName: ""                          # secret name to hold secret in
-          issuerKind: ClusterIssuer               # kind of the certificate issuer
 
 # environment-wide secrets
 userdata:
@@ -98,6 +76,23 @@ nosqlclient:
     image: tidepool/nosqlclient:2.3.2
   service:
     port: 3000
+ingress:
+  service:
+    http:
+      enabled: true
+    https:
+      enabled: true
+  deployment:
+    name: gateway-proxy-v2                                             
+    namespace: gloo-system  
+  gateway:
+    default:
+      protocol: http                            # the protocol to use for signup emails
+      #host:                                    # default host.
+    http:
+      dnsNames: [ "localhost" ]                 # list of DNS names
+    https:
+      dnsNames: []                              # list of DNS names
 gloo:
   enabled: true
   settings:

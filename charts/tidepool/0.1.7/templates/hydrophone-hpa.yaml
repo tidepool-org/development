@@ -7,7 +7,7 @@ metadata:
   name: hydrophone
   namespace: {{ .Release.Namespace }}
   labels:
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
 spec:
   maxReplicas: {{ .Values.hydrophone.hpa.data.maxReplicas | default 10 }}
   minReplicas: {{ .Values.hydrophone.hpa.data.minReplicas | default 1 }}

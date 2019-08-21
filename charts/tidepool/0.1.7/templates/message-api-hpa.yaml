@@ -1,4 +1,4 @@
-{{ if .Values.message-api.hpa.create -}}
+{{ if .Values.messageapi.hpa.create -}}
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -7,13 +7,13 @@ metadata:
   name: messageapi
   namespace: {{ .Release.Namespace }}
   labels:
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
 spec:
-  maxReplicas: {{ .Values.message-api.hpa.data.maxReplicas | default 10 }}
-  minReplicas: {{ .Values.message-api.hpa.data.minReplicas | default 1 }}
+  maxReplicas: {{ .Values.messageapi.hpa.data.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.messageapi.hpa.data.minReplicas | default 1 }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: messageapi
-  targetCPUUtilizationPercentage: {{ .Values.message-api.hpa.data.targetCPUUtilizationPercentage | default 50 }}
+  targetCPUUtilizationPercentage: {{ .Values.messageapi.hpa.data.targetCPUUtilizationPercentage | default 50 }}
 {{- end }}

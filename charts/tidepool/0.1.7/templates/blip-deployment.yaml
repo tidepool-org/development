@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   labels:
     app: blip
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: blip
   namespace: {{.Release.Namespace}}
 spec:
@@ -21,8 +21,10 @@ spec:
         app: blip
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+{{ if .Values.blip.podAnnotations }}
       annotations:
         {{- .Values.blip.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
     spec:
       containers:
       - image: "{{ .Values.blip.deployment.image }}"
@@ -31,7 +33,7 @@ spec:
           value: "true"
         name: blip
         ports:
-        - containerPort: {{.Values.blip.service.port}}
+        - containerPort: 80
         resources:
           {{- toYaml .Values.blip.resources | nindent 10 }}
         securityContext:

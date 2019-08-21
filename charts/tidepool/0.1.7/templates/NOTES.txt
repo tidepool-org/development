@@ -41,6 +41,6 @@ Override the default values in `value.yaml` with:
 kubectl apply -f userdata-secret.yaml
 helm install --set "userdata.secret.create=false"
 ```
-{{-end }}
+{{- end }}
 
 

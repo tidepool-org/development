@@ -14,7 +14,7 @@ metadata:
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: image.{{ .Release.Namespace }}:{{.Values.image.service.port}}
+      service: image.{{ .Release.Namespace }}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -25,7 +25,7 @@ metadata:
       method: "GET|POST|DELETE"
       method_regex: true
       rewrite: ""
-      service: image.{{ .Release.Namespace }}:{{.Values.image.service.port}}
+      service: image.{{ .Release.Namespace }}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -36,17 +36,17 @@ metadata:
       method: "GET|POST|DELETE"
       method_regex: true
       rewrite: ""
-      service: image.{{ .Release.Namespace }}:{{.Values.image.service.port}}
+      service: image.{{ .Release.Namespace }}
   labels:
     app: image
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: image
   namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "http"
-    port: {{.Values.image.service.port}}
-    targetPort: {{.Values.image.service.port}}
+    port: 80
+    targetPort: 80
   selector:
     app: image
     app.kubernetes.io/name: {{ include "charts.name" . }}

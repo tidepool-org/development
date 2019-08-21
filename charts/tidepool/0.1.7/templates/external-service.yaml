@@ -1,31 +1,31 @@
-{{ if or .Values.global.environment.hosts.http.enabled .Values.global.environment.hosts.https.enabled -}}
+{{ if or .Values.ingress.service.http.enabled .Values.ingress.service.https.enabled -}}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: external-gateway-loadbalancer
-{{- if .Values.global.cluster.gateway.annotations }}
+{{- if .Values.ingress.service.annotations }}
   annotations:
-    {{ .Values.global.cluster.gateway.annotations | toYaml | nindent 4 }}
+    {{ .Values.ingress.service.annotations | toYaml | nindent 4 }}
 {{- end }}
   labels:
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
 spec:
   externalTrafficPolicy: Local
   ports:
-{{- if .Values.global.environment.hosts.https.enabled }}
+{{- if .Values.ingress.service.https.enabled }}
   - name: https
-    port: {{ .Values.global.environment.hosts.https.port | default 443  }}
+    port: {{ include "charts.service.https.port" . }}
     protocol: TCP
     targetPort: 8443
 {{- end }}
-{{ if .Values.global.environment.hosts.http.enabled }}
+{{ if .Values.ingress.service.http.enabled }}
   - name: http
-    port: {{ .Values.global.environment.hosts.http.port | default 80 }}
+    port: {{ include "charts.service.http.port" . }}
     protocol: TCP
     targetPort: 8080
 {{- end }}
   selector:
-    gloo: {{ .Values.global.cluster.gateway.proxy.name }}
-  type: {{ .Values.global.cluster.gateway.type | default "LoadBalancer" }}
+    gloo: {{ .Values.ingress.deployment.name }}
+  type: {{ include "charts.service.type" . }}
 {{- end }}

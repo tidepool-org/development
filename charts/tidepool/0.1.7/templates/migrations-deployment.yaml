@@ -5,7 +5,7 @@ kind: Deployment
 metadata:
   labels:
     app: migrations
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: migrations
   namespace: {{.Release.Namespace}}
   annotations:
@@ -24,8 +24,10 @@ spec:
         app: migrations
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+{{ if .Values.migrations.podAnnotations }}
       annotations:
         {{- .Values.migrations.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
     spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}

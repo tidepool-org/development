@@ -5,7 +5,7 @@ metadata:
   name: internal 
   namespace: {{ .Release.Namespace }}
   labels:
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
 spec:
 {{ if .Values.gloo.enabled }}
   ports:
@@ -17,7 +17,7 @@ spec:
     gloo: gateway-proxy-v2
   type: ClusterIP 
 {{ else }}
-  externalName: {{ .Values.global.cluster.gateway.proxy.name -}}.{{- .Values.global.cluster.gateway.proxy.namespace -}}.svc.cluster.local
+  externalName: {{ .Values.ingress.deployment.name -}}.{{- .Values.ingress.deployment.namespace -}}.svc.cluster.local
   ports:
   - port: 80
   type: ExternalName

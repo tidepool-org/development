@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: highwater
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: highwater
   namespace: {{.Release.Namespace}}
   annotations:
@@ -22,8 +22,10 @@ spec:
         app: highwater
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+{{ if .Values.highwater.podAnnotations }}
       annotations:
         {{- .Values.highwater.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
     spec:
       containers:
       - env:
@@ -58,7 +60,7 @@ spec:
         - name: NODE_ENV
           value: '{{.Values.highwater.nodeEnvironment}}'
         - name: PORT
-          value: "{{.Values.highwater.service.port}}"
+          value: "80"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SALT_DEPLOY
@@ -74,17 +76,17 @@ spec:
         - name: SERVICE_NAME
           value: highwater
         - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline"}]}'
         image: "{{ .Values.highwater.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.highwater.service.port}}
+            port: 80
           initialDelaySeconds: 3
           periodSeconds: 10
         name: highwater
         ports:
-        - containerPort: {{.Values.highwater.service.port}}
+        - containerPort: 80
         resources:
           {{- toYaml .Values.highwater.resources | nindent 10 }}
         securityContext:

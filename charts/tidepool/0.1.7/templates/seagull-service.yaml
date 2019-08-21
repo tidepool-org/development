@@ -14,17 +14,17 @@ metadata:
       method_regex: true
       rewrite: "/"
       path_redirect: "false"
-      service: seagull.{{ .Release.Namespace }}:{{.Values.seagull.service.port}}
+      service: seagull.{{ .Release.Namespace }}
   labels:
     app: seagull
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: seagull
   namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "http"
-    port: {{.Values.seagull.service.port}}
-    targetPort: {{.Values.seagull.service.port}}
+    port: 80
+    targetPort: 80
   selector:
     app: seagull
     app.kubernetes.io/name: {{ include "charts.name" . }}

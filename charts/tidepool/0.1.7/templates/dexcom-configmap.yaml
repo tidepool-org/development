@@ -4,7 +4,7 @@ metadata:
   name: dexcom
   namespace: {{ .Release.Namespace }}
   labels:
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" . }}
 data:
   RedirectURL: "{{include "charts.host.external.tp" .}}/v1/oauth/dexcom/redirect"
   TokenURL: "https://api.dexcom.com/v1/oauth2/token"                

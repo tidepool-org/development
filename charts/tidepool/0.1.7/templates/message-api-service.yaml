@@ -14,17 +14,17 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: message-api.{{ .Release.Namespace }}:{{.Values.messageapi.service.port}}
+      service: message-api.{{ .Release.Namespace }}
   labels:
     app: message-api
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: message-api
   namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "http"
-    port: {{.Values.messageapi.service.port}}
-    targetPort: {{.Values.messageapi.service.port}}
+    port: 80
+    targetPort: 80
   selector:
     app: message-api
     app.kubernetes.io/name: {{ include "charts.name" . }}

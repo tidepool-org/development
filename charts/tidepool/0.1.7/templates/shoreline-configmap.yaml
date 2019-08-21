@@ -6,7 +6,7 @@ metadata:
   name: shoreline
   namespace: {{ .Release.Namespace }}
   labels:
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
 data:
   ClinicDemoUserId: {{ .Values.shoreline.configmap.data.ClinicDemoUserId | quote }}
 {{- end }}

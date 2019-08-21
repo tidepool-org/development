@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   labels:
     app: shoreline
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: shoreline
   namespace: {{.Release.Namespace}}
   annotations:
@@ -24,8 +24,10 @@ spec:
         app: shoreline
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+{{ if .Values.shoreline.podAnnotations }}
       annotations:
         {{- .Values.shoreline.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
     spec:
       containers:
       - env:
@@ -94,7 +96,7 @@ spec:
         - name: TIDEPOOL_SHORELINE_ENV
           value: |
             {
-                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.gatekeeper.service.port}}"]}},
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper"]}},
                 "hakken": {
                   "host": "hakken",
                   "skipHakken": true
@@ -103,7 +105,7 @@ spec:
                     "metricsSource": "shoreline",
                     "metricsVersion": "v0.0.1",
                     "name": "highwater",
-                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.highwater.service.port}}"]}
+                    "serviceSpec": {"type": "static", "hosts": ["http://highwater"]}
                 }
             }
         - name: TIDEPOOL_SHORELINE_SERVICE
@@ -116,7 +118,7 @@ spec:
                     "expireDays": 14
                 },
                 "service": {
-                    "host": "localhost:{{.Values.shoreline.service.port}}",
+                    "host": "localhost",
                     "protocol": "http",
                     "service": "shoreline"
                 },
@@ -129,12 +131,12 @@ spec:
         livenessProbe:
           httpGet:
             path: /status
-            port: {{ .Values.shoreline.service.port }}
+            port: 80
           initialDelaySeconds: 3
           periodSeconds: 10
         name: shoreline
         ports:
-        - containerPort: {{ .Values.shoreline.service.port }}
+        - containerPort: 80
         resources:
           {{- toYaml .Values.shoreline.resources | nindent 10 }}
         securityContext:

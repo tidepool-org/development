@@ -12,7 +12,7 @@ kind: Deployment
 metadata:
   labels:
     app: hydrophone
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: hydrophone
   namespace: {{.Release.Namespace}}
   annotations:
@@ -26,8 +26,10 @@ spec:
   replicas: 1
   template:
     metadata:
+{{ if .Values.hydrophone.podAnnotations }}
       annotations:
         {{- .Values.hydrophone.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
       labels:
         app: hydrophone
         app.kubernetes.io/name: {{ include "charts.name" . }}
@@ -48,7 +50,7 @@ spec:
         - name: TIDEPOOL_HYDROPHONE_ENV
           value: |
             {
-                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.gatekeeper.service.port}}"]}},
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper"]}},
                 "hakken": {
                   "host": "hakken",
                   "skipHakken": true
@@ -57,17 +59,17 @@ spec:
                     "metricsSource": "hydrophone",
                     "metricsVersion": "v0.0.1",
                     "name": "highwater",
-                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.highwater.service.port}}"]}
+                    "serviceSpec": {"type": "static", "hosts": ["http://highwater"]}
                 },
-                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.seagull.service.port}}"]}},
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull"]}},
                 "shoreline": {
                     "name": "hydrophone",
-                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:{{.Values.shoreline.service.port}}"]},
+                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline"]},
                     "tokenRefreshInterval": "1h"
                 }
             }
         - name: PROTOCOL
-          value: "{{.Values.global.environment.hosts.default.protocol}}"
+          value: "{{ .Values.ingress.gateway.default.protocol }}"
         - name: TIDEPOOL_HYDROPHONE_SERVICE
           value: |
             {
@@ -79,7 +81,7 @@ spec:
                     "connectionString": ""
                 },
                 "service": {
-                    "host": "localhost:{{.Values.hydrophone.service.port}}",
+                    "host": "localhost",
                     "protocol": "http",
                     "service": "hydrophone"
                 },
@@ -91,12 +93,12 @@ spec:
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.hydrophone.service.port}}
+            port: 80
           initialDelaySeconds: 30
           periodSeconds: 10
         name: hydrophone
         ports:
-        - containerPort: {{.Values.hydrophone.service.port}}
+        - containerPort: 80
         resources:
           {{- toYaml .Values.hydrophone.resources | nindent 10 }}
         securityContext:

@@ -5,7 +5,7 @@ kind: Namespace
 metadata:
   name: {{.Release.Namespace}}
   labels:
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   annotations:
     {{- .Values.namespace.annotations | toYaml | nindent 4 }}
 {{- end }}

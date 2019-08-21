@@ -22,13 +22,10 @@ This helm chart for Tidepool features:
   * optional embedded API Gateway
 * simultaneous, multiple deployments (in different namespaces)
 * ability to forgo installing certain non-essential services (tools, migration, jellyfish)
-* general MongoDB URI support
   * including mongodb and mongdb+srv schemes, usernames, passwords, and additional URL parameters
   * allows use of AtlasDB or Amazon DocumentDB
   * allows use of local (out of cluster) MongoDB
-* support for IAM role assignment using Kiam
 * automatic generation of TLS certificate requests (using certmanager)
-* port-forwarding (so that Docker does not have to run privileged).
 
 ## Prerequisites
 
@@ -48,12 +45,9 @@ The command deploys Tidepool on the Kubernetes cluster in the default configurat
 The [configuration](#configuration) section lists the parameters that can be configured during installation.
 
 The default configuration  includes an embedded Mongo database and a Gloo API Gateway.  You may access
-the Tidepool Web Service at port 8080 of the `gateway-proxyy-v2` service using kubectl port-forwarding:
 
 ```console
-kubectl port-forward svc/gateway-proxy 8080
 ```
-Then open your web browser to port 8080 on localhost. Using MacOsX w/ Chrome):
 
 ```console
 open -a /Applications/Google\ Chrome.app/ http://localhost:8080
@@ -92,63 +86,39 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | Parameter             | Description   | Default   |
 |-----------------------|--------------|-------------------------------------------------------|
 | `auth.deployment.image` | auth Docker image | `` |
-| `auth.service.port`                                      | Auth service container port                                                                  | `9222`                                                |
 | `blip.deployment.image` | blip Docker image | `` |
-| `blip.service.port`                                      | Blip service container port                                                                  | `3000`                                                |
-| `blob.deployment.env.store.directory`                                         | Directory to use when storing blobs on file storage                                          | `_data/blobs`                                         |
 | `blob.deployment.env.store.bucket`                                      | S3 bucket where blob data is written | `data`                                      |
+| `blob.deployment.env.store.directory`                                         | Directory to use when storing blobs on file storage                                          | `_data/blobs`                                         |
 | `blob.deployment.env.store.prefix`                                            | File prefix to use when storing blobs on file storage                                        | `blobs`                                               |
 | `blob.deployment.env.store.type`                                      | If `s3`, store blob data in Amazon S3. If `file` store blob data in local files. | `file`                                                |
 | `blob.deployment.image` | blob Docker image | `` |
 | `blob.secret.create`                                         | whether to create blob secret | ``                                         |
 | `blob.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
-| `blob.service.port`                                      | Blob service container port                                                                  | `9225`                                                |
 | `carelink.enabled`                                       | Enable carelink                                                                              | `false`                                               |
 | `carelink.secret.create`                                       | whether to create carelink secret| `false`                                               |
 | `carelink.secret.data_.CareLinkSalt`                                       | plaintext Carelink salt | `false`                                               |
 | `data.deployment.image` | data Docker image | `` |
 | `data.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
-| `data.service.port`                                      | Data service container port                                                                  | `9220`                                                |
 | `dexcom.secret.create`                                         | whether to create dexcom secret| `false`                                               |
 | `dexcom.secret.data_.ClientId`                                  | plaintext Oauth2 client id | ``                                               |
 | `dexcom.secret.data_.ClientSecret`                                         | plaintext Oauth2 client secret | `false`                                               |
 | `dexcom.secret.data_.StateSalt`                                         | plaintext Oauth2 state salt | `false`                                               |
-| `export.deployment.image` | export Docker image | `` |
-| `export.secret.SessionEncryptionKey` | session encryption key | `` |
-| `export.service.port`                                    | Export service container port                                                                | `9300`                                                |
 | `gatekeeper.deployment.image` | gatekeeper Docker image | `` |
 | `gatekeeper.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
-| `gatekeeper.service.port`                                | Gatekeeper service container port                                                            | `9123`                                                |
-| `global.cluster.gateway.proxy.name`                              | Name of the API gateway proxy                                                                | `gateway-proxy-v2`                                    |
-| `global.cluster.gateway.proxy.namespace`                         | Namespace of the API gateway proxy                                                           | `gloo-system`                                         |
-| `global.cluster.gateway.proxy.type`                              | CluserIP or LoadBalancer                                                                     | `LoadBalancer`                                        |
 | `global.cluster.logLevel`                              | Default log level | `info`                                        |
-| `global.cluster.mesh.create`                            | Whether the service mesh is enabled.                                                         | ``                                                    |
-| `global.cluster.mesh.name`                               | The name service mesh.                                                                       | ``                                                    |
-| `global.cluster.name`                                    | The name of the K8s cluster that hosts this env.                                             | ``                                                    |
 | `global.cluster.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
-| `global.environment.hosts.default.host`                          | Host to use for email verification                                                      | ``                                                    |
-| `global.environment.hosts.default.protocol`                          | Protocol to use for email verification.                                                      | ``                                                    |
-| `global.environment.hosts.http.dnsNames`                             | List of host to listen to                                                                    | `localhost`                                           |
-| `global.environment.hosts.http.enabled`                             |  Whether to provide HTTP access | `true`                                           |
-| `global.environment.hosts.http.port`                             |  Port to use for HTTP traffic | `8080`                                           |
-| `global.environment.hosts.https.certificate.issuerKind`                          | Type of Certificate Issuer, either `Issuer` or  `ClusterIssuer`                              | `ClusterIssuer`                                       |
-| `global.environment.hosts.https.certificate.issuer`                   | Name of TLS certificate issuer, e.g. `letsencrypt-stating`, `letsencrypt-production`         | ``                                                    |
-| `global.environment.hosts.https.certificate.secretName`                          | `Name of secret to store cert in`
-| `global.environment.hosts.https.dnsNames`                            | List of Subject Alternative Names to use                                                     | `[]`                                                  |
-| `global.environment.hosts.https.enabled`                             |  Whether to provide HTTPS access | `false`                                           |
-| `global.environment.hosts.https.port`                             |  Port to use for HTTPS traffic | `8443`                                           |
 | `global.environment.namespace.create`                                | If true, create namespace                                                                    | `false`                                               |
 | `global.fullnameOverride`                                |                                                                                              | ``                                                    |
 | `global.mongodb.enabled`                                 | Whether to include an mongodb with this installation                                         | `true`                                                |
 | `global.nameOverride`                                    | If non-empty, Helm chart name to use                                                         | ``                                                    |
 | `gloo.enabled`                                           | Whether to include an API Gateway with this installation                                     | `true`                                                |
-| `gloo.{name}`  | Values for Gloo API gateway.                                                                  | ``                                                  |
+| `gloo.gatewayProxies.gatewayProxyV2.service.httpPort`  | HTTP port to listen to | `8080`                                                  |
+| `gloo.gatewayProxies.gatewayProxyV2.service.httpsPort`  | HTTPS port to listen to | `8433`                                                  |
+| `gloo.gatewayProxies.gatewayProxyV2.service.type`  | Type on service | `ClusterIP`                                                  |
 | `highwater.deployment.image` | highwater Docker image | `` |
 | `highwater.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
-| `highwater.service.port`                                 | Highwater service container port                                                             | `9191`                                                |
-| `hydrophone.deployment.env.store.bucket`                                      | S3 bucket where email templates are stored                                                   | `asset`                                      |
 | `hydrophone.deployment.env.fromAddress`                                 | Email address to use for replies to sigups                                                   | `Tidepool <noreply@tidepool.org>`                     |
+| `hydrophone.deployment.env.store.bucket`                                      | S3 bucket where email templates are stored                                                   | `asset`                                      |
 | `hydrophone.deployment.image` | hydrophone Docker image | `` |
 | `image.deployment.env.store.bucket`                                      | S3 bucket where image data is written | `data`                                      |
 | `image.deployment.env.store.directory`                                        | Directory to use when storing images on file storage                                         | `_data/image`                                         |
@@ -157,13 +127,21 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `image.deployment.image` | image Docker image | `` |
 | `image.secret.create`                                         | whether to create image secret| ``                                         |
 | `image.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
-| `image.service.port`                                     | Image service container port                                                                 | `9226`                                                |
-| `jellyfish.deployment.image` | jellyfish Docker image | `` |
+| `ingress.deployment.name`                              | Name of the API gateway proxy                                                                | `gateway-proxy-v2`                                    |
+| `ingress.deployment.namespace`                         | Namespace of the API gateway proxy                                                           | `gloo-system`                                         |
+| `ingress.gateway.default.host`                          | Host to use for email verification                                                      | ``                                                    |
+| `ingress.gateway.default.protocol`                          | Protocol to use for email verification.                                                      | ``                                                    |
+| `ingress.gateway.http.dnsNames`                             | List of host to listen to                                                                    | `localhost`                                           |
+| `ingress.gateway.https.dnsNames`                            | List of Subject Alternative Names to use                                                     | `[]`                                                  |
+| `ingress.service.annotations`                             |  The service annotations | `{}`                                           |
+| `ingress.service.http.enabled`                             |  Whether to provide HTTP access | `false`                                           |
+| `ingress.service.https.enabled`                             |  Whether to provide HTTPS access | `true`                                           |
+| `ingress.service.type` | Type of service to use for the ingress | `LoadBalancer` |
 | `jellyfish.deployment.env.store.bucket`                                      | S3 bucket where jellyfish data is written | `data`                                      |
 | `jellyfish.deployment.env.store.type`                                      | If `s3`, store jellyfish data in Amazon S3. If `file` store jellyfishdata in local files. | `file`                                                |
+| `jellyfish.deployment.image` | jellyfish Docker image | `` |
 | `jellyfish.enabled`                                      | Enable jellyfish service if true                                                             | `true`                                                |
 | `jellyfish.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
-| `jellyfish.service.port`                                 | Jellyfish service container port                                                             | `9122`                                                |
 | `kissmetrics.secret.create` | whether to use create kissmetrics secret | `false` |
 | `kissmetrics.secret.data_.KissmetricsAPIKey` | plaintext Kissmetrics API Key | `` |
 | `kissmetrics.secret.data_.KissmetricsToken` | plaintext Kissmetrics Token | `` |
@@ -177,11 +155,9 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `messageapi.deployment.env.window`                                      |                                                                                              | `21`                                                  |
 | `messageapi.deployment.image` | message-api Docker image | `` |
 | `messageapi.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
-| `messageapi.service.port`                                | Message-Api service container port                                                           | `9119`                                                |
 | `migrations.deployment.image` | migrations Docker image | `` |
 | `migrations.enabled`                                     | Enable migrations service if true                                                            | `true`                                                |
 | `mongo.secret.create`                                        | Whether to create mongo secret | `false`                                             |
-| `mongo.secret.data_.Addresses`                                        | plaintext comma-separated list of Mongo host[:port]                                                    | `mongodb`                                             |
 | `mongo.secret.data_.OptParams`                                        | plaintext additional Mongo connection params                                                           | ``                                                    |
 | `mongo.secret.data_.Password`                                         | plaintext Mongo password                                                                 | `` ||                                                  |
 | `mongo.secret.data_.Scheme`                                        | plaintext Mongo DB scheme, either `mongodb` or `mongodb+srv`                                              | `mongodb`                                             |
@@ -191,36 +167,29 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `notification.deployment.image` | notification Docker image | `` |
 | `notification.secret.create`                                         | wheter to create notification secret | ``                                         |
 | `notification.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
-| `notification.service.port`                              | Notification service container port                                                          | `9223`                                                |
 | `seagull.deployment.image` | seagull Docker image | `` |
 | `seagull.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
-| `seagull.service.port`                                   | Seagull service container port                                                               | `9120`                                                |
-| `seagull.service.port`                                   | Seagull service container port                                                               | `9120`                                                |
 | `server.secret.create` | whether to cerate secret |  `` |
 | `server.secret.data_.ServiceAuth` | service authorization, if empty, random value is generated |  `` |
 | `shoreline.deployment.image` | shoreline Docker image | `` |
 | `shoreline.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
-| `shoreline.service.port`                                 | Shoreline service container port                                                             | `9107`                                                |
 | `sumologic.enabled` | whether to use Sumologic | `false` |
 | `sumologic.secret.CollectorUrl` |  Sumologic collector URL | `false` |
 | `task.deployment.image` | task Docker image | `` |
 | `task.secret.data_.ServiceAuth` | task authorization, if empty, random value is generated |  `` |
-| `task.service.port`                                      | Task service container port                                                                  | `9224`                                                |
 | `tidewhisperer.deployment.image` | tidewhisperer Docker image | `` |
-| `tidewhisperer.service.port`                             | Tide whisperer service container port                                                        | `9127`                                                |
 | `tools.deployment.image` | tools Docker image | `` |
 | `tools.enabled`                                          | Enable tools service if true                                                                 | `true`                                                |
 | `user.deployment.image` | user Docker image | `` |
 | `user.secret.create` | whether to generate user secret |  `` |
 | `user.secret.data_.ServiceAuth` | user authorization, if empty, random value is generated |  `` |
-| `user.service.port`                                      | User service container port                                                                  | `9221`                                                |
 | `userdata.secret.create` | whethe to create userdata secret | `` |
 | `userdata.secret.data_.GroupIdEncryptionKey` | plaintext group id encryption key| `` |
 | `userdata.secret.data_.UserIdSalt` | plaintext user id salt | `` |
 | `userdata.secret.data_.UserPasswordSalt` | plaintext user password salt | `` |
 | `{name}.hpa.create`                                      | If true, create a horizontal pod autoscalers for all pods of given deployment                                    | 'false'                                               |
-| `{name}.hpa.data.minReplicas`                                      | Minimum number of replicase that HPA will maintain | 'false'                                               |
 | `{name}.hpa.data.maxReplicas`                                      | Maximum number of replicase that HPA will maintain | 'false'                                               |
+| `{name}.hpa.data.minReplicas`                                      | Minimum number of replicase that HPA will maintain | 'false'                                               |
 | `{name}.hpa.data.targetCPUUtilizationPercentage`                     | Target CPU utilization percentage for HPA to maintain| 'false'                                               |
 | `{name}.resources.limits.cpu`                            | CPU Limit                                                                                    | `200m`                                                |
 | `{name}.resources.limits.memory`                         | Memory Limit                                                                                 | `128Mi`                                               |

@@ -7,7 +7,7 @@ metadata:
   name: task
   namespace: {{ .Release.Namespace }}
   labels:
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
 spec:
   maxReplicas: {{ .Values.task.hpa.data.maxReplicas | default 10 }}
   minReplicas: {{ .Values.task.hpa.data.minReplicas | default 1 }}

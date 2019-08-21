@@ -12,7 +12,7 @@ kind: Deployment
 metadata:
   labels:
     app: blob
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: blob
   namespace: {{.Release.Namespace}}
   annotations:
@@ -27,8 +27,10 @@ spec:
   strategy: {}
   template:
     metadata:
+{{ if .Values.blob.podAnnotations }}
       annotations:
         {{- .Values.blob.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
       labels:
         app: blob
         app.kubernetes.io/name: {{ include "charts.name" . }}
@@ -47,7 +49,7 @@ spec:
               name: blob
               key: ServiceAuth
         - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.blob.service.port}}
+          value: 80
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
           value: '{{.Values.blob.deployment.env.store.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
@@ -57,10 +59,10 @@ spec:
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
           value: '{{.Values.blob.deployment.env.store.type}}'
         image: "{{ .Values.blob.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.blob.service.port}}
+        {{ template "charts.platform.probes" . }}
         name: blob
         ports:
-        - containerPort: {{.Values.blob.service.port}}
+        - containerPort: 80
         resources:
           {{- toYaml .Values.blob.resources | nindent 10 }}
         securityContext:

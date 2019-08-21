@@ -5,7 +5,7 @@ kind: Deployment
 metadata:
   labels:
     app: export
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: export
   namespace: {{.Release.Namespace}}
   annotations:
@@ -24,8 +24,10 @@ spec:
         app: export
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-      annotations:
+{{ if .Values.export.podAnnotations }}
+      ahnnotations:
         {{- .Values.export.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
     spec:
       containers:
       - env:
@@ -34,7 +36,7 @@ spec:
         - name: DEBUG_LEVEL
           value: debug
         - name: HTTP_PORT
-          value: "{{ .Values.export.service.port }}"
+          value: "80"
         - name: SESSION_SECRET
           valueFrom:
             secretKeyRef:
@@ -44,12 +46,12 @@ spec:
         livenessProbe:
           httpGet:
             path: /export/status
-            port: {{ .Values.export.service.port }}
+            port: 80
           initialDelaySeconds: 30
           periodSeconds: 10
         name: export
         ports:
-        - containerPort: {{.Values.export.service.port}}
+        - containerPort: 80
         resources:
           {{- toYaml .Values.export.resources | nindent 10 }}
         securityContext:

@@ -1,4 +1,4 @@
-{{ if .Values.tide-whisperer.hpa.create -}}
+{{ if .Values.tidewhisperer.hpa.create -}}
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -7,13 +7,13 @@ metadata:
   name: tide-whisperer
   namespace: {{ .Release.Namespace }}
   labels:
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
 spec:
-  maxReplicas: {{ .Values.tide-whisperer.hpa.data.maxReplicas | default 10 }}
-  minReplicas: {{ .Values.tide-whisperer.hpa.data.minReplicas | default 1 }}
+  maxReplicas: {{ .Values.tidewhisperer.hpa.data.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.tidewhisperer.hpa.data.minReplicas | default 1 }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: tide-whisperer
-  targetCPUUtilizationPercentage: {{ .Values.tide-whisperer.hpa.data.targetCPUUtilizationPercentage | default 50 }}
+  targetCPUUtilizationPercentage: {{ .Values.tidewhisperer.hpa.data.targetCPUUtilizationPercentage | default 50 }}
 {{- end }}

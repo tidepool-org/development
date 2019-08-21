@@ -14,7 +14,7 @@ metadata:
       method_regex: false
       rewrite: ""
       path_redirect: "false"
-      service: jellyfish.{{ .Release.Namespace }}:{{.Values.jellyfish.service.port}}
+      service: jellyfish.{{ .Release.Namespace }}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -25,7 +25,7 @@ metadata:
       method_regex: false
       rewrite: ""
       path_redirect: "false"
-      service: jellyfish.{{ .Release.Namespace }}:{{.Values.jellyfish.service.port}}
+      service: jellyfish.{{ .Release.Namespace }}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -36,7 +36,7 @@ metadata:
       method_regex: false
       rewrite: ""
       path_redirect: "false"
-      service: jellyfish.{{ .Release.Namespace }}:{{.Values.jellyfish.service.port}}
+      service: jellyfish.{{ .Release.Namespace }}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -47,7 +47,7 @@ metadata:
       method_regex: false
       rewrite: ""
       path_redirect: "false"
-      service: jellyfish.{{ .Release.Namespace }}:{{.Values.jellyfish.service.port}}
+      service: jellyfish.{{ .Release.Namespace }}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -58,18 +58,18 @@ metadata:
       method_regex: false
       rewrite: ""
       path_redirect: "false"
-      service: jellyfish.{{ .Release.Namespace }}:{{.Values.jellyfish.service.port}}
+      service: jellyfish.{{ .Release.Namespace }}
 
   labels:
     app: jellyfish
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: jellyfish
   namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "http"
-    port: {{.Values.jellyfish.service.port}}
-    targetPort: {{.Values.jellyfish.service.port}}
+    port: 80
+    targetPort: 80
   selector:
     app: jellyfish
     app.kubernetes.io/name: {{ include "charts.name" . }}

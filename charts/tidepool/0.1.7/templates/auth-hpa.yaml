@@ -7,7 +7,7 @@ metadata:
   name: auth
   namespace: {{ .Release.Namespace }}
   labels:
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
 spec:
   maxReplicas: {{ .Values.auth.hpa.data.maxReplicas | default 10 }}
   minReplicas: {{ .Values.auth.hpa.data.minReplicas | default 1 }}

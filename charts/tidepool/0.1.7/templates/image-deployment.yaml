@@ -14,7 +14,7 @@ kind: Deployment
 metadata:
   labels:
     app: image
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: image
   namespace: {{.Release.Namespace}}
   annotations:
@@ -28,8 +28,10 @@ spec:
   replicas: 1
   template:
     metadata:
+{{ if .Values.image.podAnnotations }}
       annotations:
         {{- .Values.image.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
       labels:
         app: image
         app.kubernetes.io/name: {{ include "charts.name" . }}
@@ -48,7 +50,7 @@ spec:
               name: image
               key: ServiceAuth 
         - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.image.service.port}}
+          value: 80
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
           value: '{{.Values.image.deployment.env.store.type}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
@@ -58,10 +60,10 @@ spec:
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
           value: '{{.Values.image.deployment.env.store.prefix}}' 
         image: "{{ .Values.image.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.image.service.port }}
+        {{ template "charts.platform.probes" . }}
         name: image
         ports:
-        - containerPort: {{.Values.image.service.port}}
+        - containerPort: 80
         resources:
           {{- toYaml .Values.image.resources | nindent 10 }}
         securityContext:

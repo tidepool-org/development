@@ -4,14 +4,14 @@ kind: Service
 metadata:
   labels:
     app: notification
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: notification
   namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "http"
-    port: {{.Values.notification.service.port}}
-    targetPort: {{.Values.notification.service.port}}
+    port: 80
+    targetPort: 80
   selector:
     app: notification
     app.kubernetes.io/name: {{ include "charts.name" . }}

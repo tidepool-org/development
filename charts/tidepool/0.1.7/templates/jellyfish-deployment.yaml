@@ -11,7 +11,7 @@ kind: Deployment
 metadata:
   labels:
     app: jellyfish
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: jellyfish
   namespace: {{.Release.Namespace}}
   annotations:
@@ -26,8 +26,10 @@ spec:
   strategy: {}
   template:
     metadata:
+{{ if .Values.jellyfish.podAnnotations }}
       annotations:
         {{- .Values.jellyfish.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
       labels:
         app: jellyfish
         app.kubernetes.io/name: {{ include "charts.name" . }}
@@ -43,13 +45,13 @@ spec:
         - name: DISCOVERY_HOST
           value: 'hakken'
         - name: GATEKEEPER_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.gatekeeper.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper"}]}'
         - name: MINIMUM_UPLOADER_VERSION
           value: 0.251.0
         - name: NODE_ENV
           value: '{{.Values.jellyfish.nodeEnvironment}}'
         - name: PORT
-          value: "{{.Values.jellyfish.service.port}}"
+          value: "80"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SALT_DEPLOY
@@ -60,7 +62,7 @@ spec:
         - name: SCHEMA_VERSION
           value: "3"
         - name: SEAGULL_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:{{.Values.seagull.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull"}]}'
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
@@ -75,17 +77,17 @@ spec:
         - name: STORAGE_DEFAULT
           value: '{{ .Values.jellyfish.deployment.env.store.type }}'
         - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline"}]}'
         image: "{{ .Values.jellyfish.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{ .Values.jellyfish.service.port }}
+            port: 80
           initialDelaySeconds: 3
           periodSeconds: 10
         name: jellyfish
         ports:
-        - containerPort: {{ .Values.jellyfish.service.port }}
+        - containerPort: 80
         resources:
           {{- toYaml .Values.jellyfish.resources | nindent 10 }}
         securityContext:

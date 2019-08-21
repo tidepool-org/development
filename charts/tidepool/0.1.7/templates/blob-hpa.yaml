@@ -7,7 +7,7 @@ metadata:
   name: blob
   namespace: {{ .Release.Namespace }}
   labels:
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
 spec:
   maxReplicas: {{ .Values.blob.hpa.data.maxReplicas | default 10 }}
   minReplicas: {{ .Values.blob.hpa.data.minReplicas | default 1 }}

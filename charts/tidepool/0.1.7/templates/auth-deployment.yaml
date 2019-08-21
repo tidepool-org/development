@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   labels:
     app: auth
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: auth
   namespace: {{.Release.Namespace}}
   annotations:
@@ -23,8 +23,10 @@ spec:
         app: auth
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+{{ if .Values.auth.podAnnotations }}
       annotations:
         {{- .Values.auth.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
     spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}
@@ -78,17 +80,17 @@ spec:
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
           value: "internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.auth.service.port}}
+          value: :80
         - name: TIDEPOOL_AUTH_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
               name: auth
               key: ServiceAuth
         image: "{{ .Values.auth.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.auth.service.port}}
+        {{ template "charts.platform.probes" . }}
         name: auth
         ports:
-        - containerPort: {{.Values.auth.service.port}}
+        - containerPort: 80
         resources:
           {{- toYaml .Values.auth.resources | nindent 10 }}
         securityContext:

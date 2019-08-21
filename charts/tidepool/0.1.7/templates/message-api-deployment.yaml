@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   labels:
     app: message-api
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: message-api
   namespace: {{.Release.Namespace}}
   annotations:
@@ -22,8 +22,10 @@ spec:
         app: message-api
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+{{ if .Values.messageapi.podAnnotations }}
       annotations:
         {{- .Values.messageapi.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
     spec:
       containers:
       - env:
@@ -34,17 +36,17 @@ spec:
           value: 'hakken'
         - name: GATEKEEPER_SERVICE
           value: '{
-                  "type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.gatekeeper.service.port}}"}]}'
+                  "type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper"}]}'
         - name: METRICS_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater:{{.Values.highwater.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater"}]}'
         - name: NODE_ENV
-          value: '{{.Values.message-api.nodeEnvironment}}'
+          value: '{{.Values.messageapi.nodeEnvironment}}'
         - name: PORT
-          value: "{{.Values.messageapi.service.port}}"
+          value: "80"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SEAGULL_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:{{.Values.seagull.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull"}]}'
         - name: SERVER_NAME
           value: message-api
         - name: SERVER_SECRET
@@ -57,21 +59,21 @@ spec:
         - name: DELETE_TIME_WINDOW
           value: '{{.Values.messageapi.window}}'
         - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline"}]}'
         - name: SKIP_HAKKEN
           value: "true"
         image: "{{ .Values.messageapi.deployment.image }}" 
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.messageapi.service.port}}
+            port: 80
           initialDelaySeconds: 3
           periodSeconds: 10
         name: message-api
         ports:
-        - containerPort: {{.Values.messageapi.service.port}}
+        - containerPort: 80
         resources:
-          {{- toYaml .Values.message-api.resources | nindent 10 }}
+          {{- toYaml .Values.messageapi.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.message-api.securityContext | nindent 10 }}
+          {{- toYaml .Values.messageapi.securityContext | nindent 10 }}
       restartPolicy: Always

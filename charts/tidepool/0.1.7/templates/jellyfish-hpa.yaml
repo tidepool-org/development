@@ -7,7 +7,7 @@ metadata:
   name: jellyfish
   namespace: {{ .Release.Namespace }}
   labels:
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
 spec:
   maxReplicas: {{ .Values.jellyfish.hpa.data.maxReplicas | default 10 }}
   minReplicas: {{ .Values.jellyfish.hpa.data.minReplicas | default 1 }}

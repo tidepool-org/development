@@ -7,7 +7,7 @@ metadata:
   name: blip
   namespace: {{ .Release.Namespace }}
   labels:
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
 spec:
   maxReplicas: {{ .Values.blip.hpa.data.maxReplicas | default 10 }}
   minReplicas: {{ .Values.blip.hpa.data.minReplicas | default 1 }}

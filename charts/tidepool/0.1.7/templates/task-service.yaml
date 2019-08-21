@@ -13,7 +13,7 @@ metadata:
       method: "GET|POST"
       method_regex: true
       rewrite: ""
-      service: task.{{ .Release.Namespace }}:{{.Values.task.service.port}}
+      service: task.{{ .Release.Namespace }}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -24,17 +24,17 @@ metadata:
       method: "GET|PUT|DELETE"
       method_regex: true
       rewrite: ""
-      service: task.{{ .Release.Namespace }}:{{.Values.task.service.port}}
+      service: task.{{ .Release.Namespace }}
   labels:
     app: task
-{{ include "charts.labels.standard .}}
+{{ include "charts.labels.standard" .}}
   name: task
   namespace: {{.Release.Namespace}}
 spec:
   ports:
   - name: "http"
-    port: {{.Values.task.service.port}}
-    targetPort: {{.Values.task.service.port}}
+    port: 80
+    targetPort: 80
   selector:
     app: task
     app.kubernetes.io/name: {{ include "charts.name" . }}
