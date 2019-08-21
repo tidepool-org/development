@@ -63,7 +63,7 @@ local Helmrelease(config, group) = aws.helmrelease(config, group) {
           },
         ],
         extraArgs: {
-          region: config.cluster.eks.region,
+          region: config.cluster.aws.region,
           'assume-role-arn': aws.role(config, group.name),
         },
         useHostNetwork: true,

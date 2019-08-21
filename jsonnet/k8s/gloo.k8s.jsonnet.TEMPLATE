@@ -1,8 +1,8 @@
 local aws = import 'aws.jsonnet';
 local str = import 'str.jsonnet';
 
-local eksAnnotations(config) =
-  if config.cluster.provider == 'eks' && config.cluster.gateway.type == 'LoadBalancer' then {
+local loadbalancerAnnotations(config) =
+  if config.cluster.provider == 'aws' && config.cluster.ingress.service.type == 'LoadBalancer' then {
     'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
     'service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags': 'cluster:' + config.cluster.name,
   } else {
@@ -12,7 +12,7 @@ local eksAnnotations(config) =
 local externalDNSAnnotations(config) =
   if config.groups.externalDNS.enabled then {
     'external-dns.alpha.kubernetes.io/alias': true,
-    'external-dns.alpha.kubernetes.io/hostname': std.join(',', config.cluster.gateway.hostnames),
+    'external-dns.alpha.kubernetes.io/hostname': std.join(',', config.cluster.ingress.dns.hostnames),
   } else
     {
 
@@ -38,7 +38,7 @@ local Helmrelease(config, group) =
           },
         },
         gatewayProxies: {
-          [str.camelCase(config.cluster.gateway.proxy.name)]: {
+          [str.camelCase(config.cluster.ingress.deployment.name)]: {
             podTemplate: {
               stats: config.cluster.metrics.enabled,
             },
@@ -46,7 +46,7 @@ local Helmrelease(config, group) =
               httpPort: config.cluster.ingress.service.http.port,
               httpsPort: config.cluster.ingress.service.https.port,
               type: config.cluster.ingress.service.type,
-              extraAnnotations: eksAnnotations(config) + externalDNSAnnotations(config),
+              extraAnnotations: loadbalancerAnnotations(config) + externalDNSAnnotations(config),
             },
           },
         },
@@ -68,7 +68,7 @@ local Gateway(config, group) = {
     ssl: true,
     bindAddress: '::',
     bindPort: 8443,
-    gatewayProxyName: config.cluster.gateway.proxy.name,
+    gatewayProxyName: config.cluster.ingress.deployment.name,
     httpGateway: {},
     useProxyProto: false,
     plugins: {

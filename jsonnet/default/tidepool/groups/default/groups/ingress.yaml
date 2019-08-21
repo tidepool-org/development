@@ -3,6 +3,7 @@ tidepool:
     default:
       groups:
         ingress:
+          name: ingress
           deployment:
             name: gateway-proxy-v2
             namespace: gloo-system

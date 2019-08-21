@@ -6,8 +6,8 @@ local Secret(config, group) = kube.secret(config, group) {
       type: 'S3',
       config: {
         bucket: group.secret.input.bucket,
-        endpoint: 's3.%s.amazonaws.com' % config.cluster.eks.region,
-        region: config.cluster.eks.region,
+        endpoint: 's3.%s.amazonaws.com' % config.cluster.aws.region,
+        region: config.cluster.aws.region,
         insecure: false,
         signature_version2: false,
         encrypt_sse: false,

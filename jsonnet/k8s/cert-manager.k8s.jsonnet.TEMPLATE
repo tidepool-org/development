@@ -19,7 +19,7 @@ local ClusterIssuer(config, group, server, name) = {
         {
           dns01: {
             route53: {
-              region: config.cluster.eks.region,
+              region: config.cluster.aws.region,
             },
           },
         },

@@ -1,23 +1,27 @@
 local aws = import 'aws.jsonnet';
-eocal kube = import 'kube.jsonnet';
+local kube = import 'kube.jsonnet';
 local obj = import 'obj.jsonnet';
 
-local host(config, env) =
-  if std.objectHas(env.hosts.default, 'host')
-  then env.hosts.default.host
+local host(config, env) = (
+  local gateway = env.groups.ingress.gateway;
+  if std.objectHas(gateway.default, 'host')
+  then gateway.default.host
   else (
-    if env.hosts.default.protocol == 'http'
-    then env.hosts.http.dnsNames[0]
-    else env.hosts.https.dnsNames[0]
-  );
+    if gateway.default.protocol == 'http'
+    then gateway.http.dnsNames[0]
+    else gateway.https.dnsNames[0]
+  )
+);
 
-local certificateSecretName(config, env) =
-  if std.objectHas(env.hosts.https, 'certificateSecretName')
-  then env.hosts.https.certificate.secretName
-  else '%s-tls-secret' % env.name;
+local certificateSecretName(config, env) = (
+  local certificate = env.groups.ingress.certificate;
+  if std.objectHas(certificate, 'secretName')
+  then certificate.secretName
+  else '%s-tls-secret' % env.name
+);
 
 local s3URL(config, env) =
-  'https://s3-%s.amazonaws.com' % config.cluster.eks.region;
+  'https://s3-%s.amazonaws.com' % config.cluster.aws.region;
 
 
 local roleRequired(config, group) =
@@ -82,6 +86,24 @@ local deployment(config, env, group) =
   else {
   };
 
+local ingress(config,env) = {
+  local ingress = config.cluster.ingress,
+  service+: {
+    http: {
+      enabled: ingress.service.http.enabled,
+    },
+    https: {
+      enabled: ingress.service.https.enabled,
+    },
+    gateway+: {
+      default+: {
+        host: host(config, env),
+      },
+    },
+  },
+  deployment: ingress.deployment,
+  gateway: env.groups.ingress.gateway,
+};
 
 local hpas(config, env, group) = combine(config, env, group, 'hpa');
 
@@ -92,6 +114,20 @@ local getBucket(config, env) =
       bucket: aws.bucketName(config, env),
     },
   };
+
+local groupConfig(config, env, group) = (
+  local envWithBucket = env + getBucket(config, env);
+  obj.strip(obj.strip(
+    group
+    + iamAnnotations(config, envWithBucket, group)
+    + linkerdAnnotations(config, envWithBucket, group)
+    + securityContext(config, envWithBucket, group)
+    + resources(config, envWithBucket, group)
+    + deployment(config, envWithBucket, group)
+    + hpas(config, envWithBucket, group),
+    'secret'
+  ), 'iamRole')
+);
 
 local isAutomated(group) =
   std.objectHas(group, 'deployment') &&
@@ -123,46 +159,16 @@ local HelmRelease(config, env) = aws.helmrelease(config, env) {
         },
       },
       global+: {
-        region: config.cluster.eks.region,
+        region: config.cluster.aws.region,
         logLevel: config.cluster.logLevel,
       },
     } + {
       values+: {
-        [group.name]: (
-          local envWithBucket = env + getBucket(config, env);
-          obj.strip(obj.strip(
-            group
-            + iamAnnotations(config, envWithBucket, group)
-            + linkerdAnnotations(config, envWithBucket, group)
-            + securityContext(config, envWithBucket, group)
-            + resources(config, envWithBucket, group)
-            + deployment(config, envWithBucket, group)
-            + hpas(config, envWithBucket, group),
-            'secret'
-          ), 'iamRole')
-        )
-        for group in obj.values(env.groups)
-        if std.objectHas(group, 'deployment')
+        [group.name]: groupConfig(config, env, group) for group in obj.values(env.groups) if std.objectHas(group, 'deployment')
       },
     } + {
       values+: {
-        ingress: {
-          service+: {
-            http: {
-              enabled: config.cluster.ingress.service.http.enabled,
-            },
-            https: {
-              enabled: config.cluster.ingress.service.https.enabled,
-            },
-            gateway+: {
-              default+: {
-                host: host(config, env),
-              },
-            },
-          },
-          deployment: env.ingress.deployment,
-          gateway: env.ingress.gateway,
-        },
+        ingress: ingress(config, env),
       },
     },
   },
@@ -171,6 +177,7 @@ local HelmRelease(config, env) = aws.helmrelease(config, env) {
 local namespace(name, env) = if env.namespace.create then aws.namespace(config, env);
 
 function(config) (
+  local helmRelease(name, env) = if env.enabled then HelmRelease(config, env);
   local helmReleases = std.mapWithKey(helmRelease, config.tidepool.groups);
-  obj.values(std.prune(helmReleases)) + obj.values(std.prune(namespaces))
+  obj.values(std.prune(helmReleases))
 )

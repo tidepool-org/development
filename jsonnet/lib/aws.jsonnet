@@ -5,7 +5,7 @@ local kube = import "kube.jsonnet";
   bucketName(config, env)::
     if std.objectHas(env.store, 'bucket') && env.store.bucket != ''
     then env.store.bucket
-    else '%s-%s-%s-data' % [config.store.s3.bucketNamePrefix, config.cluster.name, env.name],
+    else '%s-%s-%s-data' % [config.cluster.store.s3.bucketNamePrefix, config.cluster.name, env.name],
 
   role(config, name):: config.cluster.name + '-' + name + '-role',
 
@@ -92,12 +92,12 @@ local kube = import "kube.jsonnet";
         AccessControl: "Private",
         BucketName: name,
         LoggingConfiguration: {
-          LogFilePrefix: 'AWSLogs/%s/S3/%s/' % [ config.cluster.eks.accountNumber, name ]
+          LogFilePrefix: 'AWSLogs/%s/S3/%s/' % [ config.cluster.aws.accountNumber, name ]
         },
         Tags:  [
           {
             Key: "Name",
-            Value: "%s-%s-DataBucket" % [ config.cluster.eks.name, group.name ]
+            Value: "%s-%s-DataBucket" % [ config.cluster.name, group.name ]
           }, {
             Key: "Tidepool-Env",
             Value: {
@@ -145,7 +145,7 @@ local kube = import "kube.jsonnet";
         Tags: [
           {
             Key: "Name",
-            Value: "%s-%s-DBPeeringConnection" % [ config.cluster.eks.name, group.name ]
+            Value: "%s-%s-DBPeeringConnection" % [ config.cluster.name, group.name ]
           }, {
             Key: "Tidepool-Env",
             Value: {

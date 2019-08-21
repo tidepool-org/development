@@ -10,7 +10,7 @@ local Helmrelease(config, group) = aws.helmrelease(config, group) {
       autoDiscovery: {
         clusterName: config.cluster.name,
       },
-      awsRegion: config.cluster.eks.region,
+      awsRegion: config.cluster.aws.region,
       serviceMonitor: {
         enabled: true,
       },

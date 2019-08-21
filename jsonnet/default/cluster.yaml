@@ -1,18 +1,19 @@
 cluster:
-  eks:
+  aws:
     accountNumber: 123456789012    # 12 digit AWS account number
-    cidr: 10.44.0.0/16
-    configFile: ""
+    eks:
+      cidr: 10.44.0.0/16
+      configFile: ""
+      nodegroup:
+        desiredCapacity: 3
+        instanceType: m4.large
+        maxSize: 10
+        minSize: 1
     iam:
       administrators:
       - derrickburns-cli
       - lennartgoedhard-cli
       - benderr-cli
-    nodegroup:
-      desiredCapacity: 3
-      instanceType: m4.large
-      maxSize: 10
-      minSize: 1
     region: us-west-2
   ingress:
     dns:
@@ -25,6 +26,9 @@ cluster:
         enabled: true
         port: 443
       type: LoadBalancer
+    deployment:
+      name: gateway-proxy-v2
+      namespace: gloo-system
   hpa:
     create: true
     data:
@@ -40,7 +44,7 @@ cluster:
     enabled: false
     name: linkerd
   name: development
-  provider: eks
+  provider: aws
   securityContext: 
     allowPrivilegeEscalation: false
     runAsNonRoot: true

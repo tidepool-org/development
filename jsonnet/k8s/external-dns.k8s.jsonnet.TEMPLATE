@@ -9,7 +9,7 @@ local Helmrelease(config, group) = aws.helmrelease(config, group) {
       },
       logLevel: config.cluster.logLevel,
       aws: {
-        region: config.cluster.eks.region,
+        region: config.cluster.aws.region,
         zoneType: 'public',
       },
       metrics: {

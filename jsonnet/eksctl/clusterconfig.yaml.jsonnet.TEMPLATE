@@ -2,20 +2,21 @@ local kube = import 'kube.jsonnet';
 
 local ClusterConfig(config) = kube.kubeobj('eksctl.io/v1alpha5', 'ClusterConfig', config.cluster.name) {
   local cluster = config.cluster,
+  local eks = cluster.aws.eks,
   metadata+: {
-    region: cluster.eks.region,
+    region: cluster.aws.region,
     version: cluster.k8sVersion,
   },
   vpc: {
-    cidr: cluster.eks.cidr,
+    cidr: eks.cidr,
   },
   nodeGroups: [
     {
       name: 'ng-1',
-      instanceType: cluster.eks.nodegroup.instanceType,
-      desiredCapacity: cluster.eks.nodegroup.desiredCapacity,
-      minSize: cluster.eks.nodegroup.minSize,
-      maxSize: cluster.eks.nodegroup.maxSize,
+      instanceType: eks.nodegroup.instanceType,
+      desiredCapacity: eks.nodegroup.desiredCapacity,
+      minSize: eks.nodegroup.minSize,
+      maxSize: eks.nodegroup.maxSize,
       labels: {
         'kiam-server': 'false',
       },
@@ -26,7 +27,7 @@ local ClusterConfig(config) = kube.kubeobj('eksctl.io/v1alpha5', 'ClusterConfig'
     },
     {
       name: 'ng-kiam',
-      instanceType: cluster.eks.nodegroup.instanceType,
+      instanceType: eks.nodegroup.instanceType,
       desiredCapacity: 1,
       labels: {
         'kiam-server': 'true',
