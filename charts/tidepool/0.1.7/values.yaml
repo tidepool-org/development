@@ -210,9 +210,12 @@ blob:
     image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     env:
       store: 
-        bucket: "data"                                            
-        prefix: "blobs" 
-        directory: "_data/blobs"                                            # directory to use if using local file storage
+        s3:
+          bucket: "data"                                            
+          create: false
+        file:
+          prefix: "blobs" 
+          directory: "_data/blobs"                                            # directory to use if using local file storage
         type: file
         #type: s3
   resources: {}
@@ -246,9 +249,12 @@ image:
     image: tidepool/platform-image:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
     env:
       store: 
-        directory: "_data/image"                                            # directory to use if using local file storage
-        prefix: "images"
-        bucket:  "data"
+        file:
+          directory: "_data/image"                                            # directory to use if using local file storage
+          prefix: "images"
+        s3:
+          bucket:  "data"
+          create: false
         type: file
         #type: s3
   resources: {}
@@ -350,9 +356,10 @@ jellyfish:
     image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
     env:
       store: 
-        bucket: "data"
-        type: file
-        #type: s3
+        s3:
+          bucket: "data"
+          create: false
+      type: file
   service:
     port: 9122
   resources: {}

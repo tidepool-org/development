@@ -43,11 +43,11 @@ spec:
         - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
           value: :{{.Values.blob.service.port}}
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.blob.deployment.env.store.directory}}'
+          value: '{{.Values.blob.deployment.env.store.file.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
-          value: '{{ .Values.blob.deployment.env.store.bucket }}'
+          value: '{{ .Values.blob.deployment.env.store.s3.bucket }}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.blob.deployment.env.store.prefix}}'
+          value: '{{.Values.blob.deployment.env.store.s3.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
           value: '{{.Values.blob.deployment.env.store.type}}'
         image: "{{ .Values.blob.deployment.image }}"

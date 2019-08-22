@@ -44,11 +44,11 @@ spec:
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
           value: '{{.Values.image.deployment.env.store.type}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.image.deployment.env.store.directory}}'
+          value: '{{.Values.image.deployment.env.store.file.directory}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
-          value: '{{ .Values.image.deployment.env.store.bucket }}'
+          value: '{{ .Values.image.deployment.env.store.s3.bucket }}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.image.deployment.env.store.prefix}}' 
+          value: '{{.Values.image.deployment.env.store.s3.prefix}}' 
         image: "{{ .Values.image.deployment.image }}"
         {{ template "charts.platform.probes" .Values.image.service.port }}
         name: image

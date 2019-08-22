@@ -1,5 +1,5 @@
 ---
-{{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{ .Values.hydrophone.deployment.env.bucket }} {{- end }}
+{{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{ .Values.hydrophone.deployment.env.store.s3.bucket }} {{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
