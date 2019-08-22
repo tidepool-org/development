@@ -8,7 +8,6 @@ groups:
         index: stable
         name: datadog
         version: 1.32.2
-      create: true
       gitops:
         automated: false
     namespace:

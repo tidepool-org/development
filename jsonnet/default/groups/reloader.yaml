@@ -3,7 +3,6 @@ groups:
     name: reloader
     enabled: true
     helmrelease:
-      create: true
       chart:
         repository: https://stakater.github.io/stakater-charts/
         name: reloader

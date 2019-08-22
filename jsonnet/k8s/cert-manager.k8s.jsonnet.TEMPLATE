@@ -31,7 +31,7 @@ local ClusterIssuer(config, group, server, name) = {
 function(config) (
   local group = config.groups.certManager;
   if group.enabled then {
-    Helmrelease: if group.helmrelease.create then aws.helmrelease(config, group),
+    Helmrelease: aws.helmrelease(config, group),
     Namespace: if group.namespace.create then aws.namespace(config, group),
     StagingClusterIssuer:
       ClusterIssuer(config,

@@ -7,9 +7,6 @@ local Helmrelease(config, group) = aws.helmrelease(config, group) {
     values+: {
       prometheus+: {
         prometheusSpec+: {
-          image: {
-            tag: 'v2.8.0',  // use a specific version of Prometheus
-          },
           externalLabels: {  // a cool way to add default labels to all metrics
             geo: 'us',
             region: config.cluster.aws.region,
@@ -36,7 +33,7 @@ local Helmrelease(config, group) = aws.helmrelease(config, group) {
 function(config) (
   local group = config.groups.prometheusOperator;
   if group.enabled then {
-    Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+    Helmrelease: Helmrelease(config, group),
     Namespace: if group.namespace.create then aws.namespace(config, group),
   }
 )

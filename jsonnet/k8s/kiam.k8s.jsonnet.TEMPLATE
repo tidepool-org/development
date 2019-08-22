@@ -1,11 +1,11 @@
 local aws = import 'aws.jsonnet';
 
-local Helmrelease(config, group) = aws.helmrelease(config, group) {
+local Helmrelease(config, group) = aws.helmrelease(config, group) { // XXX add no iptables remove
   spec+: {
     values+: {
       agent: {
         image: {
-          tag: 'd999e61e28befb872cd1875812c9d1bf37dc4f37',  // contains the fix for assume-role-arn
+          tag: group.helmrelease.deployment.tag, 
         },
         enabled: true,
         host: {
@@ -36,7 +36,7 @@ local Helmrelease(config, group) = aws.helmrelease(config, group) {
       },
       server: {
         image: {
-          tag: 'd999e61e28befb872cd1875812c9d1bf37dc4f37',  // contains the fix for assume-role-arn
+          tag: group.helmrelease.deployment.tag, 
         },
         enabled: true,
         // This is to choose a different node for agent vs server. Without it, the kiam-server pods
@@ -78,7 +78,7 @@ local Helmrelease(config, group) = aws.helmrelease(config, group) {
 function(config) (
   local group = config.groups.kiam;
   if group.enabled then {
-    Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+    Helmrelease: Helmrelease(config, group),
     Namespace: if group.namespace.create then aws.namespace(config, group),
   }
 )

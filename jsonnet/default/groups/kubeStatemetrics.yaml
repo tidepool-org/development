@@ -3,7 +3,6 @@ groups:
     name: kube-state-metrics
     enabled: true
     helmrelease:
-      create: true
       chart:
         repository: https://kubernetes-charts.storage.googleapis.com/
         name: kube-state-metrics

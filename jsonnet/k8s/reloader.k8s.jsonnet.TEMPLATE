@@ -1,19 +1,9 @@
 local aws = import 'aws.jsonnet';
 
-local Helmrelease(config, group) = aws.helmrelease(config, group) {
-  spec+: {
-    chart: {
-      repository: 'https://stakater.github.io/stakater-charts/',
-      name: 'reloader',
-      version: 'v0.0.38',
-    },
-  },
-};
-
 function(config) (
   local group = config.groups.reloader;
   if group.enabled then {
-    Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+    Helmrelease: aws.helmrelease(config, group),
     Namespace: if group.namespace.create then aws.namespace(config, group),
   }
 )

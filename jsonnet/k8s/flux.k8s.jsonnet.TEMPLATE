@@ -28,9 +28,7 @@ local asRepository(chart) =
 local toEntry(name, group) =
   if group.enabled &&
      std.objectHas(group, 'helmrelease') &&
-     group.helmrelease.create &&
-     std.objectHas(group.helmrelease, 'chart') &&
-     (!std.objectHas(group.helmrelease, 'bootstrap'))
+     std.objectHas(group.helmrelease, 'chart')
   then asRepository(group.helmrelease.chart);
 
 local merge(a, b) = if std.isObject(b) then a + b else a;
@@ -82,7 +80,7 @@ local HelmRelease(config, group) = aws.helmrelease(config, group) {
 function(config) (
   local group = config.groups.flux;
   if group.enabled then {
-    URLRelease: if group.urlrelease.create then tidepool.urlrelease(config, group),
+    URLRelease: tidepool.urlrelease(config, group),
     HelmRelease: HelmRelease(config, group),
   }
 )

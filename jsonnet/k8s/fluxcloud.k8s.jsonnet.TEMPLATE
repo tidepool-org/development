@@ -18,6 +18,9 @@ local Deployment(config, group) = kube.deployment(config, group) {
   spec+: {
     template+: {
       spec+: {
+        securityContext: {
+          runAsUser: 999
+        },
         containers: {
           env: [
             {
@@ -47,7 +50,7 @@ local Deployment(config, group) = kube.deployment(config, group) {
             },
             {
               name: 'LISTEN_ADDRESS',
-              value: group.deployment.port,
+              value: ":%s" % group.deployment.port,
             },
           ],
         },

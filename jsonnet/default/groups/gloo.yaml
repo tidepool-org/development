@@ -5,7 +5,6 @@ groups:
     gateway:
       create: true
     helmrelease:
-      create: true
       chart:
         repository: https://storage.googleapis.com/solo-public-helm/
         name: gloo

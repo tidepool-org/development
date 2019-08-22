@@ -8,7 +8,6 @@ groups:
         index: stable
         name: external-dns
         version: 2.5.3
-      create: true
       gitops:
         automated: false
     iam:

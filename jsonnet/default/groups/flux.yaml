@@ -3,11 +3,8 @@ groups:
     name: flux
     enabled: true
     urlrelease:
-      create: true
-      bootstrap: true
       url: https://raw.githubusercontent.com/fluxcd/flux/master/deploy-helm/flux-helm-release-crd.yaml
     helmrelease:
-      create: true
       bootstrap: true
       chart:
         repository: https://fluxcd.github.io/

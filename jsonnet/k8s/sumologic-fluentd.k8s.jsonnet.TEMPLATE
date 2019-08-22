@@ -19,7 +19,7 @@ local Helmrelease(config, group) = aws.helmrelease(config, group) {
 function(config) (
   local group = config.groups.sumologicFluentd;
   if group.enabled then {
-    Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+    Helmrelease: Helmrelease(config, group),
     Namespace: if group.namespace.create then aws.namespace(config, group),
   }
 )

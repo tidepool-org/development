@@ -13,6 +13,6 @@ local Helmrelease(config, group) = aws.helmrelease(config, group) {
 function(config) (
   local group = config.groups.kubeStateMetrics;
   if group.enabled then {
-    Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+    Helmrelease: Helmrelease(config, group),
   }
 )

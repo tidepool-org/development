@@ -3,7 +3,7 @@ groups:
     name: fluxcloud
     enabled: true
     deployment:
-      image: "justinbarrick/fluxcloud:v0.3.6"
+      image: "justinbarrick/fluxcloud:v0.3.8"
       port: 3032
       gitops:
         automated: false

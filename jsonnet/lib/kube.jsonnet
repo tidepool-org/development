@@ -82,7 +82,7 @@
     },
   },
 
-  helmrelease(config, group):: if group.helmrelease.create then $.kubeobj('flux.weave.works/v1beta1', 'HelmRelease', group.name) {
+  helmrelease(config, group):: $.kubeobj('flux.weave.works/v1beta1', 'HelmRelease', group.name) {
     local namespace = group.namespace.name,
     local name = group.name,
     metadata+: {

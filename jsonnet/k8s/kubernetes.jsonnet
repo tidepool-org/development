@@ -20,6 +20,8 @@ local groups = [
 
 local Manifests(svcs, conf) = [obj.values(std.prune(s(conf))) for s in svcs];
 
+// XXX remove redundant namespaces
+
 function(config) {
   apiVersion: 'v1',
   kind: 'List',
