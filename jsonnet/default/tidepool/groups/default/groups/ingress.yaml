@@ -10,14 +10,14 @@ tidepool:
           gateway:
             default:
               protocol: https
-              #host: ""
+              #host: ""                               # defaults to first host listed for given protocol
             http:
               dnsNames: [ ]
             https:
               dnsNames:
               - default.tidepool.org
           certificate:
-            create: false
+            create: false                             # whether to create a TLS certificate 
             #issuer:
               #name: letsencrypt-staging
               #kind: ClusterIssuer

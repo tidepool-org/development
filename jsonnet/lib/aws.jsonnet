@@ -1,5 +1,5 @@
-local str = import "str.jsonnet";
-local kube = import "kube.jsonnet";
+local kube = import 'kube.jsonnet';
+local str = import 'str.jsonnet';
 
 {
   bucketName(config, env)::
@@ -14,7 +14,7 @@ local kube = import "kube.jsonnet";
   },
 
   permittedAnnotation(config, name):: {
-    'iam.amazonaws.com/permitted': "%s-.*" % config.cluster.name 
+    'iam.amazonaws.com/permitted': '%s-.*' % config.cluster.name,
   },
 
   cfObject(config, group, cfKind):: {
@@ -31,7 +31,7 @@ local kube = import "kube.jsonnet";
     [self.iamName(config, group, cfKind)]: this.values,
   },
 
-  kindToName(cfKind):: std.strReplace(cfKind, "::", "-"),
+  kindToName(cfKind):: std.strReplace(cfKind, '::', '-'),
 
   iamName(config, group, cfKind):: str.capitalize(str.camelCase(group.name) + str.camelCase($.kindToName(cfKind))),
 
@@ -46,12 +46,12 @@ local kube = import "kube.jsonnet";
     },
   },
 
-   helmrelease(config, group):: kube.helmrelease(config, group) {
+  helmrelease(config, group):: kube.helmrelease(config, group) {
     spec: {
-      values+: 
-        if std.objectHas(group, 'iam') && group.iam.create 
-        then { podAnnotations: $.roleAnnotation(config, group.name) } 
-        else {}
+      values+:
+        if std.objectHas(group, 'iam') && group.iam.create
+        then { podAnnotations: $.roleAnnotation(config, group.name) }
+        else {},
     },
   },
 
@@ -61,105 +61,109 @@ local kube = import "kube.jsonnet";
     },
   },
 
-  secret(config, group, defaultNamespace="default"):: $.cfObject(config, group, 'AWS::SecretsManager::Secret') {
+  secret(config, group, defaultNamespace='default'):: $.cfObject(config, group, 'AWS::SecretsManager::Secret') {
     local this = self,
     values+:: {
       Properties: {
         Name: group.secret.name,
         SecretString: std.manifestJson(this.data),
         Tags: [
-        {
-            Key: "Cluster",
-            Value: config.cluster.name
-        },
-        {
-            Key: "Namespace",
-            Value: kube.namespaceName(group, defaultNamespace)
-        }
-        ]
-      }
+          {
+            Key: 'Cluster',
+            Value: config.cluster.name,
+          },
+          {
+            Key: 'Namespace',
+            Value: kube.namespaceName(group, defaultNamespace),
+          },
+        ],
+      },
     },
     data_:: if std.objectHas(group.secret, 'data_') then group.secret.data_ else {},
     data: { [k]: std.base64(this.data_[k]) for k in std.objectFields(this.data_) },
   },
 
-  loggedS3Bucket(config,group):: $.cfObject(config, group, 'AWS::S3::Bucket') {
+  loggedS3Bucket(config, group):: $.cfObject(config, group, 'AWS::S3::Bucket') {
     values+:: {
-      local name = bucketName(config,group),
-      Condition: "EC2RoleVersion1",
-      DeletionPolicy: "Retain",
+      local name = bucketName(config, group),
+      Condition: 'EC2RoleVersion1',
+      DeletionPolicy: 'Retain',
       Properties: {
-        AccessControl: "Private",
+        AccessControl: 'Private',
         BucketName: name,
         LoggingConfiguration: {
-          LogFilePrefix: 'AWSLogs/%s/S3/%s/' % [ config.cluster.aws.accountNumber, name ]
-        },
-        Tags:  [
-          {
-            Key: "Name",
-            Value: "%s-%s-DataBucket" % [ config.cluster.name, group.name ]
-          }, {
-            Key: "Tidepool-Env",
-            Value: {
-              'Fn::GetAtt': group.name
-            }
-          }, {
-            Key: "Tidepool-Stack",
-            Value: {
-              Ref: "AWS::StackName"
-            }
-          }
-        ]
-      }
-    }
-  },
-
-  publicRoute(config,group):: $.cfObject(config, group, 'AWS::EC2::Route') {
-    values+:: {
-      DependsOn: "OpsVPCPeeringConnection",
-      Properties: {
-        DestinationCidrBlock: {
-          'Fn::Sub': '${OpsNetStackOutputs.IpPrefix}.0.0/16'
-        },
-        VpcPeeringConnectionId: {
-          Ref: "OpsVPCPeeringConnection"
-        },
-        RouteTableId: {
-          'Fn::GetAtt': "EnvNetStackOutputs.PublicRouteTableId" 
-        },
-      }
-    }
-  },
-
-  peeringConnection(config,group):: $.cfObject(config, group, 'AWS::EC2::VPCPeeringConnection') {
-    values+:: {
-      Condition: "EC2RoleVersion1",
-      DeletionPolicy: "Retain",
-      Properties: {
-        VpcId: {
-          'Fn::GetAtt': "EnvNetStackOutputs.VPCId" // XXX - get this from eksctl
-        },
-        PeerVpcId: {
-          'Fn::GetAtt': "OpsNetStackOutputs.VPCId" // XXX
+          LogFilePrefix: 'AWSLogs/%s/S3/%s/' % [config.cluster.aws.accountNumber, name],
         },
         Tags: [
           {
-            Key: "Name",
-            Value: "%s-%s-DBPeeringConnection" % [ config.cluster.name, group.name ]
-          }, {
-            Key: "Tidepool-Env",
+            Key: 'Name',
+            Value: '%s-%s-DataBucket' % [config.cluster.name, group.name],
+          },
+          {
+            Key: 'Tidepool-Env',
             Value: {
-              'Fn::GetAtt': group.name
-            }
-          }, {
-            Key: "Tidepool-Stack",
+              'Fn::GetAtt': group.name,
+            },
+          },
+          {
+            Key: 'Tidepool-Stack',
             Value: {
-              Ref: "AWS::StackName"
-            }
-          }
-        ]
-      }
-    }
+              Ref: 'AWS::StackName',
+            },
+          },
+        ],
+      },
+    },
+  },
+
+  publicRoute(config, group):: $.cfObject(config, group, 'AWS::EC2::Route') {
+    values+:: {
+      DependsOn: 'OpsVPCPeeringConnection',
+      Properties: {
+        DestinationCidrBlock: {
+          'Fn::Sub': '${OpsNetStackOutputs.IpPrefix}.0.0/16',
+        },
+        VpcPeeringConnectionId: {
+          Ref: 'OpsVPCPeeringConnection',
+        },
+        RouteTableId: {
+          'Fn::GetAtt': 'EnvNetStackOutputs.PublicRouteTableId',
+        },
+      },
+    },
+  },
+
+  peeringConnection(config, group):: $.cfObject(config, group, 'AWS::EC2::VPCPeeringConnection') {
+    values+:: {
+      Condition: 'EC2RoleVersion1',
+      DeletionPolicy: 'Retain',
+      Properties: {
+        VpcId: {
+          'Fn::GetAtt': 'EnvNetStackOutputs.VPCId',  // XXX - get this from eksctl
+        },
+        PeerVpcId: {
+          'Fn::GetAtt': 'OpsNetStackOutputs.VPCId',  // XXX
+        },
+        Tags: [
+          {
+            Key: 'Name',
+            Value: '%s-%s-DBPeeringConnection' % [config.cluster.name, group.name],
+          },
+          {
+            Key: 'Tidepool-Env',
+            Value: {
+              'Fn::GetAtt': group.name,
+            },
+          },
+          {
+            Key: 'Tidepool-Stack',
+            Value: {
+              Ref: 'AWS::StackName',
+            },
+          },
+        ],
+      },
+    },
   },
 
   iamRole(config, group):: $.cfObject(config, group, 'AWS::IAM::Role') {

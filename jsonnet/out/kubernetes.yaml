@@ -458,27 +458,57 @@ items:
     annotations:
       iam.amazonaws.com/permitted: development-.*
     name: external-secrets
-- apiVersion: flux.weave.works/v1beta1
-  kind: HelmRelease
+- apiVersion: v1
+  kind: Deployment
   metadata:
     annotations:
-      flux.weave.works/automated: "false"
+      flux.weave.works/automated: false
     labels:
       name: fluxcloud
     name: fluxcloud
     namespace: flux
   spec:
-    chart:
-      git: git@github.com:tidepool-org/development
-      path: charts/fluxcloud/0.1.0
-      ref: k8s
-    values:
-      github: https://github.com/tidepool-org/cluster-development
+    replicas: 1
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: fluxcloud
+      spec:
+        containers:
+          env:
+          - name: SLACK_URL
+            valueFrom:
+              secretKeyRef:
+                key: url
+                name: slack
+          - name: SLACK_CHANNEL
+            value: '#flux-development'
+          - name: SLACK_USERNAME
+            value: derrickburns
+          - name: SLACK_ICON_EMOJI
+            value: ':heart:'
+          - name: GITHUB_URL
+            value: https://github.com/tidepool-org/cluster-development
+          - name: LISTEN_ADDRESS
+            value: 3032
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      flux.weave.works/automated: false
+    labels:
       name: fluxcloud
-      secretName: slack
-      slack:
-        channel: '#flux-development'
-        username: derrickburns
+    name: fluxcloud
+    namespace: flux
+  spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 3032
+    selector:
+      name: fluxcloud
 - apiVersion: gateway.solo.io.v2/v2
   kind: Gateway
   metadata:

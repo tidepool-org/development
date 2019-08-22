@@ -1,13 +1,13 @@
 local SlackApp(config) = {
-   kind: "SlackApp",
-   apiVersion: "tidepool/v1beta1",
-   data: {
-     username: config.gitops.notifications.slack.username,
-     channel: 
-        if std.objectHas(config.gitops.notifications.slack, 'channel') 
-        then config.gitops.notifications.slack.channel
-        else "#flux-%s" % config.cluster.name
-   }
+  kind: 'SlackApp',
+  apiVersion: 'tidepool/v1beta1',
+  data: {
+    username: config.gitops.notifications.slack.username,
+    channel:
+      if std.objectHas(config.gitops.notifications.slack, 'channel')
+      then config.gitops.notifications.slack.channel
+      else '#flux-%s' % config.cluster.name,
+  },
 };
 
-function(config) if config.gitops.notifications.slack.create then [ SlackApp(config) ] else []
+function(config) if config.gitops.notifications.slack.create then [SlackApp(config)] else []

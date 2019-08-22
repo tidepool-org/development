@@ -1,5 +1,5 @@
 {
-  local obj = import "obj.jsonnet",
+  local obj = import 'obj.jsonnet',
 
   kubeobj(apiVersion, kind, name):: {
     local this = self,
@@ -12,7 +12,7 @@
     },
   },
 
-  namespaceName(group, defaultNamespace):: 
+  namespaceName(group, defaultNamespace)::
     if std.objectHas(group, 'namespace') then group.namespace.name else defaultNamespace,
 
   labels(config):: if config.cluster.mesh.enabled then
@@ -22,6 +22,65 @@
       'istio-injection': 'disabled',
     },
 
+  service(config, group):: $.kubeobj('v1', 'Service', group.name) {
+    metadata+: {
+      namespace: $.namespaceName(group, "default"),
+      annotations: {
+        'flux.weave.works/automated': group.deployment.gitops.automated,
+      },
+    },
+    spec: {
+      selector: {
+        name: group.name,
+      },
+      ports: [
+        {
+          protocol: 'TCP',
+          port: group.service.port,
+          targetPort: group.deployment.port,
+        },
+      ],
+    },
+  },
+
+  deployment(config, group):: $.kubeobj('v1', 'Deployment', group.name) {
+    local deployment = group.deployment,
+    local name = group.name,
+    metadata+: {
+      namespace: $.namespaceName(group, "default"),
+      annotations: {
+        'flux.weave.works/automated': deployment.gitops.automated,
+      },
+    },
+    spec: {
+      replicas: 1,
+      strategy: {
+        type: "Recreate",
+      },
+      template: {
+        metadata: {
+          labels: {
+            name: group.name,
+          },
+        },
+        spec: {
+          containers:
+            [
+              {
+                name: group.name,
+                image: deployment.image,
+                imagePullPolicy: 'IfNotPresent',
+                ports: [
+                  {
+                    containerPort: deployment.port,
+                  },
+                ],
+              },
+            ],
+        },
+      },
+    },
+  },
 
   helmrelease(config, group):: if group.helmrelease.create then $.kubeobj('flux.weave.works/v1beta1', 'HelmRelease', group.name) {
     local namespace = group.namespace.name,
@@ -29,7 +88,7 @@
     metadata+: {
       namespace: namespace,
       annotations: {
-        'flux.weave.works/automated': 'false', // XXX
+        'flux.weave.works/automated': 'false',  // XXX
       },
     },
     spec: {
@@ -39,7 +98,7 @@
     },
   },
 
-  secret(config, group, defaultNamespace="default"):: $.kubeobj('v1', 'Secret', group.name) {
+  secret(config, group, defaultNamespace='default'):: $.kubeobj('v1', 'Secret', group.name) {
     local this = self,
     type: 'Opaque',
     metadata+: {
@@ -59,7 +118,7 @@
     },
   },
 
-  externalSecret(config, group, defaultNamespace="default"):: $.kubeobj('kubernetes-client.io/v1', 'ExternalSecret', group.name) {
+  externalSecret(config, group, defaultNamespace='default'):: $.kubeobj('kubernetes-client.io/v1', 'ExternalSecret', group.name) {
     local namespace = $.namespaceName(group, defaultNamespace),
     local key = config.cluster.name + '/' + namespace + '/' + group.name,
     secretDescriptor: {

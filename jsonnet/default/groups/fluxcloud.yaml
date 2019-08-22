@@ -2,14 +2,13 @@ groups:
   fluxcloud:
     name: fluxcloud
     enabled: true
-    helmrelease:
-      chart:
-        git: git@github.com:tidepool-org/development
-        path: charts/fluxcloud/0.1.0
-        ref: k8s
-      create: true
+    deployment:
+      image: "justinbarrick/fluxcloud:v0.3.6"
+      port: 3032
       gitops:
         automated: false
+    service:
+      port: 80
     namespace:
       create: true
       name: flux

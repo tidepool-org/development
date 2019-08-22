@@ -86,7 +86,7 @@ local deployment(config, env, group) =
   else {
   };
 
-local ingress(config,env) = {
+local ingress(config, env) = {
   local ingress = config.cluster.ingress,
   service+: {
     http: {
@@ -97,11 +97,11 @@ local ingress(config,env) = {
     },
   },
   deployment: ingress.deployment,
-  gateway: env.groups.ingress.gateway + {
+  gateway: env.groups.ingress.gateway {
     default+: {
-        host: host(config, env),
+      host: host(config, env),
     },
-  }
+  },
 };
 
 local hpas(config, env, group) = combine(config, env, group, 'hpa');
@@ -117,13 +117,13 @@ local getBucket(config, env) =
 local groupConfig(config, env, group) = (
   local envWithBucket = env + getBucket(config, env);
   local merged = group
-    + iamAnnotations(config, envWithBucket, group)
-    + linkerdAnnotations(config, envWithBucket, group)
-    + securityContext(config, envWithBucket, group)
-    + resources(config, envWithBucket, group)
-    + deployment(config, envWithBucket, group)
-    + hpas(config, envWithBucket, group);
-  obj.strip(merged, ['secret','iamRole'])
+                 + iamAnnotations(config, envWithBucket, group)
+                 + linkerdAnnotations(config, envWithBucket, group)
+                 + securityContext(config, envWithBucket, group)
+                 + resources(config, envWithBucket, group)
+                 + deployment(config, envWithBucket, group)
+                 + hpas(config, envWithBucket, group);
+  obj.strip(merged, ['secret', 'iamRole'])
 );
 
 local isAutomated(group) =
@@ -160,14 +160,16 @@ local HelmRelease(config, env) = aws.helmrelease(config, env) {
         logLevel: config.cluster.logLevel,
       },
     } + {
-      [group.name]: groupConfig(config, env, group) for group in obj.values(env.groups) if std.objectHas(group, 'deployment')
+      [group.name]: groupConfig(config, env, group)
+      for group in obj.values(env.groups)
+      if std.objectHas(group, 'deployment')
     } + {
       ingress: ingress(config, env),
     } + {
       mongodb: {
-        enabled: false // XXX
-      }
-    }
+        enabled: false,  // XXX
+      },
+    },
   },
 };
 

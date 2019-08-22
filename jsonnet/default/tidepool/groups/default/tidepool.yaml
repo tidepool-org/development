@@ -4,15 +4,15 @@ tidepool:
       name: default
       enabled: true
       iam:
-        create: true
+        create: true                          # whether to create kiam annotations in Pods
       namespace:
-        create: true
+        create: true                          # whether to create a new namespace for the tidepool env
       node:
         environment: production
       store:
-        type: s3
+        type: s3                              # where to store non-Mongo persistent data
       hpa:
-        create: true
+        create: true                          # whether to create horizonal pod auto-scalers 
         data:
           maxReplicas: 10
           minReplicas: 1

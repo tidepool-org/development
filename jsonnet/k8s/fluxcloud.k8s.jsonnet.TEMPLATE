@@ -1,31 +1,57 @@
-local aws = import 'aws.jsonnet';
+local kube = import 'kube.jsonnet';
 
-local Helmrelease(config, group) = aws.helmrelease(config, group) {
+local Deployment(config, group) = kube.deployment(config, group) {
   local gitops = config.gitops,
+
   local repoBase =
     if std.objectHas(gitops.git, 'name')
     then gitops.git.name
     else 'cluster-%s' % config.cluster.name,
+
   local repoName = '%s/%s' % [gitops.git.server, repoBase],
+
   local channelName =
     if std.objectHas(gitops.notifications.slack, 'channel')
     then gitops.notifications.slack.channel
     else '#flux-%s' % config.cluster.name,
 
   spec+: {
-    chart: {
-      git: 'git@github.com:tidepool-org/development',
-      path: 'charts/fluxcloud/0.1.0',
-      ref: 'k8s',
-    },
-    values+: {
-      name: group.name,
-      github: repoName,
-      slack: {
-        channel: channelName,
-        username: gitops.notifications.slack.username,
+    template+: {
+      spec+: {
+        containers: {
+          env: [
+            {
+              name: 'SLACK_URL',
+              valueFrom: {
+                secretKeyRef: {
+                  name: group.secret.name,
+                  key: 'url',
+                },
+              },
+            },
+            {
+              name: 'SLACK_CHANNEL',
+              value: channelName,
+            },
+            {
+              name: 'SLACK_USERNAME',
+              value: gitops.notifications.slack.username,
+            },
+            {
+              name: 'SLACK_ICON_EMOJI',
+              value: ':heart:',
+            },
+            {
+              name: 'GITHUB_URL',
+              value: repoName,
+            },
+            {
+              name: 'LISTEN_ADDRESS',
+              value: group.deployment.port,
+            },
+          ],
+        },
       },
-      secretName: group.secret.name,
     },
   },
 };
@@ -33,6 +59,7 @@ local Helmrelease(config, group) = aws.helmrelease(config, group) {
 function(config) (
   local group = config.groups.fluxcloud;
   if group.enabled then {
-    Helmrelease: if group.helmrelease.create then Helmrelease(config, group),
+    Deployment: Deployment(config, group),
+    Service: kube.service(config, group),
   }
 )

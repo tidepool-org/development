@@ -7,7 +7,7 @@ groups:
     helmrelease:
       create: true
       chart:
-        repository: https://charts.jetstack.io
+        repository: https://charts.jetstack.io/
         index: jetstack
         name: cert-manager
         version: v0.8.1
