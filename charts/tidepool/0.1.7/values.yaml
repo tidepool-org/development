@@ -174,8 +174,6 @@ highwater:
   deployment:
     podAnnotations: {}
     image: tidepool/highwater:develop-aaefb43df9a132f6c012f7216952e8650e6f6b4a
-  secret:
-    UserIdSalt: ""
   service:
     port: 9191
   resources: {}
@@ -212,7 +210,6 @@ blob:
       store: 
         s3:
           bucket: "data"                                            
-          create: false
         file:
           prefix: "blobs" 
           directory: "_data/blobs"                                            # directory to use if using local file storage
@@ -254,7 +251,6 @@ image:
           prefix: "images"
         s3:
           bucket:  "data"
-          create: false
         type: file
         #type: s3
   resources: {}
@@ -327,7 +323,6 @@ shoreline:
       ServiceAuth: ""
       UserLongTermKey: 
       UserMailVerification: ""
-      UserPasswordSalt: ""
       ClinicDemoUserId: ""
   deployment:
     podAnnotations: {}
@@ -358,7 +353,6 @@ jellyfish:
       store: 
         s3:
           bucket: "data"
-          create: false
       type: file
   service:
     port: 9122
@@ -383,7 +377,8 @@ hydrophone:
     image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
     env:
       fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send
-      bucket: "asset" 
+      s3:
+        bucket: "asset" 
   service:
     port: 9157
   resources: {}

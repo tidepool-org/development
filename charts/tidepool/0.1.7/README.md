@@ -88,7 +88,6 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `auth.deployment.image` | auth Docker image | `` |
 | `blip.deployment.image` | blip Docker image | `` |
 | `blob.deployment.env.store.s3.bucket`                                      | S3 bucket where blob data is written | `data`                                      |
-| `blob.deployment.env.store.s3.create`                                      | Whether to create the S3 bucket | `false`                                      |
 | `blob.deployment.env.store.file.directory`                                         | Directory to use when storing blobs on file storage                                          | `_data/blobs`                                         |
 | `blob.deployment.env.store.file.prefix`                                            | File prefix to use when storing blobs on file storage                                        | `blobs`                                               |
 | `blob.deployment.env.store.type`                                      | If `s3`, store blob data in Amazon S3. If `file` store blob data in local files. | `file`                                                |
@@ -120,7 +119,6 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `hydrophone.deployment.env.store.s3.bucket`                                      | S3 bucket where email templates are stored                                                   | `asset`                                      |
 | `hydrophone.deployment.image` | hydrophone Docker image | `` |
 | `image.deployment.env.store.s3.bucket`                                      | S3 bucket where image data is written | `data`                                      |
-| `image.deployment.env.store.s3.create`                                      | Whether to create the S3 bucket | `false`                                      |
 | `image.deployment.env.store.file.directory`                                        | Directory to use when storing images on file storage                                         | `_data/image`                                         |
 | `image.deployment.env.store.file.prefix`                                           | File prefix to use when storing images on file storage                                       | `images`                                              |
 | `image.deployment.env.store.type`                                      | If `s3`, store image data in Amazon S3. If `file` store image data in local files. | `file`                                                |
@@ -137,7 +135,6 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `ingress.service.http.enabled`                             |  Whether to provide HTTP access | `true`                                           |
 | `ingress.service.https.enabled`                             |  Whether to provide HTTPS access | `false`                                           |
 | `jellyfish.deployment.env.store.s3.bucket`                                      | S3 bucket where jellyfish data is written | `data`                                      |
-| `jellyfish.deployment.env.store.s3.create`                                      | Whether to create the S3 bucket | `false`                                      |
 | `jellyfish.deployment.env.store.type`                                      | If `s3`, store jellyfish data in Amazon S3. If `file` store jellyfishdata in local files. | `file`                                                |
 | `jellyfish.deployment.image` | jellyfish Docker image | `` |
 | `jellyfish.enabled`                                      | Enable jellyfish service if true                                                             | `true`                                                |
