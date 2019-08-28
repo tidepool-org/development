@@ -9,7 +9,7 @@ services:
       - '27017:27017'
 
   blip:
-    image: tidepool/blip
+    image: tidepool/blip:v1.26.0-compose
     depends_on:
       - hakken
     # build:
