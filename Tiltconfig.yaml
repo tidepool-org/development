@@ -124,7 +124,8 @@ hydrophone:
   # image: tidepool-k8s-hydrophone
   # hostPath: '~/go/src/github.com/tidepool-org/hydrophone'
   containerPath: '/go/src/github.com/tidepool-org/hydrophone'
-  rebuildAlways: true
+  restartCommand: './build.sh'
+  restartContainer: true
 
 image:
   # image: tidepool-k8s-image
@@ -169,7 +170,8 @@ shoreline:
   # image: tidepool-k8s-shoreline
   # hostPath: '~/go/src/github.com/tidepool-org/shoreline'
   containerPath: '/go/src/github.com/tidepool-org/shoreline'
-  rebuildAlways: true
+  restartCommand: './build.sh'
+  restartContainer: true
 
 task:
   # image: tidepool-k8s-task
@@ -182,7 +184,8 @@ tidewhisperer:
   # image: tidepool-k8s-tidewhisperer
   # hostPath: '~/go/src/github.com/tidepool-org/tide-whisperer'
   containerPath: '/go/src/github.com/tidepool-org/tide-whisperer'
-  rebuildAlways: true
+  restartCommand: './build.sh'
+  restartContainer: true
 
 tools:
   # image: tidepool-k8s-tools
