@@ -112,13 +112,13 @@ gatekeeper:
   # image: tidepool-k8s-gatekeeper
   # hostPath: ../gatekeeper
   containerPath: '/app'
-  restartCommand: 'touch service-restart'
+  restartContainer: true
 
 highwater:
   # image: tidepool-k8s-highwater
   # hostPath: ../highwater
   containerPath: '/app'
-  restartCommand: 'touch service-restart'
+  restartContainer: true
 
 hydrophone:
   # image: tidepool-k8s-hydrophone
@@ -138,13 +138,13 @@ jellyfish:
   # image: tidepool-k8s-jellyfish
   # hostPath: ../jellyfish
   containerPath: '/app'
-  restartCommand: 'touch service-restart'
+  restartContainer: true
 
 message-api:
   # image: tidepool-k8s-message-api
   # hostPath: ../message-api
   containerPath: '/app'
-  restartCommand: 'touch service-restart'
+  restartContainer: true
 
 migrations:
   # image: tidepool-k8s-migrations
@@ -164,7 +164,7 @@ seagull:
   # image: tidepool-k8s-seagull
   # hostPath: ../seagull
   containerPath: '/app'
-  restartCommand: 'touch service-restart'
+  restartContainer: true
 
 shoreline:
   # image: tidepool-k8s-shoreline
