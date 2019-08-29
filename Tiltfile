@@ -159,6 +159,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       containerPath = overrides.get('containerPath')
       dockerFile = overrides.get('dockerFile', 'Dockerfile')
       target = overrides.get('buildTarget', 'development')
+      rebuildAlways = overrides.get('rebuildAlways', False)
 
       fallback_commands = []
       sync_commands = []
@@ -181,8 +182,9 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
         '{}/{}'.format(hostPath, dockerFile),
       ]))
 
-      # Sync the host path changes to the container path
-      sync_commands.append(sync(hostPath, containerPath))
+      if not rebuildAlways:
+        # Sync the host path changes to the container path
+        sync_commands.append(sync(hostPath, containerPath))
 
       if service == 'blip':
         # Force rebuild when webpack config changes
