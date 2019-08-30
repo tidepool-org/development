@@ -97,7 +97,7 @@ spec:
     messageapi:
       image: tidepool/message-api:develop-48e4e55d3119bd94c25fa7f01be79be85a860528
     auth:
-      image: tidepool/platform-auth:develop-cebea363931570d3930848a21e6a3d07a54f4425
+      image: tidepool/platform-auth:develop-03cbd1f46006037417749fb3a24031b9f3e2f6cc
     blob:
       bucket: tidepool-qa1-data
       image: tidepool/platform-blob:develop-03cbd1f46006037417749fb3a24031b9f3e2f6cc
@@ -115,9 +115,9 @@ spec:
       image: tidepool/platform-task:develop-03cbd1f46006037417749fb3a24031b9f3e2f6cc
     tools:
       enabled: false
-      image: tidepool/platform-tools:develop-cebea363931570d3930848a21e6a3d07a54f4425
+      image: tidepool/platform-tools:develop-03cbd1f46006037417749fb3a24031b9f3e2f6cc
     user:
-      image: tidepool/platform-user:develop-cebea363931570d3930848a21e6a3d07a54f4425
+      image: tidepool/platform-user:develop-03cbd1f46006037417749fb3a24031b9f3e2f6cc
     seagull:
       image: tidepool/seagull:develop-f5b583382cc468657710b15836eafad778817f7c
     shoreline:
