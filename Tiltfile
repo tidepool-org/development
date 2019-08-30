@@ -243,11 +243,11 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       buildCommand += ' {}'.format(hostPath)
 
       # Apply any rebuild commands specified
-      if overrides.get('restartCommand'):
-        run_commands.append(run(overrides.get('restartCommand')))
+      if overrides.get('rebuildCommand'):
+        run_commands.append(run(overrides.get('rebuildCommand')))
 
       # Apply any rebuild commands specified
-      if overrides.get('restartContainer'):
+      if overrides.get('restartContainer', True):
         run_commands.append(restart_container())
 
       live_update_commands = fallback_commands + sync_commands + run_commands;
