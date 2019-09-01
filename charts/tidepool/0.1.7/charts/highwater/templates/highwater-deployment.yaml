@@ -22,9 +22,9 @@ spec:
         app: highwater
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-{{ if .Values.highwater.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.highwater.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
       containers:
@@ -58,9 +58,9 @@ spec:
               key: UCSFWhitelist
               optional: true
         - name: NODE_ENV
-          value: '{{.Values.highwater.nodeEnvironment}}'
+          value: '{{.Values.nodeEnvironment}}'
         - name: PORT
-          value: "{{.Values.highwater.service.port}}"
+          value: "{{.Values.service.port}}"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SALT_DEPLOY
@@ -77,18 +77,18 @@ spec:
           value: highwater
         - name: USER_API_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
-        image: "{{ .Values.highwater.deployment.image }}"
+        image: "{{ .Values.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.highwater.service.port}}
+            port: {{.Values.service.port}}
           initialDelaySeconds: 3
           periodSeconds: 10
         name: highwater
         ports:
-        - containerPort: {{.Values.highwater.service.port}}
+        - containerPort: {{.Values.service.port}}
         resources:
-          {{- toYaml .Values.highwater.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.highwater.securityContext | nindent 10 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always

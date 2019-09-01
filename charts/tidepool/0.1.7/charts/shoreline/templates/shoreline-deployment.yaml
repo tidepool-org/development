@@ -24,9 +24,9 @@ spec:
         app: shoreline
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-{{ if .Values.shoreline.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.shoreline.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
       containers:
@@ -118,7 +118,7 @@ spec:
                     "expireDays": 14
                 },
                 "service": {
-                    "host": "localhost:{{.Values.shoreline.service.port}}",
+                    "host": "localhost:{{.Values.service.port}}",
                     "protocol": "http",
                     "service": "shoreline"
                 },
@@ -127,18 +127,18 @@ spec:
                     "tokenDurationSecs": 2592000
                 }
             }
-        image: "{{ .Values.shoreline.deployment.image }}"
+        image: "{{ .Values.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{ .Values.shoreline.service.port }}
+            port: {{ .Values.service.port }}
           initialDelaySeconds: 3
           periodSeconds: 10
         name: shoreline
         ports:
-        - containerPort: {{ .Values.shoreline.service.port }}
+        - containerPort: {{ .Values.service.port }}
         resources:
-          {{- toYaml .Values.shoreline.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.shoreline.securityContext | nindent 10 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always

@@ -1,4 +1,4 @@
-{{ if .Values.nosqlclient.enabled -}}
+{{ if .Values.enabled -}}
 ---
 apiVersion: v1
 kind: Service
@@ -11,7 +11,7 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: {{.Values.nosqlclient.service.port}}
+    port: {{.Values.service.port}}
     targetPort: 3000
   selector:
     app: nosqlclient

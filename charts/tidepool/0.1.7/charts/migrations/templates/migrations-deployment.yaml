@@ -1,4 +1,4 @@
-{{ if .Values.migrations.enabled -}}
+{{ if .Values.enabled -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -24,9 +24,9 @@ spec:
         app: migrations
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-{{ if .Values.migrations.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.migrations.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
       initContainers:
@@ -38,11 +38,11 @@ spec:
         {{ include "charts.platform.env.clients" .}}
         - name: TIDEPOOL_SESSION_STORE_DATABASE
           value: user
-        image: {{ .Values.migrations.deployment.image | quote}}
+        image: {{ .Values.deployment.image | quote}}
         name: migrations
         resources:
-          {{- toYaml .Values.migrations.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.migrations.securityContext | nindent 10 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always
 {{- end }}

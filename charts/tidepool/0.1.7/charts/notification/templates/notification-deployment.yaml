@@ -23,9 +23,9 @@ spec:
         app: notification
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-{{ if .Values.notification.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.notification.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
       initContainers:
@@ -41,14 +41,14 @@ spec:
               name: notification
               key: ServiceAuth
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.notification.service.port}}
-        image: "{{ .Values.notification.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.notification.service.port}}
+          value: :{{.Values.service.port}}
+        image: "{{ .Values.deployment.image }}"
+        {{ template "charts.platform.probes" .Values.service.port}}
         name: notification
         ports:
-        - containerPort: {{.Values.notification.service.port}}
+        - containerPort: {{.Values.service.port}}
         resources:
-          {{- toYaml .Values.notification.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.notification.securityContext | nindent 10 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always

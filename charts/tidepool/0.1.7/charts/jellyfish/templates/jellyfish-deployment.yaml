@@ -19,9 +19,9 @@ spec:
   strategy: {}
   template:
     metadata:
-{{ if .Values.jellyfish.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.jellyfish.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
       labels:
         app: jellyfish
@@ -42,9 +42,9 @@ spec:
         - name: MINIMUM_UPLOADER_VERSION
           value: 0.251.0
         - name: NODE_ENV
-          value: '{{.Values.jellyfish.nodeEnvironment}}'
+          value: '{{.Values.nodeEnvironment}}'
         - name: PORT
-          value: "{{.Values.jellyfish.service.port}}"
+          value: "{{.Values.service.port}}"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SALT_DEPLOY
@@ -66,23 +66,23 @@ spec:
         - name: SERVICE_NAME
           value: jellyfish
         - name: STORAGE_TYPES
-          value: '{"s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.global.region}}", "bucket": "{{ .Values.jellyfish.deployment.env.store.s3.bucket }}" }}'
+          value: '{"s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.global.region}}", "bucket": "{{ .Values.deployment.env.store.s3.bucket }}" }}'
         - name: STORAGE_DEFAULT
-          value: '{{ .Values.jellyfish.deployment.env.store.type }}'
+          value: '{{ .Values.deployment.env.store.type }}'
         - name: USER_API_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
-        image: "{{ .Values.jellyfish.deployment.image }}"
+        image: "{{ .Values.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{ .Values.jellyfish.service.port }}
+            port: {{ .Values.service.port }}
           initialDelaySeconds: 3
           periodSeconds: 10
         name: jellyfish
         ports:
-        - containerPort: {{ .Values.jellyfish.service.port }}
+        - containerPort: {{ .Values.service.port }}
         resources:
-          {{- toYaml .Values.jellyfish.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.jellyfish.securityContext | nindent 10 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always

@@ -23,9 +23,9 @@ spec:
         app: task
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-{{ if .Values.task.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.task.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
       initContainers:
@@ -36,23 +36,23 @@ spec:
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
         - name: TIDEPOOL_TASK_QUEUE_DELAY
-          value: {{ .Values.task.deployment.env.queue.delay | quote }}
+          value: {{ .Values.deployment.env.queue.delay | quote }}
         - name: TIDEPOOL_TASK_QUEUE_WORKERS
-          value: {{ .Values.task.deployment.env.queue.workers | quote }}
+          value: {{ .Values.deployment.env.queue.workers | quote }}
         - name: TIDEPOOL_TASK_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
               name: task
               key: ServiceAuth
         - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
-          value: :{{ .Values.task.service.port }}
-        image: "{{ .Values.task.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.task.service.port}}
+          value: :{{ .Values.service.port }}
+        image: "{{ .Values.deployment.image }}"
+        {{ template "charts.platform.probes" .Values.service.port}}
         name: task
         ports:
-        - containerPort: {{.Values.task.service.port}}
+        - containerPort: {{.Values.service.port}}
         resources:
-          {{- toYaml .Values.task.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.task.securityContext | nindent 10 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always

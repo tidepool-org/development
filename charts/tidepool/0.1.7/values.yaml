@@ -3,6 +3,10 @@ global:
   nameOverride: ""                                # the name to use for the helm chart, if given
   region: "us-west-2"                         # AWS region
   logLevel: info                                # the default log level for all services
+  gateway:
+    default:
+      protocol: http
+      host: localhost
 
 # environment-wide secrets
 tidepool:
@@ -36,9 +40,6 @@ ingress:
     name: gateway-proxy-v2                                             
     namespace: gloo-system  
   gateway:
-    default:
-      protocol: http                            # the protocol to use for signup emails
-      host: "localhost"                         # default host.
     http:
       dnsNames: [ "localhost" ]                 # list of DNS names
     https:

@@ -1,4 +1,4 @@
-{{ if .Values.nosqlclient.enabled -}}
+{{ if .Values.enabled -}}
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -23,9 +23,9 @@ spec:
         app: nosqlclient
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-{{ if .Values.nosqlclient.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.nosqlclient.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
       containers:
@@ -64,9 +64,9 @@ spec:
             secretKeyRef:
               name: mongo
               key: tls
-        image: "{{ .Values.nosqlclient.image }}"
+        image: "{{ .Values.image }}"
         ports:
-        - containerPort: {{ .Values.nosqlclient.service.port }}
+        - containerPort: {{ .Values.service.port }}
       restartPolicy: Always
 
 {{- end }}

@@ -19,9 +19,9 @@ spec:
   strategy: {}
   template:
     metadata:
-{{ if .Values.blob.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.blob.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
       labels:
         app: blob
@@ -41,22 +41,22 @@ spec:
               name: blob
               key: ServiceAuth
         - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.blob.service.port}}
+          value: :{{.Values.service.port}}
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.blob.deployment.env.store.file.directory}}'
+          value: '{{.Values.deployment.env.store.file.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
-          value: '{{ .Values.blob.deployment.env.store.s3.bucket }}'
+          value: '{{ .Values.deployment.env.store.s3.bucket }}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.blob.deployment.env.store.s3.prefix}}'
+          value: '{{.Values.deployment.env.store.s3.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.blob.deployment.env.store.type}}'
-        image: "{{ .Values.blob.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.blob.service.port}}
+          value: '{{.Values.deployment.env.store.type}}'
+        image: "{{ .Values.deployment.image }}"
+        {{ template "charts.platform.probes" .Values.service.port}}
         name: blob
         ports:
-        - containerPort: {{.Values.blob.service.port}}
+        - containerPort: {{.Values.service.port}}
         resources:
-          {{- toYaml .Values.blob.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.blob.securityContext | nindent 10 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always

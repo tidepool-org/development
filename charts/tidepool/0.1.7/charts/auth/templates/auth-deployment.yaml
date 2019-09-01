@@ -23,9 +23,9 @@ spec:
         app: auth
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-{{ if .Values.auth.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.auth.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
       initContainers:
@@ -80,19 +80,19 @@ spec:
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
           value: "internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.auth.service.port}}
+          value: :{{.Values.service.port}}
         - name: TIDEPOOL_AUTH_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
               name: auth
               key: ServiceAuth
-        image: "{{ .Values.auth.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.auth.service.port}}
+        image: "{{ .Values.deployment.image }}"
+        {{ template "charts.platform.probes" .Values.service.port}}
         name: auth
         ports:
-        - containerPort: {{.Values.auth.service.port}}
+        - containerPort: {{.Values.service.port}}
         resources:
-          {{- toYaml .Values.auth.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.auth.securityContext | nindent 10 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always

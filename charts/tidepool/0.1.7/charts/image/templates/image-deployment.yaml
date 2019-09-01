@@ -18,9 +18,9 @@ spec:
   replicas: 1
   template:
     metadata:
-{{ if .Values.image.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.image.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
       labels:
         app: image
@@ -40,22 +40,22 @@ spec:
               name: image
               key: ServiceAuth 
         - name: TIDEPOOL_IMAGE_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.image.service.port}}
+          value: :{{.Values.service.port}}
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.image.deployment.env.store.type}}'
+          value: '{{.Values.deployment.env.store.type}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.image.deployment.env.store.file.directory}}'
+          value: '{{.Values.deployment.env.store.file.directory}}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
-          value: '{{ .Values.image.deployment.env.store.s3.bucket }}'
+          value: '{{ .Values.deployment.env.store.s3.bucket }}'
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.image.deployment.env.store.s3.prefix}}' 
-        image: "{{ .Values.image.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.image.service.port }}
+          value: '{{.Values.deployment.env.store.s3.prefix}}' 
+        image: "{{ .Values.deployment.image }}"
+        {{ template "charts.platform.probes" .Values.service.port }}
         name: image
         ports:
-        - containerPort: {{.Values.image.service.port}}
+        - containerPort: {{.Values.service.port}}
         resources:
-          {{- toYaml .Values.image.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.image.securityContext | nindent 10 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always

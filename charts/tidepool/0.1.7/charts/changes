@@ -1,0 +1,13 @@
+for dir in *
+do
+(cd $dir/templates
+for file in *.yaml
+do
+ed $file <<!
+g/\.Values.$dir/s//.Values/g
+w
+q
+!
+done
+)
+done

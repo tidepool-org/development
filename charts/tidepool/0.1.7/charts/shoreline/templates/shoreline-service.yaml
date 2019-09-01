@@ -14,7 +14,7 @@ metadata:
       method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
       method_regex: true
       rewrite: "/"
-      service: shoreline.{{ .Release.Namespace }}:{{.Values.shoreline.service.port}}
+      service: shoreline.{{ .Release.Namespace }}:{{.Values.service.port}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -25,7 +25,7 @@ metadata:
       method: "POST"
       method_regex: false
       rewrite: ""
-      service: shoreline.{{ .Release.Namespace }}:{{.Values.shoreline.service.port}}
+      service: shoreline.{{ .Release.Namespace }}:{{.Values.service.port}}
   labels:
     app: shoreline
 {{ include "charts.labels.standard" .}}
@@ -34,8 +34,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: {{.Values.shoreline.service.port}}
-    targetPort: {{.Values.shoreline.service.port}}
+    port: {{.Values.service.port}}
+    targetPort: {{.Values.service.port}}
   selector:
     app: shoreline
     app.kubernetes.io/name: {{ include "charts.name" . }}

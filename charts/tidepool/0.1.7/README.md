@@ -105,10 +105,12 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `dexcom.secret.data_.StateSalt`                                         | plaintext Oauth2 state salt | `false`                                               |
 | `gatekeeper.deployment.image` | gatekeeper Docker image | `` |
 | `gatekeeper.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
-| `global.logLevel`                              | Default log level | `info`                                        |
-| `global.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
 | `global.fullnameOverride`                                |                                                                                              | ``                                                    |
+| `global.gateway.host`                          | Host to use for email verification                                                      | `localhost`   |
+| `global.gateway.protocol`                          | Protocol to use for email verification.                                                      | `http`                                                    |
+| `global.logLevel`                              | Default log level | `info`                                        |
 | `global.nameOverride`                                    | If non-empty, Helm chart name to use                                                         | ``                                                    |
+| `global.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
 | `gloo.enabled`                                           | Whether to include an API Gateway with this installation                                     | `true`                                                |
 | `gloo.gatewayProxies.gatewayProxyV2.service.httpPort`  | HTTP port to listen to | `8080`                                                  |
 | `gloo.gatewayProxies.gatewayProxyV2.service.httpsPort`  | HTTPS port to listen to | `8433`                                                  |
@@ -127,8 +129,6 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `image.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `ingress.deployment.name`                              | Name of the API gateway proxy                                                                | `gateway-proxy-v2`                                    |
 | `ingress.deployment.namespace`                         | Namespace of the API gateway proxy                                                           | `gloo-system`                                         |
-| `ingress.gateway.default.host`                          | Host to use for email verification                                                      | `localhost`   |
-| `ingress.gateway.default.protocol`                          | Protocol to use for email verification.                                                      | `http`                                                    |
 | `ingress.gateway.http.dnsNames`                             | List of host to listen to                                                                    | `localhost`                                           |
 | `ingress.gateway.https.dnsNames`                            | List of Subject Alternative Names to use                                                     | `[]`                                                  |
 | `ingress.service.annotations`                             |  The service annotations | `{}`                                           |

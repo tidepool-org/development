@@ -1,4 +1,4 @@
-{{ if .Values.shoreline.configmap.create -}}
+{{ if .Values.configmap.create -}}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -8,5 +8,5 @@ metadata:
   labels:
 {{ include "charts.labels.standard" .}}
 data:
-  ClinicDemoUserId: {{ .Values.shoreline.configmap.data.ClinicDemoUserId | quote }}
+  ClinicDemoUserId: {{ .Values.configmap.data.ClinicDemoUserId | quote }}
 {{- end }}

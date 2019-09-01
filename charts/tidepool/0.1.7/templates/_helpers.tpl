@@ -4,7 +4,7 @@ Expand the name of the chart.
 */}}
 
 {{- define "charts.host.external.tp" -}} 
-{{- .Values.ingress.gateway.default.protocol -}}:{{- .Values.ingress.gateway.default.host }}
+{{- .Values.global.gateway.protocol -}}:{{- .Values.global.gateway.host }}
 {{- end }}
 
 {{- define "charts.name" -}}

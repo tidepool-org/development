@@ -1,4 +1,4 @@
-{{ if .Values.export.enabled -}}
+{{ if .Values.enabled -}}
 ---
 apiVersion: v1
 kind: Service
@@ -15,7 +15,7 @@ metadata:
       method_regex: true
       path_redirect: "false"
       rewrite: "/"
-      service: export.{{ .Release.Namespace }}:{{.Values.export.service.port}}
+      service: export.{{ .Release.Namespace }}:{{.Values.service.port}}
   labels:
     app: export
 {{ include "charts.labels.standard" .}}
@@ -24,8 +24,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: {{.Values.export.service.port}}
-    targetPort: {{.Values.export.service.port}}
+    port: {{.Values.service.port}}
+    targetPort: {{.Values.service.port}}
   selector:
     app: export
     app.kubernetes.io/name: {{ include "charts.name" . }}

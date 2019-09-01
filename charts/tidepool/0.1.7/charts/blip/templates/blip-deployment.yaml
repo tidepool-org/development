@@ -21,21 +21,21 @@ spec:
         app: blip
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-{{ if .Values.blip.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.blip.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
       containers:
-      - image: "{{ .Values.blip.deployment.image }}"
+      - image: "{{ .Values.deployment.image }}"
         env:
         - name: SKIP_HAKKEN
           value: "true"
         name: blip
         ports:
-        - containerPort: {{.Values.blip.service.port}}
+        - containerPort: {{.Values.service.port}}
         resources:
-          {{- toYaml .Values.blip.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.blip.securityContext | nindent 10 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always

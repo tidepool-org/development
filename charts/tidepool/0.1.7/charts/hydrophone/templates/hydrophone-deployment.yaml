@@ -1,5 +1,5 @@
 ---
-{{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{ .Values.hydrophone.deployment.env.store.s3.bucket }} {{- end }}
+{{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{ .Values.deployment.env.store.s3.bucket }} {{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,9 +19,9 @@ spec:
   replicas: 1
   template:
     metadata:
-{{ if .Values.hydrophone.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.hydrophone.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
       labels:
         app: hydrophone
@@ -62,7 +62,7 @@ spec:
                 }
             }
         - name: PROTOCOL
-          value: "{{ .Values.ingress.gateway.default.protocol }}"
+          value: "{{ .Values.global.gateway.protocol }}"
         - name: TIDEPOOL_HYDROPHONE_SERVICE
           value: |
             {
@@ -74,26 +74,26 @@ spec:
                     "connectionString": ""
                 },
                 "service": {
-                    "host": "localhost:{{.Values.hydrophone.service.port}}",
+                    "host": "localhost:{{.Values.service.port}}",
                     "protocol": "http",
                     "service": "hydrophone"
                 },
                 "sesEmail": {
-                    "fromAddress": "{{.Values.hydrophone.deployment.env.fromAddress}}"
+                    "fromAddress": "{{.Values.deployment.env.fromAddress}}"
                 }
             }
-        image: "{{ .Values.hydrophone.deployment.image }}"
+        image: "{{ .Values.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.hydrophone.service.port}}
+            port: {{.Values.service.port}}
           initialDelaySeconds: 30
           periodSeconds: 10
         name: hydrophone
         ports:
-        - containerPort: {{.Values.hydrophone.service.port}}
+        - containerPort: {{.Values.service.port}}
         resources:
-          {{- toYaml .Values.hydrophone.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.hydrophone.securityContext | nindent 10 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always

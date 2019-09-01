@@ -23,9 +23,9 @@ spec:
         app: seagull
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-{{ if .Values.seagull.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.seagull.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
       containers:
@@ -40,9 +40,9 @@ spec:
         - name: METRICS_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater:{{.Values.highwater.service.port}}"}]}'
         - name: NODE_ENV
-          value: '{{.Values.seagull.nodeEnvironment}}'
+          value: '{{.Values.nodeEnvironment}}'
         - name: PORT
-          value: "{{.Values.seagull.service.port}}"
+          value: "{{.Values.service.port}}"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SERVER_SECRET
@@ -56,18 +56,18 @@ spec:
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
         - name: SKIP_HAKKEN
           value: "true"
-        image: "{{ .Values.seagull.deployment.image }}"
+        image: "{{ .Values.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.seagull.service.port}}
+            port: {{.Values.service.port}}
           initialDelaySeconds: 30
           periodSeconds: 10
         name: seagull
         ports:
-        - containerPort: {{.Values.seagull.service.port}}
+        - containerPort: {{.Values.service.port}}
         resources:
-          {{- toYaml .Values.seagull.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.seagull.securityContext | nindent 10 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always
