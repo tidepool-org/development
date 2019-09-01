@@ -1,4 +1,4 @@
 secret:
-  create: false
+  enabled: false
   data_:
     CareLinkSalt: ""

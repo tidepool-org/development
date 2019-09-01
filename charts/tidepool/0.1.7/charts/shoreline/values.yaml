@@ -1,9 +1,9 @@
 configmap:
-  create: false
+  enabled: false
   data:
     ClinicDemoUserId: ""
 secret:
-  create: false
+  enabled: false
   data_:
     ServiceAuth: ""
     UserLongTermKey: 
