@@ -98,7 +98,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `carelink.secret.enabled`                                       | whether to create carelink secret| `false`                                               |
 | `carelink.secret.data_.CareLinkSalt`                                       | plaintext Carelink salt | `false`                                               |
 | `data.deployment.image` | data Docker image | `` |
-| `data.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
+| `data.secret.data_.ServiceAuth`                                         | Service authorization secret | ``                                         |
 | `dexcom.secret.enabled`                                         | whether to create dexcom secret| `false`                                               |
 | `dexcom.secret.data_.ClientId`                                  | plaintext Oauth2 client id | ``                                               |
 | `dexcom.secret.data_.ClientSecret`                                         | plaintext Oauth2 client secret | `false`                                               |
@@ -157,15 +157,15 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `jellyfish.enabled`                                      | Enable jellyfish service if true                                                             | `true`                                                |
 | `jellyfish.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
 | `kissmetrics.secret.enabled` | whether to use create kissmetrics secret | `false` |
-| `kissmetrics.secret.data_.KissmetricsAPIKey` | plaintext Kissmetrics API Key | `` |
-| `kissmetrics.secret.data_.KissmetricsToken` | plaintext Kissmetrics Token | `` |
-| `kissmetrics.secret.data_.UCSFKissmetricsAPIKey` | plaintext UCSF Kissmetrics Token | `` |
+| `kissmetrics.secret.data_.APIKey` | plaintext Kissmetrics API Key | `` |
+| `kissmetrics.secret.data_.Token` | plaintext Kissmetrics Token | `` |
+| `kissmetrics.secret.data_.UCSFAPIKey` | plaintext UCSF Kissmetrics Token | `` |
 | `kissmetrics.secret.data_.UCSFWhitelist` | plaintext UCSF metrics whitelist | `` |
 | `mailchimp.secret.enabled` | whether to create Mailchimp secret | `false` |
-| `mailchimp.secret.data_.MailchimpApiKey` | plaintext Mailchimp API key | `` |
-| `mailchimp.secret.data_.MailchimpClinicLists` | plaintext clinic mailing lists| `` |
-| `mailchimp.secret.data_.MailchimpPersonalLists` | plaintext personal mailing lists| `` |
-| `mailchimp.secret.data_.MailchimpURL` | plaintext Mailchimp URL | `` |
+| `mailchimp.secret.data_.ApiKey` | plaintext Mailchimp API key | `` |
+| `mailchimp.secret.data_.ClinicLists` | plaintext clinic mailing lists| `` |
+| `mailchimp.secret.data_.PersonalLists` | plaintext personal mailing lists| `` |
+| `mailchimp.secret.data_.URL` | plaintext Mailchimp URL | `` |
 | `messageapi.deployment.env.window`                                      |                                                                                              | `21`                                                  |
 | `messageapi.deployment.image` | message-api Docker image | `` |
 | `messageapi.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
@@ -187,9 +187,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `server.secret.enabled` | whether to cerate secret |  `` |
 | `server.secret.data_.ServiceAuth` | service authorization, if empty, random value is generated |  `` |
 | `shoreline.deployment.image` | shoreline Docker image | `` |
-| `shoreline.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
-| `sumologic.enabled` | whether to use Sumologic | `false` |
-| `sumologic.secret.CollectorUrl` |  Sumologic collector URL | `false` |
+| `shoreline.secret.data_.ServiceAuth`                                         | Service authorization secret | ``                                         |
 | `task.deployment.image` | task Docker image | `` |
 | `task.secret.data_.ServiceAuth` | task authorization, if empty, random value is generated |  `` |
 | `tidepool.namespace.create`                                | If true, create namespace                                                                    | `false`                                               |
