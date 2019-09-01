@@ -1,0 +1,6 @@
+secret:
+  create: false
+  data_:
+    ClientId: ""
+    ClientSecret: ""
+    StateSalt: ""                            # the Dexcom client API url

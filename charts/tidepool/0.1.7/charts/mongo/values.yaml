@@ -1,0 +1,10 @@
+secret:
+  create: false
+  data_:
+    Scheme: "mongodb"
+    Addresses: "mongodb"
+    Username: ""
+    Password: ""
+    Database: ""
+    Tls: "true"
+    OptParams: ""

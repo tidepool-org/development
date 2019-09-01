@@ -1,0 +1,14 @@
+iamRole: ""
+deployment:
+  podAnnotations: {}
+  image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
+  env:
+    fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send
+    s3:
+      bucket: "asset" 
+service:
+  port: 9157
+resources: {}
+securityContext: {}
+hpa:
+  enabled: false
