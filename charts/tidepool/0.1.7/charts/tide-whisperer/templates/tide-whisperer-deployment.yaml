@@ -23,9 +23,9 @@ spec:
         app: tide-whisperer
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-{{ if .Values.tidewhisperer.podAnnotations }}
+{{ if .Values.podAnnotations }}
       annotations:
-        {{- .Values.tidewhisperer.podAnnotations | toYaml | nindent 8 }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
       initContainers:
@@ -80,7 +80,7 @@ spec:
                     "service": "tide-whisperer"
                 }
             }
-        image: "{{ .Values.tidewhisperer.deployment.image }}"
+        image: "{{ .Values.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
@@ -91,7 +91,7 @@ spec:
         ports:
         - containerPort: {{.Values.global.ports.tidewhisperer}}
         resources:
-          {{- toYaml .Values.tidewhisperer.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.tidewhisperer.securityContext | nindent 10 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always

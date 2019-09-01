@@ -7,4 +7,4 @@ resources: {}
 securityContext: {}
 hpa:
   enabled: false
-        nodeEnvironment: production 
+nodeEnvironment: production 
