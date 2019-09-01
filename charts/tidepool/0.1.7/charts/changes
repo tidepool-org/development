@@ -4,7 +4,8 @@ do
 for file in *.yaml
 do
 ed $file <<!
-g/\.Values.$dir/s//.Values/g
+g/\.Values.auth.service.port/s//.Values.global.ports.auth/
+g/\.Values.messageapi.service.port/s//.Values.global.ports.messageapi/
 w
 q
 !

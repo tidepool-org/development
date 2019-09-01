@@ -1,0 +1,7 @@
+secret:
+  enabled: false
+  data_:
+    ClinicLists: ""
+    URL: ""
+    PersonalLists: ""
+    ApiKey: ""

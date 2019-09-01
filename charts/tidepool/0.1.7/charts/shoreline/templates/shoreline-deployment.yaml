@@ -38,19 +38,19 @@ spec:
           valueFrom:
             secretKeyRef:
               name: mailchimp
-              key: MailchimpClinicLists
+              key: ClinicLists
               optional: true
         - name: MAILCHIMP_URL
           valueFrom:
             secretKeyRef:
               name: mailchimp
-              key: MailchimpURL
+              key: URL
               optional: true
         - name: PERSONAL_LISTS
           valueFrom:
             secretKeyRef:
               name: mailchimp
-              key: MailchimpPersonalLists
+              key: PersonalLists
               optional: true
         - name: DEMO_CLINIC_USER_ID
           valueFrom:
@@ -91,12 +91,12 @@ spec:
           valueFrom:
             secretKeyRef:
               name: mailchimp
-              key: MailchimpApiKey
+              key: ApiKey
               optional: true
         - name: TIDEPOOL_SHORELINE_ENV
           value: |
             {
-                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.gatekeeper.service.port}}"]}},
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.global.ports.gatekeeper}}"]}},
                 "hakken": {
                   "host": "hakken",
                   "skipHakken": true
@@ -105,7 +105,7 @@ spec:
                     "metricsSource": "shoreline",
                     "metricsVersion": "v0.0.1",
                     "name": "highwater",
-                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.highwater.service.port}}"]}
+                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.global.ports.highwater}}"]}
                 }
             }
         - name: TIDEPOOL_SHORELINE_SERVICE
@@ -118,7 +118,7 @@ spec:
                     "expireDays": 14
                 },
                 "service": {
-                    "host": "localhost:{{.Values.service.port}}",
+                    "host": "localhost:{{.Values.global.ports.shoreline}}",
                     "protocol": "http",
                     "service": "shoreline"
                 },
@@ -131,12 +131,12 @@ spec:
         livenessProbe:
           httpGet:
             path: /status
-            port: {{ .Values.service.port }}
+            port: {{ .Values.global.ports.shoreline }}
           initialDelaySeconds: 3
           periodSeconds: 10
         name: shoreline
         ports:
-        - containerPort: {{ .Values.service.port }}
+        - containerPort: {{ .Values.global.ports.shoreline }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

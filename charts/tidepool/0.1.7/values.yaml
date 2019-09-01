@@ -7,28 +7,30 @@ global:
     default:
       protocol: http
       host: localhost
+  ports:
+    blip: 3000                                                        # blip service internal port
+    export: 9300                                                      # export service internal port
+    gatekeeper: 9123                                                  # gatekeeper service internal port
+    highwater: 9191                                                   # highwater service internal port
+    hydrophone: 9157                                                  # hydrophone service internal port
+    jellyfish: 9122                                                   # jellyfish service internal port
+    messageapi: 9119                                                  # messageapi service internal port
+    auth: 9222                                                        # auth service internal port
+    blob: 9225                                                        # blob service internal port
+    data: 9220                                                        # data service internal port
+    image: 9226                                                       # image service internal port
+    notification: 9223                                                # notification service internal port
+    task: 9224                                                        # task service internal port
+    user: 9221                                                        # user service internal port
+    seagull: 9120                                                     # seagull service internal port
+    shoreline: 9107                                                   # shoreline service internal port
+    tidewhisperer: 9127                                               # tidewhisperer service internal port
 
 # environment-wide secrets
 tidepool:
   namespace:
     create: true
     annotations: {}                             # namespace annotations
-mailchimp:
-  secret:
-    create: false
-    data_:
-      MailchimpClinicLists: ""
-      MailchimpURL: ""
-      MailchimpPersonalLists: ""
-      MailchimpApiKey: ""
-kissmetrics:
-  secret:
-    create: false
-    data_:
-      KissmetricsAPIKey: ""
-      KissmetricsToken: ""
-      UCSFKissmetricsAPIKey: ""
-      UCSFWhitelist: ""
 
 ingress:
   service:

@@ -45,12 +45,12 @@ spec:
               name: task
               key: ServiceAuth
         - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
-          value: :{{ .Values.service.port }}
+          value: :{{ .Values.global.ports.task }}
         image: "{{ .Values.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.service.port}}
+        {{ template "charts.platform.probes" .Values.global.ports.task}}
         name: task
         ports:
-        - containerPort: {{.Values.service.port}}
+        - containerPort: {{.Values.global.ports.task}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

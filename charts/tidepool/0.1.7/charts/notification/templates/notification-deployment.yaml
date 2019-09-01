@@ -41,12 +41,12 @@ spec:
               name: notification
               key: ServiceAuth
         - name: TIDEPOOL_NOTIFICATION_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.service.port}}
+          value: :{{.Values.global.ports.notification}}
         image: "{{ .Values.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.service.port}}
+        {{ template "charts.platform.probes" .Values.global.ports.notification}}
         name: notification
         ports:
-        - containerPort: {{.Values.service.port}}
+        - containerPort: {{.Values.global.ports.notification}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

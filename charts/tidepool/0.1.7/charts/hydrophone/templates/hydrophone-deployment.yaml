@@ -43,7 +43,7 @@ spec:
         - name: TIDEPOOL_HYDROPHONE_ENV
           value: |
             {
-                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.gatekeeper.service.port}}"]}},
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.global.ports.gatekeeper}}"]}},
                 "hakken": {
                   "host": "hakken",
                   "skipHakken": true
@@ -52,12 +52,12 @@ spec:
                     "metricsSource": "hydrophone",
                     "metricsVersion": "v0.0.1",
                     "name": "highwater",
-                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.highwater.service.port}}"]}
+                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.global.ports.highwater}}"]}
                 },
-                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.seagull.service.port}}"]}},
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.global.ports.seagull}}"]}},
                 "shoreline": {
                     "name": "hydrophone",
-                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:{{.Values.shoreline.service.port}}"]},
+                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:{{.Values.global.ports.shoreline}}"]},
                     "tokenRefreshInterval": "1h"
                 }
             }
@@ -74,7 +74,7 @@ spec:
                     "connectionString": ""
                 },
                 "service": {
-                    "host": "localhost:{{.Values.service.port}}",
+                    "host": "localhost:{{.Values.global.ports.hydrophone}}",
                     "protocol": "http",
                     "service": "hydrophone"
                 },
@@ -86,12 +86,12 @@ spec:
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.service.port}}
+            port: {{.Values.global.ports.hydrophone}}
           initialDelaySeconds: 30
           periodSeconds: 10
         name: hydrophone
         ports:
-        - containerPort: {{.Values.service.port}}
+        - containerPort: {{.Values.global.ports.hydrophone}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

@@ -10,8 +10,8 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: {{.Values.service.port}}
-    targetPort: {{.Values.service.port}}
+    port: {{.Values.global.ports.notification}}
+    targetPort: {{.Values.global.ports.notification}}
   selector:
     app: notification
     app.kubernetes.io/name: {{ include "charts.name" . }}

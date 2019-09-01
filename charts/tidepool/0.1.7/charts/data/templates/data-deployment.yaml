@@ -41,18 +41,18 @@ spec:
               name: data
               key: ServiceAuth
         - name: TIDEPOOL_DATA_SERVICE_SERVER_ADDRESS
-          value: :{{ .Values.service.port }}
+          value: :{{ .Values.global.ports.data }}
         - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
-          value: http://data:{{ .Values.service.port }}
+          value: http://data:{{ .Values.global.ports.data }}
         - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
           value: data
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
         image: "{{ .Values.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.service.port}}
+        {{ template "charts.platform.probes" .Values.global.ports.data}}
         name: data
         ports:
-        - containerPort: {{.Values.service.port}}
+        - containerPort: {{.Values.global.ports.data}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

@@ -36,17 +36,17 @@ spec:
           value: 'hakken'
         - name: GATEKEEPER_SERVICE
           value: '{
-                  "type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.gatekeeper.service.port}}"}]}'
+                  "type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.global.ports.gatekeeper}}"}]}'
         - name: METRICS_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater:{{.Values.highwater.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "highwater:{{.Values.global.ports.highwater}}"}]}'
         - name: NODE_ENV
           value: '{{.Values.messageapi.nodeEnvironment}}'
         - name: PORT
-          value: "{{.Values.messageapi.service.port}}"
+          value: "{{.Values.global.ports.messageapi}}"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SEAGULL_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:{{.Values.seagull.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:{{.Values.global.ports.seagull}}"}]}'
         - name: SERVER_NAME
           value: message-api
         - name: SERVER_SECRET
@@ -59,19 +59,19 @@ spec:
         - name: DELETE_TIME_WINDOW
           value: '{{.Values.messageapi.window}}'
         - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
         - name: SKIP_HAKKEN
           value: "true"
         image: "{{ .Values.messageapi.deployment.image }}" 
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.messageapi.service.port}}
+            port: {{.Values.global.ports.messageapi}}
           initialDelaySeconds: 3
           periodSeconds: 10
         name: message-api
         ports:
-        - containerPort: {{.Values.messageapi.service.port}}
+        - containerPort: {{.Values.global.ports.messageapi}}
         resources:
           {{- toYaml .Values.messageapi.resources | nindent 10 }}
         securityContext:

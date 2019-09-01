@@ -41,7 +41,7 @@ spec:
               name: user
               key: ServiceAuth
         - name: TIDEPOOL_USER_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.service.port}}
+          value: :{{.Values.global.ports.user}}
         - name: TIDEPOOL_USER_STORE_DATABASE
           value: user
         - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
@@ -65,10 +65,10 @@ spec:
         - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
           value: confirm
         image: "{{ .Values.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.service.port }}
+        {{ template "charts.platform.probes" .Values.global.ports.user }}
         name: user
         ports:
-        - containerPort: {{.Values.service.port}}
+        - containerPort: {{.Values.global.ports.user}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

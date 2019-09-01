@@ -80,17 +80,17 @@ spec:
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
           value: "internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
-          value: :{{.Values.service.port}}
+          value: :{{.Values.global.ports.auth}}
         - name: TIDEPOOL_AUTH_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
               name: auth
               key: ServiceAuth
         image: "{{ .Values.deployment.image }}"
-        {{ template "charts.platform.probes" .Values.service.port}}
+        {{ template "charts.platform.probes" .Values.global.ports.auth}}
         name: auth
         ports:
-        - containerPort: {{.Values.service.port}}
+        - containerPort: {{.Values.global.ports.auth}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

@@ -45,7 +45,7 @@ Create environment variables used by all platform services.
 
 {{ define "charts.platform.env.clients" }}
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
-          value: http://auth:{{.Values.auth.service.port}}
+          value: http://auth:{{.Values.global.ports.auth}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
           value: "http://internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
@@ -54,11 +54,11 @@ Create environment variables used by all platform services.
               name: server
               key: ServiceAuth
         - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
-          value: http://blob:{{.Values.blob.service.port}}
+          value: http://blob:{{.Values.global.ports.blob}}
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
-          value: http://data:{{.Values.data.service.port}}
+          value: http://data:{{.Values.global.ports.data}}
         - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
-          value: http://data:{{.Values.data.service.port}}
+          value: http://data:{{.Values.global.ports.data}}
         - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
           valueFrom:
             configMapKeyRef:
@@ -70,15 +70,15 @@ Create environment variables used by all platform services.
               name: dexcom
               key: AuthorizeURL
         - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
-          value: http://image:{{.Values.image.service.port}}
+          value: http://image:{{.Values.global.ports.image}}
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
           value: "http://internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
-          value: http://notification:{{.Values.notification.service.port}}
+          value: http://notification:{{.Values.global.ports.notification}}
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
-          value: http://gatekeeper:{{.Values.gatekeeper.service.port}}
+          value: http://gatekeeper:{{.Values.global.ports.gatekeeper}}
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS
-          value: http://task:{{.Values.task.service.port}}
+          value: http://task:{{.Values.global.ports.task}}
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
           value: "http://internal.{{.Release.Namespace}}"
 {{ end }}
@@ -159,7 +159,7 @@ Create liveness and readiness probes for platform services.
 {{- define "charts.init.shoreline" -}}
       - name: init-shoreline
         image: busybox
-        command: ['sh', '-c', 'until nc -zvv shoreline {{.Values.shoreline.service.port}}; do echo waiting for shoreline; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -zvv shoreline {{.Values.global.ports.shoreline}}; do echo waiting for shoreline; sleep 2; done;']
 {{- end -}} 
 
 {{- define "charts.labels.standard" }} 

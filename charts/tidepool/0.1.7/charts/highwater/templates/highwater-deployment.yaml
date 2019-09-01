@@ -37,19 +37,19 @@ spec:
           valueFrom:
             secretKeyRef:
               name: kissmetrics
-              key: KissmetricsAPIKey
+              key: APIKey
               optional: true
         - name: METRICS_TOKEN
           valueFrom:
             secretKeyRef:
               name: kissmetrics
-              key: KissmetricsToken
+              key: Token
               optional: true
         - name: METRICS_UCSF_APIKEY
           valueFrom:
             secretKeyRef:
               name: kissmetrics
-              key: UCSFKissmetricsAPIKey
+              key: UCSFAPIKey
               optional: true
         - name: METRICS_UCSF_WHITELIST
           valueFrom:
@@ -60,7 +60,7 @@ spec:
         - name: NODE_ENV
           value: '{{.Values.nodeEnvironment}}'
         - name: PORT
-          value: "{{.Values.service.port}}"
+          value: "{{.Values.global.ports.highwater}}"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SALT_DEPLOY
@@ -76,17 +76,17 @@ spec:
         - name: SERVICE_NAME
           value: highwater
         - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
         image: "{{ .Values.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{.Values.service.port}}
+            port: {{.Values.global.ports.highwater}}
           initialDelaySeconds: 3
           periodSeconds: 10
         name: highwater
         ports:
-        - containerPort: {{.Values.service.port}}
+        - containerPort: {{.Values.global.ports.highwater}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

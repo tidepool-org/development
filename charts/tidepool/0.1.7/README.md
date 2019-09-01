@@ -110,6 +110,23 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.gateway.protocol`                          | Protocol to use for email verification.                                                      | `http`                                                    |
 | `global.logLevel`                              | Default log level | `info`                                        |
 | `global.nameOverride`                                    | If non-empty, Helm chart name to use                                                         | ``                                                    |
+| `global.ports.auth`                                      | Auth service container port                                                                  | `9222`                                                |
+| `global.ports.blip`                                      | Blip service container port                                                                  | `3000`                                                |
+| `global.ports.blob`                                      | Blob service container port                                                                  | `9225`                                                |
+| `global.ports.data`                                      | Data service container port                                                                  | `9220`                                                |
+| `global.ports.export`                                    | Export service container port                                                                | `9300`                                                |
+| `global.ports.gatekeeper`                                | Gatekeeper service container port                                                            | `9123`                                                |
+| `global.ports.highwater`                                 | Highwater service container port                                                             | `9191`                                                |
+| `global.ports.image`                                     | Image service container port                                                                 | `9226`                                                |
+| `global.ports.jellyfish`                                 | Jellyfish service container port                                                             | `9122`                                                |
+| `global.ports.messageapi`                                | Message-Api service container port                                                           | `9119`                                                |
+| `global.ports.notification`                              | Notification service container port                                                          | `9223`                                                |
+| `global.ports.seagull`                                   | Seagull service container port                                                               | `9120`                                                |
+| `global.ports.seagull`                                   | Seagull service container port                                                               | `9120`                                                |
+| `global.ports.shoreline`                                 | Shoreline service container port                                                             | `9107`                                                |
+| `global.ports.task`                                      | Task service container port                                                                  | `9224`                                                |
+| `global.ports.tidewhisperer`                             | Tide whisperer service container port                                                        | `9127`                                                |
+| `global.ports.user`                                      | User service container port                                                                  | `9221`
 | `global.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
 | `gloo.enabled`                                           | Whether to include an API Gateway with this installation                                     | `true`                                                |
 | `gloo.gatewayProxies.gatewayProxyV2.service.httpPort`  | HTTP port to listen to | `8080`                                                  |

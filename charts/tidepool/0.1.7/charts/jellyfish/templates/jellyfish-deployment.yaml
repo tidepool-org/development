@@ -38,13 +38,13 @@ spec:
         - name: DISCOVERY_HOST
           value: 'hakken'
         - name: GATEKEEPER_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.gatekeeper.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.global.ports.gatekeeper}}"}]}'
         - name: MINIMUM_UPLOADER_VERSION
           value: 0.251.0
         - name: NODE_ENV
           value: '{{.Values.nodeEnvironment}}'
         - name: PORT
-          value: "{{.Values.service.port}}"
+          value: "{{.Values.global.ports.jellyfish}}"
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: SALT_DEPLOY
@@ -55,7 +55,7 @@ spec:
         - name: SCHEMA_VERSION
           value: "3"
         - name: SEAGULL_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:{{.Values.seagull.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:{{.Values.global.ports.seagull}}"}]}'
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
@@ -70,17 +70,17 @@ spec:
         - name: STORAGE_DEFAULT
           value: '{{ .Values.deployment.env.store.type }}'
         - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.shoreline.service.port}}"}]}'
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
         image: "{{ .Values.deployment.image }}"
         livenessProbe:
           httpGet:
             path: /status
-            port: {{ .Values.service.port }}
+            port: {{ .Values.global.ports.jellyfish }}
           initialDelaySeconds: 3
           periodSeconds: 10
         name: jellyfish
         ports:
-        - containerPort: {{ .Values.service.port }}
+        - containerPort: {{ .Values.global.ports.jellyfish }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
