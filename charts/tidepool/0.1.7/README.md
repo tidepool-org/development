@@ -92,14 +92,14 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `blob.deployment.env.store.file.prefix`                                            | File prefix to use when storing blobs on file storage                                        | `blobs`                                               |
 | `blob.deployment.env.store.type`                                      | If `s3`, store blob data in Amazon S3. If `file` store blob data in local files. | `file`                                                |
 | `blob.deployment.image` | blob Docker image | `` |
-| `blob.secret.create`                                         | whether to create blob secret | ``                                         |
+| `blob.secret.enabled`                                         | whether to create blob secret | ``                                         |
 | `blob.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `carelink.enabled`                                       | Enable carelink                                                                              | `false`                                               |
-| `carelink.secret.create`                                       | whether to create carelink secret| `false`                                               |
+| `carelink.secret.enabled`                                       | whether to create carelink secret| `false`                                               |
 | `carelink.secret.data_.CareLinkSalt`                                       | plaintext Carelink salt | `false`                                               |
 | `data.deployment.image` | data Docker image | `` |
 | `data.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
-| `dexcom.secret.create`                                         | whether to create dexcom secret| `false`                                               |
+| `dexcom.secret.enabled`                                         | whether to create dexcom secret| `false`                                               |
 | `dexcom.secret.data_.ClientId`                                  | plaintext Oauth2 client id | ``                                               |
 | `dexcom.secret.data_.ClientSecret`                                         | plaintext Oauth2 client secret | `false`                                               |
 | `dexcom.secret.data_.StateSalt`                                         | plaintext Oauth2 state salt | `false`                                               |
@@ -142,7 +142,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `image.deployment.env.store.file.prefix`                                           | File prefix to use when storing images on file storage                                       | `images`                                              |
 | `image.deployment.env.store.type`                                      | If `s3`, store image data in Amazon S3. If `file` store image data in local files. | `file`                                                |
 | `image.deployment.image` | image Docker image | `` |
-| `image.secret.create`                                         | whether to create image secret| ``                                         |
+| `image.secret.enabled`                                         | whether to create image secret| ``                                         |
 | `image.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `ingress.deployment.name`                              | Name of the API gateway proxy                                                                | `gateway-proxy-v2`                                    |
 | `ingress.deployment.namespace`                         | Namespace of the API gateway proxy                                                           | `gloo-system`                                         |
@@ -156,12 +156,12 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `jellyfish.deployment.image` | jellyfish Docker image | `` |
 | `jellyfish.enabled`                                      | Enable jellyfish service if true                                                             | `true`                                                |
 | `jellyfish.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
-| `kissmetrics.secret.create` | whether to use create kissmetrics secret | `false` |
+| `kissmetrics.secret.enabled` | whether to use create kissmetrics secret | `false` |
 | `kissmetrics.secret.data_.KissmetricsAPIKey` | plaintext Kissmetrics API Key | `` |
 | `kissmetrics.secret.data_.KissmetricsToken` | plaintext Kissmetrics Token | `` |
 | `kissmetrics.secret.data_.UCSFKissmetricsAPIKey` | plaintext UCSF Kissmetrics Token | `` |
 | `kissmetrics.secret.data_.UCSFWhitelist` | plaintext UCSF metrics whitelist | `` |
-| `mailchimp.secret.create` | whether to create Mailchimp secret | `false` |
+| `mailchimp.secret.enabled` | whether to create Mailchimp secret | `false` |
 | `mailchimp.secret.data_.MailchimpApiKey` | plaintext Mailchimp API key | `` |
 | `mailchimp.secret.data_.MailchimpClinicLists` | plaintext clinic mailing lists| `` |
 | `mailchimp.secret.data_.MailchimpPersonalLists` | plaintext personal mailing lists| `` |
@@ -171,7 +171,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `messageapi.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
 | `migrations.deployment.image` | migrations Docker image | `` |
 | `migrations.enabled`                                     | Enable migrations service if true                                                            | `true`                                                |
-| `mongo.secret.create`                                        | Whether to create mongo secret | `false`                                             |
+| `mongo.secret.enabled`                                        | Whether to create mongo secret | `false`                                             |
 | `mongo.secret.data_.OptParams`                                        | plaintext additional Mongo connection params                                                           | ``                                                    |
 | `mongo.secret.data_.Password`                                         | plaintext Mongo password                                                                 | `` ||                                                  |
 | `mongo.secret.data_.Scheme`                                        | plaintext Mongo DB scheme, either `mongodb` or `mongodb+srv`                                              | `mongodb`                                             |
@@ -180,11 +180,11 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `mongodb.enabled`                                 | Whether to include an mongodb with this installation                                         | `true`                                                |
 | `nosqlclient.enabled`                                    | Enable nosqlclient                                                                           | `false`                                               |
 | `notification.deployment.image` | notification Docker image | `` |
-| `notification.secret.create`                                         | wheter to create notification secret | ``                                         |
+| `notification.secret.enabled`                                         | wheter to create notification secret | ``                                         |
 | `notification.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `seagull.deployment.image` | seagull Docker image | `` |
 | `seagull.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
-| `server.secret.create` | whether to cerate secret |  `` |
+| `server.secret.enabled` | whether to cerate secret |  `` |
 | `server.secret.data_.ServiceAuth` | service authorization, if empty, random value is generated |  `` |
 | `shoreline.deployment.image` | shoreline Docker image | `` |
 | `shoreline.secret.ServiceAuth`                                         | Service authorization secret | ``                                         |
@@ -197,13 +197,13 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `tools.deployment.image` | tools Docker image | `` |
 | `tools.enabled`                                          | Enable tools service if true                                                                 | `true`                                                |
 | `user.deployment.image` | user Docker image | `` |
-| `user.secret.create` | whether to generate user secret |  `` |
+| `user.secret.enabled` | whether to generate user secret |  `` |
 | `user.secret.data_.ServiceAuth` | user authorization, if empty, random value is generated |  `` |
-| `userdata.secret.create` | whethe to create userdata secret | `` |
+| `userdata.secret.enabled` | whethe to create userdata secret | `` |
 | `userdata.secret.data_.GroupIdEncryptionKey` | plaintext group id encryption key| `` |
 | `userdata.secret.data_.UserIdSalt` | plaintext user id salt | `` |
 | `userdata.secret.data_.UserPasswordSalt` | plaintext user password salt | `` |
-| `{name}.hpa.create`                                      | If true, create a horizontal pod autoscalers for all pods of given deployment                                    | 'false'                                               |
+| `{name}.hpa.enabled`                                      | If true, create a horizontal pod autoscalers for all pods of given deployment                                    | 'false'                                               |
 | `{name}.hpa.data.maxReplicas`                                      | Maximum number of replicase that HPA will maintain | 'false'                                               |
 | `{name}.hpa.data.minReplicas`                                      | Minimum number of replicase that HPA will maintain | 'false'                                               |
 | `{name}.hpa.data.targetCPUUtilizationPercentage`                     | Target CPU utilization percentage for HPA to maintain| 'false'                                               |
