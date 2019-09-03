@@ -15,7 +15,6 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [Install Tilt](#install-tilt)
   - [Clone This Repository](#clone-this-repository)
   - [Add Tidepool Helper Script (recommended)](#add-tidepool-helper-script-recommended)
-  - [Clone This Repository](#clone-this-repository)
   - [Environment Setup (recommended)](#environment-setup-recommended)
 - [Quick Start](#quick-start)
   - [With the tidepool helper script (recommended)](#with-the-tidepool-helper-script-recommended)
@@ -24,6 +23,8 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
 # Initial Setup
 
 It's easy to get up and running quickly as long as you know a bit about your computer and your way around a terminal window.
+
+**WINDOWS USERS:** Currently, our local development environment only works natively in MacOS and Linux environments. To run within Windows, we recommend you set up and run within a Linux VM via a virtualization tool such as VirtualBox or VMWare. We hope to natively support Windows in an upcoming iteration.
 
 ## Install Docker
 
@@ -48,8 +49,6 @@ Please install the `helm` CLI tool via the [Helm Installation Instructions](http
 Managing a K8s cluster can be very challenging, and even more so when using one for local development. [Tilt](https://tilt.dev/) is a CLI tool used to simplify and streamline management of local development services within a Kubernetes cluster.
 
 By using our Tilt setup, developers can very easily run a live-reloading instance of any of our frontend or backend services without needing to directly use or understand Helm or Kubernetes. All that's needed is uncommenting a couple of lines in a `Tiltconfig.yaml` file, and updating the local paths to where the developer has checked out the respective git repo, if different than the default defined in the config.
-
-**WINDOWS USERS:** Currently, our Tilt config only works in MacOS and Linux environments. To run within windows, we recommend you set up and run withing a Linux VM via a virtualization tool such as VirtualBox or VMWare. We do intend to natively support Windows in an upcoming iteration.
 
 **IMPORTANT NOTE:** We currently run against version `v0.9.7` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
 
