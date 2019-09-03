@@ -107,7 +107,6 @@ export:
   # image: tidepool-k8s-export
   # hostPath: ../export
   containerPath: '/app'
-  rebuildCommand: 'touch service-restart'
 
 gatekeeper:
   # image: tidepool-k8s-gatekeeper
