@@ -6,13 +6,62 @@ This GitHub repository is your launching pad to running and developing the Tidep
 
 Of course, if you haven't already done so, you should check out [Tidepool](https://tidepool.org) and [Tidepool Web](https://app.tidepool.org). It's a snap to create an account, upload your or your loved one's diabetes device data, and visualize it all in one place. We've already done the hard work of setting up the servers, software, databases, backups, and more, so you don't have to. Check it out!
 
-# Setup
+## Quick Links
+
+- [Initial Setup](#initial-setup)
+  - [Install Docker](#install-docker)
+  - [Install Docker Compose](#install-docker-compose)
+  - [Install Helm](#install-helm)
+  - [Install Tilt](#install-tilt)
+  - [Clone This Repository](#clone-this-repository)
+  - [Add Tidepool Helper Script (recommended)](#add-tidepool-helper-script-recommended)
+  - [Clone This Repository](#clone-this-repository)
+  - [Environment Setup (recommended)](#environment-setup-recommended)
+- [Quick Start](#quick-start)
+  - [With the tidepool helper script (recommended)](#with-the-tidepool-helper-script-recommended)
+  - [Without the tidepool helper script](#without-the-tidepool-helper-script)
+
+# Initial Setup
 
 It's easy to get up and running quickly as long as you know a bit about your computer and your way around a terminal window.
 
 ## Install Docker
 
-The Tidepool stack relies on [Docker](https://www.docker.com) to run all of the code on your computer. Follow the directions at https://www.docker.com/community-edition to install and run Docker on your computer.
+The Tidepool stack relies on [Docker](https://www.docker.com) and [Docker Compose](https://docs.docker.com/compose) to run all of the code on your computer.
+
+Follow the appropriate link for your platform (Mac OSx or Linux recommended) at https://docs.docker.com/install/#supported-platforms and follow the directions to install and run Docker on your computer.
+
+## Install Docker Compose
+
+We use [Docker Compose](https://docs.docker.com/compose/) to run a local Kubernetes cluster within Docker. There are a number of _Kubernetes-in-Docker_ solutions available, but the one we've settled on as offering the best all-around fit for local development is [bsycorp/kind](https://github.com/bsycorp/kind/).
+
+If you installed Docker Desktop, the `docker-compose` tool will have been automatically installed with it.  If you installed Docker on Linux, you'll need to download the binary by following the [Docker Compose Installation Instructions](https://docs.docker.com/compose/install/#install-compose)
+
+## Install Helm
+
+The Tidepool services (and supporting services such as the [MongoDB](https://www.mongodb.com/) database and the [Gloo Gateway](https://gloo.solo.io/) for routing requests) are defined by [Helm](https://helm.sh/) templates, which the `helm` tool uses to convert into manifests that can be applied to the our local [Kubernetes](https://kubernetes.io/) (K8s) cluster.
+
+Please install the `helm` CLI tool via the [Helm Installation Instructions](https://helm.sh/docs/using_helm/#installing-helm).
+
+## Install Tilt
+
+Managing a K8s cluster can be very challenging, and even more so when using one for local development. [Tilt](https://tilt.dev/) is a CLI tool used to simplify and streamline management of local development services within a Kubernetes cluster.
+
+By using our Tilt setup, developers can very easily run a live-reloading instance of any of our frontend or backend services without needing to directly use or understand Helm or Kubernetes. All that's needed is uncommenting a couple of lines in a `Tiltconfig.yaml` file, and updating the local paths to where the developer has checked out the respective git repo, if different than the default defined in the config.
+
+**WINDOWS USERS:** Currently, our Tilt config only works in MacOS and Linux environments. To run within windows, we recommend you set up and run withing a Linux VM via a virtualization tool such as VirtualBox or VMWare. We do intend to natively support Windows in an upcoming iteration.
+
+**IMPORTANT NOTE:** We currently run against version `v0.9.7` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
+
+```bash
+# MacOS
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.9.7/tilt.0.9.7.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+
+# Linux
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.9.7/tilt.0.9.7.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+```
+
+After installing Tilt, you can verify the correct version by typing `tilt version` in your terminal.
 
 ## Clone This Repository
 
@@ -29,6 +78,93 @@ git clone https://github.com/tidepool-org/development.git ~/Tidepool/development
 ```
 
 For more information about `git`, please see [Git](https://git-scm.com/) and [Try Git](https://try.github.io/).
+
+## Add Tidepool Helper Script (recommended)
+
+Though not strictly necessary, we recommend that you manage your local Tidepool stack via the `tidepool` helper script provided by this repo at `/bin/tidepool`
+
+You can run the script from the root directory of this repo from your terminal with:
+
+```bash
+# Show the help text (run from the root of this repo)
+bin/tidepool help
+```
+
+It's recommended, however, to add the `bin` directory to your $PATH (e.g. in `~/.bashrc`) so that you can run the script from anywhere as `tidepool`.
+
+```bash
+export PATH=$PATH:/path/to/this/repo/bin
+```
+
+You can now easily manage your stack and services from anywhere.
+
+```bash
+# Show the help text (run from anywhere :) )
+tidepool help
+```
+
+## Environment Setup (recommended)
+
+There are 2 environment variables that we recommend you export before starting up the Tidepool stack for the first time.
+
+It's recommended that you export them in a persistent way, such as within your local `~/.bash_profile` (or whatever equivalent you use)
+
+`KUBECONFIG` - This is the path used by Tilt to issue commands to your Kubernetes cluster.
+
+```bash
+export KUBECONFIG="$HOME/.kube/config"
+```
+
+`TIDEPOOL_DOCKER_MONGO_VOLUME` - This is the path used to persist your local MongoDB data. You don't need to set this, but if you don't, you'll be restarting from a blank slate each time you start up your dev environment.
+
+For example, if you want to store the Mongo data in the `~/MyMongoData` directory, then just set the value of the environment variable like so:
+
+```bash
+export TIDEPOOL_DOCKER_MONGO_VOLUME="~/MyMongoData"
+```
+
+# Quick Start
+
+Once you've completed the [Initial Setup](#initial-setup), getting the Tidepool services (including supporting services such as the database and gateway services) up and running in a local Kubernetes cluster is trivial.
+
+## With the tidepool helper script (recommended)
+
+### Start the kubernetes server via Docker Compose
+
+```bash
+tidepool server-start
+```
+
+### Retrieve and store the Kubernetes server config
+
+```bash
+tidepool server-set-config
+```
+
+This will save the Kubernetes server config to ~/.kube/config. This is only required after the initial server start provisioning.
+
+### Start the tidepool services
+
+```bash
+tidepool start
+```
+
+This will start the Tidepool services in the kubernetes cluster via Tilt. You will see a terminal UI open that will allow you to view the both the build logs and container logs for all of the Tidepool services.
+
+### Optional - Monitor Kubernetes state with k9s
+
+While the tilt terminal UI shows a good deal of information, there may be times as a developer that you want a little deeper insight into what's happening inside Kubernetes.
+
+[K9s](https://k9ss.io/) is a CLI tool that provides a terminal UI to interact with your Kubernetes clusters.  It allows you to view in realtime the status of your Kubernetes pods and services without needing to learn the intricacies of `kubectl`, the powerful-but-complex Kubernetes CLI tool.
+
+After [Installing the k9s CLI](https://github.com/derailed/k9s#installation), you can simply start the Terminal UI with:
+
+```bash
+k9s
+```
+
+## Without the tidepool helper script
+
 
 # Starting
 
