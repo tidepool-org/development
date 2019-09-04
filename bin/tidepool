@@ -54,6 +54,7 @@ USAGE: tidepool command [service] [...additional args]
                                     example: tidepool yarn tidepool-platform-client test
 
   port-forward [service] [port]   Forward a port to a running service container
+  verify-account-email [email]    Complete the email address verification step for a created account
 
 EOF
 }
@@ -65,6 +66,8 @@ run_docker_compose() { args="${@:1}" && (docker-compose -f 'docker-compose.k8s.y
 restart() { (kubectl scale deployment ${1} --replicas=0 && kubectl scale deployment ${1} --replicas=1) }
 
 run_exec() { args="${@:2}" && (kubectl exec -ti svc/${1} -c ${1} -- /bin/sh -c "${args}") }
+
+mongo_exec() { args="${@:1}" && (kubectl exec -ti svc/mongodb -c mongo -- /bin/sh -c "${args}") }
 
 run_yarn() {
   NODE_SERVICES='@(blip|export|gatekeeper|highwater|jellyfish|message-api|seagull)'
@@ -126,5 +129,6 @@ case ${1-help} in
   exec) run_exec ${2} ${@:3};;
   yarn) run_yarn ${2} "${@:3}";;
   port-forward) (cd ${DIR} && kubectl port-forward svc/${2} ${3});;
+  verify-account-email) mongo_exec "mongo --eval 'db.users.update({username: \"${@:2}\"},{\$set:{\"authenticated\":true}});' user";;
   *) usage;;
 esac

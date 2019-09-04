@@ -19,6 +19,14 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
 - [Quick Start](#quick-start)
   - [With the tidepool helper script (recommended)](#with-the-tidepool-helper-script-recommended)
   - [Without the tidepool helper script](#without-the-tidepool-helper-script)
+  - [Monitor Kubernetes state with k9s (Optional)](#monitor-kubernetes-state-with-k9s-optional)
+- [Using Tidepool](#using-tidepool)
+  - [Creating An Account](#creating-an-account)
+  - [Verifying An Account Email](#verifying-an-account-email)
+  - [Uploading Data](#uploading-data)
+  - [Data Retention](#data-retention)
+- [Troubleshooting](#troubleshooting)
+- [Known Issues](#known-issues)
 
 # Initial Setup
 
@@ -80,7 +88,9 @@ For more information about `git`, please see [Git](https://git-scm.com/) and [Tr
 
 ## Add Tidepool Helper Script (recommended)
 
-Though not strictly necessary, we recommend that you manage your local Tidepool stack via the `tidepool` helper script provided by this repo at `/bin/tidepool`
+Though not strictly necessary, we recommend that you manage your local Tidepool stack via the `tidepool` helper script provided by this repo at `/bin/tidepool`.
+
+Most of this documentation will assume you've chosen to install the helper script, but we do have some Quick Start instructions for [managing the stack without the helper script](#without-the-tidepool-helper-script) for those who prefer to manage all the components directly.
 
 You can run the script from the root directory of this repo from your terminal with:
 
@@ -128,7 +138,7 @@ Once you've completed the [Initial Setup](#initial-setup), getting the Tidepool 
 
 ## With the tidepool helper script (recommended)
 
-### Start the kubernetes server via Docker Compose
+### Start the kubernetes server
 
 ```bash
 tidepool server-start
@@ -150,7 +160,82 @@ tidepool start
 
 This will start the Tidepool services in the kubernetes cluster via Tilt. You will see a terminal UI open that will allow you to view the both the build logs and container logs for all of the Tidepool services.
 
-### Optional - Monitor Kubernetes state with k9s
+### Stop the tidepool services
+
+You can stop the Tidepool services either by exiting the Tilt UI with `ctrl-c`, or with the following terminal command:
+
+```bash
+tidepool stop
+```
+
+### Stop the kubernetes server
+
+```bash
+tidepool server-stop
+```
+
+## Without the tidepool helper script
+
+**NOTE:** All commands must be run from the root of this repo.
+
+### Start the kubernetes server
+
+```bash
+docker-compose -f 'docker-compose.k8s.yml' up -d
+```
+
+### Retrieve and store the Kubernetes server config
+
+We need to save the Kubernetes server config to ~/.kube/config. This is only required after the initial server start provisioning.
+
+First, we need to confirm server has completely started by tailing the server logs:
+
+```bash
+docker-compose -f 'docker-compose.k8s.yml' logs -f server
+```
+
+We can move on once we see the following message:
+
+```bash
+INFO exited: start (exit status 0; expected)
+```
+
+Now that the server has started, we need to retrieve the Kubernetes config and store it to the path we exported our `KUBECONFIG` variable to.
+
+```bash
+# Replace ~/.kube/config as needed if you
+# chose a different path for KUBECONFIG
+curl http://127.0.0.1:10080/config > ~/.kube/config
+```
+
+
+### Start the tidepool services
+
+```bash
+# First, set the DOCKER_HOST variable to allow using the docker process
+# inside the server container for retrieving and building images
+export DOCKER_HOST=tcp://127.0.0.1:2375
+
+# Start the tidepool services with Tilt,
+# with trap to shut down properly upon exit
+trap 'SHUTTING_DOWN=1 tilt down' EXIT; tilt up --port=0
+```
+
+### Stop the tidepool services
+
+You can stop the Tidepool services either by exiting the Tilt UI with `ctrl-c`, or with the following terminal command:
+
+```bash
+export SHUTTING_DOWN=1; tilt down
+```
+
+### Stop the kubernetes server
+
+```bash
+docker-compose -f 'docker-compose.k8s.yml' stop
+```
+
+## Monitor Kubernetes state with k9s (Optional)
 
 While the tilt terminal UI shows a good deal of information, there may be times as a developer that you want a little deeper insight into what's happening inside Kubernetes.
 
@@ -162,35 +247,23 @@ After [Installing the k9s CLI](https://github.com/derailed/k9s#installation), yo
 k9s
 ```
 
-## Without the tidepool helper script
+# Using Tidepool
 
-
-# Starting
-
-Now, if you just want to get it running as quickly as possible, execute the following commands in a terminal window. As before, remember to replace `<local-directory>` with the directory where you cloned this repository.
-
-```bash
-cd <local-directory>
-docker-compose up -d
-```
-
-NOTE: Due to timing issues not seen outside of Docker, the `hydrophone` and `tide-whisperer` services may not properly connect to `shoreline`. We are looking at how to fix this problem. To resolve this problem for now, execute the following commands to restart these containers and services.
-
-```bash
-docker-compose restart hydrophone tide-whisperer
-```
-
-NOTE: Executing `docker-compose up -d` will do nothing if all of the containers are already running. However, if one or more containers are stopped or their associated Docker images have been rebuilt, then it will start or restart those containers as you'd expect. In summary, feel free to run `docker-compose up -d` if you aren't sure if everything is running and up-to-date as there's no harm if there's nothing to be done.
-
-For more information about `docker-compose`, please see https://docs.docker.com/compose.
-
-# Creating An Account
+## Creating An Account
 
 Once your local Tidepool is running, open your Chrome browser and browse to http://localhost:3000. You should see the Tidepool login page running from your local computer, assuming everything worked as expected. Go ahead and signup for a new account. Remember, all accounts and data created via this local Tidepool are _ONLY_ stored on your computer. _No_ data is stored on any of the Tidepool servers.
 
-NOTE: Since your local Tidepool does not have a configured email server, no emails will be sent at all. This includes the verification email sent during account creation. To get around this when running locally you can add `+skip` to your email address. Your local Tidepool will allow you to login with that email address even without email verification. For example, if the email address you were going to use was `jdoe@mail.com`, use `jdoe+skip@mail.com` instead. You'll need to use this new email address whenever you login.
+## Verifying An Account Email
 
-# Uploading
+Since your local Tidepool does not have a configured email server, no emails will be sent at all. This includes the verification email sent during account creation. To get around this when running locally, you need to verify the email account in the mongo database directly by setting the `authenticated` field to true for the user you've created, which can be found at `db.user.users`.
+
+This can be done by connecting to the mongo client within the mongo container (out of scope for this document), or, more conveniently, with the `tidepool` helper script:
+
+```bash
+tidepool verify-account-email [user-email-address]
+```
+
+## Uploading Data
 
 To upload diabetes device data to your local Tidepool, first make sure the [Tidepool Uploader](https://tidepool.org/products/tidepool-uploader) is installed on your computer. Follow the directions at https://tidepool.org/products/tidepool-uploader.
 
@@ -200,24 +273,32 @@ NOTE: If you wish to upload to our official, production Tidepool later, you'll h
 
 NOTE: The Dexcom API integration will not work as it requires a private developer id and secret known only to Dexcom and Tidepool. If you wish to enable this functionality, please see https://developer.dexcom.com/. Once you receive a developer id and secret from Dexcom, please contact us at support@tidepool.org so we can help you make the appropriate local configuration changes.
 
-# Data Retention
+## Data Retention
 
-Remember, this is all running on your computer only. This means that all accounts you create and all data you upload to your local Tidepool are _ONLY_ stored in a Mongo database located in the `<local-directory>/mongo` directory on your computer. If you delete that directory, then all of the data you uploaded locally is gone, **permanently**. If you are going to run Tidepool locally as a permanent solution, then we very **strongly** suggest regular backups of the `mongo` directory.
+Remember, this is all running on your computer only. This means that all accounts you create and all data you upload to your local Tidepool are _ONLY_ stored in a Mongo database located in the local directory on your computer that you defined with the `TIDEPOOL_DOCKER_MONGO_VOLUME` environment variable (See [Environment Setup (recommended)](#environment-setup-recommended)). If you delete that directory, then all of the data you uploaded locally is gone, **permanently**. If you are going to run Tidepool locally as a permanent solution, then we very **strongly** suggest regular backups of the `mongo` directory.
 
 Fortunately, at [Tidepool Web](https://app.tidepool.org), we worry about that for you and make sure all of your data is secure and backed up regularly.
 
-# Stopping
+# Troubleshooting
 
-To stop running your local Tidepool, execute the following commands in a terminal window.
+| Issue | Things to try |
+| --- | --- |
+| kubectl errors when provisioning services | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config) |
+| kubectl errors when starting k9s | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config) |
 
-```bash
-cd <local-directory>
-docker-compose down
+# Known Issues
+
+## Tidepool Web becomes inaccessible
+
+Currently, there is a known issue where at times the gateway proxy service that handles incoming requests loses track of the local blip service.
+
+This will present itself usually with the web app getting stuck in a loading state in the browser, or possibly resolving with an error message like: `‘No healthy upstream on blip (http://localhost:3000)`
+
+The solution is to restart the `gateway-proxy` service, which should instantly restore access:
+
 ```
-
-This will stop all Docker containers used by your local Tidepool.
-
-You can now quit the Docker application, if you wish.
+tidepool restart gateway-proxy
+```
 
 # Customization
 
