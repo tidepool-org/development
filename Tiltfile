@@ -43,9 +43,10 @@ def main():
     prepareServer()
 
     # Ensure mongodb service is deployed
-    mongodb_service = local('kubectl get service mongodb --ignore-not-found')
-    if not mongodb_service:
-      local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 &>/dev/null &')
+    if not getNested(config, 'mongodb.useExternal'):
+      mongodb_service = local('kubectl get service mongodb --ignore-not-found')
+      if not mongodb_service:
+        local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 &>/dev/null &')
 
     # Ensure proxy services are deployed
     gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found')
@@ -53,14 +54,16 @@ def main():
       local('tilt up --file=Tiltfile.proxy --hud=0 --port=0 &>/dev/null &')
 
     # Wait until mongodb and gateway-proxy services are forwarding before provisioning rest of stack
-    local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
+    if not getNested(config, 'mongodb.useExternal'):
+      local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
     local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
 
     # Generate and/or apply server secrets on startup
     tidepool_helm_template_cmd = setServerSecrets(tidepool_helm_template_cmd)
   else:
     # Shut down the mongodb and proxy services
-    local('tilt down --file=Tiltfile.mongodb &>/dev/null &')
+    if not getNested(config, 'mongodb.useExternal'):
+      local('tilt down --file=Tiltfile.mongodb &>/dev/null &')
     local('tilt down --file=Tiltfile.proxy &>/dev/null &')
 
     # Clean up any tilt up backround processes

@@ -16,6 +16,13 @@ global:
       port: '3000'
     https:
       enabled: false
+  mongo:
+    await: 'true'    # whether to await for mongo to be ready before starting services
+    hosts: 'mongodb' # comma-separated list of Mongo hosts
+    port: 27017      # the Mongo port
+    username: ''     # a username in the Mongo instance
+    ssl: 'false'     # whether to use SSL to communicate with Mongo
+    optParams: ''    # optional parameters to pass on the Mongo connection string
   ports:
     viz:
       stories: 8083
@@ -53,7 +60,8 @@ gloo:
 
 ### MongoDB Config Start ###
 mongodb:
-  enabled: false # We deploy our own directly within the Tiltfile
+  enabled: false # Disable the helm-chart-defined mongo, as we deploy our own directly within the Tiltfile
+  useExternal: false # Set to true and update the global mongo config above if using an external mongo db
   hostPath: '/data/db' # Note: this path is relative to the k8s server container defined in `docker-compose.k8s.yml`. Local machine path is volume-mounted using the TIDEPOOL_DOCKER_MONGO_VOLUME environment variable.
 ### MongoDB Config End ###
 
