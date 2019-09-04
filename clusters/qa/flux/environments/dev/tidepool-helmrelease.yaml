@@ -83,7 +83,7 @@ spec:
       image: tidepool/blip:release-1.27.0-0346046f985248aea1341577739428ae0408a553
     export:
       enabled: true
-      image: tidepool/export:develop-800f65cf2541db989179f898cbb77399ca079a0b
+      image: tidepool/export:develop-363c4bb3a5dfaff8cf3950c92ee3e2d90cbd06b1
     gatekeeper:
       image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
     highwater:
