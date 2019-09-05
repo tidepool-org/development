@@ -17,9 +17,9 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [Add Tidepool Helper Script (recommended)](#add-tidepool-helper-script-recommended)
   - [Environment Setup (recommended)](#environment-setup-recommended)
 - [Quick Start](#quick-start)
-  - [With the tidepool helper script (recommended)](#with-the-tidepool-helper-script-recommended)
-  - [Without the tidepool helper script](#without-the-tidepool-helper-script)
-  - [Monitor Kubernetes state with k9s (Optional)](#monitor-kubernetes-state-with-k9s-optional)
+  - [With The Tidepool Helper Script (recommended)](#with-the-tidepool-helper-script-recommended)
+  - [Without The Tidepool Helper Script](#without-the-tidepool-helper-script)
+  - [Monitor Kubernetes State With K9s (Optional)](#monitor-kubernetes-state-with-k9s-optional)
 - [Using Tidepool](#using-tidepool)
   - [Creating An Account](#creating-an-account)
   - [Verifying An Account Email](#verifying-an-account-email)
@@ -34,6 +34,8 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [Image Source Respositories](#image-source-repositories)
   - [Building Local Images](#building-local-images)
   - [Custom Docker Build Parameters](#custom-docker-build-parameters)
+  - [Linking And Un-Linking Tidepool Web NPM Packages](#linking-and-un-linking-tidepool-web-npm-packages)
+  - [Working With Yarn For NodeJS Services](#working-with-yarn-for-nodejs-services)
 - [Misc](#misc)
   - [Tracing Internal Services](#tracing-internal-services)
   - [Troubleshooting](#troubleshooting)
@@ -129,6 +131,8 @@ You can now easily manage your stack and services from anywhere.
 tidepool help
 ```
 
+**NOTE:** `tidepool help` will describe and outline the use of all of the available commands.
+
 ## Environment Setup (recommended)
 
 There are 2 environment variables that we recommend you export before starting up the Tidepool stack for the first time.
@@ -155,7 +159,7 @@ export TIDEPOOL_DOCKER_MONGO_VOLUME="~/MyMongoData"
 
 Once you've completed the [Initial Setup](#initial-setup), getting the Tidepool services (including supporting services such as the database and gateway services) up and running in a local Kubernetes cluster is trivial.
 
-## With the tidepool helper script (recommended)
+## With The Tidepool Helper Script (recommended)
 
 ### Start the kubernetes server
 
@@ -193,7 +197,7 @@ tidepool stop
 tidepool server-stop
 ```
 
-## Without the tidepool helper script
+## Without The Tidepool Helper Script
 
 **NOTE:** All commands must be run from the root of this repo.
 
@@ -254,7 +258,7 @@ export SHUTTING_DOWN=1; tilt down
 docker-compose -f 'docker-compose.k8s.yml' stop
 ```
 
-## Monitor Kubernetes state with k9s (Optional)
+## Monitor Kubernetes State With K9s (Optional)
 
 While the tilt terminal UI shows a good deal of information, there may be times as a developer that you want a little deeper insight into what's happening inside Kubernetes.
 
@@ -532,26 +536,90 @@ blip:
   # ...
 ```
 
-## Developing Front End Services
+## Linking And Un-Linking Tidepool Web NPM Packages
 
 Making changes to our primary web application, Tidepool Web, which goes by the service name `blip`, is exactly the same process as all of the other services as long as all the changes required can be made within the `blip` repository.
 
-If a feature requires developing any of our supporting NPM libraries, such as `@tidepool/viz`, `tideline`, or `platform-client`, they need to be mounted into the `blip` service container and linked via NPM
+If a feature requires changes to any of our supporting NPM packages (listed below), they need to be mounted into the `blip` service container and linked via NPM
 
-See
-
-### Tidepool Front End NPM Packages
+First, you'll need to clone the GitHub repository you are interested in to your computer.
 
 Here is a list of the Tidepool npm packages you may need to make changes to:
 
-| Package Name             | Service Name    | Repository URL                                  | Description                                                     |
-| ---                      | ---             | ---                                             | ---                                                             |
-| @tidepool/viz            | viz             | https://github.com/tidepool-org/viz             | Component Visualization and Data Pre-Processing                 |
-| tideline                 | tideline        | https://github.com/tidepool-org/tideline        | Legacy Component Visualization and Data Pre-Processing          |
-| tidepool-platform-client | platform-client | https://github.com/tidepool-org/platform-client | Client-side library to interact with the Tidepool  backend APIs |
+| Package Name             | Service Name    | Description                                                     | Git Clone URL (`<git-clone-url>`)               | Default Clone Directory (`<default-clone-directory>`)|
+| ---                      | ---             | ---                                                             | ---                                             | ---                                                  |
+| @tidepool/viz            | viz             | Component Visualization and Data Pre-Processing                 | https://github.com/tidepool-org/viz             | ../viz                                               |
+| tideline                 | tideline        | Legacy Component Visualization and Data Pre-Processing          | https://github.com/tidepool-org/tideline        | ../tideline                                          |
+| tidepool-platform-client | platform-client | Client-side library to interact with the Tidepool  backend APIs | https://github.com/tidepool-org/platform-client | ../platform-client                                   |
 
+Choose one of the above repositories and clone locally using the following command. Replace `<git-clone-url>` with the appropriate Git Clone URL from the above table. Replace `<default-clone-directory>` with the appropriate Default Clone Directory from the above table.
 
-### Working with node package managers in Docker (`npm`, `yarn`)
+```bash
+git clone <git-clone-url> <default-clone-directory>
+```
+
+For example, if you wanted to clone the `viz` service repository:
+
+```bash
+git clone https://github.com/tidepool-org/viz.git ../viz
+```
+
+### Linking A Package With Tilt Config
+
+Next, you need to set the linked package's `active` value to `true` in your `local/Tiltconfig.yaml` file.
+
+You will also need to ensure that the `blip.image` and `blip.hostPath` values are uncommented
+
+```yaml
+blip:
+  image: tidepool-k8s-blip # Uncommented
+  hostPath: ../blip # Uncommented and path matches the cloned blip repo location
+  containerPath: '/app'
+  apiHost: 'http://localhost:3000'
+  webpackDevTool: cheap-module-eval-source-map
+  webpackPublicPath: 'http://localhost:3000'
+  linkedPackages:
+    - name: tideline
+      packageName: tideline
+      hostPath: ../tideline
+      enabled: false
+
+    - name: tidepool-platform-client
+      packageName: tidepool-platform-client
+      hostPath: ../platform-client
+      enabled: false
+
+    - name: viz
+      packageName: '@tidepool/viz'
+      hostPath: ../viz # Path matches where the cloned viz repo location
+      enabled: true # Set from false to true
+  restartContainer: false
+```
+
+When you save this, if the services are already running, or you start the services with `tidepool start`, Tilt will automatically build and deploy a new `blip` container image with the `viz` repo package mounted at `/app/packageMounts/@tidepool/viz`, and will have already installed the `viz` npm dependancies and `npm link`-ed the package to `blip`
+
+### Un-Linking A Package With Tilt Config
+
+If you set `enabled` for the `viz` package back to `false` in your `local/Tiltconfig.yaml` file, Tilt will automatically build and deploy a new `blip` container image without the package link.
+
+```yaml
+blip:
+  image: tidepool-k8s-blip
+  hostPath: ../blip
+  containerPath: '/app'
+  apiHost: 'http://localhost:3000'
+  webpackDevTool: cheap-module-eval-source-map
+  webpackPublicPath: 'http://localhost:3000'
+  linkedPackages:
+    # ...
+    - name: viz
+      packageName: '@tidepool/viz'
+      hostPath: ../viz
+      enabled: false # Set from true back to false
+  # ...
+```
+
+## Working With Yarn For NodeJS Services
 
 Running your development environment in Docker is great for a number of reasons, but it does complicate package management when working with Node.js projects.
 
@@ -561,13 +629,11 @@ This is for performance reasons, but also because we want the packages to be com
 
 This results in us having to issue our `yarn` commands from **_within_** the containers, instead of from our native operating system.
 
-Docker Compose provides a couple ways for us to get _into_ the service containers to run our commands. Here are a couple of examples of how to run a `yarn install` for the `blip` service:
-
-#### Using `docker-compose exec` to enter an interactive prompt within the container
+The `tidepool` helper script (see [Add Tidepool Helper Script](#add-tidepool-helper-script-recommended)) allows us to shell into a container and run commands.
 
 ```bash
 # Shell into the container from your local terminal
-docker-compose exec blip sh
+tidepool exec blip sh
 
 # You will now be 'inside' the container in the /app directory
 yarn install
@@ -579,27 +645,33 @@ exit
 
 This is overkill when just doing a simple command (streamlined alternative outlined below), but it's very hand when you need to perform multiple operations or simply poke around the container's file system.
 
-#### Using `docker-compose exec` to issue a one-off command in the container with the `sh -c` flag
+Because issuing yarn commands is such a common process for our NodeJS services, we have a `tidepool` helper specifically for that:
 
 ```bash
 # Examples (from your local terminal)
 
 # Perform an install
-docker-compose exec blip sh -c "yarn install"
+tidepool yarn blip # Could specify install, but it's implied as the default command
 
 # Run an npm script, such as a test-watch
-docker-compose exec blip sh -c "yarn run test-watch"
+tidepool yarn blip test-watch
+
+# Run the linked @tidepool/viz storybook
+tidepool yarn @tidepool/viz stories
+
+# IMPORTANT STEP: in a separate tab, expose the storybook port
+# in the blip service so you can access the storybook UI from your browser
+tidepool port-forward blip 8083
 ```
 
-### Linking other node packages into `blip`
+### Persisting Yarn Lockfile Updates
 
-### Running the `viz` service
+**IMPORTANT:** If you were to add a new NPM package directly (or otherwise update the `yarn.lock` or `package.json`) within the container using the above `tidepool yarn` helper, it would work within that container, but these changes would **_NOT_** propogate back to your host filesystem.
 
-Unlike the other frontend Node.js services that blip uses, `viz` can also be run as a standalone service.
+To persist updates to your `yarn.lock` (or `package.lock` in some repos) and `package.json` files, you should run the `yarn` or `npm` commands locally.
 
-In fact, it **_must_** be running if you are planning to link it into `blip`, as the webpack bundling needs to run (which it does when the service container starts, and when mounted files change).
+This will allow your changes to be tracked properly in version control, and Tilt is configured to recognize when a `yarn.lock` or `package.lock` file changes and will automatically run `yarn install` for you in the service container (so you don't have to do it in 2 places).
 
-There are times, however, where you may want to run it on it's own without linking into `blip`, such as if you're working on new prototypes in `viz`'s Storybooks.
 
 [[back to top]](#quick-links)
 
