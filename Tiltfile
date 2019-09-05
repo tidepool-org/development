@@ -184,6 +184,15 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
         '{}/{}'.format(hostPath, dockerFile),
       ]))
 
+      # Run yarn install in container whenever yarn.lock changes on host
+      run_commands.append(run(
+        'cd {} && yarn install --silent'.format(containerPath),
+        trigger=[
+          '{}/yarn.lock'.format(hostPath),
+          '{}/package.lock'.format(hostPath),
+        ]
+      ))
+
       # Sync the host path changes to the container path
       sync_commands.append(sync(hostPath, containerPath))
 
@@ -192,12 +201,6 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
         fallback_commands.append(fall_back_on([
           '{}/{}'.format(hostPath, 'webpack.config.js'),
         ]))
-
-        # Run yarn install in container whenever yarn.lock changes on host
-        run_commands.append(run(
-          'cd {} && yarn install --silent'.format(containerPath),
-          trigger='{}/yarn.lock'.format(hostPath),
-        ))
 
         activeLinkedPackages = []
 
