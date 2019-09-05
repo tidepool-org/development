@@ -34,11 +34,10 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [Image Source Respositories](#image-source-repositories)
   - [Building Local Images](#building-local-images)
   - [Custom Docker Build Parameters](#custom-docker-build-parameters)
-- [Troubleshooting](#troubleshooting)
-- [Known Issues](#known-issues)
-
-- DEPRECATED?
-  - [Tracing](#tracing)
+- [Misc](#misc)
+  - [Tracing Internal Services](#tracing-internal-services)
+  - [Troubleshooting](#troubleshooting)
+  - [Known Issues](#known-issues)
 
 # Initial Setup
 
@@ -604,18 +603,28 @@ There are times, however, where you may want to run it on it's own without linki
 
 [[back to top]](#quick-links)
 
-# Troubleshooting
+# Misc
+
+## Tracing Internal Services
+
+Sometimes, you'll want to capture some or all of the network traffic that flows into and between the various Tidepool services.
+
+Unfortunately, due the version of the Gloo gateway (which handles internal networking between the Tidepool services) that we are currently using, we don't yet have an easy way to do this.
+
+The good news is that we anticipate upgrading the Gloo version in the near future, and will support [Envoy's tracing capabilities](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/observability/tracing.html), as outlined in the [Gloo Tracing Documentation](https://gloo.solo.io/advanced_configuration/tracing/).
+
+Stay Tuned :)
+
+## Troubleshooting
 
 | Issue                                     | Things to try                                                                                                                                                                                                                             |
 | ---                                       | ---                                                                                                                                                                                                                                       |
 | kubectl errors when provisioning services | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config) |
 | kubectl errors when starting k9s          | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config) |
 
-[[back to top]](#quick-links)
+## Known Issues
 
-# Known Issues
-
-## Tidepool Web becomes inaccessible
+### Tidepool Web becomes inaccessible
 
 Currently, there is a known issue where at times the gateway proxy service that handles incoming requests loses track of the local blip service.
 
@@ -628,70 +637,3 @@ tidepool restart gateway-proxy
 ```
 
 [[back to top]](#quick-links)
-
-# Tracing
-
-If you want to capture some or all of the network traffic that flows into and between the various Tidepool services, then all it requires is setting up a reverse proxy and a few environment variable changes.
-
-The trick to capturing network traffic is to have the Docker container expose (and service listen on) a different port than the standard port expected by clients. Using a network-capture tool acting as a reverse proxy, you can route and capture traffic from the standard port (where a client sends the request) to the service port (where the container exposed and service listens). Thus, the client request goes "through" the reverse proxy and can be logged before being forwarded to the container and service.
-
-One tool that can be used for this purpose is [Charles Proxy](https://www.charlesproxy.com/).
-
-## Determine Proxy Host, Standard Port, Service Port, And Port Prefix
-
-### Proxy Host
-
-You'll need to determine what host the proxy will run on that is accessible from within the various Docker containers. If you are running the reverse proxy on your local Mac, then you can use the Docker-specific, container-accessible-only, `host.docker.internal` host.
-
-### Standard Port
-
-Each container and its contained service have their own standard port where clients will sends requests.
-
-| Service                                                           | Standard Port(s)       |
-| ----------------------------------------------------------------- | ---------------------- |
-| [blip](https://github.com/tidepool-org/blip)                      | N/A (see below)        |
-| [gatekeeper](https://github.com/tidepool-org/gatekeeper)          | 9123                   |
-| [highwater](https://github.com/tidepool-org/highwater)            | 9191                   |
-| [hydrophone](https://github.com/tidepool-org/hydrophone)          | 9157                   |
-| [jellyfish](https://github.com/tidepool-org/jellyfish)            | 9122                   |
-| [message-api](https://github.com/tidepool-org/message-api)        | 9119                   |
-| [platform-auth](https://github.com/tidepool-org/platform)         | 9222                   |
-| [platform-blob](https://github.com/tidepool-org/platform)         | 9225                   |
-| [platform-data](https://github.com/tidepool-org/platform)         | 9220                   |
-| [platform-migrations](https://github.com/tidepool-org/platform)   | N/A (see below)        |
-| [platform-notification](https://github.com/tidepool-org/platform) | 9223                   |
-| [platform-task](https://github.com/tidepool-org/platform)         | 9224                   |
-| [platform-tools](https://github.com/tidepool-org/platform)        | N/A (see below)        |
-| [platform-user](https://github.com/tidepool-org/platform)         | 9221                   |
-| [seagull](https://github.com/tidepool-org/seagull)                | 9120                   |
-| [shoreline](https://github.com/tidepool-org/shoreline)            | 9107                   |
-| [tide-whisperer](https://github.com/tidepool-org/tide-whisperer)  | 9127                   |
-
-NOTE: There is no need to capture network traffic to the `blip` container since you can already do this from within your Chrome browser when browsing to http://localhost:3000.
-
-NOTE: The `platform-migrations` and `platform-tools` containers do not listen for incoming network traffic and do not have associated ports.
-
-### Service Port and Port Prefix
-
-While the only absolute requirement is that the service port must be different than the standard port (and not conflict with any other ports in use, of course), it is easiest to just add a multiple of 10000 to the port. This helps keep all of the service and standard ports straight. This is accomplished by simply prepending a port prefix, a single number (1-5), to the standard port. Thus, standard port of 4455 can become a service port of 14455, 24455, 34455, 44455, or 54455, which are all valid ports. (Typically, ports are limited to 1024-65535.)
-
-For example, if you wanted to route `shoreline` traffic through a reverse proxy and you choose a port prefix of `2` (to offset by 20000), then the service port would be `29017`, as the standard port for `shoreline` from the above table is `9107`.
-
-## Setup Proxy
-
-Install a reverse proxy of your choice.
-
-Configure the reverse proxy to route and capture traffic on the proxy host from the standard port to the service port.
-
-For example, if you wanted to route `shoreline` traffic through a reverse proxy running on your computer with a port prefix of `2`, then you'd configure your reverse proxy to route from `:9107` to `:29107`.
-
-## Set Host and Port Prefix Environment Variables
-
-Now, set the values for the `TIDEPOOL_DOCKER_<docker-container-name>_HOST` and `TIDEPOOL_DOCKER_<docker-container-name>_PORT_PREFIX` environment variables in the `.env` files. Replace `<docker-container-name>` with the _uppercase_ Docker Container name. The dash to underscore replacement applies here, as mentioned above.
-
-For example, if you wanted to route `tide-whisperer` traffic through a reverse proxy available at `host.docker.internal` that was routing traffic from port `9127` to port `29127` (the standard `tide-whisperer` port), then you'd need to set the environment variables to:
-
-```bash
-TIDEPOOL_DOCKER_TIDE_WHISPERER_HOST=host.docker.internal
-TIDEPOOL_DOCKER_TIDE_WHISPERER_PORT_PREFIX=2
-```
