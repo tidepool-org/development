@@ -1,0 +1,59 @@
+local aws = import 'aws.jsonnet';
+
+local NODEGROUP_STACK_NAME(config) = 'eksctl-%s-nodegroup-ng-kiam' % config.cluster.name;
+
+local CLUSTER_STACK_NAME(config) = 'eksctl-%s-roles' % config.cluster.name;
+
+local ManagedPolicy(config, group) = aws.iamManagedPolicy(config, group) {
+  values+:: {
+    Properties+: {
+      PolicyDocument+: {
+        Statement: [
+          {
+            Effect: 'Allow',
+            Action: 'sts:AssumeRole',
+            Resource: '*',
+          },
+        ],
+      },
+    },
+  },
+};
+
+local Role(config, group) = aws.iamRole(config, group) {
+  values+:: {
+    Properties+: {
+      AssumeRolePolicyDocument+: {
+        Statement: [
+          {
+            Effect: 'Allow',
+            Principal: {
+              AWS: {
+                'Fn::ImportValue': '%s::InstanceRoleARN' % NODEGROUP_STACK_NAME(config),
+              },
+            },
+            Action: 'sts:AssumeRole',
+          },
+          {
+            Effect: 'Allow',
+            Principal: {
+              Service: 'ec2.amazonaws.com',
+            },
+            Action: 'sts:AssumeRole',
+          },
+        ],
+      },
+      ManagedPolicyArns: [{
+        Ref: aws.iamName(config, group, 'ManagedPolicy'),
+      }],
+    },
+  },
+};
+
+function(config) (
+  local group = config.groups.kiam;
+
+  if group.enabled then
+    [Role(config, group), ManagedPolicy(config, group)]
+  else []
+)

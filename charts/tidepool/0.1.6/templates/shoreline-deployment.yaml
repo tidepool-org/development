@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -29,8 +30,6 @@ spec:
       annotations:
         linkerd.io/inject: "{{ .Values.global.linkerd }}"
     spec:
-      initContainers:
-      {{ include "charts.init.mongo" .}}
       containers:
       - env:
         {{ include "charts.mongo.params" .}}

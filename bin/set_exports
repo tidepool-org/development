@@ -15,14 +15,14 @@ export VALUES_FILE=$(realpath $1)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 export DEV_REPO=$(realpath $DIR/..)
 
-CONFIG_PARENT_DIR=$(realpath $(yq read $VALUES_FILE global.repo.directory))
+CONFIG_PARENT_DIR=$(realpath $(yq read $VALUES_FILE cluster.repo.directory))
 if [ -z ${CONFIG_PARENT_DIR} -o "${CONFIG_PARENT_DIR}" == "null" ]
 then
 	echo "global.repo.directory required."
 	exit
 fi
 
-export CLUSTER_NAME=$(yq read $VALUES_FILE global.cluster.name)
+export CLUSTER_NAME=$(yq read $VALUES_FILE cluster.eks.name)
 if [ -z ${CLUSTER_NAME} -o "${CLUSTER_NAME}" == "null" ]
 then
 	echo "global.cluster.name required."
@@ -35,7 +35,7 @@ then
 	exit
 fi
 
-export GIT_REPO_NAME=$(yq read $VALUES_FILE global.repo.name)
+export GIT_REPO_NAME=$(yq read $VALUES_FILE cluster.repo.name)
 
 if [ -z "$GIT_REPO_NAME" -o "${GIT_REPO_NAME}" == "null" ]
 then
@@ -46,19 +46,19 @@ export CONFIG_DIR=${CONFIG_PARENT_DIR}/${GIT_REPO_NAME}
 export CLUSTER_DIR=${CONFIG_DIR}/clusters/${CLUSTER_NAME}
 export FLUX_DIR=${CLUSTER_DIR}/flux
 
-export CONFIG_FILE=$(yq read $VALUES_FILE global.cluster.configFile)
+export CONFIG_FILE=$(yq read $VALUES_FILE cluster.eks.configFile)
 if [ -z "$CONFIG_FILE" -o "${CONFIG_FILE}" == "null" ]
 then
 	CONFIG_FILE=$CLUSTER_DIR/config.yaml
 fi
 
-export AWS_REGION=$(yq read $VALUES_FILE global.cluster.region)
+export AWS_REGION=$(yq read $VALUES_FILE cluster.eks.region)
 if [ -z "$CONFIG_FILE" -o "${CONFIG_FILE}" == "null" ]
 then
     AWS_REGION=us-west-2
 fi
 
-export ENVIRONMENTS=$(yq r $VALUES_FILE env)
+export ENVIRONMENTS=$(yq r $VALUES_FILE environments)
 if [ "$ENVIRONMENTS" == "null" -o "$ENVIROMMENTS" == "{}" ]
 then
 	ENVIRONMENTS=""
@@ -67,13 +67,13 @@ else
 fi
 
 
-export FLUXCLOUD=$(yq read $VALUES_FILE global.fluxcloud.enabled)
+export FLUXCLOUD=$(yq read $VALUES_FILE cluster.third-party-services.fluxcloud.enabled)
 if [ "${FLUXCLOUD}" == "null" ]
 then
 	FLUXCLOUD=""
 fi
 
-export FLUX_BRANCH=$(yq read $VALUES_FILE global.repo.branch)
+export FLUX_BRANCH=$(yq read $VALUES_FILE cluster.repo.branch)
 if [ -z "$FLUX_BRANCH" -o "${FLUX_BRANCH}" == "null" ]
 then
 	FLUX_BRANCH=master
@@ -87,13 +87,13 @@ fi
 
 export GIT_REMOTE=git@github.com:${GITHUB_ACCOUNT}/${GIT_REPO_NAME}.git
 
-export KUBECONFIG=$(yq read $VALUES_FILE global.kubeconfig)
+export KUBECONFIG=$(yq read $VALUES_FILE cluster.eks.kubeconfig)
 if [ "$KUBECONFIG" == "null" ]
 then
 	KUBECONFIG=$CLUSTER_DIR/kubeconfig.yaml
 fi
 
-export IAM_USERS=$(yq read $VALUES_FILE global.iamUsers)
+export IAM_USERS=$(yq read $VALUES_FILE cluster.eks.iam.administrators | sed -e "s/^- //" | paste -sd " " -)
 if [ "$IAM_USERS" == "null" ]
 then
 	IAM_USERS=""

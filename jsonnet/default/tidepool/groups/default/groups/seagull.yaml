@@ -1,0 +1,14 @@
+tidepool:
+  groups:
+    default:
+      groups:
+        seagull:
+          name: seagull
+          iamRole:
+            create: false
+          deployment:
+            gitops:
+              automated: true
+            image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
+          service:
+            port: 9120

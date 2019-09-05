@@ -1,0 +1,19 @@
+tidepool:
+  groups:
+    default:
+      groups:
+        highwater:
+          name: highwater
+          iamRole:
+            create: false
+          deployment:
+            gitops:
+              automated: true
+            image: tidepool/highwater:develop-aaefb43df9a132f6c012f7216952e8650e6f6b4a
+          secret:
+            name: highwater
+            create: false
+            data_:
+              UserIdSalt: ""
+          service:
+            port: 9191

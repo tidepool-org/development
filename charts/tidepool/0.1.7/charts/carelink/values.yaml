@@ -1,0 +1,4 @@
+secret:
+  enabled: false
+  data_:
+    CareLinkSalt: ""

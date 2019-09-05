@@ -1,0 +1,13 @@
+tidepool:
+  groups:
+    default:
+      groups:
+        migrations:
+          name: migrations
+          iamRole:
+            create: false
+          deployment:
+            gitops:
+              automated: true
+            image: tidepool/platform-migrations:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+          enabled: true

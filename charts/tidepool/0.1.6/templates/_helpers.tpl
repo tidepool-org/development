@@ -3,16 +3,32 @@
 Expand the name of the chart.
 */}}
 
+{{- define "charts.default.host" -}}
+{{- if eq .Values.global.hosts.default.protocol "http" -}}
+{{- .Values.global.hosts.http.dnsNames | first -}}
+{{- else -}}
+{{- .Values.global.hosts.https.dnsNames | first -}}
+{{- end -}}
+{{- end }}
+
+{{- define "charts.host.external.tp" -}} 
+{{- .Values.global.hosts.default.protocol }}://{{ include "charts.default.host" . -}}
+{{- end }}
+
+{{- define "charts.certificate.secretName" -}}
+{{- .Release.Namespace -}}-tls-secret
+{{- end -}}
+
 {{- define "charts.name" -}}
 {{- default .Chart.Name .Values.global.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "charts.mongo.secretname." }}
-{{ default 'mongo' .Values.global.mongo.secretName }}
+{{ default "mongo" .Values.global.mongo.secretName }}
 {{- end -}}
 
 {{- define "charts.externalSecrets.role" -}}
-{{ .Values.global.clusterName }}-{{ .Release.Namespace}}-secrets-role
+{{ .Values.global.cluster.name }}-{{ .Release.Namespace}}-secrets-role
 {{- end -}}
 
 {{- define "charts.roles.permitted" -}}
@@ -20,7 +36,7 @@ Expand the name of the chart.
 {{- end -}}
 
 {{- define "charts.worker.role" -}}
-{{ .Values.global.clusterName }}-{{ .Release.Namespace}}-worker-role
+{{ .Values.global.cluster.name }}-{{ .Release.Namespace}}-worker-role
 {{- end -}}
 
 {{- define "charts.host.internal.tp" -}} internal {{- end }}
@@ -29,11 +45,7 @@ Expand the name of the chart.
 http://{{include "charts.host.internal.tp" .}}.{{.Release.Namespace}}
 {{- end }}
 
-{{- define "charts.host.external.tp" -}} 
-{{- .Values.global.hosts.default.protocol -}}://{{- .Values.global.hosts.default.host -}}
-{{- end }}
-
-{{- define "charts.s3.url" -}} https://s3-{{.Values.global.aws.region}}.amazonaws.com {{- end }}
+{{- define "charts.s3.url" -}} https://s3-{{.Values.global.cluster.region}}.amazonaws.com {{- end }}
 
 {{- define "charts.image.s3.bucket" -}}
 {{- if (.Values.image.bucket) and (ne .Values.image.bucket "") -}}
@@ -97,7 +109,7 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{- define "charts.secret.prefix" -}}
-{{ .Values.global.clusterName }}/{{ .Release.Namespace }}
+{{ .Values.global.cluster.name }}/{{ .Release.Namespace }}
 {{- end -}}
 
 {{/*
@@ -179,6 +191,10 @@ Create environment variables used by all platform services.
               key: ServiceAuth
 {{ end }}
 
+{{- define "charts.mongo.secretName" -}}
+{{- default "mongo" .Values.mongo.secretName -}}
+{{- end -}}
+
 {{ define "charts.mongo.params" }}
         - name: TIDEPOOL_STORE_SCHEME
           valueFrom:
@@ -201,13 +217,11 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: {{ include "charts.mongo.secretName" . }}
               key: addresses
-          value: '{{ .Values.global.mongo.addresses }}'
         - name: TIDEPOOL_STORE_OPT_PARAMS
           valueFrom:
             secretKeyRef:
               name: {{ include "charts.mongo.secretName" . }}
               key: optparams
-          value: '{{.Values.global.mongo.optParams}}'
         - name: TIDEPOOL_STORE_TLS
           valueFrom:
             secretKeyRef:
@@ -239,13 +253,6 @@ Create liveness and readiness probes for platform services.
           initialDelaySeconds: 5
           periodSeconds: 10
           timeoutSeconds: 5
-{{- end -}} 
-{{- define "charts.init.mongo" -}}
-{{ if (eq .Values.global.mongo.await "true") }}
-      - name: init-mongo
-        image: busybox
-        command: ['sh', '-c', 'until nc -zvv {{ (split "," .Values.global.mongo.addresses)._0 }} {{.Values.global.mongo.port}}; do echo waiting for mongo; sleep 2; done;']
-{{ end }}
 {{- end -}} 
 {{- define "charts.init.shoreline" -}}
       - name: init-shoreline

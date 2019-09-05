@@ -1,0 +1,17 @@
+groups:
+  kiam:
+    name: kiam
+    enabled: true
+    helmrelease:
+      chart:
+        repository: https://kubernetes-charts.storage.googleapis.com/
+        name: kiam
+        version: 2.3.0
+        index: stable
+      gitops:
+        automated: false
+      deployment:
+        tag: "d999e61e28befb872cd1875812c9d1bf37dc4f37"  # contains the fix for assume-role-arn
+    namespace:
+      create: false
+      name: kube-system

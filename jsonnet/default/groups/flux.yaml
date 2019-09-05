@@ -1,0 +1,37 @@
+groups:
+  flux:
+    name: flux
+    enabled: true
+    urlrelease:
+      url: https://raw.githubusercontent.com/fluxcd/flux/master/deploy-helm/flux-helm-release-crd.yaml
+    helmrelease:
+      bootstrap: true
+      chart:
+        repository: https://fluxcd.github.io/
+        name: flux
+        version: 0.10.2
+        index: fluxcd
+      values:
+        rbac:
+          create: true
+        customRepositories:
+          apiVersion: v1
+          repositories: []
+      helmOperator:
+        create: "true"
+        chartsSyncInterval: 1m
+        replicaCount: 1
+        updateChartDeps: true
+        configureRepositories:
+          enable: true
+      syncGarbageCollection:
+        enabled: "true"
+      git:
+        pollInterval: 1m
+        timeout: 40s
+    namespace:
+      create: true
+      name: flux
+    secret:
+      create: false
+      name: git-deploy-secret

@@ -1,0 +1,17 @@
+groups:
+  externalDNS:
+    name: external-dns
+    enabled: true
+    helmrelease:
+      chart:
+        repository: https://kubernetes-charts.storage.googleapis.com/
+        index: stable
+        name: external-dns
+        version: 2.5.3
+      gitops:
+        automated: false
+    iam:
+      create: true
+    namespace:
+      create: true
+      name: external-dns-system

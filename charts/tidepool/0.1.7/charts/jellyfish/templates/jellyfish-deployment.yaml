@@ -1,0 +1,88 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: jellyfish
+{{ include "charts.labels.standard" .}}
+  name: jellyfish
+  namespace: {{.Release.Namespace}}
+  annotations:
+    secret.reloader.stakater.com/reload: "server,mongo,jellyfish"
+spec:
+  selector:
+    matchLabels:
+      app: jellyfish
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+{{ if .Values.podAnnotations }}
+      annotations:
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
+      labels:
+        app: jellyfish
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+      - env:
+        {{ include "charts.mongo.params" .}}
+        - name: TIDEPOOL_STORE_DATABASE
+          value: 'data'
+        - name: SKIP_HAKKEN
+          value: "true"
+        - name: DISCOVERY_HOST
+          value: 'hakken'
+        - name: GATEKEEPER_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.global.ports.gatekeeper}}"}]}'
+        - name: MINIMUM_UPLOADER_VERSION
+          value: 0.251.0
+        - name: NODE_ENV
+          value: '{{.Values.nodeEnvironment}}'
+        - name: PORT
+          value: "{{.Values.global.ports.jellyfish}}"
+        - name: PUBLISH_HOST
+          value: 'hakken'
+        - name: SALT_DEPLOY
+          valueFrom:
+            secretKeyRef:
+              name: jellyfish
+              key: CarelinkSalt
+        - name: SCHEMA_VERSION
+          value: "3"
+        - name: SEAGULL_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:{{.Values.global.ports.seagull}}"}]}'
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server
+              key: ServiceAuth
+        - name: SERVE_STATIC
+          value: dist
+        - name: SERVICE_NAME
+          value: jellyfish
+        - name: STORAGE_TYPES
+          value: '{"s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.global.region}}", "bucket": "{{ .Values.deployment.env.store.s3.bucket }}" }}'
+        - name: STORAGE_DEFAULT
+          value: '{{ .Values.deployment.env.store.type }}'
+        - name: USER_API_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
+        image: "{{ .Values.deployment.image }}"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: {{ .Values.global.ports.jellyfish }}
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        name: jellyfish
+        ports:
+        - containerPort: {{ .Values.global.ports.jellyfish }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+      restartPolicy: Always

@@ -1,0 +1,15 @@
+groups:
+  reloader:
+    name: reloader
+    enabled: true
+    helmrelease:
+      chart:
+        repository: https://stakater.github.io/stakater-charts/
+        name: reloader
+        version: v0.0.38
+        index: stakater
+      gitops:
+        automated: false
+    namespace:
+      create: true
+      name: reloader

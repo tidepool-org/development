@@ -1,0 +1,19 @@
+tidepool:
+  groups:
+    default:
+      groups:
+        data:
+          name: data
+          iamRole:
+            create: false
+          deployment:
+            gitops:
+              automated: true
+            image: tidepool/platform-data:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+          secret:
+            name: data
+            create: false
+            data_:
+              ServiceAuth: ""
+          service:
+            port: 9220

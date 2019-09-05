@@ -79,20 +79,19 @@ function start_services()
     cp -r ${BASE_ENVIRONMENT}/* ${EPHEMERAL_DIR}/ 
     cd ${EPHEMERAL_DIR}
 
-    YQ="docker run -v ${PWD}:/workdir mikefarah/yq yq"
-    ${YQ} w -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/automated] false
-    ${YQ} w -i tidepool-helmrelease.yaml spec.values.${SERVICE}.image tidepool/${SERVICE}:${TAG}
-    ${YQ} w -i tidepool-helmrelease.yaml spec.releaseName tidepool-${ENVIRONMENT}
-    ${YQ} d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
-    ${YQ} w -i mongodb-helmrelease.yaml spec.releaseName mongo-${ENVIRONMENT}
+    yq w -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/automated] false
+    yq w -i tidepool-helmrelease.yaml spec.values.${SERVICE}.image tidepool/${SERVICE}:${TAG}
+    yq w -i tidepool-helmrelease.yaml spec.releaseName tidepool-${ENVIRONMENT}
+    yq d -i tidepool-helmrelease.yaml metadata.annotations[flux.weave.works/tag.${SERVICE}]
+    yq w -i mongodb-helmrelease.yaml spec.releaseName mongo-${ENVIRONMENT}
 
     if [ "$PROTOCOL" == "http" ]
     then
-        ${YQ} w -i tidepool-helmrelease.yaml spec.values.global.gateway.http.enabled true
-        ${YQ} w -i tidepool-helmrelease.yaml spec.values.global.gateway.https.enabled false
+        yq w -i tidepool-helmrelease.yaml spec.values.global.gateway.http.enabled true
+        yq w -i tidepool-helmrelease.yaml spec.values.global.gateway.https.enabled false
     else
-        ${YQ} w -i tidepool-helmrelease.yaml spec.values.global.gateway.http.enabled false
-        ${YQ} w -i tidepool-helmrelease.yaml spec.values.global.gateway.https.enabled true
+        yq w -i tidepool-helmrelease.yaml spec.values.global.gateway.http.enabled false
+        yq w -i tidepool-helmrelease.yaml spec.values.global.gateway.https.enabled true
     fi
 
     # Update namespace
@@ -100,9 +99,9 @@ function start_services()
     do
         if grep "kind" $file | egrep "kind: +Namespace" >/dev/null
         then
-            ${YQ} w -i $file metadata.name ${ENVIRONMENT}
+            yq w -i $file metadata.name ${ENVIRONMENT}
         else
-            ${YQ} w -i $file metadata.namespace ${ENVIRONMENT}
+            yq w -i $file metadata.namespace ${ENVIRONMENT}
         fi
     done
     

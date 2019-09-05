@@ -5,7 +5,7 @@ This document describes how to install the Tidepool web service on an Amazon hos
 
 With suitable modification, one may install the service on another Kubernetes platform.  However, that is not contained in the scope of this document.
 
-## TL;DR
+## TL;DR [ UNDER CONSTRUCTION ]
 
 These compressed instructions presume that you can figure out how to edit the `values.yaml` file. :)
 
@@ -42,7 +42,7 @@ In order to sail through this installation, we presume the following:
 * you are familiar with core [Kubernetes](https://kubernetes.io/) concepts; and,
 * you are familiar with [Helm, the Kubernetes package manager](https://helm.sh/).
 
-In addition, you should make yourself familiar with the base [Tidepool Helm Chart](https://github.com/tidepool-org/development/tree/k8s/charts/tidepool/0.1.6).
+In addition, you should make yourself familiar with the base [Tidepool Helm Chart](https://github.com/tidepool-org/development/tree/k8s/charts/tidepool/0.1.7).
 This is suitable for installing Tidepool on a local development environment.
 
 ## Ancillary Services
@@ -385,12 +385,12 @@ Your Tidepool environments persists user data in MongoDB. We recommend that you 
   ```yaml
   apiVersion: v1
   data:
-    scheme: ${scheme}
-    addresses: ${addresses}
-    username: ${username}
-    password: ${password}
-    ssl: ${ssl}
-    optParams: ${optParams}
+    Scheme: ${scheme}
+    Addresses: ${addresses}
+    Username: ${username}
+    Password: ${password}
+    Tls: ${tls}
+    OptParams: ${optParams}
   kind: Secret
   metadata:
     name: mongo
@@ -404,7 +404,7 @@ Your Tidepool environments persists user data in MongoDB. We recommend that you 
   - `${addresses}` is a comma-separated list of Mongo host[:port]
   - `${username}` is the Mongo username in the Mongo database used to authenticate the connection
   - `${password}` is the Mongo password associated with Mongo username used for authentication
-  - `${ssl}` indicates whether to use SSL 
+  - `${tls}` indicates whether to use SSL 
   - `${optParams}` are the additional URL parameters needed for the connection (e.g replica set info)
 
 ####  KissMetrics [Optional]
@@ -542,11 +542,14 @@ To support your use of `ExternalSecrets`, we provide a helper function called `e
 1. loads secrets to AWS Secrets Manager and 
 2. generates `ExternalSecret` manifests, following naming conventions suggested in the above example.  
 
-Above you created your `Secret` manifests. We provide a helper function called `external_secrets` do
+
+![secret creation flow](https://docs.google.com/drawings/d/e/2PACX-1vRNAMa_N0IQZr51u5cbCoC91pd7bYpkDZE-altY9i9A5Iew6HYOq4aEKzfstGmqtmwDVJymNuBJ1iZE/pub?w=960&amp;h=720 "Secrets Creation Flow")
+
+Above you created your `Secret` manifests. We provide a helper function called `external_secrets` to
 help you upload them to AWS Secrets Manager using the aforementioned naming conventions: 
 
   ```bash
-  $ external_secrets ${FILENAME} ${OPERATION} ${CLUSTER_NAME} ${ENCODING}
+  $ external_secrets ${FILENAME} ${OPERATION} ${CLUSTER_NAME} ${ENCODING} >external-secret.yaml
   ```
 
   where:
@@ -564,6 +567,9 @@ Now, upload all the secrets that you created above:
       external_secrets $file create ${CLUSTER_NAME} plaintext
     done
   ```
+
+Finally, save the generated `external-secret.yaml` file in your Git config repo.
+
 If you later need to update the secret, provide the `update` operation instead of the `create` operation to `external_secrets`.
 
 #### Confirm Secrets Are Persisted
@@ -896,16 +902,17 @@ Here is an example `${CONFIG_REPO}/clusters/${CLUSTER_NAME}/flux/shared-helmrele
       ref: k8s
     values:
       global:
-        clusterName: development
-        hostnames: 
-        - qa1.development.tidepool.org
-        - dev-api.tidepool.org
-        - dev-app.tidepool.org
-        - dev-uploads.tidepool.org
-        - qa2.development.tidepool.org
-        - stg-api.tidepool.org
-        - stg-app.tidepool.org
-        - stg-uploads.tidepool.org
+        cluster:
+          name: development
+          hostnames: 
+          - qa1.development.tidepool.org
+          - dev-api.tidepool.org
+          - dev-app.tidepool.org
+          - dev-uploads.tidepool.org
+          - qa2.development.tidepool.org
+          - stg-api.tidepool.org
+          - stg-app.tidepool.org
+          - stg-uploads.tidepool.org
       gloo:
         crds:
           create: false
@@ -930,7 +937,8 @@ You must identify your cluster name in both `HelmRelease` manifests.  Edit these
    spec:
      values:
        global:
-         clusterName: ${CLUSTER_NAME}
+         cluster:
+           name: ${CLUSTER_NAME}
    ```
 
 #### Identify the DNS Hostnames to Advertise
@@ -941,10 +949,11 @@ In order for traffic to be directed to your Kubernetes cluster, a DNS alias must
    spec:
      values:
        global:
-         hostnames:
-         - name1
-         - name2
-         ....
+         cluster:
+           hostnames:
+           - name1
+           - name2
+           ....
    ```
 
 If you are not ready to redirect the DNS entries of those names, you may update the file later and check it into GitHub. This is trigger a restart of the `external-dns` service with the new names.
@@ -1077,8 +1086,9 @@ default local file storage as follows in your `HelmRelease` manifest:
   spec:
     values:
       global:
-        store:
-          type: s3
+        environment:
+          store:
+            type: s3
   ```
 
 You may override the name of the S3 bucket used as described below.
@@ -1092,11 +1102,17 @@ for these fields in the HelmRelease for the environment. Here we show the defaul
   spec:
     values:
       blob:
-        bucket: tidepool-${ENVIRONMENT}-data
+        deployment:
+          env: 
+            bucket: tidepool-${ENVIRONMENT}-data
       image:
-        bucket: tidepool-${ENVIRONMENT}-data
+        deployment:
+          env: 
+            bucket: tidepool-${ENVIRONMENT}-data
       jellyfish:
-        bucket: tidepool-${ENVIRONMENT}-data
+        deployment:
+          env: 
+            bucket: tidepool-${ENVIRONMENT}-data
   ```
 
 You may override the bucket names to store your private data in another place.
@@ -1108,7 +1124,9 @@ In addition, the hydrophone services reads email templates for user signup purpo
   spec:
     values:
       hydrophone:
-        bucket: tidepool-${ENVIRONMENT}-asset`
+        deployment:
+          env:    
+            bucket: tidepool-${ENVIRONMENT}-asset`
   ```
 
 You may copy [this example](https://s3.console.aws.amazon.com/s3/buckets/tidepool-int-asset/?region=us-west-2&tab=overview) using the Amazon CLI:
@@ -1129,8 +1147,9 @@ not access to K8s resources outside the namespace of the environment.  In other 
   spec:
     values:
       global:
-        clusterName: ${CLUSTER_NAME}
-        awsRegion: ${AWS_REGION}
+        cluster:
+          name: ${CLUSTER_NAME}
+          region: ${AWS_REGION}
   ```
 
 #### Configure Mongo
@@ -1144,16 +1163,6 @@ For production, you should store your Mongo data in a replicated store that is c
 
 You will need to provide the [Mongo connection string](https://docs.mongodb.com/manual/reference/connection-string/).  This is a standard way of identifying a Mongo service.  
 
-Above, you created a `Secret` with the Mongo connection information. In addition, you must provide the secret name.  This indicates that the connection information is stored in the secret of the given name. By convention, the name of that secret is `mongo`.
-
-  ```yaml
-  spec:
-    values:
-      global:
-        mongo:
-          secretName: "mongo"
-  ```
-
 Finally, if you do not host Mongo in the same VPC, but you use a Mongo server in another Amazon VPC, you may establish a peering relationship between your VPC and the Mongo VPC in order to enable network communcation without leaving the Amazon private network. See the appendix for details.
       
 ##### Test Configuration
@@ -1164,11 +1173,11 @@ For *testing*, you may install an embedded Mongo database using:
     values:
       mongodb:
         enabled: true
-      global:
-        mongo:
-          scheme: mongodb
-          hosts: localhost
-          ssl: "true"
+      mongo:
+        secrets:
+          Scheme: mongodb
+          Hosts: localhost
+          Tls: "true"
   ```
 This will create a Mongo secret with the given Mongo connnection information and use that secret to connect to a local, embedded Mongo database. 
 
@@ -1189,48 +1198,47 @@ the namespace of your environment, `${ENVIRONMENT}`  This client will be pre-con
 
 You must configure your environment to support HTTP and/or HTTPS access.  By default, you are provided http access on port 8080:
 
-   ```yaml
-   spec:
-     values:
-       global:
-         hosts:
-            default:
-              protocol: http                          # the protocol to use for signup emails
-              host: localhost                         # a valid DNS name[:port] for the service
-            http:
-              enabled: true
-              port: "8080"                            # HTTP port (must be quoted)
-              dnsNames:                               # list of DNS names to server 
-              - localhost              
-            https:
-              enabled: false
-   ```
+  ```yaml
+  spec:
+    values:
+      global:
+        environment:
+          hosts:
+             default:
+               protocol: http                          # the protocol to use for signup emails
+             http:
+               enabled: true
+               port: "8080"                            # HTTP port (must be quoted)
+               dnsNames:                               # list of DNS names to server 
+               - localhost              
+             https:
+               enabled: false
+  ```
 
 You may configure https access and generate TLS secrets by providing the `domains` for the hosts and a name in 
 which to store the TLS certificate.  Here is an example that turns off HTTP access and enables HTTPS access only, using
-5 DNS aliases, for two domains, and with automatic generation of a TLS certificate:
-   ```yaml
-   spec:
-     values:
-       global:
-         hosts:
-            default:
-              protocol: https
-              host: qa1.development.tidepool.org
-            http:
-              enabled: false
-            https:
-              enabled: true
-              port: "8443"
-              commonName: qa1.development.tidepool.org
-              secretName: qa1-tls-secret
-              dnsNames:
-              - qa1.development.tidepool.org
-              - dev.tidepool.org
-              - dev-app.tidepool.org
-              - dev-api.tidepool.org
-              - dev-uploads.tidepool.org
-   ```
+5 DNS aliases, for two domains, and with automatic generation of a TLS certificate. The first name listed of the
+default protocol is used as the `common name` and the default host for email verifications.
+  ```yaml
+  spec:
+    values:
+      global:
+        environment:
+          hosts:
+             default:
+               protocol: https
+             http:
+               enabled: false
+             https:
+               enabled: true
+               port: "8443"
+               dnsNames:
+               - qa1.development.tidepool.org
+               - dev.tidepool.org
+               - dev-app.tidepool.org
+               - dev-api.tidepool.org
+               - dev-uploads.tidepool.org
+  ```
 
 #### Configure Secrets Access
 
@@ -1270,8 +1278,9 @@ You may disable all of these by setting:
   spec:
     values:
       global:
-        hpa:
-          enabled: false
+        environment:
+          hpa:
+            create: false
   ```
 
 ### Create IAM Roles for Each Environment
@@ -1307,48 +1316,6 @@ have the namespace of the ${ENVIRONMENT} using a simple helper function.
 
   ```bash
   $ ENVIRONMENT=... change_namespace 
-  ```
-
-## Create Intra-cluster Secrets
-
-Above you created and persisted secrets for external services.  There are also secrets needed for intra-cluster communication. 
-
-For you convenience, we provide a means of creating random secret values for such intra-cluster communication.  You then need to
-persist these values to AWS Secrets Manager as you did the external service secrets.
-
-Each Tidepool environment is parameterized with a number of values.  You have already provided some of these values in the `HelmRelease` file.  You provide others as Kubernetes Secrets.
-
-There are two types of secrets that are needed to run your services: intra-cluster secrets and externally shared secrets.
-
-You may create random infra-cluster secrets and upload them to the AWS Secrets Manager using the
-`external_secrets` helper:
-
-  ```bash
-  $ external_secret <(helm template --namespace=${ENVIRONMENT} ${DEV_REPO}/charts/intra-secrets/0.1.6) create ${CLUSTER_NAME} encoded
-  ```
-
-For example, you may retrieve the Mongo connection data as follows:
-
-  ```bash
-  $ get_external_secret mongo qa1 development
-  ```
-
-Example output:
-
-  ```yaml
-  apiVersion: v1
-  kind: Secret
-  type: Opaque
-  data:
-      addresses: cluster0-shard-00-01-hu2cn.mongodb.net:27017,cluster0-shard-00-00-hu2cn.mongodb.net:27017,cluster0-shard-00-02-hu2cn.mongodb.net:27017
-      optParams: replicaSet=Cluster0-shard-0&authSource=admin&w=majority
-      password: ...
-      scheme: mongodb
-      ssl: 'true'
-      username: derrickburns
-  metadata:
-    name: mongo
-    namespace: qa1
   ```
 
 ## Install Services
@@ -1706,50 +1673,6 @@ provide the secrets in any way that you please, as long as they become Kubernete
 
 ### Using a Private Git Repo
 
-One simply alternative is to store the secrets (after `base64` encoding the values) in a *private* Git config repo.  Simply commit your `Secret` manifests to your Git config repo. This means that you need to edit the `${CONFIG_REPO}/clusters/${CLUSTER_NAME}/flux/.gitconfig` file to eliminate the `secrets` line.
+One simply alternative is to store the secrets (after `base64` encoding the values) in a *private* Git config repo.  Simply commit your `Secret` manifests to your Git config repo. 
 
-You may mix and match the source of your secrets.  
 
-You may select the *source* of the secrets by setting a `source` value.  Any value other than `awsSecretsManager` is interpreted to mean that
-secrets of that category will be provided by you via your config repo or some other means.
-
-#### Secrets for Shared Services
-
-To configure all secrets for intra-cluster communication to come from Git, set the value below in the `HelmRelease` for your `${ENVIRONMENT}`.
-That is the file `${CONFIG_REPO}/clusters/${CLUSTER_NAME}/flux/shared/shared-helmrelease.yaml`:
-
-   ```yaml
-   spec:
-     values:
-       global:
-         secrets:
-           source: gitops
-   ```
-
-#### Secrets for Internal Services Specific to Each Tidepool Environment
-
-To configure all secrets for intra-cluster communication to come from Git, set the value below in the `HelmRelease` for your `${ENVIRONMENT}`.
-That is the file `${CONFIG_REPO}/clusters/${CLUSTER_NAME}/flux/environments/${ENVIRONMENT}/tidepool-helmrelease.yaml`:
-
-   ```yaml
-   spec:
-     values:
-       global:
-         secrets:
-           internal:
-             source: gitops
-   ```
-
-#### Secrets for External Services Specific to Each Tidepool Environment
-
-To configure all secrets for external services used by your Tidepool environment, set the value below in the `HelmRelease` for your `${ENVIRONMENT}`.
-That is the file `${CONFIG_REPO}/clusters/${CLUSTER_NAME}/flux/environments/${ENVIRONMENT}/tidepool-helmrelease.yaml`:
-
-   ```yaml
-   spec:
-     values:
-       global:
-         secrets:
-           external:
-             source: gitops
-   ```

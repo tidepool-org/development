@@ -1,0 +1,15 @@
+#!/bin/bash -xv
+#
+# Usage: to_config config_file_name
+
+CONFIG_FILE_NAME=$1
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DEV_REPO=${DEV_REPO:-$DIR/..}
+
+TO_GLOO_JSONNET=$DEV_REPO/jsonnet/config.yaml
+
+export CONFIG_DATA=$(yq read -j $CONFIG_FILE_NAME)
+
+# create complete HelmReleases in a directory, with one file per helm release
+jsonnet $TO_GLOO_JSONNET  --tla-code config="$CONFIG_DATA" 

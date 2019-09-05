@@ -1,0 +1,20 @@
+{{ if .Values.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nosqlclient
+{{ include "charts.labels.standard" .}}
+  name: nosqlclient
+  namespace: {{.Release.Namespace}}
+spec:
+  ports:
+  - name: "http"
+    port: {{.Values.global.ports.nosqlclient}}
+    targetPort: 3000
+  selector:
+    app: nosqlclient
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

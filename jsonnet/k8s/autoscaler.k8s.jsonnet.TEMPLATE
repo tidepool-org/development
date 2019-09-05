@@ -1,0 +1,34 @@
+local aws = import 'aws.jsonnet';
+local kube = import 'kube.jsonnet';
+
+local Helmrelease(config, group) = aws.helmrelease(config, group) {
+  spec+: {
+    values+: {
+      rbac: {
+        create: true,
+      },
+      autoDiscovery: {
+        clusterName: config.cluster.name,
+      },
+      awsRegion: config.cluster.aws.region,
+      serviceMonitor: {
+        enabled: true,
+      },
+      sslCertHostPath: '/etc/ssl/certs/ca-bundle.crt',
+      extraArgs: {
+        v: 4,
+        stderrthreshold: 'info',
+        logtostderr: true,
+        'skip-nodes-with-local-storage': false,
+      },
+    },
+  },
+};
+
+function(config) (
+  local group = config.groups.autoscaler;
+  if group.enabled then {
+    Helmrelease: Helmrelease(config, group),
+    Namespace: if group.namespace.create then aws.namespace(config, group),
+  }
+)

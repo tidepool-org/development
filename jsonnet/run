@@ -1,0 +1,23 @@
+#!/bin/bash 
+#
+# Create Manifests from input directory.
+# Use defaults in defaults directory.
+
+export JSONNET_PATH=$(realpath .):$(realpath ./lib):$(realpath ./iam):$(realpath ./k8s)
+
+ARGS=$(jsonnet_path)
+
+if [ $# == 1 ]
+then
+  combined=$(combine $1 "default")
+else
+  combined=$(combine default)
+fi
+
+OUTDIR=out
+mkdir -p $OUTDIR
+for x in k8s/kubernetes k8s/tidepool-helmrelease iam/iam eksctl/eksctl k8s/secrets  gitops/gitops sm/sm
+do
+  base=$(basename $x)
+  jsonnet $ARGS --tla-code config="$combined" $x.jsonnet | yq read - >${OUTDIR}/${base}.yaml
+done

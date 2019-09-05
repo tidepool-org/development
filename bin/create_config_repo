@@ -3,6 +3,16 @@
 # Create configuration repo from single values files.
 #
 
+if [ $# -ne 3 ]
+then
+	echo "Usage: $0 ${INIT_REPO:-false} ${CREATE_REPO:-false} ${PUSH_REPO:-false}"
+	exit 1
+fi
+
+INIT_REPO=${1:-false}
+CREATE_REPO=${2:-false}
+PUSH_REPO=${3:-false}
+
 if [ -z "$FLUX_DIR" ]
 then
 	echo "\$FLUX_DIR required."
@@ -40,26 +50,31 @@ fi
 
 cd $DEV_REPO
 
-CHART_DIR=${DEV_REPO}/charts/configurator
-TEMPLATE_DIR=${CHART_DIR}/templates
+CHART_DIR=${DEV_REPO}/charts
+
+CONFIGURATOR_CHART_DIR=${CHART_DIR}/configurator
+CONFIGURATOR_TEMPLATE_DIR=${CONFIGURATOR_CHART_DIR}/templates
+
+TIDEPOOL_CHART_DIR=${CHART_DIR}/tidepool
+SHARED_CHART_DIR=${CHART_DIR}/shared
+START_CHART_DIR=${CHART_DIR}/shared-start
+FLUX_CHART_DIR=${CHART_DIR}/flux-repositories
 
 mkdir -p $CLUSTER_DIR
 cd $CONFIG_DIR
 
 # create cluster config 
-helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/config.yaml | tail -n +4 > ${CLUSTER_DIR}/config.yaml 
+helm template -f ${VALUES_FILE} ${CONFIGURATOR_CHART_DIR} -x ${CONFIGURATOR_TEMPLATE_DIR}/config.yaml | tail -n +4 > ${CLUSTER_DIR}/config.yaml 
 
 mkdir -p $FLUX_DIR
 cd ${FLUX_DIR}
 
-# create and store secrets 
-external_secret <(helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/secrets.yaml) dryrun ${CLUSTER_NAME} encoded >external-secrets.yaml
-
-# create shared services helmreleases
-helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/shared-helmrelease.yaml >shared-helmrelease.yaml
-helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/shared-start-helmrelease.yaml >shared-start-helmrelease.yaml
-
-helm template -f ${VALUES_FILE} --namespace flux ${DEV_REPO}/charts/flux-repositories >flux-repositories.yaml
+# expand shared services helmreleases
+# we expand them to aid up updating the individual services
+helm template -f ${VALUES_FILE} ${SHARED_CHART_DIR} >shared-manifests.yaml
+helm template -f ${VALUES_FILE} ${START_CHART_DIR}  >start-manifests.yaml
+helm template -f ${VALUES_FILE} --namespace flux ${FLUX_CHART_DIR} >flux-repositories.yaml
+helm template -f ${VALUES_FILE} ${CONFIGURATOR_CHART_DIR} -x ${CONFIGURATOR_TEMPLATE_DIR}/tidepool-helmrelease.yaml > tidepool-manifests.yaml
 
 # create environments
 mkdir -p environments
@@ -67,27 +82,28 @@ cd environments
 for ENVIRONMENT in $ENVIRONMENTS
 do
   mkdir -p $ENVIRONMENT
-  helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/namespace.yaml > $ENVIRONMENT/namespace.yaml
-  helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/shoreline-configmap.yaml > $ENVIRONMENT/shoreline-configmap.yaml
-  helm template -f ${VALUES_FILE} ${CHART_DIR} -x ${TEMPLATE_DIR}/tidepool-helmrelease.yaml > $ENVIRONMENT/tidepool-helmrelease.yaml
+  yq read ${VALUES_FILE} "env."+$ENVIRONMENT >/tmp/$ENVIRONMENT
+  generate_external_secrets $ENVIRONMENT /tmp/$ENVIRONMENT > $ENVIRONMENT/external-secrets.yaml
+  helm template -f ${VALUES_FILE} ${TIDEPOOL_CHART_DIR} | yq 'filter(.kind == "Namespace")' > $ENVIRONMENT/namespace.yaml
+  helm template -f ${VALUES_FILE} ${TIDEPOOL_CHART_DIR} | yq 'filter(.kind == "ConfigMap")' > $ENVIRONMENT/configmaps.yaml
 done
 
-CREATE=$(yq read ${VALUES_FILE} global.repo.create)
 
 cd $CONFIG_DIR
-if [ "$CREATE" == "true" ]
+if [ "$INIT_REPO" == "true" ]
 then
-  if [ ! -d ".git" ]
-  then
-    git init
-  fi
+  git init
+fi
+
+if [ "$CREATE_REPO" == "true" ]
+then
   hub create -d "Creating K8s config repo." $GITHUB_ACCOUNT/$GIT_REPO_NAME
 fi
+
 git add .
 git commit -m "Initial configuration"
 
-PUSH=$(yq read ${VALUES_FILE} global.github.push)
-if [ "$PUSH" == "true" ]
+if [ "$PUSH_REPO" == "true" ]
 then
   git push --set-upstream origin master
 fi

@@ -1,4 +1,5 @@
 {{ if (or .Values.global.hosts.http.enabled .Values.global.hosts.https.enabled ) }}
+---
 apiVersion: v1
 kind: Service
 metadata:

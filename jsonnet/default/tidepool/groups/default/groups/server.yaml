@@ -1,0 +1,11 @@
+tidepool:
+  groups:
+    default:
+      groups:
+        server:
+          name: server
+          secret:
+            name: server
+            create: false
+            data_:
+              ServiceAuth: ""

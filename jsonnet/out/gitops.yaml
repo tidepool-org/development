@@ -1,0 +1,12 @@
+apiVersion: v1
+items:
+- apiVersion: tidepool/v1beta1
+  data:
+    channel: '#flux-development'
+    username: derrickburns
+  kind: SlackApp
+- apiVersion: tidepool/v1beta1
+  data:
+    repo: ~/cluster-development
+  kind: GitRepo
+kind: List

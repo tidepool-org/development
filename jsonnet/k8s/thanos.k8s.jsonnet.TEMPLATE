@@ -1,0 +1,33 @@
+local kube = import 'kube.jsonnet';
+
+local Secret(config, group) = kube.secret(config, group) {
+  data_+:: {
+    'thanos.yaml': std.manifestYamlDoc({
+      type: 'S3',
+      config: {
+        bucket: group.secret.input.bucket,
+        endpoint: 's3.%s.amazonaws.com' % config.cluster.aws.region,
+        region: config.cluster.aws.region,
+        insecure: false,
+        signature_version2: false,
+        encrypt_sse: false,
+        put_user_metadata: {},
+        http_config: {
+          idle_conn_timeout: '0s',
+          response_header_timeout: '0s',
+          insecure_skip_verify: false,
+        },
+        trace: {
+          enable: false,
+        },
+      },
+    }),
+  },
+};
+
+function(config) (
+  local group = config.groups.thanos;
+  if group.enabled then {
+    Secret: Secret(config, group),
+  }
+)

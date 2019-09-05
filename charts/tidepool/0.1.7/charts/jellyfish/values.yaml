@@ -1,0 +1,17 @@
+iamRole: ""
+enabled: true
+deployment:
+  podAnnotations: {}
+  image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
+  env:
+    store: 
+      s3:
+        bucket: "data"
+    type: file
+service:
+  port: 9122
+resources: {}
+securityContext: {}
+hpa:
+  enabled: false
+nodeEnvironment: production 

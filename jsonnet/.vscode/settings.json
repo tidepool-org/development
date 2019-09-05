@@ -1,0 +1,4 @@
+{
+    "jsonnet.executablePath": "/Users/derrickburns/bin/sjsonnet.jar",
+    "files.associations": {"*.jsonnet.TEMPLATE": "jsonnet" }
+}

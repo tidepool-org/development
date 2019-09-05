@@ -1,0 +1,17 @@
+groups:
+  autoscaler:
+    name: autoscaler
+    enabled: true
+    helmrelease:
+      chart:
+        repository: https://kubernetes-charts.storage.googleapis.com/
+        name: cluster-autoscaler
+        index: stable
+        version: 0.14.2
+      gitops:
+        automated: false
+    iam:
+      create: true
+    namespace:
+      create: true
+      name: autoscaler

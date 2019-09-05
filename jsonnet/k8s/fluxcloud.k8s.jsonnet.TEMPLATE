@@ -1,0 +1,68 @@
+local kube = import 'kube.jsonnet';
+
+local Deployment(config, group) = kube.deployment(config, group) {
+  local gitops = config.gitops,
+
+  local repoBase =
+    if std.objectHas(gitops.git, 'name')
+    then gitops.git.name
+    else 'cluster-%s' % config.cluster.name,
+
+  local repoName = '%s/%s' % [gitops.git.server, repoBase],
+
+  local channelName =
+    if std.objectHas(gitops.notifications.slack, 'channel')
+    then gitops.notifications.slack.channel
+    else '#flux-%s' % config.cluster.name,
+
+  spec+: {
+    template+: {
+      spec+: {
+        securityContext: {
+          runAsUser: 999
+        },
+        containers: {
+          env: [
+            {
+              name: 'SLACK_URL',
+              valueFrom: {
+                secretKeyRef: {
+                  name: group.secret.name,
+                  key: 'url',
+                },
+              },
+            },
+            {
+              name: 'SLACK_CHANNEL',
+              value: channelName,
+            },
+            {
+              name: 'SLACK_USERNAME',
+              value: gitops.notifications.slack.username,
+            },
+            {
+              name: 'SLACK_ICON_EMOJI',
+              value: ':heart:',
+            },
+            {
+              name: 'GITHUB_URL',
+              value: repoName,
+            },
+            {
+              name: 'LISTEN_ADDRESS',
+              value: ":%s" % group.deployment.port,
+            },
+          ],
+        },
+      },
+    },
+  },
+};
+
+function(config) (
+  local group = config.groups.fluxcloud;
+  if group.enabled then {
+    Deployment: Deployment(config, group),
+    Service: kube.service(config, group),
+  }
+)

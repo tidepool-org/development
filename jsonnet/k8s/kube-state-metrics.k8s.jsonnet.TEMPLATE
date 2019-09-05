@@ -1,0 +1,18 @@
+local aws = import 'aws.jsonnet';
+
+local Helmrelease(config, group) = aws.helmrelease(config, group) {
+  spec+: {
+    values+: {
+      hostNetwork: {
+        enabled: true,
+      },
+    },
+  },
+};
+
+function(config) (
+  local group = config.groups.kubeStateMetrics;
+  if group.enabled then {
+    Helmrelease: Helmrelease(config, group),
+  }
+)

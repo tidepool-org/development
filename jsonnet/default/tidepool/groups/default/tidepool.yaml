@@ -1,0 +1,32 @@
+tidepool:
+  groups:
+    default:
+      name: default
+      enabled: true
+      iam:
+        create: true                          # whether to create kiam annotations in Pods
+      namespace:
+        create: true                          # whether to create a new namespace for the tidepool env
+      node:
+        environment: production
+      store:
+        type: s3                              # where to store non-Mongo persistent data
+      hpa:
+        create: true                          # whether to create horizonal pod auto-scalers 
+        data:
+          maxReplicas: 10
+          minReplicas: 1
+          targetCPUUtilizationPercentage: 50
+      helmrelease:
+        create: true
+        chart:
+          git: git@github.com:tidepool-org/development
+          path: charts/tidepool/0.1.7
+          ref: k8s
+        gitops:
+          automated: true
+          filter: develop-*
+          selector: glob
+        values: {}
+
+
