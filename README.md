@@ -341,12 +341,12 @@ mongodb:
   # ...
 ```
 
-If you are running Mongo natively on your local Mac (not in Docker, but via another installation, such as [Homebrew](https://brew.sh/)), then you can use the Docker-specific, container-accessible-only address `docker.for.mac.host.internal` to point to the alternate Mongo host. For example,
+If you are running Mongo natively on your local Mac (not in Docker, but via another installation, such as [Homebrew](https://brew.sh/)), then you can use the Docker-specific, container-accessible-only address `host.docker.internal` to point to the alternate Mongo host. For example,
 
 ```yaml
 global:
   mongo:
-    hosts: 'docker.for.mac.host.internal'
+    hosts: 'host.docker.internal'
     # ...
 ```
 
@@ -641,7 +641,7 @@ One tool that can be used for this purpose is [Charles Proxy](https://www.charle
 
 ### Proxy Host
 
-You'll need to determine what host the proxy will run on that is accessible from within the various Docker containers. If you are running the reverse proxy on your local Mac, then you can use the Docker-specific, container-accessible-only, `docker.for.mac.host.internal` host.
+You'll need to determine what host the proxy will run on that is accessible from within the various Docker containers. If you are running the reverse proxy on your local Mac, then you can use the Docker-specific, container-accessible-only, `host.docker.internal` host.
 
 ### Standard Port
 
@@ -689,15 +689,9 @@ For example, if you wanted to route `shoreline` traffic through a reverse proxy 
 
 Now, set the values for the `TIDEPOOL_DOCKER_<docker-container-name>_HOST` and `TIDEPOOL_DOCKER_<docker-container-name>_PORT_PREFIX` environment variables in the `.env` files. Replace `<docker-container-name>` with the _uppercase_ Docker Container name. The dash to underscore replacement applies here, as mentioned above.
 
-For example, if you wanted to route `tide-whisperer` traffic through a reverse proxy available at `docker.for.mac.host.internal` that was routing traffic from port `9127` to port `29127` (the standard `tide-whisperer` port), then you'd need to set the environment variables to:
+For example, if you wanted to route `tide-whisperer` traffic through a reverse proxy available at `host.docker.internal` that was routing traffic from port `9127` to port `29127` (the standard `tide-whisperer` port), then you'd need to set the environment variables to:
 
 ```bash
-TIDEPOOL_DOCKER_TIDE_WHISPERER_HOST=docker.for.mac.host.internal
+TIDEPOOL_DOCKER_TIDE_WHISPERER_HOST=host.docker.internal
 TIDEPOOL_DOCKER_TIDE_WHISPERER_PORT_PREFIX=2
 ```
-
-### Start Local Tidepool
-
-Start your local Tidepool again, per [Starting](#starting) instructions. If already running, then this will restart the associated Docker container, use the latest built Docker image, and use the correct host and port prefixes.
-
-Now all network traffic directed to your chosen service will first route through the reverse proxy before being forwards to the actual container and service. The reverse proxy can be configured to log this traffic.
