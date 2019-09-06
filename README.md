@@ -181,7 +181,7 @@ This will save the Kubernetes server config to `~/.kube/config`. This is only re
 tidepool start
 ```
 
-This will start the Tidepool services in the kubernetes cluster via Tilt. You will see a terminal UI open that will allow you to view the both the build logs and container logs for all of the Tidepool services.
+This will start the Tidepool services in the kubernetes cluster via Tilt. You will see a terminal UI open that will allow you to view the both the build status, build logs and container logs for all of the Tidepool services.
 
 ### Stop the tidepool services
 
@@ -693,6 +693,7 @@ Stay Tuned :)
 | ---                                       | ---                                                                                                                                                                                                                                       |
 | kubectl errors when provisioning services | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config) |
 | kubectl errors when starting k9s          | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config) |
+| Tidepool Web ('blip') not loading         | Check the service logs, either in the Tilt UI or with `tidepool logs blip` to make sure it's finished compiling successfully.  If it has compiled, see [Tidepool Web becomes inaccessible](#tidepool-web-becomes-inaccessible)            |
 
 ## Known Issues
 
