@@ -39,7 +39,7 @@ datadog:
   enabled: false
 
 kubeStateMetrics:
-  enabled: true
+  enabled: false
 
 thanosObjstoreConfig:
   enabled: true
