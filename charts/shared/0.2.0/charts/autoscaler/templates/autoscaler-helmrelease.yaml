@@ -1,0 +1,28 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: autoscaler
+  namespace: autoscaler
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: autoscaler
+  chart:
+    {{- .Values.chart | toYaml | nindent 4 }}
+  values: 
+    rbac:
+      create: true
+    autoDiscovery:
+      cluster.name: {{ .Values.global.cluster.name | quote }}
+    awsRegion: {{ .Values.global.cluster.region | quote }}
+    serviceMonitor:
+      enabled: true
+    sslCertHostPath: /etc/ssl/certs/ca-bundle.crt
+    extraArgs:
+      v: 4
+      stderrthreshold: info
+      logtostderr: true
+      skip-nodes-with-local-storage: false
+    podAnnotations:
+      iam.amazonaws.com/role: {{ include "charts.autoscaler.role" . }}

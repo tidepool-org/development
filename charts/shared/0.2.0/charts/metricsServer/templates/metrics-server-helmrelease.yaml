@@ -1,0 +1,15 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: metrics-server
+  namespace: metrics-server
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: metrics-server
+  chart:
+    {{- .Values.chart | toYaml | nindent 4 }}
+  values: 
+    hostNetwork:
+      enabled: true

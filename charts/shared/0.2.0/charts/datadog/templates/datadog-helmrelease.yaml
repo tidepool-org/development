@@ -1,0 +1,25 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: datadog-agent
+  namespace: datadog
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: datadog
+  chart:
+    {{- .Values.chart | toYaml | nindent 4 }}
+  values:
+    kubeStateMetrics:
+      enabled: false
+    datadog:
+      apiKeyExistingSecret: {{ .Values.secretName | default "datadog" }}
+      appKeyExistingSecret: {{ .Values.secretName | default "datadog" }}
+      cluster.name: {{ .Values.global.cluster.name }}
+      logLevel: {{ .Values.global.cluster.logLevel }}
+    clusterAgent:
+      token: {{ randAlphaNum 32 | b64enc | quote }}
+      enabled: true
+      metricsProvider:
+        enabled: true

@@ -1,0 +1,5 @@
+enabled: true
+chart:
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  name: cluster-autoscaler
+  version: 0.14.2

@@ -1,0 +1,5 @@
+enabled: true
+chart:
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  name: kiam
+  version: "2.3.0"

@@ -1,0 +1,8 @@
+enabled: true
+chart:
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  name: external-dns
+  version: 1.7.9
+domainfilter: tidepool.org
+image: registry.opensource.zalan.do/teapot/external-dns
+tag: latest

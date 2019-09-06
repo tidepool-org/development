@@ -1,0 +1,5 @@
+enabled: true
+chart:
+  git: git@github.com:godaddy/kubernetes-external-secrets
+  path: charts/kubernetes-external-secrets
+  ref: master
