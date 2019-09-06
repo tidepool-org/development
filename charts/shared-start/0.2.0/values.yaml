@@ -8,3 +8,6 @@ kiam:
 
 externalSecrets:
   enabled: true
+
+gloo:
+  enabled: true

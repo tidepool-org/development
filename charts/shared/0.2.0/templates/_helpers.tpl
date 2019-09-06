@@ -61,7 +61,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{- define "charts.fluxcloud.github" -}}
-{{= if .Values.global.repo.name -}}
+{{- if .Values.global.repo.name -}}
 {{- printf "https://github.com/%s/%s" .Values.global.github.account .Values.global.repo.name | quote -}}
 {{- else -}}
 {{- printf "https://github.com/%s/cluster-%s" .Values.global.github.account .Values.global.cluster.name | quote -}}

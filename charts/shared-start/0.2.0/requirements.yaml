@@ -3,3 +3,5 @@ dependencies:
     condition: kiam.enabled
   - name: externalSecrets
     condition: externalSecrets.enabled
+  - name: gloo
+    condition: gloo.enabled
