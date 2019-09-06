@@ -668,9 +668,9 @@ tidepool port-forward blip 8083
 
 **IMPORTANT:** If you were to add a new NPM package directly (or otherwise update the `yarn.lock` or `package.json`) within the container using the above `tidepool yarn` helper, it would work within that container, but these changes would **_NOT_** propogate back to your host filesystem.
 
-To persist updates to your `yarn.lock` (or `package.lock` in some repos) and `package.json` files, you should run the `yarn` or `npm` commands locally.
+To persist updates to your `yarn.lock` (or `package-lock.json` in some repos) and `package.json` files, you should run the `yarn` or `npm` commands locally.
 
-This will allow your changes to be tracked properly in version control, and Tilt is configured to recognize when a `yarn.lock` or `package.lock` file changes and will automatically run `yarn install` for you in the service container (so you don't have to do it in 2 places).
+This will allow your changes to be tracked properly in version control, and Tilt is configured to recognize when a `yarn.lock` or `package-lock.json` file changes and will automatically run `yarn install` for you in the service container (so you don't have to do it in 2 places).
 
 
 [[back to top]](#quick-links)

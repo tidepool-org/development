@@ -189,7 +189,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
         'cd {} && yarn install --silent'.format(containerPath),
         trigger=[
           '{}/yarn.lock'.format(hostPath),
-          '{}/package.lock'.format(hostPath),
+          '{}/package-lock.json'.format(hostPath),
         ]
       ))
 
