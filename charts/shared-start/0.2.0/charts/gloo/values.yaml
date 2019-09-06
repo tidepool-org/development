@@ -4,6 +4,6 @@ chart:
   name: gloo
   version: "0.18.12"
 crds:
-  create: false
+  create: true
 discovery:
   fdsMode: WHITELIST
