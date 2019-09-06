@@ -2,4 +2,12 @@ enabled: true
 chart:
   repository: https://kubernetes-charts.storage.googleapis.com/
   name: kiam
-  version: "2.3.0"
+  version: "2.5.1"
+
+agent:
+  image:
+     tag: "v3.4"
+
+server:
+  image:
+    tag: "v3.4"
