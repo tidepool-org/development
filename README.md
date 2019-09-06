@@ -153,7 +153,7 @@ For example, if you want to store the Mongo data in the `~/MyMongoData` director
 export TIDEPOOL_DOCKER_MONGO_VOLUME="~/MyMongoData"
 ```
 
-[[back to top]](#quick-links)
+[[back to top]](#welcome)
 
 # Quick Start
 
@@ -173,7 +173,7 @@ tidepool server-start
 tidepool server-set-config
 ```
 
-This will save the Kubernetes server config to ~/.kube/config. This is only required after the initial server start provisioning.
+This will save the Kubernetes server config to `~/.kube/config`. This is only required after the initial server start provisioning.
 
 ### Start the tidepool services
 
@@ -270,7 +270,7 @@ After [Installing the k9s CLI](https://github.com/derailed/k9s#installation), yo
 k9s
 ```
 
-[[back to top]](#quick-links)
+[[back to top]](#welcome)
 
 # Using Tidepool
 
@@ -302,7 +302,7 @@ Remember, this is all running on your computer only. This means that all account
 
 Fortunately, at [Tidepool Web](https://app.tidepool.org), we worry about that for you and make sure all of your data is secure and backed up regularly.
 
-[[back to top]](#quick-links)
+[[back to top]](#welcome)
 
 # Advanced Customization
 
@@ -394,7 +394,7 @@ shoreline:
 
 **IMPORTANT:** You must leave the `hostPath` value for the service commented out if you want to deploy a remote image
 
-[[back to top]](#quick-links)
+[[back to top]](#welcome)
 
 # Developing Tidepool Services
 
@@ -673,7 +673,7 @@ To persist updates to your `yarn.lock` (or `package-lock.json` in some repos) an
 This will allow your changes to be tracked properly in version control, and Tilt is configured to recognize when a `yarn.lock` or `package-lock.json` file changes and will automatically run `yarn install` for you in the service container (so you don't have to do it in 2 places).
 
 
-[[back to top]](#quick-links)
+[[back to top]](#welcome)
 
 # Misc
 
@@ -708,4 +708,4 @@ The solution is to restart the `gateway-proxy` service, which should instantly r
 tidepool restart gateway-proxy
 ```
 
-[[back to top]](#quick-links)
+[[back to top]](#welcome)
