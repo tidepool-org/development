@@ -3,7 +3,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: external-dns
-  namespace: external-dns-system
+  namespace: external-dns
   annotations:
     flux.weave.works/automated: "false"
 spec:

@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: external-dns-system
+  name: external-dns
   labels:
     istio-injection: disabled
     linkerd.io/inject: enabled
