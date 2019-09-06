@@ -5,14 +5,6 @@ global:
 
 kiam:
   enabled: true
-  chart:
-    repository: https://kubernetes-charts.storage.googleapis.com/
-    name: kiam
-    version: "2.3.0"
 
 externalSecrets:
   enabled: true
-  chart:
-    git: git@github.com:godaddy/kubernetes-external-secrets
-    path: charts/kubernetes-external-secrets
-    ref: master
