@@ -100,7 +100,7 @@ spec:
       image: tidepool/platform-auth:develop-03cbd1f46006037417749fb3a24031b9f3e2f6cc
     blob:
       bucket: tidepool-qa1-data
-      image: tidepool/platform-blob:develop-03cbd1f46006037417749fb3a24031b9f3e2f6cc
+      image: tidepool/platform-blob:develop-0d46e42db4c6aaafc05b7889d04d8c3f6102815d
     data:
       image: tidepool/platform-data:develop-03cbd1f46006037417749fb3a24031b9f3e2f6cc
     image:
