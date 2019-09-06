@@ -37,7 +37,7 @@ spec:
       image:
         tag: {{ .Values.server.image.tag }}
       extraArgs:
-      - no-iptables-remove
+      - "--no-iptables-remove"
       enabled: true
       # This is to choose a different node for agent vs server. Without it, the kiam-server pods
       # would be scheduled on all nodes, including the ones that are running the kiam-agents
