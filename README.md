@@ -320,7 +320,7 @@ The overrides file is read by the `Tiltfile` (and `Tiltfile.mongodb` and `Tiltfi
 
 In addition to the helm chart overrides, there are some extra configuration parameters to instruct Tilt on how to build local images for any of the Tidepool services.
 
-See [Building Local Images] for more details
+See [Building Local Images](#building-local-images) for more details
 
 ## Alternate Mongo Host
 
