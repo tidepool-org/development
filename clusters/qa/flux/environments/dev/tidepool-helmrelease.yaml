@@ -90,12 +90,12 @@ spec:
       image: tidepool/highwater:develop-18a1c2660bd7da9e64a6dc32917b37118052a014
     hydrophone:
       bucket: tidepool-qa1-asset
-      image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
+      image: tidepool/hydrophone:develop-e2c989755666043edefa4d859b74af14b8c8120b
     jellyfish:
       bucket: tidepool-qa1-data
       image: tidepool/jellyfish:develop-ec65174b44479f6af6c4159a2bb15eb0907a9afa
     messageapi:
-      image: tidepool/message-api:develop-48e4e55d3119bd94c25fa7f01be79be85a860528
+      image: tidepool/message-api:develop-040c9df7ae35dc0b2c8d1b7166a21cadd2045f0a
     auth:
       image: tidepool/platform-auth:develop-03cbd1f46006037417749fb3a24031b9f3e2f6cc
     blob:
