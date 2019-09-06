@@ -10,7 +10,7 @@ spec:
   values:
     agent:
       extraArgs:
-        "--no-iptables-remove": ""
+        no-iptables-remove: ""
       image:
         tag: {{ .Values.agent.image.tag }}
       enabled: true
