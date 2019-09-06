@@ -87,13 +87,13 @@ spec:
     gatekeeper:
       image: tidepool/gatekeeper:develop-51030b3213d05b739dc4d0d45a0ad7ae06b3b068
     highwater:
-      image: tidepool/highwater:develop-18a1c2660bd7da9e64a6dc32917b37118052a014
+      image: tidepool/highwater:develop-5288888159293ec640ac3623191ec395a260eba7
     hydrophone:
       bucket: tidepool-qa1-asset
       image: tidepool/hydrophone:develop-e2c989755666043edefa4d859b74af14b8c8120b
     jellyfish:
       bucket: tidepool-qa1-data
-      image: tidepool/jellyfish:develop-3fe9816e71c9712cbbf6055e415f69fcb511db62
+      image: tidepool/jellyfish:develop-33e891e9f666f7608bce9a693fd4c7b2add7537b
     messageapi:
       image: tidepool/message-api:develop-c5ac4c43231c33c2dca7485a88fe27ba64769a06
     auth:
