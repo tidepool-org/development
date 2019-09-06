@@ -1,0 +1,5 @@
+enabled: true
+chart:
+  repository: https://charts.jetstack.io
+  name: cert-manager
+  version: v0.8.1

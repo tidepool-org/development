@@ -1,8 +1,0 @@
-#!/bin/bash
-
-IFS=':' read -ra ADDR <<< "$JSONNET_PATH" # str is read into an array as tokens separated by IFS
-ARGS=""
-for i in "${ADDR[@]}"; do
-    ARGS="${ARGS} -J $i"
-done
-echo $ARGS

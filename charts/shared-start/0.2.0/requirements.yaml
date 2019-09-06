@@ -1,0 +1,5 @@
+dependencies:
+  - name: kiam
+    condition: kiam.enabled
+  - name: externalSecrets
+    condition: externalSecrets.enabled

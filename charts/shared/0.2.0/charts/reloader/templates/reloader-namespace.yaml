@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: reloader
+  labels:
+    istio-injection: disabled
+    linkerd.io/inject: enabled
