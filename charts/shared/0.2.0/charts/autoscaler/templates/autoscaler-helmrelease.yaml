@@ -14,7 +14,7 @@ spec:
     rbac:
       create: true
     autoDiscovery:
-      cluster.name: {{ .Values.global.cluster.name | quote }}
+      clusterName: {{ .Values.global.cluster.name | quote }}
     awsRegion: {{ .Values.global.cluster.region | quote }}
     serviceMonitor:
       enabled: true
