@@ -50,6 +50,8 @@ gloo:
   enabled: true
   settings:
     create: true
+  crds:
+    create: true
   discovery:
     fdsMode: WHITELIST
   namespace:
