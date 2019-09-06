@@ -454,7 +454,7 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-message-api-{{ .Values.global.ports.messageApi }}'
+          name: '{{ .Release.Name }}-message-api-{{ .Values.global.ports.messageapi }}'
           namespace: '{{ .Release.Name }}'
     routePlugins:
       prefixRewrite:
@@ -569,7 +569,7 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-tide-whisperer-{{ .Values.global.ports.tideWhisperer }}'
+          name: '{{ .Release.Name }}-tide-whisperer-{{ .Values.global.ports.tidewhisperer }}'
           namespace: '{{ .Release.Name }}'
     routePlugins:
       prefixRewrite:
