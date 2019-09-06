@@ -95,7 +95,7 @@ spec:
       bucket: tidepool-qa1-data
       image: tidepool/jellyfish:develop-3fe9816e71c9712cbbf6055e415f69fcb511db62
     messageapi:
-      image: tidepool/message-api:develop-040c9df7ae35dc0b2c8d1b7166a21cadd2045f0a
+      image: tidepool/message-api:develop-c5ac4c43231c33c2dca7485a88fe27ba64769a06
     auth:
       image: tidepool/platform-auth:develop-03cbd1f46006037417749fb3a24031b9f3e2f6cc
     blob:
@@ -119,7 +119,7 @@ spec:
     user:
       image: tidepool/platform-user:develop-03cbd1f46006037417749fb3a24031b9f3e2f6cc
     seagull:
-      image: tidepool/seagull:develop-834049a0fed2106f9a8eec4f0ef81f3bb29cae8f
+      image: tidepool/seagull:develop-3b61d504616e7af2c6e3a0d0a68ad602428b1036
     shoreline:
       image: tidepool/shoreline:develop-67d50c8555969458465b8c1d0aa7c05fd23b8ccf
     tidewhisperer:
