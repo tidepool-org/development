@@ -87,7 +87,7 @@ spec:
     gatekeeper:
       image: tidepool/gatekeeper:develop-51030b3213d05b739dc4d0d45a0ad7ae06b3b068
     highwater:
-      image: tidepool/highwater:develop-cb0ef1425b29f0a37c10e975876804f3ccfb1348
+      image: tidepool/highwater:develop-18a1c2660bd7da9e64a6dc32917b37118052a014
     hydrophone:
       bucket: tidepool-qa1-asset
       image: tidepool/hydrophone:develop-0683c6ba2c75ffd21ac01cd577acfeaf5cd0ef8f
