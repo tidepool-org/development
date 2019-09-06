@@ -1,8 +1,6 @@
 deployment:
   podAnnotations: {}
   image: tidepool/seagull:develop-b06870d3752afede7da24116763fd5a161b84da0
-service:
-  port: 9120
 resources: {}
 securityContext: {}
 hpa:

@@ -8,8 +8,6 @@ deployment:
       s3:
         bucket: "data"
     type: file
-service:
-  port: 9122
 resources: {}
 securityContext: {}
 hpa:

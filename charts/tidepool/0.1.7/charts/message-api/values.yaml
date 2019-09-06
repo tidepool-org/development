@@ -3,8 +3,6 @@ deployment:
   image: tidepool/message-api:develop-448835b6be0c27185e487f582f9b47a784aa781f
   env:
     window: 21
-service:
-  port: 9119
 resources: {}
 securityContext: {}
 hpa:

@@ -7,8 +7,6 @@ deployment:
     store:
       s3:
         bucket: "asset" 
-service:
-  port: 9157
 resources: {}
 securityContext: {}
 hpa:

@@ -1,4 +1,3 @@
-{{ if .Values.enabled -}}
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -66,7 +65,5 @@ spec:
               key: tls
         image: "{{ .Values.image }}"
         ports:
-        - containerPort: {{ .Values.global.ports.nosqlclient }}
+        - containerPort: {{ .Values.service.port }}
       restartPolicy: Always
-
-{{- end }}
