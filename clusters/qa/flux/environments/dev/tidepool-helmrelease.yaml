@@ -85,12 +85,12 @@ spec:
       enabled: true
       image: tidepool/export:develop-60db12a344f230e2c17e6ec84c8cb166167d7e76
     gatekeeper:
-      image: tidepool/gatekeeper:develop-51030b3213d05b739dc4d0d45a0ad7ae06b3b068
+      image: tidepool/gatekeeper:develop-7601d7eb1a03f7d4d010d0b955aa99220770e8ce
     highwater:
       image: tidepool/highwater:develop-5288888159293ec640ac3623191ec395a260eba7
     hydrophone:
       bucket: tidepool-qa1-asset
-      image: tidepool/hydrophone:develop-e2c989755666043edefa4d859b74af14b8c8120b
+      image: tidepool/hydrophone:develop-471c14613e64c38a934962bc7d1829f4eb6cadf6
     jellyfish:
       bucket: tidepool-qa1-data
       image: tidepool/jellyfish:develop-33e891e9f666f7608bce9a693fd4c7b2add7537b
