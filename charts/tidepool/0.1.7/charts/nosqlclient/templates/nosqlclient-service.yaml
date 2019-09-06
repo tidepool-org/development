@@ -10,7 +10,7 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: {{.Values.global.ports.nosqlclient}}
+    port: {{.Values.service.port}}
     targetPort: 3000
   selector:
     app: nosqlclient
