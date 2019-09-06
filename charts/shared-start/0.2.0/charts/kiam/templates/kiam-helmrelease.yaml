@@ -10,7 +10,7 @@ spec:
   values:
     agent:
       image:
-        tag: d999e61e28befb872cd1875812c9d1bf37dc4f37
+        tag: {{ .Values.agent.image.tag }}
       enabled: true
       host:
         iptables: true
@@ -31,11 +31,11 @@ spec:
         hostPath: /etc/pki/ca-trust/extracted/pem
         readOnly: true
       log:
-        level: {{ .Values.global.cluster.logLevel | quote }}
+        level: {{ .Values.global.logLevel | quote }}
     
     server:
       image:
-        tag: d999e61e28befb872cd1875812c9d1bf37dc4f37
+        tag: {{ .Values.server.image.tag }}
       extraArgs:
       - no-iptables-remove
       enabled: true
@@ -60,4 +60,4 @@ spec:
         assume-role-arn: {{ include "charts.kiam.arn" . }}
       useHostNetwork: true
       log:
-        level: {{ .Values.global.cluster.logLevel | quote }}
+        level: {{ .Values.global.logLevel | quote }}
