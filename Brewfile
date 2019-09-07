@@ -1,5 +1,6 @@
 brew "awscli"
 brew "kubernetes-helm"
+brew "eksctl"
 brew "kubernetes-cli"
 brew "aws-iam-authenticator"
 brew "jq"

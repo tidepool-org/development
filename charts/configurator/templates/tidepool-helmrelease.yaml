@@ -1,0 +1,37 @@
+{{ range $name, $environment := .Values.environments }}
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: tidepool
+  namespace: {{ $name }}
+  annotations:
+    flux.weave.works/automated: "true"
+    flux.weave.works/tag.auth: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.blip: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.blob: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.data: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.export: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.gatekeeper: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.highwater: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.hydrophone: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.image: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.jellyfish: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.messageapi: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.migrations: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.notification: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.seagull: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.shoreline: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.task: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.tidewhisperer: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.tools: glob:{{ $environment.gitops.branch }}-*
+    flux.weave.works/tag.user: glob:{{ $environment.gitops.branch }}-*
+spec:
+  releaseName: {{ $name }}-tidepool
+  chart:
+    git: git@github.com:tidepool-org/development
+    path: charts/tidepool/0.1.7
+    ref: k8s
+  values:
+   {{- $environment.helm | toYaml | nindent 4 }}
+{{- end }}

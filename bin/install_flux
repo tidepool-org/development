@@ -80,7 +80,7 @@ fi
 
 cd /tmp
 helm repo add fluxcd https://fluxcd.github.io/flux
-if [ ${CRD_UNINSTALLED} -ne 0 ]
+if [ "${CRD_UNINSTALLED}" != "0" ]
 then
     kubectl apply -f https://raw.githubusercontent.com/fluxcd/flux/master/deploy-helm/flux-helm-release-crd.yaml
 fi
