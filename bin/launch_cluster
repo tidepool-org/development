@@ -42,7 +42,7 @@ export CLUSTER_STACK_NAME=eksctl-${CLUSTER_NAME}-cluster
 # create cluster
 cd ${CLUSTER_DIR}
 create_cluster 
-aws cloudformation wait stack-delete-complete --stack-name ${CLUSTER_STACK_NAME}
+aws cloudformation wait stack-create-complete --stack-name ${CLUSTER_STACK_NAME}
 
 # add authorized users
 authorize_users 

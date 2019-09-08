@@ -45,5 +45,5 @@ done
 for ENVIRONEMT in $ENVIRONMENTS
 do
   	STACK_NAME=eksctl-${CLUSTER_NAME}-${ENVIRONMENT}-roles
-  	aws cloudformation wait stack-delete-complete --stack-name ${STACK_NAME}
+  	aws cloudformation wait stack-create-complete --stack-name ${STACK_NAME}
 done

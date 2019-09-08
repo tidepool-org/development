@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xv
 #
 # Set IAM roles for Kiam
 #
@@ -14,7 +14,7 @@ fi
 AWS_ACCOUNT=${AWS_ACCOUNT:-$(get_account)}
 if [ -z "$AWS_ACCOUNT" ]
 then
-	echo "Must set \$AWS_ACCOUNT in enviroment"
+	echo "Must set \$AWS_ACCOUNT in environment"
 	exit
 fi
 	
@@ -38,4 +38,4 @@ CLUSTER_STACK_NAME=eksctl-${CLUSTER_NAME}-roles
 
 set -x
 aws cloudformation create-stack --stack-name ${CLUSTER_STACK_NAME} --capabilities CAPABILITY_NAMED_IAM --template-body ${CF_FILE} --parameters ParameterKey=ClusterName,ParameterValue=${CLUSTER_NAME}     ParameterKey=NodeGroupStackName,ParameterValue=${NODEGROUP_STACK_NAME} ParameterKey=Region,ParameterValue=${AWS_REGION} ParameterKey=AccountNumber,ParameterValue=${AWS_ACCOUNT}
-aws cloudformation wait stack-delete-complete --stack-name ${STACK_NAME}
+aws cloudformation wait stack-create-complete --stack-name ${CLUSTER_STACK_NAME}
