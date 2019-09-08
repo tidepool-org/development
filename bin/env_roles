@@ -42,7 +42,7 @@ do
 
 done
 
-for ENVIRONEMT in $ENVIRONMENTS
+for ENVIRONMENT in $ENVIRONMENTS
 do
   	STACK_NAME=eksctl-${CLUSTER_NAME}-${ENVIRONMENT}-roles
   	aws cloudformation wait stack-create-complete --stack-name ${STACK_NAME}
