@@ -18,6 +18,7 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: 1
   template:
+    serviceAccountName: hydrophone
     metadata:
 {{ if .Values.podAnnotations }}
       annotations:

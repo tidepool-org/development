@@ -18,6 +18,7 @@ spec:
   replicas: 1
   strategy: {}
   template:
+    serviceAccountName: jellyfish
     metadata:
 {{ if .Values.podAnnotations }}
       annotations:
