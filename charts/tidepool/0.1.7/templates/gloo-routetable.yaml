@@ -2,7 +2,7 @@ apiVersion: gateway.solo.io/v1
 kind: RouteTable
 metadata:
   name: tidepool-routes
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
 spec:
   routes:
   - matcher:
@@ -14,8 +14,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-auth-{{ .Values.global.ports.auth }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -25,8 +25,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-auth-{{ .Values.global.ports.auth }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -34,8 +34,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blip-{{ .Values.global.ports.blip }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -46,8 +46,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-data-{{ .Values.global.ports.data }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -57,8 +57,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-auth-{{ .Values.global.ports.auth }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -66,8 +66,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blip-{{ .Values.global.ports.blip }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - POST
@@ -75,8 +75,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blip-{{ .Values.global.ports.blip }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -85,8 +85,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-auth-{{ .Values.global.ports.auth }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -94,8 +94,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-data-{{ .Values.global.ports.data }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -105,8 +105,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-image-{{ .Values.global.ports.image }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-image-{{ .Values.global.ports.image }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -114,8 +114,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-auth-{{ .Values.global.ports.auth }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -124,8 +124,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-data-{{ .Values.global.ports.data }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -133,8 +133,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blip-{{ .Values.global.ports.blip }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -142,8 +142,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blip-{{ .Values.global.ports.blip }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -151,8 +151,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blob-{{ .Values.global.ports.blob }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blob-{{ .Values.global.ports.blob }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -162,8 +162,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-data-{{ .Values.global.ports.data }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -173,8 +173,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-image-{{ .Values.global.ports.image }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-image-{{ .Values.global.ports.image }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -184,8 +184,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-auth-{{ .Values.global.ports.auth }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -195,8 +195,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blob-{{ .Values.global.ports.blob }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blob-{{ .Values.global.ports.blob }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - DELETE
@@ -204,8 +204,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-data-{{ .Values.global.ports.data }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - POST
@@ -213,8 +213,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-jellyfish-{{ .Values.global.ports.jellyfish }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -222,8 +222,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blip-{{ .Values.global.ports.blip }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -231,8 +231,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blip-{{ .Values.global.ports.blip }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -240,8 +240,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-jellyfish-{{ .Values.global.ports.jellyfish }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -249,8 +249,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blip-{{ .Values.global.ports.blip }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -259,8 +259,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blob-{{ .Values.global.ports.blob }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blob-{{ .Values.global.ports.blob }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -270,8 +270,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-task-{{ .Values.global.ports.task }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-task-{{ .Values.global.ports.task }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -280,8 +280,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-user-{{ .Values.global.ports.user }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-user-{{ .Values.global.ports.user }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -294,8 +294,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-data-{{ .Values.global.ports.data }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}'
+          namespace: '{{ .Release.Namespace }}'
     routePlugins:
       prefixRewrite:
         prefixRewrite: /
@@ -306,8 +306,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-jellyfish-{{ .Values.global.ports.jellyfish }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -320,8 +320,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-user-{{ .Values.global.ports.user }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-user-{{ .Values.global.ports.user }}'
+          namespace: '{{ .Release.Namespace }}'
     routePlugins:
       prefixRewrite:
         prefixRewrite: /
@@ -332,8 +332,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-data-{{ .Values.global.ports.data }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - POST
@@ -343,8 +343,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-data-{{ .Values.global.ports.data }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - POST
@@ -352,8 +352,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-shoreline-{{ .Values.global.ports.shoreline }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-shoreline-{{ .Values.global.ports.shoreline }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -363,8 +363,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-image-{{ .Values.global.ports.image }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-image-{{ .Values.global.ports.image }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -377,8 +377,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-seagull-{{ .Values.global.ports.seagull }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-seagull-{{ .Values.global.ports.seagull }}'
+          namespace: '{{ .Release.Namespace }}'
     routePlugins:
       prefixRewrite:
         prefixRewrite: /
@@ -389,8 +389,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blip-{{ .Values.global.ports.blip }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -403,8 +403,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-data-{{ .Values.global.ports.data }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}'
+          namespace: '{{ .Release.Namespace }}'
     routePlugins:
       prefixRewrite:
         prefixRewrite: /
@@ -420,8 +420,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-highwater-{{ .Values.global.ports.highwater }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-highwater-{{ .Values.global.ports.highwater }}'
+          namespace: '{{ .Release.Namespace }}'
     routePlugins:
       prefixRewrite:
         prefixRewrite: /
@@ -437,8 +437,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-hydrophone-{{ .Values.global.ports.hydrophone }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-hydrophone-{{ .Values.global.ports.hydrophone }}'
+          namespace: '{{ .Release.Namespace }}'
     routePlugins:
       prefixRewrite:
         prefixRewrite: /
@@ -454,8 +454,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-message-api-{{ .Values.global.ports.messageapi }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-message-api-{{ .Values.global.ports.messageapi }}'
+          namespace: '{{ .Release.Namespace }}'
     routePlugins:
       prefixRewrite:
         prefixRewrite: /
@@ -467,8 +467,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-task-{{ .Values.global.ports.task }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-task-{{ .Values.global.ports.task }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -476,8 +476,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blip-{{ .Values.global.ports.blip }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -485,8 +485,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-data-{{ .Values.global.ports.data }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -499,8 +499,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-export-{{ .Values.global.ports.export }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-export-{{ .Values.global.ports.export }}'
+          namespace: '{{ .Release.Namespace }}'
     routePlugins:
       prefixRewrite:
         prefixRewrite: /
@@ -516,8 +516,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-gatekeeper-{{ .Values.global.ports.gatekeeper }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-gatekeeper-{{ .Values.global.ports.gatekeeper }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -525,8 +525,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blip-{{ .Values.global.ports.blip }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -534,8 +534,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blip-{{ .Values.global.ports.blip }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - POST
@@ -543,8 +543,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-jellyfish-{{ .Values.global.ports.jellyfish }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -557,8 +557,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-shoreline-{{ .Values.global.ports.shoreline }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-shoreline-{{ .Values.global.ports.shoreline }}'
+          namespace: '{{ .Release.Namespace }}'
     routePlugins:
       prefixRewrite:
         prefixRewrite: /
@@ -569,8 +569,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-tide-whisperer-{{ .Values.global.ports.tidewhisperer }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-tide-whisperer-{{ .Values.global.ports.tidewhisperer }}'
+          namespace: '{{ .Release.Namespace }}'
     routePlugins:
       prefixRewrite:
         prefixRewrite: /
@@ -581,8 +581,8 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-jellyfish-{{ .Values.global.ports.jellyfish }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}'
+          namespace: '{{ .Release.Namespace }}'
   - matcher:
       methods:
       - GET
@@ -590,5 +590,5 @@ spec:
     routeAction:
       single:
         upstream:
-          name: '{{ .Release.Name }}-blip-{{ .Values.global.ports.blip }}'
-          namespace: '{{ .Release.Name }}'
+          name: '{{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}'
+          namespace: '{{ .Release.Namespace }}'
