@@ -1,0 +1,16 @@
+#!/bin/bash 
+
+JSONNET_FILE=/Users/derrickburns/go/src/github.com/tidepool-org/development/bin/flux.jsonnet
+
+yq r flux-deployment.yaml -j >flux.yaml
+yq r helm-operator-deployment.yaml -j > helm.yaml
+
+jsonnet  --tla-code-file flux="flux.yaml"  --tla-code-file helm="helm.yaml"  $JSONNET_FILE >updated.yaml
+
+yq r updated.yaml flux >flux-deployment-updated.yaml
+yq r updated.yaml helm >helm-operator-deployment-update.yaml
+rm updated.yaml
+rm flux.yaml
+rm helm.yaml
+mv flux-deployment.yaml flux-deployment.yaml.old
+mv helm-operator-deployment.yaml helm-operator-deployment.yaml.old

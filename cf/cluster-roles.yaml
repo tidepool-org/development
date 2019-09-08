@@ -10,6 +10,43 @@ Parameters:
   NodeGroupStackName:
     Type: String
 Resources:
+
+  CloudwatchAgentManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Action:
+          - logs:CreateLogGroup
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+          - logs:DescribeLogStreams
+          Resource: "arn:aws:logs:*:*:*"
+  CloudwatchAgentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        Fn::Sub: "${ClusterName}-cloudwatch-agent-role"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: ec2.amazonaws.com
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            AWS:
+              Fn::GetAtt:
+              - KiamServerRole
+              - "Arn"
+      ManagedPolicyArns:
+        - !Ref CloudwatchAgentManagedPolicy
   KiamServerManagedPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
@@ -182,6 +219,10 @@ Outputs:
     Export:
       Name: !Sub '${AWS::StackName}::ClusterName'
     Value: !Sub "${ClusterName}"
+  CloudwatchAgentRoleARN:
+    Export:
+      Name: !Sub '${AWS::StackName}::CloudwatchAgentRoleARN'
+    Value: !GetAtt CloudwatchAgentRole.Arn
   AutoscalerRoleARN:
     Export:
       Name: !Sub '${AWS::StackName}::AutoscalerRoleARN'
