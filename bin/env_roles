@@ -33,7 +33,7 @@ fi
 CF_FILE=file://${DEV_REPO}/cf/env-roles.yaml
 
 set -x
-for ENVIRONEMT in $ENVIRONMENTS
+for ENVIRONMENT in $ENVIRONMENTS
 do
   	STACK_NAME=eksctl-${CLUSTER_NAME}-${ENVIRONMENT}-roles
 	BUCKET_NAME=${1:-tidepool-${ENVIRONMENT}-data}
