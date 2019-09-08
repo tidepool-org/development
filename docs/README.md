@@ -303,6 +303,7 @@ You secret file must have the form:
   data:
     api-key: ${api-key}
     app-key: ${app-key}
+    token: ${token}
   kind: Secret
   metadata:
     name: datadog
@@ -314,6 +315,7 @@ You secret file must have the form:
 
   - `${api-key}` is the API key
   - `${app-key}` is the application key
+  - `${token}` is a shared random token for intra-service comms
 
 ####  Sumologic [Optional]
 
@@ -421,10 +423,10 @@ You store these secrets in the `kissmetrics` `Secret` in the namespace `${ENVIRO
 
   ```yaml
   apiVersion: v1
-  data:
-    KissmetricsAPIKey: ${KissmetricsAPIKey}
-    KissmetricsToken: ${KissmetricsToken}
-    UCSFKissmetricsAPIKey: ${UCSFKissmetricsAPIKey}
+
+    APIKey: ${APIKey}
+    Token: ${Token}
+    UCSFAPIKey: ${UCSFAPIKey}
     UCSFWhitelist: ${UCSFWhitelist}
   kind: Secret
   metadata:
@@ -435,9 +437,9 @@ You store these secrets in the `kissmetrics` `Secret` in the namespace `${ENVIRO
 
   where:
 
-  - `${KissmetricsAPIKey}` is the API key from KissMetrics
-  - `${KissmetricsToken}` is the session token that you will use in the HTTP header
-  - `${UCSFKissmetricsAPIKey}` is the API key from KissMetrics for UCSF
+  - `${APIKey}` is the API key from KissMetrics
+  - `${Token}` is the session token that you will use in the HTTP header
+  - `${UCSFAPIKey}` is the API key from KissMetrics for UCSF
   - `${UCSFWhitelist}` is the list of users tracked
 
 
@@ -480,10 +482,10 @@ You provide the information in the `mailchimp` `Secret` within the `${ENVIRONMEN
   ```yaml
   apiVersion: v1
   data:
-    MailchimpApiKey: ${MailchimpApiKey}
-    MailchimpURL: ${MailchimpURL}
-    MailchimpPersonalLists: ${MailchimpPersonalLists}
-    MailchimpClinicLists: ${MailchimpClinicLists}
+    ApiKey: ${ApiKey}
+    URL: ${URL}
+    PersonalLists: ${PersonalLists}
+    ClinicLists: ${ClinicLists}
   kind: Secret
   metadata:
     name: mailchimp
@@ -493,10 +495,10 @@ You provide the information in the `mailchimp` `Secret` within the `${ENVIRONMEN
 
   where:
   
-  -  `${MailchimpApiKey}` is the value of the Mailchimp API Key
-  -  `${MailchimpURL}` is the URL to the Mailchimp service
-  -  `${MailchimpPersonalLists}` is the mailing list info to individuals
-  -  `${MailchimpClinicLists}` is the mailing list info for clinics 
+  -  `${ApiKey}` is the value of the Mailchimp API Key
+  -  `${URL}` is the URL to the Mailchimp service
+  -  `${PersonalLists}` is the mailing list info to individuals
+  -  `${ClinicLists}` is the mailing list info for clinics 
 
 ## Persist Your Secrets
 
