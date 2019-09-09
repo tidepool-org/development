@@ -83,14 +83,16 @@ run_yarn() {
 }
 
 set_docker_env() {
-  export DOCKER_HOST=tcp://127.0.0.1:2375
+  export DOCKER_CERT_PATH=local/certs/docker
+  export DOCKER_HOST=tcp://127.0.0.1:2376
+  export DOCKER_TLS_VERIFY=1
 }
 
 set_tilt_env() {
   set_docker_env
 
   case "$1" in
-    --trap-shutdown) trap 'SHUTTING_DOWN=1 tilt down' EXIT;;
+    --trap-shutdown) trap 'SHUTTING_DOWN=0 tilt down' EXIT;;
     --shutdown) export SHUTTING_DOWN=1;;
   esac
 }
@@ -116,10 +118,12 @@ destroy() {
 case ${1-help} in
   server-start) (cd ${DIR} && run_docker_compose up -d ${2-});;
   server-stop) (cd ${DIR} && run_docker_compose stop ${2-});;
-  server-logs) (cd ${DIR} && run_docker_compose logs --tail=100 -f server);;
+  server-logs) (cd ${DIR} && run_docker_compose logs --tail=1000 -f server);;
+  node-logs) (cd ${DIR} && run_docker_compose logs --tail=1000 -f node);;
   server-set-config) (cd ${DIR} && set_kubeconfig);;
   server-docker) run_docker "${@:2}";;
   server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
+  node-exec) (cd ${DIR} && run_docker_compose exec node sh);;
   server-prune) (run_docker "system prune --volumes -af");;
   server-destroy) (cd ${DIR} && destroy);;
   start) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up --port=0 ${2-});;

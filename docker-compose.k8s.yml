@@ -2,29 +2,88 @@ version: '3'
 services:
   server:
     image: rancher/k3s:v0.8.1
+    # command: server --disable-agent
     command: server --disable-agent --docker
+    # network_mode: bridge
+    depends_on:
+      - dind
+    links:
+      - "dind:docker"
     environment:
       - K3S_CLUSTER_SECRET=somethingtotallyrandom
       - K3S_KUBECONFIG_OUTPUT=/output/kubeconfig.yaml
       - K3S_KUBECONFIG_MODE=666
+      - DOCKER_HOST=tcp://docker:2376
+      - DOCKER_TLS_VERIFY=1
+      - DOCKER_CERT_PATH=/certs/docker
     volumes:
       - k3s-server:/var/lib/rancher/k3s
       # This is just so that we get the kubeconfig file out
       - ./local/output:/output
+      - ${TIDEPOOL_DOCKER_MONGO_VOLUME}:/data/db
+
+      - dind-var-run:/var/run
+      - dind-var-lib:/var/lib
+      # - dind-run:/run:ro
+      # - dind-sys:/sys
+      # - dind-sock:/var/run/docker.sock:ro
+
+      - ./local/certs/docker/:/certs/docker:ro
+      - dind-usr-local:/usr/local:ro
     ports:
       - 6443:6443
-      - 2375:2375
 
   node:
     image: rancher/k3s:v0.8.1
+    command: agent --docker
+    # network_mode: bridge
     tmpfs:
       - /run
-      - /var/run
+      # - /var/run
+    depends_on:
+      - dind
+      - server
+    links:
+      - "dind:docker"
     privileged: true
-    network_mode: bridge
     environment:
       - K3S_URL=https://server:6443
       - K3S_CLUSTER_SECRET=somethingtotallyrandom
+      - DOCKER_HOST=tcp://docker:2376
+      - DOCKER_TLS_VERIFY=1
+      - DOCKER_CERT_PATH=/certs/docker
+    volumes:
+      - dind-var-run:/var/run
+      - dind-var-lib:/var/lib
+      # - dind-run:/run:ro
+      # - dind-sys:/sys
+      # - dind-sock:/var/run/docker.sock:ro
+      - ./local/certs/docker/:/certs/docker:ro
+      - dind-usr-local:/usr/local:ro
+
+  dind:
+    image: docker:stable-dind
+    # network_mode: bridge
+    privileged: true
+    environment:
+      - DOCKER_TLS_CERTDIR=/certs
+    volumes:
+      - dind-var-run:/var/run
+      - dind-var-lib:/var/lib
+      # - dind-sock:/var/run/docker.sock
+      # - dind-run:/run
+      # - dind-sys:/sys
+      - ./local/certs/docker/:/certs/client
+      - dind-usr-local:/usr/local
+    ports:
+      - 2375:2375
+      - 2376:2376
 
 volumes:
   k3s-server: {}
+  # dind-sock: {}
+  dind-var-run: {}
+  dind-var-lib: {}
+  # dind-run: {}
+  dind-sys: {}
+  dind-usr-local: {}
