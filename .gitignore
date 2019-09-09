@@ -1,2 +1,4 @@
 docker-compose.override.yml
 *.swp
+local/*
+!local/README.md

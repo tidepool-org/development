@@ -35,11 +35,15 @@ spec:
         - name: DISCOVERY_HOST
           value: 'hakken'
         - name: METRICS_APIKEY
+{{ if (eq .Values.global.secrets.external.source "awsSecretsManager" ) }}
           valueFrom:
             secretKeyRef:
               name: highwater
               key: KissmetricsAPIKey
               optional: true
+{{ else }}
+          value: ''
+{{ end }}
         - name: METRICS_TOKEN
           valueFrom:
             secretKeyRef:
@@ -47,11 +51,15 @@ spec:
               key: KissmetricsToken
               optional: true
         - name: METRICS_UCSF_APIKEY
+{{ if (eq .Values.global.secrets.external.source "awsSecretsManager" ) }}
           valueFrom:
             secretKeyRef:
               name: highwater
               key: UCSFKissmetricsAPIKey
               optional: true
+{{ else }}
+          value: ''
+{{ end }}
         - name: METRICS_UCSF_WHITELIST
           valueFrom:
             secretKeyRef:

@@ -8,7 +8,7 @@ gloo:
         httpPort: 8080                                               # HTTP port to listen on
         #httpsPort: 8443                                             # HTTPS port to listen on
         type: ClusterIP                                              # Type of service to create (alternative: ClusterIP)
-        #extraAnnotations:                                           # Use to create an AWS Network Load Balancer 
+        #extraAnnotations:                                           # Use to create an AWS Network Load Balancer
           #service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 mongodb:
   enabled: true
@@ -43,7 +43,7 @@ global:
     proxy:                                                            # proxy if embedded gloo gateway is disabled.
       name: gateway-proxy                                             # the name of the API gateway service (unused if gloo.enabled)
       namespace: gloo-system                                          # the namespace of the API gateway proxy service  (unused if gloo.enabled)
-  store: 
+  store:
     #type: s3                                                         # store non-Mongo data in S3
     type: file                                                        # store non-Mongo data on file system
   secrets:
@@ -51,7 +51,7 @@ global:
       #source: "awsSecretsManager"                                    # external secrets are loaded from aws
       source: "local"                                                 # external secrets are by other means
     internal:
-      source: "helm"                                                  # internal secrets are randominly generated 
+      source: "helm"                                                  # internal secrets are randominly generated
       #source: "awsSecretsManager"                                    # internal secrets are loaded from aws
       #source: "other"                                                # internal secrets are provided by other means
   linkerd: disabled
@@ -103,7 +103,7 @@ global:
     requests:
       cpu: 50m
       memory: 32Mi
-    #
+
   securityContext:                                                    # the security context for all services
     allowPrivilegeEscalation: false
     runAsNonRoot: true                                                # we don't need root access

@@ -32,7 +32,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}      
+      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -92,7 +92,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}      
+      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -102,7 +102,7 @@ metadata:
       rewrite: ""
       method: "GET"
       method_regex: false
-      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}} 
+      service: blip.{{ .Release.Namespace }}:{{.Values.global.ports.blip}}
       ---
       apiVersion: tidepool/v1alpha
       kind:  Mapping
@@ -146,6 +146,11 @@ spec:
   - name: "http"
     port: {{.Values.global.ports.blip}}
     targetPort: {{.Values.global.ports.blip}}
+{{ range $key, $port := .Values.global.ports.viz }}
+  - name: 'http-viz-{{ $key }}'
+    port: {{ $port }}
+    targetPort: {{ $port }}
+{{ end }}
   selector:
     app: blip
     app.kubernetes.io/name: {{ include "charts.name" . }}

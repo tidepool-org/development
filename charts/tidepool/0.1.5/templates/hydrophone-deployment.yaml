@@ -31,6 +31,7 @@ spec:
     spec:
       initContainers:
       {{ include "charts.init.mongo" .}}
+      {{ include "charts.init.shoreline" .}}
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
@@ -42,7 +43,7 @@ spec:
               name: tidepool-server-secret
               key: ServiceAuth
         - name: REGION
-          value: {{.Values.global.aws.region}}            
+          value: {{.Values.global.aws.region}}
         - name: TIDEPOOL_HYDROPHONE_ENV
           value: |
             {
