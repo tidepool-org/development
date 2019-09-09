@@ -1,4 +1,3 @@
-iamRole: ""
 enabled: true
 deployment:
   podAnnotations: {}
