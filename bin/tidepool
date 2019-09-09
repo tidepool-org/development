@@ -96,10 +96,10 @@ set_tilt_env() {
 }
 
 set_kubeconfig() {
-  until curl -s --fail http://127.0.0.1:10080/kubernetes-ready; do
+  until [[ ! -s ".local/output/kubeconfig.yaml" ]] ; do
     sleep 1;
   done
-  curl http://127.0.0.1:10080/config > ~/.kube/config
+  cp local/output/kubeconfig.yaml ~/.kube/config
 }
 
 destroy() {
@@ -117,7 +117,7 @@ case ${1-help} in
   server-start) (cd ${DIR} && run_docker_compose up -d ${2-});;
   server-stop) (cd ${DIR} && run_docker_compose stop ${2-});;
   server-logs) (cd ${DIR} && run_docker_compose logs --tail=100 -f server);;
-  server-set-config) set_kubeconfig;;
+  server-set-config) (cd ${DIR} && set_kubeconfig);;
   server-docker) run_docker "${@:2}";;
   server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
   server-prune) (run_docker "system prune --volumes -af");;

@@ -1,12 +1,30 @@
 version: '3'
 services:
   server:
-    image: bsycorp/kind:v1.13.8
+    image: rancher/k3s:v0.8.1
+    command: server --disable-agent --docker
+    environment:
+      - K3S_CLUSTER_SECRET=somethingtotallyrandom
+      - K3S_KUBECONFIG_OUTPUT=/output/kubeconfig.yaml
+      - K3S_KUBECONFIG_MODE=666
+    volumes:
+      - k3s-server:/var/lib/rancher/k3s
+      # This is just so that we get the kubeconfig file out
+      - ./local/output:/output
+    ports:
+      - 6443:6443
+      - 2375:2375
+
+  node:
+    image: rancher/k3s:v0.8.1
+    tmpfs:
+      - /run
+      - /var/run
     privileged: true
     network_mode: bridge
-    ports:
-      - 8443:8443
-      - 10080:10080
-      - 2375:2375
-    volumes:
-      - ${TIDEPOOL_DOCKER_MONGO_VOLUME}:/data/db
+    environment:
+      - K3S_URL=https://server:6443
+      - K3S_CLUSTER_SECRET=somethingtotallyrandom
+
+volumes:
+  k3s-server: {}
