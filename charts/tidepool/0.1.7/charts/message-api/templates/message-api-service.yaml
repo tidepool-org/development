@@ -2,19 +2,6 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    tidepool.org/config: |
-      ---
-      apiVersion: tidepool/v1alpha
-      kind:  Mapping
-      host: tp
-      name: {{ .Release.Namespace -}}-message-api-message
-      prefix: /message/
-      method: "GET|OPTIONS|POST|PUT|PATCH|DELETE"
-      method_regex: true
-      path_redirect: "false"
-      rewrite: "/"
-      service: message-api.{{ .Release.Namespace }}:{{.Values.global.ports.messageapi}}
   labels:
     app: message-api
 {{ include "charts.labels.standard" .}}

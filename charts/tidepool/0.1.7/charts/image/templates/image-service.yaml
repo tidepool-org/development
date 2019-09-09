@@ -2,41 +2,6 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    tidepool.org/config: |
-      ---
-      apiVersion: tidepool/v1alpha
-      kind:  Mapping
-      host: tp
-      name: {{ .Release.Namespace -}}-image
-      prefix: "/v1/images"
-      prefix_regex: false
-      method: "GET|PUT|DELETE"
-      method_regex: true
-      rewrite: ""
-      service: image.{{ .Release.Namespace }}:{{.Values.global.ports.image}}
-      ---
-      apiVersion: tidepool/v1alpha
-      kind:  Mapping
-      host: tp
-      name: {{ .Release.Namespace -}}-image-users-images
-      prefix: "/v1/users/[^/]+/images"
-      prefix_regex: true
-      method: "GET|POST|DELETE"
-      method_regex: true
-      rewrite: ""
-      service: image.{{ .Release.Namespace }}:{{.Values.global.ports.image}}
-      ---
-      apiVersion: tidepool/v1alpha
-      kind:  Mapping
-      host: tp
-      name: {{ .Release.Namespace -}}-image-users-images-regex
-      prefix: "/v1/users/[^/]+/images/.+"
-      prefix_regex: true
-      method: "GET|POST|DELETE"
-      method_regex: true
-      rewrite: ""
-      service: image.{{ .Release.Namespace }}:{{.Values.global.ports.image}}
   labels:
     app: image
 {{ include "charts.labels.standard" .}}
