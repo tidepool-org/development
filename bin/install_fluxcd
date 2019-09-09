@@ -1,2 +1,3 @@
 #!/bin/bash
-EKSCTL_EXPERIMENTAL=true eksctl install flux -f config.yaml  --git-url=git@github.com:tidepool-org/cluster-development --git-email=derrick@tidepool.org 
+CLUSTER=$1
+EKSCTL_EXPERIMENTAL=true eksctl install flux -f config.yaml  --git-url=git@github.com:tidepool-org/cluster-$CLUSTER --git-email=derrick@tidepool.org 

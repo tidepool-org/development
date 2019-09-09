@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# Create an EKSCTL cluster config from stdin
+# values file
+#
+# Usage: $0 < values.yaml
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+export config=$(yq r - -j)
+jsonnet --tla-code config="$config" $DIR/config.json.jsonnet
