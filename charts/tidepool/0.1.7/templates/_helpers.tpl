@@ -167,7 +167,7 @@ Create liveness and readiness probes for platform services.
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-{{ end }}
+{{- end }}
 
 {{- define "charts.service.https.port" -}} 
 {{ .Values.gloo.gatewayProxies.gatewayProxyV2.service.httpsPort }}
