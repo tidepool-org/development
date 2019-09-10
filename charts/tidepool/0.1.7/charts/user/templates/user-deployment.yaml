@@ -8,7 +8,7 @@ metadata:
   name: user
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo,user,userdata"
+    secret.reloader.stakater.com/reload: "server,mongo,user,userdata-groupidencryptionkey,userdata-userpasswordsalt"
 spec:
   selector:
     matchLabels:
@@ -47,7 +47,7 @@ spec:
         - name: TIDEPOOL_USER_STORE_PASSWORD_SALT
           valueFrom:
             secretKeyRef:
-              name: userdata
+              name: userdata-userpasswordsalt
               key: UserPasswordSalt 
         - name: TIDEPOOL_PROFILE_STORE_DATABASE
           value: seagull
@@ -56,7 +56,7 @@ spec:
         - name: TIDEPOOL_PERMISSION_STORE_SECRET
           valueFrom:
             secretKeyRef:
-              name: userdata
+              name: userdata-groupidencryptionkey
               key: GroupIdEncryptionKey
         - name: TIDEPOOL_MESSAGE_STORE_DATABASE
           value: messages
