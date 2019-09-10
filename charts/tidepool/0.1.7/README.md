@@ -128,6 +128,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.ports.tidewhisperer`                             | Tide whisperer service container port                                                        | `9127`                                                |
 | `global.ports.user`                                      | User service container port                                                                  | `9221`
 | `global.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
+| `global.secret.enabled`                                  | whether to generate all secret files | `false`                                           |
 | `gloo.enabled`                                           | Whether to include an API Gateway with this installation                                     | `true`                                                |
 | `gloo.gatewayProxies.gatewayProxyV2.service.httpPort`  | HTTP port to listen to | `8080`                                                  |
 | `gloo.gatewayProxies.gatewayProxyV2.service.httpsPort`  | HTTPS port to listen to | `8433`                                                  |
