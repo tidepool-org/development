@@ -1,27 +1,20 @@
 # Auto-generated file by gloo_gateway. Do not edit.
-{{ if .Values.global.hosts.https.enabled }}
-{{ $spec := .Values.global.hosts.https }}
-{{ $default := "443" }}
-{{ $port := $spec.port | default $default }}
-{{ if $spec.dnsNames }}
-{{- range $dnsName := $spec.dnsNames }}
-{{ $legalName := printf "%s-%s" $dnsName $port }}
----
-# file: gloo-{{ $legalName }}-virtualservice.yaml
----
+{{- $relname := .Release.Name -}}
+{{- range $key, $spec := .Values.global.hosts.https }}
+--- #file: gloo-{{ $key }}-external-https-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{ $legalName }}'
+  name: '{{ $key }}-{{ $.Release.Namespace }}-external-https'
   namespace: '{{ $.Release.Namespace }}'
 spec:
-  displayName: '{{ $legalName }}'
+  displayName: '{{ $key }}-{{ $.Release.Namespace }}-external-https'
   sslConfig:
     secretRef:
-      name: '{{ $.Values.global.hosts.https.secretName }}'
-      namespace: '{{ $.Release.Namespace }}'
+      name: '{{ $spec.tlssecret.name }}'
+      namespace: '{{ $spec.tlssecret.namespace | default "default" }}'
     sniDomains:
-    - '{{ $dnsName }}'
+    - '{{ $spec.name }}'
   virtualHost:
     corsPolicy:
       allowCredentials: true
@@ -46,7 +39,7 @@ spec:
       - x-tidepool-trace-session
       maxAge: 600s
     domains:
-    - '{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf " %s" $dnsName -}}{{- end -}}'
+    - '{{ $spec.name }}'
     routes:
     - matcher:
         methods:
@@ -539,14 +532,13 @@ spec:
         - PATCH
         - DELETE
         prefix: /export/
+      routePlugins:
+        timeout: '2m'
       routeAction:
         single:
           upstream:
             name: '{{ $.Release.Namespace }}-export-9300'
             namespace: '{{ $.Release.Namespace }}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
     - matcher:
         methods:
         - GET
@@ -635,6 +627,4 @@ spec:
           upstream:
             name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
-{{ end }}
-{{ end }}
 {{ end }}

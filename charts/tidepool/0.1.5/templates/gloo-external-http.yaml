@@ -1,24 +1,17 @@
 # Auto-generated file by gloo_gateway. Do not edit.
-{{ if .Values.global.hosts.http }}
-{{ $spec := .Values.global.hosts.http }}
-{{ $default := "80" }}
-{{ $port := $spec.port | default $default }}
-{{ if $spec.dnsNames }}
-{{- range $dnsName := $spec.dnsNames }}
-{{ $legalName := printf "%s-%s" $dnsName $port }}
----
-# file: gloo-{{ $legalName }}-virtualservice.yaml
----
+{{- $relname := .Release.Name -}}
+{{- range $key, $spec := .Values.global.hosts.http }}
+--- #file: gloo-{{ $key }}-external-http-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{ $legalName }}'
+  name: '{{ $key }}-{{ $.Release.Namespace }}-external-http'
   namespace: '{{ $.Release.Namespace }}'
 spec:
-  displayName: '{{ $legalName }}'
+  displayName: '{{ $key }}-{{ $.Release.Namespace }}-external-http'
   virtualHost:
     domains:
-    - '{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf " %s" $dnsName -}}{{- end -}}'
+    - '{{ $spec.name }}'
     routes:
     - matcher:
         methods:
@@ -511,14 +504,13 @@ spec:
         - PATCH
         - DELETE
         prefix: /export/
+      routePlugins:
+        timeout: '2m'
       routeAction:
         single:
           upstream:
             name: '{{ $.Release.Namespace }}-export-9300'
             namespace: '{{ $.Release.Namespace }}'
-      routePlugins:
-        prefixRewrite:
-          prefixRewrite: /
     - matcher:
         methods:
         - GET
@@ -607,6 +599,4 @@ spec:
           upstream:
             name: '{{ $.Release.Namespace }}-blip-3000'
             namespace: '{{ $.Release.Namespace }}'
-{{ end }}
-{{ end }}
 {{ end }}
