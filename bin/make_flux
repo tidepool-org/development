@@ -1,0 +1,68 @@
+#!/bin/bash 
+#
+# Create EKS cluster and install flux
+#
+# Requires config.yaml file in REMOTE_REPO.
+# Requires values.yaml file in REMOTE_REPO.
+#
+# Depends on eksctl, git, yq,  mktemp
+#
+# Usage: $0 ${REMOTE_REPO}
+
+default=git@github.com:tidepool-org/cluster-test1
+remote=${1:-${REMOTE_REPO:-$default}}
+
+if [ "$remote" == "$default" ]
+then
+	echo "must provide REMOTE_REPO, e.g. $default"
+	#exit  1
+fi
+
+remotebase=$(basename $remote)
+
+# create temporary workspace to clone Git repos into
+mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
+cd $mytmpdir
+
+# clone quickstart
+git clone git@github.com:/tidepool-org/tidepool-quickstart
+QUICKSTART_DIR=$(realpath ./tidepool-quickstart)
+
+# clone config repo
+git clone $remote
+cd $remotebase
+CONFIG_DIR=$(realpath .)
+
+# extract values to use for templating
+export config=$(yq r values.yaml -j)
+export email=$(yq r values.yaml -j email)
+
+# create cluster, install flux into cluster
+export EKSCTL_EXPERIMENTAL=true
+eksctl install flux -f $CONFIG_DIR/config.yaml --git-url=${remote}.git --git-email=$email
+
+# pull changes to config repo
+git pull
+
+# update flux and helm 
+if [ -f $CONFIG_DIR/flux/flux-deployment.yaml ]
+then
+	yq r $CONFIG_DIR/flux/flux-deployment.yaml -j > $mytmpdir/flux.json
+	yq r $CONFIG_DIR/flux/helm-operator-deployment.yaml -j > $mytmpdir/helm.json
+        jsonnet  --tla-code-file flux="$mytmpdir/flux.json"  --tla-code-file helm="$mytmpdir/helm.json" $QUICKSTART_DIR/flux/flux.jsonnet >$mytmpdir/updated.json
+        yq r $mytmpdir/updated.json flux >$CONFIG_DIR/flux/flux-deployment-updated.yaml
+        yq r $mytmpdir/updated.json helm >$CONFIG_DIR/flux/helm-operator-deployment-updated.yaml
+	mv $CONFIG_DIR/flux/flux-deployment.yaml $CONFIG_DIR/flux/flux-deployment.yaml.orig
+	mv $CONFIG_DIR/flux/helm-operator-deployment.yaml $CONFIG_DIR/flux/helm-operator-deployment.yaml.orig
+fi
+
+# commit changes to repo
+cd $CONFIG_DIR
+git add .
+git commit -m "Added tidepool environments"
+git push
+cd /
+
+# clean up
+rm -rf $mytmpdir
+

@@ -1,0 +1,29 @@
+#!/bin/bash -xv
+#
+# Place starting values file in remote config repo.
+#
+# Usage: $0 ${REMOTE_REPO}
+
+default=git@github.com:tidepool-org/cluster-test1
+remote=${1:-${REMOTE_REPO:-$default}}
+
+if [ "$remote" == "$default" ]
+then
+	echo "must provide REMOTE_REPO, e.g. $default"
+	#exit  1
+fi
+
+base=$(basename $remote)
+mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
+cd $mytmpdir
+git clone git@github.com:tidepool-org/tidepool-quickstart
+find . -print
+git clone $remote
+cp tidepool-quickstart/values.yaml $base/
+cd $base
+git add .
+git commit -m "Added values file."
+git push
+cd /
+rm -rf $mytmpdir
+

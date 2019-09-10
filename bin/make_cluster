@@ -1,0 +1,38 @@
+#!/bin/bash  -xv
+#
+# Create EKS cluster and install flux
+#
+# Requires config.yaml file in REMOTE_REPO.
+#
+# Depends on eksctl, git, mktemp
+#
+# Usage: $0 ${REMOTE_REPO}
+
+default=git@github.com:tidepool-org/cluster-test1
+remote=${1:-${REMOTE_REPO:-$default}}
+
+if [ "$remote" == "$default" ]
+then
+	echo "must provide REMOTE_REPO, e.g. $default"
+	#exit  1
+fi
+
+remotebase=$(basename $remote)
+
+# create temporary workspace to clone Git repos into
+mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
+cd $mytmpdir
+
+# clone config repo
+git clone $remote
+cd $remotebase
+CONFIG_DIR=$(realpath .)
+
+# extract values to use for templating
+
+# create cluster, install flux into cluster
+export EKSCTL_EXPERIMENTAL=true
+eksctl create cluster -f $CONFIG_DIR/config.yaml
+
+rm -rf $mytmpdir
+
