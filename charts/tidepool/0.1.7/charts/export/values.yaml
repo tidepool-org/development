@@ -1,6 +1,7 @@
 enabled: true
 secret:
-   SessionEncryptionKey: ""
+  data_:
+    SessionEncryptionKey: ""
 deployment:
   podAnnotations: {}
   image: tidepool/export:develop-c67e1425a4f6eb4c3f70f95284a24899a9ff986f
