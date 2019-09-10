@@ -42,6 +42,7 @@ CONFIG_DIR=$(realpath .)
 # extract values to use for templating
 export config=$(yq r values.yaml -j)
 export email=$(yq r values.yaml -j email)
+export cluster=$(yq r values.yaml -j cluster.metadata.name)
 
 # create cluster, install flux into cluster
 echo "installing flux in cluster"
@@ -56,7 +57,7 @@ curl -X POST -i\
 	-H"Authorization: token $GITHUB_TOKEN"\
 	--data @- https://api.github.com/repos/tidepool-org/$reponame/keys << EOF
 {
-	"title" : "flux key for $context $(date)",
+	"title" : "flux key for $cluster on $(date)",
 	"key" : "$key",
 	"read_only" : false
 }

@@ -28,11 +28,24 @@ git clone $remote
 cd $remotebase
 CONFIG_DIR=$(realpath .)
 
+CLUSTER_NAME=$(yq r $CONFIG_DIR/values.yaml cluster.metadata.name)
+IAM_USERS=$(yq r $CONFIG_DIR/values.yaml aws.iamUsers | sed -e "s/- //")
+
 # extract values to use for templating
 
 # create cluster, install flux into cluster
-export EKSCTL_EXPERIMENTAL=true
+echo "creating cluster"
 eksctl create cluster -f $CONFIG_DIR/config.yaml
+
+GROUP=system:masters
+
+echo "adding system masters"
+for user in ${IAM_USERS}
+do
+    echo "adding $user"
+    arn=arn:aws:iam::${AWS_ACCOUNT}:user/${user}
+    eksctl create iamidentitymapping --region=${AWS_REGION}  --role=$arn --group=$GROUP --name=${CLUSTER_NAME} --username=$user
+done
 
 rm -rf $mytmpdir
 
