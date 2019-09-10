@@ -7,15 +7,10 @@ VALUES_FILES=${1:-~/values.yaml}
 CONFIG_FILE=${2:-config.yaml}
 
 QUICKSTART=git@github.com:tidepool-org/eks-quickstart-app-dev.git
-REMOTE_SERVER=$(yq r $VALUES_FILE repo.remote)
 CLUSTER_NAME=$(yq r $VALUES_FILE cluster.metadata.name)
 DIRECTORY=cluster-${CLUSTER_NAME}
-REMOTE=${REMOTE_SERVER}/${DIRECTORY}
 LOCAL=$(yq r $VALUES_FILE repo.local)
-EMAIL=$(yq r $VALUES_FILE email)
 
 export EKSCTL_EXPERIMENTAL=true
-eksctl install flux -f ${CONFIG_FILE}  --git-url=${REMOTE} --git-email=${EMAIL}
-update_flux
 
 eksctl generate profile  -f ${CONFIG_FILE} --git-url=$QUICKSTART --profile-path ${LOCAL}/${DIRECTORY}/base/

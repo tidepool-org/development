@@ -1,0 +1,18 @@
+#!/bin/bash -xv
+#
+# create a github repo 
+#
+
+
+mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
+cd $mytmpdir
+REPO=${1}
+ORGANIZATION=${2:-tidepool-org}
+
+mkdir $REPO
+cd $1
+git init
+hub create $ORGANIZATION/$REPO
+cd
+rm -rf $mytmpdir
+
