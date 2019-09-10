@@ -1,4 +1,4 @@
-#!/bin/bash  -xv
+#!/bin/bash 
 #
 # Create EKS cluster and install flux
 #
