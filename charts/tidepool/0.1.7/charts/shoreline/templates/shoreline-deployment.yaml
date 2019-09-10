@@ -8,7 +8,7 @@ metadata:
   name: shoreline
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo,shoreline-serviceauth,shoreline-userlongtermkey,shoreline-usermailverification,userdata-userpasswordsalt"
+    secret.reloader.stakater.com/reload: "server,mongo,shoreline,userdata"
     configmap.reloader.stakater.com/reload: "shoreline"
 spec:
   selector:
@@ -66,25 +66,25 @@ spec:
         - name: API_SECRET
           valueFrom:
             secretKeyRef:
-              name: shoreline-serviceauth
+              name: shoreline
               key: ServiceAuth
               optional: true
         - name: SALT
           valueFrom:
             secretKeyRef:
-              name: userdata-userpasswordsalt
+              name: userdata
               key: UserPasswordSalt
               optional: true
         - name: VERIFICATION_SECRET
           valueFrom:
             secretKeyRef:
-              name: shoreline-usermailverification
+              name: shoreline
               key: UserMailVerification
               optional: true
         - name: LONG_TERM_KEY
           valueFrom:
             secretKeyRef:
-              name: shoreline-userlongtermkey
+              name: shoreline
               key: UserLongTermKey 
               optional: true
         - name: MAILCHIMP_APIKEY
