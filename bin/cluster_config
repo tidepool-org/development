@@ -1,3 +1,0 @@
-#!/bin/bash
-
-jsonnet config.json.jsonnet

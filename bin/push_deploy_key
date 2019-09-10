@@ -10,24 +10,24 @@
 #
 # Usage: $0
 
+default=git@github.com:tidepool-org/cluster-test1
+remote=${1:-${REMOTE_REPO:-$default}}
+
+if [ "$remote" == "$default" ]
+then
+        echo "must provide REMOTE_REPO, e.g. $default"
+        #exit  1
+fi
+
 if [ -z "$GITHUB_TOKEN" ]
 then
 	echo "\$GITHUB_TOKEN required."
 	exit
 fi
 
-if [ -z "$CONFIG_REPO" ]
-then
-	echo "\$CONFIG_REPO required."
-	exit
-fi
-
-cd $CONFIG_DIR
-GIT_REMOTE=$(git config remote.origin.url)
-
 key=$(fluxctl --k8s-fwd-ns=flux identity)
 
-reponame="$(echo $GIT_REMOTE | cut -d/ -f2 | sed -e 's/\.git//')"
+reponame="$(echo $remote | cut -d/ -f2 | sed -e 's/\.git//')"
 echo $reponame
 
 curl -X POST -i\

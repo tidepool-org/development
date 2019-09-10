@@ -18,6 +18,12 @@ then
 	#exit  1
 fi
 
+if [ -z "$GITHUB_TOKEN" ]
+then
+	echo "\$GITHUB_TOKEN required."
+	exit
+fi
+
 remotebase=$(basename $remote)
 
 # create temporary workspace to clone Git repos into
@@ -38,13 +44,29 @@ export config=$(yq r values.yaml -j)
 export email=$(yq r values.yaml -j email)
 
 # create cluster, install flux into cluster
+echo "installing flux in cluster"
 export EKSCTL_EXPERIMENTAL=true
 eksctl install flux -f $CONFIG_DIR/config.yaml --git-url=${remote}.git --git-email=$email
+key=$(fluxctl --k8s-fwd-ns=flux identity)
+
+reponame="$(echo $remote | cut -d/ -f2 | sed -e 's/\.git//')"
+
+echo "Authorizing access to $remote"
+curl -X POST -i\
+	-H"Authorization: token $GITHUB_TOKEN"\
+	--data @- https://api.github.com/repos/tidepool-org/$reponame/keys << EOF
+{
+	"title" : "flux key for $context $(date)",
+	"key" : "$key",
+	"read_only" : false
+}
+EOF
 
 # pull changes to config repo
 git pull
 
 # update flux and helm 
+echo "Updating flux and flux-helm-operator manifests"
 if [ -f $CONFIG_DIR/flux/flux-deployment.yaml ]
 then
 	yq r $CONFIG_DIR/flux/flux-deployment.yaml -j > $mytmpdir/flux.json
