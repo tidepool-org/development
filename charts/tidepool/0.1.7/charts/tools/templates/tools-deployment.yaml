@@ -9,7 +9,7 @@ metadata:
   name: tools
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "mongo,userdata-groupidencyrptionkey"
+    secret.reloader.stakater.com/reload: "mongo,userdata"
 spec:
   selector:
     matchLabels:
@@ -40,7 +40,7 @@ spec:
         - name: TIDEPOOL_PERMISSION_STORE_SECRET
           valueFrom:
             secretKeyRef:
-              name: userdata-groupidencryptionkey
+              name: userdata
               key: GroupIdEncryptionKey
         - name: TIDEPOOL_DEPRECATED_DATA_STORE_DATABASE
           value: data

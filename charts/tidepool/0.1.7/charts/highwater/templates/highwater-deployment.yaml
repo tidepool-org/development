@@ -7,7 +7,7 @@ metadata:
   name: highwater
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,highwater,userdata-useridsalt,kissmetrics"
+    secret.reloader.stakater.com/reload: "server,highwater,userdata,kissmetrics"
 spec:
   selector:
     matchLabels:
@@ -66,7 +66,7 @@ spec:
         - name: SALT_DEPLOY
           valueFrom:
             secretKeyRef:
-              name: userdata-useridsalt
+              name: userdata
               key: UserIdSalt
         - name: SERVER_SECRET
           valueFrom:
