@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash  -xv
 #
 # Create Tidepool GitOps config repo
 #
