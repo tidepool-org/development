@@ -2,6 +2,11 @@ load('./Tiltfile.global', 'absolute_dir', 'getNested', 'tidepool_helm_overrides_
 
 ### Main Start ###
 def main():
+  watch_file('./Tiltconfig.yaml')
+
+  if read_file('./local/Tiltconfig.yaml'):
+    watch_file('./local/Tiltconfig.yaml')
+
   # Set up tidepool helm template command
   tidepool_helm_template_cmd = 'helm template --is-upgrade --name tidepool-tilt --namespace default '
 

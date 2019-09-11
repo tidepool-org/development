@@ -14,12 +14,9 @@ tidepool_helm_overrides_file = './Tiltconfig.yaml'
 config = read_yaml(tidepool_helm_overrides_file)
 configOverrides = read_yaml('./local/Tiltconfig.yaml', False)
 
-watch_file(tidepool_helm_overrides_file)
-
 if type(configOverrides) == 'dict':
   config.update(configOverrides.items())
   tidepool_helm_overrides_file = './local/Tiltconfig.yaml'
-  watch_file(tidepool_helm_overrides_file)
 
 tidepool_helm_charts_version = config.get('tidepool_helm_charts_version')
 tidepool_helm_chart_dir = "./charts/tidepool/{}".format(tidepool_helm_charts_version)
