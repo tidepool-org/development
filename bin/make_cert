@@ -25,10 +25,18 @@ cd $mytmpdir
 aws secretsmanager get-secret-value --secret-id $cluster/flux/ca.pem | jq '.SecretString' | sed -e 's/"//g' \
 -e 's/\\n/\
 /g' >ca.pem
+if [ $# -ne 0 ]
+then
+	exit 1
+fi
 
 aws secretsmanager get-secret-value --secret-id $cluster/flux/ca-key.pem | jq '.SecretString' | sed -e 's/"//g'  \
 -e 's/\\n/\
 /g' >ca-key.pem
+if [ $# -ne 0 ]
+then
+	exit 1
+fi
 
 export TILLER_HOSTNAME=tiller-deploy.flux
 export USER_NAME=helm-client
