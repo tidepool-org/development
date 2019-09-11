@@ -10,7 +10,7 @@ metadata:
     #flux.weave.works/tag.shoreline: "semver:~1."
     #flux.weave.works/tag.shoreline: "glob:master-*"
     flux.weave.works/tag.auth: glob:develop-*
-    flux.weave.works/tag.blip: glob:master-*
+    flux.weave.works/tag.blip: glob:release-1.27.0*
     flux.weave.works/tag.blob: glob:develop-*
     flux.weave.works/tag.data: glob:develop-*
     flux.weave.works/tag.export: glob:develop-*
