@@ -64,7 +64,7 @@ unbuffer eksctl install flux -f $CONFIG_DIR/config.yaml --git-url=${remote}.git 
 git pull
 
 echo "${magenta}creating local helm credentials${reset}"
-DIR=$(cat eksctl.out | grep "Public key infrastructure" | sed -e 's/^.*"\(.*\)".*$/\1/')
+DIR=$(cat $mytmpdir/eksctl.out | grep "Public key infrastructure" | sed -e 's/^.*"\(.*\)".*$/\1/')
 aws secretsmanager describe-secret --secret-id test2/flux/ca.pem
 if [ $# != 0 ]
 then
