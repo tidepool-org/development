@@ -80,7 +80,7 @@ spec:
       namespace:
         create: false
     blip:
-      image: tidepool/blip:release-1.27.0-9e56bf9c3ea0cb4c73067dcb6a6b86bf2bf19c77
+      image: tidepool/blip:release-1.27.0-defded8244de84b0c4aec217f0f6c6f852036843
     export:
       enabled: true
       image: tidepool/export:develop-974488dcc53cfcbbf8fafbd40053fcf7878ff183
