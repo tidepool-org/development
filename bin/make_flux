@@ -9,18 +9,29 @@
 #
 # Usage: $0 ${REMOTE_REPO}
 
-default=git@github.com:tidepool-org/cluster-test1
-remote=${1:-${REMOTE_REPO:-$default}}
+red=`tput setaf 1`
+green=`tput setaf 2`
+magenta=`tput setaf 5`
+reset=`tput sgr0`
 
-if [ "$remote" == "$default" ]
+REMOTE_REPO=${1:-$REMOTE_REPO}
+
+if [ -z "$REMOTE_REPO" ]
 then
-	echo "must provide REMOTE_REPO, e.g. $default"
-	#exit  1
+	echo "${red}must provide REMOTE_REPO${reset}"
+	exit 1
+fi
+
+if [[ $REMOTE_REPO = git@github.com* ]]
+then
+	remote=$REMOTE_REPO
+else
+	remote="git@github.com:tidepool-org/$REMOTE_REPO"
 fi
 
 if [ -z "$GITHUB_TOKEN" ]
 then
-	echo "\$GITHUB_TOKEN required."
+	echo "${red}\$GITHUB_TOKEN required.${reset}"
 	exit
 fi
 
@@ -31,13 +42,14 @@ mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
 cd $mytmpdir
 
 # clone quickstart
-git clone git@github.com:/tidepool-org/tidepool-quickstart
+git clone git@github.com:/tidepool-org/tidepool-quickstart 
 QUICKSTART_DIR=$(realpath ./tidepool-quickstart)
 
 # clone config repo
-git clone $remote
+git clone $remote 
 cd $remotebase
 CONFIG_DIR=$(realpath .)
+
 
 # extract values to use for templating
 export config=$(yq r values.yaml -j)
@@ -45,9 +57,26 @@ export email=$(yq r values.yaml -j email | sed -e 's/"//g')
 export cluster=$(yq r values.yaml -j cluster.metadata.name | sed -e 's/"//g')
 
 # create cluster, install flux into cluster
-echo "installing flux in cluster"
+echo "${magenta}installing flux in cluster $cluster${reset}"
 export EKSCTL_EXPERIMENTAL=true
-eksctl install flux -f $CONFIG_DIR/config.yaml --git-url=${remote}.git --git-email=$email
+unbuffer eksctl install flux -f $CONFIG_DIR/config.yaml --git-url=${remote}.git --git-email=$email --git-label=$cluster  | tee  $mytmpdir/eksctl.out
+
+git pull
+
+echo "${magenta}creating local helm credentials${reset}"
+DIR=$(cat eksctl.out | grep "Public key infrastructure" | sed -e 's/^.*"\(.*\)".*$/\1/')
+aws secretsmanager describe-secret --secret-id test2/flux/ca.pem
+if [ $# != 0 ]
+then
+    aws secretsmanager create-secret --name $cluster/flux/ca.pem --secret-string "$(cat $DIR/ca.pem)"
+    aws secretsmanager create-secret --name $cluster/flux/ca-key.pem --secret-string "$(cat $DIR/ca-key.pem)"
+else
+    aws secretsmanager update-secret --secret-id $cluster/flux/ca.pem --secret-string "$(cat $DIR/ca.pem)"
+    aws secretsmanager update-secret --secret-id $cluster/flux/ca-key.pem --secret-string "$(cat $DIR/ca-key.pem)"
+fi
+
+make_cert $cluster
+
 key=$(fluxctl --k8s-fwd-ns=flux identity)
 
 reponame="$(echo $remote | cut -d/ -f2 | sed -e 's/\.git//')"
@@ -57,6 +86,7 @@ curl -X POST -i\
 	-H"Authorization: token $GITHUB_TOKEN"\
 	--data @- https://api.github.com/repos/tidepool-org/$reponame/keys << EOF
 {
+
 	"title" : "flux key for $cluster on $(date)",
 	"key" : "$key",
 	"read_only" : false

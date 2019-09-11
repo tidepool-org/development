@@ -1,0 +1,59 @@
+#!/bin/bash
+#
+# Retrieves the Helm Certificate Authority public and private key from AWS Secrets Manager and
+# creates a cert for use by a Helm client.
+#
+# Places that cert in HELM_HOME/cluster/$1/{ca.pem,cert.pem,key.pem}
+# Copies that cert to $HELM_HOME/{ca.pem,cert.pem,key.pem}
+#
+# To use the Helm client, make sure that $HELM_
+
+red=`tput setaf 1`
+green=`tput setaf 2`
+magenta=`tput setaf 5`
+reset=`tput sgr0`
+
+cluster=${1:-test2}
+HELM_HOME=${HELM_HOME:-~/.helm}
+
+echo "${magenta}installing helm client cert for cluster $cluster${reset}"
+
+# create temporary workspace to clone Git repos into
+mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
+cd $mytmpdir
+
+aws secretsmanager get-secret-value --secret-id $cluster/flux/ca.pem | jq '.SecretString' | sed -e 's/"//g' \
+-e 's/\\n/\
+/g' >ca.pem
+
+aws secretsmanager get-secret-value --secret-id $cluster/flux/ca-key.pem | jq '.SecretString' | sed -e 's/"//g'  \
+-e 's/\\n/\
+/g' >ca-key.pem
+
+export TILLER_HOSTNAME=tiller-deploy.flux
+export USER_NAME=helm-client
+echo '{"signing":{"default":{"expiry":"43800h","usages":["signing","key encipherment","server auth","client auth"]}}}' > ca-config.json
+echo '{"CN":"'$USER_NAME'","hosts":[""],"key":{"algo":"rsa","size":4096}}' | cfssl gencert \
+  -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem \
+  -hostname="$TILLER_HOSTNAME" - | cfssljson -bare $USER_NAME
+
+HELM_CLUSTER_HOME=${HELM_HOME}/clusters/$cluster
+
+rm -rf $HELM_CLUSTER_HOME
+mkdir -p $HELM_CLUSTER_HOME
+cp helm-client.pem $HELM_CLUSTER_HOME/cert.pem
+cp helm-client-key.pem $HELM_CLUSTER_HOME/key.pem
+cp ca.pem $HELM_CLUSTER_HOME/ca.pem
+rm -f $HELM_HOME/{cert.pem,key.pem,ca.pem}
+cp $HELM_CLUSTER_HOME/{cert.pem,key.pem,ca.pem} $HELM_HOME
+
+echo "${magenta}created helm client certs in $HELM_CLUSTER_HOME${reset}"
+
+if [ "$TILLER_NAMESPACE" != "flux"  -o "$HELM_TLS_ENABLE" != "true" ]
+then
+    echo "${green}you must do this to use helm:${reset}"
+    echo "${green}export TILLER_NAMESPACE=flux${reset}"
+    echo "${green}export HELM_TLS_ENABLE=true${reset}"
+fi
+
+rm -rf $mytmpdir

@@ -4,13 +4,30 @@
 #
 # Usage: $0 ${REMOTE_REPO}
 
-default=git@github.com:tidepool-org/cluster-test1
-remote=${1:-${REMOTE_REPO:-$default}}
+red=`tput setaf 1`
+green=`tput setaf 2`
+magenta=`tput setaf 5`
+reset=`tput sgr0`
 
-if [ "$remote" == "$default" ]
+REMOTE_REPO=${1:-$REMOTE_REPO}
+
+if [ -z "$GITHUB_TOKEN" ]
 then
-	echo "must provide REMOTE_REPO, e.g. $default"
-	#exit  1
+        echo "${red}\$GITHUB_TOKEN required in environment.${reset}"
+        exit 1
+fi
+
+if [ -z "$REMOTE_REPO" ]
+then
+        echo "${red}must provide REMOTE_REPO in environment or as first argument.${reset}"
+        exit 1
+fi
+
+if [[ $REMOTE_REPO = git@github.com* ]]
+then
+        remote=$REMOTE_REPO
+else
+        remote="git@github.com:tidepool-org/$REMOTE_REPO"
 fi
 
 base=$(basename $remote)

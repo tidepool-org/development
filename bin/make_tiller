@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# Install Tiller into cluster of kubectl context
+#
+#
+
+export PATH=/usr/local/bin
+
+kubectl -n kube-system create sa tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+helm init --skip-refresh --upgrade --service-account tiller --history-max=10 

@@ -11,12 +11,12 @@
 # Usage: $0
 
 default=git@github.com:tidepool-org/cluster-test1
-remote=${1:-${REMOTE_REPO:-$default}}
+export cluster=$(yq r values.yaml -j cluster.metadata.name | sed -e 's/"//g')
 
-if [ "$remote" == "$default" ]
+if [ -z "$REMOTE_REPO" ]
 then
-        echo "must provide REMOTE_REPO, e.g. $default"
-        #exit  1
+        echo "must provide REMOTE_REPO"
+        exit  1
 fi
 
 if [ -z "$GITHUB_TOKEN" ]
@@ -27,14 +27,14 @@ fi
 
 key=$(fluxctl --k8s-fwd-ns=flux identity)
 
-reponame="$(echo $remote | cut -d/ -f2 | sed -e 's/\.git//')"
+reponame="$(echo $REMOTE_REPO | cut -d/ -f2 | sed -e 's/\.git//')"
 echo $reponame
 
 curl -X POST -i\
 	-H"Authorization: token $GITHUB_TOKEN"\
 	--data @- https://api.github.com/repos/tidepool-org/$reponame/keys << EOF
 {
-	"title" : "flux key for $context $(date)",
+	"title" : "flux key for cluster $cluster on $(date)",
 	"key" : "$key",
 	"read_only" : false
 }
