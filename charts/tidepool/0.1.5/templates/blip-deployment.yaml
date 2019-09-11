@@ -45,6 +45,10 @@ spec:
         - name: WEBPACK_DEVTOOL
           value: {{ .Values.blip.webpackDevTool }}
 {{ end }}
+{{ if .Values.blip.disableDevTools }}
+        - name: DEV_TOOLS
+          value: 'false'
+{{ end }}
 {{ if .Values.blip.apiHost }}
         - name: API_HOST
           value: {{ .Values.blip.apiHost }}
