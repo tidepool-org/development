@@ -1,29 +1,4 @@
-### Helpers Start ###
-def absolute_dir(relative_dir):
-  return str(local('mkdir -p {dir} && cd {dir} && pwd'.format(dir=relative_dir))).strip()
-
-def getNested(dict, path, fallback=None):
-  value = dict
-  for path_segment in path.split('.'):
-    value = value.get(path_segment, {})
-  return value or fallback
-### Helpers End ###
-
-### Global Start ###
-tidepool_helm_overrides_file = './Tiltconfig.yaml'
-config = read_yaml(tidepool_helm_overrides_file)
-configOverrides = read_yaml('./local/Tiltconfig.yaml', False)
-
-watch_file(tidepool_helm_overrides_file)
-
-if type(configOverrides) == 'dict':
-  config.update(configOverrides.items())
-  tidepool_helm_overrides_file = './local/Tiltconfig.yaml'
-  watch_file(tidepool_helm_overrides_file)
-
-tidepool_helm_charts_version = config.get('tidepool_helm_charts_version')
-tidepool_helm_chart_dir = "./charts/tidepool/{}".format(tidepool_helm_charts_version)
-### Global End ###
+load('./Tiltfile.global', 'absolute_dir', 'getNested', 'tidepool_helm_overrides_file', 'config', 'tidepool_helm_chart_dir')
 
 ### Main Start ###
 def main():
