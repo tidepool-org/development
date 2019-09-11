@@ -41,8 +41,8 @@ CONFIG_DIR=$(realpath .)
 
 # extract values to use for templating
 export config=$(yq r values.yaml -j)
-export email=$(yq r values.yaml -j email)
-export cluster=$(yq r values.yaml -j cluster.metadata.name)
+export email=$(yq r values.yaml -j email | sed -e 's/"//g')
+export cluster=$(yq r values.yaml -j cluster.metadata.name | sed -e 's/"//g')
 
 # create cluster, install flux into cluster
 echo "installing flux in cluster"
