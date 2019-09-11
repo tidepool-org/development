@@ -1,7 +1,7 @@
 version: '3'
 services:
   server:
-    image: bsycorp/kind:v1.13.8
+    image: bsycorp/kind:v1.15.1
     privileged: true
     network_mode: bridge
     ports:
