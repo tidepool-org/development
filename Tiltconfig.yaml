@@ -11,11 +11,8 @@ global:
       protocol: http
       host: "localhost:3000"
     http:
-      dnsNames:
-      - localhost
-      port: '3000'
-    https:
-      enabled: false
+      localhost:
+        name: 'localhost:3000'
   mongo:
     await: 'true'    # whether to await for mongo to be ready before starting services
     hosts: 'mongodb' # comma-separated list of Mongo hosts
