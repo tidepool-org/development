@@ -8,7 +8,7 @@ def main():
     watch_file('./local/Tiltconfig.yaml')
 
   # Set up tidepool helm template command
-  tidepool_helm_template_cmd = 'helm template --is-upgrade --name tidepool-tilt --namespace default '
+  tidepool_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
 
   gateway_port_forwards = getNested(config,'gateway-proxy.portForwards', ['3000'])
   gateway_port_forward_host_port = gateway_port_forwards[0].split(':')[0]
@@ -16,48 +16,52 @@ def main():
   mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
   mongodb_port_forward_host_port = mongodb_port_forwards[0].split(':')[0]
 
-  if not is_shutdown:
-    prepareServer()
+  # if not is_shutdown:
+    # prepareServer()
 
-    # Ensure mongodb service is deployed
-    if not getNested(config, 'mongodb.useExternal'):
-      mongodb_service = local('kubectl get service mongodb --ignore-not-found')
-      if not mongodb_service:
-        local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 &>/dev/null &')
+    # setServerSecrets()
 
-    # Ensure proxy services are deployed
-    gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found')
-    if not gateway_proxy_service:
-      local('tilt up --file=Tiltfile.proxy --hud=0 --port=0 &>/dev/null &')
+  #   # Ensure mongodb service is deployed
+  #   if not getNested(config, 'mongodb.useExternal'):
+  #     mongodb_service = local('kubectl get service mongodb --ignore-not-found')
+  #     if not mongodb_service:
+  #       local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 &>/dev/null &')
 
-    # Wait until mongodb and gateway-proxy services are forwarding before provisioning rest of stack
-    if not getNested(config, 'mongodb.useExternal'):
-      local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
-    local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
+  #   # Ensure proxy services are deployed
+  #   gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found')
+  #   if not gateway_proxy_service:
+  #     local('tilt up --file=Tiltfile.proxy --hud=0 --port=0 &>/dev/null &')
 
-    # Generate and/or apply server secrets on startup
-    tidepool_helm_template_cmd = setServerSecrets(tidepool_helm_template_cmd)
-  else:
-    # Shut down the mongodb and proxy services
-    if not getNested(config, 'mongodb.useExternal'):
-      local('tilt down --file=Tiltfile.mongodb &>/dev/null &')
-    local('tilt down --file=Tiltfile.proxy &>/dev/null &')
+  #   # Wait until mongodb and gateway-proxy services are forwarding before provisioning rest of stack
+  #   if not getNested(config, 'mongodb.useExternal'):
+  #     local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
+  #   local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
 
-    # Clean up any tilt up backround processes
-    local("for pid in $(ps -ef | awk '/tilt\ up/ {print $2}'); do kill -9 $pid; done")
+  #   # Generate and/or apply server secrets on startup
+  #   tidepool_helm_template_cmd = setServerSecrets(tidepool_helm_template_cmd)
+  # else:
+  #   # Shut down the mongodb and proxy services
+  #   if not getNested(config, 'mongodb.useExternal'):
+  #     local('tilt down --file=Tiltfile.mongodb &>/dev/null &')
+  #   local('tilt down --file=Tiltfile.proxy &>/dev/null &')
+
+  #   # Clean up any tilt up backround processes
+  #   local("for pid in $(ps -ef | awk '/tilt\ up/ {print $2}'); do kill -9 $pid; done")
 
   # Apply any service overrides
   tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
   tidepool_helm_template_cmd = applyServiceOverrides(tidepool_helm_template_cmd)
 
-  # Don't provision the gloo gateway here - we do that in Tiltfile.proxy
-  tidepool_helm_template_cmd += '--set "gloo.enabled=false" --set "gloo.created=true" '
+  # # Don't provision the gloo gateway here - we do that in Tiltfile.proxy
+  # tidepool_helm_template_cmd += '--set "gloo.enabled=false" --set "gloo.created=true" '
 
   # Deploy and watch the helm charts
   k8s_yaml(local('{helmCmd} {chartDir}'.format(
     chartDir=tidepool_helm_chart_dir,
     helmCmd=tidepool_helm_template_cmd
   )))
+
+  # TODO: do we need to watch these, really - only useful while working developing Tilt setup
   watch_file(tidepool_helm_chart_dir)
 
   # Back out of actual provisioning for debugging purposes by uncommenting below
@@ -73,22 +77,22 @@ def prepareServer():
 ### Prepare Server End ###
 
 ### Secrets Start ###
-def setServerSecrets (tidepool_helm_template_cmd):
+def setServerSecrets ():
   required_secrets = [
     'auth',
     'blob',
+    'carelink',
     'data',
-    'dexcom-api',
+    'dexcom',
     'export',
-    'gatekeeper',
-    'highwater',
     'image',
-    'jellyfish',
+    'mongo',
     'notification',
+    'server',
     'shoreline',
     'task',
-    'tidepool-server-secret',
     'user',
+    'userdata',
   ]
 
   server_secrets_dir = getNested(config, 'global.secrets.hostPath', './local/secrets')
@@ -113,7 +117,7 @@ def setServerSecrets (tidepool_helm_template_cmd):
 
     else:
       # Generate the secret and apply it to the cluster
-      local('helm template --is-upgrade -x {chartDir}/templates/{secret}-secret.yaml -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+      local('helm template --is-upgrade -x {chartDir}/charts/{secret}/templates/{secret}-secret.yaml -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
         chartDir=absolute_dir(tidepool_helm_chart_dir),
         overrides=tidepool_helm_overrides_file,
         secret=secret,
@@ -124,17 +128,12 @@ def setServerSecrets (tidepool_helm_template_cmd):
         secret_file_path=secret_file_path,
         secret=secret,
       ))
-
-  # Ensure that we don't recreate the secrets when provisioning
-  tidepool_helm_template_cmd += '--set "global.secrets.internal.source=other" '
-
-  return tidepool_helm_template_cmd
 ### Secrets End ###
 
 ### Service Overrides Start ###
 def applyServiceOverrides(tidepool_helm_template_cmd):
   for service, overrides in config.items():
-    if type(overrides) == 'dict' and overrides.get('hostPath') and overrides.get('image') and overrides.get('enabled', True):
+    if type(overrides) == 'dict' and overrides.get('hostPath') and getNested(overrides, 'deployment.image'):
       hostPath = absolute_dir(overrides.get('hostPath'))
       containerPath = overrides.get('containerPath')
       dockerFile = overrides.get('dockerFile', 'Dockerfile')

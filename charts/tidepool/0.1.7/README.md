@@ -72,7 +72,7 @@ kubectl delete crd upstreams.gloo.solo.io
 kubectl delete crd upstreamgroups.gloo.solo.io
 ```
 
-Alternatively, you may leave the CRDs.  However on the next install of this chart, you will get an error that one of the Gloo CRDs exists.  
+Alternatively, you may leave the CRDs.  However on the next install of this chart, you will get an error that one of the Gloo CRDs exists.
 To avoid attempts to reinstall the Gloo CRDs, set the parameter `gloo.crds.create` to `false` on install:
 ```
 helm install --name my-release --set gloo.crds.create=false .
@@ -176,6 +176,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `mongo.secret.data_.OptParams`                                        | plaintext additional Mongo connection params                                                           | ``                                                    |
 | `mongo.secret.data_.Password`                                         | plaintext Mongo password                                                                 | `` ||                                                  |
 | `mongo.secret.data_.Scheme`                                        | plaintext Mongo DB scheme, either `mongodb` or `mongodb+srv`                                              | `mongodb`                                             |
+| `mongo.secret.data_.Addresses`                                        | plaintext comma-separated list of Mongo `host[:port]` addresses                                              | `mongodb`                                             |
 | `mongo.secret.data_.Tls`                                              | plaintext, If true, use SSL on Mongo connection                                                         | `false`                                               |
 | `mongo.secret.data_.Username`                                         | plaintext, If non-empty, Mongo username                                                                 | ``                                                    |
 | `mongodb.enabled`                                 | Whether to include an mongodb with this installation                                         | `true`                                                |
@@ -185,7 +186,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `notification.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
 | `seagull.deployment.image` | seagull Docker image | `` |
 | `seagull.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
-| `server.secret.enabled` | whether to cerate secret |  `` |
+| `server.secret.enabled` | whether to create secret |  `` |
 | `server.secret.data_.ServiceAuth` | service authorization, if empty, random value is generated |  `` |
 | `shoreline.deployment.image` | shoreline Docker image | `` |
 | `shoreline.secret.data_.ServiceAuth`                                         | Service authorization secret | ``                                         |
@@ -231,7 +232,7 @@ $ helm upgrade --install --wait my-release -f values.yaml .
 ### Using a Pre-existing Mongo Instance
 By default, this helm chart will install a version of mongodb in the Kubernetes cluster.  You may disable this by setting `mongodb.enabled` to `false`.
 
-To use an existing Mongo server, simply provide the Mongo connection parameters are above.  
+To use an existing Mongo server, simply provide the Mongo connection parameters are above.
 
 N.B If you are running Mongo on your local laptop and typically access it using host `localhost`, you cannot simply use the host name `localhost` because that name is overloaded to mean something different in the Kubernetes cluster. Instead, you must provide an alias that resolves to your `localhost`.  Do this by creating the alias in your `/etc/hosts` file.  Then, you may use that alias to identify your Mongo server.
 
