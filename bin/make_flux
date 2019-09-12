@@ -41,6 +41,7 @@ remotebase=$(basename $remote)
 
 # create temporary workspace to clone Git repos into
 mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
+trap "rm -rf $mytmpdir" EXIT
 cd $mytmpdir
 
 # clone quickstart

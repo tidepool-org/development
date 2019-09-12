@@ -20,6 +20,7 @@ echo "${magenta}[i] installing helm client cert for cluster $cluster${reset}"
 
 # create temporary workspace to clone Git repos into
 mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
+trap "rm -rf $mytmpdir" EXIT
 cd $mytmpdir
 
 echo "${magenta}[i] retrieving ca.pem from AWS secrets manager${reset}"
