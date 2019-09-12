@@ -27,8 +27,9 @@ echo "${magenta}[i] retrieving ca.pem from AWS secrets manager${reset}"
 aws secretsmanager get-secret-value --secret-id $cluster/flux/ca.pem | jq '.SecretString' | sed -e 's/"//g' \
 -e 's/\\n/\
 /g' >ca.pem
-if [ $# -ne 0 ]
+if [ $? -ne 0 ]
 then
+	echo "${red}[x] failed to retrieve ca.pem from AWS secrets manager${reset}"
 	exit 1
 fi
 
@@ -36,8 +37,9 @@ echo "${magenta}[i] retrieving ca-key.pem from AWS secrets manager${reset}"
 aws secretsmanager get-secret-value --secret-id $cluster/flux/ca-key.pem | jq '.SecretString' | sed -e 's/"//g'  \
 -e 's/\\n/\
 /g' >ca-key.pem
-if [ $# -ne 0 ]
+if [ $? -ne 0 ]
 then
+	echo "${red}[x] failed to retrieve ca-key.pem from AWS secrets manager${reset}"
 	exit 1
 fi
 
