@@ -123,7 +123,7 @@ Create environment variables used by all platform services.
           valueFrom:
             secretKeyRef:
               name: mongo
-              key: Optparams
+              key: OptParams
         - name: TIDEPOOL_STORE_TLS
           valueFrom:
             secretKeyRef:

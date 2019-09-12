@@ -39,7 +39,7 @@ spec:
             secretKeyRef:
               name: mailchimp
               key: ClinicLists
-              optional: true
+              optional: false
         - name: MAILCHIMP_URL
           valueFrom:
             secretKeyRef:
@@ -51,7 +51,7 @@ spec:
             secretKeyRef:
               name: mailchimp
               key: PersonalLists
-              optional: true
+              optional: false
         - name: DEMO_CLINIC_USER_ID
           valueFrom:
             configMapKeyRef:

@@ -36,33 +36,33 @@ spec:
           valueFrom:
             secretKeyRef:
               name: mongo
-              key: scheme
+              key: Scheme
         - name: MONGO_USERNAME
           valueFrom:
             secretKeyRef:
               name: mongo
-              key: username
+              key: Username
         - name: MONGO_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mongo
-              key: password
+              key: Password
               optional: true
         - name: MONGO_ADDRESSES
           valueFrom:
             secretKeyRef:
               name: mongo
-              key: addresses
+              key: Addresses
         - name: MONGO_OPT_PARAMS
           valueFrom:
             secretKeyRef:
               name: mongo
-              key: optParams
+              key: OptParams
         - name: MONGO_TLS
           valueFrom:
             secretKeyRef:
               name: mongo
-              key: tls
+              key: Tls
         image: "{{ .Values.deployment.image }}"
         ports:
         - containerPort: {{ .Values.service.port }}

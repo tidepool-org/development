@@ -8,13 +8,30 @@
 #
 # Usage: $0 ${REMOTE_REPO}
 
-default=git@github.com:tidepool-org/cluster-test1
-remote=${1:-${REMOTE_REPO:-$default}}
+red=`tput setaf 1`
+green=`tput setaf 2`
+magenta=`tput setaf 5`
+reset=`tput sgr0`
 
-if [ "$remote" == "$default" ]
+REMOTE_REPO=${1:-$REMOTE_REPO}
+
+if [ -z "$REMOTE_REPO" ]
 then
-	echo "must provide REMOTE_REPO, e.g. $default"
-	#exit  1
+        echo "${red}must provide REMOTE_REPO${reset}"
+        exit 1
+fi
+
+if [[ $REMOTE_REPO = git@github.com* ]]
+then
+        remote=$REMOTE_REPO
+else
+        remote="git@github.com:tidepool-org/$REMOTE_REPO"
+fi
+
+if [ -z "$GITHUB_TOKEN" ]
+then
+        echo "${red}\$GITHUB_TOKEN required.${reset}"
+        exit
 fi
 
 remotebase=$(basename $remote)
@@ -34,8 +51,12 @@ IAM_USERS=$(yq r $CONFIG_DIR/values.yaml aws.iamUsers | sed -e "s/- //")
 # extract values to use for templating
 
 # create cluster, install flux into cluster
-echo "creating cluster"
+echo "${magenta}creating cluster $CLUSTER_NAME${reset}"
 eksctl create cluster -f $CONFIG_DIR/config.yaml
+if [ $? -ne 0 ]
+then
+	exit 1
+fi
 
 GROUP=system:masters
 
@@ -45,6 +66,10 @@ do
     echo "adding $user"
     arn=arn:aws:iam::${AWS_ACCOUNT}:user/${user}
     eksctl create iamidentitymapping --region=${AWS_REGION}  --role=$arn --group=$GROUP --name=${CLUSTER_NAME} --username=$user
+    if [ $? -ne 0 ]
+    then
+	    exit 1
+    fi
 done
 
 rm -rf $mytmpdir

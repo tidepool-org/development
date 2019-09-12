@@ -6,5 +6,5 @@ secret:
     Username: ""
     Password: ""
     Database: ""
-    Tls: "true"
+    Tls: "false"
     OptParams: ""
