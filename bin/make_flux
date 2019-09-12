@@ -113,20 +113,19 @@ git pull
 
 # update flux and helm 
 echo "${magenta}[i] updating flux and flux-helm-operator manifests${reset}"
-if [ -f $CONFIG_DIR/flux/flux-deployment.yaml ]
+if [ -f flux/flux-deployment.yaml ]
 then
-	yq r $CONFIG_DIR/flux/flux-deployment.yaml -j > $mytmpdir/flux.json
-	yq r $CONFIG_DIR/flux/helm-operator-deployment.yaml -j > $mytmpdir/helm.json
+	yq r flux/flux-deployment.yaml -j > $mytmpdir/flux.json
+	yq r flux/helm-operator-deployment.yaml -j > $mytmpdir/helm.json
         jsonnet  --tla-code-file flux="$mytmpdir/flux.json"  --tla-code-file helm="$mytmpdir/helm.json" $QUICKSTART_DIR/flux/flux.jsonnet >$mytmpdir/updated.json
-        yq r $mytmpdir/updated.json flux >$CONFIG_DIR/flux/flux-deployment-updated.yaml
-        yq r $mytmpdir/updated.json helm >$CONFIG_DIR/flux/helm-operator-deployment-updated.yaml
-	mv $CONFIG_DIR/flux/flux-deployment.yaml $CONFIG_DIR/flux/flux-deployment.yaml.orig
-	mv $CONFIG_DIR/flux/helm-operator-deployment.yaml $CONFIG_DIR/flux/helm-operator-deployment.yaml.orig
+        yq r $mytmpdir/updated.json flux >flux/flux-deployment-updated.yaml
+        yq r $mytmpdir/updated.json helm >flux/helm-operator-deployment-updated.yaml
+	mv flux/flux-deployment.yaml flux/flux-deployment.yaml.orig
+	mv flux/helm-operator-deployment.yaml flux/helm-operator-deployment.yaml.orig
 fi
 
 echo "${magenta}[i] commiting repo${reset}"
 # commit changes to repo
-cd $CONFIG_DIR
 git add .
 git commit -m "Added tidepool environments"
 git push

@@ -74,7 +74,7 @@ then
 	echo "${magenta}[i] resetting config repo${reset}"
 	rm -rf pkgs
 fi
-mv $mytmpdir/flux .
+mv $mytmpdir/values.yaml .
 
 # extract values to use for templating
 export ClusterName=$(yq r values.yaml cluster.metadata.name)
