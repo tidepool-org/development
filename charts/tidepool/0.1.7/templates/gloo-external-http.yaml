@@ -20,6 +20,9 @@ spec:
     routes:
     - matcher:
         prefix: '/'
+      routePlugins:
+        prefixRewrite:
+          prefixRewrite: ""
       delegateAction:
         name: 'tidepool-routes'
         namespace: {{ $.Release.Namespace }}

@@ -10,7 +10,7 @@ spec:
       - GET
       - POST
       - DELETE
-      regex: /v1/users/[^/]+/restricted_tokens
+      regex: v1/users/[^/]+/restricted_tokens
     routeAction:
       single:
         upstream:
@@ -21,7 +21,7 @@ spec:
       - GET
       - POST
       - DELETE
-      regex: /v1/users/[^/]+/provider_sessions
+      regex: v1/users/[^/]+/provider_sessions
     routeAction:
       single:
         upstream:
@@ -30,7 +30,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /request-password-from-uploader
+      prefix: request-password-from-uploader
     routeAction:
       single:
         upstream:
@@ -42,7 +42,7 @@ spec:
       - POST
       - DELETE
       - OPTIONS
-      regex: /v1/users/[^/]+/data_sources
+      regex: v1/users/[^/]+/data_sources
     routeAction:
       single:
         upstream:
@@ -53,7 +53,7 @@ spec:
       - GET
       - PUT
       - DELETE
-      regex: /v1/provider_sessions/[^/]+
+      regex: v1/provider_sessions/[^/]+
     routeAction:
       single:
         upstream:
@@ -62,7 +62,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /verification-with-password
+      prefix: verification-with-password
     routeAction:
       single:
         upstream:
@@ -71,7 +71,7 @@ spec:
   - matcher:
       methods:
       - POST
-      prefix: /event/csp-report/violation
+      prefix: event/csp-report/violation
     routeAction:
       single:
         upstream:
@@ -81,7 +81,7 @@ spec:
       methods:
       - GET
       - DELETE
-      regex: /v1/oauth/[^/]+/authorize
+      regex: v1/oauth/[^/]+/authorize
     routeAction:
       single:
         upstream:
@@ -90,7 +90,7 @@ spec:
   - matcher:
       methods:
       - GET
-      regex: /v1/users/[^/]+/data_sets
+      regex: v1/users/[^/]+/data_sets
     routeAction:
       single:
         upstream:
@@ -101,7 +101,7 @@ spec:
       - GET
       - POST
       - DELETE
-      regex: /v1/users/[^/]+/images/.+
+      regex: v1/users/[^/]+/images/.+
     routeAction:
       single:
         upstream:
@@ -110,7 +110,7 @@ spec:
   - matcher:
       methods:
       - GET
-      regex: /v1/oauth/[^/]+/redirect
+      regex: v1/oauth/[^/]+/redirect
     routeAction:
       single:
         upstream:
@@ -120,7 +120,7 @@ spec:
       methods:
       - GET
       - POST
-      regex: /v1/users/[^/]+/datasets
+      regex: v1/users/[^/]+/datasets
     routeAction:
       single:
         upstream:
@@ -129,7 +129,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /request-password-reset
+      prefix: request-password-reset
     routeAction:
       single:
         upstream:
@@ -138,7 +138,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /confirm-password-reset
+      prefix: confirm-password-reset
     routeAction:
       single:
         upstream:
@@ -147,7 +147,7 @@ spec:
   - matcher:
       methods:
       - GET
-      regex: /v1/blobs/[^/]+/content
+      regex: v1/blobs/[^/]+/content
     routeAction:
       single:
         upstream:
@@ -158,7 +158,7 @@ spec:
       - GET
       - PUT
       - DELETE
-      regex: /v1/data_sources/[^/]+
+      regex: v1/data_sources/[^/]+
     routeAction:
       single:
         upstream:
@@ -169,7 +169,7 @@ spec:
       - GET
       - POST
       - DELETE
-      regex: /v1/users/[^/]+/images
+      regex: v1/users/[^/]+/images
     routeAction:
       single:
         upstream:
@@ -180,7 +180,7 @@ spec:
       - GET
       - PUT
       - DELETE
-      prefix: /v1/restricted_tokens
+      prefix: v1/restricted_tokens
     routeAction:
       single:
         upstream:
@@ -191,7 +191,7 @@ spec:
       - GET
       - POST
       - DELETE
-      regex: /v1/users/[^/]+/blobs
+      regex: v1/users/[^/]+/blobs
     routeAction:
       single:
         upstream:
@@ -200,7 +200,7 @@ spec:
   - matcher:
       methods:
       - DELETE
-      regex: /v1/users/[^/]+/data
+      regex: v1/users/[^/]+/data
     routeAction:
       single:
         upstream:
@@ -209,7 +209,7 @@ spec:
   - matcher:
       methods:
       - POST
-      prefix: /v1/device/upload/cl
+      prefix: v1/device/upload/cl
     routeAction:
       single:
         upstream:
@@ -218,7 +218,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /email-verification
+      prefix: email-verification
     routeAction:
       single:
         upstream:
@@ -227,7 +227,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /clinician-details
+      prefix: clinician-details
     routeAction:
       single:
         upstream:
@@ -236,7 +236,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /v1/device/data/"
+      prefix: v1/device/data/"
     routeAction:
       single:
         upstream:
@@ -245,7 +245,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /browser-warning
+      prefix: browser-warning
     routeAction:
       single:
         upstream:
@@ -255,7 +255,7 @@ spec:
       methods:
       - GET
       - DELETE
-      regex: /v1/blobs/[^/]+
+      regex: v1/blobs/[^/]+
     routeAction:
       single:
         upstream:
@@ -266,7 +266,7 @@ spec:
       - GET
       - PUT
       - DELETE
-      regex: /v1/tasks/[^/*]
+      regex: v1/tasks/[^/*]
     routeAction:
       single:
         upstream:
@@ -276,7 +276,7 @@ spec:
       methods:
       - GET
       - DELETE
-      regex: /v1/users/[^/*]
+      regex: v1/users/[^/*]
     routeAction:
       single:
         upstream:
@@ -290,7 +290,7 @@ spec:
       - PUT
       - PATCH
       - DELETE
-      prefix: /dataservices/
+      prefix: dataservices/
     routeAction:
       single:
         upstream:
@@ -302,7 +302,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /v1/synctasks/
+      prefix: v1/synctasks/
     routeAction:
       single:
         upstream:
@@ -316,7 +316,7 @@ spec:
       - PUT
       - PATCH
       - DELETE
-      prefix: /userservices/
+      prefix: userservices/
     routeAction:
       single:
         upstream:
@@ -328,7 +328,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /v1/data_sets
+      prefix: v1/data_sets
     routeAction:
       single:
         upstream:
@@ -339,7 +339,7 @@ spec:
       - POST
       - PUT
       - DELETE
-      prefix: /v1/datasets
+      prefix: v1/datasets
     routeAction:
       single:
         upstream:
@@ -348,7 +348,7 @@ spec:
   - matcher:
       methods:
       - POST
-      prefix: /serverlogin
+      prefix: serverlogin
     routeAction:
       single:
         upstream:
@@ -359,7 +359,7 @@ spec:
       - GET
       - PUT
       - DELETE
-      prefix: /v1/images
+      prefix: v1/images
     routeAction:
       single:
         upstream:
@@ -373,7 +373,7 @@ spec:
       - PUT
       - PATCH
       - DELETE
-      prefix: /metadata/
+      prefix: metadata/
     routeAction:
       single:
         upstream:
@@ -385,7 +385,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /patients
+      prefix: patients
     routeAction:
       single:
         upstream:
@@ -399,7 +399,7 @@ spec:
       - PUT
       - PATCH
       - DELETE
-      prefix: /v1/data/
+      prefix: v1/data/
     routeAction:
       single:
         upstream:
@@ -416,7 +416,7 @@ spec:
       - PUT
       - PATCH
       - DELETE
-      prefix: /metrics/
+      prefix: metrics/
     routeAction:
       single:
         upstream:
@@ -433,7 +433,7 @@ spec:
       - PUT
       - PATCH
       - DELETE
-      prefix: /confirm/
+      prefix: confirm/
     routeAction:
       single:
         upstream:
@@ -450,7 +450,7 @@ spec:
       - PUT
       - PATCH
       - DELETE
-      prefix: /message/
+      prefix: message/
     routeAction:
       single:
         upstream:
@@ -463,7 +463,7 @@ spec:
       methods:
       - GET
       - POST
-      prefix: /v1/tasks
+      prefix: v1/tasks
     routeAction:
       single:
         upstream:
@@ -472,7 +472,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /profile
+      prefix: profile
     routeAction:
       single:
         upstream:
@@ -481,7 +481,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /v1/time
+      prefix: v1/time
     routeAction:
       single:
         upstream:
@@ -495,7 +495,7 @@ spec:
       - PUT
       - PATCH
       - DELETE
-      prefix: /export/
+      prefix: export/
     routePlugins:
       timeout: '2m'
     routeAction:
@@ -511,7 +511,7 @@ spec:
       - PUT
       - PATCH
       - DELETE
-      prefix: /access/
+      prefix: access/
     routeAction:
       single:
         upstream:
@@ -520,7 +520,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /signup
+      prefix: signup
     routeAction:
       single:
         upstream:
@@ -529,7 +529,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /terms
+      prefix: terms
     routeAction:
       single:
         upstream:
@@ -538,7 +538,7 @@ spec:
   - matcher:
       methods:
       - POST
-      prefix: /data/
+      prefix: data/
     routeAction:
       single:
         upstream:
@@ -552,7 +552,7 @@ spec:
       - PUT
       - PATCH
       - DELETE
-      prefix: /auth/
+      prefix: auth/
     routeAction:
       single:
         upstream:
@@ -564,7 +564,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /data/
+      prefix: data/
     routeAction:
       single:
         upstream:
@@ -576,7 +576,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /info
+      prefix: info
     routeAction:
       single:
         upstream:
@@ -585,7 +585,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /
+      prefix: 
     routeAction:
       single:
         upstream:
