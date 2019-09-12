@@ -62,7 +62,6 @@ fi
 
 # reset config directory
 mv values.yaml  $mytmpdir/
-mv flux $mytmpdir/
 if [ $(ls | wc -l) -ne 0 ]
 then
 	echo "${red}WARNING: will remove prior contents (except values.yaml)?${reset}"
@@ -73,9 +72,8 @@ then
 	fi
 	echo
 	echo "${magenta}[i] resetting config repo${reset}"
-	rm -rf *
+	rm -rf pkgs
 fi
-mv $mytmpdir/values.yaml .
 mv $mytmpdir/flux .
 
 # extract values to use for templating
