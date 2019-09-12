@@ -63,7 +63,7 @@ fi
 mv values.yaml  $mytmpdir/
 if [ $(ls | wc -l) -ne 0 ]
 then
-	echo "${red}WARNING: removing prior contents (except values.yaml)?${reset}"
+	echo "${red}WARNING: will remove prior contents (except values.yaml)?${reset}"
 	read -p "${red}Are you sure?${reset} " -n 1 -r
 	if [[ ! $REPLY =~ ^[Yy]$ ]]
 	then
