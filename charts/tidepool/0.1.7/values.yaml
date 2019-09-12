@@ -68,6 +68,7 @@ gloo:
           #service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 mongodb:
   enabled: true
+  usePassword: false
   image:
     tag: "3.6"
   persistence:
