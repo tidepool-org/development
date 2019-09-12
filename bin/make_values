@@ -13,13 +13,13 @@ REMOTE_REPO=${1:-$REMOTE_REPO}
 
 if [ -z "$GITHUB_TOKEN" ]
 then
-        echo "${red}\$GITHUB_TOKEN required in environment.${reset}"
+        echo "${red}[x] \$GITHUB_TOKEN required in environment.${reset}"
         exit 1
 fi
 
 if [ -z "$REMOTE_REPO" ]
 then
-        echo "${red}must provide REMOTE_REPO in environment or as first argument.${reset}"
+        echo "${red}[x] must provide REMOTE_REPO in environment or as first argument.${reset}"
         exit 1
 fi
 

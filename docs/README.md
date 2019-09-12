@@ -16,18 +16,19 @@ These compressed instructions presume that you can figure out how to edit the `v
   git checkout k8s
   export PATH=$PATH:${DEV_REPO}/bin
 
-  cp $DEV_REPO/charts/configurator/values.yaml ..
-  export VALUES_FILE=$(realpath ../values.yaml)
+  export REMOTE_REPO=foobar
+  hub create tidepool-org/${REMOTE_REPO}
 
-  # The $VALUES_FILE lists the values that you must provide.
-  $EDITOR ${VALUES_FILE}
+  # see https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line
+  export GITHUB_TOKEN=....
 
-  . set_exports ${VALUES_FILE}
   install_tools
-  create_config_repo
-  export_secrets
-  create_s3_assets
-  launch_cluster 
+  make_values 
+  make_config
+  make_demo_secrets
+  make_demo_assets
+  make_cluster
+  make_flux
   ```
 
 ## Prerequisites

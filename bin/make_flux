@@ -9,6 +9,8 @@
 #
 # Usage: $0 ${REMOTE_REPO}
 
+set -o pipefail
+
 red=`tput setaf 1`
 green=`tput setaf 2`
 magenta=`tput setaf 5`
@@ -56,17 +58,29 @@ export config=$(yq r values.yaml -j)
 export email=$(yq r values.yaml -j email | sed -e 's/"//g')
 export cluster=$(yq r values.yaml -j cluster.metadata.name | sed -e 's/"//g')
 
+eksctl get cluster --name $cluster
+if [ $? -ne 0 ]
+then
+	echo "${red}[x] cluster $cluster does not exist. Create with make_cluster.${reset}"
+	exit 1
+fi
+
 # create cluster, install flux into cluster
-echo "${magenta}installing flux in cluster $cluster${reset}"
+echo "${magenta}[i] installing flux in cluster $cluster${reset}"
 export EKSCTL_EXPERIMENTAL=true
 unbuffer eksctl install flux -f $CONFIG_DIR/config.yaml --git-url=${remote}.git --git-email=$email --git-label=$cluster  | tee  $mytmpdir/eksctl.out
 
+if [  $? -ne 0 ]
+then
+	exit 1
+fi
+
 git pull
 
-echo "${magenta}creating local helm credentials${reset}"
+echo "${magenta}[i] saving ca pem and key to AWS secrets manager${reset}"
 DIR=$(cat $mytmpdir/eksctl.out | grep "Public key infrastructure" | sed -e 's/^.*"\(.*\)".*$/\1/')
-aws secretsmanager describe-secret --secret-id test2/flux/ca.pem
-if [ $# != 0 ]
+aws secretsmanager describe-secret --secret-id $cluster/flux/ca.pem 2>/dev/null
+if [ $? -ne 0 ]
 then
     aws secretsmanager create-secret --name $cluster/flux/ca.pem --secret-string "$(cat $DIR/ca.pem)"
     aws secretsmanager create-secret --name $cluster/flux/ca-key.pem --secret-string "$(cat $DIR/ca-key.pem)"
@@ -81,13 +95,13 @@ key=$(fluxctl --k8s-fwd-ns=flux identity)
 
 reponame="$(echo $remote | cut -d/ -f2 | sed -e 's/\.git//')"
 
-echo "Authorizing access to $remote"
+echo "${magenta}[i] authorizing access to $remote${reset}"
 curl -X POST -i\
 	-H"Authorization: token $GITHUB_TOKEN"\
 	--data @- https://api.github.com/repos/tidepool-org/$reponame/keys << EOF
 {
 
-	"title" : "flux key for $cluster on $(date)",
+	"title" : "flux key for $cluster created by make_flux",
 	"key" : "$key",
 	"read_only" : false
 }
@@ -97,7 +111,7 @@ EOF
 git pull
 
 # update flux and helm 
-echo "Updating flux and flux-helm-operator manifests"
+echo "${magenta}[i] updating flux and flux-helm-operator manifests${reset}"
 if [ -f $CONFIG_DIR/flux/flux-deployment.yaml ]
 then
 	yq r $CONFIG_DIR/flux/flux-deployment.yaml -j > $mytmpdir/flux.json
@@ -109,13 +123,15 @@ then
 	mv $CONFIG_DIR/flux/helm-operator-deployment.yaml $CONFIG_DIR/flux/helm-operator-deployment.yaml.orig
 fi
 
+echo "${magenta}[i] commiting repo${reset}"
 # commit changes to repo
 cd $CONFIG_DIR
 git add .
 git commit -m "Added tidepool environments"
 git push
 cd /
-
 # clean up
 rm -rf $mytmpdir
+
+echo "${magenta}[i] done${reset}"
 

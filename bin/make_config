@@ -14,7 +14,7 @@ REMOTE_REPO=${1:-$REMOTE_REPO}
 
 if [ -z "$REMOTE_REPO" ]
 then
-        echo "${red}must provide REMOTE_REPO${reset}"
+        echo "${red}[x] must provide REMOTE_REPO${reset}"
         exit 1
 fi
 
@@ -27,7 +27,7 @@ fi
 
 if [ -z "$GITHUB_TOKEN" ]
 then
-        echo "${red}\$GITHUB_TOKEN required.${reset}"
+        echo "${red}[x] \$GITHUB_TOKEN required.${reset}"
         exit
 fi
 
@@ -55,7 +55,7 @@ CONFIG_DIR=$(realpath .)
 
 if [ ! -f values.yaml ]
 then
-	echo "${red}No values.yaml file.  Create one with make_values.${reset}"
+	echo "${red}[x] No values.yaml file.  Create one with make_values.${reset}"
 	exit 1
 fi
 
