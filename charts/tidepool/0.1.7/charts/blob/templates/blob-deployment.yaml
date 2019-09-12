@@ -18,7 +18,6 @@ spec:
   replicas: 1
   strategy: {}
   template:
-    serviceAccountName: blob
     metadata:
 {{ if .Values.podAnnotations }}
       annotations:
@@ -31,6 +30,8 @@ spec:
     spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}
+      serviceAccount: blob
+      serviceAccountName: blob
       containers:
       - env:
         {{ include "charts.platform.env.mongo" .}}
