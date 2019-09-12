@@ -18,7 +18,9 @@ spec:
     domains:
     - '{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf " %s" $dnsName -}}{{- end -}}'
     routes:
-    - delegateAction:
+    - matcher:
+        prefix: '/'
+      delegateAction:
         name: 'tidepool-routes'
         namespace: {{ $.Release.Namespace }}
 {{ end }}
