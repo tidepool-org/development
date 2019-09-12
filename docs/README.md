@@ -5,9 +5,10 @@ This document describes how to install the Tidepool web service on an Amazon hos
 
 With suitable modification, one may install the service on another Kubernetes platform.  However, that is not contained in the scope of this document.
 
-## TL;DR [ UNDER CONSTRUCTION ]
+## TL;DR 
 
-These compressed instructions presume that you can figure out how to edit the `values.yaml` file. :)
+To create a new cluster, you will first need to select a REMOTE_REPO name and acquire a GITHUB_TOKEN
+per [these directions] (https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line.)
 
   ```bash
   git clone git@github.com:tidepool-org/development.git
@@ -16,19 +17,20 @@ These compressed instructions presume that you can figure out how to edit the `v
   git checkout k8s
   export PATH=$PATH:${DEV_REPO}/bin
 
-  export REMOTE_REPO=foobar
+  export REMOTE_REPO=....
   hub create tidepool-org/${REMOTE_REPO}
 
   # see https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line
   export GITHUB_TOKEN=....
 
-  install_tools
-  make_values 
-  make_config
-  make_demo_secrets
-  make_demo_assets
-  make_cluster
-  make_flux
+  install_tools         # installs all tools needed
+  make_values 		# creates values.yaml file in $REMOTE_REPO
+  make_config		# populates $REMOTE_REPO with configuration
+  make_assets		# makes S3 bucket for readonly assets
+  make_cluster		# create EKS cluster, kubeconfig file
+  make_random_secrets	# loads random secrets into K8s cluster
+  make_flux		# installs flux and TLS-secured tiller into cluster, installs deploy key into $REMOTE_REPO
+  make_cert		# creates a TLS certificate for local helm use, installs in ${HELM_HOME:-~/.helm}
   ```
 
 ## Prerequisites
