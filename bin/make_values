@@ -13,13 +13,13 @@ REMOTE_REPO=${1:-$REMOTE_REPO}
 
 if [ -z "$GITHUB_TOKEN" ]
 then
-        echo "${red}\$GITHUB_TOKEN required in environment.${reset}"
+        echo "${red}[x] \$GITHUB_TOKEN required in environment.${reset}"
         exit 1
 fi
 
 if [ -z "$REMOTE_REPO" ]
 then
-        echo "${red}must provide REMOTE_REPO in environment or as first argument.${reset}"
+        echo "${red}[x] must provide REMOTE_REPO in environment or as first argument.${reset}"
         exit 1
 fi
 
@@ -30,13 +30,25 @@ else
         remote="git@github.com:tidepool-org/$REMOTE_REPO"
 fi
 
-echo "${magenta}created initial values file for repo $remote${reset}"
+echo "${magenta}[i] creating initial values file for repo $remote${reset}"
 
 base=$(basename $remote)
 mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
 cd $mytmpdir
+trap "rm -rf $mytmpdir" EXIT
 git clone git@github.com:tidepool-org/tidepool-quickstart
 git clone $remote
+
+if [ -f $base/values.yaml ]
+then
+	echo "${red}WARNING: will overwrite prior contents of values.yaml?${reset}"
+        read -p "${red}Are you sure?${reset} " -n 1 -r
+        if [[ ! $REPLY =~ ^[Yy]$ ]]
+        then
+                exit 1
+        fi
+fi
+echo "${magenta}[i] creating values.yaml?${reset}"
 cp tidepool-quickstart/values.yaml $base/
 ${EDITOR:-vi} $base/values.yaml
 cd $base
@@ -45,4 +57,5 @@ git commit -m "Added values file."
 git push
 cd /
 rm -rf $mytmpdir
+echo "${magenta}[i] done${reset}"
 

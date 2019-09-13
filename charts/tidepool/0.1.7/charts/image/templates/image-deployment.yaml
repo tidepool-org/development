@@ -17,7 +17,6 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: 1
   template:
-    serviceAccountName: image
     metadata:
 {{ if .Values.podAnnotations }}
       annotations:
@@ -30,6 +29,8 @@ spec:
     spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}
+      serviceAccount: image
+      serviceAccountName: image
       containers:
       - env:
         {{ include "charts.platform.env.mongo" .}}

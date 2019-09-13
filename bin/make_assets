@@ -1,0 +1,61 @@
+#!/bin/bash
+#
+# Copy Tidepool S3 email assets to environment 
+#
+# Usage: $0
+#
+# Requires ENVIRONMENTS
+
+set -o pipefail
+
+red=`tput setaf 1`
+green=`tput setaf 2`
+magenta=`tput setaf 5`
+reset=`tput sgr0`
+
+REMOTE_REPO=${1:-$REMOTE_REPO}
+
+if [ -z "$REMOTE_REPO" ]
+then
+	echo "${red}must provide REMOTE_REPO${reset}"
+	exit 1
+fi
+
+if [[ $REMOTE_REPO = git@github.com* ]]
+then
+	remote=$REMOTE_REPO
+else
+	remote="git@github.com:tidepool-org/$REMOTE_REPO"
+fi
+
+remotebase=$(basename $remote)
+
+# create temporary workspace to clone Git repos into
+mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
+trap "rm -rf $mytmpdir" EXIT
+cd $mytmpdir
+
+# clone config repo
+git clone $remote
+cd $remotebase
+
+export cluster=$(yq r values.yaml -j cluster.metadata.name | sed -e 's/"//g')
+
+environments=$(yq r values.yaml environments | sed -e "/^  .*/d" -e s/:.*//)
+for env in $environments
+do
+  bucket=$(yq r values.yaml environments.${env}.asset | sed -e "/^  .*/d" -e s/:.*//)
+  if [ "$bucket" == "null" ]
+  then
+	  bucket="tidepool-${cluster}-${env}-asset"
+  fi
+  echo "${magenta}[i] creating asset bucket $bucket${reset}"
+  aws s3 mb s3://$bucket
+
+  echo "${magenta}[i] copying  dev assets into $bucket${reset}"
+  aws s3 cp s3://tidepool-dev-asset s3://$bucket
+done
+echo "${magenta}[i] done${reset}"
+
+# clean up
+rm -rf $mytmpdir

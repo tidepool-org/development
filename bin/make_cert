@@ -16,28 +16,36 @@ reset=`tput sgr0`
 cluster=${1:-test2}
 HELM_HOME=${HELM_HOME:-~/.helm}
 
-echo "${magenta}installing helm client cert for cluster $cluster${reset}"
+echo "${magenta}[i] installing helm client cert for cluster $cluster${reset}"
 
 # create temporary workspace to clone Git repos into
 mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
+trap "rm -rf $mytmpdir" EXIT
 cd $mytmpdir
 
+echo "${magenta}[i] retrieving ca.pem from AWS secrets manager${reset}"
 aws secretsmanager get-secret-value --secret-id $cluster/flux/ca.pem | jq '.SecretString' | sed -e 's/"//g' \
 -e 's/\\n/\
 /g' >ca.pem
-if [ $# -ne 0 ]
+if [ $? -ne 0 ]
 then
+	echo "${red}[x] failed to retrieve ca.pem from AWS secrets manager${reset}"
 	exit 1
 fi
 
+echo "${magenta}[i] retrieving ca-key.pem from AWS secrets manager${reset}"
 aws secretsmanager get-secret-value --secret-id $cluster/flux/ca-key.pem | jq '.SecretString' | sed -e 's/"//g'  \
 -e 's/\\n/\
 /g' >ca-key.pem
-if [ $# -ne 0 ]
+if [ $? -ne 0 ]
 then
+	echo "${red}[x] failed to retrieve ca-key.pem from AWS secrets manager${reset}"
 	exit 1
 fi
 
+HELM_CLUSTER_HOME=${HELM_HOME}/clusters/$cluster
+
+echo "${magenta}[i] creating cert in ${HELM_CLUSTER_HOME}${reset}"
 export TILLER_HOSTNAME=tiller-deploy.flux
 export USER_NAME=helm-client
 echo '{"signing":{"default":{"expiry":"43800h","usages":["signing","key encipherment","server auth","client auth"]}}}' > ca-config.json
@@ -45,7 +53,6 @@ echo '{"CN":"'$USER_NAME'","hosts":[""],"key":{"algo":"rsa","size":4096}}' | cfs
   -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem \
   -hostname="$TILLER_HOSTNAME" - | cfssljson -bare $USER_NAME
 
-HELM_CLUSTER_HOME=${HELM_HOME}/clusters/$cluster
 
 rm -rf $HELM_CLUSTER_HOME
 mkdir -p $HELM_CLUSTER_HOME
@@ -55,7 +62,6 @@ cp ca.pem $HELM_CLUSTER_HOME/ca.pem
 rm -f $HELM_HOME/{cert.pem,key.pem,ca.pem}
 cp $HELM_CLUSTER_HOME/{cert.pem,key.pem,ca.pem} $HELM_HOME
 
-echo "${magenta}created helm client certs in $HELM_CLUSTER_HOME${reset}"
 
 if [ "$TILLER_NAMESPACE" != "flux"  -o "$HELM_TLS_ENABLE" != "true" ]
 then
@@ -65,3 +71,5 @@ then
 fi
 
 rm -rf $mytmpdir
+
+echo "${magenta}[i] done${reset}"

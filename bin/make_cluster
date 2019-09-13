@@ -38,6 +38,7 @@ remotebase=$(basename $remote)
 
 # create temporary workspace to clone Git repos into
 mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
+trap "rm -rf $mytmpdir" EXIT
 cd $mytmpdir
 
 # clone config repo
@@ -47,16 +48,41 @@ CONFIG_DIR=$(realpath .)
 
 CLUSTER_NAME=$(yq r $CONFIG_DIR/values.yaml cluster.metadata.name)
 IAM_USERS=$(yq r $CONFIG_DIR/values.yaml aws.iamUsers | sed -e "s/- //")
+kubeconfig=$(yq r $CONFIG_DIR/values.yaml kubeconfig | sed -e "s/- //")
+
+if [ -z "$kubeconfig" -o  "$kubeconfig" == "null" ]
+then
+    kubeconfig=$(realpath ~/.kube/config)
+fi
 
 # extract values to use for templating
 
 # create cluster, install flux into cluster
 echo "${magenta}creating cluster $CLUSTER_NAME${reset}"
-eksctl create cluster -f $CONFIG_DIR/config.yaml
+
+localKubeConfig=$(realpath ./kubeconfig.yaml)
+eksctl create cluster -f $CONFIG_DIR/config.yaml --kubeconfig $localKubeConfig
 if [ $? -ne 0 ]
 then
 	exit 1
 fi
+
+if [ "$kubeconfig" != "$localKubeConfig" ]
+then
+    if [ -f $kubeconfig ]
+    then
+        echo "${magenta}[i] adding kubeconfig to $kubeconfig"
+        KUBECONFIG=$kubeconfig:$localKubeConfig kubectl config view --flatten >updated.yaml
+        mv updated.yaml $kubeconfig
+    else
+        mkdir -p $(dirname $kubeconfig)
+        echo "${magenta}[i] creating $kubeconfig" 
+        cp $localKubeConfig $kubeconfig
+    fi
+fi
+
+git commit -am "Added kubeconfig file."
+git push
 
 GROUP=system:masters
 

@@ -14,7 +14,7 @@ REMOTE_REPO=${1:-$REMOTE_REPO}
 
 if [ -z "$REMOTE_REPO" ]
 then
-        echo "${red}must provide REMOTE_REPO${reset}"
+        echo "${red}[x] must provide REMOTE_REPO${reset}"
         exit 1
 fi
 
@@ -27,10 +27,9 @@ fi
 
 if [ -z "$GITHUB_TOKEN" ]
 then
-        echo "${red}\$GITHUB_TOKEN required.${reset}"
+        echo "${red}[x] \$GITHUB_TOKEN required.${reset}"
         exit
 fi
-
 
 go get github.com/subfuzion/envtpl/...
 
@@ -38,6 +37,7 @@ remotebase=$(basename $remote)
 
 # create temporary workspace to clone Git repos into
 mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
+trap "rm -rf $mytmpdir" EXIT
 cd $mytmpdir
 
 # clone quickstart
@@ -54,23 +54,55 @@ git clone $remote
 cd $remotebase
 CONFIG_DIR=$(realpath .)
 
+if [ ! -f values.yaml ]
+then
+	echo "${red}[x] No values.yaml file.  Create one with make_values.${reset}"
+	exit 1
+fi
+
+# reset config directory
+mv values.yaml  $mytmpdir/
+if [ $(ls | wc -l) -ne 0 ]
+then
+	echo "${red}WARNING: will remove prior contents (except values.yaml)?${reset}"
+	read -p "${red}Are you sure?${reset} " -n 1 -r
+	if [[ ! $REPLY =~ ^[Yy]$ ]]
+	then
+    		exit 1
+	fi
+	echo
+	echo "${magenta}[i] resetting config repo${reset}"
+	rm -rf pkgs
+fi
+mv $mytmpdir/values.yaml .
 
 # extract values to use for templating
 export ClusterName=$(yq r values.yaml cluster.metadata.name)
 export Region=$(yq r values.yaml cluster.metadata.region)
 export config=$(yq r values.yaml -j)
 
-echo "${magenta}creating config for cluster $ClusterName in repo $remote${reset}"
+echo "${magenta}[i] creating config for cluster $ClusterName in repo $remote${reset}"
 
 # run template processor to create non-Tidepool services
 cd $QUICKSTART_DIR
-for dir in base namespaces
+
+mkdir -p $CONFIG_DIR/external-secrets
+dirs=""
+for dir in $(ls pkgs)
+do
+	enabled=$(yq r values.yaml pkgs.$dir.enabled)
+	if [ "$enabled" == "true" ]
+	then
+		dirs="${dirs} pkgs/$dir"
+        fi
+done
+echo "${magenta}[i] creating namespaces and enabled packages${reset}"
+for dir in namespaces $dirs
 do
   for file in $(find $dir -type f -print)
   do
 	echo $file
 	mkdir -p $CONFIG_DIR/$(dirname $file)
-	mkdir -p $CONFIG_DIR/external-secrets
 	if [ "${file: -5}" == ".tmpl" ]
 	then
 		envtpl $file >$CONFIG_DIR/${file%.tmpl}
@@ -87,8 +119,10 @@ do
   done
 done
 
+echo "${magenta}[i] creating eksctl config file${reset}"
 jsonnet --tla-code config="$config" ${QUICKSTART_DIR}/eksctl/cluster_config.jsonnet | yq r - > $CONFIG_DIR/config.yaml
 
+echo "${magenta}[i] creating tidepool environments${reset}"
 # create Tidepool environments
 environments=$(yq r values.yaml environments | sed -e "/^  .*/d" -e s/:.*//)
 for env in $environments
@@ -106,6 +140,7 @@ do
 	done
 done
 
+echo "${magenta}[i] committing changes${reset}"
 # commit changes to repo
 cd $CONFIG_DIR
 git add .
@@ -116,3 +151,4 @@ cd /
 # clean up
 rm -rf $mytmpdir
 
+echo "${magenta}[i] done${reset}"
