@@ -48,27 +48,41 @@ CONFIG_DIR=$(realpath .)
 
 CLUSTER_NAME=$(yq r $CONFIG_DIR/values.yaml cluster.metadata.name)
 IAM_USERS=$(yq r $CONFIG_DIR/values.yaml aws.iamUsers | sed -e "s/- //")
+kubeconfig=$(yq r $CONFIG_DIR/values.yaml kubeconfig | sed -e "s/- //")
+
+if [ -z "$kubeconfig" -o  "$kubeconfig" == "null" ]
+then
+    kubeconfig=$(realpath ~/.kube/config)
+fi
 
 # extract values to use for templating
 
 # create cluster, install flux into cluster
 echo "${magenta}creating cluster $CLUSTER_NAME${reset}"
-eksctl create cluster -f $CONFIG_DIR/config.yaml --kubeconfig ./kubeconfig.yaml
+
+localKubeConfig=$(realpath ./kubeconfig.yaml)
+eksctl create cluster -f $CONFIG_DIR/config.yaml --kubeconfig $localKubeConfig
 if [ $? -ne 0 ]
 then
 	exit 1
 fi
 
-if [ -f ~/.kube/config ]
+if [ "$kubeconfig" != "$localKubeConfig" ]
 then
-    echo "${magenta}[i] adding kubeconfig to ~/.kube/config"
-    KUBECONFIG=~/.kube/config:./kubeconfig.yaml kubectl config view --flatten >updated.yaml
-    mv updated.yaml ~/.kube/config
-else
-    mkdir -p ~/.kube
-    echo "${magenta}[i] creating ~/.kube/config"
-    cp ./kubeconfig ~/.kube/config
+    if [ -f $kubeconfig ]
+    then
+        echo "${magenta}[i] adding kubeconfig to $kubeconfig"
+        KUBECONFIG=$kubeconfig:$localKubeConfig kubectl config view --flatten >updated.yaml
+        mv updated.yaml $kubeconfig
+    else
+        mkdir -p $(dirname $kubeconfig)
+        echo "${magenta}[i] creating $kubeconfig" 
+        cp $localKubeConfig $kubeconfig
+    fi
 fi
+
+git commit -am "Added kubeconfig file."
+git push
 
 GROUP=system:masters
 

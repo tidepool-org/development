@@ -596,63 +596,121 @@ You may view a secret stored in AWS Secrets Manager using the helper `get_extern
   - `${NAMESPACE}` is either a) for shared services, the name of the shared service or b) for per environment services, the name of the ${ENVIRONMENT}
   - `${CLUSTER_NAME}` is the name of the cluster
 
-## Create Your Amazon EKS Cluster
+## Create Your Configuration 
 
-To create an Amazon EKS cluster, you will need an AWS account and proper authority (IAM policy) to allow you to do so.
-
-### Prepare Cluster Configuration File
-
-We use the `eksctl` cli tool to create EKS clusters. This tool has an option to provide a single cluster configuration file
-to configure your cluster.  We use that approach.  In the file `${CONFIG_REPO}/clusters/${CLUSTER_NAME}/config.yaml` we have a description of the desired cluster. Here is an example:
+```bash
+  $ make_values
+  [i] creating initial values file for repo git@github.com:tidepool-org/cluster-test1
+  Cloning into 'tidepool-quickstart'...
+  remote: Enumerating objects: 300, done.
+  remote: Counting objects: 100% (300/300), done.
+  remote: Compressing objects: 100% (225/225), done.
+  remote: Total 300 (delta 137), reused 221 (delta 69), pack-reused 0
+  Receiving objects: 100% (300/300), 85.16 KiB | 2.94 MiB/s, done.
+  Resolving deltas: 100% (137/137), done.
+  Cloning into 'cluster-test1'...
+  remote: Enumerating objects: 1003, done.
+  remote: Total 1003 (delta 0), reused 0 (delta 0), pack-reused 1003
+  Receiving objects: 100% (1003/1003), 244.05 KiB | 96.00 KiB/s, done.
+  Resolving deltas: 100% (541/541), done.
+  WARNING: will overwrite prior contents of values.yaml?
+  Are you sure? y[i] creating values.yaml?
+  On branch master
+  Your branch is up to date with 'origin/master'.
   
-  ```yaml
-  apiVersion: eksctl.io/v1alpha5
-  kind: ClusterConfig
-  
+  nothing to commit, working tree clean
+  Everything up-to-date
+  [i] done
+```
+
+Your initial  values.yaml looks like this:
+```yaml
+logLevel: debug                               # the default log level for all services
+email: derrick@tidepool.org                   # cluster admin email address
+
+aws:
+  accountNumber: 118346523422
+  iamUsers:
+  - derrickburns-cli
+  - lennartgoedhard-cli
+  - benderr-cli
+  - jamesraby-cli
+  - haroldbernard-cli
+
+kubeconfig: "~/.kube/config"                 # place to put KUBECONFIG
+
+cluster:
   metadata:
-    name: development
+    name: test1
     region: us-west-2
-    version: "1.13"
-  
   vpc:
-    cidr: "10.49.0.0/16"
-  
+    cidr: "10.47.0.0/16"                      # CIDR of AWS VPC
   nodeGroups:
-    - name: ng-1
-      instanceType: m5.large
-      desiredCapacity: 3
-      minSize: 1
-      maxSize: 5
-      labels:
-        kiam-server: "false"
-      tags:
-        k8s.io/cluster-autoscaler/enabled: "true"
-        k8s.io/cluster-autoscaler/development: "true"
-    - name: ng-kiam
-      instanceType: t3.medium
-      desiredCapacity: 1
-      labels:
-        kiam-server: "true"
-      taints:
-        kiam-server: "false:NoExecute"
-  ```
+  - instanceType: "m4.large"                  # AWS instance type for workers
+    desiredCapacity: 4                        # initial capacity of auto scaling group of workers
+    minSize: 1                                # minimum size of auto scaling group of workers
+    maxSize: 10                               # maximum size of auto scaling group of workers
+    name: ng
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        certManager: true
+        externalDNS: true
 
-Edit this file before creating a cluster.
+pkgs:
+  amazon-cloudwatch:
+    enabled: true
+  external-dns:
+    enabled: true
+  gloo:
+    enabled: true
+  gloo-crds:
+    enabled: true
+  prometheus-operator:
+    enabled: true
+  certmanager:
+    enabled: true
+  cluster-autoscaler:
+    enabled: true
+  external-secrets:
+    enabled: true
+  reloader:
+    enabled: true
+  datadog:
+    enabled: false
+  flux:
+    enabled: true
+  fluxcloud:
+    enabled: false
+  metrics-server:
+    enabled: true
+  sumologic:
+    enabled: false
 
-  ```bash
-  $ export CONFIG_FILE=${CONFIG_REPO}/clusters/${CLUSTER_NAME}/config.yaml
-  $ ${EDITOR} $CONFIG_FILE
-  ```
-
-#### Cluster Name
-
-At minimum, you must change:
-1. the value of the field `metadata.name` to be the value of `${CLUSTER_NAME}` and 
-1. the tag `k8s.io/cluster-autoscaler/development` to `k8s.io/cluster-autoscaler/${CLUSTER_NAME}`.
-
-The former indicates to the `eksctl` how to name cluster resources in CloudFormation.
-
-The latter indicates to the cluster auto-scaler which nodes to consider when scaling this cluster.  See details below.
+environments:
+  qa2:
+    hpa:
+      enabled: true
+    nosqlclient:
+      enabled: true
+    mongodb:
+      enabled: true
+    gitops:
+      branch: develop
+    buckets: {}
+      #data: tidepool-test-qa2-data
+      #asset: tidepool-test-qa2-asset
+    gateway:
+      default:
+        protocol: http
+      http:
+        enabled: true
+        dnsNames:
+        - localhost
+      https:
+        enabled: false
+        dnsNames: []
+```
 
 #### CIDR
 
@@ -672,134 +730,372 @@ At the time of this writing, Tidepool hosts its own Mongo servers in 4 different
 | dev | 10.48.0.0/16 |
 | int | 10.64.0.0/16 |
 
-If you connect to one of these environments for you MongoDB, you must avoid conflicting with it.  
+If you connect to one of these environments for you MongoDB, you must avoid conflicting with it. 
 
-#### Create Cluster
-After you have modified the `config.yaml` file, you are ready to create your K8s cluster.
+## Create Your Amazon EKS Cluster
 
-You may set the `$KUBECONFIG` environment variable to select the destination.  Otherwise, by convention, the file `$CONFIG_REPO/clusters/$CLUSTER_NAME/kubeconfig.yaml` will be used.
+To create an Amazon EKS cluster, you will need an AWS account and proper authority (IAM policy) to allow you to do so.
 
-Also, export the absolute path to the configuration file:
+### A Look at the Cluster Config File
+
+We use the `eksctl` cli tool to create EKS clusters. This tool has an option to provide a single cluster configuration file
+to configure your cluster.  We use that approach. Our `make_config` helper generates a `config.yaml` file that looks like this:
+  
+  ```yaml
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: test1
+  region: us-west-2
+  version: "1.14"
+nodeGroups:
+- desiredCapacity: 4
+  iam:
+    withAddonPolicies:
+      autoScaler: true
+      certManager: true
+      externalDNS: true
+  instanceType: m4.large
+  maxSize: 10
+  minSize: 1
+  name: ng
+  tags:
+    k8s.io/cluster-autoscaler/enabled: "true"
+    k8s.io/cluster-autoscaler/test1: "true"
+vpc:
+  cidr: 10.47.0.0/16
+iam:
+  withOIDC: true
+  serviceAccounts:
+  - attachPolicy:
+      Statement:
+      - Action:
+        - autoscaling:DescribeAutoScalingGroups
+        - autoscaling:DescribeAutoScalingInstances
+        - autoscaling:DescribeLaunchConfigurations
+        - autoscaling:DescribeTags
+        - autoscaling:SetDesiredCapacity
+        - autoscaling:TerminateInstanceInAutoScalingGroup
+        Effect: Allow
+        Resource: '*'
+      Version: "2012-10-17"
+    metadata:
+      labels:
+        aws-usage: cluster-ops
+      name: cluster-autoscaler
+      namespace: kube-system
+  - attachPolicy:
+      Statement:
+      - Action:
+        - route53:ChangeResourceRecordSets
+        Effect: Allow
+        Resource: arn:aws:route53:::hostedzone/*
+      - Action:
+        - route53:GetChange
+        - route53:ListHostedZones
+        - route53:ListResourceRecordSets
+        - route53:ListHostedZonesByName
+        Effect: Allow
+        Resource: '*'
+      Version: "2012-10-17"
+    metadata:
+      labels:
+        aws-usage: certificate-management
+      name: certmanager
+      namespace: certmanager
+  - attachPolicy:
+      Statement:
+      - Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+        - logs:DescribeLogStreams
+        Effect: Allow
+        Resource: arn:aws:logs:*:*:*
+      Version: "2012-10-17"
+    metadata:
+      labels:
+        aws-usage: cloudwatch-logging
+      name: cloudwatch
+      namespace: amazon-cloudwatch
+  - attachPolicy:
+      Statement:
+      - Action:
+        - route53:ChangeResourceRecordSets
+        Effect: Allow
+        Resource: arn:aws:route53:::hostedzone/*
+      - Action:
+        - route53:GetChange
+        - route53:ListHostedZones
+        - route53:ListResourceRecordSets
+        - route53:ListHostedZonesByName
+        Effect: Allow
+        Resource: '*'
+      Version: "2012-10-17"
+    metadata:
+      labels:
+        aws-usage: DNS-alias-creation
+      name: external-dns
+      namespace: external-dns
+  - attachPolicy:
+      Statement:
+      - Action: secretsmanager:GetSecretValue
+        Effect: Allow
+        Resource: arn:aws:secretsmanager:us-west-2:118346523422:secret:test1/*
+      Version: "2012-10-17"
+    metadata:
+      labels:
+        aws-usage: secrets-management
+      name: external-secrets
+      namespace: external-secrets
+  - attachPolicy:
+      Statement:
+      - Action: s3:ListBucket
+        Effect: Allow
+       Resource: arn:aws:s3:::tidepool-test1-qa2-data/*
+      - Action:
+        - s3:GetObject
+        - s3:PutObject
+        - s3:DeleteObject
+        Effect: Allow
+        Resource: arn:aws:s3:::tidepool-test1-qa2-data/*
+      Version: "2012-10-17"
+    metadata:
+      labels:
+        aws-usage: blob-service
+      name: blob
+      namespace: qa2
+  - attachPolicy:
+      Statement:
+      - Action: s3:ListBucket
+        Effect: Allow
+        Resource: arn:aws:s3:::tidepool-test1-qa2-data/*
+      - Action:
+        - s3:GetObject
+        - s3:PutObject
+        - s3:DeleteObject
+        Effect: Allow
+        Resource: arn:aws:s3:::tidepool-test1-qa2-data/*
+      Version: "2012-10-17"
+    metadata:
+      labels:
+        aws-usage: image-service
+      name: image
+      namespace: qa2
+  - attachPolicy:
+      Statement:
+      - Action: s3:ListBucket
+        Effect: Allow
+        Resource: arn:aws:s3:::tidepool-test1-qa2-data/*
+      - Action:
+        - s3:GetObject
+        - s3:PutObject
+        - s3:DeleteObject
+        Effect: Allow
+        Resource: arn:aws:s3:::tidepool-test1-qa2-data/*
+      Version: "2012-10-17"
+    metadata:
+      labels:
+        aws-usage: jellyfish-service
+      name: jellyfish
+      namespace: qa2
+  - attachPolicy:
+      Statement:
+      - Action: s3:ListBucket
+        Effect: Allow
+        Resource: arn:aws:s3:::tidepool-test1-qa2-asset/*
+      - Action:
+        - s3:GetObject
+        Effect: Allow
+        Resource: arn:aws:s3:::tidepool-test1-qa2-asset/*
+      - Action: ses:*
+        Effect: Allow
+        Resource: '*'
+      Version: "2012-10-17"
+    metadata:
+      labels:
+        aws-usage: hydrophone-service
+      name: hydrophone
+      namespace: qa2
+
+  ```
+
+## Create Cluster
 
   ```bash
-  $ create_cluster 
+  $ make_cluster 
   ```
-  > FIXME: We need to document the required IAM Policy to be able to run `create_cluster`.
-  > FIXME: We may need some instructions (could be in a separate document), about what to do when `create_cluster` fails. I had to go and manually delete my CF Stack to try again. I got the policy instructions from https://github.com/weaveworks/eksctl/issues/204
+  > FIXME: We need to document the required IAM Policy to be able to run `make_cluster`.
+  > FIXME: We may need some instructions (could be in a separate document), about what to do when `make_cluster` fails. I had to go and manually delete my CF Stack to try again. I got the policy instructions from https://github.com/weaveworks/eksctl/issues/204
 
-You will see immediately see output similar to:
-
-  ```
-  [ℹ]  using region us-west-2
-  [ℹ]  setting availability zones to [us-west-2b us-west-2c us-west-2d]
-  [ℹ]  subnets for us-west-2b - public:10.49.0.0/19 private:10.49.96.0/19
-  [ℹ]  subnets for us-west-2c - public:10.49.32.0/19 private:10.49.128.0/19
-  [ℹ]  subnets for us-west-2d - public:10.49.64.0/19 private:10.49.160.0/19
-  [ℹ]  nodegroup "ng-1" will use "ami-089d3b6350c1769a6" [AmazonLinux2/1.13]
-  [ℹ]  using SSH public key "/Users/derrickburns/.saws-tidepool-derrickburns.pub" as "eksctl-development-nodegroup-ng-1-5a:13:38:5e:a3:a6:20:54:78:52:90:65:02:da:38"
-  [ℹ]  nodegroup "ng-kiam" will use "ami-089d3b6350c1769a6" [AmazonLinux2/1.13]
-  [ℹ]  using SSH public key "/Users/derrickburns/.saws-tidepool-derrickburns.pub" as "eksctl-development-nodegroup-ng-kiam-5a:13:38:5e:a3:a6:20:54:78:52:90:65:02:9a:38"
-  [ℹ]  creating EKS cluster "development" in "us-west-2" region
-  [ℹ]  2 nodegroups (ng-1, ng-kiam) were included
-  [ℹ]  will create a CloudFormation stack for cluster itself and 2 nodegrostack(s)
-  [ℹ]  if you encounter any issues, check CloudFormation console or try 'ekscutils describe-stacks --region=us-west-2 --name=development'
-  [ℹ]  2 sequential tasks: { create cluster control plane "development",parallel sub-tasks: { create nodegroup "ng-1", create nodegro"ng-kiam" } }
-  [ℹ]  building cluster stack "eksctl-development-cluster"
-  [ℹ]  deploying stack "eksctl-development-cluster"
-  ```
-
-  Then, there will be a 5-10 `FIXME: (seconds|minutes)` waiting period for AWS to spin up the EKS cluster:
+You will see see output similar to:
 
   ```
-  [ℹ]  building nodegroup stack "eksctl-development-nodegroup-ng-1"
-  [ℹ]  building nodegroup stack "eksctl-development-nodegroup-ng-kiam"
-  [ℹ]  --nodes-min=3 was set automatically for nodegroup ng-1
-  [ℹ]  --nodes-max=3 was set automatically for nodegroup ng-1
-  [ℹ]  deploying stack "eksctl-development-nodegroup-ng-1"
-  [ℹ]  deploying stack "eksctl-development-nodegroup-ng-kiam"
+Cloning into 'cluster-test1'...
+remote: Enumerating objects: 1003, done.
+remote: Total 1003 (delta 0), reused 0 (delta 0), pack-reused 1003
+Receiving objects: 100% (1003/1003), 244.05 KiB | 2.60 MiB/s, done.
+Resolving deltas: 100% (541/541), done.
+creating cluster test1
+[ℹ]  using region us-west-2
+[ℹ]  setting availability zones to [us-west-2c us-west-2d us-west-2b]
+[ℹ]  subnets for us-west-2c - public:10.47.0.0/19 private:10.47.96.0/19
+[ℹ]  subnets for us-west-2d - public:10.47.32.0/19 private:10.47.128.0/19
+[ℹ]  subnets for us-west-2b - public:10.47.64.0/19 private:10.47.160.0/19
+[ℹ]  nodegroup "ng" will use "ami-076c743acc3ec4159" [AmazonLinux2/1.14]
+[ℹ]  using Kubernetes version 1.14
+[ℹ]  creating EKS cluster "test1" in "us-west-2" region
+[ℹ]  1 nodegroup (ng) was included (based on the include/exclude rules)
+[ℹ]  will create a CloudFormation stack for cluster itself and 1 nodegroup stack(s)
+[ℹ]  if you encounter any issues, check CloudFormation console or try 'eksctl utils describe-stacks --region=us-west-2 --name=test1'
+[ℹ]  CloudWatch logging will not be enabled for cluster "test1" in "us-west-2"
+[ℹ]  you can enable it with 'eksctl utils update-cluster-logging --region=us-west-2 --name=test1'
+[ℹ]  3 sequential tasks: { create cluster control plane "test1", create nodegroup "ng", 2 sequential sub-tasks: { associate IAM OIDC provider, 9 parallel sub-tasks: { 2 sequential sub-tasks: { create IAM role for serviceaccount "kube-system/cluster-autoscaler", create serviceaccount "kube-system/cluster-autoscaler" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "certmanager/certmanager", create serviceaccount "certmanager/certmanager" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "amazon-cloudwatch/cloudwatch", create serviceaccount "amazon-cloudwatch/cloudwatch" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "external-dns/external-dns", create serviceaccount "external-dns/external-dns" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "external-secrets/external-secrets", create serviceaccount "external-secrets/external-secrets" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "qa2/blob", create serviceaccount "qa2/blob" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "qa2/image", create serviceaccount "qa2/image" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "qa2/jellyfish", create serviceaccount "qa2/jellyfish" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "qa2/hydrophone", create serviceaccount "qa2/hydrophone" } } } }
+[ℹ]  building cluster stack "eksctl-test1-cluster"
+[ℹ]  deploying stack "eksctl-test1-cluster"
+[ℹ]  building nodegroup stack "eksctl-test1-nodegroup-ng"
+[ℹ]  deploying stack "eksctl-test1-nodegroup-ng"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-certmanager-certmanager"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-qa2-blob"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-qa2-hydrophone"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-external-secrets-external-secrets"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-amazon-cloudwatch-cloudwatch"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-qa2-image"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-qa2-jellyfish"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-kube-system-cluster-autoscaler"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-external-dns-external-dns"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-qa2-hydrophone"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-certmanager-certmanager"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-qa2-jellyfish"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-qa2-image"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-external-dns-external-dns"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-amazon-cloudwatch-cloudwatch"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-qa2-blob"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-external-secrets-external-secrets"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-kube-system-cluster-autoscaler"
+[ℹ]  created namespace "amazon-cloudwatch"
+[ℹ]  created serviceaccount "amazon-cloudwatch/cloudwatch"
+[ℹ]  created namespace "external-secrets"
+[ℹ]  created serviceaccount "external-secrets/external-secrets"
+[ℹ]  created namespace "qa2"
+[ℹ]  created serviceaccount "qa2/blob"
+[ℹ]  created serviceaccount "kube-system/cluster-autoscaler"
+[ℹ]  created namespace "certmanager"
+[ℹ]  created serviceaccount "certmanager/certmanager"
+[ℹ]  created serviceaccount "qa2/jellyfish"
+[ℹ]  created serviceaccount "qa2/image"
+[ℹ]  created serviceaccount "qa2/hydrophone"
+[ℹ]  created namespace "external-dns"
+[ℹ]  created serviceaccount "external-dns/external-dns"
+[✔]  all EKS cluster resource for "test1" had been created
+[✔]  saved kubeconfig as "/private/var/folders/m1/9nxmym25533_5khp4gsv89fc0000gn/T/tmp.jmAqKFfu/cluster-test1/kubeconfig.yaml"
+[ℹ]  adding role "arn:aws:iam::118346523422:role/eksctl-test1-nodegroup-ng-NodeInstanceRole-YF0MFBO66OAQ" to auth ConfigMap
+[ℹ]  nodegroup "ng" has 0 node(s)
+[ℹ]  waiting for at least 1 node(s) to become ready in "ng"
+[ℹ]  nodegroup "ng" has 4 node(s)
+[ℹ]  node "ip-10-47-0-70.us-west-2.compute.internal" is ready
+[ℹ]  node "ip-10-47-5-129.us-west-2.compute.internal" is not ready
+[ℹ]  node "ip-10-47-72-154.us-west-2.compute.internal" is not ready
+[ℹ]  node "ip-10-47-83-190.us-west-2.compute.internal" is not ready
+[ℹ]  kubectl command should work with "/private/var/folders/m1/9nxmym25533_5khp4gsv89fc0000gn/T/tmp.jmAqKFfu/cluster-test1/kubeconfig.yaml", try 'kubectl --kubeconfig=/private/var/folders/m1/9nxmym25533_5khp4gsv89fc0000gn/T/tmp.jmAqKFfu/cluster-test1/kubeconfig.yaml get nodes'
+[✔]  EKS cluster "test1" in "us-west-2" region is ready
   ```
 
-  Finally,
 
-  ```
-  [✔]  all EKS cluster resource for "development" had been created
-  [✔]  saved kubeconfig as "kubeconfig.yaml"
-  [ℹ]  adding role "arn:aws:iam::${AWS_ACCOUNT}:role/eksctl-development-nodegroup-ng-1-NodeInstanceRole-1BSR58IZJYPTN" to auth ConfigMap
-  [ℹ]  nodegroup "ng-1" has 0 node(s)
-  [ℹ]  waiting for at least 3 node(s) to become ready in "ng-1"
-  [ℹ]  nodegroup "ng-1" has 3 node(s)
-  [ℹ]  node "ip-10-49-21-209.us-west-2.compute.internal" is ready
-  [ℹ]  node "ip-10-49-48-225.us-west-2.compute.internal" is ready
-  [ℹ]  node "ip-10-49-85-86.us-west-2.compute.internal" is ready
-  [ℹ]  adding role "arn:aws:iam::${AWS_ACCOUNT}:role/eksctl-development-nodegroup-ng-k-NodeInstanceRole-1X6ALBSVX3O5T" to auth ConfigMap
-  [ℹ]  nodegroup "ng-kiam" has 0 node(s)
-  [ℹ]  waiting for at least 1 node(s) to become ready in "ng-kiam"
-  [ℹ]  nodegroup "ng-kiam" has 1 node(s)
-  [ℹ]  node "ip-10-49-7-216.us-west-2.compute.internal" is ready
-  [ℹ]  kubectl command should work with "kubeconfig.yaml", try 'kubectl      --kubeconfig=kubeconfig.yaml get nodes'
-  [✔]  EKS cluster "development" in "us-west-2" region is ready
-  ```
+## Create Random Secrets
 
-#### Export KUBECONFIG
+```bash
+  $ make_random_secrets
+  Cloning into 'tidepool-quickstart'...
+  remote: Enumerating objects: 303, done.
+  remote: Counting objects: 100% (303/303), done.
+  remote: Compressing objects: 100% (227/227), done.
+  remote: Total 303 (delta 138), reused 224 (delta 70), pack-reused 0
+  Receiving objects: 100% (303/303), 85.55 KiB | 695.00 KiB/s, done.
+  Resolving deltas: 100% (138/138), done.
+  Cloning into 'development'...
+  remote: Enumerating objects: 35, done.
+  remote: Counting objects: 100% (35/35), done.
+  remote: Compressing objects: 100% (29/29), done.
+  remote: Total 13045 (delta 12), reused 14 (delta 6), pack-reused 13010
+  Receiving objects: 100% (13045/13045), 12.87 MiB | 11.97 MiB/s, done.
+  Resolving deltas: 100% (9905/9905), done.
+  Branch 'k8s' set up to track remote branch 'k8s' from 'origin'.
+  Switched to a new branch 'k8s'
+  Cloning into 'cluster-test1'...
+  remote: Enumerating objects: 29, done.
+  remote: Counting objects: 100% (29/29), done.
+  remote: Compressing objects: 100% (21/21), done.
+  remote: Total 1031 (delta 14), reused 22 (delta 8), pack-reused 1002
+  Receiving objects: 100% (1031/1031), 252.47 KiB | 1.09 MiB/s, done.
+  Resolving deltas: 100% (555/555), done.
+  [i] creating random secrets for cluster test1 in repo git@github.com:tidepool-org/cluster-test1
+  [i] creating secret fluxcloud-secret.yaml
+  secret/slack configured
+  [i] creating secret datadog-secret.yaml
+  secret/datadog configured
+  [i] creating secret sumologic-secret.yaml
+  secret/sumologic configured
+  [i] creating secret qa2/dexcom-secret.yaml
+  secret/dexcom configured
+  [i] creating secret qa2/auth-secret.yaml
+  secret/auth configured
+  [i] creating secret qa2/notification-secret.yaml
+  secret/notification configured
+  [i] creating secret qa2/server-secret.yaml
+  secret/server configured
+  [i] creating secret qa2/user-secret.yaml
+  secret/user configured
+  [i] creating secret qa2/image-secret.yaml
+  secret/image configured
+  [i] creating secret qa2/mailchimp-secret.yaml
+  secret/mailchimp configured
+  [i] creating secret qa2/shoreline-secret.yaml
+  secret/shoreline configured
+  [i] creating secret qa2/task-secret.yaml
+  secret/task configured
+  [i] creating secret qa2/kissmetrics-secret.yaml
+  secret/kissmetrics configured
+  [i] creating secret qa2/mongo-secret.yaml
+  secret/mongo configured
+  [i] creating secret qa2/carelink-secret.yaml
+  secret/jellyfish configured
+  [i] creating secret qa2/export-secret.yaml
+  secret/export configured
+  [i] creating secret qa2/data-secret.yaml
+  secret/data configured
+  [i] creating secret qa2/userdata-secret.yaml
+  secret/userdata configured
+  [i] creating secret qa2/blob-secret.yaml
+  secret/blob configured
+  [i] done
+```
+#### Kubeconfig
 
-This will create a `kubeconfig.yaml` file. Set the `KUBECONFIG` environment value to the absolute path of that file:
-
-  ```bash
-  $ export KUBECONFIG=$(realpath ./kubeconfig.yaml)
-  ```
+This will create merge in a new K8s kubeconfig into the file named in your values.yaml file under the key `kubeconfig`.
 
 Verify that you can communicate with the cluster by running:
 
   ```bash
   $ kubectl get all --all-namespaces
   ```
-If you get an error, confirm that the value of `$KUBECONFIG` is correct.
+If you get an error, confirm that the value of `$KUBECONFIG` is set to the same values as in your `values.yaml` file.
 
-#### AWS CloudFormation
+#### AWS CloudFormation 
 
 Under the covers, `eksctl` uses Amazon CloudFormation to create resources in AWS.   Observe the mention of the stacks created:
    ```
    eksctl-${CLUSTER_NAME}-cluster
-   eksctl-${CLUSTER_NAME}-nodegroup-ng-1
-   eksctl-${CLUSTER_NAME}-nodegroup-ng-kiam
+   eksctl-${CLUSTER_NAME}-nodegroup-ng
+   ...
    ```
 We reference these AWS CloudFormation resources later when we create additional IAM roles and policies.
 
-### Create Kubernetes Users
+### IAM Master Users
 
-When you create your cluster with `eksctl`, it will be fully manageable by IAM identity, the identity that created it.  This will be the role returned from:
+Amazon EKS provides an integration between their identity management system (IAM) and the Kubernetes native identity system.  This allows one to associate a specific IAM user or role with a specific Kubernetes user.   You provide the name of the master users in the value `aws.iamUsers` of your `values.yaml` file.
 
-  ```bash
-  $ aws sts get-caller-identity
-  ```
-
-You may want to provide other members of your operations staff with Kubernetes identities and  `system:master` privileges.
-
-Amazon EKS provides an integration between their identity management system (IAM) and the Kubernetes native identity system.  This allows one to associate a specific IAM user or role with a specific Kubernetes user.   This correspondence is communicated to Kubernetes via a ConfigMap called `aws-auth` in the `kube-system` namespace, along with the Kubernetes privileges for each user.
-
-For your convenience, we provide a helper function  `authorize_users` to provide Kubernetes `system:master` privileges to your operations staff.  Simply run this tool with a list of IAM users and the helper will update the ConfigMap accordingly:
-
-  ```bash
-  $ IAM_USERS="${IAM_USERS}" authorize_users
-  ```
-
-  where 
-       
-  - `${IAM_USERS}` is a whitespace-separated list of the AWS IAM users whom you would like to provide Kubernetes `system:master` access to the cluster (in addition to the AWS user that creates the cluster).  By default, this value will be replaced with the CLI IAM identities of the Tidepool Operations staff.
-
-  This helper uses the environment variable `${AWS_ACCOUNT}` if it is defined.  In this way you can allow users from any AWS account access 
-  to access your cluster with full privileges if you desire.
-
-  If the environment variable is not set, then the helper will identify your AWS account number from the Kubernetes cluster.
-
-  You will see output similar to:
-
-  ```
-  [ℹ]  adding role "arn:aws:iam::${AWS_ACCOUNT}:user/lennartgoedhart-cli" to auth ConfigMap
-  [ℹ]  adding role "arn:aws:iam::${AWS_ACCOUNT}:user/benderr-cli" to auth ConfigMap
-  [ℹ]  adding role "arn:aws:iam::${AWS_ACCOUNT}:user/derrick-cli" to auth ConfigMap
-  [ℹ]  adding role "arn:aws:iam::${AWS_ACCOUNT}:user/mikeallgeier-cli" to auth ConfigMap
-  ```
+This correspondence is communicated to Kubernetes via a ConfigMap called `aws-auth` in the `kube-system` namespace, along with the Kubernetes privileges for each user.
 
 At the completion, verify the list of users:
 
@@ -849,36 +1145,7 @@ At the completion, verify the list of users:
   Events:  <none>
   ```
 
-### Deploy Tiller, the Helm server.
-
-The helm package manager allows you to install software to your cluster.  Helm version 2.X consists of a client side CLI and a server side service. You must install the server component, called Tiller.
-
-Use the helper function `install_tiller`:
-
-  ```bash
-  $ install_tiller
-  ```
-
-You should see output similar to:
-
-   ```
-   serviceaccount/tiller created
-   clusterrolebinding.rbac.authorization.k8s.io/tiller-cluster-rule created 
-   
-   $HELM_HOME has been configured at /Users/derrickburns/.helm.
-   
-   Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
-   
-   Please note: by default, Tiller is deployed with an insecure 'allow unauthenticated users' policy.
-
-   To prevent this, run `helm init` with the --tiller-tls-verify flag. For more information on securing your installation see: https://docs.helm.sh/ using_helm/#securing-your-helm-installation
-   ```
-
-## Configure Shared Services
-
-We use a number of open source Kubernetes services.  These services must be properly configured. In some cases, this configuration includes certain secrets that you must provide. In other cases, this configuration consists of values that you provide in a Kubernetes manifest file by way of Helm configuration values.
-
-### Prepare Flux Manifests
+### A Look at Flux Manifests
 
 In your cluster, you will run a number of Kubernetes services.  Some are services that are shared by all of your Tidepool environments.  Others are configured specifically for each Tidepool environment.
 
@@ -983,56 +1250,12 @@ You should see output similar to:
    customresourcedefinition.apiextensions.k8s.io/issuers.certmanager.k8s.io created
    customresourcedefinition.apiextensions.k8s.io/orders.certmanager.k8s.io created
    ```
-
-### Create IAM Roles for Your Shared Services
-
-Several of the services need to access or modify Amazon resources.  To do this, your services must have IAM roles with policies that authorize such actions. 
-
-An IAM role is associated with each node in your Kubernetes cluster. By default, a Kubernetes service gets the authority of the node on which it runs.  Moreover, any Kubernetes service can run on any node.  Therefore, in order to authorize a service to access your AWS resources, every node must have the union of all privileges needed. However, this violates the principle of least privilege.
-       
-Instead of relying on the default mechanism, we use the `kiam` service to associate IAM roles with specific services. With `kiam`, you simply annotate each pod with an IAM role that it needs, and you annotate the namespace to permit the assumption of those roles. 
-
-The `kiam` service itself needs permission to assume roles on behalf of your specific services.
-
-To make that process simple, we provide an Amazon CloudFormation template that creates all the IAM roles.  We name those roles following a convention
-that ensures that the roles created match the names used for those roles in the Helm templates.
-
-Create a CF stack named `eksctl-${CLUSTER_NAME}-roles` as follows.
-
-For your convenience, we provide a helper function to create the IAM roles.
-
-  ```bash
-  $ cluster_roles
-  ```
-
-You should see output similar to:
-  ```json
-  {
-     "StackId": "arn:aws:cloudformation:us-west-2:${AWS_ACCOUNT}:stack/eksctl-${CLUSTER_NAME}-roles/39c22a40-af63-11e9-b075-025219eb189a"
-  }
-  ```
-
-## Configure Your Tidepool Environments
-
-Above we configured the services shared by all Tidepool environments.  Now, you must configure each specific Tidepool Environment.
-
-To configure each Tidepool environment, you must provide:
-  * a single `HelmRelease` file that describes the parameters for the Tidepool Helm Chart;
-  * a namespace file to create the K8s namespace for the environment.
-
-All of these resources must exist in the namespace of the environment, ${ENVIRONMENT}`.
-
-In addition, you must create IAM roles that provide policies that allow access:
-  * the S3 buckets used and
-  * the Amazon SMS mail service.
  
-### Tidepool HelmRelease Manifest
+### A Look at the Tidepool HelmRelease Manifest
 
 To configure each Tidepool environment, you must provide a single `HelmRelease`.
 
-By convention, we call this file  `tidepool-helmrelease.yaml` and we store it a directory called ${CONFIG_REPO}/clusters/${CLUSTER_NAME}/flux/environments/${ENVIRONMENT}.
-
-However, if you have followed the standard `flux` installation, any location under the `flux` directory will suffice.
+By convention, we call this file  `tidepool-helmrelease.yaml` and we store it a directory called ${CONFIG_REPO}/environments/${ENVIRONMENT}.
   
 There are two parts of the `HelmRelease` that you need to understand in detail: `metadata` and `values`:
 
@@ -1082,7 +1305,6 @@ You must customize the `values` section for your particular needs.
 ##### S3 Storage
 
 Each Tidepool environment needs a place to persist non-Mongo data.  We store this data in [Amazon S3](https://aws.amazon.com/s3/).  
-
 
 You will use S3 for object storage instead of local file storage that is configured by default in the Tidepool helm chart. You must override the
 default local file storage as follows in your `HelmRelease` manifest:
@@ -1323,122 +1545,212 @@ have the namespace of the ${ENVIRONMENT} using a simple helper function.
   $ ENVIRONMENT=... change_namespace 
   ```
 
-## Install Services
 
-Congratulations, you are almost there.  You simply need to commit the Config repo, and enable GitOps.
 
-### Publish Your Config Repo 
+## Install Flux
 
-You are now ready to publish your config repo to a public Git repo such as GitHub. 
+You must install the Flux GitOps operator and the (Helm) Tiller server with `make_flux`.  
 
-If you have chosen to store your secrets outside of your repo, then you may make your config repo public.
+#### Tiller
 
-1. Your Git Server and Repo
+Flux communicatew with Tiller to install helm charts using TLS.  The Certificate Authority for this communication is generated on the fly. We store the CA credentials in AWS Secrets Manager so you can use a Helm client locally.  We create a TLS certificate for your
+Helm client and place it in your `${HELM_HOME:~/.helm}`.    
 
-   Now publish a repo of the configuration of your cluster in a publiclly assessible Git server such as GitHub: 
+### GitHub
 
-  ```bash
-  $ git commit -am "Initial configuration"
-  $ git remote add origin git@github.com:${GITHIB_ACCOUNT}/${CONFIG_REPO_NAME}.git
-  $ git push
-   ``` 
- 
-  where 
-  - `${GITHIB_ACCOUNT}` is your GitHub account name.  For Tidepool.org this is `tidepool-org`.
-  - `${CONFIG_REPO_NAME}` is the name of your config repo.  We follow the convention `$CONFIG_REPO_NAME=cluster-${CLUSTER_NAME}`.
+[Flux](https://flux-cd.readthedocs.io/en/latest/install/standalone-setup.html#add-an-ssh-deploy-key-to-the-repository) can update your config repo whenerer new images are published to your Docker image repot (e.g. DockerHub).  To do this, your Git server (e.g. GitHub) must be configured to allow flux permission to make changes.  You do this on GitHub by providing a [deploy key](https://developer.github.com/v3/guides/managing-deploy-keys/), which is the public key of your flux server. Export a value called `GITHUB_TOKEN` with permission [to write to the repo].
 
-You must name the remote `origin` as in the example above.  We use that name later when we identify your public repo from your local Git config.
-
-Now that you have written your configuration files and published them to GitHub, you may deploy the services to your cluster using GitOps via the Flux tool.
-
-### Enable GitOps
-
-We need to configure and install the GitOps controller.
-
-#### Install Flux
-
-The `HelmRelease` manifests that you edited above are inputs to the Flux controller. Flux installs the services named in those manifests.  We must install [flux](https://github.com/fluxcd/flux), in order for it to do so.
-
-For your convenience, we provide a helper function which you may execute from within the $CONFIG_REPO.  Note
-that the config repo *must* have a remote associated with it named `origin`.  This is the repo that Flux will monitor.
-
-If you have chosen to install the slack helper, then provide the argument `$FLUXCLOUD=fluxcloud` otherwise set `$FLUXCLOUD=`:
+### Example
 
    ```bash
-   $ cd $CONFIG_REPO
-   $ install_flux "$FLUXCLOUD"
-   ```
-   
-#### Install List of Helm Repositories
-
-Flux can install software from Git repos or Helm repos.  For the latter, you must provide the access credentials. None of the repositories that we use require authentication.  If they did, then we would need to modify this repo to access secrets.  For now, we simply compose a secrets file from plaintext using the helm chart in `${DEV_REPO}/charts/flux-repositories`.
- 
-  ```bash
-  $ helm install --name flux-repositories --namespace flux ${DEV_REPO}/charts/flux-repositories
-  ```
-
-#### Retrieve the flux public key.
-
-[Flux](https://flux-cd.readthedocs.io/en/latest/install/standalone-setup.html#add-an-ssh-deploy-key-to-the-repository) can update your config repo whenerer new images are published to your Docker image repot (e.g. DockerHub).  To do this, your Git server (e.g. GitHub) must be configured to allow flux permission to make changes.  You do this on GitHub by providing a [deploy key](https://developer.github.com/v3/guides/managing-deploy-keys/), which is the public key of your flux server.
-
-If you have placed your GitHub token in the proper environment variable,
-then you may push the new key as follows:
- 
-  ```bash
-  $ GITHUB_TOKEN=... push_deploy_key
-  ```
-
-You should see output similar to:
-      
-   ```
-   cluster-development
-   HTTP/1.1 201 Created
-   Date: Fri, 26 Jul 2019 07:12:56 GMT
-   Content-Type: application/json; charset=utf-8
-   Content-Length: 686
-   Server: GitHub.com
-   Status: 201 Created
-   X-RateLimit-Limit: 5000
-   X-RateLimit-Remaining: 4999
-   X-RateLimit-Reset: 1564128776
-   Cache-Control: private, max-age=60, s-maxage=60
-   Vary: Accept, Authorization, Cookie, X-GitHub-OTP
-   ETag: "e67e797431099e2fff922a3692c27108"
-   X-OAuth-Scopes: admin:public_key, repo
-   X-Accepted-OAuth-Scopes:
-   Location: https://api.github.com/repos/tidepool-org/cluster-development/keys/36570161
-   X-GitHub-Media-Type: github.v3; format=json
-   Access-Control-Expose-Headers: ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,   X-Poll-Interval, X-GitHub-Media-Type
-   Access-Control-Allow-Origin: *
-   Strict-Transport-Security: max-age=31536000; includeSubdomains; preload
-   X-Frame-Options: deny
-   X-Content-Type-Options: nosniff
-   X-XSS-Protection: 1; mode=block
-   Referrer-Policy: origin-when-cross-origin, strict-origin-when-cross-origin
-   Content-Security-Policy: default-src 'none'
-   Vary: Accept-Encoding
-   X-GitHub-Request-Id: DFDA:2FFA:A5ADC:D0492:5D3AA7F8
-   ```
-
-   ```json
-   {
-     "id": 36570161,
-     "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsOW54woRtFFv+xrtQKfSjWENsjy58tEJO/34aMD7PP3PY7FLIsGMfeKQvYGO3NMis5P0K0cbbzLpAJElC8CtCLj1o1WyE9A2u3DC+cu59/  xquwtibc9orfAVvXxahUc3BhdH6eZqn8yOrhPRpWZR7l55ucpP+5LGoq00C9803FEV3DC9XNcZoTVKOp4C0A3uKdiK0XJ4Q8ra85F2Yh/tcd8FUDapoWzFJDk1CpJi0IJ2d18cOswsFhih8GyVZt3lCpxHm/Zyo+4Y91d+N46D  +rgmnW4dzrjgRExWmwW0MdlFppebOIH+Dfsi4mwIOvdaUjYddtW0A8dc88xnb3QQP",
-     "url": "https://api.github.com/repos/tidepool-org/cluster-development/keys/36570161",
-     "title": "weave flux key for derrick@development.us-west-2.eksctl.io Fri Jul 26 00:12:56 PDT 2019",
-     "verified": true,
-     "created_at": "2019-07-26T07:12:56Z",
-     "read_only": false
-   }
-   ```
+     $ make_flux
+     Cloning into 'tidepool-quickstart'...
+     remote: Enumerating objects: 303, done.
+     remote: Counting objects: 100% (303/303), done.
+     remote: Compressing objects: 100% (227/227), done.
+     remote: Total 303 (delta 138), reused 224 (delta 70), pack-reused 0
+     Receiving objects: 100% (303/303), 85.55 KiB | 2.95 MiB/s, done.
+     Resolving deltas: 100% (138/138), done.
+     Cloning into 'cluster-test1'...
+     remote: Enumerating objects: 1003, done.
+     remote: Total 1003 (delta 0), reused 0 (delta 0), pack-reused 1003
+     Receiving objects: 100% (1003/1003), 244.05 KiB | 1.74 MiB/s, done.
+     Resolving deltas: 100% (541/541), done.
+     NAME    VERSION STATUS  CREATED                 VPC                     SUBNETS                                                                                                                                                      SECURITYGROUPS
+     test1   1.14    ACTIVE  2019-09-13T01:54:44Z    vpc-0e7ecff91e6db74e4   subnet-01ea9f26a8346827e,subnet-033bf2fdaf6b14e17,subnet-048c287b8348c5070,subnet-0546210ba442e5d03,     subnet-07db5f084b935aadd,subnet-0be0e45d834f18c4a   sg-0574016742342f753
+     [i] installing flux in cluster test1
+     [ℹ]  Generating public key infrastructure for the Helm Operator and Tiller
+     [ℹ]    this may take up to a minute, please be patient
+     [!]  Public key infrastructure files were written into directory "/var/folders/m1/9nxmym25533_5khp4gsv89fc0000gn/T/eksctl-helm-pki924701860"
+     [!]  please move the files into a safe place or delete them
+     [ℹ]  Generating manifests
+     [ℹ]  Cloning git@github.com:tidepool-org/cluster-test1.git
+     Cloning into '/var/folders/m1/9nxmym25533_5khp4gsv89fc0000gn/T/eksctl-install-flux-clone-487086515'...
+     remote: Enumerating objects: 1003, done.
+     remote: Total 1003 (delta 0), reused 0 (delta 0), pack-reused 1003
+     Receiving objects: 100% (1003/1003), 244.05 KiB | 2.28 MiB/s, done.
+     Resolving deltas: 100% (541/541), done.
+     Already on 'master'
+     Your branch is up to date with 'origin/master'.
+     [ℹ]  Writing Flux manifests
+     [ℹ]  created "Namespace/flux"
+     [ℹ]  Applying Helm TLS Secret(s)
+     [ℹ]  created "flux:Secret/tiller-secret"
+     [ℹ]  created "flux:Secret/flux-helm-tls-cert"
+     [!]  Note: certificate secrets aren't added to the Git repository for security reasons
+     [ℹ]  Applying manifests
+     [ℹ]  created "flux:Secret/flux-git-deploy"
+     [ℹ]  created "flux:Deployment.apps/memcached"
+     [ℹ]  created "flux:Service/memcached"
+     [ℹ]  created "flux:ServiceAccount/flux"
+     [ℹ]  created "ClusterRole.rbac.authorization.k8s.io/flux"
+     [ℹ]  created "ClusterRoleBinding.rbac.authorization.k8s.io/flux"
+     [ℹ]  created "flux:Deployment.apps/flux-helm-operator"
+     [ℹ]  created "flux:ConfigMap/flux-helm-tls-ca-config"
+     [ℹ]  created "flux:ServiceAccount/flux-helm-operator"
+     [ℹ]  created "ClusterRole.rbac.authorization.k8s.io/flux-helm-operator"
+     [ℹ]  created "ClusterRoleBinding.rbac.authorization.k8s.io/flux-helm-operator"
+     [ℹ]  created "CustomResourceDefinition.apiextensions.k8s.io/helmreleases.helm.fluxcd.io"
+     [ℹ]  created "flux:Deployment.extensions/tiller-deploy"
+     [ℹ]  created "flux:Service/tiller-deploy"
+     [ℹ]  created "flux:ServiceAccount/tiller"
+     [ℹ]  created "ClusterRoleBinding.rbac.authorization.k8s.io/tiller"
+     [ℹ]  created "flux:ServiceAccount/helm"
+     [ℹ]  created "flux:Role.rbac.authorization.k8s.io/tiller-user"
+     [ℹ]  created "kube-system:RoleBinding.rbac.authorization.k8s.io/tiller-user-binding"
+     [ℹ]  created "flux:Deployment.apps/flux"
+     [ℹ]  Waiting for Helm Operator to start
+     [ℹ]  Helm Operator started successfully
+     [ℹ]  see https://docs.fluxcd.io/projects/helm-operator for details on how to use the Helm Operator
+     [ℹ]  Waiting for Flux to start
+     [ℹ]  Flux started successfully
+     [ℹ]  see https://docs.fluxcd.io/projects/flux for details on how to use Flux
+     [ℹ]  Committing and pushing manifests to git@github.com:tidepool-org/cluster-test1.git
+     [master f87037d] Add Initial Flux configuration
+      3 files changed, 302 insertions(+), 38 deletions(-)
+      create mode 100644 flux/flux-deployment.yaml
+      create mode 100644 flux/helm-operator-deployment.yaml
+      rewrite flux/tiller-ca-cert-configmap.yaml (87%)
+     Enumerating objects: 7, done.
+     Counting objects: 100% (7/7), done.
+     Delta compression using up to 12 threads
+     Compressing objects: 100% (4/4), done.
+     Writing objects: 100% (4/4), 1.76 KiB | 1.76 MiB/s, done.
+     Total 4 (delta 2), reused 0 (delta 0)
+     remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+     To github.com:tidepool-org/cluster-test1.git
+        3b3a8ff..f87037d  master -> master
+     [ℹ]  Flux will only operate properly once it has write-access to the Git repository
+     [ℹ]  please configure git@github.com:tidepool-org/cluster-test1.git so that the following Flux SSH public key has write access to it
+     ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLsTE7W1LUMYQ0uWh9yxfbye2weREb6w4zlljFAKipSoapj0i+elOnRxV36lS21HyDY4JdPfjG9PuRnO/Em0o43zRB/yH8fawLCJky7KRE6b/     lPovyJ4xsLxDNwAJUxubNFn1qvsXe4BzprkjNn9MPiRN4GvwDTLviCO27YhecPQcmSwYARBF+Ul+/TLccY6OeGO7QP6mygJE     +9uhSlsjnN7WWMjlmgKyl3DvfMeM34o4f3nkN2puDueASpVAK2FxSHOuHFaCp3pztjzek1AaioZjY2pPt3FUG9AGPFqq67V4c7nE0ZmPk/dbQzvwB+wC8vp3/NtS+Y050u2k7Oj/N
+     remote: Enumerating objects: 4, done.
+     remote: Counting objects: 100% (4/4), done.
+     remote: Compressing objects: 100% (2/2), done.
+     remote: Total 4 (delta 2), reused 4 (delta 2), pack-reused 0
+     Unpacking objects: 100% (4/4), done.
+     From github.com:tidepool-org/cluster-test1
+        3b3a8ff..f87037d  master     -> origin/master
+     Updating 3b3a8ff..f87037d
+     Fast-forward
+      flux/flux-deployment.yaml          | 157 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      flux/helm-operator-deployment.yaml | 107 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      flux/tiller-ca-cert-configmap.yaml |  52 +++++++++++++++++++--------------------
+      3 files changed, 290 insertions(+), 26 deletions(-)
+      create mode 100644 flux/flux-deployment.yaml
+      create mode 100644 flux/helm-operator-deployment.yaml
+     Current branch master is up to date.
+     [i] saving ca pem and key to AWS secrets manager
+     {
+         "ARN": "arn:aws:secretsmanager:us-west-2:118346523422:secret:test1/flux/ca.pem-YtjhkS",
+         "Name": "test1/flux/ca.pem",
+         "LastChangedDate": 1568335679.261,
+         "LastAccessedDate": 1568332800.0,
+         "VersionIdsToStages": {
+             "bf829637-9e34-4074-9860-c37ca11aeded": [
+                 "AWSPREVIOUS"
+             ],
+             "c531506f-65ef-46db-aa86-0d7965275ded": [
+                 "AWSCURRENT"
+             ]
+         }
+     }
+     {
+         "ARN": "arn:aws:secretsmanager:us-west-2:118346523422:secret:test1/flux/ca.pem-YtjhkS",
+         "Name": "test1/flux/ca.pem",
+         "VersionId": "290ad64f-4838-458a-adf7-0408a07cd417"
+     }
+     {
+         "ARN": "arn:aws:secretsmanager:us-west-2:118346523422:secret:test1/flux/ca-key.pem-2eHODg",
+         "Name": "test1/flux/ca-key.pem",
+         "VersionId": "01b402e8-63ab-4bd2-ac34-afc6280a6ea1"
+     }
+     [i] installing helm client cert for cluster test1
+     [i] retrieving ca.pem from AWS secrets manager
+     [i] retrieving ca-key.pem from AWS secrets manager
+     [i] creating cert in /Users/derrickburns/.helm/clusters/test1
+     2019/09/12 19:30:54 [INFO] generate received request
+     2019/09/12 19:30:54 [INFO] received CSR
+     2019/09/12 19:30:54 [INFO] generating key: rsa-4096
+     2019/09/12 19:30:55 [INFO] encoded CSR
+     2019/09/12 19:30:55 [INFO] signed certificate with serial number 587458340608176870727716153014044100274825898618
+     [i] done
+     [i] authorizing access to git@github.com:tidepool-org/cluster-test1
+     HTTP/1.1 201 Created
+     Date: Fri, 13 Sep 2019 02:47:14 GMT
+     Content-Type: application/json; charset=utf-8
+     Content-Length: 632
+     Server: GitHub.com
+     Status: 201 Created
+     X-RateLimit-Limit: 5000
+     X-RateLimit-Remaining: 4999
+     X-RateLimit-Reset: 1568346434
+     Cache-Control: private, max-age=60, s-maxage=60
+     Vary: Accept, Authorization, Cookie, X-GitHub-OTP
+     ETag: "5c603737d49a08d0b44452ccbcc03fe5"
+     X-OAuth-Scopes: admin:public_key, repo
+     X-Accepted-OAuth-Scopes:
+     Location: https://api.github.com/repos/tidepool-org/cluster-test1/keys/37593956
+     X-GitHub-Media-Type: github.v3; format=json
+     Access-Control-Expose-Headers: ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes,      X-Poll-Interval, X-GitHub-Media-Type
+     Access-Control-Allow-Origin: *
+     Strict-Transport-Security: max-age=31536000; includeSubdomains; preload
+     X-Frame-Options: deny
+     X-Content-Type-Options: nosniff
+     X-XSS-Protection: 1; mode=block
+     Referrer-Policy: origin-when-cross-origin, strict-origin-when-cross-origin
+     Content-Security-Policy: default-src 'none'
+     Vary: Accept-Encoding
+     X-GitHub-Request-Id: D88A:563A:33B1FA:3DA64E:5D7B0332
      
-Otherwise, manually you may run retrieve the public key by running:
-
-   ```bash
-   $ fluxctl identity
+     {
+       "id": 37593956,
+       "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLsTE7W1LUMYQ0uWh9yxfbye2weREb6w4zlljFAKipSoapj0i+elOnRxV36lS21HyDY4JdPfjG9PuRnO/Em0o43zRB/yH8fawLCJky7KRE6b/     lPovyJ4xsLxDNwAJUxubNFn1qvsXe4BzprkjNn9MPiRN4GvwDTLviCO27YhecPQcmSwYARBF+Ul+/TLccY6OeGO7QP6mygJE     +9uhSlsjnN7WWMjlmgKyl3DvfMeM34o4f3nkN2puDueASpVAK2FxSHOuHFaCp3pztjzek1AaioZjY2pPt3FUG9AGPFqq67V4c7nE0ZmPk/dbQzvwB+wC8vp3/NtS+Y050u2k7Oj/N",
+       "url": "https://api.github.com/repos/tidepool-org/cluster-test1/keys/37593956",
+       "title": "flux key for test1 created by make_flux",
+       "verified": true,
+       "created_at": "2019-09-13T02:47:14Z",
+       "read_only": false
+     }
+     Already up to date.
+     Current branch master is up to date.
+     [i] updating flux and flux-helm-operator manifests
+     [i] commiting repo
+     [master b3e3490] Added tidepool environments
+      2 files changed, 264 deletions(-)
+      delete mode 100644 flux/flux-deployment.yaml
+      delete mode 100644 flux/helm-operator-deployment.yaml
+     Enumerating objects: 5, done.
+     Counting objects: 100% (5/5), done.
+     Delta compression using up to 12 threads
+     Compressing objects: 100% (3/3), done.
+     Writing objects: 100% (3/3), 309 bytes | 309.00 KiB/s, done.
+     Total 3 (delta 2), reused 0 (delta 0)
+     remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+     To github.com:tidepool-org/cluster-test1
+        ddc0e1d..b3e3490  master -> master
+     [i] done
    ```
 
-Then, go to your GitHub repo and add the deploy key.  In the comment, place the name of the cluster.
  
 ## Confirm Proper Installation
 
@@ -1459,7 +1771,7 @@ List the namespaces with the `:ns<Enter>` command. Inspect the list. You should 
   cert-manager               
   datadog                   
   default                  
-  external-dns-system        
+  external-dns        
   external-secrets           
   flux                 
   gloo-system                

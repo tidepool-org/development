@@ -84,10 +84,30 @@ aws secretsmanager describe-secret --secret-id $cluster/flux/ca.pem 2>/dev/null
 if [ $? -ne 0 ]
 then
     aws secretsmanager create-secret --name $cluster/flux/ca.pem --secret-string "$(cat $DIR/ca.pem)"
+    if [ $? -ne 0 ]
+    then
+	    echo "${red}[x] failed to create ca.pem to AWS${reset}"
+	    exit 1
+    fi
     aws secretsmanager create-secret --name $cluster/flux/ca-key.pem --secret-string "$(cat $DIR/ca-key.pem)"
+    if [ $? -ne 0 ]
+    then
+	    echo "${red}[x] failed to create ca-key.pem to AWS${reset}"
+	    exit 1
+    fi
 else
     aws secretsmanager update-secret --secret-id $cluster/flux/ca.pem --secret-string "$(cat $DIR/ca.pem)"
+    if [ $? -ne 0 ]
+    then
+	    echo "${red}[x] failed to update ca.pem to AWS${reset}"
+	    exit 1
+    fi
     aws secretsmanager update-secret --secret-id $cluster/flux/ca-key.pem --secret-string "$(cat $DIR/ca-key.pem)"
+    if [ $? -ne 0 ]
+    then
+	    echo "${red}[x] failed to update ca-key.pem to AWS${reset}"
+	    exit 1
+    fi
 fi
 
 make_cert $cluster
