@@ -19,8 +19,10 @@ def defineMongoService ():
 
   k8s_yaml(local(mongo_helm_template_cmd + mongo_helm_chart_dir))
 
+  # Expose the mongo db on a host port
   mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
   k8s_resource('mongodb', port_forwards=mongodb_port_forwards)
+
   watch_file(mongo_helm_chart_dir)
 ### MongoDB End ###
 
