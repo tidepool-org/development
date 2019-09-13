@@ -15,7 +15,7 @@ global:
       stories: 8083
       typestories: 8082
   secret:
-    enabled: true
+    enabled: false # we provision these in Tiltfile directly with kubectl
   securityContext: &global-security-context
     allowPrivilegeEscalation: false
     runAsNonRoot: true
@@ -26,21 +26,26 @@ global:
 ### Global Config End ###
 
 ### Gateway Config Start ###
-gateway-proxy-v2: # TODO: gateway-proxy-v2?
+gateway-proxy-v2:
   portForwards: ['3000']
 
 gloo:
-  gatewayProxies:
-    gatewayProxyV2:
-      service:
-        httpPort: 3000
+  enabled: false # we provision this in Tiltfile directly with kubectl
+
+ingress:
+  deployment:
+    name: gateway-proxy-v2
+    namespace: default
+  gateway:
+    http:
+      dnsNames: [ "localhost" ]
+      port: "3000"
 ### Gateway Config End ###
 
 ### MongoDB Config Start ###
 mongodb:
-  enabled: true
-  persistence:
-    enabled: true
+  # persistence:
+  #   enabled: true
   portForwards: ['27017']
 
 mongo:
@@ -55,12 +60,11 @@ mongo:
       OptParams: ""
 ### MongoDB Config End ###
 
-### Carelink API Config Start ###
-carelink:
+### Carelink API Config Start ###carelink:
   secret:
     enabled: false
     data_:
-      CareLinkSalt: ""
+      CarelinkSalt: ""
 ### Carelink API Config End ###
 
 ### Dexcom API Config Start ###
@@ -208,6 +212,10 @@ shoreline:
   # hostPath: '~/go/src/github.com/tidepool-org/shoreline'
   containerPath: '/go/src/github.com/tidepool-org/shoreline'
   rebuildCommand: './build.sh'
+  configmap:
+    enabled: false
+    data:
+      ClinicDemoUserId: ""
 
 task:
   deployment:

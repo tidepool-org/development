@@ -10,50 +10,22 @@ def main():
   # Set up tidepool helm template command
   tidepool_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
 
-  gateway_port_forwards = getNested(config,'gateway-proxy.portForwards', ['3000'])
+  gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
   gateway_port_forward_host_port = gateway_port_forwards[0].split(':')[0]
 
   mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
   mongodb_port_forward_host_port = mongodb_port_forwards[0].split(':')[0]
 
-  # if not is_shutdown:
-    # prepareServer()
-
-    # setServerSecrets()
-
-  #   # Ensure mongodb service is deployed
-  #   if not getNested(config, 'mongodb.useExternal'):
-  #     mongodb_service = local('kubectl get service mongodb --ignore-not-found')
-  #     if not mongodb_service:
-  #       local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 &>/dev/null &')
-
-  #   # Ensure proxy services are deployed
-  #   gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found')
-  #   if not gateway_proxy_service:
-  #     local('tilt up --file=Tiltfile.proxy --hud=0 --port=0 &>/dev/null &')
-
-  #   # Wait until mongodb and gateway-proxy services are forwarding before provisioning rest of stack
-  #   if not getNested(config, 'mongodb.useExternal'):
-  #     local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
-  #   local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
-
-  #   # Generate and/or apply server secrets on startup
-  #   tidepool_helm_template_cmd = setServerSecrets(tidepool_helm_template_cmd)
-  # else:
-  #   # Shut down the mongodb and proxy services
-  #   if not getNested(config, 'mongodb.useExternal'):
-  #     local('tilt down --file=Tiltfile.mongodb &>/dev/null &')
-  #   local('tilt down --file=Tiltfile.proxy &>/dev/null &')
-
-  #   # Clean up any tilt up backround processes
-  #   local("for pid in $(ps -ef | awk '/tilt\ up/ {print $2}'); do kill -9 $pid; done")
+  if not is_shutdown:
+    provisionGlooGatewayDependancies()
+    provisionClusterRoleBindings()
+    provisionGlooGateway()
+    provisionServerSecrets()
+    provisionConfigMaps()
 
   # Apply any service overrides
   tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
   tidepool_helm_template_cmd = applyServiceOverrides(tidepool_helm_template_cmd)
-
-  # # Don't provision the gloo gateway here - we do that in Tiltfile.proxy
-  # tidepool_helm_template_cmd += '--set "gloo.enabled=false" --set "gloo.created=true" '
 
   # Deploy and watch the helm charts
   k8s_yaml(local('{helmCmd} {chartDir}'.format(
@@ -61,23 +33,86 @@ def main():
     helmCmd=tidepool_helm_template_cmd
   )))
 
-  # TODO: do we need to watch these, really - only useful while working developing Tilt setup
+  # Expose the gateway proxy on a host port
+  gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
+  k8s_resource('gateway-proxy-v2', port_forwards=gateway_port_forwards)
+
+  # Expose mongodb on a host port
+  mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
+  k8s_resource('mongodb', port_forwards=mongodb_port_forwards)
+
   watch_file(tidepool_helm_chart_dir)
 
   # Back out of actual provisioning for debugging purposes by uncommenting below
   # fail('NOT YET ;)')
 ### Main End ###
 
-### Prepare Server Start ###
-def prepareServer():
-  # Ensure default-admin clusterrolebinding on default:default service account
-  default_admin_clusterrolebinding = local('kubectl get clusterrolebinding default-admin --ignore-not-found')
-  if not default_admin_clusterrolebinding:
-    local('kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:default')
-### Prepare Server End ###
+
+### Gloo Dependancies Start ###
+def provisionGlooGatewayDependancies():
+  gloo_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
+
+  for chart in listdir('{}/charts'.format(tidepool_helm_chart_dir)):
+    if chart.find('gloo') >= 0:
+      gloo_chart_dir = './local/charts'
+      absolute_gloo_chart_dir = absolute_dir(gloo_chart_dir)
+      local('mkdir -p {}'.format(absolute_gloo_chart_dir))
+      local('tar -xzf {} -C {}'.format(chart, absolute_gloo_chart_dir));
+
+      for template in listdir('{}/gloo/templates'.format(absolute_gloo_chart_dir)):
+        if template.find('service-account') >= 0 or template.find('gateway-proxy-configmap') >= 0:
+          k8s_yaml(local('{templateCmd} -x {template} -f {overridesFile} {chartDir}/gloo'.format(
+            chartDir=absolute_gloo_chart_dir,
+            templateCmd=gloo_helm_template_cmd,
+            overridesFile=tidepool_helm_overrides_file,
+            template=template,
+          )))
+### Gloo Dependancies End ###
+
+
+### Cluster Role Bindings Start ###
+def provisionClusterRoleBindings():
+  required_admin_clusterrolebindings = [
+    'default',
+    'apiserver-ui',
+    'discovery',
+    'gateway',
+    'gateway-proxy',
+    'gloo',
+  ]
+
+  for serviceaccount in required_admin_clusterrolebindings:
+    clusterrolebinding = local('kubectl get clusterrolebinding {serviceaccount}-admin --ignore-not-found'.format(
+      serviceaccount = serviceaccount
+    ))
+
+    if not clusterrolebinding:
+      local('kubectl create clusterrolebinding {serviceaccount}-admin --clusterrole cluster-admin --serviceaccount=default:{serviceaccount} --validate=0'.format(
+        serviceaccount = serviceaccount
+      ))
+### Cluster Role Bindings End ###
+
+
+### Gloo Gateway Start ###
+def provisionGlooGateway():
+  gloo_chart_dir = './local/charts'
+  absolute_gloo_chart_dir = absolute_dir(gloo_chart_dir)
+
+  for template in listdir('{}/gloo/templates'.format(absolute_gloo_chart_dir)):
+    if template.find('service-account') >= 0 or template.find('gateway-proxy-configmap') >= 0:
+      local('rm {}'.format(template))
+
+  gloo_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
+
+  k8s_yaml(local('{templateCmd} -f {overridesFile} {chartDir}/gloo'.format(
+    chartDir=absolute_gloo_chart_dir,
+    templateCmd=gloo_helm_template_cmd,
+    overridesFile=tidepool_helm_overrides_file,
+  )))
+### Gloo Gateway End ###
 
 ### Secrets Start ###
-def setServerSecrets ():
+def provisionServerSecrets ():
   required_secrets = [
     'auth',
     'blob',
@@ -86,6 +121,9 @@ def setServerSecrets ():
     'dexcom',
     'export',
     'image',
+    'jellyfish',
+    'kissmetrics',
+    'mailchimp',
     'mongo',
     'notification',
     'server',
@@ -95,11 +133,6 @@ def setServerSecrets ():
     'userdata',
   ]
 
-  server_secrets_dir = getNested(config, 'global.secrets.hostPath', './local/secrets')
-
-  # Ensure secrets directory exists
-  local('mkdir -p {}'.format(server_secrets_dir))
-
   # Skip secrets already available on cluster
   existing_secrets = str(local("kubectl get secrets -o=jsonpath='{.items[?(@.type==\"Opaque\")].metadata.name}'")).split()
   for existing_secret in existing_secrets:
@@ -107,28 +140,63 @@ def setServerSecrets ():
       required_secrets.remove(existing_secret)
 
   for secret in required_secrets:
-    secret_file_name = '{}.yaml'.format(secret)
-    secret_file_path = '{}/{}'.format(server_secrets_dir, secret_file_name)
+    secretChartPathMap = {
+      'jellyfish': 'carelink/templates/carelink-secret.yaml',
+      'kissmetrics': 'highwater/charts/kissmetrics/templates/kissmetrics-secret.yaml',
+      'mailchimp': 'shoreline/charts/mailchimp/templates/mailchimp-secret.yaml',
+    }
 
-    if read_file(secret_file_path):
-      # If we already have the secret saved, apply it to the cluster
-      print('Loading existing secret for {}'.format(secret))
-      local('kubectl --namespace=default apply --validate=0 --force -f {}'.format(secret_file_path))
+    secretChartPath = secretChartPathMap.get(secret, '{secret}/templates/{secret}-secret.yaml'.format(
+      secret=secret,
+    ))
 
-    else:
-      # Generate the secret and apply it to the cluster
-      local('helm template --is-upgrade -x {chartDir}/charts/{secret}/templates/{secret}-secret.yaml -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
-        chartDir=absolute_dir(tidepool_helm_chart_dir),
-        overrides=tidepool_helm_overrides_file,
-        secret=secret,
-      ))
+    templatePath = '{chartDir}/charts/{secretChartPath}'.format(
+      chartDir=absolute_dir(tidepool_helm_chart_dir),
+      secretChartPath=secretChartPath,
+    )
 
-      # Save the generated secret to our local secrets directory
-      local('kubectl get secrets {secret} -o yaml > {secret_file_path}'.format(
-        secret_file_path=secret_file_path,
-        secret=secret,
-      ))
+    # Generate the secret and apply it to the cluster
+    local('helm template --namespace default --set "global.secret.enabled=true" -x {templatePath} -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+      chartDir=absolute_dir(tidepool_helm_chart_dir),
+      overrides=tidepool_helm_overrides_file,
+      templatePath=templatePath
+    ))
 ### Secrets End ###
+
+
+### Config Maps Start ###
+def provisionConfigMaps ():
+  required_configmaps = [
+    'dexcom',
+  ]
+
+  if getNested(config, 'shoreline.configmap.enabled'):
+    required_configmaps.append('shoreline')
+
+  # Skip configmaps already available on cluster
+  existing_configmaps = str(local("kubectl get --ignore-not-found configmaps -o=jsonpath='{.items[].metadata.name}'")).split()
+  for existing_configmap in existing_configmaps:
+    if ','.join(required_configmaps).find(existing_configmap) >= 0:
+      required_configmaps.remove(existing_configmap)
+
+  for configmap in required_configmaps:
+    configmapChartPath = '{configmap}/templates/{configmap}-configmap.yaml'.format(
+      configmap=configmap,
+    )
+
+    templatePath = '{chartDir}/charts/{configmapChartPath}'.format(
+      chartDir=absolute_dir(tidepool_helm_chart_dir),
+      configmapChartPath=configmapChartPath,
+    )
+
+    # Generate the configmap and apply it to the cluster
+    local('helm template --namespace default -x {templatePath} -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+      chartDir=absolute_dir(tidepool_helm_chart_dir),
+      overrides=tidepool_helm_overrides_file,
+      templatePath=templatePath
+    ))
+### Config Maps End ###
+
 
 ### Service Overrides Start ###
 def applyServiceOverrides(tidepool_helm_template_cmd):
