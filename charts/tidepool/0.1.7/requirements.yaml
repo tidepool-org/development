@@ -1,6 +1,6 @@
 dependencies:
 - name: gloo
-  version: "0.18.37"
+  version: "0.18.40"
   repository: "https://storage.googleapis.com/solo-public-helm/"
   condition: gloo.enabled
 - name: mongodb
