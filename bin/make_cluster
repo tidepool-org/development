@@ -53,8 +53,9 @@ kubeconfig=$(yq r $CONFIG_DIR/values.yaml kubeconfig | sed -e "s/- //")
 
 if [ -z "$kubeconfig" -o  "$kubeconfig" == "null" ]
 then
-    kubeconfig=$(realpath ~/.kube/config)
+    kubeconfig=~/.kube/config
 fi
+kubeconfig=$(realpath $kubeconfig)
 
 # extract values to use for templating
 
