@@ -19,9 +19,12 @@ def main():
   if not is_shutdown:
     provisionGlooGatewayDependancies()
     provisionClusterRoleBindings()
-    provisionGlooGateway()
     provisionServerSecrets()
     provisionConfigMaps()
+
+  provisionGlooGateway()
+  if not getNested(config, 'mongodb.useExternal'):
+    provisionMongoDB()
 
   # Apply any service overrides
   tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
@@ -32,14 +35,6 @@ def main():
     chartDir=tidepool_helm_chart_dir,
     helmCmd=tidepool_helm_template_cmd
   )))
-
-  # Expose the gateway proxy on a host port
-  gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
-  k8s_resource('gateway-proxy-v2', port_forwards=gateway_port_forwards)
-
-  # Expose mongodb on a host port
-  mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
-  k8s_resource('mongodb', port_forwards=mongodb_port_forwards)
 
   watch_file(tidepool_helm_chart_dir)
 
@@ -109,7 +104,30 @@ def provisionGlooGateway():
     templateCmd=gloo_helm_template_cmd,
     overridesFile=tidepool_helm_overrides_file,
   )))
+
+  # Expose the gateway proxy on a host port
+  gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
+  k8s_resource('gateway-proxy-v2', port_forwards=gateway_port_forwards)
 ### Gloo Gateway End ###
+
+
+### MongoDB Start ###
+def provisionMongoDB():
+  mongo_helm_template_cmd = 'helm template --name tidepool-local-db --namespace default '
+
+  mongodb_data_dir = getNested(config, 'mongodb.hostPath')
+  if mongodb_data_dir:
+    mongo_helm_template_cmd += '--set "mongodb.hostPath={}" '.format(mongodb_data_dir)
+
+  k8s_yaml(local(mongo_helm_template_cmd + mongo_helm_chart_dir))
+
+  # Expose mongodb on a host port
+  mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
+  k8s_resource('mongodb', port_forwards=mongodb_port_forwards)
+
+  watch_file(mongo_helm_chart_dir)
+### MongoDB End ###
+
 
 ### Secrets Start ###
 def provisionServerSecrets ():

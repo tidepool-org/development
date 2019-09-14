@@ -1,4 +1,4 @@
-{{ if .Values.mongo.persistent }}
+{{ if .Values.mongodb.persistent }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-  name: {{ .Values.mongo.volume }}
+  name: {{ .Values.mongodb.volume }}
   namespace: {{.Release.Namespace}}
 spec:
   accessModes:

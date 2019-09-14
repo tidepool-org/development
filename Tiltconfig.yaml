@@ -42,10 +42,11 @@ ingress:
       port: "3000"
 ### Gateway Config End ###
 
-### MongoDB Config Start ###
 mongodb:
-  # persistence:
-  #   enabled: true
+  persistent: true
+  enabled: false # False to disable the helm-chart-defined mongo, as we deploy our own directly within the Tiltfile
+  useExternal: false # Set to true and update the global mongo config below if using an external mongo db
+  hostPath: '/data/db' # Note: this path is relative to the k8s server container defined in `docker-compose.k8s.yml`. Local machine path is volume-mounted using the TIDEPOOL_DOCKER_MONGO_VOLUME environment variable.
   portForwards: ['27017']
 
 mongo:
@@ -56,7 +57,7 @@ mongo:
       Username: ""
       Password: ""
       Database: "admin"
-      Tls: "true"
+      Tls: "false"
       OptParams: ""
 ### MongoDB Config End ###
 

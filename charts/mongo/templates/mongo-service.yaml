@@ -11,9 +11,9 @@ metadata:
   namespace: {{.Release.Namespace}}
 spec:
   ports:
-  - name: "{{.Values.mongo.port}}"
-    port: {{.Values.mongo.port}}
-    targetPort: {{.Values.mongo.port}}
+  - name: "{{.Values.mongodb.port}}"
+    port: {{.Values.mongodb.port}}
+    targetPort: {{.Values.mongodb.port}}
   selector:
     app: mongodb
     app.kubernetes.io/name: {{ include "charts.name" . }}

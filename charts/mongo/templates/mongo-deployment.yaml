@@ -27,19 +27,19 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-{{ if .Values.mongo.persistent }}
+{{ if .Values.mongodb.persistent }}
       volumes:
-      - name: '{{.Values.mongo.volume}}'
+      - name: '{{.Values.mongodb.volume}}'
         persistentVolumeClaim:
-{{ if .Values.mongo.hostPath }}
+{{ if .Values.mongodb.hostPath }}
         hostPath:
-          path: '{{.Values.mongo.hostPath}}'
+          path: '{{.Values.mongodb.hostPath}}'
           type: Directory
 {{ end }}
-{{ if .Values.mongo.seed }}
+{{ if .Values.mongodb.seed }}
       - name: dump
         emptyDir: {}
-          claimName: {{.Values.mongo.volume}}
+          claimName: {{.Values.mongodb.volume}}
       initContainers: # provide the data volume
       - image: tidepool/mongoseed:init
         name: seed-data
@@ -52,13 +52,13 @@ spec:
 {{ end }}
 {{ end }}
       containers:
-      - image: "{{ .Values.mongo.image }}"
+      - image: "{{ .Values.mongodb.image }}"
         name: mongo
         ports:
-        - containerPort: {{.Values.mongo.port}}
+        - containerPort: {{.Values.mongodb.port}}
         resources: {}
-{{ if .Values.mongo.seed }}
-      - image: "{{ .Values.mongo.image }}"
+{{ if .Values.mongodb.seed }}
+      - image: "{{ .Values.mongodb.image }}"
         name: seeder
         volumeMounts:
         - mountPath: /dump
@@ -73,9 +73,9 @@ spec:
           initialDelaySeconds: 3
           periodSeconds: 5
 {{ end }}
-{{ if .Values.mongo.persistent }}
+{{ if .Values.mongodb.persistent }}
         volumeMounts:
         - mountPath: /data/db
-          name: {{.Values.mongo.volume}}
+          name: {{.Values.mongodb.volume}}
 {{ end }}
       restartPolicy: Always
