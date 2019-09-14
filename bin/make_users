@@ -49,44 +49,20 @@ CONFIG_DIR=$(realpath .)
 CLUSTER_NAME=$(yq r $CONFIG_DIR/values.yaml cluster.metadata.name)
 IAM_USERS=$(yq r $CONFIG_DIR/values.yaml aws.iamUsers | sed -e "s/- //")
 AWS_ACCOUNT=$(yq r $CONFIG_DIR/values.yaml aws.accountNumber | sed -e "s/- //")
-kubeconfig=$(yq r $CONFIG_DIR/values.yaml kubeconfig | sed -e "s/- //")
+GROUP=system:masters
 
-if [ -z "$kubeconfig" -o  "$kubeconfig" == "null" ]
-then
-    kubeconfig=$(realpath ~/.kube/config)
-fi
-
-# extract values to use for templating
-
-# create cluster, install flux into cluster
-echo "${magenta}[√] creating cluster $CLUSTER_NAME${reset}"
-
-localKubeConfig=$(realpath ./kubeconfig.yaml)
-eksctl create cluster -f $CONFIG_DIR/config.yaml --kubeconfig $localKubeConfig
-if [ $? -ne 0 ]
-then
-	exit 1
-fi
-
-if [ "$kubeconfig" != "$localKubeConfig" ]
-then
-    if [ -f $kubeconfig ]
-    then
-        echo "${magenta}[√] adding kubeconfig to $kubeconfig"
-        KUBECONFIG=$kubeconfig:$localKubeConfig kubectl config view --flatten >updated.yaml
-        mv updated.yaml $kubeconfig
-    else
-        mkdir -p $(dirname $kubeconfig)
-        echo "${magenta}[√] creating $kubeconfig${reset}" 
-        cp $localKubeConfig $kubeconfig
-    fi
-fi
-
-git add .
-git commit -m "Added kubeconfig file."
-git push
-
-make_users 
+echo "${magenta}[√] adding system masters${reset}"
+for user in ${IAM_USERS}
+do
+    arn=arn:aws:iam::${AWS_ACCOUNT}:user/${user}
+    eksctl create iamidentitymapping --region=${AWS_REGION}  --role=$arn --group=$GROUP --name=${CLUSTER_NAME} --username=$user
+    while [ $? -ne 0 ]
+    do
+	    sleep 3
+    	    eksctl create iamidentitymapping --region=${AWS_REGION}  --role=$arn --group=$GROUP --name=${CLUSTER_NAME} --username=$user
+    done
+    echo "${magenta}[√] added $user${reset}"
+done
 
 rm -rf $mytmpdir
 

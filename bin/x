@@ -1,0 +1,8 @@
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: x
+  namespace: foo
+data:
+   foo: bar

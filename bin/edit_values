@@ -30,32 +30,26 @@ else
         remote="git@github.com:tidepool-org/$REMOTE_REPO"
 fi
 
-echo "${magenta}[√] creating initial values file for repo $remote${reset}"
 
 base=$(basename $remote)
 mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
 cd $mytmpdir
 trap "rm -rf $mytmpdir" EXIT
-git clone git@github.com:tidepool-org/tidepool-quickstart
 git clone $remote
 
 if [ -f $base/values.yaml ]
 then
-	echo "${red}WARNING: will overwrite prior contents of values.yaml?${reset}"
-        read -p "${red}Are you sure?${reset} " -n 1 -r
-        if [[ ! $REPLY =~ ^[Yy]$ ]]
-        then
-                exit 1
-        fi
+	echo "${magenta}[√] editing values file for repo $remote${reset}"
+	${EDITOR:-vi} $base/values.yaml
+else
+	echo "${red}values.yaml does not exist. Create with make_values${reset}"
+        exit 1
 fi
+make_config
 echo
-echo "${magenta}[√] creating values.yaml${reset}"
-echo "values.yaml"
-cp tidepool-quickstart/values.yaml $base/
-${EDITOR:-vi} $base/values.yaml
 cd $base
 git add .
-git commit -m "Added values file."
+git commit -m "Updated values file."
 git push
 cd /
 rm -rf $mytmpdir

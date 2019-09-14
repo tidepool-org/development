@@ -64,8 +64,10 @@ then
 		echo "${red}[x] Failed pre-check.${reset}"
 		exit 1
 fi
+echo "${magenta}[√] linkerd check --pre ${reset}"
 
 mkdir -p linkerd
+echo "linkerd/linkerd-config.yaml"
 linkerd install config > linkerd/linkerd-config.yaml
 linkerd install config | kubectl apply -f -
 
@@ -76,7 +78,10 @@ do
     echo "linkerd check config"
     linkerd check config
 done
+echo "${magenta}[√] linkerd check config${reset}"
 
+
+echo "linkerd/linkerd-control-plane.yaml"
 linkerd install control-plane > linkerd/linkerd-control-plane.yaml
 linkerd install control-plane | kubectl apply -f -
 
@@ -87,7 +92,7 @@ do
     echo "linkerd check"
     linkerd check 
 done
-
+echo "${magenta}[√] linkerd check ${reset}"
 echo "${magenta}[√] commiting repo${reset}"
 # commit changes to repo
 git add .

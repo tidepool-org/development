@@ -81,7 +81,7 @@ export ClusterName=$(yq r values.yaml cluster.metadata.name)
 export Region=$(yq r values.yaml cluster.metadata.region)
 export config=$(yq r values.yaml -j)
 
-echo "${magenta}[√] creating config for cluster $ClusterName in repo $remote${reset}"
+echo "${magenta}[√] creating manifests for cluster $ClusterName in repo $remote${reset}"
 
 # run template processor to create non-Tidepool services
 cd $QUICKSTART_DIR
@@ -96,46 +96,56 @@ do
 		dirs="${dirs} pkgs/$dir"
         fi
 done
-echo "${magenta}[√] creating namespaces and enabled packages${reset}"
+echo "${magenta}[√] creating namespaces and package manifests${reset}"
 for dir in namespaces $dirs
 do
   for file in $(find $dir -type f -print)
   do
-	echo $file
 	mkdir -p $CONFIG_DIR/$(dirname $file)
 	if [ "${file: -5}" == ".tmpl" ]
 	then
+		echo ${file%.tmpl}
 		envtpl $file >$CONFIG_DIR/${file%.tmpl}
         elif [ "${file: -12}" == "-secret.yaml" ]
 	then
+		echo external-secrets/$(basename $file)
 		$DEV_DIR/bin/external_secret dryrun $ClusterName encoded < $file > $CONFIG_DIR/external-secrets/$(basename $file)
         elif [ "${file: -5}" == ".yaml" ]
 	then
+		echo $file
 		cp $file $CONFIG_DIR/$file
 	elif [ "${file: -8}" == ".jsonnet" ]
 	then
+		echo ${file%.jsonnet}
 		jsonnet --tla-code config="$config" $file | yq r - > $CONFIG_DIR/${file%.jsonnet}
 	fi
   done
 done
 
-echo "${magenta}[√] creating eksctl config file${reset}"
+echo "${magenta}[√] creating eksctl ClusterConfig manifest${reset}"
+echo "config.yaml"
 jsonnet --tla-code config="$config" ${QUICKSTART_DIR}/eksctl/cluster_config.jsonnet | yq r - > $CONFIG_DIR/config.yaml
 
-echo "${magenta}[√] creating tidepool environments${reset}"
+echo "${magenta}[√] creating tidepool environment manifests${reset}"
 # create Tidepool environments
 environments=$(yq r values.yaml environments | sed -e "/^  .*/d" -e s/:.*//)
 for env in $environments
 do
 	envdir=$CONFIG_DIR/environments/$env
 	mkdir -p $envdir
+
+	echo "${magenta}[√] creating $env environment manifests${reset}"
+	echo environmens/$env/tidepool-helmrelease.yaml
+	echo namespaces/${env}-namespace.yaml
 	jsonnet --tla-code config="$config" --tla-str namespace=$env  ${QUICKSTART_DIR}/tidepool/tidepool-helmrelease.jsonnet | yq r - > $envdir/tidepool-helmrelease.yaml
 	jsonnet --tla-code config="$config" --tla-str namespace=$env  ${QUICKSTART_DIR}/tidepool/tidepool-namespace.jsonnet | yq r - > $CONFIG_DIR/namespaces/${env}-namespace.yaml
 
+	echo "${magenta}[√] creating $env environment external secrets manifests${reset}"
         mkdir -p $mytmpdir/secrets
 	mkdir -p $envdir/external-secrets
         for file in $(find $CHART_DIR -name \*secret.yaml -print)
         do
+		echo environments/$env/external-secrets/$(basename $file)
 		helm template --namespace $env --set global.secret.enabled=true $CHART_DIR -f  $CHART_DIR/values.yaml -x $file  | $DEV_DIR/bin/external_secret dryrun $ClusterName encoded > $envdir/external-secrets/$(basename $file)
 	done
 done
