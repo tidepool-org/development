@@ -27,6 +27,8 @@ global:
     tidewhisperer: 9127                                               # tidewhisperer service internal port
   secret:
     enabled: false
+  template:
+    enabled: false
 
 # environment-wide secrets
 tidepool:
