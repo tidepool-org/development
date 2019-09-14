@@ -16,7 +16,7 @@ reset=`tput sgr0`
 cluster=${1:-test2}
 HELM_HOME=${HELM_HOME:-~/.helm}
 
-echo "${magenta}[i] installing helm client cert for cluster $cluster${reset}"
+echo "${magenta}[√] installing helm client cert for cluster $cluster${reset}"
 
 # create temporary workspace to clone Git repos into
 mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`

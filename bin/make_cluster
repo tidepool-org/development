@@ -71,12 +71,12 @@ if [ "$kubeconfig" != "$localKubeConfig" ]
 then
     if [ -f $kubeconfig ]
     then
-        echo "${magenta}[i] adding kubeconfig to $kubeconfig"
+        echo "${magenta}[√] adding kubeconfig to $kubeconfig"
         KUBECONFIG=$kubeconfig:$localKubeConfig kubectl config view --flatten >updated.yaml
         mv updated.yaml $kubeconfig
     else
         mkdir -p $(dirname $kubeconfig)
-        echo "${magenta}[i] creating $kubeconfig" 
+        echo "${magenta}[√] creating $kubeconfig" 
         cp $localKubeConfig $kubeconfig
     fi
 fi

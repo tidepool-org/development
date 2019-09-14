@@ -67,7 +67,7 @@ then
 fi
 
 # create cluster, install flux into cluster
-echo "${magenta}[i] installing flux in cluster $cluster${reset}"
+echo "${magenta}[√] installing flux in cluster $cluster${reset}"
 export EKSCTL_EXPERIMENTAL=true
 unbuffer eksctl install flux -f $CONFIG_DIR/config.yaml --git-url=${remote}.git --git-email=$email --git-label=$cluster  | tee  $mytmpdir/eksctl.out
 
@@ -78,7 +78,7 @@ fi
 
 git pull
 
-echo "${magenta}[i] saving ca pem and key to AWS secrets manager${reset}"
+echo "${magenta}[√] saving ca pem and key to AWS secrets manager${reset}"
 DIR=$(cat $mytmpdir/eksctl.out | grep "Public key infrastructure" | sed -e 's/^.*"\(.*\)".*$/\1/')
 aws secretsmanager describe-secret --secret-id $cluster/flux/ca.pem 2>/dev/null
 if [ $? -ne 0 ]
@@ -116,7 +116,7 @@ key=$(fluxctl --k8s-fwd-ns=flux identity)
 
 reponame="$(echo $remote | cut -d/ -f2 | sed -e 's/\.git//')"
 
-echo "${magenta}[i] authorizing access to $remote${reset}"
+echo "${magenta}[√] authorizing access to $remote${reset}"
 curl -X POST -i\
 	-H"Authorization: token $GITHUB_TOKEN"\
 	--data @- https://api.github.com/repos/tidepool-org/$reponame/keys << EOF
@@ -132,7 +132,7 @@ EOF
 git pull
 
 # update flux and helm 
-echo "${magenta}[i] updating flux and flux-helm-operator manifests${reset}"
+echo "${magenta}[√] updating flux and flux-helm-operator manifests${reset}"
 if [ -f flux/flux-deployment.yaml ]
 then
 	yq r flux/flux-deployment.yaml -j > $mytmpdir/flux.json
@@ -144,7 +144,7 @@ then
 	mv flux/helm-operator-deployment.yaml flux/helm-operator-deployment.yaml.orig
 fi
 
-echo "${magenta}[i] commiting repo${reset}"
+echo "${magenta}[√] commiting repo${reset}"
 # commit changes to repo
 git add .
 git commit -m "Added tidepool environments"
@@ -153,5 +153,5 @@ cd /
 # clean up
 rm -rf $mytmpdir
 
-echo "${magenta}[i] done${reset}"
+echo "${magenta}[√] done${reset}"
 

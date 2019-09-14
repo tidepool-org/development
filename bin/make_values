@@ -30,7 +30,7 @@ else
         remote="git@github.com:tidepool-org/$REMOTE_REPO"
 fi
 
-echo "${magenta}[i] creating initial values file for repo $remote${reset}"
+echo "${magenta}[√] creating initial values file for repo $remote${reset}"
 
 base=$(basename $remote)
 mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
@@ -48,7 +48,7 @@ then
                 exit 1
         fi
 fi
-echo "${magenta}[i] creating values.yaml?${reset}"
+echo "${magenta}[√] creating values.yaml?${reset}"
 cp tidepool-quickstart/values.yaml $base/
 ${EDITOR:-vi} $base/values.yaml
 cd $base
@@ -57,5 +57,5 @@ git commit -m "Added values file."
 git push
 cd /
 rm -rf $mytmpdir
-echo "${magenta}[i] done${reset}"
+echo "${magenta}[√] done${reset}"
 

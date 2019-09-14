@@ -71,7 +71,7 @@ then
     		exit 1
 	fi
 	echo
-	echo "${magenta}[i] resetting config repo${reset}"
+	echo "${magenta}[√] resetting config repo${reset}"
 	rm -rf pkgs
 fi
 mv $mytmpdir/values.yaml .
@@ -81,7 +81,7 @@ export ClusterName=$(yq r values.yaml cluster.metadata.name)
 export Region=$(yq r values.yaml cluster.metadata.region)
 export config=$(yq r values.yaml -j)
 
-echo "${magenta}[i] creating config for cluster $ClusterName in repo $remote${reset}"
+echo "${magenta}[√] creating config for cluster $ClusterName in repo $remote${reset}"
 
 # run template processor to create non-Tidepool services
 cd $QUICKSTART_DIR
@@ -96,7 +96,7 @@ do
 		dirs="${dirs} pkgs/$dir"
         fi
 done
-echo "${magenta}[i] creating namespaces and enabled packages${reset}"
+echo "${magenta}[√] creating namespaces and enabled packages${reset}"
 for dir in namespaces $dirs
 do
   for file in $(find $dir -type f -print)
@@ -119,10 +119,10 @@ do
   done
 done
 
-echo "${magenta}[i] creating eksctl config file${reset}"
+echo "${magenta}[√] creating eksctl config file${reset}"
 jsonnet --tla-code config="$config" ${QUICKSTART_DIR}/eksctl/cluster_config.jsonnet | yq r - > $CONFIG_DIR/config.yaml
 
-echo "${magenta}[i] creating tidepool environments${reset}"
+echo "${magenta}[√] creating tidepool environments${reset}"
 # create Tidepool environments
 environments=$(yq r values.yaml environments | sed -e "/^  .*/d" -e s/:.*//)
 for env in $environments
@@ -140,7 +140,7 @@ do
 	done
 done
 
-echo "${magenta}[i] committing changes${reset}"
+echo "${magenta}[√] committing changes${reset}"
 # commit changes to repo
 cd $CONFIG_DIR
 git add .
@@ -151,4 +151,4 @@ cd /
 # clean up
 rm -rf $mytmpdir
 
-echo "${magenta}[i] done${reset}"
+echo "${magenta}[√] done${reset}"

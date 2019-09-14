@@ -49,13 +49,13 @@ do
   then
 	  bucket="tidepool-${cluster}-${env}-asset"
   fi
-  echo "${magenta}[i] creating asset bucket $bucket${reset}"
+  echo "${magenta}[√] creating asset bucket $bucket${reset}"
   aws s3 mb s3://$bucket
 
-  echo "${magenta}[i] copying  dev assets into $bucket${reset}"
+  echo "${magenta}[√] copying  dev assets into $bucket${reset}"
   aws s3 cp s3://tidepool-dev-asset s3://$bucket
 done
-echo "${magenta}[i] done${reset}"
+echo "${magenta}[√] done${reset}"
 
 # clean up
 rm -rf $mytmpdir
