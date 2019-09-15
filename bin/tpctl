@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Configure EKS cluster
+# Configure EKS cluster to run Tidepool services
 #
 # Usage: $0
 #
@@ -15,19 +15,31 @@ function define_colors {
 	RESET=`tput sgr0`
 }
 
+# irrecoverable error. Show message and exit.
 function panic {
 	echo "${RED}[✖] ${1}${RESET}"
 	exit 1
 }
 
+# confirm that previous command succeeded, otherwise panic with message
+function expect_success {
+	if [ $? -ne 0 ]
+	then
+		panic $1
+	fi
+}
+
+# show info message
 function info {
 	echo "${MAGENTA}[√] ${1}${RESET}"
 }
 
+# report that file is being added to config repo
 function add_file {
 	echo "${GREEN}[ℹ] adding ${1}${RESET}"
 }
 
+# report all files added to config repo from list given in stdin
 function add_names {
 	while read -r line
 	do 
@@ -35,10 +47,12 @@ function add_names {
 	done
 }
 
+# report renaming of file in config repo
 function rename_file {
 	echo "${GREEN}[√] renaming ${1} ${2}${RESET}"
 }
 
+# conform action, else exit
 function confirm {
 	local msg=$1
 	read -p "${RED}$msg${RESET} " -n 1 -r
@@ -75,10 +89,7 @@ function setup_tmpdir {
 function clone_remote {
 	cd $TMP_DIR
 	git clone $REMOTE_REPO
-	if [ $? -ne 0 ]
-	then
-		panic "Cannot clone $REMOTE_REPO"
-	fi
+	expect_success "Cannot clone $REMOTE_REPO"
 	cd $(basename $REMOTE_REPO)
 }
 
@@ -112,10 +123,12 @@ function clone_secret_map {
 	popd >/dev/null 2>&1
 }
 
+# get values file
 function get_config {
 	yq r values.yaml -j
 }
 
+# retrieve value from values file, or exit it not available
 function must_get_value {
 	local val=$(yq r values.yaml -j $1 | sed -e 's/"//g' -e "s/'//g")
 	if [ $? -ne 0 -o "$val" == "null" -o "$val" == "" ]
@@ -125,30 +138,37 @@ function must_get_value {
 	echo $val
 }
 
+# retrieve name of cluster
 function get_cluster {
 	must_get_value "cluster.metadata.name"
 }
 
+# retrieve name of region
 function get_region {
 	must_get_value "cluster.metadata.region"
 }
 
+# retrieve email address of cluster admin
 function get_email {
 	must_get_value "email" 
 }
 
+# retrieve AWS account number
 function get_aws_account {
 	must_get_value "aws.accountNumber"
 }
 
+# retrieve list of AWS environments to create
 function get_environments {
 	yq r values.yaml environments | sed -e "/^  .*/d" -e s/:.*//
 }
 
+# retrieve list of K8s system masters
 function get_iam_users {
 	yq r values.yaml aws.iamUsers | sed -e "s/- //" -e 's/"//g'
 }
 
+# retrieve bucket name or create from convention
 function get_bucket {
 	local env = $1
 	local bucket=$(yq r values.yaml environments.${env}.asset | sed -e "/^  .*/d" -e s/:.*//)
@@ -161,6 +181,7 @@ function get_bucket {
 	fi
 }
 
+# create Tidepool assets bucket
 function make_assets {
 	local env
 	for env in $(get_environments)
@@ -173,11 +194,12 @@ function make_assets {
 	done
 }
 
-# clean up
+# clean up all temporary files
 function cleanup {
 	rm -rf $TMP_DIR
 }
 
+# retrieve helm home
 function get_helm_home {
 	echo ${HELM_HOME:-~/.helm}
 }
@@ -192,22 +214,16 @@ function make_cert {
 	info "retrieving ca.pem from AWS secrets manager"
 	aws secretsmanager get-secret-value --secret-id $cluster/flux/ca.pem | jq '.SecretString' | sed -e 's/"//g' \
 -e 's/\\n/\
-/g' >ca.pem
+/g' >$TMP_DIR/ca.pem
 
-	if [ $? -ne 0 ]
-	then
-		panic "failed to retrieve ca.pem from AWS secrets manager"
-	fi
+	expect_success "failed to retrieve ca.pem from AWS secrets manager"
 
 	info "retrieving ca-key.pem from AWS secrets manager"
 	aws secretsmanager get-secret-value --secret-id $cluster/flux/ca-key.pem | jq '.SecretString' | sed -e 's/"//g'  \
 -e 's/\\n/\
-/g' >ca-key.pem
+/g' >$TMP_DIR/ca-key.pem
 
-	if [ $? -ne 0 ]
-	then
-		panic "failed to retrieve ca-key.pem from AWS secrets manager"
-	fi
+	expect_success  "failed to retrieve ca-key.pem from AWS secrets manager"
 	
 	local helm_cluster_home=${helm_home}/clusters/$cluster
 
@@ -215,18 +231,19 @@ function make_cert {
 	local tiller_hostname=tiller-deploy.flux
 	local user_name=helm-client
 
-	echo '{"signing":{"default":{"expiry":"43800h","usages":["signing","key encipherment","server auth","client auth"]}}}' > ca-config.json
+	echo '{"signing":{"default":{"expiry":"43800h","usages":["signing","key encipherment","server auth","client auth"]}}}' > $TMP_DIR/ca-config.json
 	echo '{"CN":"'$user_name'","hosts":[""],"key":{"algo":"rsa","size":4096}}' | cfssl gencert \
-  	-config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem \
+  	-config=$TMP_DIR/ca-config.json -ca=$TMP_DIR/ca.pem -ca-key=$TMP_DIR/ca-key.pem \
   	-hostname="$tiller_hostname" - | cfssljson -bare $user_name
 	
 	rm -rf $helm_cluster_home
 	mkdir -p $helm_cluster_home
-	cp helm-client.pem $helm_cluster_home/cert.pem
+	mv helm-client.pem $helm_cluster_home/cert.pem
 	add_file $helm_cluster_home/cert.pem
-	cp helm-client-key.pem $helm_cluster_home/key.pem
+	mv helm-client-key.pem $helm_cluster_home/key.pem
+	rm helm-client.csr
 	add_file $helm_cluster_home/key.pem
-	cp ca.pem $helm_cluster_home/ca.pem
+	cp $TMP_DIR/ca.pem $helm_cluster_home/ca.pem
 	add_file $helm_cluster_home/ca.pem
 	rm -f $helm_home/{cert.pem,key.pem,ca.pem}
 	cp $helm_cluster_home/{cert.pem,key.pem,ca.pem} $helm_home
@@ -239,6 +256,7 @@ function make_cert {
 	fi
 }
 
+# config availability of GITHUB TOKEN in environment
 function confirm_github_token {
 	if [ -z "$GITHUB_TOKEN" ]
 	then
@@ -246,27 +264,24 @@ function confirm_github_token {
 	fi
 }
 
+# retrieve kubeconfig value
 function get_kubeconfig {
-	kc=$(yq r values.yaml kubeconfig | sed -e 's/"//g' -e "s/'//g")
-	kc=~/.kube/config
+	kc=$(must_get_value "kubeconfig")
 	realpath $kc
 }
 
-
+# create EKS cluster using config.yaml file, add kubeconfig.yaml to config repo
 function make_cluster {
 	local cluster=$(get_cluster)
 	info "creating cluster $cluster"
 
 	eksctl create cluster -f config.yaml --kubeconfig ./kubeconfig.yaml
+	expect_success "eksctl create cluster failed."
 	git pull
-
-	if [ $? -ne 0 ]
-	then
-		panic "eksctl create cluster failed."
-	fi
 	add_file "./kubeconfig.yaml"
 }
 	
+# merge K8s Kubeconfig of cluster into user's kubeconfig file for each switching (see kubectx)
 function merge_kubeconfig {
 	set -xv
 	local localKubeConfig=$(realpath ./kubeconfig.yaml)
@@ -286,7 +301,7 @@ function merge_kubeconfig {
 	fi
 }
 
-# confirms that values file exists or panics
+# confirm that values file exists or panic
 function check_values_exists {
 	if [ ! -f values.yaml ]
 	then
@@ -301,11 +316,12 @@ function reset_config_dir {
 	then
 		confirm "Are you sure that you want to remote prior contents (except values.yaml)?"
 		info "resetting config repo"
-		rm -rf pkgs
+		rm -rf pkgs 
 	fi
 	mv $TMP_DIR/values.yaml .
 }
 
+# create config manifests 
 function make_config {
 	local cluster=$(get_cluster)
 	local config=$(get_config)
@@ -368,7 +384,7 @@ function make_config {
 	done
 }
 	
-# persists changes to config repo in GitHub
+# persist changes to config repo in GitHub
 function save_changes {
 	info "saving changes to config repo"
 	git add .
@@ -376,13 +392,11 @@ function save_changes {
 	git push
 }
 
+# confirm cluster exists or exist
 function confirm_cluster_exists {
 	local cluster=$(get_cluster)
 	eksctl get cluster --name $cluster
-	if [ $? -ne 0 ]
-	then
-		panic "cluster $cluster does not exist."
-	fi
+	expect_success "cluster $cluster does not exist."
 }
 
 # install flux into cluster
@@ -391,18 +405,13 @@ function make_flux {
 	local email=$(get_email)
 	
 	info "installing flux into cluster $cluster"
-
 	EKSCTL_EXPERIMENTAL=true unbuffer eksctl install \
 		flux -f config.yaml --git-url=${REMOTE_REPO}.git --git-email=$email --git-label=$cluster  | tee  $TMP_DIR/eksctl.out
-	
-	if [  $? -ne 0 ]
-	then
-		panic "eksctl install flux failed."
-	fi
-	
+	expect_success "eksctl install flux failed."
 	git pull
 }
 
+# save Certificate Authority key and pem into AWS secrets manager
 function save_ca {
 	info "saving certificate authority TLS pem and key to AWS secrets manager"
 	local cluster=$(get_cluster)
@@ -412,29 +421,18 @@ function save_ca {
 	if [ $? -ne 0 ]
 	then
     		aws secretsmanager create-secret --name $cluster/flux/ca.pem --secret-string "$(cat $dir/ca.pem)"
-    		if [ $? -ne 0 ]
-    		then
-	    		panic "failed to create ca.pem to AWS"
-    		fi
+	    	expect_success "failed to create ca.pem to AWS"
     		aws secretsmanager create-secret --name $cluster/flux/ca-key.pem --secret-string "$(cat $dir/ca-key.pem)"
-    		if [ $? -ne 0 ]
-    		then
-	    		panic "failed to create ca-key.pem to AWS"
-    		fi
+	    	expect_success "failed to create ca-key.pem to AWS"
 	else
     		aws secretsmanager update-secret --secret-id $cluster/flux/ca.pem --secret-string "$(cat $dir/ca.pem)"
-    		if [ $? -ne 0 ]
-    		then
-	    		panic "failed to update ca.pem to AWS"
-    		fi
+		expect_success "failed to update ca.pem to AWS"
     		aws secretsmanager update-secret --secret-id $cluster/flux/ca-key.pem --secret-string "$(cat $dir/ca-key.pem)"
-    		if [ $? -ne 0 ]
-    		then
-	    		panic "failed to update ca-key.pem to AWS"
-    		fi
+		expect_success "failed to update ca-key.pem to AWS"
 	fi
 }
 	
+# save deploy key to config repo
 function make_key {
 	info "authorizing access to ${REMOTE_REPO}"
 
@@ -454,10 +452,7 @@ function make_key {
 EOF
 }
 
-function pull {
-	git pull
-}
-
+# update flux and helm operator manifests
 function update_flux {
 	info "updating flux and flux-helm-operator manifests"
 
@@ -481,12 +476,10 @@ function update_flux {
 	fi
 }
 
+# create service mesh
 function make_mesh {
 	linkerd check --pre
-	if [ $? -ne 0 ]
-	then
-		panic "Failed linkerd pre-check."
-	fi
+	expect_success "Failed linkerd pre-check."
 	info "linkerd check --pre"
 	
 	mkdir -p linkerd
@@ -517,7 +510,7 @@ function make_mesh {
 	info "linkerd installed"
 }
 
-
+# migrate secrets from legacy environments
 function migrate_secrets {
 	local cluster=$(get_cluster)
 	info "migrating secrets"
@@ -535,11 +528,7 @@ function migrate_secrets {
 	done
 }
 
-function upsert {
-	local cluster=$(get_cluster)
-	external_secret upsert $cluster plaintext | separate_files
-}
-
+# create k8s system master users
 function make_users {
 	local group=system:masters
 	local cluster=$(get_cluster)
@@ -547,6 +536,7 @@ function make_users {
 	local aws_account=$(get_account)
 
 	info "adding system masters"
+	local user
 	for user in $(get_iam_users)
 	do
     		local arn=arn:aws:iam::${aws_account}:user/${user}
@@ -562,6 +552,7 @@ function make_users {
 }
 	
 
+# confirm that values.yaml file exists
 function check_values_not_exist {
 	if [ -f values.yaml ]
 	then
@@ -569,6 +560,7 @@ function check_values_not_exist {
 	fi
 }
 
+# create initial values file
 function make_values {
 	info "creating values.yaml"
 	add_file "values.yaml"
@@ -576,12 +568,14 @@ function make_values {
 	${EDITOR:-vi} values.yaml
 }
 
+# enter into bash to allow manual editing of config repo
 function edit_config {
 	info "exit shell when done making changes."
 	bash
 	confirm "Are you sure you want to commit changes?"
 }
 
+# edit values file
 function edit_values {
 	if [ -f values.yaml ]
 	then
@@ -593,9 +587,12 @@ function edit_values {
 }
 
 
+# generate random secrets 
 function random_secrets {
+	local env
 	for env in $(get_environments)
 	do
+		local file
         	for file in $(find $CHART_DIR -name \*secret.yaml -print)
         	do
                 	helm template --namespace $env --set global.secret.generated=true $CHART_DIR  -f  $CHART_DIR/values.yaml -x $file   >$TMP_DIR/x
@@ -609,24 +606,29 @@ function random_secrets {
 	done
 }
 
+# delete cluster from EKS, including cloudformation templates
 function delete_cluster {
 	cluster=$(get_cluster)
 	confirm "Are you sure that you want to delete cluster $cluster?"
+	info "deleting cluster $cluster"
 	eksctl delete cluster --name=$cluster
 }
 
+# remove service mesh from cluster and config repo
 function remove_mesh {
 	info "removing linkerd"
 	linkerd install --ignore-cluster | kubectl delete -f -
 	rm -rf linkerd
 }
 
+# install installation tools
 function install_tools {
 	info "installing tools"
 	brew bundle --file=${DEV_DIR}/Brewfile
 	pip3 install boto3 --user
 }
 
+# show help
 function help {
       echo "$0 [-h|--help] (tools|values|edit_values|config|edit|cluster|flux|cert|assets|mesh|migrate_secrets|plaintext_secrets|users|deploy_key|delete_cluster|remove_mesh|kubeconfig)*"
 }
