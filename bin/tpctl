@@ -612,6 +612,12 @@ function delete_cluster {
 	eksctl delete cluster --name=$cluster
 }
 
+function remove_mesh {
+	info "removing linkerd"
+	linkerd install --ignore-cluster | kubectl delete -f -
+	rm -rf linkerd
+}
+
 function install_tools {
 	info "installing tools"
 	brew bundle --file=${DEV_DIR}/Brewfile
@@ -619,7 +625,7 @@ function install_tools {
 }
 
 function help {
-      echo "$0 [-h|--help] (tools|values|edit_values|config|edit|cluster|flux|cert|assets|mesh|migrate_secrets|plaintext_secrets|users|deploy_key|delete_cluster|kubeconfig)*"
+      echo "$0 [-h|--help] (tools|values|edit_values|config|edit|cluster|flux|cert|assets|mesh|migrate_secrets|plaintext_secrets|users|deploy_key|delete_cluster|remove_mesh|kubeconfig)*"
 }
 
 if [ $# -eq 0 ]
@@ -733,6 +739,10 @@ do
 		local cluster=$(get_cluster)
 		delete_cluster
 		info "cluster $cluster deletion  takes ~10 minutes to complete"
+		;;
+	remove_mesh)
+		remove_mesh
+		save_changes "Removed mesh."
 		;;
 	tools)
 		install_tools
