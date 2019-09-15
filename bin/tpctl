@@ -99,13 +99,13 @@ function setup_tmpdir {
 
 # clone config repo, change to that directory
 function clone_remote {
+	cd $TMP_DIR
 	if [[ ! -d $(basename $REMOTE_REPO) ]]; then
-		cd $TMP_DIR
 		info "cloning remote"
 		git clone $REMOTE_REPO
 		expect_success "Cannot clone $REMOTE_REPO"
-		cd $(basename $REMOTE_REPO)
 	fi
+	cd $(basename $REMOTE_REPO)
 }
 
 # clone quickstart repo, export QUICKSTART_DIR
@@ -299,7 +299,6 @@ function make_cluster {
 	
 # merge K8s Kubeconfig of cluster into user's kubeconfig file for each switching (see kubectx)
 function merge_kubeconfig {
-	set -xv
 	local localKubeConfig=$(realpath ./kubeconfig.yaml)
 	local kubeconfig=$(get_kubeconfig)
 	if [ "$kubeconfig" != "$localKubeConfig" ]
