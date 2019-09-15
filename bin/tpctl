@@ -75,6 +75,10 @@ function setup_tmpdir {
 function clone_remote {
 	cd $TMP_DIR
 	git clone $REMOTE_REPO
+	if [ $? -ne 0 ]
+	then
+		panic "Cannot clone $REMOTE_REPO"
+	fi
 	cd $(basename $REMOTE_REPO)
 }
 
@@ -108,20 +112,33 @@ function clone_secret_map {
 	popd >/dev/null 2>&1
 }
 
-function get_cluster {
-	yq r values.yaml -j cluster.metadata.name | sed -e 's/"//g'
-}
-
-function get_region {
-	yq r values.yaml cluster.metadata.region | sed -e 's/"//g'
-}
-
 function get_config {
 	yq r values.yaml -j
 }
 
+function must_get_value {
+	local val=$(yq r values.yaml -j $1 | sed -e 's/"//g' -e "s/'//g")
+	if [ $? -ne 0 -o "$val" == "null" -o "$val" == "" ]
+	then
+		panic "Missing $1 from values.yaml file."
+	fi
+	echo $val
+}
+
+function get_cluster {
+	must_get_value "cluster.metadata.name"
+}
+
+function get_region {
+	must_get_value "cluster.metadata.region"
+}
+
 function get_email {
-	yq r values.yaml -j email | sed -e 's/"//g'
+	must_get_value "email" 
+}
+
+function get_aws_account {
+	must_get_value "aws.accountNumber"
 }
 
 function get_environments {
@@ -130,10 +147,6 @@ function get_environments {
 
 function get_iam_users {
 	yq r values.yaml aws.iamUsers | sed -e "s/- //" -e 's/"//g'
-}
-
-function get_aws_account {
-	yq r values.yaml aws.accountNumber | sed -e 's/"//g'
 }
 
 function get_bucket {
@@ -231,13 +244,9 @@ function confirm_github_token {
 }
 
 function get_kubeconfig {
-	local kubeconfig=$(yq r values.yaml kubeconfig | sed -e "s/- //")
-
-	if [ -z "$kubeconfig" -o  "$kubeconfig" == "null" ]
-	then
-    		kubeconfig=~/.kube/config
-	fi
-	echo $(realpath $kubeconfig)
+	kc=$(yq r values.yaml kubeconfig | sed -e 's/"//g' -e "s/'//g")
+	kc=~/.kube/config
+	realpath $kc
 }
 
 
@@ -245,23 +254,27 @@ function make_cluster {
 	local cluster=$(get_cluster)
 	info "creating cluster $cluster"
 
-	local localKubeConfig=$(realpath ./kubeconfig.yaml)
-
-	eksctl create cluster -f config.yaml --kubeconfig $localKubeConfig
+	eksctl create cluster -f config.yaml --kubeconfig ./kubeconfig.yaml
+	git pull
 
 	if [ $? -ne 0 ]
 	then
 		panic "eksctl create cluster failed."
 	fi
 	add_file "./kubeconfig.yaml"
+}
 	
+function merge_kubeconfig {
+	set -xv
+	local localKubeConfig=$(realpath ./kubeconfig.yaml)
+	local kubeconfig=$(get_kubeconfig)
 	if [ "$kubeconfig" != "$localKubeConfig" ]
 	then
-    		if [ -f $kubeconfig ]
+    		if [ -f "$kubeconfig" ]
     		then
         		info "merging kubeconfig into $kubeconfig"
-        		KUBECONFIG=$kubeconfig:$localKubeConfig kubectl config view --flatten >updated.yaml
-        		mv updated.yaml $kubeconfig
+        		KUBECONFIG=$kubeconfig:$localKubeConfig kubectl config view --flatten >$TMP_DIR/updated.yaml
+        		mv $TMP_DIR/updated.yaml $kubeconfig
     		else
         		mkdir -p $(dirname $kubeconfig)
         		info "creating new $kubeconfig" 
@@ -376,7 +389,7 @@ function make_flux {
 	
 	info "installing flux into cluster $cluster"
 
-	unbuffer EKSCTL_EXPERIMENTAL=true eksctl install \
+	EKSCTL_EXPERIMENTAL=true unbuffer eksctl install \
 		flux -f config.yaml --git-url=${REMOTE_REPO}.git --git-email=$email --git-label=$cluster  | tee  $TMP_DIR/eksctl.out
 	
 	if [  $? -ne 0 ]
@@ -560,6 +573,12 @@ function make_values {
 	${EDITOR:-vi} values.yaml
 }
 
+function edit_config {
+	info "exit shell when done making changes."
+	bash
+	confirm "Are you sure you want to commit changes?"
+}
+
 function edit_values {
 	if [ -f values.yaml ]
 	then
@@ -576,13 +595,13 @@ function random_secrets {
 	do
         	for file in $(find $CHART_DIR -name \*secret.yaml -print)
         	do
-                	helm template --namespace $env --set global.secret.generated=true $CHART_DIR  -f  $CHART_DIR/values.yaml -x $file   >x
-                	grep "kind" x >/dev/null 2>&1
+                	helm template --namespace $env --set global.secret.generated=true $CHART_DIR  -f  $CHART_DIR/values.yaml -x $file   >$TMP_DIR/x
+                	grep "kind" $TMP_DIR/x >/dev/null 2>&1
                 	if [ $? -eq 0 ]
                 	then
-                        	cat x
+                        	cat $TMP_DIR/x
                 	fi
-                	rm x
+                	rm $TMP_DIR/x
         	done
 	done
 }
@@ -593,8 +612,14 @@ function delete_cluster {
 	eksctl delete cluster --name=$cluster
 }
 
+function install_tools {
+	info "installing tools"
+	brew bundle --file=${DEV_DIR}/Brewfile
+	pip3 install boto3 --user
+}
+
 function help {
-      echo "$0 [-h|--help] (values|edit|config|cluster|flux|cert|assets|mesh|migrate_secrets|plaintext_secrets|users|deploy_key|delete_cluster)*"
+      echo "$0 [-h|--help] (tools|values|edit_values|config|edit|cluster|flux|cert|assets|mesh|migrate_secrets|plaintext_secrets|users|deploy_key|delete_cluster|kubeconfig)*"
 }
 
 if [ $# -eq 0 ]
@@ -611,7 +636,6 @@ while (( "$#" )); do
       APPROVE=true
       shift 1
       ;;
-
     -h|--help)
       help
       exit 0
@@ -643,7 +667,7 @@ set_development_dir
 for param in $PARAMS
 do
 	case $param in 
-	edit)
+	edit_values)
 		edit_values
 		make_config
 		save_changes "Edited values. Updated config."
@@ -659,6 +683,7 @@ do
 		;;
 	cluster)
 		make_cluster
+		merge_kubeconfig
 		make_users
 		save_changes "Added cluster and users"
 		;;
@@ -705,7 +730,20 @@ do
 		make_key
 		;;
 	delete_cluster)
+		local cluster=$(get_cluster)
 		delete_cluster
+		info "cluster $cluster deletion  takes ~10 minutes to complete"
+		;;
+	tools)
+		install_tools
+		info "tools installed"
+		;;
+	edit)
+		edit_config
+		save_changes "Manual changes."
+		;;
+	kubeconfig)
+		merge_kubeconfig
 		;;
 	esac
 done
