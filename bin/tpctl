@@ -78,49 +78,70 @@ function check_remote_repo {
 	fi
 }
 
+# clean up all temporary files
+function cleanup {
+	if [ -f "$TMP_DIR" ]
+	then
+		rm -rf $TMP_DIR
+	fi
+}
+
+
 # create temporary workspace to clone Git repos into, change to that directory
 function setup_tmpdir {
-	TMP_DIR=`mktemp -d 2>/dev/null || mktemp -d -t 'TMP_DIR'`
-	trap "rm -rf $TMP_DIR" EXIT
-	cd $TMP_DIR
+	if [[ ! -d $TMP_DIR ]]; then
+		info "creating tmp dir"
+		TMP_DIR=`mktemp -d 2>/dev/null || mktemp -d -t 'TMP_DIR'`
+		trap cleanup EXIT
+		cd $TMP_DIR
+	fi
 }
 
 # clone config repo, change to that directory
 function clone_remote {
-	cd $TMP_DIR
-	git clone $REMOTE_REPO
-	expect_success "Cannot clone $REMOTE_REPO"
-	cd $(basename $REMOTE_REPO)
+	if [[ ! -d $(basename $REMOTE_REPO) ]]; then
+		cd $TMP_DIR
+		info "cloning remote"
+		git clone $REMOTE_REPO
+		expect_success "Cannot clone $REMOTE_REPO"
+		cd $(basename $REMOTE_REPO)
+	fi
 }
 
 # clone quickstart repo, export QUICKSTART_DIR
 function set_quickstart_dir {
-	info "cloning quickstart"
-	pushd $TMP_DIR >/dev/null 2>&1
-	git clone git@github.com:/tidepool-org/tidepool-quickstart
-	export QUICKSTART_DIR=$(realpath tidepool-quickstart)
-	popd >/dev/null 2>&1
+	if [[ ! -d $QUICKSTART_DIR ]]; then
+		info "cloning quickstart"
+		pushd $TMP_DIR >/dev/null 2>&1
+		git clone git@github.com:/tidepool-org/tidepool-quickstart
+		export QUICKSTART_DIR=$(realpath tidepool-quickstart)
+		popd >/dev/null 2>&1
+	fi
 }
 
 # clone development repo, exports DEV_DIR and CHART_DIR
 function set_development_dir {
-	info "cloning development tools"
-	pushd $TMP_DIR >/dev/null 2>&1
-	git clone git@github.com:/tidepool-org/development
-	cd development
-       	git checkout k8s
-	DEV_DIR=$(realpath .)
-	CHART_DIR=${DEV_DIR}/charts/tidepool/0.1.7
-	popd >/dev/null 2>&1
+	if [[ ! -d $CHART_DIR ]]; then
+		info "cloning development tools"
+		pushd $TMP_DIR >/dev/null 2>&1
+		git clone git@github.com:/tidepool-org/development
+		cd development
+       		git checkout k8s
+		DEV_DIR=$(realpath .)
+		CHART_DIR=${DEV_DIR}/charts/tidepool/0.1.7
+		popd >/dev/null 2>&1
+	fi
 }
 
 # clone secret-map repo, export SM_DIR
 function clone_secret_map {
-	info "cloning secret-map"
-	pushd $TMP_DIR >/dev/null 2>&1
-	git clone git@github.com:/tidepool-org/secret-map
-	SM_DIR=$(realpath ./secret-map)
-	popd >/dev/null 2>&1
+	if [[ ! -d $SM_DIR ]]; then
+		info "cloning secret-map"
+		pushd $TMP_DIR >/dev/null 2>&1
+		git clone git@github.com:/tidepool-org/secret-map
+		SM_DIR=$(realpath ./secret-map)
+		popd >/dev/null 2>&1
+	fi
 }
 
 # get values file
@@ -194,11 +215,6 @@ function make_assets {
 	done
 }
 
-# clean up all temporary files
-function cleanup {
-	rm -rf $TMP_DIR
-}
-
 # retrieve helm home
 function get_helm_home {
 	echo ${HELM_HOME:-~/.helm}
@@ -267,7 +283,7 @@ function confirm_github_token {
 # retrieve kubeconfig value
 function get_kubeconfig {
 	kc=$(must_get_value "kubeconfig")
-	realpath $kc
+	realpath $(eval "echo $kc")
 }
 
 # create EKS cluster using config.yaml file, add kubeconfig.yaml to config repo
@@ -628,9 +644,15 @@ function install_tools {
 	pip3 install boto3 --user
 }
 
+function await_deletion {
+	local cluster=$(get_cluster)
+	info "awaiting cluster $cluster deletion"
+	aws cloudformation wait stack-delete-complete --stack-name eksctl-${cluster}-cluster
+}
+
 # show help
 function help {
-      echo "$0 [-h|--help] (tools|values|edit_values|config|edit|cluster|flux|cert|assets|mesh|migrate_secrets|plaintext_secrets|users|deploy_key|delete_cluster|remove_mesh|kubeconfig)*"
+      echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit|cluster|flux|cert|assets|mesh|migrate_secrets|plaintext_secrets|users|deploy_key|delete_cluster|await_deletion|remove_mesh|kubeconfig)*"
 }
 
 if [ $# -eq 0 ]
@@ -670,35 +692,71 @@ eval set -- "$PARAMS"
 
 define_colors
 check_remote_repo
-setup_tmpdir
-clone_remote
-set_quickstart_dir
-set_development_dir
 
 for param in $PARAMS
 do
 	case $param in 
+	all)
+		setup_tmpdir
+		clone_remote
+		set_quickstart_dir
+		set_development_dir
+		confirm_github_token
+		check_values_not_exist
+                make_values
+                save_changes "Added values"
+		make_config
+                save_changes "Added config packages"
+		make_cluster
+                merge_kubeconfig
+                make_users
+                save_changes "Added cluster and users"
+		make_mesh
+                save_changes "Added linkerd mesh"
+                make_flux
+                save_ca
+                make_cert
+                make_key
+                update_flux
+                save_changes "Added flux"
+		;;
 	edit_values)
+		setup_tmpdir
+		clone_remote
 		edit_values
 		make_config
 		save_changes "Edited values. Updated config."
 		;;
 	values)
+		setup_tmpdir
+		clone_remote
 		check_values_not_exist
 		make_values
 		save_changes "Added values"
 		;;
 	config)
+		setup_tmpdir
+		clone_remote
+		set_quickstart_dir
+		set_development_dir
 		make_config
 		save_changes "Added config packages"
 		;;
 	cluster)
+		setup_tmpdir
+		clone_remote
+		set_quickstart_dir
+		set_development_dir
 		make_cluster
 		merge_kubeconfig
 		make_users
 		save_changes "Added cluster and users"
 		;;
 	flux)
+		setup_tmpdir
+		clone_remote
+		set_quickstart_dir
+		set_development_dir
 		confirm_github_token
 		make_flux
 		save_ca
@@ -708,44 +766,77 @@ do
 		save_changes "Added flux"
 		;;
 	cert)
+		setup_tmpdir
+		clone_remote
+		set_development_dir
 		make_cert
 		;;
 	assets)
 		make_assets
 		;;
 	mesh)
+		setup_tmpdir
+		clone_remote
+		set_quickstart_dir
+		set_development_dir
 		make_mesh
 		save_changes "Added linkerd mesh"
 		;;
         random_secrets)
+		setup_tmpdir
+		clone_remote
+		set_quickstart_dir
+		set_development_dir
 		local cluster=$(get_cluster)
 		random_secrets | external_secret upsert $cluster encoded | separate_files
 	        save_changes "Added random secrets"
 		;;
 	migrated_secrets)
+		setup_tmpdir
+		clone_remote
+		set_quickstart_dir
+		set_development_dir
 		clone_secret_map
 		local cluster=$(get_cluster)
 		migrate_secrets | external_secret upsert $cluster plaintext | separate_files | add_names
 	        save_changes "Added migrated secrets"
 		;;
 	plaintext_secrets)
+		setup_tmpdir
+		clone_remote
+		set_quickstart_dir
+		set_development_dir
 		local cluster=$(get_cluster)
 		external_secret upsert $cluster plaintext | separate_files | add_names
 	        save_changes "Added plaintext secrets"
 		;;
 	users)
+		setup_tmpdir
+		clone_remote
 		make_users
 		;;
 	deploy_key)
+		setup_tmpdir
+		clone_remote
 		confirm_github_token
 		make_key
 		;;
 	delete_cluster)
+		setup_tmpdir
+		clone_remote
 		local cluster=$(get_cluster)
 		delete_cluster
 		info "cluster $cluster deletion  takes ~10 minutes to complete"
 		;;
+	await_deletion)
+		setup_tmpdir
+		clone_remote
+		await_deletion
+		info "cluster deleted"
+		;;
 	remove_mesh)
+		setup_tmpdir
+		clone_remote
 		remove_mesh
 		save_changes "Removed mesh."
 		;;
@@ -754,10 +845,14 @@ do
 		info "tools installed"
 		;;
 	edit)
+		setup_tmpdir
+		clone_remote
 		edit_config
 		save_changes "Manual changes."
 		;;
 	kubeconfig)
+		setup_tmpdir
+		clone_remote
 		merge_kubeconfig
 		;;
 	esac
