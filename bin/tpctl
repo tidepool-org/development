@@ -525,18 +525,20 @@ function make_mesh {
 	info "linkerd installed"
 }
 
-# migrate secrets from legacy environments
-function migrate_secrets {
+# get secrets from legacy environments if requested
+function get_secrets {
 	local cluster=$(get_cluster)
-	info "migrating secrets"
 	local env
 	for env in $(get_environments)
 	do
 		local source=$(yq r values.yaml environments.${env}.source)
-		info "migrating ${source}"
+		if [ "$source" == "null" -o  "$source" == "" ]
+		then
+			continue
+		fi
 		if [ "$source" == "dev" -o "$source" == "stg" -o "$source" == "int" -o "$source" == "prd" ]
 		then
-			$SM_DIR/git_to_map $source | $SM_DIR/map_to_k8s $env 
+			$SM_DIR/bin/git_to_map $source | $SM_DIR/bin/map_to_k8s $env 
 		else
 			panic "Unknown secret source $source"
 		fi
@@ -603,7 +605,7 @@ function edit_values {
 
 
 # generate random secrets 
-function random_secrets {
+function randomize_secrets {
 	local env
 	for env in $(get_environments)
 	do
@@ -649,9 +651,15 @@ function await_deletion {
 	aws cloudformation wait stack-delete-complete --stack-name eksctl-${cluster}-cluster
 }
 
+function migrate_secrets {
+	set -xv
+	local cluster=$(get_cluster)
+	get_secrets | external_secret upsert $cluster plaintext | separate_files | add_names
+}
+
 # show help
 function help {
-      echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit|cluster|flux|cert|assets|mesh|migrate_secrets|plaintext_secrets|users|deploy_key|delete_cluster|await_deletion|remove_mesh|kubeconfig)*"
+      echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit|cluster|flux|cert|assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|users|deploy_key|delete_cluster|await_deletion|remove_mesh|kubeconfig)*"
 }
 
 if [ $# -eq 0 ]
@@ -696,11 +704,11 @@ for param in $PARAMS
 do
 	case $param in 
 	all)
+		confirm_github_token
 		setup_tmpdir
 		clone_remote
 		set_quickstart_dir
 		set_development_dir
-		confirm_github_token
 		check_values_not_exist
                 make_values
                 save_changes "Added values"
@@ -718,6 +726,9 @@ do
                 make_key
                 update_flux
                 save_changes "Added flux"
+		clone_secret_map
+		migrate_secrets
+                save_changes "Added migrated secrets"
 		;;
 	edit_values)
 		setup_tmpdir
@@ -744,7 +755,6 @@ do
 	cluster)
 		setup_tmpdir
 		clone_remote
-		set_quickstart_dir
 		set_development_dir
 		make_cluster
 		merge_kubeconfig
@@ -776,34 +786,29 @@ do
 	mesh)
 		setup_tmpdir
 		clone_remote
-		set_quickstart_dir
 		set_development_dir
 		make_mesh
 		save_changes "Added linkerd mesh"
 		;;
-        random_secrets)
+        randomize_secrets)
 		setup_tmpdir
 		clone_remote
-		set_quickstart_dir
 		set_development_dir
 		local cluster=$(get_cluster)
-		random_secrets | external_secret upsert $cluster encoded | separate_files
+		randomize_secrets | external_secret upsert $cluster encoded | separate_files
 	        save_changes "Added random secrets"
 		;;
-	migrated_secrets)
+	migrate_secrets)
 		setup_tmpdir
 		clone_remote
-		set_quickstart_dir
 		set_development_dir
 		clone_secret_map
-		local cluster=$(get_cluster)
-		migrate_secrets | external_secret upsert $cluster plaintext | separate_files | add_names
+		migrate_secrets
 	        save_changes "Added migrated secrets"
 		;;
-	plaintext_secrets)
+	upsert_plaintext_secrets)
 		setup_tmpdir
 		clone_remote
-		set_quickstart_dir
 		set_development_dir
 		local cluster=$(get_cluster)
 		external_secret upsert $cluster plaintext | separate_files | add_names
@@ -857,4 +862,3 @@ do
 	esac
 done
 
-cleanup
