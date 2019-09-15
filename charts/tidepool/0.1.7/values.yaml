@@ -1,8 +1,7 @@
 global:
   fullnameOverride: ""                            #
   nameOverride: ""                                # the name to use for the helm chart, if given
-  region: "us-west-2"                           # AWS region
-  cluster: ""                                   # cluster name
+  region: "us-west-2"                         # AWS region
   logLevel: info                                # the default log level for all services
   gateway:
     default:
