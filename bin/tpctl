@@ -183,7 +183,7 @@ function get_helm_home {
 }
 
 # make TLS certificate to allow local helm client to access tiller with TLS
-function make_certs {
+function make_cert {
 	local cluster=$(get_cluster)
 	local helm_home=$(get_helm_home)
 
@@ -223,8 +223,11 @@ function make_certs {
 	rm -rf $helm_cluster_home
 	mkdir -p $helm_cluster_home
 	cp helm-client.pem $helm_cluster_home/cert.pem
+	add_file $helm_cluster_home/cert.pem
 	cp helm-client-key.pem $helm_cluster_home/key.pem
+	add_file $helm_cluster_home/key.pem
 	cp ca.pem $helm_cluster_home/ca.pem
+	add_file $helm_cluster_home/ca.pem
 	rm -f $helm_home/{cert.pem,key.pem,ca.pem}
 	cp $helm_cluster_home/{cert.pem,key.pem,ca.pem} $helm_home
 	
@@ -703,7 +706,7 @@ do
 		save_changes "Added flux"
 		;;
 	cert)
-		make_certs
+		make_cert
 		;;
 	assets)
 		make_assets
