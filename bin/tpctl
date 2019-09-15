@@ -16,7 +16,7 @@ function define_colors {
 }
 
 function panic {
-	echo "${RED}[X] ${1}${RESET}"
+	echo "${RED}[✖] ${1}${RESET}"
 	exit 1
 }
 
@@ -25,7 +25,7 @@ function info {
 }
 
 function add_file {
-	info "adding $1"
+	echo "${GREEN}[ℹ] adding ${1}${RESET}"
 }
 
 function add_names {
@@ -36,7 +36,7 @@ function add_names {
 }
 
 function rename_file {
-	info "renaming $1 $2"
+	echo "${GREEN}[√] renaming ${1} ${2}${RESET}"
 }
 
 function confirm {
@@ -81,31 +81,31 @@ function clone_remote {
 # clone quickstart repo, export QUICKSTART_DIR
 function set_quickstart_dir {
 	info "cloning quickstart"
-	pushd $TMP_DIR
+	pushd $TMP_DIR >/dev/null 2>&1
 	git clone git@github.com:/tidepool-org/tidepool-quickstart
 	export QUICKSTART_DIR=$(realpath tidepool-quickstart)
-	popd
+	popd >/dev/null 2>&1
 }
 
 # clone development repo, exports DEV_DIR and CHART_DIR
 function set_development_dir {
 	info "cloning development tools"
-	pushd $TMP_DIR
+	pushd $TMP_DIR >/dev/null 2>&1
 	git clone git@github.com:/tidepool-org/development
 	cd development
        	git checkout k8s
 	DEV_DIR=$(realpath .)
 	CHART_DIR=${DEV_DIR}/charts/tidepool/0.1.7
-	popd
+	popd >/dev/null 2>&1
 }
 
 # clone secret-map repo, export SM_DIR
 function clone_secret_map {
 	info "cloning secret-map"
-	pushd $TMP_DIR
+	pushd $TMP_DIR >/dev/null 2>&1
 	git clone git@github.com:/tidepool-org/secret-map
 	SM_DIR=$(realpath ./secret-map)
-	popd
+	popd >/dev/null 2>&1
 }
 
 function get_cluster {
@@ -247,13 +247,13 @@ function make_cluster {
 
 	local localKubeConfig=$(realpath ./kubeconfig.yaml)
 
-	add_file "./kubeconfig.yaml"
 	eksctl create cluster -f config.yaml --kubeconfig $localKubeConfig
 
 	if [ $? -ne 0 ]
 	then
 		panic "eksctl create cluster failed."
 	fi
+	add_file "./kubeconfig.yaml"
 	
 	if [ "$kubeconfig" != "$localKubeConfig" ]
 	then
@@ -317,24 +317,24 @@ function make_config {
 			mkdir -p $dir
 			if [ "${filename: -5}" == ".tmpl" ]
 			then
-				add_file ${filename%.tmpl}
+				add_file $dir/${filename%.tmpl}
 				envtpl $fullpath >$dir/${filename%.tmpl}
         		elif [ "${filename: -12}" == "-secret.yaml" ]
 			then
 				echo >/dev/null
         		elif [ "${filename: -5}" == ".yaml" ]
 			then
-				add_file $filename
+				add_file $dir/$filename
 				cp $fullpath $dir/$filename
 			elif [ "${filename: -8}" == ".jsonnet" ]
 			then
-				add_file ${filename%.jsonnet}
+				add_file $dir/${filename%.jsonnet}
 				jsonnet --tla-code config="$config" $fullpath | yq r - > $dir/${filename%.jsonnet}
 			fi
   		done
 	done
 	
-	info "creating eksctl ClusterConfig manifest}"
+	info "creating eksctl ClusterConfig manifest"
 	add_file "config.yaml"
 	jsonnet --tla-code config="$config" ${QUICKSTART_DIR}/eksctl/cluster_config.jsonnet | yq r - > config.yaml
 	
@@ -354,7 +354,6 @@ function make_config {
 	
 # persists changes to config repo in GitHub
 function save_changes {
-	echo $(pwd)
 	info "saving changes to config repo"
 	git add .
 	git commit -m "$1"
@@ -513,8 +512,6 @@ function migrate_secrets {
 		info "migrating ${source}"
 		if [ "$source" == "dev" -o "$source" == "stg" -o "$source" == "int" -o "$source" == "prd" ]
 		then
-			echo $"external-secrets/migrated-external-secrets.yaml"
-			mkdir -p environments/$env/external-secrets
 			$SM_DIR/git_to_map $source | $SM_DIR/map_to_k8s $env 
 		else
 			panic "Unknown secret source $source"
@@ -567,7 +564,7 @@ function edit_values {
 	if [ -f values.yaml ]
 	then
         	info "editing values file for repo $REMOTE_REPO"
-        	vi values.yaml
+		${EDITOR:-vi} values.yaml
 	else
 		panic "values.yaml does not exist."
 	fi
@@ -590,6 +587,22 @@ function random_secrets {
 	done
 }
 
+function delete_cluster {
+	cluster=$(get_cluster)
+	confirm "Are you sure that you want to delete cluster $cluster?"
+	eksctl delete cluster --name=$cluster
+}
+
+function help {
+      echo "$0 [-h|--help] (values|edit|config|cluster|flux|cert|assets|mesh|migrate_secrets|plaintext_secrets|users|deploy_key|delete_cluster)*"
+}
+
+if [ $# -eq 0 ]
+then
+	help
+	exit 0
+fi
+
 APPROVE=false
 PARAMS=""
 while (( "$#" )); do
@@ -597,6 +610,11 @@ while (( "$#" )); do
     -y|--approve)
       APPROVE=true
       shift 1
+      ;;
+
+    -h|--help)
+      help
+      exit 0
       ;;
     --) # end argument parsing
       shift
@@ -685,6 +703,9 @@ do
 	deploy_key)
 		confirm_github_token
 		make_key
+		;;
+	delete_cluster)
+		delete_cluster
 		;;
 	esac
 done
