@@ -86,7 +86,6 @@ echo "${magenta}[√] creating manifests for cluster $ClusterName in repo $remot
 # run template processor to create non-Tidepool services
 cd $QUICKSTART_DIR
 
-mkdir -p $CONFIG_DIR/external-secrets
 dirs=""
 for dir in $(ls pkgs)
 do
@@ -108,8 +107,7 @@ do
 		envtpl $file >$CONFIG_DIR/${file%.tmpl}
         elif [ "${file: -12}" == "-secret.yaml" ]
 	then
-		echo external-secrets/$(basename $file)
-		$DEV_DIR/bin/external_secret dryrun $ClusterName encoded < $file > $CONFIG_DIR/external-secrets/$(basename $file)
+		echo >/dev/null
         elif [ "${file: -5}" == ".yaml" ]
 	then
 		echo $file
@@ -139,15 +137,6 @@ do
 	echo namespaces/${env}-namespace.yaml
 	jsonnet --tla-code config="$config" --tla-str namespace=$env  ${QUICKSTART_DIR}/tidepool/tidepool-helmrelease.jsonnet | yq r - > $envdir/tidepool-helmrelease.yaml
 	jsonnet --tla-code config="$config" --tla-str namespace=$env  ${QUICKSTART_DIR}/tidepool/tidepool-namespace.jsonnet | yq r - > $CONFIG_DIR/namespaces/${env}-namespace.yaml
-
-	echo "${magenta}[√] creating $env environment external secrets manifests${reset}"
-        mkdir -p $mytmpdir/secrets
-	mkdir -p $envdir/external-secrets
-        for file in $(find $CHART_DIR -name \*secret.yaml -print)
-        do
-		echo environments/$env/external-secrets/$(basename $file)
-		helm template --namespace $env --set global.secret.enabled=true $CHART_DIR -f  $CHART_DIR/values.yaml -x $file  | $DEV_DIR/bin/external_secret dryrun $ClusterName encoded > $envdir/external-secrets/$(basename $file)
-	done
 done
 
 echo "${magenta}[√] committing changes${reset}"
