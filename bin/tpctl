@@ -91,7 +91,7 @@ function cleanup {
 # create temporary workspace to clone Git repos into, change to that directory
 function setup_tmpdir {
 	if [[ ! -d $TMP_DIR ]]; then
-		info "creating tmp dir"
+		info "creating temporary working directory"
 		TMP_DIR=`mktemp -d 2>/dev/null || mktemp -d -t 'TMP_DIR'`
 		trap cleanup EXIT
 		cd $TMP_DIR
@@ -109,13 +109,13 @@ function clone_remote {
 	cd $(basename $REMOTE_REPO)
 }
 
-# clone quickstart repo, export QUICKSTART_DIR
+# clone quickstart repo, export TEMPLATE_DIR
 function set_quickstart_dir {
-	if [[ ! -d $QUICKSTART_DIR ]]; then
+	if [[ ! -d $TEMPLATE_DIR ]]; then
 		info "cloning quickstart"
 		pushd $TMP_DIR >/dev/null 2>&1
-		git clone git@github.com:/tidepool-org/tidepool-quickstart
-		export QUICKSTART_DIR=$(realpath tidepool-quickstart)
+		git clone git@github.com:/tidepool-org/eks-template
+		export TEMPLATE_DIR=$(realpath eks-template)
 		popd >/dev/null 2>&1
 	fi
 }
@@ -386,11 +386,11 @@ function template_files {
 function make_shared_config {
 	info "creating namespaces and package manifests"
 	local config=$(get_config)
-	template_files "$config" $QUICKSTART_DIR/namespaces $QUICKSTART_DIR/
+	template_files "$config" $TEMPLATE_DIR/namespaces $TEMPLATE_DIR/
 	local dir
-	for dir in $(enabled_pkgs $QUICKSTART_DIR/pkgs pkgs)
+	for dir in $(enabled_pkgs $TEMPLATE_DIR/pkgs pkgs)
 	do
-		template_files "$config" $QUICKSTART_DIR/pkgs/$dir $QUICKSTART_DIR/
+		template_files "$config" $TEMPLATE_DIR/pkgs/$dir $TEMPLATE_DIR/
 	done
 }
 
@@ -399,7 +399,7 @@ function make_cluster_config {
 	local config=$(get_config)
 	info "creating eksctl ClusterConfig manifest"
 	add_file "config.yaml"
-	jsonnet --tla-code config="$config" ${QUICKSTART_DIR}/eksctl/cluster_config.jsonnet | yq r - > config.yaml
+	jsonnet --tla-code config="$config" ${TEMPLATE_DIR}/eksctl/cluster_config.jsonnet | yq r - > config.yaml
 }
 
 # make K8s manifests for enviroments given config, path, prefix, and environment name
@@ -429,9 +429,9 @@ function make_environment_config {
 	for env in $(get_environments)
 	do
 		info "creating $env environment manifests"
-		for dir in $(enabled_pkgs $QUICKSTART_DIR/environments environments.$env)
+		for dir in $(enabled_pkgs $TEMPLATE_DIR/environments environments.$env)
 		do
-			environment_template_files "$config" $QUICKSTART_DIR/environments/$dir $QUICKSTART_DIR/environments/ $env
+			environment_template_files "$config" $TEMPLATE_DIR/environments/$dir $TEMPLATE_DIR/environments/ $env
 		done
 	done
 }
@@ -520,7 +520,7 @@ function update_flux {
 	then
 		yq r flux/flux-deployment.yaml -j > $TMP_DIR/flux.json
 		yq r flux/helm-operator-deployment.yaml -j > $TMP_DIR/helm.json
-        	jsonnet  --tla-code-file flux="$TMP_DIR/flux.json"  --tla-code-file helm="$TMP_DIR/helm.json" $QUICKSTART_DIR/flux/flux.jsonnet >$TMP_DIR/updated.json
+        	jsonnet  --tla-code-file flux="$TMP_DIR/flux.json"  --tla-code-file helm="$TMP_DIR/helm.json" $TEMPLATE_DIR/flux/flux.jsonnet >$TMP_DIR/updated.json
 
 		add_file flux/flux-deployment-updated.yaml
         	yq r $TMP_DIR/updated.json flux >flux/flux-deployment-updated.yaml
@@ -626,7 +626,7 @@ function expect_values_not_exist {
 function make_values {
 	info "creating values.yaml"
 	add_file "values.yaml"
-	cp $TMP_DIR/tidepool-quickstart/values.yaml .
+	cp $TMP_DIR/eks-template/values.yaml .
 	${EDITOR:-vi} values.yaml
 }
 
