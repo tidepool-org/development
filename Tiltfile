@@ -272,7 +272,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       live_update_commands = fallback_commands + sync_commands + run_commands;
 
       custom_build(
-        ref=overrides.get('image'),
+        ref=getNested(overrides, 'deployment.image'),
         command='{} {} {}'.format(preBuildCommand, buildCommand, postBuildCommand),
         deps=build_deps,
         disable_push=True,
