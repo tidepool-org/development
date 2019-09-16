@@ -15,4 +15,5 @@ web
 *.log
 */packageMounts
 */packageMountDeps
-local
+local/*
+!local/Tiltconfig.yaml
