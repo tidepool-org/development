@@ -656,7 +656,14 @@ function expect_values_not_exist {
 function make_values {
 	start "creating values.yaml"
 	add_file "values.yaml"
-	cp $TMP_DIR/eks-template/values.yaml .
+	local https=$(echo $REMOTE_REPO | sed -e "s#git@github.com:#https://github.com/#")
+	cat >values.yaml <<!
+github:
+  git: $REMOTE_REPO
+  https: $https
+
+!
+	cat $TMP_DIR/eks-template/values.yaml >>values.yaml
 	${EDITOR:-vi} values.yaml
 	complete "created values.yaml"
 }
