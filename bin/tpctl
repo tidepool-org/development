@@ -574,7 +574,7 @@ function get_secrets {
 	local env
 	for env in $(get_environments)
 	do
-		local source=$(yq r values.yaml environments.${env}.source)
+		local source=$(yq r values.yaml environments.${env}.tidepool.source)
 		if [ "$source" == "null" -o  "$source" == "" ]
 		then
 			continue
@@ -679,6 +679,18 @@ function remove_mesh {
 	info "removing linkerd"
 	linkerd install --ignore-cluster | kubectl delete -f -
 	rm -rf linkerd
+}
+
+function create_repo {
+	read -p "${GREEN}repo name?${RESET} "  -r
+	REMOTE_REPO=$REPLY
+	if [[ "$REMOTE_REPO" != *\/* ]] && [[ "$REMOTE_REPO" != *\\* ]]
+	then
+  		REMOTE_REPO=tidepool-org/$REMOTE_REPO
+	fi
+	git init
+	hub create $REMOTE_REPO
+	check_remote_repo
 }
 
 # install installation tools
@@ -924,6 +936,10 @@ do
 		setup_tmpdir
 		clone_remote
 		merge_kubeconfig
+		;;
+	repo)
+		setup_tmpdir
+		create_repo
 		;;
 	esac
 done

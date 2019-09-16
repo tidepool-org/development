@@ -32,6 +32,7 @@ for value in input:
         path = "%s/%s" % ( convert(value["kind"]), value["metadata"]["namespace"])
         name = "%s.yaml" % value["metadata"]["name"]
         mkdir_p(path)
+        print(path + "/" + name)
         with open(path + "/" + name, "w") as out:
             yaml.dump(value, out)
             out.flush()
