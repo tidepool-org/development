@@ -54,7 +54,7 @@ function rename_file {
 
 # conform action, else exit
 function confirm {
-	if [ "$APPROVE" != "true ]
+	if [ "$APPROVE" != "true" ]
 	then
 		local msg=$1
 		read -p "${RED}$msg${RESET} " -n 1 -r
