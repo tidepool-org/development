@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 #
 # Configure EKS cluster to run Tidepool services
 #
@@ -336,24 +336,28 @@ function reset_config_dir {
 	mv $TMP_DIR/values.yaml .
 }
 
-# create config manifests 
-function make_config {
-	local cluster=$(get_cluster)
-	local config=$(get_config)
-	info "creating manifests for cluster $cluster"
-	go get github.com/subfuzion/envtpl/...
+function enabled_pkgs {
 	local pkgs=""
-	local dir
-	for dir in $(ls $QUICKSTART_DIR/pkgs)
+	local directory=$1
+	local ldir=$(basename $directory)
+	local key=$2
+	for dir in $(ls $directory)
 	do
 		local pkg=$(basename $dir)
-		local enabled=$(yq r values.yaml pkgs.${pkg}.enabled)
+		local enabled=$(yq r values.yaml $key.${pkg}.enabled)
 		if [ "$enabled" == "true" ]
 		then
-			pkgs="${pkgs} pkgs/$pkg"
+			pkgs="${pkgs} $ldir/$pkg"
         	fi
 	done
+	echo $pkgs
+}
+
+function make_shared_config {
 	info "creating namespaces and package manifests"
+	local cluster=$(get_cluster)
+	local config=$(get_config)
+	local pkgs=$(enabled_pkgs $QUICKSTART_DIR/pkgs pkgs)
 	local dir
 	for dir in namespaces $pkgs
 	do
@@ -366,9 +370,6 @@ function make_config {
 			then
 				add_file $dir/${filename%.tmpl}
 				envtpl $fullpath >$dir/${filename%.tmpl}
-        		elif [ "${filename: -12}" == "-secret.yaml" ]
-			then
-				echo >/dev/null
         		elif [ "${filename: -5}" == ".yaml" ]
 			then
 				add_file $dir/$filename
@@ -380,23 +381,50 @@ function make_config {
 			fi
   		done
 	done
-	
+}
+
+function make_cluster_config {
+	local config=$(get_config)
 	info "creating eksctl ClusterConfig manifest"
 	add_file "config.yaml"
 	jsonnet --tla-code config="$config" ${QUICKSTART_DIR}/eksctl/cluster_config.jsonnet | yq r - > config.yaml
-	
+}
+
+function make_environment_config {
+	local cluster=$(get_cluster)
+	local config=$(get_config)
 	local env
 	for env in $(get_environments)
 	do
 		local envdir=environments/$env
-		mkdir -p $envdir
-	
 		info "creating $env environment manifests"
-		add_file environments/$env/tidepool-helmrelease.yaml
-		add_file namespaces/${env}-namespace.yaml
-		jsonnet --tla-code config="$config" --tla-str namespace=$env  ${QUICKSTART_DIR}/tidepool/tidepool-helmrelease.jsonnet | yq r - > $envdir/tidepool-helmrelease.yaml
-		jsonnet --tla-code config="$config" --tla-str namespace=$env  ${QUICKSTART_DIR}/tidepool/tidepool-namespace.jsonnet | yq r - > namespaces/${env}-namespace.yaml
+                local fullpath
+		local pkgs=$(enabled_pkgs $QUICKSTART_DIR/environments environments.$env)
+
+		for dir in $pkgs
+		do
+                	for fullpath in $(find $QUICKSTART_DIR/$dir -type f -print)
+			do
+				mkdir -p $envdir/$dir
+				local filename=$(basename $fullpath)
+				if [ "${filename: -8}" == ".jsonnet" ]
+				then
+					add_file $envdir/$dir/${filename%.jsonnet}
+					jsonnet --tla-code config="$config" --tla-str namespace=$env $fullpath | yq r - > $envdir/$dir/${filename%.jsonnet}
+				fi
+			done
+		done
 	done
+}
+
+# create config manifests 
+function make_config {
+	local cluster=$(get_cluster)
+	local config=$(get_config)
+	info "creating manifests for cluster $cluster"
+	make_shared_config
+	make_cluster_config
+	make_environment_config
 }
 	
 # persist changes to config repo in GitHub
@@ -643,6 +671,7 @@ function install_tools {
 	info "installing tools"
 	brew bundle --file=${DEV_DIR}/Brewfile
 	pip3 install boto3 --user
+	go get github.com/subfuzion/envtpl/...
 }
 
 function await_deletion {
@@ -741,6 +770,7 @@ do
 		setup_tmpdir
 		clone_remote
 		check_values_not_exist
+		set_quickstart_dir
 		make_values
 		save_changes "Added values"
 		;;
