@@ -226,9 +226,9 @@ task:
   dockerFile: 'Dockerfile.task'
   rebuildCommand: 'make service-build'
 
-tidewhisperer:
+tide-whisperer:
   deployment:
-    # image: tidepool-k8s-tidewhisperer
+    # image: tidepool-k8s-tide-whisperer
   # hostPath: '~/go/src/github.com/tidepool-org/tide-whisperer'
   containerPath: '/go/src/github.com/tidepool-org/tide-whisperer'
   rebuildCommand: './build.sh'
