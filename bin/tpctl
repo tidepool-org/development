@@ -710,7 +710,6 @@ function await_deletion {
 
 # migrate secrets from legacy GitHub repo to AWS secrets manager
 function migrate_secrets {
-	set -xv
 	local cluster=$(get_cluster)
 	get_secrets | external_secret upsert $cluster plaintext | separate_files | add_names
 }
