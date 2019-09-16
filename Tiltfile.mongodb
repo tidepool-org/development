@@ -1,5 +1,6 @@
 load('./Tiltfile.global', 'getNested', 'config', 'mongo_helm_chart_dir')
 
+
 ### Main Start ###
 def main():
   # Provision the gloo gateway service
@@ -11,9 +12,9 @@ def main():
 
 ### MongoDB Start ###
 def provisionMongoDB ():
-  mongo_helm_template_cmd = 'helm template --name tidepool-local-db --namespace default '
-
   mongodb_data_dir = getNested(config, 'mongodb.hostPath')
+
+  mongo_helm_template_cmd = 'helm template --name tilt-mongodb --namespace default '
   if mongodb_data_dir:
     mongo_helm_template_cmd += '--set "mongodb.hostPath={}" '.format(mongodb_data_dir)
 

@@ -1,5 +1,4 @@
 load('./Tiltfile.global', 'absolute_dir', 'getNested', 'tidepool_helm_overrides_file', 'config', 'tidepool_helm_charts_version', 'tidepool_helm_chart_dir', 'mongo_helm_chart_dir', 'is_shutdown')
-load('./Tiltfile.proxy', 'provisionGlooGatewayDependancies')
 
 ### Main Start ###
 def main():
@@ -9,7 +8,7 @@ def main():
     watch_file('./local/Tiltconfig.yaml')
 
   # Set up tidepool helm template command
-  tidepool_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
+  tidepool_helm_template_cmd = 'helm template --name tilt-tidepool --namespace default '
 
   gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
   gateway_port_forward_host_port = gateway_port_forwards[0].split(':')[0]
@@ -18,7 +17,6 @@ def main():
   mongodb_port_forward_host_port = mongodb_port_forwards[0].split(':')[0]
 
   if not is_shutdown:
-    provisionGlooGatewayDependancies()
     provisionClusterRoleBindings()
     provisionServerSecrets()
     provisionConfigMaps()
@@ -42,8 +40,8 @@ def main():
   else:
     # Shut down the mongodb and proxy services
     if not getNested(config, 'mongodb.useExternal'):
-      local('tilt down --file=Tiltfile.mongodb &>/dev/null &')
-    local('tilt down --file=Tiltfile.proxy &>/dev/null &')
+      local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.mongodb &>/dev/null &')
+    local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.proxy &>/dev/null &')
 
     # Clean up any tilt up backround processes
     local("for pid in $(ps -ef | awk '/tilt\ up/ {print $2}'); do kill -9 $pid; done")
@@ -71,11 +69,6 @@ def main():
 def provisionClusterRoleBindings():
   required_admin_clusterrolebindings = [
     'default',
-    'apiserver-ui',
-    'discovery',
-    'gateway',
-    'gateway-proxy',
-    'gloo',
   ]
 
   for serviceaccount in required_admin_clusterrolebindings:
