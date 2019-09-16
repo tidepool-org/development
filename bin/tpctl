@@ -563,6 +563,14 @@ function update_flux {
 	complete "updated flux and flux-helm-operator manifests"
 }
 
+function make_gloo {
+	start "installing gloo gateway"
+	mkdir -p pkgs/gloo
+	(cd pkgs/gloo; glooctl install gateway --dry-run | separate_files | add_names)
+	glooctl install gateway
+	complete "install gloo gateway"
+}
+
 # create service mesh
 function make_mesh {
 	linkerd check --pre
@@ -848,51 +856,6 @@ do
                 save_changes "Added cluster and users"
 		make_mesh
                 save_changes "Added linkerd mesh"
-                make_flux
-                save_ca
-                make_cert
-                make_key
-                update_flux
-                save_changes "Added flux"
-		clone_secret_map
-		migrate_secrets
-                save_changes "Added migrated secrets"
-		;;
-	tools)
-		install_tools
-		info "tools installed"
-		;;
-	repo)
-		setup_tmpdir
-		create_repo
-		;;
-	values)
-		check_remote_repo
-		setup_tmpdir
-		clone_remote
-		expect_values_not_exist
-		set_template_dir
-		make_values
-		save_changes "Added values"
-		;;
-	config)
-		check_remote_repo
-		setup_tmpdir
-		clone_remote
-		set_template_dir
-		set_tools_dir
-		make_config
-		save_changes "Added config packages"
-		;;
-	cluster)
-		check_remote_repo
-		setup_tmpdir
-		clone_remote
-		set_tools_dir
-		make_cluster
-		merge_kubeconfig
-		make_users
-		save_changes "Added cluster and users"
 		;;
 	flux)
 		check_remote_repo
@@ -907,14 +870,6 @@ do
 		make_key
 		update_flux
 		save_changes "Added flux"
-		;;
-	mesh)
-		check_remote_repo
-		setup_tmpdir
-		clone_remote
-		set_tools_dir
-		make_mesh
-		save_changes "Added linkerd mesh"
 		;;
 	diff)
 		check_remote_repo
