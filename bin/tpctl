@@ -339,7 +339,6 @@ function reset_config_dir {
 function enabled_pkgs {
 	local pkgs=""
 	local directory=$1
-	local ldir=$(basename $directory)
 	local key=$2
 	for dir in $(ls $directory)
 	do
@@ -347,39 +346,45 @@ function enabled_pkgs {
 		local enabled=$(yq r values.yaml $key.${pkg}.enabled)
 		if [ "$enabled" == "true" ]
 		then
-			pkgs="${pkgs} $ldir/$pkg"
+			pkgs="${pkgs} $pkg"
         	fi
 	done
 	echo $pkgs
 }
 
+function template_files {
+	local config=$1
+	local path=$2
+	local prefix=$3
+	local fullpath
+	for fullpath in $(find $path -type f -print)
+	do
+		local filename=${fullpath#$prefix}
+		mkdir -p $(dirname $filename)
+		if [ "${filename: -5}" == ".tmpl" ]
+		then
+			add_file ${filename%.tmpl}
+			envtpl $fullpath >${filename%.tmpl}
+		elif [ "${filename: -5}" == ".yaml" ]
+		then
+			add_file $filename
+			cp $fullpath $filename
+		elif [ "${filename: -8}" == ".jsonnet" ]
+		then
+			add_file ${filename%.jsonnet}
+			jsonnet --tla-code config="$config" $fullpath | yq r - > ${filename%.jsonnet}
+		fi
+	done
+}
+
 function make_shared_config {
 	info "creating namespaces and package manifests"
-	local cluster=$(get_cluster)
 	local config=$(get_config)
-	local pkgs=$(enabled_pkgs $QUICKSTART_DIR/pkgs pkgs)
+	template_files "$config" $QUICKSTART_DIR/namespaces $QUICKSTART_DIR/
 	local dir
-	for dir in namespaces $pkgs
+	for dir in $(enabled_pkgs $QUICKSTART_DIR/pkgs pkgs)
 	do
-		local fullpath
-  		for fullpath in $(find $QUICKSTART_DIR/$dir -type f -print)
-  		do
-			local filename=$(basename $fullpath)
-			mkdir -p $dir
-			if [ "${filename: -5}" == ".tmpl" ]
-			then
-				add_file $dir/${filename%.tmpl}
-				envtpl $fullpath >$dir/${filename%.tmpl}
-        		elif [ "${filename: -5}" == ".yaml" ]
-			then
-				add_file $dir/$filename
-				cp $fullpath $dir/$filename
-			elif [ "${filename: -8}" == ".jsonnet" ]
-			then
-				add_file $dir/${filename%.jsonnet}
-				jsonnet --tla-code config="$config" $fullpath | yq r - > $dir/${filename%.jsonnet}
-			fi
-  		done
+		template_files "$config" $QUICKSTART_DIR/pkgs/$dir $QUICKSTART_DIR/
 	done
 }
 
@@ -390,38 +395,41 @@ function make_cluster_config {
 	jsonnet --tla-code config="$config" ${QUICKSTART_DIR}/eksctl/cluster_config.jsonnet | yq r - > config.yaml
 }
 
+function environment_template_files {
+	local config=$1
+	local path=$2
+	local prefix=$3
+	local env=$4
+	for fullpath in $(find $path -type f -print)
+	do
+		local filename=${fullpath#$prefix}
+		local dir=environments/$env/$(dirname $filename)
+		local file=$(basename $filename)
+		mkdir -p $dir
+		if [ "${file: -8}" == ".jsonnet" ]
+		then
+			add_file $dir/${file%.jsonnet}
+			jsonnet --tla-code config="$config" --tla-str namespace=$env $fullpath | yq r - > $dir/${file%.jsonnet}
+		fi
+	done
+}
+
 function make_environment_config {
-	local cluster=$(get_cluster)
 	local config=$(get_config)
 	local env
 	for env in $(get_environments)
 	do
-		local envdir=environments/$env
 		info "creating $env environment manifests"
-                local fullpath
-		local pkgs=$(enabled_pkgs $QUICKSTART_DIR/environments environments.$env)
-
-		for dir in $pkgs
+		for dir in $(enabled_pkgs $QUICKSTART_DIR/environments environments.$env)
 		do
-                	for fullpath in $(find $QUICKSTART_DIR/$dir -type f -print)
-			do
-				mkdir -p $envdir/$dir
-				local filename=$(basename $fullpath)
-				if [ "${filename: -8}" == ".jsonnet" ]
-				then
-					add_file $envdir/$dir/${filename%.jsonnet}
-					jsonnet --tla-code config="$config" --tla-str namespace=$env $fullpath | yq r - > $envdir/$dir/${filename%.jsonnet}
-				fi
-			done
+			environment_template_files "$config" $QUICKSTART_DIR/environments/$dir $QUICKSTART_DIR/environments/ $env
 		done
 	done
 }
 
 # create config manifests 
 function make_config {
-	local cluster=$(get_cluster)
-	local config=$(get_config)
-	info "creating manifests for cluster $cluster"
+	info "creating manifests"
 	make_shared_config
 	make_cluster_config
 	make_environment_config
