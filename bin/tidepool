@@ -56,6 +56,9 @@ USAGE: tidepool command [service] [...additional args]
   port-forward [service] [port]   Forward a port to a running service container
   verify-account-email [email]    Complete the email address verification step for a created account
 
+  restart-proxy                   Restart the external gateway proxy.
+                                  Useful if the exposed `blip` port stops responding on host machine
+
 EOF
 }
 
