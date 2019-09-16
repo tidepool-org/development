@@ -54,13 +54,16 @@ function rename_file {
 
 # conform action, else exit
 function confirm {
-	local msg=$1
-	read -p "${RED}$msg${RESET} " -n 1 -r
-	if [[ ! $REPLY =~ ^[Yy]$ ]]
+	if [ "$APPROVE" != "true ]
 	then
-		exit 1
-	else
-		echo
+		local msg=$1
+		read -p "${RED}$msg${RESET} " -n 1 -r
+		if [[ ! $REPLY =~ ^[Yy]$ ]]
+		then
+			exit 1
+		else
+			echo
+		fi
 	fi
 }
 
@@ -273,7 +276,7 @@ function make_cert {
 }
 
 # config availability of GITHUB TOKEN in environment
-function confirm_github_token {
+function expect_github_token {
 	if [ -z "$GITHUB_TOKEN" ]
 	then
         	panic "\$GITHUB_TOKEN required."
@@ -317,7 +320,7 @@ function merge_kubeconfig {
 }
 
 # confirm that values file exists or panic
-function check_values_exists {
+function expect_values_exists {
 	if [ ! -f values.yaml ]
 	then
 		panic "No values.yaml file."
@@ -444,7 +447,7 @@ function save_changes {
 }
 
 # confirm cluster exists or exist
-function confirm_cluster_exists {
+function expect_cluster_exists {
 	local cluster=$(get_cluster)
 	eksctl get cluster --name $cluster
 	expect_success "cluster $cluster does not exist."
@@ -606,7 +609,7 @@ function make_users {
 	
 
 # confirm that values.yaml file exists
-function check_values_not_exist {
+function expect_values_not_exist {
 	if [ -f values.yaml ]
 	then
         	confirm "Are you sure that you want to overwrite prior contents of values.yaml?"
@@ -741,12 +744,12 @@ for param in $PARAMS
 do
 	case $param in 
 	all)
-		confirm_github_token
+		expect_github_token
 		setup_tmpdir
 		clone_remote
 		set_quickstart_dir
 		set_development_dir
-		check_values_not_exist
+		expect_values_not_exist
                 make_values
                 save_changes "Added values"
 		make_config
@@ -777,7 +780,7 @@ do
 	values)
 		setup_tmpdir
 		clone_remote
-		check_values_not_exist
+		expect_values_not_exist
 		set_quickstart_dir
 		make_values
 		save_changes "Added values"
@@ -800,11 +803,11 @@ do
 		save_changes "Added cluster and users"
 		;;
 	flux)
+		expect_github_token
 		setup_tmpdir
 		clone_remote
 		set_quickstart_dir
 		set_development_dir
-		confirm_github_token
 		make_flux
 		save_ca
 		make_cert
@@ -860,7 +863,7 @@ do
 	deploy_key)
 		setup_tmpdir
 		clone_remote
-		confirm_github_token
+		expect_github_token
 		make_key
 		;;
 	delete_cluster)
