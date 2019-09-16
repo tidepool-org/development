@@ -760,8 +760,8 @@ function help {
       echo "values  - create initial values.yaml file"
       echo "config  - create K8s and eksctl K8s manifest files"
       echo "cluster - create AWS EKS cluster, add system:master USERS"
-      echo "flux    - install flux GitOps controller, Tiller server, client certs for Helm to access Tiller, and deploy key into GitHub"
       echo "mesh    - install service mesh"
+      echo "flux    - install flux GitOps controller, Tiller server, client certs for Helm to access Tiller, and deploy key into GitHub"
       echo 
       echo "----- Advanced Commands -----"
       echo "edit_repo - open shell with config repo in current directory.  Exit shell to commit changes."
