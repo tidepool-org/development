@@ -718,6 +718,7 @@ function migrate_secrets {
 function help {
       echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit|cluster|flux|cert|assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|users|deploy_key|delete_cluster|await_deletion|remove_mesh|kubeconfig)*"
       echo 
+      echo "repo - create config repo on GitHub"
       echo "tools - install needed tools"
       echo "values - create initial values.yaml file"
       echo "edit_values - open editor to edit values.yaml file"
