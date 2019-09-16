@@ -83,9 +83,9 @@ userdata:
   secret:
     enabled: false
     data_:
-      GroupIdEncryptionKey: "optionally-replace-with-your-group-id-encryption-key"
-      UserIdSalt: "optionally-replace-with-your-user-id-salt"
-      UserPasswordSalt: "optionally-replace-with-your-user-password-salt"
+      ServiceAuth: "This secret is used to encrypt the group id stored in the DB for gatekeeper" # Replaces previously used TIDEPOOL_DOCKER_GATEKEEPER_SECRET env variable
+      UserIdSalt: "This secret is used to salt the user id stored in the DB for highwater" # Replaces previously used TIDEPOOL_DOCKER_HIGHWATER_SALT env variable
+      PasswordSalt: "This secret is used to salt the user password stored in the DB for shoreline" # Replaces previously used TIDEPOOL_DOCKER_SHORELINE_SALT env variable
 ### User Data Secret Config Start ###
 
 ### Tidepool Services Config Start ###
