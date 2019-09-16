@@ -110,7 +110,7 @@ function clone_remote {
 }
 
 # clone quickstart repo, export TEMPLATE_DIR
-function set_quickstart_dir {
+function set_template_dir {
 	if [[ ! -d $TEMPLATE_DIR ]]; then
 		info "cloning quickstart"
 		pushd $TMP_DIR >/dev/null 2>&1
@@ -121,7 +121,7 @@ function set_quickstart_dir {
 }
 
 # clone development repo, exports DEV_DIR and CHART_DIR
-function set_development_dir {
+function set_tools_dir {
 	if [[ ! -d $CHART_DIR ]]; then
 		info "cloning development tools"
 		pushd $TMP_DIR >/dev/null 2>&1
@@ -718,27 +718,30 @@ function migrate_secrets {
 
 # show help
 function help {
-      echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit|cluster|flux|cert|assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|users|deploy_key|delete_cluster|await_deletion|remove_mesh|kubeconfig)*"
-      echo 
-      echo "repo - create config repo on GitHub"
-      echo "tools - install needed tools"
-      echo "values - create initial values.yaml file"
-      echo "edit_values - open editor to edit values.yaml file"
-      echo "config - create K8s manifests and eksctl K8s manifest file"
-      echo "edit - open shell with config repo in current directory.  Exit shell to commit changes."
+      echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit_repo|cluster|flux|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig)*"
+      echo
+      echo "----- Basic Commands -----"
+      echo "tools   - install installation tools"
+      echo "repo    - create config repo on GitHub"
+      echo "values  - create initial values.yaml file"
+      echo "config  - create K8s and eksctl K8s manifest files"
       echo "cluster - create AWS EKS cluster, add system:master USERS"
-      echo "flux - install flux GitOps controller, Tiller, client certs for Helm to access Tiller, and deploy key into GitHub"
-      echo "cert - regenerate client certs for Helm to access Tiller"
-      echo "assets - copy S3 assets to new bucket"
-      echo "mesh - install linkerd service mesh"
+      echo "flux    - install flux GitOps controller, Tiller server, client certs for Helm to access Tiller, and deploy key into GitHub"
+      echo "mesh    - install service mesh"
+      echo 
+      echo "----- Advanced Commands -----"
+      echo "edit_repo - open shell with config repo in current directory.  Exit shell to commit changes."
+      echo "regenerate_cert - regenerate client certs for Helm to access Tiller"
+      echo "edit_values - open editor to edit values.yaml file"
+      echo "copy_assets - copy S3 assets to new bucket"
       echo "migrate_secrets - migrate secrets from legacy GitHub repo to AWS secrets manager"
       echo "randomize_secrets - generate random secrets and persist into AWS secrets manager"
       echo "upsert_plaintext_secrets - read STDIN for plaintext K8s secrets"
-      echo "users - add system:master USERS to K8s cluster"
+      echo "install_users - add system:master USERS to K8s cluster"
       echo "deploy_key - copy deploy key from Flux to GitHub config repo"
       echo "delete_cluster - initiate deletion of the AWS EKS cluster"
       echo "await_deletion - await completion of deletion of gthe AWS EKS cluster"
-      echo "kubeconfig - copy the KUBECONFIG into the local $KUBECONFIG file"
+      echo "merge_kubeconfig - copy the KUBECONFIG into the local $KUBECONFIG file"
 }
 
 if [ $# -eq 0 ]
@@ -786,8 +789,8 @@ do
 		expect_github_token
 		setup_tmpdir
 		clone_remote
-		set_quickstart_dir
-		set_development_dir
+		set_template_dir
+		set_tools_dir
 		expect_values_not_exist
                 make_values
                 save_changes "Added values"
@@ -809,33 +812,30 @@ do
 		migrate_secrets
                 save_changes "Added migrated secrets"
 		;;
-	edit_values)
+	repo)
 		setup_tmpdir
-		clone_remote
-		edit_values
-		make_config
-		save_changes "Edited values. Updated config."
+		create_repo
 		;;
 	values)
 		setup_tmpdir
 		clone_remote
 		expect_values_not_exist
-		set_quickstart_dir
+		set_template_dir
 		make_values
 		save_changes "Added values"
 		;;
 	config)
 		setup_tmpdir
 		clone_remote
-		set_quickstart_dir
-		set_development_dir
+		set_template_dir
+		set_tools_dir
 		make_config
 		save_changes "Added config packages"
 		;;
 	cluster)
 		setup_tmpdir
 		clone_remote
-		set_development_dir
+		set_tools_dir
 		make_cluster
 		merge_kubeconfig
 		make_users
@@ -845,8 +845,8 @@ do
 		expect_github_token
 		setup_tmpdir
 		clone_remote
-		set_quickstart_dir
-		set_development_dir
+		set_template_dir
+		set_tools_dir
 		make_flux
 		save_ca
 		make_cert
@@ -854,26 +854,33 @@ do
 		update_flux
 		save_changes "Added flux"
 		;;
-	cert)
-		setup_tmpdir
-		clone_remote
-		set_development_dir
-		make_cert
-		;;
-	assets)
-		make_assets
-		;;
 	mesh)
 		setup_tmpdir
 		clone_remote
-		set_development_dir
+		set_tools_dir
 		make_mesh
 		save_changes "Added linkerd mesh"
+		;;
+	edit_values)
+		setup_tmpdir
+		clone_remote
+		edit_values
+		make_config
+		save_changes "Edited values. Updated config."
+		;;
+	regenerate_cert)
+		setup_tmpdir
+		clone_remote
+		set_tools_dir
+		make_cert
+		;;
+	copy_assets)
+		make_assets
 		;;
         randomize_secrets)
 		setup_tmpdir
 		clone_remote
-		set_development_dir
+		set_tools_dir
 		local cluster=$(get_cluster)
 		randomize_secrets | external_secret upsert $cluster encoded | separate_files
 	        save_changes "Added random secrets"
@@ -881,7 +888,7 @@ do
 	migrate_secrets)
 		setup_tmpdir
 		clone_remote
-		set_development_dir
+		set_tools_dir
 		clone_secret_map
 		migrate_secrets
 	        save_changes "Added migrated secrets"
@@ -889,12 +896,12 @@ do
 	upsert_plaintext_secrets)
 		setup_tmpdir
 		clone_remote
-		set_development_dir
+		set_tools_dir
 		local cluster=$(get_cluster)
 		external_secret upsert $cluster plaintext | separate_files | add_names
 	        save_changes "Added plaintext secrets"
 		;;
-	users)
+	install_users)
 		setup_tmpdir
 		clone_remote
 		make_users
@@ -928,20 +935,16 @@ do
 		install_tools
 		info "tools installed"
 		;;
-	edit)
+	edit_repo)
 		setup_tmpdir
 		clone_remote
 		edit_config
 		save_changes "Manual changes."
 		;;
-	kubeconfig)
+	merge_kubeconfig)
 		setup_tmpdir
 		clone_remote
 		merge_kubeconfig
-		;;
-	repo)
-		setup_tmpdir
-		create_repo
 		;;
 	esac
 done
