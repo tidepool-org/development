@@ -1,10 +1,10 @@
 ---
 apiVersion: v1
-with .Values.configmap.data_
+{{ with .Values.configmap.data_ }}
 data:
-  ClinicRole: {{ .ClinicRole | default "clinic" }}
-  PatientRole: {{ .PatientRole | default "user" ||
-  Timeout: {{ .Timeout | default "15000000000" | b64enc | quote }}
+  ClinicRole: {{ .ClinicRole | default "" }}
+  PatientRole: {{ .PatientRole | default "" }}
+  Timeout: {{ .Timeout | default "15000000000" | quote }}
 {{- end }}
 kind: ConfigMap
 metadata:
@@ -13,4 +13,3 @@ metadata:
   labels:
     app: marketo
 type: Opaque
-{{- end }}

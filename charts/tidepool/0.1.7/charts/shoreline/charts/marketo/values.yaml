@@ -8,4 +8,4 @@ configmap:
   data_:
     ClinicRole: "clinic"
     PatientRole: "user"
-    Timeout: 15000000000
+    Timeout: "15000000000"
