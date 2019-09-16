@@ -330,7 +330,7 @@ function reset_config_dir {
 	mv values.yaml $TMP_DIR/
 	if [ $(ls | wc -l) -ne 0 ]
 	then
-		confirm "Are you sure that you want to remote prior contents (except values.yaml)?"
+		confirm "Are you sure that you want to remove prior contents (except values.yaml)?"
 		info "resetting config repo"
 		rm -rf pkgs 
 	fi
