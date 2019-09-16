@@ -1,5 +1,9 @@
-load('./Tiltfile.global', 'getNested', 'config', 'mongo_helm_chart_dir')
+load('./Tiltfile.global', 'getNested', 'getConfig')
 
+### Config Start ###
+config = getConfig()
+mongo_helm_chart_dir = "./charts/mongo"
+### Config End ###
 
 ### Main Start ###
 def main():
@@ -13,8 +17,8 @@ def main():
 ### MongoDB Start ###
 def provisionMongoDB ():
   mongodb_data_dir = getNested(config, 'mongodb.hostPath')
-
   mongo_helm_template_cmd = 'helm template --name tilt-mongodb --namespace default '
+
   if mongodb_data_dir:
     mongo_helm_template_cmd += '--set "mongodb.hostPath={}" '.format(mongodb_data_dir)
 

@@ -1,11 +1,18 @@
-load('./Tiltfile.global', 'absolute_dir', 'getNested', 'tidepool_helm_overrides_file', 'config', 'tidepool_helm_charts_version', 'tidepool_helm_chart_dir', 'mongo_helm_chart_dir', 'is_shutdown')
+load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmOverridesFile', 'isShutdown')
+
+### Config Start ###
+tidepool_helm_overrides_file = getHelmOverridesFile()
+config = getConfig()
+watch_file(tidepool_helm_overrides_file)
+
+tidepool_helm_charts_version = config.get('tidepool_helm_charts_version')
+tidepool_helm_chart_dir = "./charts/tidepool/{}".format(tidepool_helm_charts_version)
+
+is_shutdown = isShutdown()
+### Config End ###
 
 ### Main Start ###
 def main():
-  watch_file('./Tiltconfig.yaml')
-
-  if read_file('./local/Tiltconfig.yaml'):
-    watch_file('./local/Tiltconfig.yaml')
 
   # Set up tidepool helm template command
   tidepool_helm_template_cmd = 'helm template --name tilt-tidepool --namespace default '
@@ -34,8 +41,8 @@ def main():
 
     # Wait until mongodb and gateway-proxy services are forwarding before provisioning rest of stack
     if not getNested(config, 'mongodb.useExternal'):
-      local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
-    local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
+      local('while ! nc -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
+    local('while ! nc -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
 
   else:
     # Shut down the mongodb and proxy services
@@ -59,7 +66,8 @@ def main():
     helmCmd=tidepool_helm_template_cmd
   )))
 
-  watch_file(tidepool_helm_chart_dir)
+  # To update on helm chart source changes, uncomment below
+  # watch_file(tidepool_helm_chart_dir)
 
   # Back out of actual provisioning for debugging purposes by uncommenting below
   # fail('NOT YET ;)')
@@ -122,13 +130,13 @@ def provisionServerSecrets ():
     ))
 
     templatePath = '{chartDir}/charts/{secretChartPath}'.format(
-      chartDir=absolute_dir(tidepool_helm_chart_dir),
+      chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
       secretChartPath=secretChartPath,
     )
 
     # Generate the secret and apply it to the cluster
     local('helm template --namespace default --set "global.secret.enabled=true" -x {templatePath} -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
-      chartDir=absolute_dir(tidepool_helm_chart_dir),
+      chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
       overrides=tidepool_helm_overrides_file,
       templatePath=templatePath
     ))
@@ -155,13 +163,13 @@ def provisionConfigMaps ():
     )
 
     templatePath = '{chartDir}/charts/{configmapChartPath}'.format(
-      chartDir=absolute_dir(tidepool_helm_chart_dir),
+      chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
       configmapChartPath=configmapChartPath,
     )
 
     # Generate the configmap and apply it to the cluster
     local('helm template --namespace default -x {templatePath} -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
-      chartDir=absolute_dir(tidepool_helm_chart_dir),
+      chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
       overrides=tidepool_helm_overrides_file,
       templatePath=templatePath
     ))
@@ -171,7 +179,7 @@ def provisionConfigMaps ():
 def applyServiceOverrides(tidepool_helm_template_cmd):
   for service, overrides in config.items():
     if type(overrides) == 'dict' and overrides.get('hostPath') and getNested(overrides, 'deployment.image'):
-      hostPath = absolute_dir(overrides.get('hostPath'))
+      hostPath = getAbsoluteDir(overrides.get('hostPath'))
       containerPath = overrides.get('containerPath')
       dockerFile = overrides.get('dockerFile', 'Dockerfile')
       target = overrides.get('buildTarget', 'development')
@@ -219,7 +227,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
 
         for package in overrides.get('linkedPackages'):
           packageName = package.get('packageName')
-          packageHostPath = absolute_dir(package.get('hostPath'))
+          packageHostPath = getAbsoluteDir(package.get('hostPath'))
           build_deps.append(packageHostPath)
 
           if package['enabled']:

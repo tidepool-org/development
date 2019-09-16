@@ -1,8 +1,19 @@
-load('./Tiltfile.global', 'absolute_dir', 'getNested', 'tidepool_helm_overrides_file', 'config', 'tidepool_helm_chart_dir', 'is_shutdown')
+load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmOverridesFile', 'isShutdown')
+
+### Config Start ###
+tidepool_helm_overrides_file = getHelmOverridesFile()
+config = getConfig()
+watch_file(tidepool_helm_overrides_file)
+
+tidepool_helm_charts_version = config.get('tidepool_helm_charts_version')
+tidepool_helm_chart_dir = "./charts/tidepool/{}".format(tidepool_helm_charts_version)
 
 gloo_chart_dir = './local/charts'
-absolute_gloo_chart_dir = absolute_dir(gloo_chart_dir)
+absolute_gloo_chart_dir = getAbsoluteDir(gloo_chart_dir)
 gloo_helm_template_cmd = 'helm template --name tilt-proxy --namespace default '
+
+is_shutdown = isShutdown()
+### Config End ###
 
 ### Main Start ###
 def main():

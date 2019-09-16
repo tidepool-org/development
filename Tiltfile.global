@@ -1,26 +1,25 @@
 ### Helpers Start ###
-def absolute_dir(relative_dir):
-  return str(local('mkdir -p {dir} && cd {dir} && pwd'.format(dir=relative_dir))).strip()
+def getAbsoluteDir(relativeDir):
+  return str(local('mkdir -p {dir} && cd {dir} && pwd'.format(dir=relativeDir))).strip()
 
 def getNested(dict, path, fallback=None):
   value = dict
   for path_segment in path.split('.'):
     value = value.get(path_segment, {})
   return value or fallback
+
+def getHelmOverridesFile():
+  tidepool_helm_overrides_file = './Tiltconfig.yaml'
+  localOverrides = read_yaml('./local/Tiltconfig.yaml', False)
+
+  if type(localOverrides) == 'dict':
+    tidepool_helm_overrides_file = './local/Tiltconfig.yaml'
+
+  return tidepool_helm_overrides_file
+
+def getConfig():
+  return read_yaml(getHelmOverridesFile())
+
+def isShutdown():
+  return bool(int(str(local('printf ${SHUTTING_DOWN-0}'))))
 ### Helpers End ###
-
-### Global Start ###
-tidepool_helm_overrides_file = './Tiltconfig.yaml'
-config = read_yaml(tidepool_helm_overrides_file)
-configOverrides = read_yaml('./local/Tiltconfig.yaml', False)
-
-if type(configOverrides) == 'dict':
-  config.update(configOverrides.items())
-  tidepool_helm_overrides_file = './local/Tiltconfig.yaml'
-
-tidepool_helm_charts_version = config.get('tidepool_helm_charts_version')
-tidepool_helm_chart_dir = "./charts/tidepool/{}".format(tidepool_helm_charts_version)
-mongo_helm_chart_dir = "./charts/mongo"
-
-is_shutdown = bool(int(str(local('printf ${SHUTTING_DOWN-0}'))))
-### Global End ###
