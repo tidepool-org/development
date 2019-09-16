@@ -339,6 +339,7 @@ function reset_config_dir {
 	mv $TMP_DIR/values.yaml .
 }
 
+# return list of enabled packages
 function enabled_pkgs {
 	local pkgs=""
 	local directory=$1
@@ -355,6 +356,7 @@ function enabled_pkgs {
 	echo $pkgs
 }
 
+# make K8s manifest file for shared services given config, path to directory, and prefix to strip
 function template_files {
 	local config=$1
 	local path=$2
@@ -380,6 +382,7 @@ function template_files {
 	done
 }
 
+# make K8s manifest files for shared services
 function make_shared_config {
 	info "creating namespaces and package manifests"
 	local config=$(get_config)
@@ -391,6 +394,7 @@ function make_shared_config {
 	done
 }
 
+# make EKSCTL manifest file
 function make_cluster_config {
 	local config=$(get_config)
 	info "creating eksctl ClusterConfig manifest"
@@ -398,6 +402,7 @@ function make_cluster_config {
 	jsonnet --tla-code config="$config" ${QUICKSTART_DIR}/eksctl/cluster_config.jsonnet | yq r - > config.yaml
 }
 
+# make K8s manifests for enviroments given config, path, prefix, and environment name
 function environment_template_files {
 	local config=$1
 	local path=$2
@@ -417,6 +422,7 @@ function environment_template_files {
 	done
 }
 
+# make K8s manifests for environments
 function make_environment_config {
 	local config=$(get_config)
 	local env
@@ -430,7 +436,7 @@ function make_environment_config {
 	done
 }
 
-# create config manifests 
+# create all K8s manifests and EKSCTL manifest
 function make_config {
 	info "creating manifests"
 	make_shared_config
@@ -685,12 +691,14 @@ function install_tools {
 	go get github.com/subfuzion/envtpl/...
 }
 
+# await deletion of a CloudFormation template that represents a cluster before returning
 function await_deletion {
 	local cluster=$(get_cluster)
 	info "awaiting cluster $cluster deletion"
 	aws cloudformation wait stack-delete-complete --stack-name eksctl-${cluster}-cluster
 }
 
+# migrate secrets from legacy GitHub repo to AWS secrets manager
 function migrate_secrets {
 	set -xv
 	local cluster=$(get_cluster)
