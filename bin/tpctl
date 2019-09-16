@@ -779,6 +779,12 @@ done
 # set positional arguments in their proper place
 eval set -- "$PARAMS"
 
+unset TMP_DIR
+unset TEMPLATE_DIR
+unset CHART_DIR
+unset DEV_DIR
+unset SM_DIR
+
 define_colors
 
 for param in $PARAMS
