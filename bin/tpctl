@@ -360,6 +360,8 @@ function template_files {
 	local path=$2
 	local prefix=$3
 	local fullpath
+	local cluster=$(get_cluster)
+	local region=$(get_region)
 	for fullpath in $(find $path -type f -print)
 	do
 		local filename=${fullpath#$prefix}
@@ -367,7 +369,7 @@ function template_files {
 		if [ "${filename: -5}" == ".tmpl" ]
 		then
 			add_file ${filename%.tmpl}
-			envtpl $fullpath >${filename%.tmpl}
+			ClusterName=$cluster Region=$region envtpl $fullpath >${filename%.tmpl}
 		elif [ "${filename: -5}" == ".yaml" ]
 		then
 			add_file $filename
