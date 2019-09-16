@@ -9,9 +9,9 @@ def main():
   # fail('NOT YET ;)')
 ### Main End ###
 
-### Gloo Gateway Start ###
-def provisionGlooGateway():
-  proxy_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
+### Gloo Dependancies Start ###
+def provisionGlooGatewayDependancies():
+  gloo_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
 
   for chart in listdir('{}/charts'.format(tidepool_helm_chart_dir)):
     if chart.find('gloo') >= 0:
@@ -20,11 +20,32 @@ def provisionGlooGateway():
       local('mkdir -p {}'.format(absolute_gloo_chart_dir))
       local('tar -xzf {} -C {}'.format(chart, absolute_gloo_chart_dir));
 
-      k8s_yaml(local('{templateCmd} -f {overridesFile} {chartDir}/gloo'.format(
-        chartDir=absolute_gloo_chart_dir,
-        templateCmd=proxy_helm_template_cmd,
-        overridesFile=tidepool_helm_overrides_file,
-      )))
+      for template in listdir('{}/gloo/templates'.format(absolute_gloo_chart_dir)):
+        if template.find('service-account') >= 0 or template.find('gateway-proxy-configmap') >= 0:
+          k8s_yaml(local('{templateCmd} -x {template} -f {overridesFile} {chartDir}/gloo'.format(
+            chartDir=absolute_gloo_chart_dir,
+            templateCmd=gloo_helm_template_cmd,
+            overridesFile=tidepool_helm_overrides_file,
+            template=template,
+          )))
+### Gloo Dependancies End ###
+
+### Gloo Gateway Start ###
+def provisionGlooGateway():
+  gloo_chart_dir = './local/charts'
+  absolute_gloo_chart_dir = absolute_dir(gloo_chart_dir)
+
+  for template in listdir('{}/gloo/templates'.format(absolute_gloo_chart_dir)):
+    if template.find('service-account') >= 0 or template.find('gateway-proxy-configmap') >= 0:
+      local('rm {}'.format(template))
+
+  gloo_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
+
+  k8s_yaml(local('{templateCmd} -f {overridesFile} {chartDir}/gloo'.format(
+    chartDir=absolute_gloo_chart_dir,
+    templateCmd=gloo_helm_template_cmd,
+    overridesFile=tidepool_helm_overrides_file,
+  )))
 
   # Expose the gateway proxy on a host port
   gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])

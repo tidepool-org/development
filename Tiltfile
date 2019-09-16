@@ -1,4 +1,5 @@
 load('./Tiltfile.global', 'absolute_dir', 'getNested', 'tidepool_helm_overrides_file', 'config', 'tidepool_helm_charts_version', 'tidepool_helm_chart_dir', 'mongo_helm_chart_dir', 'is_shutdown')
+load('./Tiltfile.proxy', 'provisionGlooGatewayDependancies')
 
 ### Main Start ###
 def main():
@@ -22,13 +23,37 @@ def main():
     provisionServerSecrets()
     provisionConfigMaps()
 
-  provisionGlooGateway()
-  if not getNested(config, 'mongodb.useExternal'):
-    provisionMongoDB()
+    # Ensure mongodb service is deployed
+    if not getNested(config, 'mongodb.useExternal'):
+      mongodb_service = local('kubectl get service mongodb --ignore-not-found')
+      if not mongodb_service:
+        local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 &>/dev/null &')
+
+    # Ensure proxy services are deployed
+    gateway_proxy_service = local('kubectl get service gateway-proxy-v2 --ignore-not-found')
+    if not gateway_proxy_service:
+      local('tilt up --file=Tiltfile.proxy --hud=0 --port=0 &>/dev/null &')
+
+    # Wait until mongodb and gateway-proxy services are forwarding before provisioning rest of stack
+    if not getNested(config, 'mongodb.useExternal'):
+      local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
+    local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
+
+  else:
+    # Shut down the mongodb and proxy services
+    if not getNested(config, 'mongodb.useExternal'):
+      local('tilt down --file=Tiltfile.mongodb &>/dev/null &')
+    local('tilt down --file=Tiltfile.proxy &>/dev/null &')
+
+    # Clean up any tilt up backround processes
+    local("for pid in $(ps -ef | awk '/tilt\ up/ {print $2}'); do kill -9 $pid; done")
 
   # Apply any service overrides
   tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
   tidepool_helm_template_cmd = applyServiceOverrides(tidepool_helm_template_cmd)
+
+  # Don't provision the gloo gateway here - we do that in Tiltfile.proxy
+  tidepool_helm_template_cmd += '--set "gloo.enabled=false" --set "gloo.created=true" '
 
   # Deploy and watch the helm charts
   k8s_yaml(local('{helmCmd} {chartDir}'.format(
@@ -41,29 +66,6 @@ def main():
   # Back out of actual provisioning for debugging purposes by uncommenting below
   # fail('NOT YET ;)')
 ### Main End ###
-
-
-### Gloo Dependancies Start ###
-def provisionGlooGatewayDependancies():
-  gloo_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
-
-  for chart in listdir('{}/charts'.format(tidepool_helm_chart_dir)):
-    if chart.find('gloo') >= 0:
-      gloo_chart_dir = './local/charts'
-      absolute_gloo_chart_dir = absolute_dir(gloo_chart_dir)
-      local('mkdir -p {}'.format(absolute_gloo_chart_dir))
-      local('tar -xzf {} -C {}'.format(chart, absolute_gloo_chart_dir));
-
-      for template in listdir('{}/gloo/templates'.format(absolute_gloo_chart_dir)):
-        if template.find('service-account') >= 0 or template.find('gateway-proxy-configmap') >= 0:
-          k8s_yaml(local('{templateCmd} -x {template} -f {overridesFile} {chartDir}/gloo'.format(
-            chartDir=absolute_gloo_chart_dir,
-            templateCmd=gloo_helm_template_cmd,
-            overridesFile=tidepool_helm_overrides_file,
-            template=template,
-          )))
-### Gloo Dependancies End ###
-
 
 ### Cluster Role Bindings Start ###
 def provisionClusterRoleBindings():
@@ -86,48 +88,6 @@ def provisionClusterRoleBindings():
         serviceaccount = serviceaccount
       ))
 ### Cluster Role Bindings End ###
-
-
-### Gloo Gateway Start ###
-def provisionGlooGateway():
-  gloo_chart_dir = './local/charts'
-  absolute_gloo_chart_dir = absolute_dir(gloo_chart_dir)
-
-  for template in listdir('{}/gloo/templates'.format(absolute_gloo_chart_dir)):
-    if template.find('service-account') >= 0 or template.find('gateway-proxy-configmap') >= 0:
-      local('rm {}'.format(template))
-
-  gloo_helm_template_cmd = 'helm template --name tidepool-tilt --namespace default '
-
-  k8s_yaml(local('{templateCmd} -f {overridesFile} {chartDir}/gloo'.format(
-    chartDir=absolute_gloo_chart_dir,
-    templateCmd=gloo_helm_template_cmd,
-    overridesFile=tidepool_helm_overrides_file,
-  )))
-
-  # Expose the gateway proxy on a host port
-  gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
-  k8s_resource('gateway-proxy-v2', port_forwards=gateway_port_forwards)
-### Gloo Gateway End ###
-
-
-### MongoDB Start ###
-def provisionMongoDB():
-  mongo_helm_template_cmd = 'helm template --name tidepool-local-db --namespace default '
-
-  mongodb_data_dir = getNested(config, 'mongodb.hostPath')
-  if mongodb_data_dir:
-    mongo_helm_template_cmd += '--set "mongodb.hostPath={}" '.format(mongodb_data_dir)
-
-  k8s_yaml(local(mongo_helm_template_cmd + mongo_helm_chart_dir))
-
-  # Expose mongodb on a host port
-  mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
-  k8s_resource('mongodb', port_forwards=mongodb_port_forwards)
-
-  watch_file(mongo_helm_chart_dir)
-### MongoDB End ###
-
 
 ### Secrets Start ###
 def provisionServerSecrets ():
@@ -181,7 +141,6 @@ def provisionServerSecrets ():
     ))
 ### Secrets End ###
 
-
 ### Config Maps Start ###
 def provisionConfigMaps ():
   required_configmaps = [
@@ -214,7 +173,6 @@ def provisionConfigMaps ():
       templatePath=templatePath
     ))
 ### Config Maps End ###
-
 
 ### Service Overrides Start ###
 def applyServiceOverrides(tidepool_helm_template_cmd):
