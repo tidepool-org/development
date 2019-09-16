@@ -283,7 +283,7 @@ function expect_github_token {
 
 # retrieve kubeconfig value
 function get_kubeconfig {
-	kc=$(must_get_value "kubeconfig")
+	local kc=$(must_get_value "kubeconfig")
 	realpath $(eval "echo $kc")
 }
 
