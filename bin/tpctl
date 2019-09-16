@@ -28,6 +28,16 @@ function expect_success {
 }
 
 # show info message
+function start {
+	echo "${GREEN}[√] ${1}${RESET}"
+}
+
+# show info message
+function complete {
+	echo "${MAGENTA}[√] ${1}${RESET}"
+}
+
+# show info message
 function info {
 	echo "${MAGENTA}[√] ${1}${RESET}"
 }
@@ -91,8 +101,9 @@ function cleanup {
 # create temporary workspace to clone Git repos into, change to that directory
 function setup_tmpdir {
 	if [[ ! -d $TMP_DIR ]]; then
-		info "creating temporary working directory"
+		start "creating temporary working directory"
 		TMP_DIR=`mktemp -d 2>/dev/null || mktemp -d -t 'TMP_DIR'`
+		complete "created temporary working directory"
 		trap cleanup EXIT
 		cd $TMP_DIR
 	fi
@@ -102,9 +113,10 @@ function setup_tmpdir {
 function clone_remote {
 	cd $TMP_DIR
 	if [[ ! -d $(basename $REMOTE_REPO) ]]; then
-		info "cloning remote"
+		start "cloning remote"
 		git clone $REMOTE_REPO
 		expect_success "Cannot clone $REMOTE_REPO"
+		complete "cloned remote"
 	fi
 	cd $(basename $REMOTE_REPO)
 }
@@ -112,18 +124,19 @@ function clone_remote {
 # clone quickstart repo, export TEMPLATE_DIR
 function set_template_dir {
 	if [[ ! -d $TEMPLATE_DIR ]]; then
-		info "cloning quickstart"
+		start "cloning quickstart"
 		pushd $TMP_DIR >/dev/null 2>&1
 		git clone git@github.com:/tidepool-org/eks-template
 		export TEMPLATE_DIR=$(realpath eks-template)
 		popd >/dev/null 2>&1
+		complete "cloned quickstart"
 	fi
 }
 
 # clone development repo, exports DEV_DIR and CHART_DIR
 function set_tools_dir {
 	if [[ ! -d $CHART_DIR ]]; then
-		info "cloning development tools"
+		start "cloning development tools"
 		pushd $TMP_DIR >/dev/null 2>&1
 		git clone git@github.com:/tidepool-org/development
 		cd development
@@ -131,17 +144,19 @@ function set_tools_dir {
 		DEV_DIR=$(realpath .)
 		CHART_DIR=${DEV_DIR}/charts/tidepool/0.1.7
 		popd >/dev/null 2>&1
+		complete "cloned development tools"
 	fi
 }
 
 # clone secret-map repo, export SM_DIR
 function clone_secret_map {
 	if [[ ! -d $SM_DIR ]]; then
-		info "cloning secret-map"
+		start "cloning secret-map"
 		pushd $TMP_DIR >/dev/null 2>&1
 		git clone git@github.com:/tidepool-org/secret-map
 		SM_DIR=$(realpath ./secret-map)
 		popd >/dev/null 2>&1
+		complete "cloned secret-map"
 	fi
 }
 
@@ -150,8 +165,8 @@ function get_config {
 	yq r values.yaml -j
 }
 
-# retrieve value from values file, or exit it not available
-function must_get_value {
+# retrieve value from values file, or exit if it is not available
+function require_value {
 	local val=$(yq r values.yaml -j $1 | sed -e 's/"//g' -e "s/'//g")
 	if [ $? -ne 0 -o "$val" == "null" -o "$val" == "" ]
 	then
@@ -162,22 +177,22 @@ function must_get_value {
 
 # retrieve name of cluster
 function get_cluster {
-	must_get_value "cluster.metadata.name"
+	require_value "cluster.metadata.name"
 }
 
 # retrieve name of region
 function get_region {
-	must_get_value "cluster.metadata.region"
+	require_value "cluster.metadata.region"
 }
 
 # retrieve email address of cluster admin
 function get_email {
-	must_get_value "email" 
+	require_value "email" 
 }
 
 # retrieve AWS account number
 function get_aws_account {
-	must_get_value "aws.accountNumber"
+	require_value "aws.accountNumber"
 }
 
 # retrieve list of AWS environments to create
@@ -209,10 +224,11 @@ function make_assets {
 	for env in $(get_environments)
 	do
 		local bucket=$(get_bucket $env)
-  		info "creating asset bucket $bucket"
+  		start "creating asset bucket $bucket"
   		aws s3 mb s3://$bucket
   		info "copying  dev assets into $bucket"
   		aws s3 cp s3://tidepool-dev-asset s3://$bucket
+  		complete "created asset bucket $bucket"
 	done
 }
 
@@ -226,7 +242,7 @@ function make_cert {
 	local cluster=$(get_cluster)
 	local helm_home=$(get_helm_home)
 
-	info "installing helm client cert for cluster $cluster"
+	start "installing helm client cert for cluster $cluster"
 
 	info "retrieving ca.pem from AWS secrets manager"
 	aws secretsmanager get-secret-value --secret-id $cluster/flux/ca.pem | jq '.SecretString' | sed -e 's/"//g' \
@@ -271,6 +287,7 @@ function make_cert {
     		info "export TILLER_NAMESPACE=flux"
     		info "export HELM_TLS_ENABLE=true"
 	fi
+	complete "installed helm client cert for cluster $cluster"
 }
 
 # config availability of GITHUB TOKEN in environment
@@ -283,36 +300,37 @@ function expect_github_token {
 
 # retrieve kubeconfig value
 function get_kubeconfig {
-	local kc=$(must_get_value "kubeconfig")
+	local kc=$(require_value "kubeconfig")
 	realpath $(eval "echo $kc")
 }
 
 # create EKS cluster using config.yaml file, add kubeconfig.yaml to config repo
 function make_cluster {
 	local cluster=$(get_cluster)
-	info "creating cluster $cluster"
+	start` "creating cluster $cluster"
 
 	eksctl create cluster -f config.yaml --kubeconfig ./kubeconfig.yaml
 	expect_success "eksctl create cluster failed."
 	git pull
 	add_file "./kubeconfig.yaml"
+	complete` "created cluster $cluster"
 }
 	
 # merge K8s Kubeconfig of cluster into user's kubeconfig file for each switching (see kubectx)
 function merge_kubeconfig {
-	local localKubeConfig=$(realpath ./kubeconfig.yaml)
+	local local_kube_config=$(realpath ./kubeconfig.yaml)
 	local kubeconfig=$(get_kubeconfig)
-	if [ "$kubeconfig" != "$localKubeConfig" ]
+	if [ "$kubeconfig" != "$local_kube_config" ]
 	then
     		if [ -f "$kubeconfig" ]
     		then
         		info "merging kubeconfig into $kubeconfig"
-        		KUBECONFIG=$kubeconfig:$localKubeConfig kubectl config view --flatten >$TMP_DIR/updated.yaml
+        		KUBECONFIG=$kubeconfig:$local_kube_config kubectl config view --flatten >$TMP_DIR/updated.yaml
         		mv $TMP_DIR/updated.yaml $kubeconfig
     		else
         		mkdir -p $(dirname $kubeconfig)
         		info "creating new $kubeconfig" 
-        		cp $localKubeConfig $kubeconfig
+        		cp $local_kube_config $kubeconfig
     		fi
 	fi
 }
@@ -384,7 +402,7 @@ function template_files {
 
 # make K8s manifest files for shared services
 function make_shared_config {
-	info "creating namespaces and package manifests"
+	start "creating namespaces and package manifests"
 	local config=$(get_config)
 	template_files "$config" $TEMPLATE_DIR/namespaces $TEMPLATE_DIR/
 	local dir
@@ -392,14 +410,16 @@ function make_shared_config {
 	do
 		template_files "$config" $TEMPLATE_DIR/pkgs/$dir $TEMPLATE_DIR/
 	done
+	complete "created namespaces and package manifests"
 }
 
 # make EKSCTL manifest file
 function make_cluster_config {
 	local config=$(get_config)
-	info "creating eksctl ClusterConfig manifest"
+	start "creating eksctl manifest"
 	add_file "config.yaml"
 	jsonnet --tla-code config="$config" ${TEMPLATE_DIR}/eksctl/cluster_config.jsonnet | yq r - > config.yaml
+	complete "created eksctl manifest"
 }
 
 # make K8s manifests for enviroments given config, path, prefix, and environment name
@@ -428,28 +448,31 @@ function make_environment_config {
 	local env
 	for env in $(get_environments)
 	do
-		info "creating $env environment manifests"
+		start "creating $env environment manifests"
 		for dir in $(enabled_pkgs $TEMPLATE_DIR/environments environments.$env)
 		do
 			environment_template_files "$config" $TEMPLATE_DIR/environments/$dir $TEMPLATE_DIR/environments/ $env
 		done
+		complete "created $env environment manifests"
 	done
 }
 
 # create all K8s manifests and EKSCTL manifest
 function make_config {
-	info "creating manifests"
+	start "creating manifests"
 	make_shared_config
 	make_cluster_config
 	make_environment_config
+	complete "created manifests"
 }
 	
 # persist changes to config repo in GitHub
 function save_changes {
-	info "saving changes to config repo"
+	start "saving changes to config repo"
 	git add .
 	git commit -m "$1"
 	git push
+	complete "saved changes to config repo"
 }
 
 # confirm cluster exists or exist
@@ -464,16 +487,17 @@ function make_flux {
 	local cluster=$(get_cluster)
 	local email=$(get_email)
 	
-	info "installing flux into cluster $cluster"
+	start "installing flux into cluster $cluster"
 	EKSCTL_EXPERIMENTAL=true unbuffer eksctl install \
 		flux -f config.yaml --git-url=${REMOTE_REPO}.git --git-email=$email --git-label=$cluster  | tee  $TMP_DIR/eksctl.out
 	expect_success "eksctl install flux failed."
 	git pull
+	complete  "installed flux into cluster $cluster"
 }
 
 # save Certificate Authority key and pem into AWS secrets manager
 function save_ca {
-	info "saving certificate authority TLS pem and key to AWS secrets manager"
+	start "saving certificate authority TLS pem and key to AWS secrets manager"
 	local cluster=$(get_cluster)
 	local dir=$(cat $TMP_DIR/eksctl.out | grep "Public key infrastructure" | sed -e 's/^.*"\(.*\)".*$/\1/')
 
@@ -490,11 +514,12 @@ function save_ca {
     		aws secretsmanager update-secret --secret-id $cluster/flux/ca-key.pem --secret-string "$(cat $dir/ca-key.pem)"
 		expect_success "failed to update ca-key.pem to AWS"
 	fi
+	complete "saved certificate authority TLS pem and key to AWS secrets manager"
 }
 	
 # save deploy key to config repo
 function make_key {
-	info "authorizing access to ${REMOTE_REPO}"
+	start "authorizing access to ${REMOTE_REPO}"
 
 	local key=$(fluxctl --k8s-fwd-ns=flux identity)
 	local reponame="$(echo $REMOTE_REPO | cut -d/ -f2 | sed -e 's/\.git//')"
@@ -510,11 +535,12 @@ function make_key {
 		"read_only" : false
 	}
 EOF
+	complete  "authorized access to ${REMOTE_REPO}"
 }
 
 # update flux and helm operator manifests
 function update_flux {
-	info "updating flux and flux-helm-operator manifests"
+	start "updating flux and flux-helm-operator manifests"
 
 	if [ -f flux/flux-deployment.yaml ]
 	then
@@ -534,12 +560,14 @@ function update_flux {
 		rename_file flux/helm-operator-deployment.yaml flux/helm-operator-deployment.yaml.orig
 		mv flux/helm-operator-deployment.yaml flux/helm-operator-deployment.yaml.orig
 	fi
+	complete "updated flux and flux-helm-operator manifests"
 }
 
 # create service mesh
 function make_mesh {
 	linkerd check --pre
 	expect_success "Failed linkerd pre-check."
+	start "installing mesh"
 	info "linkerd check --pre"
 	
 	mkdir -p linkerd
@@ -567,7 +595,7 @@ function make_mesh {
     		info "retrying linkerd check"
     		linkerd check 
 	done
-	info "linkerd installed"
+	complete "installed mesh"
 }
 
 # get secrets from legacy environments if requested
@@ -584,6 +612,7 @@ function get_secrets {
 		if [ "$source" == "dev" -o "$source" == "stg" -o "$source" == "int" -o "$source" == "prd" ]
 		then
 			$SM_DIR/bin/git_to_map $source | $SM_DIR/bin/map_to_k8s $env 
+			info "$source secrets installed in $env"
 		else
 			panic "Unknown secret source $source"
 		fi
@@ -597,7 +626,7 @@ function make_users {
 	local aws_region=$(get_region)
 	local aws_account=$(get_account)
 
-	info "adding system masters"
+	start "adding system masters"
 	local user
 	for user in $(get_iam_users)
 	do
@@ -609,8 +638,9 @@ function make_users {
     	    		eksctl create iamidentitymapping --region=$aws_region  --role=$arn --group=$group --name=$cluster --username=$user
 			info "retrying eksctl create iamidentitymapping"
     		done
-    		info "added $user"
+    		info "added $user to cluster $cluster"
 	done
+	complete "added system masters"
 }
 	
 
@@ -624,10 +654,11 @@ function expect_values_not_exist {
 
 # create initial values file
 function make_values {
-	info "creating values.yaml"
+	start "creating values.yaml"
 	add_file "values.yaml"
 	cp $TMP_DIR/eks-template/values.yaml .
 	${EDITOR:-vi} values.yaml
+	complete "created values.yaml"
 }
 
 # enter into bash to allow manual editing of config repo
@@ -672,15 +703,16 @@ function randomize_secrets {
 function delete_cluster {
 	cluster=$(get_cluster)
 	confirm "Are you sure that you want to delete cluster $cluster?"
-	info "deleting cluster $cluster"
+	start "deleting cluster $cluster"
 	eksctl delete cluster --name=$cluster
 }
 
 # remove service mesh from cluster and config repo
 function remove_mesh {
-	info "removing linkerd"
+	start "removing linkerd"
 	linkerd install --ignore-cluster | kubectl delete -f -
 	rm -rf linkerd
+	complete "removed linkerd"
 }
 
 function create_repo {
@@ -697,17 +729,19 @@ function create_repo {
 
 # install installation tools
 function install_tools {
-	info "installing tools"
+	start "installing tools"
 	brew bundle --file=${DEV_DIR}/Brewfile
 	pip3 install boto3 --user
 	go get github.com/subfuzion/envtpl/...
+	complete "installed tools"
 }
 
 # await deletion of a CloudFormation template that represents a cluster before returning
 function await_deletion {
+	start  "awaiting cluster $cluster deletion"
 	local cluster=$(get_cluster)
-	info "awaiting cluster $cluster deletion"
 	aws cloudformation wait stack-delete-complete --stack-name eksctl-${cluster}-cluster
+	complete "cluster $cluster deleted"
 }
 
 # migrate secrets from legacy GitHub repo to AWS secrets manager
