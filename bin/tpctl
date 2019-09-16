@@ -668,6 +668,11 @@ function edit_config {
 	confirm "Are you sure you want to commit changes?"
 }
 
+# show recent diff
+function diff_config {
+	git diff HEAD~1
+}
+
 # edit values file
 function edit_values {
 	if [ -f values.yaml ]
@@ -752,7 +757,7 @@ function migrate_secrets {
 
 # show help
 function help {
-      echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit_repo|cluster|flux|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig)*"
+      echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit_repo|cluster|flux|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|diff_config)*"
       echo
       echo "----- Basic Commands -----"
       echo "tools   - install installation tools"
@@ -776,6 +781,7 @@ function help {
       echo "delete_cluster - initiate deletion of the AWS EKS cluster"
       echo "await_deletion - await completion of deletion of gthe AWS EKS cluster"
       echo "merge_kubeconfig - copy the KUBECONFIG into the local $KUBECONFIG file"
+      echo "diff_config - show recent git diff"
 }
 
 if [ $# -eq 0 ]
@@ -1003,6 +1009,15 @@ do
 		setup_tmpdir
 		clone_remote
 		merge_kubeconfig
+		;;
+	diff_config)
+		check_remote_repo
+		setup_tmpdir
+		clone_remote
+		diff_config
+		;;
+	*)
+		panic "unknown command: $param"
 		;;
 	esac
 done
