@@ -277,7 +277,7 @@ function make_cert {
 function expect_github_token {
 	if [ -z "$GITHUB_TOKEN" ]
 	then
-        	panic "\$GITHUB_TOKEN required."
+        	panic "\$GITHUB_TOKEN required. https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line"
 	fi
 }
 
