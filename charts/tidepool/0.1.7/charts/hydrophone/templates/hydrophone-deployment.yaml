@@ -28,6 +28,8 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      initContainers:
+      {{ include "charts.init.shoreline" .}}
 {{ if .Values.serviceAccount.create }}
       serviceAccount: hydrophone
       serviceAccountName: hydrophone
