@@ -2,8 +2,6 @@
 #
 # Configure EKS cluster to run Tidepool services
 #
-# Usage: $0
-#
 
 set -o pipefail
 
@@ -708,6 +706,25 @@ function migrate_secrets {
 # show help
 function help {
       echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit|cluster|flux|cert|assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|users|deploy_key|delete_cluster|await_deletion|remove_mesh|kubeconfig)*"
+      echo 
+      echo "tools - install neeeded tools"
+      echo "values - create initial values.yaml file"
+      echo "edit_values - open editor to edit values.yaml file"
+      echo "config - create K8s manifests and eksctl K8s manifest file"
+      echo "edit - open shell with config repo in current directory.  Exit shell to commit changes."
+      echo "cluster - create AWS EKS cluster, add system:master USERS"
+      echo "flux - install flux GitOps controller, Tiller, client certs for Helm to access Tiller, and deploy key into GitHub"
+      echo "cert - regenerate client certs for Helm to access Tiller"
+      echo "assets - copy S3 assets to new bucket"
+      echo "mesh - install linkerd service mesh"
+      echo "migrate_secrets - migrate secrets from legacy GitHub repo to AWS secrets manager"
+      echo "randomize_secrets - generate random secrets and persist into AWS secrets manager"
+      echo "upsert_plaintext_secrets - read STDIN for plaintext K8s secrets"
+      echo "users - add system:master USERS to K8s cluster"
+      echo "deploy_key - copy deploy key from Flux to GitHub config repo"
+      echo "delete_cluster - initiate deletion of the AWS EKS cluster"
+      echo "await_deletion - await completion of deletion of gthe AWS EKS cluster"
+      echo "kubeconfig - copy the KUBECONFIG into the local $KUBECONFIG file"
 }
 
 if [ $# -eq 0 ]
