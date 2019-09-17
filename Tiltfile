@@ -95,12 +95,11 @@ def provisionServerSecrets ():
   required_secrets = [
     'auth',
     'blob',
-    'carelink',
+    'jellyfish',
     'data',
     'dexcom',
     'export',
     'image',
-    'jellyfish',
     'kissmetrics',
     'mailchimp',
     'mongo',
@@ -112,6 +111,18 @@ def provisionServerSecrets ():
     'userdata',
   ]
 
+  secretHelmKeyMap = {
+    'jellyfish': 'carelink.secret.enabled',
+    'kissmetrics': 'global.secret.templated',
+    'mailchimp': 'global.secret.templated',
+  }
+
+  secretChartPathMap = {
+    'jellyfish': 'carelink/templates/carelink-secret.yaml',
+    'kissmetrics': 'highwater/charts/kissmetrics/templates/kissmetrics-secret.yaml',
+    'mailchimp': 'shoreline/charts/mailchimp/templates/mailchimp-secret.yaml',
+  }
+
   # Skip secrets already available on cluster
   existing_secrets = str(local("kubectl get secrets -o=jsonpath='{.items[?(@.type==\"Opaque\")].metadata.name}'")).split()
   for existing_secret in existing_secrets:
@@ -119,12 +130,6 @@ def provisionServerSecrets ():
       required_secrets.remove(existing_secret)
 
   for secret in required_secrets:
-    secretChartPathMap = {
-      'jellyfish': 'carelink/templates/carelink-secret.yaml',
-      'kissmetrics': 'highwater/charts/kissmetrics/templates/kissmetrics-secret.yaml',
-      'mailchimp': 'shoreline/charts/mailchimp/templates/mailchimp-secret.yaml',
-    }
-
     secretChartPath = secretChartPathMap.get(secret, '{secret}/templates/{secret}-secret.yaml'.format(
       secret=secret,
     ))
@@ -134,11 +139,14 @@ def provisionServerSecrets ():
       secretChartPath=secretChartPath,
     )
 
+    secretKey = secretHelmKeyMap.get(secret, '{}.secret.enabled'.format(secret))
+
     # Generate the secret and apply it to the cluster
-    local('helm template --namespace default --set "global.secret.generated=true" --set "global.secret.templated=true" -x {templatePath} -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+    # local('helm template --namespace default --set "{secret}.secret.enabled=true" -x {templatePath} -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+    local('helm template --namespace default --set "{secretKey}=true" -x {templatePath} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
       chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
-      overrides=tidepool_helm_overrides_file,
-      templatePath=templatePath
+      templatePath=templatePath,
+      secretKey=secretKey,
     ))
 ### Secrets End ###
 
