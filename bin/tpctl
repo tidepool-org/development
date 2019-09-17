@@ -755,6 +755,11 @@ function install_tools {
 	complete "installed tools"
 }
 
+function gloo_dashboard {
+	kubectl port-forward -n gloo-system  deployment/api-server 8081:8080 &
+	open -a "Google Chrome"  http://localhost:8081
+}
+
 function remove_gloo {
 	glooctl install gateway --dry-run | kubectl delete -f -
 }
@@ -773,9 +778,13 @@ function migrate_secrets {
 	get_secrets | external_secret upsert $cluster plaintext | separate_files | add_names
 }
 
+function linkerd_dashboard {
+	linkerd dashboard &
+}
+
 # show help
 function help {
-      echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit_repo|cluster|flux|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|diff)*"
+      echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit_repo|cluster|flux|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|diff)*"
       echo
       echo "----- Basic Commands -----"
       echo "tools   - install installation tools"
@@ -799,6 +808,8 @@ function help {
       echo "delete_cluster - initiate deletion of the AWS EKS cluster"
       echo "await_deletion - await completion of deletion of gthe AWS EKS cluster"
       echo "merge_kubeconfig - copy the KUBECONFIG into the local $KUBECONFIG file"
+      echo "gloo_dashboard - open the Gloo dashboard"
+      echo "linkerd_dashboard - open the Linkerd dashboard"
       echo "diff - show recent git diff"
 }
 
@@ -1030,6 +1041,12 @@ do
 		;;
 	remove_gloo)
 		remove_gloo
+		;;
+	gloo_dashboard)
+		gloo_dashboard
+		;;
+	linkerd_dashboard)
+		linkerd_dashboard
 		;;
 	diff)
 		check_remote_repo
