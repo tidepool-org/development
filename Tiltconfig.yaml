@@ -64,6 +64,7 @@ mongo:
 ### MongoDB Config End ###
 
 ### Carelink API Config Start ###carelink:
+carelink:
   secret:
     enabled: false
     data_:
