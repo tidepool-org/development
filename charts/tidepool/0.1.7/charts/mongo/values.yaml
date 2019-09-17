@@ -1,10 +1,10 @@
 secret:
   enabled: false
   data_:
-    Scheme: "mongodb"
-    Addresses: "mongodb"
+    Scheme: ""
+    Addresses: ""
     Username: ""
     Password: ""
     Database: ""
-    Tls: "false"
+    Tls: ""
     OptParams: ""
