@@ -105,9 +105,9 @@ spec:
       image: tidepool/platform-data:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
     image:
       bucket: tidepool-qa1-data
-      image: tidepool/platform-image:develop-2cfea6fdc40ce39a36b80472598ef6f2a1089c7b
+      image: tidepool/platform-image:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
     migrations:
-      image: tidepool/platform-migrations:develop-2cfea6fdc40ce39a36b80472598ef6f2a1089c7b
+      image: tidepool/platform-migrations:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
     notification:
       enabled: false
       image: tidepool/platform-notification:develop-2cfea6fdc40ce39a36b80472598ef6f2a1089c7b
@@ -117,7 +117,7 @@ spec:
       enabled: false
       image: tidepool/platform-tools:develop-2cfea6fdc40ce39a36b80472598ef6f2a1089c7b
     user:
-      image: tidepool/platform-user:develop-2cfea6fdc40ce39a36b80472598ef6f2a1089c7b
+      image: tidepool/platform-user:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
     seagull:
       image: tidepool/seagull:develop-3b61d504616e7af2c6e3a0d0a68ad602428b1036
     shoreline:
