@@ -23,7 +23,7 @@ function panic {
 function expect_success {
 	if [ $? -ne 0 ]
 	then
-		panic $1
+		panic "$1"
 	fi
 }
 
@@ -771,6 +771,7 @@ function await_deletion {
 	local cluster=$(get_cluster)
 	start  "awaiting cluster $cluster deletion"
 	aws cloudformation wait stack-delete-complete --stack-name eksctl-${cluster}-cluster
+	expect_success "Aborting wait"
 	complete "cluster $cluster deleted"
 }
 
