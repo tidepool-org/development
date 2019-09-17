@@ -714,10 +714,10 @@ Currently, there is a known issue where at times the gateway proxy service that 
 
 This will present itself usually with the web app getting stuck in a loading state in the browser, or possibly resolving with an error message like: `‘No healthy upstream on blip (http://localhost:3000)`
 
-The solution is to restart the `gateway-proxy` service, which should instantly restore access:
+The solution is to restart the `gateway-proxy-v2` service, which should instantly restore access:
 
 ```bash
-tidepool restart gateway-proxy
+tidepool restart gateway-proxy-v2
 
 # or use the built-in shortcut
 tidepool restart-proxy

@@ -28,7 +28,7 @@ global:
 ### Global Config End ###
 
 ### Gateway Config Start ###
-gateway-proxy:
+gateway-proxy-v2:
   portForwards: ['3000']
 
 gloo:
@@ -36,7 +36,7 @@ gloo:
 
 ingress:
   deployment:
-    name: gateway-proxy
+    name: gateway-proxy-v2
     namespace: default
   gateway:
     http:
