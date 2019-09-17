@@ -748,6 +748,10 @@ function install_tools {
 	complete "installed tools"
 }
 
+function remove_gloo {
+	glooctl install gateway --dry-run | kubectl delete -f -
+}
+
 # await deletion of a CloudFormation template that represents a cluster before returning
 function await_deletion {
 	start  "awaiting cluster $cluster deletion"
@@ -1016,6 +1020,9 @@ do
 		setup_tmpdir
 		clone_remote
 		merge_kubeconfig
+		;;
+	remove_gloo)
+		remove_gloo
 		;;
 	diff)
 		check_remote_repo
