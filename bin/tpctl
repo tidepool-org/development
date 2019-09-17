@@ -29,7 +29,7 @@ function expect_success {
 
 # show info message
 function start {
-	echo "${GREEN}[√] ${1}${RESET}"
+	echo "${GREEN}[i] ${1}${RESET}"
 }
 
 # show info message
