@@ -97,12 +97,12 @@ spec:
     messageapi:
       image: tidepool/message-api:develop-c5ac4c43231c33c2dca7485a88fe27ba64769a06
     auth:
-      image: tidepool/platform-auth:develop-2cfea6fdc40ce39a36b80472598ef6f2a1089c7b
+      image: tidepool/platform-auth:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
     blob:
       bucket: tidepool-qa1-data
-      image: tidepool/platform-blob:develop-2cfea6fdc40ce39a36b80472598ef6f2a1089c7b
+      image: tidepool/platform-blob:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
     data:
-      image: tidepool/platform-data:develop-2cfea6fdc40ce39a36b80472598ef6f2a1089c7b
+      image: tidepool/platform-data:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
     image:
       bucket: tidepool-qa1-data
       image: tidepool/platform-image:develop-2cfea6fdc40ce39a36b80472598ef6f2a1089c7b
