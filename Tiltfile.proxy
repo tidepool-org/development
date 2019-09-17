@@ -113,8 +113,8 @@ def provisionGlooGateway():
   )))
 
   # Expose the gateway proxy on a host port
-  gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
-  k8s_resource('gateway-proxy-v2', port_forwards=gateway_port_forwards)
+  gateway_port_forwards = getNested(config,'gateway-proxy.portForwards', ['3000'])
+  k8s_resource('gateway-proxy', port_forwards=gateway_port_forwards)
 ### Gloo Gateway End ###
 
 # Unleash the beast

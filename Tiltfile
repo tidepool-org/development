@@ -17,7 +17,7 @@ def main():
   # Set up tidepool helm template command
   tidepool_helm_template_cmd = 'helm template --name tilt-tidepool --namespace default '
 
-  gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
+  gateway_port_forwards = getNested(config,'gateway-proxy.portForwards', ['3000'])
   gateway_port_forward_host_port = gateway_port_forwards[0].split(':')[0]
 
   mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
@@ -35,7 +35,7 @@ def main():
         local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 &>/dev/null &')
 
     # Ensure proxy services are deployed
-    gateway_proxy_service = local('kubectl get service gateway-proxy-v2 --ignore-not-found')
+    gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found')
     if not gateway_proxy_service:
       local('tilt up --file=Tiltfile.proxy --hud=0 --port=0 &>/dev/null &')
 
