@@ -388,6 +388,7 @@ function template_files {
 		then
 			add_file ${filename%.tmpl}
 			ClusterName=$cluster Region=$region envtpl $fullpath >${filename%.tmpl}
+			expect_success "Templating failure $filename"
 		elif [ "${filename: -5}" == ".yaml" ]
 		then
 			add_file $filename
@@ -396,6 +397,7 @@ function template_files {
 		then
 			add_file ${filename%.jsonnet}
 			jsonnet --tla-code config="$config" $fullpath | yq r - > ${filename%.jsonnet}
+			expect_success "Templating failure $filename"
 		fi
 	done
 }
@@ -419,6 +421,7 @@ function make_cluster_config {
 	start "creating eksctl manifest"
 	add_file "config.yaml"
 	jsonnet --tla-code config="$config" ${TEMPLATE_DIR}/eksctl/cluster_config.jsonnet | yq r - > config.yaml
+	expect_success "Templating failure eksctl/cluster_config.jsonnet"
 	complete "created eksctl manifest"
 }
 
@@ -438,6 +441,7 @@ function environment_template_files {
 		then
 			add_file $dir/${file%.jsonnet}
 			jsonnet --tla-code config="$config" --tla-str namespace=$env $fullpath | yq r - > $dir/${file%.jsonnet}
+			expect_success "Templating failure $filename"
 		fi
 	done
 }
@@ -547,12 +551,15 @@ function update_flux {
 		yq r flux/flux-deployment.yaml -j > $TMP_DIR/flux.json
 		yq r flux/helm-operator-deployment.yaml -j > $TMP_DIR/helm.json
         	jsonnet  --tla-code-file flux="$TMP_DIR/flux.json"  --tla-code-file helm="$TMP_DIR/helm.json" $TEMPLATE_DIR/flux/flux.jsonnet >$TMP_DIR/updated.json
+		expect_success "Templating failure flux/flux.jsonnet"
 
 		add_file flux/flux-deployment-updated.yaml
         	yq r $TMP_DIR/updated.json flux >flux/flux-deployment-updated.yaml
+		expect_success "Serialization flux/flux-deployment-updated.yaml"
 
 		add_file flux/helm-operator-deployment-updated.yaml
         	yq r $TMP_DIR/updated.json helm >flux/helm-operator-deployment-updated.yaml
+		expect_success "Serialization flux/helm-operator-deployment-updated.yaml"
 
 		rename_file flux/flux-deployment.yaml flux/flux-deployment.yaml.orig
 		mv flux/flux-deployment.yaml flux/flux-deployment.yaml.orig
