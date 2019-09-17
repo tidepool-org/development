@@ -572,7 +572,7 @@ function make_mesh {
 	
 	mkdir -p linkerd
 	add_file "linkerd/linkerd-config.yaml"
-	linkerd install config > linkerd/linkerd-config.yaml
+	(cd linkerd; linkerd install config | separate_files | add_names)
 	linkerd install config | kubectl apply -f -
 	
 	linkerd check config
@@ -585,7 +585,7 @@ function make_mesh {
 	info "linkerd check config"
 	
 	add_file "linkerd/linkerd-control-plane.yaml"
-	linkerd install control-plane > linkerd/linkerd-control-plane.yaml
+	(cd linkerd; linkerd install control-plane | separate_files | add_names)
 	linkerd install control-plane | kubectl apply -f -
 	
 	linkerd check
