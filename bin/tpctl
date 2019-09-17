@@ -724,6 +724,8 @@ function delete_cluster {
 	confirm "Are you sure that you want to delete cluster $cluster?"
 	start "deleting cluster $cluster"
 	eksctl delete cluster --name=$cluster
+	expect_success "Cluster deletion failed."
+	info "cluster $cluster deletion takes ~10 minutes to complete"
 }
 
 # remove service mesh from cluster and config repo
@@ -766,8 +768,8 @@ function remove_gloo {
 
 # await deletion of a CloudFormation template that represents a cluster before returning
 function await_deletion {
-	start  "awaiting cluster $cluster deletion"
 	local cluster=$(get_cluster)
+	start  "awaiting cluster $cluster deletion"
 	aws cloudformation wait stack-delete-complete --stack-name eksctl-${cluster}-cluster
 	complete "cluster $cluster deleted"
 }
@@ -1010,7 +1012,6 @@ do
 		clone_remote
 		local cluster=$(get_cluster)
 		delete_cluster
-		info "cluster $cluster deletion  takes ~10 minutes to complete"
 		;;
 	await_deletion)
 		check_remote_repo
