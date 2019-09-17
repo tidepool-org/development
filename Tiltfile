@@ -135,7 +135,7 @@ def provisionServerSecrets ():
     )
 
     # Generate the secret and apply it to the cluster
-    local('helm template --namespace default --set "global.secret.enabled=true" -x {templatePath} -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+    local('helm template --namespace default --set "global.secret.generated=true" --set "global.secret.templated=true" -x {templatePath} -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
       chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
       overrides=tidepool_helm_overrides_file,
       templatePath=templatePath

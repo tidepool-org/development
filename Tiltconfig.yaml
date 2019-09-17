@@ -14,8 +14,10 @@ global:
     viz:
       stories: 8083
       typestories: 8082
-  secret:
-    enabled: false # we provision these in Tiltfile directly with kubectl
+  secret: # we provision these in Tiltfile directly with kubectl
+    enabled: false
+    templated: false
+    generated: false
   securityContext: &global-security-context
     allowPrivilegeEscalation: false
     runAsNonRoot: true
