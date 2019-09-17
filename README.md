@@ -376,7 +376,7 @@ global:
 
 By default, Tilt will pull and provision the images specified in the `values.yaml` file for the tidepool helm charts from the [Docker Hub](https://hub.docker.com/).
 
-To pull and deploy a different image from the Docker Hub, simply uncomment and update the `image` value for the given service in your `local/Tiltconfig.yaml` file with any valid `image:tag` combination (See [Tilt Config Overrides](#tilt-config-overrides) if you haven't set up your local overrides file).
+To pull and deploy a different image from the Docker Hub, simply uncomment and update the `deployment.image` value for the given service in your `local/Tiltconfig.yaml` file with any valid `image:tag` combination (See [Tilt Config Overrides](#tilt-config-overrides) if you haven't set up your local overrides file).
 
 For instance, to have Tilt provision the latest remote image for `shoreline`:
 
@@ -384,13 +384,15 @@ For instance, to have Tilt provision the latest remote image for `shoreline`:
 ```yaml
 ### Change this:
 shoreline:
-  # image: tidepool-k8s-shoreline
+  # deployment:
+  #   image: tidepool-k8s-shoreline
   # hostPath: '~/go/src/github.com/tidepool-org/shoreline'
   # ...
 
 ### To this:
 shoreline:
-  image: tidepool/shoreline:latest
+  deployment:
+    image: tidepool/shoreline:latest
   # hostPath: '~/go/src/github.com/tidepool-org/shoreline'
   # ...
 ```
