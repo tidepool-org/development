@@ -37,18 +37,21 @@ def main():
     # Ensure proxy services are deployed
     gateway_proxy_service = local('kubectl get service gateway-proxy-v2 --ignore-not-found')
     if not gateway_proxy_service:
-      local('tilt up --file=Tiltfile.proxy --hud=0 --port=0 &>/dev/null &')
+      local('tilt up --file=Tiltfile.gateway --hud=0 --port=0 &>/dev/null &')
 
-    # Wait until mongodb and gateway-proxy services are forwarding before provisioning rest of stack
+    # Wait until mongodb and gateway proxy services are forwarding before provisioning rest of stack
     if not getNested(config, 'mongodb.useExternal'):
+      print("Preparing mongodb service...")
       local('while ! nc -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
+
+    print("Preparing gateway services...")
     local('while ! nc -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
 
   else:
-    # Shut down the mongodb and proxy services
+    # Shut down the mongodb and gateway services
     if not getNested(config, 'mongodb.useExternal'):
       local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.mongodb &>/dev/null &')
-    local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.proxy &>/dev/null &')
+    local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.gateway &>/dev/null &')
 
     # Clean up any tilt up backround processes
     local("for pid in $(ps -ef | awk '/tilt\ up/ {print $2}'); do kill -9 $pid; done")
@@ -57,7 +60,7 @@ def main():
   tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
   tidepool_helm_template_cmd = applyServiceOverrides(tidepool_helm_template_cmd)
 
-  # Don't provision the gloo gateway here - we do that in Tiltfile.proxy
+  # Don't provision the gloo gateway here - we do that in Tiltfile.gateway
   tidepool_helm_template_cmd += '--set "gloo.enabled=false" --set "gloo.created=true" '
 
   # Deploy and watch the helm charts
