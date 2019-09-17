@@ -115,7 +115,7 @@ spec:
       image: tidepool/platform-task:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
     tools:
       enabled: false
-      image: tidepool/platform-tools:develop-2cfea6fdc40ce39a36b80472598ef6f2a1089c7b
+      image: tidepool/platform-tools:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
     user:
       image: tidepool/platform-user:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
     seagull:
