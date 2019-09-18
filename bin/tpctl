@@ -307,13 +307,12 @@ function get_kubeconfig {
 # create EKS cluster using config.yaml file, add kubeconfig.yaml to config repo
 function make_cluster {
 	local cluster=$(get_cluster)
-	start` "creating cluster $cluster"
-
+	start "creating cluster $cluster"
 	eksctl create cluster -f config.yaml --kubeconfig ./kubeconfig.yaml
 	expect_success "eksctl create cluster failed."
 	git pull
 	add_file "./kubeconfig.yaml"
-	complete` "created cluster $cluster"
+	complete "created cluster $cluster"
 }
 	
 # merge K8s Kubeconfig of cluster into user's kubeconfig file for each switching (see kubectx)
@@ -619,7 +618,6 @@ function get_secrets {
 		if [ "$source" == "dev" -o "$source" == "stg" -o "$source" == "int" -o "$source" == "prd" ]
 		then
 			$SM_DIR/bin/git_to_map $source | $SM_DIR/bin/map_to_k8s $env 
-			info "$source secrets installed in $env"
 		else
 			panic "Unknown secret source $source"
 		fi
@@ -631,13 +629,14 @@ function make_users {
 	local group=system:masters
 	local cluster=$(get_cluster)
 	local aws_region=$(get_region)
-	local aws_account=$(get_account)
+	local account=$(get_aws_account)
+	echo "ACCOUNT $account"
 
 	start "adding system masters"
 	local user
 	for user in $(get_iam_users)
 	do
-    		local arn=arn:aws:iam::${aws_account}:user/${user}
+    		local arn=arn:aws:iam::${account}:user/${user}
     		eksctl create iamidentitymapping --region=$aws_region  --role=$arn --group=$group --name=$cluster --username=$user
     		while [ $? -ne 0 ]
     		do
@@ -671,7 +670,10 @@ github:
 
 !
 	cat $TMP_DIR/eks-template/values.yaml >>values.yaml
-	${EDITOR:-vi} values.yaml
+	if [ "$APPROVE" != "true" ]
+	then
+		${EDITOR:-vi} values.yaml
+	fi
 	complete "created values.yaml"
 }
 
@@ -781,13 +783,48 @@ function migrate_secrets {
 	get_secrets | external_secret upsert $cluster plaintext | separate_files | add_names
 }
 
+function create_secrets_managed_policy {
+	local file=$TMP_DIR/policy.yaml
+
+	start "Creating IAM Managed Policy for secrets management"
+	local cluster=$(get_cluster)
+	local region=$(get_region)
+	local stack_name=eksctl-${cluster}-external-secrets-managed-policy
+	local cf_file=file://$(realpath $file)
+	local account=$(get_aws_account)
+
+	cat >$file <<EOF
+          AWSTemplateFormatVersion: 2010-09-09
+          Description: Kubernetes IAM Role for External Secrets
+          Resources:
+            ExternalSecretsManagedPolicy:
+              Type: AWS::IAM::ManagedPolicy
+              Properties:
+                ManagedPolicyName: $stack_name
+                PolicyDocument:
+                  Version: '2012-10-17'
+                  Statement:
+                  - Effect: Allow
+                    Action:
+                    - secretsmanager:GetSecretValue
+                    Resource:
+                    - "arn:aws:secretsmanager:${region}:${account}:secret:${cluster}/*"
+EOF
+
+	aws cloudformation create-stack --stack-name ${stack_name} --capabilities CAPABILITY_NAMED_IAM --template-body ${cf_file} 
+
+	aws cloudformation wait stack-create-complete --stack-name ${stack_name}
+	complete "Created IAM Managed Policy for secrets management"
+	rm $file
+}
+
 function linkerd_dashboard {
 	linkerd dashboard &
 }
 
 # show help
 function help {
-      echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit_repo|cluster|flux|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|diff)*"
+      echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit_repo|cluster|flux|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|managed_policies|diff)*"
       echo
       echo "----- Basic Commands -----"
       echo "tools   - install installation tools"
@@ -813,6 +850,7 @@ function help {
       echo "merge_kubeconfig - copy the KUBECONFIG into the local $KUBECONFIG file"
       echo "gloo_dashboard - open the Gloo dashboard"
       echo "linkerd_dashboard - open the Linkerd dashboard"
+      echo "managed_policies - create managed policies"
       echo "diff - show recent git diff"
 }
 
@@ -874,6 +912,7 @@ do
                 save_changes "Added values"
 		make_config
                 save_changes "Added config packages"
+		create_secrets_managed_policy
 		make_cluster
                 merge_kubeconfig
                 make_users
@@ -1011,7 +1050,6 @@ do
 		check_remote_repo
 		setup_tmpdir
 		clone_remote
-		local cluster=$(get_cluster)
 		delete_cluster
 		;;
 	await_deletion)
@@ -1049,6 +1087,12 @@ do
 		;;
 	linkerd_dashboard)
 		linkerd_dashboard
+		;;
+	managed_policies)
+		check_remote_repo
+		setup_tmpdir
+		clone_remote
+		create_secrets_managed_policy
 		;;
 	diff)
 		check_remote_repo
