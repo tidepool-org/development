@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -xv
 #
 # Configure EKS cluster to run Tidepool services
 #
@@ -315,7 +315,6 @@ function make_cluster {
 	complete "created cluster $cluster"
 }
 	
-# merge K8s Kubeconfig of cluster into user's kubeconfig file for each switching (see kubectx)
 function merge_kubeconfig {
 	local local_kube_config=$(realpath ./kubeconfig.yaml)
 	local kubeconfig=$(get_kubeconfig)
