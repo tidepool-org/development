@@ -127,7 +127,7 @@ function set_template_dir {
 		start "cloning quickstart"
 		pushd $TMP_DIR >/dev/null 2>&1
 		git clone git@github.com:/tidepool-org/eks-template
-		export TEMPLATE_DIR=$(realpath eks-template)
+		export TEMPLATE_DIR=$(pwd)/eks-template
 		popd >/dev/null 2>&1
 		complete "cloned quickstart"
 	fi
@@ -141,7 +141,7 @@ function set_tools_dir {
 		git clone git@github.com:/tidepool-org/development
 		cd development
        		git checkout k8s
-		DEV_DIR=$(realpath .)
+		DEV_DIR=$(pwd)
 		CHART_DIR=${DEV_DIR}/charts/tidepool/0.1.7
 		popd >/dev/null 2>&1
 		complete "cloned development tools"
@@ -154,7 +154,7 @@ function clone_secret_map {
 		start "cloning secret-map"
 		pushd $TMP_DIR >/dev/null 2>&1
 		git clone git@github.com:/tidepool-org/secret-map
-		SM_DIR=$(realpath ./secret-map)
+		SM_DIR=$(pwd)/secret-map
 		popd >/dev/null 2>&1
 		complete "cloned secret-map"
 	fi
