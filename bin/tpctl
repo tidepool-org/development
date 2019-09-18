@@ -930,6 +930,8 @@ do
                 save_changes "Added migrated secrets"
 		;;
 	tools)
+		setup_tmpdir
+		set_tools_dir
 		install_tools
 		info "tools installed"
 		;;

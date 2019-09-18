@@ -1,0 +1,634 @@
+[32m[i] creating temporary working directory(B[m
+[35m[√] created temporary working directory(B[m
+[32m[i] cloning remote(B[m
+[35m[√] cloned remote(B[m
+[32m[i] cloning quickstart(B[m
+[35m[√] cloned quickstart(B[m
+[32m[i] cloning development tools(B[m
+Branch 'k8s' set up to track remote branch 'k8s' from 'origin'.
+[35m[√] cloned development tools(B[m
+[32m[i] creating values.yaml(B[m
+[32m[ℹ] adding values.yaml(B[m
+[35m[√] created values.yaml(B[m
+[32m[i] saving changes to config repo(B[m
+On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean
+[35m[√] saved changes to config repo(B[m
+[32m[i] creating manifests(B[m
+[32m[i] creating namespaces and package manifests(B[m
+[32m[ℹ] adding namespaces/external-secrets-namespace.yaml(B[m
+[32m[ℹ] adding namespaces/amazon-cloudwatch-namespace.yaml(B[m
+[32m[ℹ] adding namespaces/reloader-namespace.yaml(B[m
+[32m[ℹ] adding namespaces/datadog-namespace.yaml(B[m
+[32m[ℹ] adding namespaces/sumologic-namespace.yaml(B[m
+[32m[ℹ] adding namespaces/external-dns-namespace.yaml(B[m
+[32m[ℹ] adding namespaces/gloo-namespace.yaml(B[m
+[32m[ℹ] adding namespaces/certmanager-namespace.yaml(B[m
+[32m[ℹ] adding namespaces/monitoring-namespace.yaml(B[m
+[32m[ℹ] adding pkgs/amazon-cloudwatch/fluentd-configmap-cluster-info.yaml(B[m
+[32m[ℹ] adding pkgs/amazon-cloudwatch/fluentd-configmap-fluentd-config.yaml(B[m
+[32m[ℹ] adding pkgs/amazon-cloudwatch/fluentd-rbac.yaml(B[m
+[32m[ℹ] adding pkgs/amazon-cloudwatch/fluentd-daemonset.yaml(B[m
+[32m[ℹ] adding pkgs/amazon-cloudwatch/cloudwatch-agent-rbac.yaml(B[m
+[32m[ℹ] adding pkgs/amazon-cloudwatch/cloudwatch-agent-daemonset.yaml(B[m
+[32m[ℹ] adding pkgs/amazon-cloudwatch/cloudwatch-agent-configmap.yaml(B[m
+[32m[ℹ] adding pkgs/certmanager/certmanager-staging-clusterissuer.yaml(B[m
+[32m[ℹ] adding pkgs/certmanager/certmanager-production-clusterissuer.yaml(B[m
+[32m[ℹ] adding pkgs/certmanager/certmanager-helmrelease.yaml(B[m
+[32m[ℹ] adding pkgs/certmanager/v0.10-crds.yaml(B[m
+[32m[ℹ] adding pkgs/cluster-autoscaler/cluster-autoscaler-deployment.yaml(B[m
+[32m[ℹ] adding pkgs/cluster-autoscaler/cluster-autoscaler-rbac.yaml(B[m
+[32m[ℹ] adding pkgs/external-dns/external-dns-helmrelease.yaml(B[m
+[32m[ℹ] adding pkgs/external-secrets/external-secrets-helmrelease.yaml(B[m
+[32m[ℹ] adding pkgs/flux/flux-helm-repositories-secret.yaml(B[m
+[32m[ℹ] adding pkgs/gloo/settings.yaml(B[m
+[32m[ℹ] adding pkgs/gloo/gloo-helmrelease.yaml(B[m
+[32m[ℹ] adding pkgs/gloo-crds/crds.yaml(B[m
+[32m[ℹ] adding pkgs/metrics-server/metrics-server.yaml(B[m
+[32m[ℹ] adding pkgs/prometheus-operator/prometheus-operator.yaml(B[m
+[32m[ℹ] adding pkgs/reloader/reloader-helmrelease.yaml(B[m
+[32m[ℹ] adding pkgs/reloader/reloader-service-account.yaml(B[m
+[32m[ℹ] adding pkgs/thanos/thanos-secret.yaml(B[m
+[35m[√] created namespaces and package manifests(B[m
+[32m[i] creating eksctl manifest(B[m
+[32m[ℹ] adding config.yaml(B[m
+[35m[√] created eksctl manifest(B[m
+[32m[i] creating qa2 environment manifests(B[m
+[32m[ℹ] adding environments/qa2/mongodb/mongodb-secret.yaml(B[m
+[32m[ℹ] adding environments/qa2/tidepool/tidepool-namespace.yaml(B[m
+[32m[ℹ] adding environments/qa2/tidepool/shoreline-configmap.yaml(B[m
+[32m[ℹ] adding environments/qa2/tidepool/certificate.yaml(B[m
+[32m[ℹ] adding environments/qa2/tidepool/tidepool-helmrelease.yaml(B[m
+[35m[√] created qa2 environment manifests(B[m
+[35m[√] created manifests(B[m
+[32m[i] saving changes to config repo(B[m
+On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean
+[35m[√] saved changes to config repo(B[m
+[32m[i] Creating IAM Managed Policy for secrets management(B[m
+[35m[√] Created IAM Managed Policy for secrets management(B[m
+[32m[i] creating cluster test1(B[m
+[ℹ]  using region us-west-2
+[ℹ]  setting availability zones to [us-west-2d us-west-2c us-west-2b]
+[ℹ]  subnets for us-west-2d - public:10.47.0.0/19 private:10.47.96.0/19
+[ℹ]  subnets for us-west-2c - public:10.47.32.0/19 private:10.47.128.0/19
+[ℹ]  subnets for us-west-2b - public:10.47.64.0/19 private:10.47.160.0/19
+[ℹ]  nodegroup "ng" will use "ami-076c743acc3ec4159" [AmazonLinux2/1.14]
+[ℹ]  using Kubernetes version 1.14
+[ℹ]  creating EKS cluster "test1" in "us-west-2" region
+[ℹ]  1 nodegroup (ng) was included (based on the include/exclude rules)
+[ℹ]  will create a CloudFormation stack for cluster itself and 1 nodegroup stack(s)
+[ℹ]  if you encounter any issues, check CloudFormation console or try 'eksctl utils describe-stacks --region=us-west-2 --name=test1'
+[ℹ]  3 sequential tasks: { create cluster control plane "test1", create nodegroup "ng", 3 sequential sub-tasks: { update CloudWatch logging configuration, associate IAM OIDC provider, 10 parallel sub-tasks: { 2 sequential sub-tasks: { create IAM role for serviceaccount "kube-system/cluster-autoscaler", create serviceaccount "kube-system/cluster-autoscaler" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "certmanager/certmanager", create serviceaccount "certmanager/certmanager" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "amazon-cloudwatch/cloudwatch-agent", create serviceaccount "amazon-cloudwatch/cloudwatch-agent" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "external-dns/external-dns", create serviceaccount "external-dns/external-dns" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "amazon-cloudwatch/fluentd", create serviceaccount "amazon-cloudwatch/fluentd" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "external-secrets/external-secrets", create serviceaccount "external-secrets/external-secrets" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "qa2/blob", create serviceaccount "qa2/blob" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "qa2/image", create serviceaccount "qa2/image" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "qa2/jellyfish", create serviceaccount "qa2/jellyfish" }, 2 sequential sub-tasks: { create IAM role for serviceaccount "qa2/hydrophone", create serviceaccount "qa2/hydrophone" } } } }
+[ℹ]  building cluster stack "eksctl-test1-cluster"
+[ℹ]  deploying stack "eksctl-test1-cluster"
+[ℹ]  building nodegroup stack "eksctl-test1-nodegroup-ng"
+[ℹ]  deploying stack "eksctl-test1-nodegroup-ng"
+[✔]  configured CloudWatch logging for cluster "test1" in "us-west-2" (enabled types: api, authenticator, controllerManager, scheduler & disabled types: audit)
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-qa2-hydrophone"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-external-secrets-external-secrets"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-qa2-jellyfish"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-qa2-blob"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-kube-system-cluster-autoscaler"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-amazon-cloudwatch-cloudwatch-agent"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-amazon-cloudwatch-fluentd"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-external-dns-external-dns"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-certmanager-certmanager"
+[ℹ]  building iamserviceaccount stack "eksctl-test1-addon-iamserviceaccount-qa2-image"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-amazon-cloudwatch-fluentd"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-amazon-cloudwatch-cloudwatch-agent"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-external-dns-external-dns"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-qa2-hydrophone"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-certmanager-certmanager"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-external-secrets-external-secrets"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-qa2-blob"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-qa2-jellyfish"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-qa2-image"
+[ℹ]  deploying stack "eksctl-test1-addon-iamserviceaccount-kube-system-cluster-autoscaler"
+[ℹ]  created namespace "qa2"
+[ℹ]  created serviceaccount "qa2/image"
+[ℹ]  created namespace "external-dns"
+[ℹ]  created serviceaccount "external-dns/external-dns"
+[ℹ]  created namespace "amazon-cloudwatch"
+[ℹ]  created serviceaccount "amazon-cloudwatch/fluentd"
+[ℹ]  created namespace "external-secrets"
+[ℹ]  created serviceaccount "external-secrets/external-secrets"
+[ℹ]  created serviceaccount "kube-system/cluster-autoscaler"
+[ℹ]  created namespace "certmanager"
+[ℹ]  created serviceaccount "certmanager/certmanager"
+[ℹ]  created serviceaccount "amazon-cloudwatch/cloudwatch-agent"
+[!]  retryable error (Throttling: Rate exceeded
+	status code: 400, request id: ae14686e-d9bd-11e9-9944-6d467a26ea6f) from cloudformation/DescribeStacks - will retry after delay of 549ms
+[ℹ]  created serviceaccount "qa2/jellyfish"
+[ℹ]  created serviceaccount "qa2/hydrophone"
+[ℹ]  created serviceaccount "qa2/blob"
+[✔]  all EKS cluster resource for "test1" had been created
+[✔]  saved kubeconfig as "./kubeconfig.yaml"
+[ℹ]  adding role "arn:aws:iam::118346523422:role/eksctl-test1-nodegroup-ng-NodeInstanceRole-PR3J5FTY1144" to auth ConfigMap
+[ℹ]  nodegroup "ng" has 0 node(s)
+[ℹ]  waiting for at least 1 node(s) to become ready in "ng"
+[ℹ]  nodegroup "ng" has 4 node(s)
+[ℹ]  node "ip-10-47-12-91.us-west-2.compute.internal" is not ready
+[ℹ]  node "ip-10-47-18-41.us-west-2.compute.internal" is not ready
+[ℹ]  node "ip-10-47-54-82.us-west-2.compute.internal" is not ready
+[ℹ]  node "ip-10-47-93-99.us-west-2.compute.internal" is ready
+[ℹ]  kubectl command should work with "./kubeconfig.yaml", try 'kubectl --kubeconfig=./kubeconfig.yaml get nodes'
+[✔]  EKS cluster "test1" in "us-west-2" region is ready
+[32m[ℹ] adding ./kubeconfig.yaml(B[m
+[35m[√] created cluster test1(B[m
+[35m[√] merging kubeconfig into /Users/derrickburns/.kube/config.yaml(B[m
+ACCOUNT 118346523422
+[32m[i] adding system masters(B[m
+[ℹ]  using region us-west-2
+[ℹ]  adding role "arn:aws:iam::118346523422:user/derrickburns-cli" to auth ConfigMap
+[35m[√] added derrickburns-cli to cluster test1(B[m
+[ℹ]  using region us-west-2
+[ℹ]  adding role "arn:aws:iam::118346523422:user/lennartgoedhard-cli" to auth ConfigMap
+[35m[√] added lennartgoedhard-cli to cluster test1(B[m
+[ℹ]  using region us-west-2
+[ℹ]  adding role "arn:aws:iam::118346523422:user/benderr-cli" to auth ConfigMap
+[35m[√] added benderr-cli to cluster test1(B[m
+[ℹ]  using region us-west-2
+[ℹ]  adding role "arn:aws:iam::118346523422:user/jamesraby-cli" to auth ConfigMap
+[35m[√] added jamesraby-cli to cluster test1(B[m
+[ℹ]  using region us-west-2
+[ℹ]  adding role "arn:aws:iam::118346523422:user/haroldbernard-cli" to auth ConfigMap
+[35m[√] added haroldbernard-cli to cluster test1(B[m
+[35m[√] added system masters(B[m
+[32m[i] saving changes to config repo(B[m
+[master fc0bcab] Added cluster and users
+ 1 file changed, 25 insertions(+), 25 deletions(-)
+ rewrite kubeconfig.yaml (60%)
+[35m[√] saved changes to config repo(B[m
+kubernetes-api
+--------------
+√ can initialize the client
+√ can query the Kubernetes API
+
+kubernetes-version
+------------------
+√ is running the minimum Kubernetes API version
+√ is running the minimum kubectl version
+
+pre-kubernetes-setup
+--------------------
+√ control plane namespace does not already exist
+√ can create Namespaces
+√ can create ClusterRoles
+√ can create ClusterRoleBindings
+√ can create CustomResourceDefinitions
+√ can create PodSecurityPolicies
+√ can create ServiceAccounts
+√ can create Services
+√ can create Deployments
+√ can create CronJobs
+√ can create ConfigMaps
+√ no clock skew detected
+
+pre-kubernetes-capability
+-------------------------
+√ has NET_ADMIN capability
+√ has NET_RAW capability
+
+pre-linkerd-global-resources
+----------------------------
+√ no ClusterRoles exist
+√ no ClusterRoleBindings exist
+√ no CustomResourceDefinitions exist
+√ no MutatingWebhookConfigurations exist
+√ no ValidatingWebhookConfigurations exist
+√ no PodSecurityPolicies exist
+
+linkerd-version
+---------------
+√ can determine the latest version
+√ cli is up-to-date
+
+Status check results are √
+[32m[i] installing mesh(B[m
+[35m[√] linkerd check --pre(B[m
+[32m[ℹ] adding linkerd/linkerd-config.yaml(B[m
+[32m[ℹ] adding namespace/none/linkerd.yaml(B[m
+[32m[ℹ] adding cluster_role/none/linkerd-linkerd-identity.yaml(B[m
+[32m[ℹ] adding cluster_role_binding/none/linkerd-linkerd-identity.yaml(B[m
+[32m[ℹ] adding service_account/linkerd/linkerd-identity.yaml(B[m
+[32m[ℹ] adding cluster_role/none/linkerd-linkerd-controller.yaml(B[m
+[32m[ℹ] adding cluster_role_binding/none/linkerd-linkerd-controller.yaml(B[m
+[32m[ℹ] adding service_account/linkerd/linkerd-controller.yaml(B[m
+[32m[ℹ] adding role/linkerd/linkerd-heartbeat.yaml(B[m
+[32m[ℹ] adding role_binding/linkerd/linkerd-heartbeat.yaml(B[m
+[32m[ℹ] adding service_account/linkerd/linkerd-heartbeat.yaml(B[m
+[32m[ℹ] adding cluster_role_binding/none/linkerd-linkerd-web-admin.yaml(B[m
+[32m[ℹ] adding service_account/linkerd/linkerd-web.yaml(B[m
+[32m[ℹ] adding custom_resource_definition/none/serviceprofiles.linkerd.io.yaml(B[m
+[32m[ℹ] adding custom_resource_definition/none/trafficsplits.split.smi-spec.io.yaml(B[m
+[32m[ℹ] adding cluster_role/none/linkerd-linkerd-prometheus.yaml(B[m
+[32m[ℹ] adding cluster_role_binding/none/linkerd-linkerd-prometheus.yaml(B[m
+[32m[ℹ] adding service_account/linkerd/linkerd-prometheus.yaml(B[m
+[32m[ℹ] adding service_account/linkerd/linkerd-grafana.yaml(B[m
+[32m[ℹ] adding cluster_role/none/linkerd-linkerd-proxy-injector.yaml(B[m
+[32m[ℹ] adding cluster_role_binding/none/linkerd-linkerd-proxy-injector.yaml(B[m
+[32m[ℹ] adding service_account/linkerd/linkerd-proxy-injector.yaml(B[m
+[32m[ℹ] adding secret/linkerd/linkerd-proxy-injector-tls.yaml(B[m
+[32m[ℹ] adding mutating_webhook_configuration/none/linkerd-proxy-injector-webhook-config.yaml(B[m
+[32m[ℹ] adding cluster_role/none/linkerd-linkerd-sp-validator.yaml(B[m
+[32m[ℹ] adding cluster_role_binding/none/linkerd-linkerd-sp-validator.yaml(B[m
+[32m[ℹ] adding service_account/linkerd/linkerd-sp-validator.yaml(B[m
+[32m[ℹ] adding secret/linkerd/linkerd-sp-validator-tls.yaml(B[m
+[32m[ℹ] adding validating_webhook_configuration/none/linkerd-sp-validator-webhook-config.yaml(B[m
+[32m[ℹ] adding cluster_role/none/linkerd-linkerd-tap.yaml(B[m
+[32m[ℹ] adding cluster_role/none/linkerd-linkerd-tap-admin.yaml(B[m
+[32m[ℹ] adding cluster_role_binding/none/linkerd-linkerd-tap.yaml(B[m
+[32m[ℹ] adding cluster_role_binding/none/linkerd-linkerd-tap-auth-delegator.yaml(B[m
+[32m[ℹ] adding service_account/linkerd/linkerd-tap.yaml(B[m
+[32m[ℹ] adding role_binding/kube-system/linkerd-linkerd-tap-auth-reader.yaml(B[m
+[32m[ℹ] adding secret/linkerd/linkerd-tap-tls.yaml(B[m
+[32m[ℹ] adding api_service/none/v1alpha1.tap.linkerd.io.yaml(B[m
+[32m[ℹ] adding pod_security_policy/none/linkerd-linkerd-control-plane.yaml(B[m
+[32m[ℹ] adding role/linkerd/linkerd-psp.yaml(B[m
+[32m[ℹ] adding role_binding/linkerd/linkerd-psp.yaml(B[m
+namespace/linkerd created
+clusterrole.rbac.authorization.k8s.io/linkerd-linkerd-identity created
+clusterrolebinding.rbac.authorization.k8s.io/linkerd-linkerd-identity created
+serviceaccount/linkerd-identity created
+clusterrole.rbac.authorization.k8s.io/linkerd-linkerd-controller created
+clusterrolebinding.rbac.authorization.k8s.io/linkerd-linkerd-controller created
+serviceaccount/linkerd-controller created
+role.rbac.authorization.k8s.io/linkerd-heartbeat created
+rolebinding.rbac.authorization.k8s.io/linkerd-heartbeat created
+serviceaccount/linkerd-heartbeat created
+clusterrolebinding.rbac.authorization.k8s.io/linkerd-linkerd-web-admin created
+serviceaccount/linkerd-web created
+customresourcedefinition.apiextensions.k8s.io/serviceprofiles.linkerd.io created
+customresourcedefinition.apiextensions.k8s.io/trafficsplits.split.smi-spec.io created
+clusterrole.rbac.authorization.k8s.io/linkerd-linkerd-prometheus created
+clusterrolebinding.rbac.authorization.k8s.io/linkerd-linkerd-prometheus created
+serviceaccount/linkerd-prometheus created
+serviceaccount/linkerd-grafana created
+clusterrole.rbac.authorization.k8s.io/linkerd-linkerd-proxy-injector created
+clusterrolebinding.rbac.authorization.k8s.io/linkerd-linkerd-proxy-injector created
+serviceaccount/linkerd-proxy-injector created
+secret/linkerd-proxy-injector-tls created
+mutatingwebhookconfiguration.admissionregistration.k8s.io/linkerd-proxy-injector-webhook-config created
+clusterrole.rbac.authorization.k8s.io/linkerd-linkerd-sp-validator created
+clusterrolebinding.rbac.authorization.k8s.io/linkerd-linkerd-sp-validator created
+serviceaccount/linkerd-sp-validator created
+secret/linkerd-sp-validator-tls created
+validatingwebhookconfiguration.admissionregistration.k8s.io/linkerd-sp-validator-webhook-config created
+clusterrole.rbac.authorization.k8s.io/linkerd-linkerd-tap created
+clusterrole.rbac.authorization.k8s.io/linkerd-linkerd-tap-admin created
+clusterrolebinding.rbac.authorization.k8s.io/linkerd-linkerd-tap created
+clusterrolebinding.rbac.authorization.k8s.io/linkerd-linkerd-tap-auth-delegator created
+serviceaccount/linkerd-tap created
+rolebinding.rbac.authorization.k8s.io/linkerd-linkerd-tap-auth-reader created
+secret/linkerd-tap-tls created
+apiservice.apiregistration.k8s.io/v1alpha1.tap.linkerd.io created
+podsecuritypolicy.policy/linkerd-linkerd-control-plane created
+role.rbac.authorization.k8s.io/linkerd-psp created
+rolebinding.rbac.authorization.k8s.io/linkerd-psp created
+kubernetes-api
+--------------
+√ can initialize the client
+√ can query the Kubernetes API
+
+kubernetes-version
+------------------
+√ is running the minimum Kubernetes API version
+√ is running the minimum kubectl version
+
+linkerd-config
+--------------
+√ control plane Namespace exists
+√ control plane ClusterRoles exist
+√ control plane ClusterRoleBindings exist
+√ control plane ServiceAccounts exist
+√ control plane CustomResourceDefinitions exist
+√ control plane MutatingWebhookConfigurations exist
+√ control plane ValidatingWebhookConfigurations exist
+√ control plane PodSecurityPolicies exist
+
+linkerd-version
+---------------
+√ can determine the latest version
+√ cli is up-to-date
+
+Status check results are √
+[35m[√] linkerd check config(B[m
+[32m[ℹ] adding linkerd/linkerd-control-plane.yaml(B[m
+[32m[ℹ] adding config_map/linkerd/linkerd-config.yaml(B[m
+[32m[ℹ] adding secret/linkerd/linkerd-identity-issuer.yaml(B[m
+[32m[ℹ] adding service/linkerd/linkerd-identity.yaml(B[m
+[32m[ℹ] adding deployment/linkerd/linkerd-identity.yaml(B[m
+[32m[ℹ] adding service/linkerd/linkerd-controller-api.yaml(B[m
+[32m[ℹ] adding service/linkerd/linkerd-destination.yaml(B[m
+[32m[ℹ] adding deployment/linkerd/linkerd-controller.yaml(B[m
+[32m[ℹ] adding cron_job/linkerd/linkerd-heartbeat.yaml(B[m
+[32m[ℹ] adding service/linkerd/linkerd-web.yaml(B[m
+[32m[ℹ] adding deployment/linkerd/linkerd-web.yaml(B[m
+[32m[ℹ] adding config_map/linkerd/linkerd-prometheus-config.yaml(B[m
+[32m[ℹ] adding service/linkerd/linkerd-prometheus.yaml(B[m
+[32m[ℹ] adding deployment/linkerd/linkerd-prometheus.yaml(B[m
+[32m[ℹ] adding config_map/linkerd/linkerd-grafana-config.yaml(B[m
+[32m[ℹ] adding service/linkerd/linkerd-grafana.yaml(B[m
+[32m[ℹ] adding deployment/linkerd/linkerd-grafana.yaml(B[m
+[32m[ℹ] adding deployment/linkerd/linkerd-proxy-injector.yaml(B[m
+[32m[ℹ] adding service/linkerd/linkerd-proxy-injector.yaml(B[m
+[32m[ℹ] adding service/linkerd/linkerd-sp-validator.yaml(B[m
+[32m[ℹ] adding deployment/linkerd/linkerd-sp-validator.yaml(B[m
+[32m[ℹ] adding service/linkerd/linkerd-tap.yaml(B[m
+[32m[ℹ] adding deployment/linkerd/linkerd-tap.yaml(B[m
+configmap/linkerd-config created
+secret/linkerd-identity-issuer created
+service/linkerd-identity created
+deployment.apps/linkerd-identity created
+service/linkerd-controller-api created
+service/linkerd-destination created
+deployment.apps/linkerd-controller created
+cronjob.batch/linkerd-heartbeat created
+service/linkerd-web created
+deployment.apps/linkerd-web created
+configmap/linkerd-prometheus-config created
+service/linkerd-prometheus created
+deployment.apps/linkerd-prometheus created
+configmap/linkerd-grafana-config created
+service/linkerd-grafana created
+deployment.apps/linkerd-grafana created
+deployment.apps/linkerd-proxy-injector created
+service/linkerd-proxy-injector created
+service/linkerd-sp-validator created
+deployment.apps/linkerd-sp-validator created
+service/linkerd-tap created
+deployment.apps/linkerd-tap created
+kubernetes-api
+--------------
+√ can initialize the client
+√ can query the Kubernetes API
+
+kubernetes-version
+------------------
+√ is running the minimum Kubernetes API version
+√ is running the minimum kubectl version
+
+linkerd-config
+--------------
+√ control plane Namespace exists
+√ control plane ClusterRoles exist
+√ control plane ClusterRoleBindings exist
+√ control plane ServiceAccounts exist
+√ control plane CustomResourceDefinitions exist
+√ control plane MutatingWebhookConfigurations exist
+√ control plane ValidatingWebhookConfigurations exist
+√ control plane PodSecurityPolicies exist
+
+linkerd-existence
+-----------------
+√ 'linkerd-config' config map exists
+√ control plane replica sets are ready
+√ no unschedulable pods
+√ controller pod is running
+√ can initialize the client
+√ can query the control plane API
+
+linkerd-api
+-----------
+√ control plane pods are ready
+√ control plane self-check
+√ [kubernetes] control plane can talk to Kubernetes
+√ [prometheus] control plane can talk to Prometheus
+√ no invalid service profiles
+
+linkerd-version
+---------------
+√ can determine the latest version
+√ cli is up-to-date
+
+control-plane-version
+---------------------
+√ control plane is up-to-date
+√ control plane and cli versions match
+
+Status check results are √
+[35m[√] installed mesh(B[m
+[32m[i] saving changes to config repo(B[m
+[master 9c93180] Added linkerd mesh
+ 17 files changed, 157 insertions(+), 157 deletions(-)
+ rewrite linkerd/api_service/none/v1alpha1.tap.linkerd.io.yaml (81%)
+ rewrite linkerd/secret/linkerd/linkerd-proxy-injector-tls.yaml (84%)
+ rewrite linkerd/secret/linkerd/linkerd-sp-validator-tls.yaml (92%)
+ rewrite linkerd/secret/linkerd/linkerd-tap-tls.yaml (93%)
+ rewrite linkerd/validating_webhook_configuration/none/linkerd-sp-validator-webhook-config.yaml (71%)
+[35m[√] saved changes to config repo(B[m
+[32m[i] installing flux into cluster test1(B[m
+[36m[ℹ]  Generating public key infrastructure for the Helm Operator and Tiller
+[0m[36m[ℹ]    this may take up to a minute, please be patient
+[0m[32m[!]  Public key infrastructure files were written into directory "/var/folders/m1/9nxmym25533_5khp4gsv89fc0000gn/T/eksctl-helm-pki410996405"
+[0m[32m[!]  please move the files into a safe place or delete them
+[0m[36m[ℹ]  Generating manifests
+[0m[36m[ℹ]  Cloning git@github.com:tidepool-org/cluster-test1.git
+[0mCloning into '/var/folders/m1/9nxmym25533_5khp4gsv89fc0000gn/T/eksctl-install-flux-clone-737662608'...
+remote: Enumerating objects: 191, done.[K
+remote: Counting objects:   0% (1/191)[Kremote: Counting objects:   1% (2/191)[Kremote: Counting objects:   2% (4/191)[Kremote: Counting objects:   3% (6/191)[Kremote: Counting objects:   4% (8/191)[Kremote: Counting objects:   5% (10/191)[Kremote: Counting objects:   6% (12/191)[Kremote: Counting objects:   7% (14/191)[Kremote: Counting objects:   8% (16/191)[Kremote: Counting objects:   9% (18/191)[Kremote: Counting objects:  10% (20/191)[Kremote: Counting objects:  11% (22/191)[Kremote: Counting objects:  12% (23/191)[Kremote: Counting objects:  13% (25/191)[Kremote: Counting objects:  14% (27/191)[Kremote: Counting objects:  15% (29/191)[Kremote: Counting objects:  16% (31/191)[Kremote: Counting objects:  17% (33/191)[Kremote: Counting objects:  18% (35/191)[Kremote: Counting objects:  19% (37/191)[Kremote: Counting objects:  20% (39/191)[Kremote: Counting objects:  21% (41/191)[Kremote: Counting objects:  22% (43/191)[Kremote: Counting objects:  23% (44/191)[Kremote: Counting objects:  24% (46/191)[Kremote: Counting objects:  25% (48/191)[Kremote: Counting objects:  26% (50/191)[Kremote: Counting objects:  27% (52/191)[Kremote: Counting objects:  28% (54/191)[Kremote: Counting objects:  29% (56/191)[Kremote: Counting objects:  30% (58/191)[Kremote: Counting objects:  31% (60/191)[Kremote: Counting objects:  32% (62/191)[Kremote: Counting objects:  33% (64/191)[Kremote: Counting objects:  34% (65/191)[Kremote: Counting objects:  35% (67/191)[Kremote: Counting objects:  36% (69/191)[Kremote: Counting objects:  37% (71/191)[Kremote: Counting objects:  38% (73/191)[Kremote: Counting objects:  39% (75/191)[Kremote: Counting objects:  40% (77/191)[Kremote: Counting objects:  41% (79/191)[Kremote: Counting objects:  42% (81/191)[Kremote: Counting objects:  43% (83/191)[Kremote: Counting objects:  44% (85/191)[Kremote: Counting objects:  45% (86/191)[Kremote: Counting objects:  46% (88/191)[Kremote: Counting objects:  47% (90/191)[Kremote: Counting objects:  48% (92/191)[Kremote: Counting objects:  49% (94/191)[Kremote: Counting objects:  50% (96/191)[Kremote: Counting objects:  51% (98/191)[Kremote: Counting objects:  52% (100/191)[Kremote: Counting objects:  53% (102/191)[Kremote: Counting objects:  54% (104/191)[Kremote: Counting objects:  55% (106/191)[Kremote: Counting objects:  56% (107/191)[Kremote: Counting objects:  57% (109/191)[Kremote: Counting objects:  58% (111/191)[Kremote: Counting objects:  59% (113/191)[Kremote: Counting objects:  60% (115/191)[Kremote: Counting objects:  61% (117/191)[Kremote: Counting objects:  62% (119/191)[Kremote: Counting objects:  63% (121/191)[Kremote: Counting objects:  64% (123/191)[Kremote: Counting objects:  65% (125/191)[Kremote: Counting objects:  66% (127/191)[Kremote: Counting objects:  67% (128/191)[Kremote: Counting objects:  68% (130/191)[Kremote: Counting objects:  69% (132/191)[Kremote: Counting objects:  70% (134/191)[Kremote: Counting objects:  71% (136/191)[Kremote: Counting objects:  72% (138/191)[Kremote: Counting objects:  73% (140/191)[Kremote: Counting objects:  74% (142/191)[Kremote: Counting objects:  75% (144/191)[Kremote: Counting objects:  76% (146/191)[Kremote: Counting objects:  77% (148/191)[Kremote: Counting objects:  78% (149/191)[Kremote: Counting objects:  79% (151/191)[Kremote: Counting objects:  80% (153/191)[Kremote: Counting objects:  81% (155/191)[Kremote: Counting objects:  82% (157/191)[Kremote: Counting objects:  83% (159/191)[Kremote: Counting objects:  84% (161/191)[Kremote: Counting objects:  85% (163/191)[Kremote: Counting objects:  86% (165/191)[Kremote: Counting objects:  87% (167/191)[Kremote: Counting objects:  88% (169/191)[Kremote: Counting objects:  89% (170/191)[Kremote: Counting objects:  90% (172/191)[Kremote: Counting objects:  91% (174/191)[Kremote: Counting objects:  92% (176/191)[Kremote: Counting objects:  93% (178/191)[Kremote: Counting objects:  94% (180/191)[Kremote: Counting objects:  95% (182/191)[Kremote: Counting objects:  96% (184/191)[Kremote: Counting objects:  97% (186/191)[Kremote: Counting objects:  98% (188/191)[Kremote: Counting objects:  99% (190/191)[Kremote: Counting objects: 100% (191/191)[Kremote: Counting objects: 100% (191/191), done.[K
+remote: Compressing objects:   1% (1/100)[Kremote: Compressing objects:   2% (2/100)[Kremote: Compressing objects:   3% (3/100)[Kremote: Compressing objects:   4% (4/100)[Kremote: Compressing objects:   5% (5/100)[Kremote: Compressing objects:   6% (6/100)[Kremote: Compressing objects:   7% (7/100)[Kremote: Compressing objects:   8% (8/100)[Kremote: Compressing objects:   9% (9/100)[Kremote: Compressing objects:  10% (10/100)[Kremote: Compressing objects:  11% (11/100)[Kremote: Compressing objects:  12% (12/100)[Kremote: Compressing objects:  13% (13/100)[Kremote: Compressing objects:  14% (14/100)[Kremote: Compressing objects:  15% (15/100)[Kremote: Compressing objects:  16% (16/100)[Kremote: Compressing objects:  17% (17/100)[Kremote: Compressing objects:  18% (18/100)[Kremote: Compressing objects:  19% (19/100)[Kremote: Compressing objects:  20% (20/100)[Kremote: Compressing objects:  21% (21/100)[Kremote: Compressing objects:  22% (22/100)[Kremote: Compressing objects:  23% (23/100)[Kremote: Compressing objects:  24% (24/100)[Kremote: Compressing objects:  25% (25/100)[Kremote: Compressing objects:  26% (26/100)[Kremote: Compressing objects:  27% (27/100)[Kremote: Compressing objects:  28% (28/100)[Kremote: Compressing objects:  29% (29/100)[Kremote: Compressing objects:  30% (30/100)[Kremote: Compressing objects:  31% (31/100)[Kremote: Compressing objects:  32% (32/100)[Kremote: Compressing objects:  33% (33/100)[Kremote: Compressing objects:  34% (34/100)[Kremote: Compressing objects:  35% (35/100)[Kremote: Compressing objects:  36% (36/100)[Kremote: Compressing objects:  37% (37/100)[Kremote: Compressing objects:  38% (38/100)[Kremote: Compressing objects:  39% (39/100)[Kremote: Compressing objects:  40% (40/100)[Kremote: Compressing objects:  41% (41/100)[Kremote: Compressing objects:  42% (42/100)[Kremote: Compressing objects:  43% (43/100)[Kremote: Compressing objects:  44% (44/100)[Kremote: Compressing objects:  45% (45/100)[Kremote: Compressing objects:  46% (46/100)[Kremote: Compressing objects:  47% (47/100)[Kremote: Compressing objects:  48% (48/100)[Kremote: Compressing objects:  49% (49/100)[Kremote: Compressing objects:  50% (50/100)[Kremote: Compressing objects:  51% (51/100)[Kremote: Compressing objects:  52% (52/100)[Kremote: Compressing objects:  53% (53/100)[Kremote: Compressing objects:  54% (54/100)[Kremote: Compressing objects:  55% (55/100)[Kremote: Compressing objects:  56% (56/100)[Kremote: Compressing objects:  57% (57/100)[Kremote: Compressing objects:  58% (58/100)[Kremote: Compressing objects:  59% (59/100)[Kremote: Compressing objects:  60% (60/100)[Kremote: Compressing objects:  61% (61/100)[Kremote: Compressing objects:  62% (62/100)[Kremote: Compressing objects:  63% (63/100)[Kremote: Compressing objects:  64% (64/100)[Kremote: Compressing objects:  65% (65/100)[Kremote: Compressing objects:  66% (66/100)[Kremote: Compressing objects:  67% (67/100)[Kremote: Compressing objects:  68% (68/100)[Kremote: Compressing objects:  69% (69/100)[Kremote: Compressing objects:  70% (70/100)[Kremote: Compressing objects:  71% (71/100)[Kremote: Compressing objects:  72% (72/100)[Kremote: Compressing objects:  73% (73/100)[Kremote: Compressing objects:  74% (74/100)[Kremote: Compressing objects:  75% (75/100)[Kremote: Compressing objects:  76% (76/100)[Kremote: Compressing objects:  77% (77/100)[Kremote: Compressing objects:  78% (78/100)[Kremote: Compressing objects:  79% (79/100)[Kremote: Compressing objects:  80% (80/100)[Kremote: Compressing objects:  81% (81/100)[Kremote: Compressing objects:  82% (82/100)[Kremote: Compressing objects:  83% (83/100)[Kremote: Compressing objects:  84% (84/100)[Kremote: Compressing objects:  85% (85/100)[Kremote: Compressing objects:  86% (86/100)[Kremote: Compressing objects:  87% (87/100)[Kremote: Compressing objects:  88% (88/100)[Kremote: Compressing objects:  89% (89/100)[Kremote: Compressing objects:  90% (90/100)[Kremote: Compressing objects:  91% (91/100)[Kremote: Compressing objects:  92% (92/100)[Kremote: Compressing objects:  93% (93/100)[Kremote: Compressing objects:  94% (94/100)[Kremote: Compressing objects:  95% (95/100)[Kremote: Compressing objects:  96% (96/100)[Kremote: Compressing objects:  97% (97/100)[Kremote: Compressing objects:  98% (98/100)[Kremote: Compressing objects:  99% (99/100)[Kremote: Compressing objects: 100% (100/100)[Kremote: Compressing objects: 100% (100/100), done.[K
+Receiving objects:   0% (1/1804)Receiving objects:   1% (19/1804)Receiving objects:   2% (37/1804)Receiving objects:   3% (55/1804)Receiving objects:   4% (73/1804)Receiving objects:   5% (91/1804)Receiving objects:   6% (109/1804)Receiving objects:   7% (127/1804)Receiving objects:   8% (145/1804)Receiving objects:   9% (163/1804)Receiving objects:  10% (181/1804)Receiving objects:  11% (199/1804)Receiving objects:  12% (217/1804)Receiving objects:  13% (235/1804)Receiving objects:  14% (253/1804)Receiving objects:  15% (271/1804)Receiving objects:  16% (289/1804)Receiving objects:  17% (307/1804)Receiving objects:  18% (325/1804)Receiving objects:  19% (343/1804)Receiving objects:  20% (361/1804)Receiving objects:  21% (379/1804)Receiving objects:  22% (397/1804)Receiving objects:  23% (415/1804)Receiving objects:  24% (433/1804)Receiving objects:  25% (451/1804)Receiving objects:  26% (470/1804)Receiving objects:  27% (488/1804)Receiving objects:  28% (506/1804)Receiving objects:  29% (524/1804)Receiving objects:  30% (542/1804)Receiving objects:  31% (560/1804)Receiving objects:  32% (578/1804)Receiving objects:  33% (596/1804)Receiving objects:  34% (614/1804)Receiving objects:  35% (632/1804)Receiving objects:  36% (650/1804)Receiving objects:  37% (668/1804)Receiving objects:  38% (686/1804)Receiving objects:  39% (704/1804)Receiving objects:  40% (722/1804)Receiving objects:  41% (740/1804)Receiving objects:  42% (758/1804)Receiving objects:  43% (776/1804)Receiving objects:  44% (794/1804)Receiving objects:  45% (812/1804)Receiving objects:  46% (830/1804)Receiving objects:  47% (848/1804)Receiving objects:  48% (866/1804)Receiving objects:  49% (884/1804)Receiving objects:  50% (902/1804)Receiving objects:  51% (921/1804)Receiving objects:  52% (939/1804)Receiving objects:  53% (957/1804)Receiving objects:  54% (975/1804)Receiving objects:  55% (993/1804)Receiving objects:  56% (1011/1804)Receiving objects:  57% (1029/1804)Receiving objects:  58% (1047/1804)Receiving objects:  59% (1065/1804)Receiving objects:  60% (1083/1804)Receiving objects:  61% (1101/1804)Receiving objects:  62% (1119/1804)Receiving objects:  63% (1137/1804)Receiving objects:  64% (1155/1804)Receiving objects:  65% (1173/1804)Receiving objects:  66% (1191/1804)Receiving objects:  67% (1209/1804)Receiving objects:  68% (1227/1804)Receiving objects:  69% (1245/1804)Receiving objects:  70% (1263/1804)Receiving objects:  71% (1281/1804)Receiving objects:  72% (1299/1804)Receiving objects:  73% (1317/1804)Receiving objects:  74% (1335/1804)Receiving objects:  75% (1353/1804)Receiving objects:  76% (1372/1804)Receiving objects:  77% (1390/1804)Receiving objects:  78% (1408/1804)Receiving objects:  79% (1426/1804)Receiving objects:  80% (1444/1804)Receiving objects:  81% (1462/1804)Receiving objects:  82% (1480/1804)Receiving objects:  83% (1498/1804)Receiving objects:  84% (1516/1804)Receiving objects:  85% (1534/1804)Receiving objects:  86% (1552/1804)Receiving objects:  87% (1570/1804)Receiving objects:  88% (1588/1804)remote: Total 1804 (delta 80), reused 175 (delta 66), pack-reused 1613[K
+Receiving objects:  89% (1606/1804)Receiving objects:  90% (1624/1804)Receiving objects:  91% (1642/1804)Receiving objects:  92% (1660/1804)Receiving objects:  93% (1678/1804)Receiving objects:  94% (1696/1804)Receiving objects:  95% (1714/1804)Receiving objects:  96% (1732/1804)Receiving objects:  97% (1750/1804)Receiving objects:  98% (1768/1804)Receiving objects:  99% (1786/1804)Receiving objects: 100% (1804/1804)Receiving objects: 100% (1804/1804), 438.58 KiB | 1.51 MiB/s, done.
+Resolving deltas:   0% (0/975)Resolving deltas:   1% (10/975)Resolving deltas:   2% (22/975)Resolving deltas:   4% (46/975)Resolving deltas:   5% (49/975)Resolving deltas:   6% (61/975)Resolving deltas:  10% (102/975)Resolving deltas:  15% (150/975)Resolving deltas:  20% (199/975)Resolving deltas:  22% (215/975)Resolving deltas:  23% (232/975)Resolving deltas:  24% (235/975)Resolving deltas:  25% (245/975)Resolving deltas:  28% (273/975)Resolving deltas:  29% (290/975)Resolving deltas:  30% (295/975)Resolving deltas:  38% (377/975)Resolving deltas:  39% (384/975)Resolving deltas:  40% (392/975)Resolving deltas:  42% (416/975)Resolving deltas:  43% (420/975)Resolving deltas:  45% (439/975)Resolving deltas:  49% (478/975)Resolving deltas:  51% (503/975)Resolving deltas:  52% (515/975)Resolving deltas:  53% (517/975)Resolving deltas:  54% (534/975)Resolving deltas:  55% (537/975)Resolving deltas:  56% (548/975)Resolving deltas:  58% (569/975)Resolving deltas:  59% (580/975)Resolving deltas:  60% (594/975)Resolving deltas:  61% (596/975)Resolving deltas:  62% (608/975)Resolving deltas:  64% (626/975)Resolving deltas:  66% (647/975)Resolving deltas:  67% (655/975)Resolving deltas:  68% (664/975)Resolving deltas:  70% (690/975)Resolving deltas:  76% (746/975)Resolving deltas:  77% (753/975)Resolving deltas:  78% (763/975)Resolving deltas:  79% (771/975)Resolving deltas:  80% (780/975)Resolving deltas:  81% (795/975)Resolving deltas:  82% (802/975)Resolving deltas:  83% (818/975)Resolving deltas:  84% (820/975)Resolving deltas:  86% (839/975)Resolving deltas:  87% (851/975)Resolving deltas:  88% (858/975)Resolving deltas:  90% (881/975)Resolving deltas:  91% (890/975)Resolving deltas:  92% (899/975)Resolving deltas:  93% (910/975)Resolving deltas:  94% (917/975)Resolving deltas:  95% (934/975)Resolving deltas:  96% (938/975)Resolving deltas:  98% (957/975)Resolving deltas:  99% (967/975)Resolving deltas: 100% (975/975)Resolving deltas: 100% (975/975), done.
+Already on 'master'
+Your branch is up to date with 'origin/master'.
+[36m[ℹ]  Writing Flux manifests
+[0m[36m[ℹ]  created "Namespace/flux"
+[0m[36m[ℹ]  Applying Helm TLS Secret(s)
+[0m[36m[ℹ]  created "flux:Secret/flux-helm-tls-cert"
+[0m[36m[ℹ]  created "flux:Secret/tiller-secret"
+[0m[32m[!]  Note: certificate secrets aren't added to the Git repository for security reasons
+[0m[36m[ℹ]  Applying manifests
+[0m[36m[ℹ]  created "CustomResourceDefinition.apiextensions.k8s.io/helmreleases.helm.fluxcd.io"
+[0m[36m[ℹ]  created "flux:ServiceAccount/flux"
+[0m[36m[ℹ]  created "ClusterRole.rbac.authorization.k8s.io/flux"
+[0m[36m[ℹ]  created "ClusterRoleBinding.rbac.authorization.k8s.io/flux"
+[0m[36m[ℹ]  created "flux:Deployment.apps/flux"
+[0m[36m[ℹ]  created "flux:Secret/flux-git-deploy"
+[0m[36m[ℹ]  created "flux:ServiceAccount/flux-helm-operator"
+[0m[36m[ℹ]  created "ClusterRole.rbac.authorization.k8s.io/flux-helm-operator"
+[0m[36m[ℹ]  created "ClusterRoleBinding.rbac.authorization.k8s.io/flux-helm-operator"
+[0m[36m[ℹ]  created "flux:Deployment.apps/flux-helm-operator"
+[0m[36m[ℹ]  created "flux:Deployment.extensions/tiller-deploy"
+[0m[36m[ℹ]  created "flux:Deployment.apps/memcached"
+[0m[36m[ℹ]  created "flux:Service/memcached"
+[0m[36m[ℹ]  created "flux:ConfigMap/flux-helm-tls-ca-config"
+[0m[36m[ℹ]  created "flux:Service/tiller-deploy"
+[0m[36m[ℹ]  created "flux:ServiceAccount/tiller"
+[0m[36m[ℹ]  created "ClusterRoleBinding.rbac.authorization.k8s.io/tiller"
+[0m[36m[ℹ]  created "flux:ServiceAccount/helm"
+[0m[36m[ℹ]  created "flux:Role.rbac.authorization.k8s.io/tiller-user"
+[0m[36m[ℹ]  created "kube-system:RoleBinding.rbac.authorization.k8s.io/tiller-user-binding"
+[0m[36m[ℹ]  Waiting for Helm Operator to start
+[0mERROR: logging before flag.Parse: E0917 19:42:55.421530    2889 portforward.go:331] an error occurred forwarding 51432 -> 3030: error forwarding port 3030 to pod 678851ee2abea13ac98fed57b8c18dd134277bcfc7374b45ea8670350a7a112d, uid : exit status 1: 2019/09/18 02:42:55 socat[8113] E connect(5, AF=2 127.0.0.1:3030, 16): Connection refused
+[32m[!]  Helm Operator is not ready yet (Get http://127.0.0.1:51432/healthz: EOF), retrying ...
+[0mERROR: logging before flag.Parse: E0917 19:42:57.512869    2889 portforward.go:331] an error occurred forwarding 51432 -> 3030: error forwarding port 3030 to pod 678851ee2abea13ac98fed57b8c18dd134277bcfc7374b45ea8670350a7a112d, uid : exit status 1: 2019/09/18 02:42:57 socat[8221] E connect(5, AF=2 127.0.0.1:3030, 16): Connection refused
+[32m[!]  Helm Operator is not ready yet (Get http://127.0.0.1:51432/healthz: EOF), retrying ...
+[0mERROR: logging before flag.Parse: E0917 19:42:59.595785    2889 portforward.go:331] an error occurred forwarding 51432 -> 3030: error forwarding port 3030 to pod 678851ee2abea13ac98fed57b8c18dd134277bcfc7374b45ea8670350a7a112d, uid : exit status 1: 2019/09/18 02:42:59 socat[8223] E connect(5, AF=2 127.0.0.1:3030, 16): Connection refused
+[32m[!]  Helm Operator is not ready yet (Get http://127.0.0.1:51432/healthz: EOF), retrying ...
+[0mERROR: logging before flag.Parse: E0917 19:43:01.682004    2889 portforward.go:331] an error occurred forwarding 51432 -> 3030: error forwarding port 3030 to pod 678851ee2abea13ac98fed57b8c18dd134277bcfc7374b45ea8670350a7a112d, uid : exit status 1: 2019/09/18 02:43:01 socat[8224] E connect(5, AF=2 127.0.0.1:3030, 16): Connection refused
+[32m[!]  Helm Operator is not ready yet (Get http://127.0.0.1:51432/healthz: EOF), retrying ...
+[0mERROR: logging before flag.Parse: E0917 19:43:03.768114    2889 portforward.go:331] an error occurred forwarding 51432 -> 3030: error forwarding port 3030 to pod 678851ee2abea13ac98fed57b8c18dd134277bcfc7374b45ea8670350a7a112d, uid : exit status 1: 2019/09/18 02:43:03 socat[8244] E connect(5, AF=2 127.0.0.1:3030, 16): Connection refused
+[32m[!]  Helm Operator is not ready yet (Get http://127.0.0.1:51432/healthz: EOF), retrying ...
+[0mERROR: logging before flag.Parse: E0917 19:43:05.855474    2889 portforward.go:331] an error occurred forwarding 51432 -> 3030: error forwarding port 3030 to pod 678851ee2abea13ac98fed57b8c18dd134277bcfc7374b45ea8670350a7a112d, uid : exit status 1: 2019/09/18 02:43:05 socat[8245] E connect(5, AF=2 127.0.0.1:3030, 16): Connection refused
+[32m[!]  Helm Operator is not ready yet (Get http://127.0.0.1:51432/healthz: EOF), retrying ...
+[0mERROR: logging before flag.Parse: E0917 19:43:07.934909    2889 portforward.go:331] an error occurred forwarding 51432 -> 3030: error forwarding port 3030 to pod 678851ee2abea13ac98fed57b8c18dd134277bcfc7374b45ea8670350a7a112d, uid : exit status 1: 2019/09/18 02:43:07 socat[8248] E connect(5, AF=2 127.0.0.1:3030, 16): Connection refused
+[32m[!]  Helm Operator is not ready yet (Get http://127.0.0.1:51432/healthz: EOF), retrying ...
+[0mERROR: logging before flag.Parse: E0917 19:43:10.021861    2889 portforward.go:331] an error occurred forwarding 51432 -> 3030: error forwarding port 3030 to pod 678851ee2abea13ac98fed57b8c18dd134277bcfc7374b45ea8670350a7a112d, uid : exit status 1: 2019/09/18 02:43:10 socat[8250] E connect(5, AF=2 127.0.0.1:3030, 16): Connection refused
+[32m[!]  Helm Operator is not ready yet (Get http://127.0.0.1:51432/healthz: EOF), retrying ...
+[0mERROR: logging before flag.Parse: E0917 19:43:12.104950    2889 portforward.go:331] an error occurred forwarding 51432 -> 3030: error forwarding port 3030 to pod 678851ee2abea13ac98fed57b8c18dd134277bcfc7374b45ea8670350a7a112d, uid : exit status 1: 2019/09/18 02:43:12 socat[8254] E connect(5, AF=2 127.0.0.1:3030, 16): Connection refused
+[32m[!]  Helm Operator is not ready yet (Get http://127.0.0.1:51432/healthz: EOF), retrying ...
+[0mERROR: logging before flag.Parse: E0917 19:43:14.192287    2889 portforward.go:331] an error occurred forwarding 51432 -> 3030: error forwarding port 3030 to pod 678851ee2abea13ac98fed57b8c18dd134277bcfc7374b45ea8670350a7a112d, uid : exit status 1: 2019/09/18 02:43:14 socat[8255] E connect(5, AF=2 127.0.0.1:3030, 16): Connection refused
+[32m[!]  Helm Operator is not ready yet (Get http://127.0.0.1:51432/healthz: EOF), retrying ...
+[0mERROR: logging before flag.Parse: E0917 19:43:16.276168    2889 portforward.go:331] an error occurred forwarding 51432 -> 3030: error forwarding port 3030 to pod 678851ee2abea13ac98fed57b8c18dd134277bcfc7374b45ea8670350a7a112d, uid : exit status 1: 2019/09/18 02:43:16 socat[8257] E connect(5, AF=2 127.0.0.1:3030, 16): Connection refused
+[32m[!]  Helm Operator is not ready yet (Get http://127.0.0.1:51432/healthz: EOF), retrying ...
+[0mERROR: logging before flag.Parse: E0917 19:43:18.359891    2889 portforward.go:331] an error occurred forwarding 51432 -> 3030: error forwarding port 3030 to pod 678851ee2abea13ac98fed57b8c18dd134277bcfc7374b45ea8670350a7a112d, uid : exit status 1: 2019/09/18 02:43:18 socat[8261] E connect(5, AF=2 127.0.0.1:3030, 16): Connection refused
+[32m[!]  Helm Operator is not ready yet (Get http://127.0.0.1:51432/healthz: EOF), retrying ...
+[0m[36m[ℹ]  Helm Operator started successfully
+[0m[36m[ℹ]  see https://docs.fluxcd.io/projects/helm-operator for details on how to use the Helm Operator
+[0m[36m[ℹ]  Waiting for Flux to start
+[0m[36m[ℹ]  Flux started successfully
+[0m[36m[ℹ]  see https://docs.fluxcd.io/projects/flux for details on how to use Flux
+[0m[36m[ℹ]  Committing and pushing manifests to git@github.com:tidepool-org/cluster-test1.git
+[0m[master ebe72b1] Add Initial Flux configuration
+ 3 files changed, 302 insertions(+), 38 deletions(-)
+ create mode 100644 flux/flux-deployment.yaml
+ create mode 100644 flux/helm-operator-deployment.yaml
+ rewrite flux/tiller-ca-cert-configmap.yaml (87%)
+Enumerating objects: 7, done.
+Counting objects:  14% (1/7)Counting objects:  28% (2/7)Counting objects:  42% (3/7)Counting objects:  57% (4/7)Counting objects:  71% (5/7)Counting objects:  85% (6/7)Counting objects: 100% (7/7)Counting objects: 100% (7/7), done.
+Delta compression using up to 12 threads
+Compressing objects:  25% (1/4)Compressing objects:  50% (2/4)Compressing objects:  75% (3/4)Compressing objects: 100% (4/4)Compressing objects: 100% (4/4), done.
+Writing objects:  25% (1/4)Writing objects:  50% (2/4)Writing objects:  75% (3/4)Writing objects: 100% (4/4)Writing objects: 100% (4/4), 1.76 KiB | 1.76 MiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0)
+remote: Resolving deltas:   0% (0/2)[Kremote: Resolving deltas:  50% (1/2)[Kremote: Resolving deltas: 100% (2/2)[Kremote: Resolving deltas: 100% (2/2), completed with 2 local objects.[K
+To github.com:tidepool-org/cluster-test1.git
+   9c93180..ebe72b1  master -> master
+[36m[ℹ]  Flux will only operate properly once it has write-access to the Git repository
+[0m[36m[ℹ]  please configure git@github.com:tidepool-org/cluster-test1.git so that the following Flux SSH public key has write access to it
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDUUr+NMDqeVCTd8XwDIThdTBeor6Eh7eq6gINh0xH2+qDW+KZLoRdsFK1DMpj2Hnwf0r82OWFw6+moECPaDYJKgOODl8pScFlEjAEkQOwelN16Jw9DVoRL4PTPB5J3zdHt3kC4HWFseQoVIOmFx270gc3EOlXtkCSElWowFgS+0IuGgcLUVsOYtLKdu++XUCqEg1YuX2VctLSjcwWv+qrK1tS1NMJvtQJwrCWytwHBlWikJLxywnT+6bSSBcowcMiIdhNO9EW+KgFTE2NzzHLKuK/LVPj1BOZJVCfYIlQg0upEalLYkWlqgrmy8ts8Kr8SiZ7Nb+3nXWCiYg+idy7j
+[0mUpdating 9c93180..ebe72b1
+Fast-forward
+ flux/flux-deployment.yaml          | 157 +++++++++++++++++++++++++++++++++++++
+ flux/helm-operator-deployment.yaml | 107 +++++++++++++++++++++++++
+ flux/tiller-ca-cert-configmap.yaml |  52 ++++++------
+ 3 files changed, 290 insertions(+), 26 deletions(-)
+ create mode 100644 flux/flux-deployment.yaml
+ create mode 100644 flux/helm-operator-deployment.yaml
+Current branch master is up to date.
+[35m[√] installed flux into cluster test1(B[m
+[32m[i] saving certificate authority TLS pem and key to AWS secrets manager(B[m
+{
+    "ARN": "arn:aws:secretsmanager:us-west-2:118346523422:secret:test1/flux/ca.pem-YtjhkS",
+    "Name": "test1/flux/ca.pem",
+    "LastChangedDate": 1568744146.637,
+    "LastAccessedDate": 1568678400.0,
+    "VersionIdsToStages": {
+        "83ef93c8-97f6-4547-a646-641a3f3ab279": [
+            "AWSCURRENT"
+        ],
+        "abde734b-0695-468e-b2b8-28a1ec9911a4": [
+            "AWSPREVIOUS"
+        ]
+    }
+}
+{
+    "ARN": "arn:aws:secretsmanager:us-west-2:118346523422:secret:test1/flux/ca.pem-YtjhkS",
+    "Name": "test1/flux/ca.pem",
+    "VersionId": "f990efad-69cf-4511-bcd0-d997c0f255a8"
+}
+{
+    "ARN": "arn:aws:secretsmanager:us-west-2:118346523422:secret:test1/flux/ca-key.pem-2eHODg",
+    "Name": "test1/flux/ca-key.pem",
+    "VersionId": "eebed049-416b-488f-9ca2-999406ad8d11"
+}
+[35m[√] saved certificate authority TLS pem and key to AWS secrets manager(B[m
+[32m[i] installing helm client cert for cluster test1(B[m
+[35m[√] retrieving ca.pem from AWS secrets manager(B[m
+[35m[√] retrieving ca-key.pem from AWS secrets manager(B[m
+[35m[√] creating cert in /Users/derrickburns/.helm/clusters/test1(B[m
+[32m[ℹ] adding /Users/derrickburns/.helm/clusters/test1/cert.pem(B[m
+[32m[ℹ] adding /Users/derrickburns/.helm/clusters/test1/key.pem(B[m
+[32m[ℹ] adding /Users/derrickburns/.helm/clusters/test1/ca.pem(B[m
+[35m[√] installed helm client cert for cluster test1(B[m
+[32m[i] authorizing access to git@github.com:tidepool-org/cluster-test1(B[m
+HTTP/1.1 201 Created
+Date: Wed, 18 Sep 2019 02:43:34 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 632
+Server: GitHub.com
+Status: 201 Created
+X-RateLimit-Limit: 5000
+X-RateLimit-Remaining: 4999
+X-RateLimit-Reset: 1568778214
+Cache-Control: private, max-age=60, s-maxage=60
+Vary: Accept, Authorization, Cookie, X-GitHub-OTP
+ETag: "453336b864294e712e1c0ef590065c76"
+X-OAuth-Scopes: admin:public_key, repo
+X-Accepted-OAuth-Scopes: 
+Location: https://api.github.com/repos/tidepool-org/cluster-test1/keys/37699160
+X-GitHub-Media-Type: github.v3; format=json
+Access-Control-Expose-Headers: ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type
+Access-Control-Allow-Origin: *
+Strict-Transport-Security: max-age=31536000; includeSubdomains; preload
+X-Frame-Options: deny
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: origin-when-cross-origin, strict-origin-when-cross-origin
+Content-Security-Policy: default-src 'none'
+Vary: Accept-Encoding
+X-GitHub-Request-Id: C91A:02BB:2A8418F:329F610:5D8199D6
+
+{
+  "id": 37699160,
+  "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDUUr+NMDqeVCTd8XwDIThdTBeor6Eh7eq6gINh0xH2+qDW+KZLoRdsFK1DMpj2Hnwf0r82OWFw6+moECPaDYJKgOODl8pScFlEjAEkQOwelN16Jw9DVoRL4PTPB5J3zdHt3kC4HWFseQoVIOmFx270gc3EOlXtkCSElWowFgS+0IuGgcLUVsOYtLKdu++XUCqEg1YuX2VctLSjcwWv+qrK1tS1NMJvtQJwrCWytwHBlWikJLxywnT+6bSSBcowcMiIdhNO9EW+KgFTE2NzzHLKuK/LVPj1BOZJVCfYIlQg0upEalLYkWlqgrmy8ts8Kr8SiZ7Nb+3nXWCiYg+idy7j",
+  "url": "https://api.github.com/repos/tidepool-org/cluster-test1/keys/37699160",
+  "title": "flux key for test1 created by make_flux",
+  "verified": true,
+  "created_at": "2019-09-18T02:43:34Z",
+  "read_only": false
+}
+[35m[√] authorized access to git@github.com:tidepool-org/cluster-test1(B[m
+[32m[i] updating flux and flux-helm-operator manifests(B[m
+[32m[ℹ] adding flux/flux-deployment-updated.yaml(B[m
+[32m[ℹ] adding flux/helm-operator-deployment-updated.yaml(B[m
+[32m[√] renaming flux/flux-deployment.yaml flux/flux-deployment.yaml.orig(B[m
+[32m[√] renaming flux/helm-operator-deployment.yaml flux/helm-operator-deployment.yaml.orig(B[m
+[35m[√] updated flux and flux-helm-operator manifests(B[m
+[32m[i] saving changes to config repo(B[m
+[master 8116374] Added flux
+ 2 files changed, 264 deletions(-)
+ delete mode 100644 flux/flux-deployment.yaml
+ delete mode 100644 flux/helm-operator-deployment.yaml
+[35m[√] saved changes to config repo(B[m
+[32m[i] cloning secret-map(B[m
+[35m[√] cloned secret-map(B[m
+[32m[ℹ] adding external_secret/qa2/shoreline.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/auth.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/blob.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/carelink.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/data.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/dexcom.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/export.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/hydrophone.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/image.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/kissmetrics.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/mailchimp.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/notification.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/server.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/shoreline.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/task.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/user.yaml(B[m
+[32m[ℹ] adding external_secret/qa2/userdata.yaml(B[m
+[32m[i] saving changes to config repo(B[m
+On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean
+[35m[√] saved changes to config repo(B[m
