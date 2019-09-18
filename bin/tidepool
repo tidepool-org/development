@@ -56,6 +56,9 @@ USAGE: tidepool command [service] [...additional args]
   port-forward [service] [port]   Forward a port to a running service container
   verify-account-email [email]    Complete the email address verification step for a created account
 
+  restart-proxy                   Restart the external gateway proxy
+                                  Useful if the exposed "blip" port stops responding on host machine
+
 EOF
 }
 
@@ -130,5 +133,6 @@ case ${1-help} in
   yarn) run_yarn ${2} "${@:3}";;
   port-forward) (cd ${DIR} && kubectl port-forward svc/${2} ${3});;
   verify-account-email) mongo_exec "mongo --eval 'db.users.update({username: \"${@:2}\"},{\$set:{\"authenticated\":true}});' user";;
+  restart-proxy) restart gateway-proxy-v2;;
   *) usage;;
 esac

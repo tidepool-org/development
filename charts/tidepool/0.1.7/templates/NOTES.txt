@@ -7,17 +7,17 @@ To learn more about the release, try:
   $ helm status {{ .Release.Name }}
   $ helm get {{ .Release.Name }}
 
-{{ if .Values.userdata.secret.create }}
+{{ if .Values.userdata.secret.enabled }}
 
 {{ if not .Values.userdata.secret.data_.GroupIdEncryptionKey }}
 WARNING: You have elected to randomly generate the `userdata` `GroupIdEncryptionKey`. If you persist any data to your Tidepool instance, the
 user data will be encrypted with this key. If you then restart your Tidepool instance, a new key will be generated and you will
-not be able to decrypt data that was encrypted with the old key. 
+not be able to decrypt data that was encrypted with the old key.
 {{ end }}
 
 {{ if not .Values.userdata.secret.data_.UserIdSalt }}
 WARNING: You have elected to randomly generate the `userdata` `UserIdSalt`. If you persist any data to your Tidepool instance, the
-user ids will be salted with this value. If you then restart your Tidepool instance, any user ides that were created will not match new user id because the salt values will be different.
+user ids will be salted with this value. If you then restart your Tidepool instance, any user ids that were created will not match new user id because the salt values will be different.
 {{ end }}
 
 {{ if not .Values.userdata.secret.data_.UserPasswordSalt }}
@@ -25,7 +25,7 @@ WARNING: You have elected to randomly generate the `userdata` `UserPasswordSalt`
 user passwords will be salted with this value. If you then restart your Tidepool instance, any passwords that were created will not match any new passwords entered because the salt values will be different.
 {{ end }}
 
-If you are simply testing Tidepool, this is fine.  However, if you are plan to store data persistenly in Tidepool, then you 
+If you are simply testing Tidepool, this is fine.  However, if you are plan to store data persistenly in Tidepool, then you
 need to generate secrets separately from installing them into your cluster:
 
 To generate your secrets:
@@ -39,7 +39,7 @@ Tidepool manifests with `helm`:
 Override the default values in `value.yaml` with:
 ```bash
 kubectl apply -f userdata-secret.yaml
-helm install --set "userdata.secret.create=false"
+helm install --set "userdata.secret.enabled=false"
 ```
 {{- end }}
 

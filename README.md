@@ -27,7 +27,7 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [Data Retention](#data-retention)
 - [Advanced Customization](#advanced-customization)
   - [Tilt Config Overrides](#tilt-config-overrides)
-  - [Alternate Mongo Host](#alternate-mongo-host)
+  - [Alternate MongoDB Host](#alternate-mongodb-host)
   - [Dexcom API integration](#dexcom-api-integration)
   - [Running Alternate Remote Images](#running-alternate-remote-images)
 - [Developing Tidepool Services](#developing-tidepool-services)
@@ -77,14 +77,14 @@ Managing a K8s cluster can be very challenging, and even more so when using one 
 
 By using our Tilt setup, developers can very easily run a live-reloading instance of any of our frontend or backend services without needing to directly use or understand Helm or Kubernetes. All that's needed is uncommenting a couple of lines in a `Tiltconfig.yaml` file, and updating the local paths to where the developer has checked out the respective git repo, if different than the default defined in the config.
 
-**IMPORTANT NOTE:** We currently run against version `v0.9.7` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
+**IMPORTANT NOTE:** We currently run against version `v0.10.7` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
 
 ```bash
 # MacOS
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.9.7/tilt.0.9.7.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.10.7/tilt.0.10.7.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 
 # Linux
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.9.7/tilt.0.9.7.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.10.7/tilt.0.10.7.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 ```
 
 After installing Tilt, you can verify the correct version by typing `tilt version` in your terminal.
@@ -322,34 +322,37 @@ In addition to the helm chart overrides, there are some extra configuration para
 
 See [Building Local Images](#building-local-images) for more details
 
-## Alternate Mongo Host
+## Alternate MongoDB Host
 
 If you wish to use an alternate Mongo host running outside of Docker, then you'll need to do a few things.
 
-Update the `global.mongo` section in your `local/Tiltconfig.yaml` file as required, and set the `mongodb.useExternal` flag to `true`. For example:
+Set the `mongodb.useExternal` flag to `true` in your `local/Tiltconfig.yaml` file as required, and update `mongo.secret._data` section as needed. For example:
 
 ```yaml
-global:
-  mongo:
-    await: 'true'                  # whether to await for mongo to be ready before starting services
-    hosts: 'http://my_mongo_host'  # comma-separated list of Mongo hosts
-    port: 27017                    # the Mongo port to connect to
-    username: ''                   # a username in the Mongo instance
-    ssl: 'false'                   # whether to use SSL to communicate with Mongo
-    optParams: ''                  # optional parameters to pass on the Mongo connection string
-  # ...
-
 mongodb:
   useExternal: true
+  # ...
+
+mongo:
+  secret:
+    _data:
+      Scheme: "mongodb"
+      Addresses: "http://host:port" # comma-separated list of MongoDB host[:port] addresses
+      Username: ""                  # the MongoDB port to connect to
+      Password: ""                  # a username in the Mongo instance
+      Tls: "false"                  # whether to use SSL to communicate with Mongo
+      OptParams: ""                 # optional parameters to pass on the Mongo connection string
+      Database: "admin"             # database to connect to
   # ...
 ```
 
 If you are running Mongo natively on your local Mac (not in Docker, but via another installation, such as [Homebrew](https://brew.sh/)), then you can use the Docker-specific, container-accessible-only address `host.docker.internal` to point to the alternate Mongo host. For example,
 
 ```yaml
-global:
-  mongo:
-    hosts: 'host.docker.internal'
+mongo:
+  secret:
+    _data:
+      Addresses: "host.docker.internal"
     # ...
 ```
 
@@ -373,7 +376,7 @@ global:
 
 By default, Tilt will pull and provision the images specified in the `values.yaml` file for the tidepool helm charts from the [Docker Hub](https://hub.docker.com/).
 
-To pull and deploy a different image from the Docker Hub, simply uncomment and update the `image` value for the given service in your `local/Tiltconfig.yaml` file with any valid `image:tag` combination (See [Tilt Config Overrides](#tilt-config-overrides) if you haven't set up your local overrides file).
+To pull and deploy a different image from the Docker Hub, simply uncomment and update the `deployment.image` value for the given service in your `local/Tiltconfig.yaml` file with any valid `image:tag` combination (See [Tilt Config Overrides](#tilt-config-overrides) if you haven't set up your local overrides file).
 
 For instance, to have Tilt provision the latest remote image for `shoreline`:
 
@@ -381,13 +384,15 @@ For instance, to have Tilt provision the latest remote image for `shoreline`:
 ```yaml
 ### Change this:
 shoreline:
-  # image: tidepool-k8s-shoreline
+  # deployment:
+  #   image: tidepool-k8s-shoreline
   # hostPath: '~/go/src/github.com/tidepool-org/shoreline'
   # ...
 
 ### To this:
 shoreline:
-  image: tidepool/shoreline:latest
+  deployment:
+    image: tidepool/shoreline:latest
   # hostPath: '~/go/src/github.com/tidepool-org/shoreline'
   # ...
 ```
@@ -460,7 +465,7 @@ Then, update the `local/Tiltconfig.yaml` file as follows:
 
 ```yaml
 tidewhisperer:
-  hostPath: '~/development/tide-whisperer'
+  hostPath: "~/development/tide-whisperer"
   # ...
 ```
 
@@ -468,21 +473,23 @@ tidewhisperer:
 
 ## Building Local Images
 
-To build and run a Docker image from the source code you just cloned, you simply need to uncomment the `image` and `hostPath` values for the given service in your `local/Tiltconfig.yaml` file (See [Tilt Config Overrides](#tilt-config-overrides) if you haven't set this up).
+To build and run a Docker image from the source code you just cloned, you simply need to uncomment the `deployment.image` and `hostPath` values for the given service in your `local/Tiltconfig.yaml` file (See [Tilt Config Overrides](#tilt-config-overrides) if you haven't set this up).
 
 For instance, to have Tilt build a local image for `shoreline`:
 
 ```yaml
 ### Change this:
 shoreline:
-  # image: tidepool-k8s-shoreline
-  # hostPath: '~/go/src/github.com/tidepool-org/shoreline'
+  # deployment:
+  #   image: tidepool-k8s-shoreline
+  # hostPath: "~/go/src/github.com/tidepool-org/shoreline"
   # ...
 
 ### To this:
 shoreline:
-  image: tidepool-k8s-shoreline
-  hostPath: '~/go/src/github.com/tidepool-org/shoreline'
+  deployment:
+    image: tidepool-k8s-shoreline
+  hostPath: "~/go/src/github.com/tidepool-org/shoreline"
   # ...
 ```
 
@@ -513,7 +520,8 @@ For example, if you wanted to build the production `blip` service image:
 
 ```yaml
 blip:
-  image: tidepool-k8s-blip
+  deployment:
+    image: tidepool-k8s-blip
   hostPath: ../blip
   buildTarget: production # <- Add this
   # ...
@@ -529,7 +537,8 @@ For example, if you created a custom `Dockerfile.myBlip` file at the root of the
 
 ```yaml
 blip:
-  image: tidepool-k8s-blip
+  deployment:
+    image: tidepool-k8s-blip
   hostPath: ../blip
   dockerFile: Dockerfile.myBlip # Add custom dockerfile here
   buildTarget: myBuildTarget # Set to false if not a multistage Dockerfile
@@ -568,16 +577,17 @@ git clone https://github.com/tidepool-org/viz.git ../viz
 
 Next, you need to set the linked package's `active` value to `true` in your `local/Tiltconfig.yaml` file.
 
-You will also need to ensure that the `blip.image` and `blip.hostPath` values are uncommented
+You will also need to ensure that the `blip.deployment.image` and `blip.hostPath` values are uncommented
 
 ```yaml
 blip:
-  image: tidepool-k8s-blip # Uncommented
+  deployment:
+    image: tidepool-k8s-blip # Uncommented
   hostPath: ../blip # Uncommented and path matches the cloned blip repo location
-  containerPath: '/app'
-  apiHost: 'http://localhost:3000'
+  containerPath: "/app"
+  apiHost: "http://localhost:3000"
   webpackDevTool: cheap-module-eval-source-map
-  webpackPublicPath: 'http://localhost:3000'
+  webpackPublicPath: "http://localhost:3000"
   linkedPackages:
     - name: tideline
       packageName: tideline
@@ -590,7 +600,7 @@ blip:
       enabled: false
 
     - name: viz
-      packageName: '@tidepool/viz'
+      packageName: "@tidepool/viz"
       hostPath: ../viz # Path matches where the cloned viz repo location
       enabled: true # Set from false to true
   restartContainer: false
@@ -604,16 +614,17 @@ If you set `enabled` for the `viz` package back to `false` in your `local/Tiltco
 
 ```yaml
 blip:
-  image: tidepool-k8s-blip
+  deployment:
+    image: tidepool-k8s-blip
   hostPath: ../blip
-  containerPath: '/app'
-  apiHost: 'http://localhost:3000'
+  containerPath: "/app"
+  apiHost: "http://localhost:3000"
   webpackDevTool: cheap-module-eval-source-map
-  webpackPublicPath: 'http://localhost:3000'
+  webpackPublicPath: "http://localhost:3000"
   linkedPackages:
     # ...
     - name: viz
-      packageName: '@tidepool/viz'
+      packageName: "@tidepool/viz"
       hostPath: ../viz
       enabled: false # Set from true back to false
   # ...
@@ -689,11 +700,13 @@ Stay Tuned :)
 
 ## Troubleshooting
 
-| Issue                                     | Things to try                                                                                                                                                                                                                             |
-| ---                                       | ---                                                                                                                                                                                                                                       |
-| kubectl errors when provisioning services | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config) |
-| kubectl errors when starting k9s          | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config) |
-| Tidepool Web ('blip') not loading         | Check the service logs, either in the Tilt UI or with `tidepool logs blip` to make sure it's finished compiling successfully.  If it has compiled, see [Tidepool Web becomes inaccessible](#tidepool-web-becomes-inaccessible)            |
+| Issue                                                    | Things to try                                                                                                                                                                                                                                                                    |
+| ---                                                      | ---                                                                                                                                                                                                                                                                              |
+| kubectl errors when provisioning services                | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config)                                        |
+| kubectl errors when starting k9s                         | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config)                                        |
+| Tidepool Web ('blip') not loading                        | Check the service logs, either in the Tilt UI or with `tidepool logs blip` to make sure it's finished compiling successfully.  If it has compiled, see [Tidepool Web becomes inaccessible](#tidepool-web-becomes-inaccessible)                                                   |
+| `tidepool start` hangs at "Preparing mongodb service...  | NOTE: It's normal for this to take a few minutes the first time you run this. Otherwise, check to see if mongodb pods are still provisioning in [k9s](#monitor-kubernetes-state-with-k9s-optional), and if so, wait, else cancel the `tidepool start` process and re-run it      |
+| `tidepool start` hangs at "Preparing gateway services... | NOTE: It's normal for this to take a few minutes the first time you run this. Otherwise, check to see if gloo gateway pods are still provisioning in [k9s](#monitor-kubernetes-state-with-k9s-optional), and if so, wait, else cancel the `tidepool start` process and re-run it |
 
 ## Known Issues
 
@@ -703,10 +716,13 @@ Currently, there is a known issue where at times the gateway proxy service that 
 
 This will present itself usually with the web app getting stuck in a loading state in the browser, or possibly resolving with an error message like: `‘No healthy upstream on blip (http://localhost:3000)`
 
-The solution is to restart the `gateway-proxy` service, which should instantly restore access:
+The solution is to restart the `gateway-proxy-v2` service, which should instantly restore access:
 
-```
-tidepool restart gateway-proxy
+```bash
+tidepool restart gateway-proxy-v2
+
+# or use the built-in shortcut
+tidepool restart-proxy
 ```
 
 [[back to top]](#welcome)

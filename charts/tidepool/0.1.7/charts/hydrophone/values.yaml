@@ -5,8 +5,10 @@ deployment:
     fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send
     store:
       s3:
-        bucket: "asset" 
+        bucket: "asset"
 resources: {}
 securityContext: {}
+serviceAccount:
+  create: false
 hpa:
   enabled: false

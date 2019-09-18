@@ -28,8 +28,10 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+{{ if .Values.serviceAccount.create }}
       serviceAccount: jellyfish
       serviceAccountName: jellyfish
+{{- end }}
       containers:
       - env:
         {{ include "charts.mongo.params" .}}

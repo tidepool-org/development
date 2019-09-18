@@ -1,4 +1,4 @@
-mongo: 
+mongodb:
   image: mongo:3.6
   port: '27017'
   volume: mongo2

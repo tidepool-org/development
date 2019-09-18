@@ -1,46 +1,32 @@
-### Helpers Start ###
-def absolute_dir(relative_dir):
-  return str(local('mkdir -p {dir} && cd {dir} && pwd'.format(dir=relative_dir))).strip()
+load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmOverridesFile', 'isShutdown')
 
-def getNested(dict, path, fallback=None):
-  value = dict
-  for path_segment in path.split('.'):
-    value = value.get(path_segment, {})
-  return value or fallback
-### Helpers End ###
-
-### Global Start ###
-tidepool_helm_overrides_file = './Tiltconfig.yaml'
-config = read_yaml(tidepool_helm_overrides_file)
-configOverrides = read_yaml('./local/Tiltconfig.yaml', False)
-
+### Config Start ###
+tidepool_helm_overrides_file = getHelmOverridesFile()
+config = getConfig()
 watch_file(tidepool_helm_overrides_file)
-
-if type(configOverrides) == 'dict':
-  config.update(configOverrides.items())
-  tidepool_helm_overrides_file = './local/Tiltconfig.yaml'
-  watch_file(tidepool_helm_overrides_file)
 
 tidepool_helm_charts_version = config.get('tidepool_helm_charts_version')
 tidepool_helm_chart_dir = "./charts/tidepool/{}".format(tidepool_helm_charts_version)
-mongo_helm_chart_dir = "./charts/mongo"
 
-is_shutdown = bool(int(str(local('printf ${SHUTTING_DOWN-0}'))))
-### Global End ###
+is_shutdown = isShutdown()
+### Config End ###
 
 ### Main Start ###
 def main():
-  # Set up tidepool helm template command
-  tidepool_helm_template_cmd = 'helm template --is-upgrade --name tidepool-tilt --namespace default '
 
-  gateway_port_forwards = getNested(config,'gateway-proxy.portForwards', ['3000'])
+  # Set up tidepool helm template command
+  tidepool_helm_template_cmd = 'helm template --name tilt-tidepool --namespace default '
+
+  gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
   gateway_port_forward_host_port = gateway_port_forwards[0].split(':')[0]
 
   mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
   mongodb_port_forward_host_port = mongodb_port_forwards[0].split(':')[0]
 
   if not is_shutdown:
-    prepareServer()
+    provisionClusterRoleBindings()
+    provisionServerSecrets()
+    provisionConfigMaps()
 
     # Ensure mongodb service is deployed
     if not getNested(config, 'mongodb.useExternal'):
@@ -49,22 +35,23 @@ def main():
         local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 &>/dev/null &')
 
     # Ensure proxy services are deployed
-    gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found')
+    gateway_proxy_service = local('kubectl get service gateway-proxy-v2 --ignore-not-found')
     if not gateway_proxy_service:
-      local('tilt up --file=Tiltfile.proxy --hud=0 --port=0 &>/dev/null &')
+      local('tilt up --file=Tiltfile.gateway --hud=0 --port=0 &>/dev/null &')
 
-    # Wait until mongodb and gateway-proxy services are forwarding before provisioning rest of stack
+    # Wait until mongodb and gateway proxy services are forwarding before provisioning rest of stack
     if not getNested(config, 'mongodb.useExternal'):
-      local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
-    local('while ! nc -G 1 -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
+      print("Preparing mongodb service...")
+      local('while ! nc -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
 
-    # Generate and/or apply server secrets on startup
-    tidepool_helm_template_cmd = setServerSecrets(tidepool_helm_template_cmd)
+    print("Preparing gateway services...")
+    local('while ! nc -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
+
   else:
-    # Shut down the mongodb and proxy services
+    # Shut down the mongodb and gateway services
     if not getNested(config, 'mongodb.useExternal'):
-      local('tilt down --file=Tiltfile.mongodb &>/dev/null &')
-    local('tilt down --file=Tiltfile.proxy &>/dev/null &')
+      local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.mongodb &>/dev/null &')
+    local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.gateway &>/dev/null &')
 
     # Clean up any tilt up backround processes
     local("for pid in $(ps -ef | awk '/tilt\ up/ {print $2}'); do kill -9 $pid; done")
@@ -73,7 +60,7 @@ def main():
   tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
   tidepool_helm_template_cmd = applyServiceOverrides(tidepool_helm_template_cmd)
 
-  # Don't provision the gloo gateway here - we do that in Tiltfile.proxy
+  # Don't provision the gloo gateway here - we do that in Tiltfile.gateway
   tidepool_helm_template_cmd += '--set "gloo.enabled=false" --set "gloo.created=true" '
 
   # Deploy and watch the helm charts
@@ -81,43 +68,63 @@ def main():
     chartDir=tidepool_helm_chart_dir,
     helmCmd=tidepool_helm_template_cmd
   )))
-  watch_file(tidepool_helm_chart_dir)
+
+  # To update on helm chart source changes, uncomment below
+  # watch_file(tidepool_helm_chart_dir)
 
   # Back out of actual provisioning for debugging purposes by uncommenting below
   # fail('NOT YET ;)')
 ### Main End ###
 
-### Prepare Server Start ###
-def prepareServer():
-  # Ensure default-admin clusterrolebinding on default:default service account
-  default_admin_clusterrolebinding = local('kubectl get clusterrolebinding default-admin --ignore-not-found')
-  if not default_admin_clusterrolebinding:
-    local('kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:default')
-### Prepare Server End ###
+### Cluster Role Bindings Start ###
+def provisionClusterRoleBindings():
+  required_admin_clusterrolebindings = [
+    'default',
+  ]
+
+  for serviceaccount in required_admin_clusterrolebindings:
+    clusterrolebinding = local('kubectl get clusterrolebinding {serviceaccount}-admin --ignore-not-found'.format(
+      serviceaccount = serviceaccount
+    ))
+
+    if not clusterrolebinding:
+      local('kubectl create clusterrolebinding {serviceaccount}-admin --clusterrole cluster-admin --serviceaccount=default:{serviceaccount} --validate=0'.format(
+        serviceaccount = serviceaccount
+      ))
+### Cluster Role Bindings End ###
 
 ### Secrets Start ###
-def setServerSecrets (tidepool_helm_template_cmd):
+def provisionServerSecrets ():
   required_secrets = [
     'auth',
     'blob',
-    'data',
-    'dexcom-api',
-    'export',
-    'gatekeeper',
-    'highwater',
-    'image',
     'jellyfish',
+    'data',
+    'dexcom',
+    'export',
+    'image',
+    'kissmetrics',
+    'mailchimp',
+    'mongo',
     'notification',
+    'server',
     'shoreline',
     'task',
-    'tidepool-server-secret',
     'user',
+    'userdata',
   ]
 
-  server_secrets_dir = getNested(config, 'global.secrets.hostPath', './local/secrets')
+  secretHelmKeyMap = {
+    'jellyfish': 'carelink.secret.enabled',
+    'kissmetrics': 'global.secret.templated',
+    'mailchimp': 'global.secret.templated',
+  }
 
-  # Ensure secrets directory exists
-  local('mkdir -p {}'.format(server_secrets_dir))
+  secretChartPathMap = {
+    'jellyfish': 'carelink/templates/carelink-secret.yaml',
+    'kissmetrics': 'highwater/charts/kissmetrics/templates/kissmetrics-secret.yaml',
+    'mailchimp': 'shoreline/charts/mailchimp/templates/mailchimp-secret.yaml',
+  }
 
   # Skip secrets already available on cluster
   existing_secrets = str(local("kubectl get secrets -o=jsonpath='{.items[?(@.type==\"Opaque\")].metadata.name}'")).split()
@@ -126,39 +133,64 @@ def setServerSecrets (tidepool_helm_template_cmd):
       required_secrets.remove(existing_secret)
 
   for secret in required_secrets:
-    secret_file_name = '{}.yaml'.format(secret)
-    secret_file_path = '{}/{}'.format(server_secrets_dir, secret_file_name)
+    secretChartPath = secretChartPathMap.get(secret, '{secret}/templates/{secret}-secret.yaml'.format(
+      secret=secret,
+    ))
 
-    if read_file(secret_file_path):
-      # If we already have the secret saved, apply it to the cluster
-      print('Loading existing secret for {}'.format(secret))
-      local('kubectl --namespace=default apply --validate=0 --force -f {}'.format(secret_file_path))
+    templatePath = '{chartDir}/charts/{secretChartPath}'.format(
+      chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
+      secretChartPath=secretChartPath,
+    )
 
-    else:
-      # Generate the secret and apply it to the cluster
-      local('helm template --is-upgrade -x {chartDir}/templates/{secret}-secret.yaml -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
-        chartDir=absolute_dir(tidepool_helm_chart_dir),
-        overrides=tidepool_helm_overrides_file,
-        secret=secret,
-      ))
+    secretKey = secretHelmKeyMap.get(secret, '{}.secret.enabled'.format(secret))
 
-      # Save the generated secret to our local secrets directory
-      local('kubectl get secrets {secret} -o yaml > {secret_file_path}'.format(
-        secret_file_path=secret_file_path,
-        secret=secret,
-      ))
-
-  # Ensure that we don't recreate the secrets when provisioning
-  tidepool_helm_template_cmd += '--set "global.secrets.internal.source=other" '
-
-  return tidepool_helm_template_cmd
+    # Generate the secret and apply it to the cluster
+    local('helm template --namespace default --set "{secretKey}=true" -x {templatePath} -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+      chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
+      templatePath=templatePath,
+      secretKey=secretKey,
+      overrides=tidepool_helm_overrides_file,
+    ))
 ### Secrets End ###
+
+### Config Maps Start ###
+def provisionConfigMaps ():
+  required_configmaps = [
+    'dexcom',
+  ]
+
+  if getNested(config, 'shoreline.configmap.enabled'):
+    required_configmaps.append('shoreline')
+
+  # Skip configmaps already available on cluster
+  existing_configmaps = str(local("kubectl get --ignore-not-found configmaps -o=jsonpath='{.items[].metadata.name}'")).split()
+  for existing_configmap in existing_configmaps:
+    if ','.join(required_configmaps).find(existing_configmap) >= 0:
+      required_configmaps.remove(existing_configmap)
+
+  for configmap in required_configmaps:
+    configmapChartPath = '{configmap}/templates/{configmap}-configmap.yaml'.format(
+      configmap=configmap,
+    )
+
+    templatePath = '{chartDir}/charts/{configmapChartPath}'.format(
+      chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
+      configmapChartPath=configmapChartPath,
+    )
+
+    # Generate the configmap and apply it to the cluster
+    local('helm template --namespace default -x {templatePath} -f {overrides} {chartDir} | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+      chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
+      overrides=tidepool_helm_overrides_file,
+      templatePath=templatePath
+    ))
+### Config Maps End ###
 
 ### Service Overrides Start ###
 def applyServiceOverrides(tidepool_helm_template_cmd):
   for service, overrides in config.items():
-    if type(overrides) == 'dict' and overrides.get('hostPath') and overrides.get('image') and overrides.get('enabled', True):
-      hostPath = absolute_dir(overrides.get('hostPath'))
+    if type(overrides) == 'dict' and overrides.get('hostPath') and getNested(overrides, 'deployment.image'):
+      hostPath = getAbsoluteDir(overrides.get('hostPath'))
       containerPath = overrides.get('containerPath')
       dockerFile = overrides.get('dockerFile', 'Dockerfile')
       target = overrides.get('buildTarget', 'development')
@@ -206,7 +238,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
 
         for package in overrides.get('linkedPackages'):
           packageName = package.get('packageName')
-          packageHostPath = absolute_dir(package.get('hostPath'))
+          packageHostPath = getAbsoluteDir(package.get('hostPath'))
           build_deps.append(packageHostPath)
 
           if package['enabled']:
@@ -259,7 +291,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       live_update_commands = fallback_commands + sync_commands + run_commands;
 
       custom_build(
-        ref=overrides.get('image'),
+        ref=getNested(overrides, 'deployment.image'),
         command='{} {} {}'.format(preBuildCommand, buildCommand, postBuildCommand),
         deps=build_deps,
         disable_push=True,

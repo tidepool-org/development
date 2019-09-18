@@ -3,39 +3,22 @@
 # parameters, and update the `hostPath` if you've checked the repo out to a different location.
 
 ### Global Config Start ###
-tidepool_helm_charts_version: '0.1.5' # Version of the Tidepool helm charts to deploy.
+tidepool_helm_charts_version: '0.1.7' # Version of the Tidepool helm charts to deploy.
 
 global:
-  hosts:
+  gateway:
     default:
       protocol: http
-      host: "localhost:3000"
-    http:
-      localhost:
-        name: 'localhost:3000'
-  mongo:
-    await: 'true'    # whether to await for mongo to be ready before starting services
-    hosts: 'mongodb' # comma-separated list of Mongo hosts
-    port: 27017      # the Mongo port
-    username: ''     # a username in the Mongo instance
-    ssl: 'false'     # whether to use SSL to communicate with Mongo
-    optParams: ''    # optional parameters to pass on the Mongo connection string
+      host: localhost:3000
   ports:
     viz:
       stories: 8083
       typestories: 8082
-  resources: # Turn off resourse limits for development
-    limits:
-      cpu: null
-      memory: null
-    requests:
-      cpu: null
-      memory: null
-  secrets:
-    hostPath: './local/secrets'
-    dexcomClientId: ""
-    dexcomClientSecret: ""
-  securityContext:
+  secret: # we provision these in Tiltfile directly with kubectl
+    enabled: false
+    templated: false
+    generated: false
+  securityContext: &global-security-context
     allowPrivilegeEscalation: false
     runAsNonRoot: true
     runAsUser: 1000
@@ -45,33 +28,81 @@ global:
 ### Global Config End ###
 
 ### Gateway Config Start ###
-gateway-proxy:
+gateway-proxy-v2:
   portForwards: ['3000']
 
 gloo:
-  gatewayProxies:
-    gateway-proxy:
-      service:
-        httpPort: 3000
+  enabled: false # we provision this in Tiltfile directly with kubectl
+
+ingress:
+  deployment:
+    name: gateway-proxy-v2
+    namespace: default
+  gateway:
+    http:
+      dnsNames: [ "localhost" ]
+      port: "3000"
 ### Gateway Config End ###
 
-### MongoDB Config Start ###
 mongodb:
-  enabled: false # Disable the helm-chart-defined mongo, as we deploy our own directly within the Tiltfile
-  useExternal: false # Set to true and update the global mongo config above if using an external mongo db
+  persistent: true
+  enabled: false # False to disable the helm-chart-defined mongo, as we deploy our own directly within the Tiltfile
+  useExternal: false # Set to true and update the global mongo config below if using an external mongo db
   hostPath: '/data/db' # Note: this path is relative to the k8s server container defined in `docker-compose.k8s.yml`. Local machine path is volume-mounted using the TIDEPOOL_DOCKER_MONGO_VOLUME environment variable.
+  portForwards: ['27017']
+
+mongo:
+  secret:
+    _data:
+      Scheme: "mongodb"
+      Addresses: "mongodb"
+      Username: ""
+      Password: ""
+      Database: "admin"
+      Tls: "false"
+      OptParams: ""
 ### MongoDB Config End ###
+
+### Carelink API Config Start ###carelink:
+carelink:
+  secret:
+    enabled: false
+    data_:
+      CarelinkSalt: ""
+### Carelink API Config End ###
+
+### Dexcom API Config Start ###
+dexcom:
+  secret:
+    enabled: false
+    data_:
+      ClientId: ""
+      ClientSecret: ""
+      StateSalt: ""
+### Dexcom API Config End ###
+
+### User Data Secret Config Start ###
+userdata:
+  secret:
+    enabled: false
+    data_:
+      ServiceAuth: "This secret is used to encrypt the group id stored in the DB for gatekeeper" # Replaces previously used TIDEPOOL_DOCKER_GATEKEEPER_SECRET env variable
+      UserIdSalt: "This secret is used to salt the user id stored in the DB for highwater" # Replaces previously used TIDEPOOL_DOCKER_HIGHWATER_SALT env variable
+      PasswordSalt: "This secret is used to salt the user password stored in the DB for shoreline" # Replaces previously used TIDEPOOL_DOCKER_SHORELINE_SALT env variable
+### User Data Secret Config Start ###
 
 ### Tidepool Services Config Start ###
 auth:
-  # image: tidepool-k8s-auth
+  deployment:
+    # image: tidepool-k8s-auth
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.auth'
   rebuildCommand: 'make service-build'
 
 blip:
-  # image: tidepool-k8s-blip
+  deployment:
+    # image: tidepool-k8s-blip
   # hostPath: ../blip
   containerPath: '/app'
   apiHost: 'http://localhost:3000'
@@ -94,106 +125,128 @@ blip:
       hostPath: ../viz
       enabled: false
   restartContainer: false
+  securityContext: *global-security-context
 
 blob:
-  # image: tidepool-k8s-blob
+  deployment:
+    # image: tidepool-k8s-blob
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.blob'
   rebuildCommand: 'make service-build'
 
 data:
-  # image: tidepool-k8s-data
+  deployment:
+    # image: tidepool-k8s-data
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.data'
   rebuildCommand: 'make service-build'
 
 export:
-  # image: tidepool-k8s-export
+  deployment:
+    # image: tidepool-k8s-export
   # hostPath: ../export
   containerPath: '/app'
 
 gatekeeper:
-  # image: tidepool-k8s-gatekeeper
+  deployment:
+    # image: tidepool-k8s-gatekeeper
   # hostPath: ../gatekeeper
   containerPath: '/app'
 
 highwater:
-  # image: tidepool-k8s-highwater
+  deployment:
+    # image: tidepool-k8s-highwater
   # hostPath: ../highwater
   containerPath: '/app'
 
 hydrophone:
-  # image: tidepool-k8s-hydrophone
+  deployment:
+    # image: tidepool-k8s-hydrophone
   # hostPath: '~/go/src/github.com/tidepool-org/hydrophone'
   containerPath: '/go/src/github.com/tidepool-org/hydrophone'
   rebuildCommand: './build.sh'
 
 image:
-  # image: tidepool-k8s-image
+  deployment:
+    # image: tidepool-k8s-image
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.image'
   rebuildCommand: 'make service-build'
 
 jellyfish:
-  # image: tidepool-k8s-jellyfish
+  deployment:
+    # image: tidepool-k8s-jellyfish
   # hostPath: ../jellyfish
   containerPath: '/app'
 
 messageapi:
-  # image: tidepool-k8s-message-api
+  deployment:
+    # image: tidepool-k8s-message-api
   # hostPath: ../message-api
   containerPath: '/app'
 
 migrations:
-  # image: tidepool-k8s-migrations
+  deployment:
+    # image: tidepool-k8s-migrations
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.migrations'
   rebuildCommand: 'make service-build'
 
 notification:
-  # image: tidepool-k8s-notification
+  deployment:
+    # image: tidepool-k8s-notification
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.notification'
   rebuildCommand: 'make service-build'
 
 seagull:
-  # image: tidepool-k8s-seagull
+  deployment:
+    # image: tidepool-k8s-seagull
   # hostPath: ../seagull
   containerPath: '/app'
 
 shoreline:
-  # image: tidepool-k8s-shoreline
+  deployment:
+    # image: tidepool-k8s-shoreline
   # hostPath: '~/go/src/github.com/tidepool-org/shoreline'
   containerPath: '/go/src/github.com/tidepool-org/shoreline'
   rebuildCommand: './build.sh'
+  configmap:
+    enabled: false
+    data:
+      ClinicDemoUserId: ""
 
 task:
-  # image: tidepool-k8s-task
+  deployment:
+    # image: tidepool-k8s-task
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.task'
   rebuildCommand: 'make service-build'
 
-tidewhisperer:
-  # image: tidepool-k8s-tidewhisperer
+tide-whisperer:
+  deployment:
+    # image: tidepool-k8s-tide-whisperer
   # hostPath: '~/go/src/github.com/tidepool-org/tide-whisperer'
   containerPath: '/go/src/github.com/tidepool-org/tide-whisperer'
   rebuildCommand: './build.sh'
 
 tools:
-  # image: tidepool-k8s-tools
+  deployment:
+    # image: tidepool-k8s-tools
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.tools'
   rebuildCommand: 'make service-build'
 
 user:
-  # image: tidepool-k8s-user
+  deployment:
+    # image: tidepool-k8s-user
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.user'

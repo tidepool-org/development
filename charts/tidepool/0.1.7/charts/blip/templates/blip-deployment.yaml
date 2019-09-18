@@ -28,12 +28,37 @@ spec:
     spec:
       containers:
       - image: "{{ .Values.deployment.image }}"
+{{ if .Values.command }}
+        command: {{ .Values.command }}
+{{- end }}
+{{ if .Values.args }}
+        args: {{ .Values.args }}
+{{- end }}
         env:
         - name: SKIP_HAKKEN
           value: "true"
+{{ if .Values.webpackPublicPath }}
+        - name: WEBPACK_PUBLIC_PATH
+          value: {{ .Values.webpackPublicPath }}
+{{- end }}
+{{ if .Values.webpackDevTool }}
+        - name: WEBPACK_DEVTOOL
+          value: {{ .Values.webpackDevTool }}
+{{- end }}
+{{ if .Values.disableDevTools }}
+        - name: DEV_TOOLS
+          value: 'false'
+{{ end }}
+{{ if .Values.apiHost }}
+        - name: API_HOST
+          value: {{ .Values.apiHost }}
+{{- end }}
         name: blip
         ports:
         - containerPort: {{.Values.global.ports.blip}}
+{{ range $key, $port := .Values.global.ports.viz }}
+        - containerPort: {{ $port }}
+{{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

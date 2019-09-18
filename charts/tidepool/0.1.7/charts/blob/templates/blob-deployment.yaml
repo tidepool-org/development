@@ -30,8 +30,10 @@ spec:
     spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}
+{{ if .Values.serviceAccount.create }}
       serviceAccount: blob
       serviceAccountName: blob
+{{- end }}
       containers:
       - env:
         {{ include "charts.platform.env.mongo" .}}
