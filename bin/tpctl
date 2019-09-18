@@ -378,6 +378,7 @@ function template_files {
 	local fullpath
 	local cluster=$(get_cluster)
 	local region=$(get_region)
+	go get github.com/subfuzion/envtpl/...
 	for fullpath in $(find $path -type f -print)
 	do
 		local filename=${fullpath#$prefix}
