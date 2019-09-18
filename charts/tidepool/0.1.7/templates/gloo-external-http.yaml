@@ -1,28 +1,30 @@
 {{- if .Values.ingress.service.http.enabled -}}
 {{- $spec := .Values.ingress.gateway.http -}}
-{{- $default := "80" -}}
-{{- $port := $spec.port | default $default -}}
-{{- if $spec.dnsNames -}}
-{{- range $dnsName := $spec.dnsNames -}}
-{{- $legalName := printf "%s-%s" $dnsName $port -}}
+{{- $port := $spec.port | default "80" -}}
 ---
-# file: gloo-{{ $legalName }}-virtualservice.yaml
+# file: gloo-http-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{ $legalName }}'
+  name: 'http-virtual-service'
   namespace: '{{ $.Release.Namespace }}'
 spec:
-  displayName: '{{ $legalName }}'
+  displayName: 'http-virtual-service'
   virtualHost:
     domains:
-    - '{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf " %s" $dnsName -}}{{- end -}}'
+{{- if $spec.dnsNames -}}
+{{- range $dnsName := $spec.dnsNames -}}
+{{ if eq $dnsName "*" }}
+    - '*'
+{{- else }}
+    - '{{ if ne $port "80" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf "%s" $dnsName -}}{{- end -}}'
+{{- end -}}
+{{- end }}
+{{- end }}
     routes:
     - matcher:
         prefix: '/'
       delegateAction:
         name: 'tidepool-routes'
         namespace: {{ $.Release.Namespace }}
-{{ end }}
-{{- end -}}
 {{- end -}}

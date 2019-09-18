@@ -47,7 +47,8 @@ ingress:
     namespace: gloo-system  
   gateway:
     http:
-      dnsNames: [ "localhost" ]                 # list of DNS names
+      port: "80"
+      dnsNames: [ "*", 'localhost' ]                 # list of DNS names
     https:
       dnsNames: []                              # list of DNS names
 gloo:
