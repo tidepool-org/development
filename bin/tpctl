@@ -663,7 +663,7 @@ github:
   https: $https
 
 !
-	cat $TMP_DIR/eks-template/values.yaml >>values.yaml
+	yq r $TMP_DIR/eks-template/values.yaml -j | jq '.cluster.metadata.name = .github.git' | jq '.cluster.metadata.name |= gsub(".*\/"; "")' > values.yaml
 	if [ "$APPROVE" != "true" ]
 	then
 		${EDITOR:-vi} values.yaml
