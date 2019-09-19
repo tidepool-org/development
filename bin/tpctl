@@ -839,7 +839,7 @@ function help {
       echo "mesh    - install service mesh"
       echo "flux    - install flux GitOps controller, Tiller server, client certs for Helm to access Tiller, and deploy key into GitHub"
       echo
-      echo "If you run into trouble of have specific needs, check out these commands:"
+      echo "If you run into trouble or have specific needs, check out these commands:"
       echo 
       echo "----- Advanced Commands -----"
       echo "edit_repo - open shell with config repo in current directory.  Exit shell to commit changes."
