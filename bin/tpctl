@@ -999,6 +999,8 @@ do
 		check_remote_repo
 		setup_tmpdir
 		clone_remote
+		set_template_dir
+		set_tools_dir
 		edit_values
 		make_config
 		save_changes "Edited values. Updated config."
