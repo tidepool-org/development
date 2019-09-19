@@ -818,6 +818,15 @@ function linkerd_dashboard {
 # show help
 function help {
       echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit_repo|cluster|flux|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|managed_policies|diff)*"
+      echo "So you want to built a Kubernetes cluster that runs Tidepool. Great!
+      echo "First, install some tools with $0 tools"
+      echo "Second, create an (empty) configuration repo on GitHub with $0 repo."
+      echo "Third, create/edit a configuration file with $0 values."
+      echo "Fourth, gerenate the rest of the configuration with $0 config."
+      echo "Fifth, generate the actual AWS EKS cluster with $0 cluster."
+      echo "Sixth, install a service mesh (to encrypt inter-service traffic for HIPPA compliance with $0 mesh"
+      echo "Seventh, install the GitOps controller with $0 flux."
+      echo "That is it!"
       echo
       echo "----- Basic Commands -----"
       echo "tools   - install installation tools"
@@ -827,6 +836,8 @@ function help {
       echo "cluster - create AWS EKS cluster, add system:master USERS"
       echo "mesh    - install service mesh"
       echo "flux    - install flux GitOps controller, Tiller server, client certs for Helm to access Tiller, and deploy key into GitHub"
+      echo
+      echo "If you run into trouble of have specific needs, check out these commands:"
       echo 
       echo "----- Advanced Commands -----"
       echo "edit_repo - open shell with config repo in current directory.  Exit shell to commit changes."
