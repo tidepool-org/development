@@ -378,17 +378,11 @@ function template_files {
 	local fullpath
 	local cluster=$(get_cluster)
 	local region=$(get_region)
-	go get github.com/subfuzion/envtpl/...
 	for fullpath in $(find $path -type f -print)
 	do
 		local filename=${fullpath#$prefix}
 		mkdir -p $(dirname $filename)
-		if [ "${filename: -5}" == ".tmpl" ]
-		then
-			add_file ${filename%.tmpl}
-			ClusterName=$cluster Region=$region envtpl $fullpath >${filename%.tmpl}
-			expect_success "Templating failure $filename"
-		elif [ "${filename: -5}" == ".yaml" ]
+		if [ "${filename: -5}" == ".yaml" ]
 		then
 			add_file $filename
 			cp $fullpath $filename
@@ -755,7 +749,6 @@ function install_tools {
 	start "installing tools"
 	brew bundle --file=${DEV_DIR}/Brewfile
 	pip3 install boto3 --user
-	go get github.com/subfuzion/envtpl/...
 	complete "installed tools"
 }
 
