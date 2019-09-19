@@ -1,4 +1,4 @@
-#!/bin/bash -xv
+#!/bin/bash
 #
 # Configure EKS cluster to run Tidepool services
 #
@@ -818,7 +818,9 @@ function linkerd_dashboard {
 # show help
 function help {
       echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit_repo|cluster|flux|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|managed_policies|diff)*"
-      echo "So you want to built a Kubernetes cluster that runs Tidepool. Great!
+      echo 
+      echo
+      echo "So you want to built a Kubernetes cluster that runs Tidepool. Great!"
       echo "First, install some tools with $0 tools"
       echo "Second, create an (empty) configuration repo on GitHub with $0 repo."
       echo "Third, create/edit a configuration file with $0 values."
