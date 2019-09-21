@@ -1,26 +1,22 @@
-# Auto-generated file by gloo_gateway. Do not edit.
 {{- if .Values.ingress.service.https.enabled -}}
 {{- $spec := .Values.ingress.gateway.https -}}
-{{- $default := "443" -}}
-{{- $port := $spec.port | default $default -}}
-{{- if $spec.dnsNames -}}
-{{- range $dnsName := $spec.dnsNames -}}
-{{- $legalName := printf "%s-%s" $dnsName $port -}}
+{{- $port := $spec.port | default "443" -}}
 ---
-# file: gloo-{{ $legalName }}-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: '{{ $legalName }}'
-  namespace: '{{ $.Release.Namespace }}'
+  name: gloo-https
+  namespace: '{{ .Release.Namespace }}'
 spec:
-  displayName: '{{ $legalName }}'
+  displayName: gloo-https
   sslConfig:
     secretRef:
-      name: '{{ $.Values.ingress.certificate.secretName }}'
+      name: '{{ .Values.ingress.certificate.secretName }}'
       namespace: '{{ $.Release.Namespace }}'
     sniDomains:
+{{- range $dnsName := $spec.dnsNames }}
     - '{{ $dnsName }}'
+{{- end }}
   virtualHost:
     corsPolicy:
       allowCredentials: true
@@ -45,13 +41,13 @@ spec:
       - x-tidepool-trace-session
       maxAge: 600s
     domains:
-    - '{{ if ne $port $default -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf " %s" $dnsName -}}{{- end -}}'
+{{- range $dnsName := $spec.dnsNames }}
+    - '{{ if ne $port "443" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf " %s" $dnsName -}}{{- end -}}'
+{{- end  }}
     routes:
     - matcher:
         prefix: '/'
       delegateAction:
         name: 'tidepool-routes'
-        namespace: {{ $.Release.Namespace }}
-{{ end }}
-{{- end -}}
-{{- end -}}
+        namespace: {{ .Release.Namespace }}
+{{ end -}}

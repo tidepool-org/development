@@ -2,24 +2,21 @@
 {{- $spec := .Values.ingress.gateway.http -}}
 {{- $port := $spec.port | default "80" -}}
 ---
-# file: gloo-http-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: 'http-virtual-service'
-  namespace: '{{ $.Release.Namespace }}'
+  name: 'gloo-http'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   displayName: 'http-virtual-service'
   virtualHost:
     domains:
-{{- if $spec.dnsNames -}}
 {{- range $dnsName := $spec.dnsNames -}}
 {{ if eq $dnsName "*" }}
     - '*'
 {{- else }}
     - '{{ if ne $port "80" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf "%s" $dnsName -}}{{- end -}}'
 {{- end -}}
-{{- end }}
 {{- end }}
     routes:
     - matcher:
