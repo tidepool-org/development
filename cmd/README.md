@@ -3,10 +3,10 @@
 in a HIPAA compliant way.
 
 ## Prerequisites
-You will need Docker to run `tpctl`. 
+You need Docker to run `tpctl`. 
 We package `tpctl` in a Docker container to ensure that it can be run in any environment.  Please install Docker on your local machine.
 
-You will need you will need a GitHub account and the ability to create/write to a GitHub repository.
+You need a GitHub account and the ability to create/write to a GitHub repository.
 
 You will also need an AWS account with an identity that has the right:
 * to create a Kubernetes cluster in EKS, 
@@ -60,7 +60,7 @@ tpctl /root/tpctl $*
 We explain these below. If any of these are incorrect, please amend the file accordingly.
 
 ### GitHub 
-In order to update your Git configuration repo will the tags of new versions of Docker images that you use, you will need to provide a [GitHub personal access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) that provides
+In order to update your Git configuration repo will the tags of new versions of Docker images that you use, you must provide a [GitHub personal access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) that provides
 write access to the GitHub configuration repository:
 
 ```bash
@@ -68,7 +68,7 @@ export GITHUB_TOKEN=....
 ```
 
 ### AWS
-In order to create and query AWS resources, you will need to provide access to your AWS credentials. We assume that you store those
+In order to create and query AWS resources, you must provide access to your AWS credentials. We assume that you store those
 credentials in the standard place, 
 ```
 ~/.aws/credentials
@@ -77,7 +77,7 @@ credentials in the standard place,
 `tpctl` mounts `~/.aws` inside the Docker container to access the credentials.
 
 ### Kubernetes
-In order to access you Kubernetes cluster, you will need to provide access to the file that will store your Kubernetes configurations.  We assume that you store that file in:
+In order to access your Kubernetes cluster, you must provide access to the file that stores your Kubernetes configurations.  We assume that you store that file in:
 ```
 ~/.kube/config
 ```
@@ -85,14 +85,14 @@ In order to access you Kubernetes cluster, you will need to provide access to th
 `tpctl` mounts `~/.kube` inside the Docker container to access that file.
 
 ### Helm
-In order to provide you access to the Kubernetes cluster via the `helm` client, you will need to provide access to the directory that stores your `helm` client credentials.  That directory is typically stored at: 
+In order to provide you access to the Kubernetes cluster via the `helm` client, you must provide access to the directory that stores your `helm` client credentials.  That directory is typically stored at: 
 ```
 ~/.helm
 ```
  `tpctl` populates that directory with a TLS certificate and keys that are needed to communicate with the `helm` installer.
 
 ### Git
-In order to make Git commits, `tpctl` will need your Git username and email. This is typically stored in:
+In order to make Git commits, `tpctl` needs your Git username and email. This is typically stored in:
 ```
 ~/.gitconfig
 ```    
@@ -132,7 +132,7 @@ a series of steps:
 
   By default, the cluster name is derived from the GitHub repository name.  You may override it.
 
-  In addition, the default `values.yaml` file defines a single Tidepool environment named `qa2`. You will want to modify this environment or add others.
+  In addition, the default `values.yaml` file defines a single Tidepool environment named `qa2`. You must modify this environment or add others.
 
   Importantly, be sure to set the DNS names for your Tidepool services. 
   Assuming that you have the authority to do so, TLS certificates are automatically generated for the names that your provide and DNS aliases to the DNS names you provide are also created.
@@ -176,8 +176,8 @@ a series of steps:
   tpctl flux
   ```
 
-  In addition, this command will install the `tiller`
-  server (the counterpart to the `Helm` client) and will create and install TLS certificates that are needed to use your `helm` client to communicate with `tiller`.
+  In addition, this command installs the `tiller`
+  server (the counterpart to the `Helm` client) and creates and installs TLS certificates that the Helm client needs to communicate with `tiller` server.
 
 ## Advanced Usage
 In addition to the basic commands above, you may:
@@ -194,7 +194,7 @@ In addition to the basic commands above, you may:
  
 * regenerate client certs for Helm to access Tiller
 
-  If you are managing multiple Kubernetes clusters with a TLS-enabled `tiller`, you will need to switch between TLS certificates.  You may use this command to change to or regenerate the TLS certificates in you `~/.helm` directory:
+  If you are managing multiple Kubernetes clusters with a TLS-enabled `tiller`, you must switch between TLS certificates.  You may use this command to change to or regenerate the TLS certificates in you `~/.helm` directory:
 
   ```bash
   tpctl regenerate_cert 
@@ -210,7 +210,7 @@ In addition to the basic commands above, you may:
 
 * copy S3 assets to new bucket
 
-  If you are launching a new cluster, you will need to provide S3 assets for email verification.  You may copy the standard assets by using this command:
+  If you are launching a new cluster, you must provide S3 assets for email verification.  You may copy the standard assets by using this command:
 
   ```bash
   tpctl copy_assets
