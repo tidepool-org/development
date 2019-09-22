@@ -8,7 +8,7 @@ We package `tpctl` in a Docker container to ensure that it can be run in any env
 
 You need a GitHub account and the ability to create/write to a GitHub repository.
 
-You will also need an AWS account with an identity that has the right:
+You also need an AWS account with an identity that has the right:
 * to create a Kubernetes cluster in EKS, 
 * to create secrets in the AWS Secrets Manager; and,
 * to create stacks in AWS CloudFormation.
@@ -21,7 +21,7 @@ from Docker Hub with tag `tidepool/tpctl:latest`.
 docker pull tidepool/tpctl
 ```
 
-Alternativeluy, you may build your own local Docker image from the source by cloning theTidepool `development` repo and running the `build.sh` script:
+Alternatively, you may build your own local Docker image from the source by cloning theTidepool `development` repo and running the `build.sh` script:
 ```bash
 git clone git@github.com:tidepool-org/development
 cd development/cmd
@@ -43,7 +43,7 @@ tpctl repo
 
 ## Authentication
 
-`tpctl` interacts with several external services on your behalf.  To do so, `tpctl` must authenticate itself.  If you look at the `tpctl` script,you will see what directories it mounts and what environment variables it requires:
+`tpctl` interacts with several external services on your behalf.  To do so, `tpctl` must authenticate itself.  If you look at the `tpctl` script, you will see what directories it mounts and what environment variables it requires:
 
 ```bash
 docker run -it \
@@ -57,7 +57,7 @@ docker run -it \
 tpctl /root/tpctl $*
 ```
 
-We explain these below. If any of these are incorrect, please amend the file accordingly.
+We explain these below. If the assumptions we make are incorrect for your environment, please amend the file accordingly.
 
 ### GitHub 
 In order to update your Git configuration repo will the tags of new versions of Docker images that you use, you must provide a [GitHub personal access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) that provides
