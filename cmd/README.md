@@ -62,10 +62,9 @@ tpctl repo
 
 ## Authentication
 
-`tpctl` interacts with several external services on your behalf.  To do so, `tpctl` must authenticate itself.  If you look at the `tpctl` script, you will see what directories it mounts and what environment variables it requires:
+`tpctl` interacts with several external services on your behalf.  To do so, `tpctl` must authenticate itself.  
 
-
-We explain these below. If the assumptions we make are incorrect for your environment, please amend the file accordingly.
+To do so, `tpctl` must access your credentials stored on your local machine.  This explains the need for the numerous directories that are mounted into the Docker container.  We explain these in detail below. If the assumptions we make are incorrect for your environment, please amend the file accordingly.
 
 ### GitHub 
 In order to update your Git configuration repo with the tags of new versions of Docker images that you use, you must provide a [GitHub personal access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) that provides
