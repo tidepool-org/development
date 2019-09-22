@@ -1,0 +1,13 @@
+#!/bin/sh
+docker run -it \
+-e REMOTE_REPO=${REMOTE_REPO} \
+-e GITHUB_TOKEN=${GITHUB_TOKEN} \
+-v ~/.ssh:/root/.ssh:ro  \
+-v ~/.aws:/root/.aws \
+-v ~/.kube:/root/.kube \
+-v ~/.helm:/root/.helm \
+-v ~/.gitconfig:/root/.gitconfig \
+tpctltest /root/tpctl $*
+#tpctltest /bin/bash 
+
+

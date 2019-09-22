@@ -1,9 +1,35 @@
-#!/bin/bash
+#!/bin/bash 
 #
 # Configure EKS cluster to run Tidepool services
 #
 
 set -o pipefail
+
+function establish_ssh {
+	ssh-add -l &>/dev/null
+	if [ "$?" == 2 ]; then
+    	# Could not open a connection to your authentication agent.
+	
+    	# Load stored agent connection info.
+    	test -r ~/.ssh-agent && \
+        	eval "$(<~/.ssh-agent)" >/dev/null
+	
+    	ssh-add -l &>/dev/null
+    	if [ "$?" == 2 ]; then
+        	# Start agent and store agent connection info.
+        	(umask 066; ssh-agent > ~/.ssh-agent)
+        	eval "$(<~/.ssh-agent)" >/dev/null
+    	fi
+fi
+
+# Load identities
+ssh-add -l &>/dev/null
+if [ "$?" == 1 ]; then
+    # The agent has no identities.
+    # Time to add one.
+    ssh-add -t 4h
+fi
+}
 
 # set up colors to use for output
 function define_colors {
@@ -113,6 +139,7 @@ function setup_tmpdir {
 function clone_remote {
 	cd $TMP_DIR
 	if [[ ! -d $(basename $REMOTE_REPO) ]]; then
+		establish_ssh
 		start "cloning remote"
 		git clone $REMOTE_REPO
 		expect_success "Cannot clone $REMOTE_REPO"
@@ -124,6 +151,7 @@ function clone_remote {
 # clone quickstart repo, export TEMPLATE_DIR
 function set_template_dir {
 	if [[ ! -d $TEMPLATE_DIR ]]; then
+		establish_ssh
 		start "cloning quickstart"
 		pushd $TMP_DIR >/dev/null 2>&1
 		git clone git@github.com:/tidepool-org/eks-template
@@ -136,6 +164,7 @@ function set_template_dir {
 # clone development repo, exports DEV_DIR and CHART_DIR
 function set_tools_dir {
 	if [[ ! -d $CHART_DIR ]]; then
+		establish_ssh
 		start "cloning development tools"
 		pushd $TMP_DIR >/dev/null 2>&1
 		git clone git@github.com:/tidepool-org/development
@@ -151,6 +180,7 @@ function set_tools_dir {
 # clone secret-map repo, export SM_DIR
 function clone_secret_map {
 	if [[ ! -d $SM_DIR ]]; then
+		establish_ssh
 		start "cloning secret-map"
 		pushd $TMP_DIR >/dev/null 2>&1
 		git clone git@github.com:/tidepool-org/secret-map
@@ -389,7 +419,8 @@ function template_files {
 		elif [ "${filename: -8}" == ".jsonnet" ]
 		then
 			add_file ${filename%.jsonnet}
-			jsonnet --tla-code config="$config" $fullpath | yq r - > ${filename%.jsonnet}
+			jsonnet --tla-code config="$config" $fullpath  >xxx
+			cat xxx | yq r - > ${filename%.jsonnet}
 			expect_success "Templating failure $filename"
 		fi
 	done
@@ -465,6 +496,7 @@ function make_config {
 	
 # persist changes to config repo in GitHub
 function save_changes {
+	establish_ssh
 	start "saving changes to config repo"
 	git add .
 	git commit -m "$1"
@@ -624,7 +656,6 @@ function make_users {
 	local cluster=$(get_cluster)
 	local aws_region=$(get_region)
 	local account=$(get_aws_account)
-	echo "ACCOUNT $account"
 
 	start "adding system masters"
 	local user
@@ -657,13 +688,16 @@ function make_values {
 	start "creating values.yaml"
 	add_file "values.yaml"
 	local https=$(echo $REMOTE_REPO | sed -e "s#git@github.com:#https://github.com/#")
-	cat >values.yaml <<!
+	cat $TMP_DIR/eks-template/values.yaml >values.yaml
+	cat >>values.yaml <<!
 github:
   git: $REMOTE_REPO
   https: $https
 
 !
-	yq r $TMP_DIR/eks-template/values.yaml -j | jq '.cluster.metadata.name = .github.git' | jq '.cluster.metadata.name |= gsub(".*\/"; "")' | yq r - > values.yaml
+
+yq r values.yaml -j | jq '.cluster.metadata.name = .github.git' | jq '.cluster.metadata.name |= gsub(".*\/"; "")' | jq '.cluster.metadata.name |= gsub("cluster-"; "")' | yq r - > xxx.yaml
+	mv xxx.yaml values.yaml
 	if [ "$APPROVE" != "true" ]
 	then
 		${EDITOR:-vi} values.yaml
@@ -744,14 +778,6 @@ function create_repo {
 	check_remote_repo
 }
 
-# install installation tools
-function install_tools {
-	start "installing tools"
-	brew bundle --file=${DEV_DIR}/Brewfile
-	pip3 install boto3 --user
-	complete "installed tools"
-}
-
 function gloo_dashboard {
 	kubectl port-forward -n gloo-system  deployment/api-server 8081:8080 &
 	open -a "Google Chrome"  http://localhost:8081
@@ -779,36 +805,39 @@ function migrate_secrets {
 function create_secrets_managed_policy {
 	local file=$TMP_DIR/policy.yaml
 
-	start "Creating IAM Managed Policy for secrets management"
 	local cluster=$(get_cluster)
 	local region=$(get_region)
 	local stack_name=eksctl-${cluster}-external-secrets-managed-policy
-	local cf_file=file://$(realpath $file)
-	local account=$(get_aws_account)
-
-	cat >$file <<EOF
-          AWSTemplateFormatVersion: 2010-09-09
-          Description: Kubernetes IAM Role for External Secrets
-          Resources:
-            ExternalSecretsManagedPolicy:
-              Type: AWS::IAM::ManagedPolicy
-              Properties:
-                ManagedPolicyName: $stack_name
-                PolicyDocument:
-                  Version: '2012-10-17'
-                  Statement:
-                  - Effect: Allow
-                    Action:
-                    - secretsmanager:GetSecretValue
-                    Resource:
-                    - "arn:aws:secretsmanager:${region}:${account}:secret:${cluster}/*"
+	aws cloudformation describe-stacks --stack-name $stack_name
+	if [ $? -ne 0 ]
+	then
+		start "Creating IAM Managed Policy for secrets management for $cluster in region $region"
+		local cf_file=file://$(realpath $file)
+		local account=$(get_aws_account)
+	
+	        cat >$file <<EOF
+                  AWSTemplateFormatVersion: 2010-09-09
+                  Description: Kubernetes IAM Role for External Secrets
+                  Resources:
+                    ExternalSecretsManagedPolicy:
+                      Type: AWS::IAM::ManagedPolicy
+                      Properties:
+                        ManagedPolicyName: $stack_name
+                        PolicyDocument:
+                          Version: '2012-10-17'
+                          Statement:
+                          - Effect: Allow
+                            Action:
+                            - secretsmanager:GetSecretValue
+                            Resource:
+                            - "arn:aws:secretsmanager:${region}:${account}:secret:${cluster}/*"
 EOF
+	        aws cloudformation create-stack --stack-name ${stack_name} --capabilities CAPABILITY_NAMED_IAM --template-body ${cf_file} 
 
-	aws cloudformation create-stack --stack-name ${stack_name} --capabilities CAPABILITY_NAMED_IAM --template-body ${cf_file} 
-
-	aws cloudformation wait stack-create-complete --stack-name ${stack_name}
-	complete "Created IAM Managed Policy for secrets management"
-	rm $file
+	        aws cloudformation wait stack-create-complete --stack-name ${stack_name}
+	        complete "Created IAM Managed Policy for secrets management"
+	        rm $file
+	fi
 }
 
 function linkerd_dashboard {
@@ -817,21 +846,19 @@ function linkerd_dashboard {
 
 # show help
 function help {
-      echo "$0 [-h|--help] (all|tools|values|edit_values|config|edit_repo|cluster|flux|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|managed_policies|diff)*"
+      echo "$0 [-h|--help] (all|values|edit_values|config|edit_repo|cluster|flux|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|managed_policies|diff)*"
       echo 
       echo
       echo "So you want to built a Kubernetes cluster that runs Tidepool. Great!"
-      echo "First, install some tools with $0 tools"
-      echo "Second, create an (empty) configuration repo on GitHub with $0 repo."
-      echo "Third, create/edit a configuration file with $0 values."
-      echo "Fourth, gerenate the rest of the configuration with $0 config."
-      echo "Fifth, generate the actual AWS EKS cluster with $0 cluster."
-      echo "Sixth, install a service mesh (to encrypt inter-service traffic for HIPPA compliance with $0 mesh"
-      echo "Seventh, install the GitOps controller with $0 flux."
+      echo "First, create an (empty) configuration repo on GitHub with $0 repo."
+      echo "Second, create/edit a configuration file with $0 values."
+      echo "Third, gerenate the rest of the configuration with $0 config."
+      echo "Fourth, generate the actual AWS EKS cluster with $0 cluster."
+      echo "Fifth, install a service mesh (to encrypt inter-service traffic for HIPPA compliance with $0 mesh"
+      echo "Sixth, install the GitOps controller with $0 flux."
       echo "That is it!"
       echo
       echo "----- Basic Commands -----"
-      echo "tools   - install installation tools"
       echo "repo    - create config repo on GitHub"
       echo "values  - create initial values.yaml file"
       echo "config  - create K8s and eksctl K8s manifest files"
@@ -865,6 +892,8 @@ then
 	help
 	exit 0
 fi
+
+echo $*
 
 APPROVE=false
 PARAMS=""
@@ -935,12 +964,6 @@ do
 		migrate_secrets
                 save_changes "Added migrated secrets"
 		;;
-	tools)
-		setup_tmpdir
-		set_tools_dir
-		install_tools
-		info "tools installed"
-		;;
 	repo)
 		setup_tmpdir
 		create_repo
@@ -968,6 +991,7 @@ do
 		setup_tmpdir
 		clone_remote
 		set_tools_dir
+		create_secrets_managed_policy
 		make_cluster
 		merge_kubeconfig
 		make_users
