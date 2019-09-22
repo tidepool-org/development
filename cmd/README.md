@@ -2,26 +2,26 @@
 `tpctl` is used to create AWS EKS clusters that run the Tidepool services
 in a HIPAA compliant way.
 
-## Why user Docker
-We package `tpctl` in a Docker container to ensure that it can be run in any environment.
-
 ## Prerequisites
-To run `tpctl`, you will need: 
-* a local Docker daemon;
-* a GitHub account and an ability to create or write to a GitHub repo; and,
-* an AWS account with an identity that has the right to create a Kubernetes cluster in EKS 
-cluster, secrets in the AWS Secrets Manager, and stacks in AWS CloudFormation.
+You will need Docker to run `tpctl`. 
+We package `tpctl` in a Docker container to ensure that it can be run in any environment.  Please install Docker on your local machine.
+
+You will need you will need a GitHub account and the ability to create/write to a GitHub repository.
+
+You will also need an AWS account with an identity that has the right:
+* to create a Kubernetes cluster in EKS, 
+* to create secrets in the AWS Secrets Manager; and,
+* to create stacks in AWS CloudFormation.
 
 ## Installation
-`tpctl` is distributed as a Docker image.  You may pull down the latest version
+You may pull down the latest version Docker image of `tpctl`
 from Docker Hub with tag `tidepool/tpctl:latest`.
 
 ```bash
 docker pull tidepool/tpctl
 ```
 
-Or, you may clone the
-Tidepool `development` repo and build the Docker image from the Dockerfile:
+Alternativeluy, you may build your own local Docker image from the source by cloning theTidepool `development` repo and running the `build.sh` script:
 ```bash
 git clone git@github.com:tidepool-org/development
 cd development/cmd
@@ -30,35 +30,20 @@ cd development/cmd
 
 ## Execution Environment
 
-You may use `tpctl` to configure an existing GitHub repository.  To do so, 
-provide the name of the repository:
+Most of the operations of `tpctl` either use or manipulate a GitHub repository.  You may use `tpctl` to configure an existing GitHub repository.  To do so, provide the name of the repository:
 
 ```bash
 export REMOTE_REPO=git@github.org:tidepool-org/cluster-test1 
 ```
 
-Or, if you have not already created a GitHub repository you may create one:
+Alternatively, if you have not already created a GitHub repository you may create one using `tpctl`:
 ```bash
 tpctl repo
 ```
 
-In addition, you will need to provide a GitHub personal access token that provides
-write access to the config repo:
+## Authentication
 
-```bash
-export GITHUB_TOKEN=....
-```
-This token will be provided to a service that runs in your cluster to keep
-its services up-to-date.
-
-These two environment variables are passed to the process running in
-the Docker container.
-
-In addition to that, you will need to provide access to your GitHub public key,
-to your AWS credentials, to your GitHub name and email address, and
-to your Kubernetes `kubeconfig.yaml` file.  This is done by mounting
-host files and directories into your Docker image.  If you look at the
-`tpctl` script, you will see what directories it mounts:
+`tpctl` interacts with several external services on your behalf.  To do so, `tpctl` must authenticate itself.  If you look at the `tpctl` script,you will see what directories it mounts and what environment variables it requires:
 
 ```bash
 docker run -it \
@@ -72,24 +57,62 @@ docker run -it \
 tpctl /root/tpctl $*
 ```
 
-This presumes that your `.ssh` public key is stored at `~/.ssh/id_rsa`, that your 
-aws credentials are stored as `~/.aws/credentials`, that your
-GitHub global credentials are stored at `~/.gitconfig`,  that your
-kubeconfig file is stores at `~/.kube/config.yaml`, and that your `Helm` identity
-is stored in `~/.helm`. 
+We explain these below. If any of these are incorrect, please amend the file accordingly.
 
-If any of these are incorrect, please amend the file accordingly.
+### GitHub 
+In order to update your Git configuration repo will the tags of new versions of Docker images that you use, you will need to provide a [GitHub personal access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) that provides
+write access to the GitHub configuration repository:
 
+```bash
+export GITHUB_TOKEN=....
+```
+
+### AWS
+In order to create and query AWS resources, you will need to provide access to your AWS credentials. We assume that you store those
+credentials in the standard place, 
+```
+~/.aws/credentials
+```
+
+`tpctl` mounts `~/.aws` inside the Docker container to access the credentials.
+
+### Kubernetes
+In order to access you Kubernetes cluster, you will need to provide access to the file that will store your Kubernetes configurations.  We assume that you store that file in:
+```
+~/.kube/config
+```
+
+`tpctl` mounts `~/.kube` inside the Docker container to access that file.
+
+### Helm
+In order to provide you access to the Kubernetes cluster via the `helm` client, you will need to provide access to the directory that stores your `helm` client credentials.  That directory is typically stored at: 
+```
+~/.helm
+```
+ `tpctl` populates that directory with a TLS certificate and keys that are needed to communicate with the `helm` installer.
+
+### Git
+In order to make Git commits, `tpctl` will need your Git username and email. This is typically stored in:
+```
+~/.gitconfig
+```    
+`tpctl` mounts that file.
+
+### SSH
+In order to clone private repos in your organization, `tpctl` needs access to your GitHub public key.  This is typically stored in:
+```
+~/.ssh/id_rsa
+```
 
 ## Basic Usage
 
 To create a EKS cluster running the Tidepool services with GitOps
-and a Service Mesh that provides HIPAA compliance, you will perform
+and a service mesh that provides HIPAA compliance, you perform
 a series of steps:
 
 * Create an GitHub Configuration Repository
 
-  This will create an empty GitHub repository for storing the desired state of your EKS
+  This creates an empty GitHub repository for storing the desired state of your EKS
   cluster.
 
   ```bash
@@ -98,21 +121,25 @@ a series of steps:
 
 * Create an Configuration File
 
-  This will create a file in your GitHub configuration repo called `values.yaml` that contains
+  This creates a file in your GitHub configuration repo called `values.yaml` that contains
   all the data needed to construct the other Kubernetes configuration files.
 
   ```bash
   tpctl values
   ```
 
-  In this file, you will find parameters that you may change to customize the installation.
+  In this file, you find parameters that you may change to customize the installation.  
 
   By default, the cluster name is derived from the GitHub repository name.  You may override it.
 
+  In addition, the default `values.yaml` file defines a single Tidepool environment named `qa2`. You will want to modify this environment or add others.
+
+  Importantly, be sure to set the DNS names for your Tidepool services. 
+  Assuming that you have the authority to do so, TLS certificates are automatically generated for the names that your provide and DNS aliases to the DNS names you provide are also created.
+
 * Generate the Configuration
 
-  From the  `values.yaml` file you can generate all the Kubernetes manifest files, the AWS IAM roles and 
-  policies, and the `eksctl` `ClusterConfig` file that is used to build a cluster.
+  From the  `values.yaml` file  `tpctl`  can generate all the Kubernetes manifest files, the AWS IAM roles and  policies, and the `eksctl` `ClusterConfig` file that is used to build a cluster.  You do this with:
 
   ```bash
   tpctl config
@@ -128,94 +155,146 @@ a series of steps:
 
 * Install a Service Mesh
 
-  A service mesh will encrypt inter-service traffic to ensure that Personal Health Information (PHI) is protected in transit from exposure.
+  A service mesh encrypt inter-service traffic to ensure that personal health information (PHI) is protected in transit from exposure to unauthorized parties. 
+
+  You may install a service mesh as follows.
 
   ```bash
   tpctl mesh
   ```
 
+  This must be done *before* the next step.
+
 * Install the Flux GitOps Controller
 
-  The Flux GitOps controller  watches for changes in the GitHub configuration repo and reflects 
-  those changes in your AWS Kubernetes cluster. 
+  The Flux GitOps controller keeps your Kubernetes cluster up to date with the contents of the GitHub configuration repo.  It also keeps your GitHub configuration repo up to date with the latest versions of Docker images of your services that are published in Docker Hub.
   
-  In addition, the command will install the `tiller`
-  service and will create and install TLS certificates.
+  To install the GitOps operator:
+  
 
   ```bash
   tpctl flux
   ```
 
+  In addition, this command will install the `tiller`
+  server (the counterpart to the `Helm` client) and will create and install TLS certificates that are needed to use your `helm` client to communicate with `tiller`.
+
 ## Advanced Usage
 In addition to the basic commands above, you may:
 
+* edit any of file in the configuration repo
+  
+  You may access the GitHub configuration repo using standard Git commands.  In addition, `tpctl` makes it convenient to clone the repo into a directory for you to make changes. 
 
-* open shell with config repo in current directory.  Exit shell to commit changes.
+  With this command, `tpctl` opens a shell with a clone of th repo in the current directory.  You may makes changes to that clone as you see fit.  When you exit the shell, `tpctl` will commit those changes (with your permission) and push them to GitHub.
+
   ```bash
   tpctl edit_repo
   ```
  
 * regenerate client certs for Helm to access Tiller
+
+  If you are managing multiple Kubernetes clusters with a TLS-enabled `tiller`, you will need to switch between TLS certificates.  You may use this command to change to or regenerate the TLS certificates in you `~/.helm` directory:
+
   ```bash
   tpctl regenerate_cert 
   ```
 
-* open editor to edit values.yaml file
+* edit your values.yaml file
+
+  If you need to modify the configuration parameters in the `values.yaml` file, you may do so with standard Git commands to operate on your Git repo.  `tpctl` makes it even easier by checking out the Git repo on your behalf and opening the `vi` editor:
+
   ```bash
   tpctl edit_values
   ```
 
 * copy S3 assets to new bucket
+
+  If you are launching a new cluster, you will need to provide S3 assets for email verification.  You may copy the standard assets by using this command:
+
   ```bash
   tpctl copy_assets
   ```
 
 * migrate secrets from legacy GitHub repo to AWS secrets manager
+  
+  If you are migrating from one of the Tidepool legacy environments, you may migrate the secrets that are used in one of those environments to AWS Secrets Manager and modify your configuration repo to access those secrets:
+
   ```bash
   tpctl migrate_secrets
   ```
 
 * generate random secrets and persist into AWS secrets manager
+
+  If you are creating a new environment, you can generate a new set of secrets and persist those secrets in AWS Secrets Manager and modify your configuration repot to access those secrets:
+
   ```bash
   tpctl randomize_secrets
   ```
 
 * read STDIN for plaintext K8s secrets
+
+  If you have secrets to persist and use in your cluster, such as 
+  those provided by a third party vendor, you may upload those secrets to AWS Secrets Manager and update your config repo to access those secrets by providing those secrets (as *plaintext* Kubernetes secrets) via the standard input to `tpctl`:
+
   ```bash
   tpctl upsert_plaintext_secrets
   ```
 
 * add system:master USERS to K8s cluster
+
+  If you have additional `system:master` users to add to your cluster, you may add them to your `values.yaml` file and run this command to install them in your cluster:
+
   ```bash
   tpctl install_users
   ```
 
 * copy deploy key from Flux to GitHub config repo
+
+  If you delete and reinstall Flux manually, it will create a new public key that you must provide to your GitHub repo in order to authenticate 
+  Flux and authorize it to modify the repo.  You do that with:
+
   ```bash
   tpctl deploy_key
   ``` 
 
 * initiate deletion of the AWS EKS cluster
+
+  If you wish to delete a AWS EKS cluster that you created with `tpctl`, you may do so with:
+
   ```bash
   tpctl delete_cluster
   ```
 
-* await completion of deletion of gthe AWS EKS cluster
+  Note that this only starts the process.  The command returns *before* the process has completed.
+
+* await completion of deletion of the AWS EKS cluster
+
+  To await the completion of the deletion of an AWS EKS cluster, you may do this:
+
   ```bash
   tpctl await_deletion
   ```
 
 * copy the KUBECONFIG into the local $KUBECONFIG file
+
+  If you need to regenerate your local ~/.kube/config, you add the credentials of your cluster with:
+
   ```bash
   tpctl merge_kubeconfig
   ```
 
 * open the Gloo dashboard
+
+  We use the Gloo API Gateway.  If you would like to see the gateways, virtual services, and/or routes that are installed, you may use this command to open up a web page to the Gloo dashboard:
+
   ```bash
   tpctl gloo_dashboard
   ```
 
-* open the Linkerd dashboard
+* open the service mesh dashboard
+
+  If you have installed a service mesh, you may view a dashboard to monitor traffic in a web page:
   ```bash
   tpctl linkerd_dashboard
   ```
@@ -226,6 +305,8 @@ In addition to the basic commands above, you may:
   ```
 
 * show recent git diff
+
+  If you would like to see the most recent changes to your config repo, you may use standard Git tools, or you may simply run:
   ```bash
   tpctl diff
   ```
