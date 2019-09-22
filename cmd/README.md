@@ -60,7 +60,7 @@ tpctl /root/tpctl $*
 We explain these below. If the assumptions we make are incorrect for your environment, please amend the file accordingly.
 
 ### GitHub 
-In order to update your Git configuration repo will the tags of new versions of Docker images that you use, you must provide a [GitHub personal access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) that provides
+In order to update your Git configuration repo with the tags of new versions of Docker images that you use, you must provide a [GitHub personal access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) that provides
 write access to the GitHub configuration repository:
 
 ```bash
