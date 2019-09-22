@@ -21,7 +21,7 @@ from Docker Hub with tag `tidepool/tpctl:latest`.
 docker pull tidepool/tpctl
 ```
 
-Place the following in a file called `tpctl` and make it executable:
+Execute the following to create a file called `tpctl` and to make it executable:
 
 ```bash
 cat <<! >tpctl
