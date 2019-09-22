@@ -25,6 +25,7 @@ Place the following in a file called `tpctl` and make it executable:
 
 ```bash
 cat <<! >tpctl
+#!/bin/bash
 docker run -it \
 -e REMOTE_REPO=${REMOTE_REPO} \
 -e GITHUB_TOKEN=${GITHUB_TOKEN} \
