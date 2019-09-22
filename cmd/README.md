@@ -32,7 +32,7 @@ docker run -it \
 -v ~/.aws:/root/.aws \
 -v ~/.kube:/root/.kube \
 -v ~/.helm:/root/.helm \
--v ~/.gitconfig:/root/.gitconfig 
+-v ~/.gitconfig:/root/.gitconfig \
 tidepool/tpctl /root/tpctl $*
 !
 chmod +x tpctl
