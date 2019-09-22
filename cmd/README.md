@@ -361,7 +361,7 @@ aws:
   - haroldbernard-cli
 ```
 
-### Kubectl Access 
+### Kubectl Access Configuration
 This secion provides the default location of the KUBECONFIG file.
 
 ```yaml
@@ -398,7 +398,7 @@ cluster:
         externalDNS: true
 ```
 
-### Optional Services
+### Optional Service Configuration
 
 There are a number of services that can be installed by `tpctl` to run in your
 Kubernetes cluster.   This section allows you to select the services
@@ -443,7 +443,7 @@ pkgs:
     secret: thanos-objstore-config
 ```
 
-### Tidepool Environments
+### Tidepool Environment Configuration
 The last section allows you to configure the Tidepool environments that you 
 run in your cluster:
 ```yaml
