@@ -318,3 +318,165 @@ In addition to the basic commands above, you may:
   ```bash
   tpctl diff
   ```
+
+## The values.yaml File
+
+Your primary configuration file, `values.yaml`, contains all the information needed to create your Kubernetes cluster and its services.  Here is an annotated example:
+
+
+### GitHub Config
+This section established where the GitHub repo is located.  
+```yaml
+github:
+  git: git@github.com:tidepool-org/cluster-test1
+  https: https://github.com/tidepool-org/cluster-test1
+```
+
+### Logging Config
+This section provides the default log level for the services that run in the
+cluster.
+
+```yaml
+logLevel: debug                               # the default log level for all services
+```
+
+### Cluster Administration Configuration
+This section provides an email address for the administrator of the cluster.
+```yaml
+email: derrick@tidepool.org                   # cluster admin email address
+```
+
+### AWS Configuration
+This section provides the AWS account number and the IAM users who are to 
+be granted `system:master` privileges on the cluster:
+
+```yaml
+aws:
+  accountNumber: 118346523422
+  iamUsers:
+  - derrickburns-cli
+  - lennartgoedhard-cli
+  - benderr-cli
+  - jamesraby-cli
+  - haroldbernard-cli
+```
+
+### Kubectl Access 
+This secion provides the default location of the KUBECONFIG file.
+
+```yaml
+kubeconfig: "$HOME/.kube/config.yaml"                 # place to put KUBECONFIG
+```
+### Cluster Provisioning Configuration
+This sections provides a description of the AWS cluster itself, including its
+name, region, size, networking config, and IAM policies.
+```yaml
+
+cluster:
+  metadata:
+    name: test1
+    region: us-west-2
+  cloudWatch:
+    clusterLogging:
+      enableTypes: ["authenticator", "api", "controllerManager", "scheduler"]
+  vpc:
+    cidr: "10.47.0.0/16"                      # CIDR of AWS VPC
+  nodeGroups: 
+  - instanceType: "m5.large"                  # AWS instance type for workers 
+    desiredCapacity: 4                        # initial capacity of auto scaling group of workers
+    minSize: 1                                # minimum size of auto scaling group of workers
+    maxSize: 10                               # maximum size of auto scaling group of workers
+    name: ng
+    iam:
+      attachPolicyARNs:
+      - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+      - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+      - arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess
+      withAddonPolicies:
+        autoScaler: true
+        certManager: true
+        externalDNS: true
+```
+
+### Optional Services
+
+There are a number of services that can be installed by `tpctl` to run in your
+Kubernetes cluster.   This section allows you to select the services
+that you want to enable:
+```yaml
+
+pkgs:
+  amazon-cloudwatch:
+    enabled: true
+  external-dns:
+    enabled: true
+  gloo:
+    enabled: true
+  gloo-crds:
+    enabled: true
+  prometheus-operator:
+    enabled: true
+  certmanager:
+    enabled: true
+  cluster-autoscaler:
+    enabled: true
+  external-secrets:
+    enabled: true
+  reloader:
+    enabled: true
+  datadog:
+    enabled: false
+  flux:
+    enabled: true
+  fluxcloud:
+    enabled: false
+    username: "derrickburns"
+    secret: slack
+    #channel: foo
+  metrics-server:
+    enabled: true
+  sumologic:
+    enabled: false
+  thanos:
+    enabled: true
+    bucket: tidepool-thanos
+    secret: thanos-objstore-config
+```
+
+### Tidepool Environments
+The last section allows you to configure the Tidepool environments that you 
+run in your cluster:
+```yaml
+
+environments:
+  qa2:
+    mongodb:
+      enabled: true
+    tidepool:
+      source: stg
+      enabled: true
+      hpa:
+        enabled: true
+      nosqlclient:
+        enabled: true
+      mongodb:
+        enabled: true
+      gitops:
+        branch: develop
+      buckets: {}
+        #data: tidepool-test-qa2-data
+        #asset: tidepool-test-qa2-asset
+      certificate:
+        secret: tls
+        issuer: letsencrypt-staging
+      gateway:
+        default:
+          protocol: http
+        http:
+          enabled: true
+          dnsNames:
+          - localhost
+        https:
+          enabled: false
+          dnsNames: [qa2.tidepool.org]
+```

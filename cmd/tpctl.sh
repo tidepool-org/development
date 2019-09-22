@@ -334,7 +334,7 @@ function get_kubeconfig {
 	realpath $(eval "echo $kc")
 }
 
-# create EKS cluster using config.yaml file, add kubeconfig.yaml to config repo
+# create EKS cluster using config.yaml file, add kubeconfig to config repo
 function make_cluster {
 	local cluster=$(get_cluster)
 	start "creating cluster $cluster"
