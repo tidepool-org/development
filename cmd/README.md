@@ -63,7 +63,7 @@ tpctl repo
 
 ## Authentication
 
-`tpctl` interacts with several external services on your behalf.  To do so, `tpctl` must authenticate itself.  
+`tpctl` interacts with several external services on your behalf.  `tpctl` must authenticate itself.
 
 To do so, `tpctl` must access your credentials stored on your local machine.  This explains the need for the numerous directories that are mounted into the Docker container.  We explain these in detail below. If the assumptions we make are incorrect for your environment, please amend the file accordingly.
 
