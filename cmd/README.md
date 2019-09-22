@@ -21,12 +21,31 @@ from Docker Hub with tag `tidepool/tpctl:latest`.
 docker pull tidepool/tpctl
 ```
 
+Place the following in a file called `tpctl` and make it executable:
+
+```bash
+cat <<! >tpctl
+docker run -it \
+-e REMOTE_REPO=${REMOTE_REPO} \
+-e GITHUB_TOKEN=${GITHUB_TOKEN} \
+-v ~/.ssh:/root/.ssh:ro  \
+-v ~/.aws:/root/.aws \
+-v ~/.kube:/root/.kube \
+-v ~/.helm:/root/.helm \
+-v ~/.gitconfig:/root/.gitconfig 
+tidepool/tpctl /root/tpctl $*
+!
+chmod +x tpctl
+```
+
 Alternatively, you may build your own local Docker image from the source by cloning theTidepool `development` repo and running the `build.sh` script:
 ```bash
 git clone git@github.com:tidepool-org/development
 cd development/cmd
 ./build.sh
 ```
+
+Thereafter, you may use the `tpctl` script provided.
 
 ## Execution Environment
 
@@ -45,17 +64,6 @@ tpctl repo
 
 `tpctl` interacts with several external services on your behalf.  To do so, `tpctl` must authenticate itself.  If you look at the `tpctl` script, you will see what directories it mounts and what environment variables it requires:
 
-```bash
-docker run -it \
--e REMOTE_REPO=${REMOTE_REPO} \
--e GITHUB_TOKEN=${GITHUB_TOKEN} \
--v ~/.ssh:/root/.ssh:ro  \
--v ~/.aws:/root/.aws \
--v ~/.kube:/root/.kube \
--v ~/.helm:/root/.helm \
--v ~/.gitconfig:/root/.gitconfig 
-tpctl /root/tpctl $*
-```
 
 We explain these below. If the assumptions we make are incorrect for your environment, please amend the file accordingly.
 
