@@ -1,2 +1,2 @@
 #!/bin/sh
-docker build -t tpctltest .
+docker build -t tidepool/tpctl .

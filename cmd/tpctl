@@ -7,7 +7,7 @@ docker run -it \
 -v ~/.kube:/root/.kube \
 -v ~/.helm:/root/.helm \
 -v ~/.gitconfig:/root/.gitconfig \
-tpctltest /root/tpctl $*
+tidepool/tpctl /root/tpctl $*
 #tpctltest /bin/bash 
 
 
