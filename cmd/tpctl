@@ -8,6 +8,5 @@ docker run -it \
 -v ~/.helm:/root/.helm \
 -v ~/.gitconfig:/root/.gitconfig \
 tidepool/tpctl /root/tpctl $*
-#tpctltest /bin/bash 
 
 
