@@ -48,6 +48,7 @@ RUN wget https://github.com/derailed/k9s/releases/download/0.8.4/k9s_0.8.4_Linux
     mv /tmp/k9s /usr/local/bin && \
     chmod 755 /usr/local/bin/k9s
 RUN wget https://github.com/linkerd/linkerd2/releases/download/stable-2.5.0/linkerd2-cli-stable-2.5.0-linux -O /usr/local/bin/linkerd && chmod +x /usr/local/bin/linkerd
+RUN curl -L https://github.com/solo-io/gloo/releases/download/v0.19.1/glooctl-linux-amd64 > /usr/local/bin/glooctl && chmod +x /usr/local/bin/glooctl
 
 COPY tpctl.sh /root/tpctl
 COPY separate_files /usr/local/bin/separate_files
