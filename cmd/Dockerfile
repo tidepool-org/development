@@ -10,7 +10,7 @@ RUN curl -sL -o /usr/local/bin/jsonnet https://github.com/databricks/sjsonnet/re
 RUN curl -sL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get && \
     bash get_helm.sh && \
     rm get_helm.sh
-RUN curl -sL "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && \
+RUN curl -sL "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp && \
     mv /tmp/eksctl /usr/local/bin
 RUN curl -sL -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl 
 RUN git clone https://github.com/ahmetb/kubectx /opt/kubectx && \
