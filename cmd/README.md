@@ -39,7 +39,7 @@ tidepool/tpctl /root/tpctl $*
 chmod +x tpctl
 ```
 
-Alternatively, you may build your own local Docker image from the source by cloning theTidepool `development` repo and running the `build.sh` script:
+Alternatively, you may build your own local Docker image from the source by cloning the Tidepool `development` repo and running the `build.sh` script:
 ```bash
 git clone git@github.com:tidepool-org/development
 cd development/cmd
