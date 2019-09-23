@@ -97,22 +97,22 @@ spec:
     messageapi:
       image: tidepool/message-api:develop-c5ac4c43231c33c2dca7485a88fe27ba64769a06
     auth:
-      image: tidepool/platform-auth:develop-f273e4edfbcb3b3c25d8f933634c865847839476
+      image: tidepool/platform-auth:develop-9139822572a890eb372d19332d45093c0233cfea
     blob:
       bucket: tidepool-qa1-data
-      image: tidepool/platform-blob:develop-f273e4edfbcb3b3c25d8f933634c865847839476
+      image: tidepool/platform-blob:develop-9139822572a890eb372d19332d45093c0233cfea
     data:
-      image: tidepool/platform-data:develop-f273e4edfbcb3b3c25d8f933634c865847839476
+      image: tidepool/platform-data:develop-9139822572a890eb372d19332d45093c0233cfea
     image:
       bucket: tidepool-qa1-data
       image: tidepool/platform-image:develop-9139822572a890eb372d19332d45093c0233cfea
     migrations:
-      image: tidepool/platform-migrations:develop-f273e4edfbcb3b3c25d8f933634c865847839476
+      image: tidepool/platform-migrations:develop-9139822572a890eb372d19332d45093c0233cfea
     notification:
       enabled: false
       image: tidepool/platform-notification:develop-f273e4edfbcb3b3c25d8f933634c865847839476
     task:
-      image: tidepool/platform-task:develop-f273e4edfbcb3b3c25d8f933634c865847839476
+      image: tidepool/platform-task:develop-9139822572a890eb372d19332d45093c0233cfea
     tools:
       enabled: false
       image: tidepool/platform-tools:develop-f273e4edfbcb3b3c25d8f933634c865847839476
