@@ -100,7 +100,7 @@ spec:
       image: tidepool/platform-auth:develop-f273e4edfbcb3b3c25d8f933634c865847839476
     blob:
       bucket: tidepool-qa1-data
-      image: tidepool/platform-blob:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
+      image: tidepool/platform-blob:develop-f273e4edfbcb3b3c25d8f933634c865847839476
     data:
       image: tidepool/platform-data:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
     image:
@@ -112,7 +112,7 @@ spec:
       enabled: false
       image: tidepool/platform-notification:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
     task:
-      image: tidepool/platform-task:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
+      image: tidepool/platform-task:develop-f273e4edfbcb3b3c25d8f933634c865847839476
     tools:
       enabled: false
       image: tidepool/platform-tools:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
