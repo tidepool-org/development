@@ -325,7 +325,7 @@ Your primary configuration file, `values.yaml`, contains all the information nee
 
 
 ### GitHub Config
-This section established where the GitHub repo is located.  
+This section establishes where the GitHub repo is located.  
 ```yaml
 github:
   git: git@github.com:tidepool-org/cluster-test1
@@ -352,8 +352,8 @@ be granted `system:master` privileges on the cluster:
 
 ```yaml
 aws:
-  accountNumber: 118346523422
-  iamUsers:
+  accountNumber: 118346523422                # AWS account number
+  iamUsers:                                  # AWS IAM users who will be grants system:master privileges to the cluster
   - derrickburns-cli
   - lennartgoedhard-cli
   - benderr-cli
@@ -362,10 +362,10 @@ aws:
 ```
 
 ### Kubectl Access Configuration
-This secion provides the default location of the KUBECONFIG file.
+This secion provides the default location of the Kubernetes cluster configuration file.
 
 ```yaml
-kubeconfig: "$HOME/.kube/config.yaml"                 # place to put KUBECONFIG
+kubeconfig: "$HOME/.kube/config"             # place to put KUBECONFIG
 ```
 ### Cluster Provisioning Configuration
 This sections provides a description of the AWS cluster itself, including its
@@ -374,20 +374,24 @@ name, region, size, networking config, and IAM policies.
 
 cluster:
   metadata:
-    name: test1
-    region: us-west-2
-  cloudWatch:
-    clusterLogging:
-      enableTypes: ["authenticator", "api", "controllerManager", "scheduler"]
-  vpc:
-    cidr: "10.47.0.0/16"                      # CIDR of AWS VPC
+    name: test1                              # name of the cluster
+    region: us-west-2                        # AWS region to host the cluster
+  cloudWatch:                                # AWS cloudwatch configuration
+    clusterLogging:                          
+      enableTypes:                           # Types of log messages to persist to CloudWatch
+      - authenticator
+      - api
+      - controllerManager
+      - scheduler
+  vpc:                                       # Amazon VPC configuration
+    cidr: "10.47.0.0/16"                     # CIDR of AWS VPC
   nodeGroups: 
-  - instanceType: "m5.large"                  # AWS instance type for workers 
-    desiredCapacity: 4                        # initial capacity of auto scaling group of workers
-    minSize: 1                                # minimum size of auto scaling group of workers
-    maxSize: 10                               # maximum size of auto scaling group of workers
+  - instanceType: "m5.large"                 # AWS instance type for workers 
+    desiredCapacity: 4                       # initial capacity of auto scaling group of workers
+    minSize: 1                               # minimum size of auto scaling group of workers
+    maxSize: 10                              # maximum size of auto scaling group of workers
     name: ng
-    iam:
+    iam:                                     # AWS IAM policies to attach to the nodes in the cluster
       attachPolicyARNs:
       - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
       - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
@@ -406,77 +410,78 @@ that you want to enable:
 ```yaml
 
 pkgs:
-  amazon-cloudwatch:
+  amazon-cloudwatch:                         # AWS CloudWatch logging
     enabled: true
-  external-dns:
+  external-dns:                              # External DNS maintains DNS aliases to Amazon ELBs
     enabled: true
-  gloo:
+  gloo:                                      # Gloo provides the API Gateway 
     enabled: true
-  gloo-crds:
+  gloo-crds:                                 # Gloo CRDs define the Custom Resource Definitions
     enabled: true
-  prometheus-operator:
+  prometheus-operator:                       # Prometheus Operator creates Prometheus instances
     enabled: true
-  certmanager:
+  certmanager:                               # Certmanager issues TLS certificates
     enabled: true
-  cluster-autoscaler:
+  cluster-autoscaler:                        # Cluster autoscaler scales the nodes in the cluster as needed
     enabled: true
-  external-secrets:
+  external-secrets:                          # External secrets loads persisted secrets from AWS Secrets Manager
     enabled: true
-  reloader:
+  reloader:                                  # Reloader restarts services on secrets/configmap changes
     enabled: true
-  datadog:
+  datadog:                                   # Datadog send telemetry to the hosted Datadog service
     enabled: false
-  flux:
+  flux:                                      # Flux provides GitOps
     enabled: true
-  fluxcloud:
+  fluxcloud:                                 # Fluxcloud sends GitOps notifications to Slack
     enabled: false
-    username: "derrickburns"
-    secret: slack
-    #channel: foo
-  metrics-server:
+    username: "derrickburns"                 
+    secret: slack                            # Name of secret in which Slack webhook URL is provided
+    #channel: foo                            # Slack channel on which to post notifications
+  metrics-server:                            # Metrics server collects Node level metrics and sends to Prometheus
     enabled: true
-  sumologic:
+  sumologic:                                 # Sumologic collects metrics and logs and sents to the hosted service
     enabled: false
-  thanos:
+  thanos:                                    # Thanos aggregates telemetry from all Tidepool clusters
     enabled: true
-    bucket: tidepool-thanos
-    secret: thanos-objstore-config
+    bucket: tidepool-thanos                  # Writable S3 bucket in which to aggregate multi-cluster telemetry data
+    secret: thanos-objstore-config           # Name of Kubernetes secret in which Thanos config is stored.
 ```
 
 ### Tidepool Environment Configuration
-The last section allows you to configure the Tidepool environments that you 
-run in your cluster:
-```yaml
+The last section allows you to configure the Tidepool environments that you run in your cluster.
 
+
+```yaml
 environments:
   qa2:
     mongodb:
-      enabled: true
+      enabled: true                          # Whether to use an embedded mongodb 
     tidepool:
-      source: stg
+      source: stg                            # Where to get initial secrets from
       enabled: true
-      hpa:
+      hpa:                                   # Whether to implement horizontal pod scalers for each service
         enabled: true
-      nosqlclient:
+      nosqlclient:                           # Whether to deploy a nosqlclient to query Mongo data
         enabled: true
-      mongodb:
+      mongodb:                  
         enabled: true
-      gitops:
-        branch: develop
-      buckets: {}
-        #data: tidepool-test-qa2-data
-        #asset: tidepool-test-qa2-asset
+      gitops:                                
+        branch: develop                      # Which branch to use for automatic image updates
+      buckets: {}                            # Which S3 buckets to store/retrieve data to/from
+        #data: tidepool-test-qa2-data        # Name of the writable S3 bucket to store document data to
+        #asset: tidepool-test-qa2-asset      # Name of the readable S3 bucker form which to get email assets
       certificate:
-        secret: tls
-        issuer: letsencrypt-staging
+        secret: tls                          # Name of the K8s secret to store the TLS certificate for the hosts served
+        issuer: letsencrypt-staging          # Name of the Certificate Issuer to use
       gateway:
-        default:
-          protocol: http
+        default:                             # Default protocol to use for communication for email verification
+          protocol: http                
         http:
-          enabled: true
-          dnsNames:
-          - localhost
+          enabled: true                      # Whether to offer HTTP access
+          dnsNames:                          # DNS Names of the HTTP hosts to serve
+          - localhost                       
         https:
-          enabled: false
-          dnsNames: [qa2.tidepool.org]
+          enabled: false                     # Whether to offer HTTPS access
+          dnsNames:                          # DNS Names of the HTTPS hosts to serve
+          - qa2.tidepool.org
 ```
