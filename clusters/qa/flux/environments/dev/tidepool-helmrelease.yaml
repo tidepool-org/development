@@ -97,7 +97,7 @@ spec:
     messageapi:
       image: tidepool/message-api:develop-c5ac4c43231c33c2dca7485a88fe27ba64769a06
     auth:
-      image: tidepool/platform-auth:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
+      image: tidepool/platform-auth:develop-f273e4edfbcb3b3c25d8f933634c865847839476
     blob:
       bucket: tidepool-qa1-data
       image: tidepool/platform-blob:develop-e4fdd8bdb4da44456d05e19ef55ab2ed12fdc8db
