@@ -29,7 +29,7 @@ def mkdir_p(path):
  
 for value in input:
     if value != None and "kind" in value:
-        path = "%s/%s" % ( convert(value["kind"]), value["metadata"]["namespace"] if "namespace" in value["metadata"] else "none" )
+        path = "%s/%s" % ( convert(value["metadata"]["namespace"]) if "namespace" in value["metadata"] else "global", value["kind"]  )
         name = "%s.yaml" % value["metadata"]["name"]
         mkdir_p(path)
         print(path + "/" + name)

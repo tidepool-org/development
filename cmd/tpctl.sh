@@ -1046,7 +1046,7 @@ do
                 clone_remote
                 set_tools_dir
                 local cluster=$(get_cluster)
-                randomize_secrets | external_secret upsert $cluster encoded | separate_files
+                randomize_secrets | external_secret upsert $cluster encoded | separate_files | add_names
                 save_changes "Added random secrets"
                 ;;
         migrate_secrets)
