@@ -419,8 +419,7 @@ function template_files {
                 elif [ "${filename: -8}" == ".jsonnet" ]
                 then
                         add_file ${filename%.jsonnet}
-                        jsonnet --tla-code config="$config" $fullpath  >xxx
-                        cat xxx | yq r - > ${filename%.jsonnet}
+                        jsonnet --tla-code config="$config" $fullpath | yq r - > ${filename%.jsonnet}
                         expect_success "Templating failure $filename"
                 fi
         done
