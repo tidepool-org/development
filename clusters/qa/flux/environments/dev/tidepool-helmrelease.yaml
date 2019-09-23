@@ -110,14 +110,14 @@ spec:
       image: tidepool/platform-migrations:develop-9139822572a890eb372d19332d45093c0233cfea
     notification:
       enabled: false
-      image: tidepool/platform-notification:develop-f273e4edfbcb3b3c25d8f933634c865847839476
+      image: tidepool/platform-notification:develop-9139822572a890eb372d19332d45093c0233cfea
     task:
       image: tidepool/platform-task:develop-9139822572a890eb372d19332d45093c0233cfea
     tools:
       enabled: false
-      image: tidepool/platform-tools:develop-f273e4edfbcb3b3c25d8f933634c865847839476
+      image: tidepool/platform-tools:develop-9139822572a890eb372d19332d45093c0233cfea
     user:
-      image: tidepool/platform-user:develop-f273e4edfbcb3b3c25d8f933634c865847839476
+      image: tidepool/platform-user:develop-9139822572a890eb372d19332d45093c0233cfea
     seagull:
       image: tidepool/seagull:develop-3b61d504616e7af2c6e3a0d0a68ad602428b1036
     shoreline:
