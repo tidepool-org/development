@@ -3,8 +3,7 @@ ENV TERM xterm-256color
 ENV TZ America/Los_Angeles
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt update && apt upgrade && \
-    apt install nano wget python3-pip curl git openjdk-8-jdk -y && \
-    apt-get upgrade vim python3 build-essential curl file git locales jq expect -y && \
+    apt install nano wget python3-pip curl git openjdk-8-jdk vim python3 build-essential file locales jq expect -y && \
     pip3 install --upgrade --user awscli boto3
 RUN locale-gen en_US.UTF-8
 RUN wget https://github.com/databricks/sjsonnet/releases/download/0.1.6/sjsonnet.jar -O sjsonnet.jar && \
