@@ -762,6 +762,7 @@ function delete_cluster {
 
 # remove service mesh from cluster and config repo
 function remove_mesh {
+	export KUBECONFIG=$(realpath ./kubeconfig.yaml)
         start "removing linkerd"
         linkerd install --ignore-cluster | kubectl delete -f -
         rm -rf linkerd
