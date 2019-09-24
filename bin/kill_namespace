@@ -5,5 +5,5 @@ trap "rm -f $tmpfile" EXIT
 NAMESPACE=flux
 kubectl proxy &
 kubectl get namespace $NAMESPACE -o json |jq '.spec = {"finalizers":[]}' >$tmpfile
-curl -k -H "Content-Type: application/json" -X PUT --data-binary @temp.json 127.0.0.1:8001/api/v1/namespaces/$NAMESPACE/finalize
+curl -k -H "Content-Type: application/json" -X PUT --data-binary @$tempfile 127.0.0.1:8001/api/v1/namespaces/$NAMESPACE/finalize
 )
