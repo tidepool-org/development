@@ -1,0 +1,66 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: blip
+{{ include "charts.labels.standard" .}}
+  name: blip
+  namespace: {{.Release.Namespace}}
+spec:
+  selector:
+    matchLabels:
+      app: blip
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: blip
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+{{ if .Values.podAnnotations }}
+      annotations:
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
+    spec:
+      containers:
+      - image: "{{ .Values.deployment.image }}"
+{{ if .Values.command }}
+        command: {{ .Values.command }}
+{{- end }}
+{{ if .Values.args }}
+        args: {{ .Values.args }}
+{{- end }}
+        env:
+        - name: SKIP_HAKKEN
+          value: "true"
+{{ if .Values.webpackPublicPath }}
+        - name: WEBPACK_PUBLIC_PATH
+          value: {{ .Values.webpackPublicPath }}
+{{- end }}
+{{ if .Values.webpackDevTool }}
+        - name: WEBPACK_DEVTOOL
+          value: {{ .Values.webpackDevTool }}
+{{- end }}
+{{ if .Values.disableDevTools }}
+        - name: DEV_TOOLS
+          value: 'false'
+{{ end }}
+{{ if .Values.apiHost }}
+        - name: API_HOST
+          value: {{ .Values.apiHost }}
+{{- end }}
+        name: blip
+        ports:
+        - containerPort: {{.Values.global.ports.blip}}
+{{ range $key, $port := .Values.global.ports.viz }}
+        - containerPort: {{ $port }}
+{{- end }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+      restartPolicy: Always

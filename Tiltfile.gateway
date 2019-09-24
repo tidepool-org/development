@@ -1,0 +1,121 @@
+load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmOverridesFile', 'isShutdown')
+
+### Config Start ###
+tidepool_helm_overrides_file = getHelmOverridesFile()
+config = getConfig()
+watch_file(tidepool_helm_overrides_file)
+
+tidepool_helm_charts_version = config.get('tidepool_helm_charts_version')
+tidepool_helm_chart_dir = "./charts/tidepool/{}".format(tidepool_helm_charts_version)
+
+gloo_chart_dir = './local/charts'
+absolute_gloo_chart_dir = getAbsoluteDir(gloo_chart_dir)
+gloo_helm_template_cmd = 'helm template --name tilt-proxy --namespace default '
+
+is_shutdown = isShutdown()
+### Config End ###
+
+### Main Start ###
+def main():
+  if not is_shutdown:
+    extractGlooGatewayCharts()
+    provisionClusterRoleBindings()
+    provisionConfigMaps()
+
+  provisionGlooGateway()
+
+  # Back out of actual provisioning for debugging purposes by uncommenting below
+  # fail('NOT YET ;)')
+### Main End ###
+
+### Extract Gloo Charts Start ###
+def extractGlooGatewayCharts():
+  for chart in listdir('{}/charts'.format(tidepool_helm_chart_dir)):
+    if chart.find('gloo') >= 0:
+      local('mkdir -p {}'.format(absolute_gloo_chart_dir))
+      local('tar -xzf {} -C {}'.format(chart, absolute_gloo_chart_dir));
+### Extract Gloo Charts End ###
+
+### Cluster Role Bindings Start ###
+def provisionClusterRoleBindings():
+  serviceaccounts_filename_map = {
+    'apiserver-ui': 'apiserver-service-account',
+    'discovery': 'discovery-service-account',
+    'gateway': 'gateway-service-account',
+    'gateway-proxy': 'gateway-proxy-service-account',
+    'gloo': 'gloo-service-account',
+  }
+
+  gloo_templates = listdir('{}/gloo/templates'.format(absolute_gloo_chart_dir))
+
+  for serviceaccount in serviceaccounts_filename_map.keys():
+    createdServiceAccount = local('kubectl get serviceaccount {serviceaccount} --ignore-not-found'.format(
+      serviceaccount = serviceaccount
+    ))
+
+    if not createdServiceAccount:
+      for template in gloo_templates:
+        if template.find(serviceaccounts_filename_map[serviceaccount]) >= 0:
+          local('{templateCmd} -x {template} -f {overridesFile} {chartDir}/gloo | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+            chartDir=absolute_gloo_chart_dir,
+            templateCmd=gloo_helm_template_cmd,
+            overridesFile=tidepool_helm_overrides_file,
+            template=template,
+          ))
+
+    clusterrolebinding = local('kubectl get clusterrolebinding {serviceaccount}-admin --ignore-not-found'.format(
+      serviceaccount = serviceaccount
+    ))
+
+    if not clusterrolebinding:
+      local('kubectl create clusterrolebinding {serviceaccount}-admin --clusterrole cluster-admin --serviceaccount=default:{serviceaccount} --validate=0'.format(
+        serviceaccount = serviceaccount
+      ))
+### Cluster Role Bindings End ###
+
+### Config Maps Start ###
+def provisionConfigMaps():
+  configmaps_filename_map = {
+    'gateway-proxy': 'gateway-proxy-configmap',
+  }
+
+  required_configmaps = configmaps_filename_map.keys()
+
+  gloo_templates = listdir('{}/gloo/templates'.format(absolute_gloo_chart_dir))
+
+  # Skip configmaps already available on cluster
+  existing_configmaps = str(local("kubectl get --ignore-not-found configmaps -o=jsonpath='{.items[].metadata.name}'")).split()
+  for existing_configmap in existing_configmaps:
+    if ','.join(required_configmaps).find(existing_configmap) >= 0:
+      required_configmaps.remove(existing_configmap)
+
+  for configmap in required_configmaps:
+    for template in gloo_templates:
+      if template.find(configmaps_filename_map[configmap]) >= 0:
+        local('{templateCmd} -x {template} -f {overridesFile} {chartDir}/gloo | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+          chartDir=absolute_gloo_chart_dir,
+          templateCmd=gloo_helm_template_cmd,
+          overridesFile=tidepool_helm_overrides_file,
+          template=template,
+        ))
+### Config Maps End ###
+
+### Gloo Gateway Start ###
+def provisionGlooGateway():
+  for template in listdir('{}/gloo/templates'.format(absolute_gloo_chart_dir)):
+    if template.find('service-account') >= 0 or template.find('gateway-proxy-configmap') >= 0:
+      local('rm {}'.format(template))
+
+  k8s_yaml(local('{templateCmd} -f {overridesFile} {chartDir}/gloo'.format(
+    chartDir=absolute_gloo_chart_dir,
+    templateCmd=gloo_helm_template_cmd,
+    overridesFile=tidepool_helm_overrides_file,
+  )))
+
+  # Expose the gateway proxy on a host port
+  gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
+  k8s_resource('gateway-proxy-v2', port_forwards=gateway_port_forwards)
+### Gloo Gateway End ###
+
+# Unleash the beast
+main()

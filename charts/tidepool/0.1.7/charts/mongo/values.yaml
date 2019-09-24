@@ -1,0 +1,10 @@
+secret:
+  enabled: false
+  data_:
+    Scheme: ""
+    Addresses: ""
+    Username: ""
+    Password: ""
+    Database: ""
+    Tls: ""
+    OptParams: ""

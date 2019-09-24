@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: mongodb
+    helm.sh/chart: {{ include "charts.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  name: mongodb
+  namespace: {{.Release.Namespace}}
+spec:
+  selector:
+    matchLabels:
+      app: mongodb
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        app: mongodb
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      volumes:
+      - name: dump
+        emptyDir: {}
+      initContainers: # provide the data volume
+      - image: tidepool/mongoseed:init
+        name: seed-data
+        command: [ "/bin/sh" ]
+        args: [ "-c", "mkdir -p /input; cp -r /dump/* /input" ]
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /input
+          name: dump
+      - image: mongo:4.0
+        name: seeder
+        volumeMounts:
+        - mountPath: /dump
+          name: dump
+        command: [ "/bin/sh" ]
+        args: [ "-c", 'while ! mongo \"{{include "charts.mongo.connectionstring" .}}\" --eval "db.adminCommand(\"ping\")"; do sleep 3; done; mongorestore --uri \"{{include "charts.mongo.connectionstring" .}}\" /dump' ]
+      restartPolicy: Always
