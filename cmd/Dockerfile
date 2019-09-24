@@ -8,7 +8,6 @@ RUN apt update && apt upgrade && \
 RUN locale-gen en_US.UTF-8
 RUN curl -sL https://github.com/google/jsonnet/releases/download/v0.14.0/jsonnet-bin-v0.14.0-linux.tar.gz | tar xz -C /tmp && \ 
     mv /tmp/jsonnet /usr/local/bin
-#RUN curl -sL -o /usr/local/bin/jsonnet https://github.com/databricks/sjsonnet/releases/download/0.1.6/sjsonnet.jar
 RUN curl -sL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get && \
     bash get_helm.sh && \
     rm get_helm.sh
