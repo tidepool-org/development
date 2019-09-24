@@ -2,7 +2,7 @@
 #
 # Stop all services running in the current cluster
 #
-# Usage $0
+# Usage $0 [$environments]
 
 for env in $1
 do
