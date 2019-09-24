@@ -735,11 +735,11 @@ This is where it's nice to run [k9s](#monitor-kubernetes-state-with-k9s-optional
 
 ### Tilt K8s event reporting can be unreliable
 
-When Tilt is provisioning services, it polls the K8s server events to get the current state of a service, such as when a pod is initializing, running, crashed, etc.
+When Tilt is provisioning services, it polls the K8s server events to get the current state of a service, such as when a pod is pending, initializing, running, crashed, etc.
 
-Usually, this works just fine, but every now and then it stops sycning the K8s events properly.  This seems to occur most often on the first time starting the services where everything takes longer, and perhaps Tilt is timing out.
+Usually, this works just fine, but every now and then it stops sycning the K8s events properly. This seems to occur most often on the first time starting the services where everything takes longer, and perhaps Tilt is timing out.
 
-If your services are running properly (you can verify this by viewing the various service logs either in the Tilt UI, or via `tidepool logs [service]`, or `k9s`), you can simply ignore the state reporting in Tilt.  Otherwise, simply restarting the Tilt process (`ctrl-c` and then `tidepool start` again) should fix it.
+If your services are running properly, you can simply ignore the state reporting in Tilt. Otherwise, simply restarting the Tilt process (`ctrl-c` and then `tidepool start` again) should fix it.
 
 ### Tidepool Web becomes inaccessible
 
