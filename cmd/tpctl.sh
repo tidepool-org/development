@@ -807,7 +807,7 @@ function create_secrets_managed_policy {
         local cluster=$(get_cluster)
         local region=$(get_region)
         local stack_name=eksctl-${cluster}-external-secrets-managed-policy
-        aws cloudformation describe-stacks --stack-name $stack_name
+        aws cloudformation describe-stacks --stack-name $stack_name >/dev/null 2>&1
         if [ $? -ne 0 ]
         then
                 start "Creating IAM Managed Policy for secrets management for $cluster in region $region"
