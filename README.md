@@ -72,10 +72,24 @@ The Kubernetes command-line tool, [kubectl](https://kubernetes.io/docs/user-guid
 
 It's important to install a version that's at minimum up-to-date with the version of the Kubernetes server we're running (currently `1.15.1`). Please follow the [kubectl installation instructions](https://kubernetes.io/docs/tasks/tools/install-kubectl/) for your operating system.
 
+For reference, the following should work:
+
+```bash
+# MacOS
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.1/bin/darwin/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+
+# Linux
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.1/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+```
+
 After installation, you can ensure that your client version meets the minimum requirements by running:
 
 ```bash
-kubectl version --client
+kubectl version
 ```
 
 ## Install Helm
