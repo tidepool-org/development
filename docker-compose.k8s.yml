@@ -1,0 +1,12 @@
+version: '3'
+services:
+  server:
+    image: bsycorp/kind:v1.15.1
+    privileged: true
+    network_mode: bridge
+    ports:
+      - 8443:8443
+      - 10080:10080
+      - 2375:2375
+    volumes:
+      - ${TIDEPOOL_DOCKER_MONGO_VOLUME}:/data/db

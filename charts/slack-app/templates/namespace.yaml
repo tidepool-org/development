@@ -1,0 +1,9 @@
+{{ if .Values.namespace.create }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flux
+  labels:
+    istio-injection: disabled
+    linkerd.io/inject: disabled
+{{ end }}

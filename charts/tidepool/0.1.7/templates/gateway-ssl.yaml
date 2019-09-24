@@ -1,0 +1,34 @@
+apiVersion: gateway.solo.io.v2/v2
+kind: Gateway
+metadata:
+  annotations:
+    origin: default
+  name: gateway-ssl
+  namespace: {{ .Values.ingress.deployment.namespace | default "gloo-system" }}
+spec:
+  bindAddress: '::'
+  bindPort: 8443
+  httpGateway: {}
+  proxyNames:
+  - gateway-proxy-v2
+  ssl: true
+  useProxyProto: false
+  plugins:
+    accessLoggingService:
+      accessLog:
+      - fileSink:
+          path: /dev/stdout
+          jsonFormat:
+            duration: "%DURATION%"
+            response: "%RESPONSE_CODE%"
+            upstream: "%UPSTREAM_CLUSTER%"
+            startTime: "%START_TIME%"
+            authority: "%REQ(:authority)%"
+            scheme: "%REQ(:scheme)%"
+            path: "%REQ(:path)%"
+            method: "%REQ(:method)%"
+            token: "%REQ(x-tidepool-session-token)%"
+            request: "%REQ(x-tidepool-trace-request)%"
+            session: "%REQ(x-tidepool-trace-session)%"
+            content: "%REQ(content-type)%"
+            authorization: "%REQ(authorization)%"
