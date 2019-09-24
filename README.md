@@ -11,6 +11,7 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
 - [Initial Setup](#initial-setup)
   - [Install Docker](#install-docker)
   - [Install Docker Compose](#install-docker-compose)
+  - [Install Kubernetes Client](#install-kubernetes-client)
   - [Install Helm](#install-helm)
   - [Install Tilt](#install-tilt)
   - [Clone This Repository](#clone-this-repository)
@@ -64,6 +65,18 @@ Follow the appropriate link for your platform (Mac OSx or Linux recommended) at 
 We use [Docker Compose](https://docs.docker.com/compose/) to run a local Kubernetes cluster within Docker. There are a number of _Kubernetes-in-Docker_ solutions available, but the one we've settled on as offering the best all-around fit for local development is [bsycorp/kind](https://github.com/bsycorp/kind/).
 
 If you installed Docker Desktop, the `docker-compose` tool will have been automatically installed with it.  If you installed Docker on Linux, you'll need to download the binary by following the [Docker Compose Installation Instructions](https://docs.docker.com/compose/install/#install-compose)
+
+## Install Kubernetes Client
+
+The Kubernetes command-line tool, [kubectl](https://kubernetes.io/docs/user-guide/kubectl/), allows you to run commands against Kubernetes clusters.
+
+It's important to install a version that's at minimum up-to-date with the version of the Kubernetes server we're running (currently `1.15.1`). Please follow the [kubectl installation instructions](https://kubernetes.io/docs/tasks/tools/install-kubectl/) for your operating system.
+
+After installation, you can ensure that your client version meets the minimum requirements by running:
+
+```bash
+kubectl version --client
+```
 
 ## Install Helm
 
@@ -709,6 +722,24 @@ Stay Tuned :)
 | `tidepool start` hangs at "Preparing gateway services... | NOTE: It's normal for this to take a few minutes the first time you run this. Otherwise, check to see if gloo gateway pods are still provisioning in [k9s](#monitor-kubernetes-state-with-k9s-optional), and if so, wait, else cancel the `tidepool start` process and re-run it |
 
 ## Known Issues
+
+### Tilt UI errors on service(s), but shows `Running` status
+
+As long as your Tidepool services are working properly for you, you can likely ignore these errors.
+
+When a container is started, there may be initial errors while it waits for other services to be ready. Kubernetes should get everything up and running eventually, but the Tilt UI will not remove the error messages that occured on the initial attempts.
+
+This is where it's nice to run [k9s](#monitor-kubernetes-state-with-k9s-optional) alongside Tilt, as it reports the current service states accurately.
+
+**NOTE:** You can highlight any service in the Tilt UI and hit `2` to see the build logs for the service, and `3` to view the runtime logs, which can be helpful in assessing the current state.  The log pane in the UI is quite small by default, but hitting `x` will cycle through the various sizes available, up to full-height.
+
+### Tilt K8s event reporting can be unreliable
+
+When Tilt is provisioning services, it polls the K8s server events to get the current state of a service, such as when a pod is initializing, running, crashed, etc.
+
+Usually, this works just fine, but every now and then it stops sycning the K8s events properly.  This seems to occur most often on the first time starting the services where everything takes longer, and perhaps Tilt is timing out.
+
+If your services are running properly (you can verify this by viewing the various service logs either in the Tilt UI, or via `tidepool logs [service]`, or `k9s`), you can simply ignore the state reporting in Tilt.  Otherwise, simply restarting the Tilt process (`ctrl-c` and then `tidepool start` again) should fix it.
 
 ### Tidepool Web becomes inaccessible
 
