@@ -26,15 +26,23 @@ Execute the following to create a file called `tpctl` and to make it executable:
 ```bash
 cat <<! >tpctl
 #!/bin/bash
-mkdir -p ~/.helm
+
+HELM_HOME=${HELM_HOME:-~/.helm}
+GITHUB_ID=${GITHUB_ID:-~/.ssh/id_rsa}
+KUBE_CONFIG=${KUBECONFIG:-~/.kube/config}
+AWS_CONFIG=${AWS_CONFIG:-~/.aws}
+GIT_CONFIG=${GIT_CONFIG:-~/.gitconfig}
+
+mkdir -p $HELM_HOME
+
 docker run -it \
 -e REMOTE_REPO=${REMOTE_REPO} \
 -e GITHUB_TOKEN=${GITHUB_TOKEN} \
--v ~/.ssh:/root/.ssh:ro  \
--v ~/.aws:/root/.aws \
--v ~/.kube:/root/.kube \
--v ~/.helm:/root/.helm \
--v ~/.gitconfig:/root/.gitconfig \
+-v ${HELM_HOME}:/root/.helm \
+-v ${GITHUB_ID}:/root/.ssh/id_rsa \
+-v ${AWS_CONFIG}:/root/.aws \
+-v ${KUBE_CONFIG}:/root/.kube/config \
+-v ${GIT_CONFIG}:/root/.gitconfig \
 tidepool/tpctl /root/tpctl $*
 !
 chmod +x tpctl
@@ -49,24 +57,21 @@ cd development/cmd
 
 Thereafter, you may use the `tpctl` script provided.
 
-## Execution Environment
-
-Most of the operations of `tpctl` either use or manipulate a GitHub repository.  You may use `tpctl` to configure an existing GitHub repository.  To do so, provide the name of the repository as the *full name* (including "git@"):
-
-```bash
-export REMOTE_REPO=git@github.org:tidepool-org/cluster-test1 
-```
-
-Alternatively, if you have not already created a GitHub repository you may create one using `tpctl`:
-```bash
-tpctl repo
-```
-
 ## Authentication
 
 `tpctl` interacts with several external services on your behalf.  `tpctl` must authenticate itself.
 
-To do so, `tpctl` must access your credentials stored on your local machine.  This explains the need for the numerous directories that are mounted into the Docker container.  We explain these in detail below. If the assumptions we make are incorrect for your environment, please amend the file accordingly.
+To do so, `tpctl` must access your credentials stored on your local machine.  This explains the need for the numerous directories that are mounted into the Docker container.  
+
+We explain these in detail below. If the assumptions we make are incorrect for your environment, you may set the environment variables used in the file to match your environment:
+
+```bash
+HELM_HOME=${HELM_HOME:-~/.helm}          
+GITHUB_ID=${GITHUB_ID:-~/.ssh/id_rsa}
+KUBE_CONFIG=${KUBECONFIG:-~/.kube/config}
+AWS_CONFIG=${AWS_CONFIG:-~/.aws}
+GIT_CONFIG=${GIT_CONFIG:-~/.gitconfig}
+```
 
 ### GitHub 
 In order to update your Git configuration repo with the tags of new versions of Docker images that you use, you must provide a [GitHub personal access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) that provides
@@ -107,10 +112,36 @@ In order to make Git commits, `tpctl` needs your Git username and email. This is
 ```    
 `tpctl` mounts that file.
 
+Check your `~/.gitconfig`.  It must have entries for `email` and `name` such as:
+```ini
+[user]
+	email = derrick@tidepool.org
+	name = Derrick Burns
+```
+If it does not, then add them by running this locally:
+
+```bash
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+```   
+
 ### SSH
 In order to clone private repos in your organization, `tpctl` needs access to your GitHub public key.  This is typically stored in:
 ```
 ~/.ssh/id_rsa
+```
+
+## Execution Environment
+
+Most of the operations of `tpctl` either use or manipulate a GitHub repository.  You may use `tpctl` to configure an existing GitHub repository.  To do so, provide the name of the repository as the *full name* (including `git@`):
+
+```bash
+export REMOTE_REPO=git@github.org:tidepool-org/cluster-test1 
+```
+
+Alternatively, if you have not already created a GitHub repository you may create one using `tpctl`:
+```bash
+tpctl repo
 ```
 
 ## Basic Usage

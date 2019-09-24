@@ -498,9 +498,11 @@ function save_changes {
         establish_ssh
         start "saving changes to config repo"
         git add .
+        complete "added changes to config repo"
         git commit -m "$1"
+        complete "committed changes to config repo"
         git push
-        complete "saved changes to config repo"
+        complete "pushed changes to config repo"
 }
 
 # confirm cluster exists or exist
