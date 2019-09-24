@@ -1,6 +1,0 @@
-enabled: true
-chart:
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  name: kube-state-metrics
-  version: 2.2.1
-        
