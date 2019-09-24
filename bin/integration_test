@@ -61,7 +61,7 @@ TMPDIR=$(mktemp -d "./zombie.XXXXXXXXX")
 trap -- "rm -rf ${TMPDIR}" EXIT
 
 # The Tidpool API key for GhostInspector
-GHOST_API_KEY=1d903bbbe266b0b560b80a5dff6659cfdf8aec8f
+#GHOST_API_KEY=....
 
 # The URL of the test runner
 TESTURL="https://api.ghostinspector.com/v1/suites/$GHOST_SUITE_ID/execute/?apiKey=$GHOST_API_KEY&startUrl=${CLUSTER_URL}"
