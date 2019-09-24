@@ -2,7 +2,7 @@
 #
 # create a github repo 
 #
-
+# Usage: $0 $REPO $ORGANIZATION
 
 mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
 cd $mytmpdir
