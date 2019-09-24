@@ -598,6 +598,7 @@ function update_flux {
 
 # create service mesh
 function make_mesh {
+	export KUBECONFIG=$(realpath ./kubeconfig.yaml)
         linkerd check --pre
         expect_success "Failed linkerd pre-check."
         start "installing mesh"
