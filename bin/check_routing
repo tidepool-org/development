@@ -15,7 +15,7 @@ mismatch=false
 for host in $hosts
 do
    current=$(echo $recordSets | jq ".ResourceRecordSets[] | select(.Name==\"${host}.\") | .AliasTarget.DNSName" |sed  -e 's#\"##g' -e 's#\.$##' )
-   if [ "$current" == "" ]
+   if [ -z "$current" ]
    then
 	  echo "Host $host is NOT being routed."
 	  mismatch=true
