@@ -6,7 +6,7 @@
 
 for env in $1
 do
-  echo "shutting down environment env"
+  echo "shutting down environment $env"
   helm delete ${env}-tidepool
 done
 
