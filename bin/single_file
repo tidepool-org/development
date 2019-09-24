@@ -3,7 +3,7 @@
 # Generate a single file from a yaml map whose keys are the file names and the values are the file contents
 # Optionally add a header and footer
 #
-# Usage: $0 $header $footer
+# Usage: $0 [$header] [$footer]
 
 import yaml
 import sys
