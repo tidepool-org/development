@@ -1,9 +1,0 @@
-enabled: true
-chart:
-  repository: https://storage.googleapis.com/solo-public-helm/
-  name: gloo
-  version: "0.18.12"
-crds:
-  create: true
-discovery:
-  fdsMode: WHITELIST

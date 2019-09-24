@@ -1,5 +1,0 @@
-enabled: true
-chart:
-  git: git@github.com:stakater/Reloader
-  path: deployments/kubernetes/chart/reloader
-  ref: master
