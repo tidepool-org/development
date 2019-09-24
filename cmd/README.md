@@ -50,7 +50,7 @@ Thereafter, you may use the `tpctl` script provided.
 
 ## Execution Environment
 
-Most of the operations of `tpctl` either use or manipulate a GitHub repository.  You may use `tpctl` to configure an existing GitHub repository.  To do so, provide the name of the repository:
+Most of the operations of `tpctl` either use or manipulate a GitHub repository.  You may use `tpctl` to configure an existing GitHub repository.  To do so, provide the name of the repository as the *full name* (including "git@"):
 
 ```bash
 export REMOTE_REPO=git@github.org:tidepool-org/cluster-test1 
