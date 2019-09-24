@@ -26,6 +26,7 @@ Execute the following to create a file called `tpctl` and to make it executable:
 ```bash
 cat <<! >tpctl
 #!/bin/bash
+mkdir -p ~/.helm
 docker run -it \
 -e REMOTE_REPO=${REMOTE_REPO} \
 -e GITHUB_TOKEN=${GITHUB_TOKEN} \

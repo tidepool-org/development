@@ -1,4 +1,5 @@
 #!/bin/sh
+mkdir -p ~/.helm
 docker run -it \
 -e REMOTE_REPO=${REMOTE_REPO} \
 -e GITHUB_TOKEN=${GITHUB_TOKEN} \
