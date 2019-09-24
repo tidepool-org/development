@@ -11,6 +11,7 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
 - [Initial Setup](#initial-setup)
   - [Install Docker](#install-docker)
   - [Install Docker Compose](#install-docker-compose)
+  - [Install Kubernetes Client](#install-kubernetes-client)
   - [Install Helm](#install-helm)
   - [Install Tilt](#install-tilt)
   - [Clone This Repository](#clone-this-repository)
@@ -65,6 +66,32 @@ We use [Docker Compose](https://docs.docker.com/compose/) to run a local Kuberne
 
 If you installed Docker Desktop, the `docker-compose` tool will have been automatically installed with it.  If you installed Docker on Linux, you'll need to download the binary by following the [Docker Compose Installation Instructions](https://docs.docker.com/compose/install/#install-compose)
 
+## Install Kubernetes Client
+
+The Kubernetes command-line tool, [kubectl](https://kubernetes.io/docs/user-guide/kubectl/), allows you to run commands against Kubernetes clusters.
+
+It's important to install a version that's at minimum up-to-date with the version of the Kubernetes server we're running (currently `1.15.1`). Please follow the [kubectl installation instructions](https://kubernetes.io/docs/tasks/tools/install-kubectl/) for your operating system.
+
+For reference, the following should work:
+
+```bash
+# MacOS
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.1/bin/darwin/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+
+# Linux
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.1/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+```
+
+After installation, you can ensure that your client version meets the minimum requirements by running:
+
+```bash
+kubectl version
+```
+
 ## Install Helm
 
 The Tidepool services (and supporting services such as the [MongoDB](https://www.mongodb.com/) database and the [Gloo Gateway](https://gloo.solo.io/) for routing requests) are defined by [Helm](https://helm.sh/) templates, which the `helm` tool uses to convert into manifests that can be applied to the our local [Kubernetes](https://kubernetes.io/) (K8s) cluster.
@@ -77,14 +104,14 @@ Managing a K8s cluster can be very challenging, and even more so when using one 
 
 By using our Tilt setup, developers can very easily run a live-reloading instance of any of our frontend or backend services without needing to directly use or understand Helm or Kubernetes. All that's needed is uncommenting a couple of lines in a `Tiltconfig.yaml` file, and updating the local paths to where the developer has checked out the respective git repo, if different than the default defined in the config.
 
-**IMPORTANT NOTE:** We currently run against version `v0.10.7` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
+**IMPORTANT NOTE:** We currently run against version `v0.10.8` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
 
 ```bash
 # MacOS
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.10.7/tilt.0.10.7.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.10.8/tilt.0.10.8.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 
 # Linux
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.10.7/tilt.0.10.7.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.10.8/tilt.0.10.8.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 ```
 
 After installing Tilt, you can verify the correct version by typing `tilt version` in your terminal.
@@ -292,9 +319,9 @@ tidepool verify-account-email [user-email-address]
 
 To upload diabetes device data to your local Tidepool, first make sure the [Tidepool Uploader](https://tidepool.org/products/tidepool-uploader) is installed on your computer. Follow the directions at https://tidepool.org/products/tidepool-uploader.
 
-After installing and launching the Tidepool Uploader, _but before logging in_, right-click on the "Log In" button. From the popup menu displayed, first select "Change server" and then select "Local". This directs the Tidepool Uploader to upload data to the running local Tidepool rather than our production servers. Then, login to the Tidepool Uploader using the account just created.
+After installing and launching the Tidepool Uploader, _but before logging in_, right-click on the "Log In" button. From the popup menu displayed, first select "Change server" and then select "localhost". This directs the Tidepool Uploader to upload data to the running local Tidepool rather than our production servers. Then, login to the Tidepool Uploader using the account just created.
 
-NOTE: If you wish to upload to our official, production Tidepool later, you'll have to repeat these instructions, but select the "Production" server instead. Please do not use any server other than "Local" or "Production", unless explicitly instructed to do so by Tidepool staff.
+NOTE: If you wish to upload to our official, production Tidepool later, you'll have to repeat these instructions, but select the "Production" server instead. Please do not use any server other than "localhost" or "Production", unless explicitly instructed to do so by Tidepool staff.
 
 ## Data Retention
 
@@ -709,6 +736,24 @@ Stay Tuned :)
 | `tidepool start` hangs at "Preparing gateway services... | NOTE: It's normal for this to take a few minutes the first time you run this. Otherwise, check to see if gloo gateway pods are still provisioning in [k9s](#monitor-kubernetes-state-with-k9s-optional), and if so, wait, else cancel the `tidepool start` process and re-run it |
 
 ## Known Issues
+
+### Tilt UI errors on service(s), but shows `Running` status
+
+As long as your Tidepool services are working properly for you, you can likely ignore these errors.
+
+When a container is started, there may be initial errors while it waits for other services to be ready. Kubernetes should get everything up and running eventually, but the Tilt UI will not remove the error messages that occured on the initial attempts.
+
+This is where it's nice to run [k9s](#monitor-kubernetes-state-with-k9s-optional) alongside Tilt, as it reports the current service states accurately.
+
+**NOTE:** You can highlight any service in the Tilt UI and hit `2` to see the build logs for the service, and `3` to view the runtime logs, which can be helpful in assessing the current state.  The log pane in the UI is quite small by default, but hitting `x` will cycle through the various sizes available, up to full-height.
+
+### Tilt K8s event reporting can be unreliable
+
+When Tilt is provisioning services, it polls the K8s server events to get the current state of a service, such as when a pod is pending, initializing, running, crashed, etc.
+
+Usually, this works just fine, but every now and then it stops sycning the K8s events properly. This seems to occur most often on the first time starting the services where everything takes longer, and perhaps Tilt is timing out.
+
+If your services are running properly, you can simply ignore the state reporting in Tilt. Otherwise, simply restarting the Tilt process (`ctrl-c` and then `tidepool start` again) should fix it.
 
 ### Tidepool Web becomes inaccessible
 
