@@ -138,7 +138,24 @@ Though not strictly necessary, we recommend that you manage your local Tidepool 
 
 Most of this documentation will assume you've chosen to install the helper script, but we do have some Quick Start instructions for [managing the stack without the helper script](#without-the-tidepool-helper-script) for those who prefer to manage all the components directly.
 
-You can run the script from the root directory of this repo from your terminal with:
+
+* `TIDEPOOL_DOCKER_SERVER_SECRET`
+* `TIDEPOOL_DOCKER_SERVICE_PROVIDER_DEXCOM_STATE_SALT`
+* `TIDEPOOL_DOCKER_GATEKEEPER_SECRET`
+* `TIDEPOOL_DOCKER_HIGHWATER_SALT`
+* `TIDEPOOL_DOCKER_JELLYFISH_SALT`
+* `TIDEPOOL_DOCKER_PLATFORM_AUTH_SERVICE_SECRET`
+* `TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_SECRET`
+* `TIDEPOOL_DOCKER_PLATFORM_DATA_SERVICE_SECRET`
+* `TIDEPOOL_DOCKER_PLATFORM_IMAGE_SERVICE_SECRET`
+* `TIDEPOOL_DOCKER_PLATFORM_NOTIFICATION_SERVICE_SECRET`
+* `TIDEPOOL_DOCKER_PLATFORM_TASK_SERVICE_SECRET`
+* `TIDEPOOL_DOCKER_PLATFORM_USER_SERVICE_SECRET`
+* `TIDEPOOL_DOCKER_SEAGULL_SALT`
+* `TIDEPOOL_DOCKER_SHORELINE_API_SECRET`
+* `TIDEPOOL_DOCKER_SHORELINE_LONG_TERM_KEY`
+* `TIDEPOOL_DOCKER_SHORELINE_SALT`
+* `TIDEPOOL_DOCKER_SHORELINE_VERIFICATION_SECRET` - should always start with "`+`"
 
 ```bash
 # Show the help text (run from the root of this repo)
@@ -236,9 +253,35 @@ docker-compose -f 'docker-compose.k8s.yml' up -d
 
 ### Retrieve and store the Kubernetes server config
 
-We need to save the Kubernetes server config to ~/.kube/config. This is only required after the initial server start provisioning.
+| Repository Name                                                  | Docker Container Name (`<docker-container-name>`) | Description                     | Language                       | Git Clone URL (`<git-clone-url>`)                  | Default Clone Directory (`<default-clone-directory>`)     |
+| ---------------------------------------------------------------- | ------------------------------------------------- | ------------------------------- | ------------------------------ | -------------------------------------------------- | --------------------------------------------------------- |
+| [blip](https://github.com/tidepool-org/blip)                     | blip                                              | Web (ie. http://localhost:3000) | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/blip.git           | blip                                                      |
+| [export](https://github.com/tidepool-org/export)                 | export                                            | Export                          | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/export.git         | export                                                    |
+| [gatekeeper](https://github.com/tidepool-org/gatekeeper)         | gatekeeper                                        | Permissions                     | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/gatekeeper.git     | gatekeeper                                                |
+| [hakken](https://github.com/tidepool-org/hakken)                 | hakken                                            | Discovery                       | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/hakken.git         | hakken                                                    |
+| [highwater](https://github.com/tidepool-org/highwater)           | highwater                                         | Metrics                         | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/highwater.git      | highwater                                                 |
+| [hydrophone](https://github.com/tidepool-org/hydrophone)         | hydrophone                                        | Email, Invitations              | [Golang](https://golang.org/)  | https://github.com/tidepool-org/hydrophone.git     | hydrophone/src/github.com/tidepool-org/hydrophone         |
+| [jellyfish](https://github.com/tidepool-org/jellyfish)           | jellyfish                                         | Data Ingestion [LEGACY]         | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/jellyfish.git      | jellyfish                                                 |
+| [message-api](https://github.com/tidepool-org/message-api)       | message-api                                       | Notes                           | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/message-api.git    | message-api                                               |
+| [platform](https://github.com/tidepool-org/platform)             | (see below)                                       | (see below)                     | [Golang](https://golang.org/)  | https://github.com/tidepool-org/platform.git       | platform/src/github.com/tidepool-org/platform             |
+| [seagull](https://github.com/tidepool-org/seagull)               | seagull                                           | Metadata                        | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/seagull.git        | seagull                                                   |
+| [shoreline](https://github.com/tidepool-org/shoreline)           | shoreline                                         | Authentication                  | [Golang](https://golang.org/)  | https://github.com/tidepool-org/shoreline.git      | shoreline/src/github.com/tidepool-org/shoreline           |
+| [styx](https://github.com/tidepool-org/styx)                     | styx                                              | Router                          | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/styx.git           | styx                                                      |
+| [tide-whisperer](https://github.com/tidepool-org/tide-whisperer) | tide-whisperer                                    | Download                        | [Golang](https://golang.org/)  | https://github.com/tidepool-org/tide-whisperer.git | tide-whisperer/src/github.com/tidepool-org/tide-whisperer |
 
-First, we need to confirm server has completely started by tailing the server logs:
+Please note that the `platform` repository actually contains source code for multiple Docker containers, specifically:
+
+| Docker Container Name | Description                      |
+| --------------------- | -------------------------------- |
+| platform-auth         | Authentication                   |
+| platform-blob         | Blob Storage                     |
+| platform-data         | Data Ingestion (next generation) |
+| platform-image        | Images                           |
+| platform-migrations   | Database Migrations              |
+| platform-notification | Notifications (TBD)              |
+| platform-task         | Background Jobs                  |
+| platform-tools        | Tools, Utilities                 |
+| platform-user         | Users                            |
 
 ```bash
 docker-compose -f 'docker-compose.k8s.yml' logs -f server
@@ -436,7 +479,30 @@ If you wish to build and run one or more Docker images locally using the latest-
 
 First, you'll need to clone the GitHub repository you are interested in to your computer.
 
-You can choose from the following active repositories:
+
+### Using development images
+
+The `blip` service image uses a multistage Dockerfile to allow the option of building development environment images or minimal production-ready images from the same file.
+
+By default, the production-ready image is pulled.
+
+If you need to develop this repo, you need to ensure that you are pulling and running the image with the `develop` tag to be able to run yarn commands and unit tests, package linking, and other development tasks.
+
+```bash
+  blip:
+    image: tidepool/blip
+  # ...
+```
+
+becomes
+
+```bash
+  blip:
+    image: tidepool/blip:develop
+  # ...
+```
+
+### Mounting Local Volumes
 
 | Repository Name                                                  | Docker Container Name (`<docker-container-name>`) | Description                     | Language                       | Git Clone URL (`<git-clone-url>`)                  | Default Clone Directory (`<default-clone-directory>`)     |
 | ---------------------------------------------------------------- | ------------------------------------------------- | ------------------------------- | ------------------------------ | -------------------------------------------------- | --------------------------------------------------------- |
@@ -466,7 +532,24 @@ Please note that the `platform` repository actually contains source code for mul
 
 NOTE: The Golang repositories include the extra-long directory hierarchy to ensure a unique, valid GOPATH. Read more about [Golang](https://golang.org/) and [GOPATH](https://golang.org/doc/code.html) for details.
 
-Choose one of the above repositories and clone locally using the following command. Replace `<git-clone-url>` with the appropriate Git Clone URL from the above table. Replace `<default-clone-directory>` with the appropriate Default Clone Directory from the above table.
+```bash
+  blip:
+    image: tidepool/blip:develop
+    depends_on:
+      - hakken
+    # build:
+    #   context: ${TIDEPOOL_DOCKER_BLIP_DIR}
+    #   target: 'develop'
+    volumes:
+      - ${TIDEPOOL_DOCKER_BLIP_DIR}:/app:cached
+      - /app/node_modules
+      - /app/dist
+      # - ${TIDEPOOL_DOCKER_PLATFORM_CLIENT_DIR}:/tidepool-platform-client:cached
+      # - /tidepool-platform-client/node_modules
+      # - ${TIDEPOOL_DOCKER_TIDELINE_DIR}:/tideline:cached
+      # - /tideline/node_modules
+      # - ${TIDEPOOL_DOCKER_VIZ_DIR}:/@tidepool/viz:cached
+      # - viz-dist:/@tidepool/viz/dist:ro
 
 ```bash
 git clone <git-clone-url> <default-clone-directory>
@@ -656,6 +739,30 @@ blip:
       enabled: false # Set from true back to false
   # ...
 ```
+### Troubleshooting Webpack Dev Server issues in blip or viz with Docker For Mac
+
+From time to time, the Webpack Dev Server started by the `blip` or `viz` npm `start` scripts will stop detecting file changes, which will stop the live recompiling.  It is unclear why this occurs, but the following steps seem to fix it:
+
+Examples for `blip`.  Simply replace with `viz` as needed.
+
+```bash
+# First, try a simple restart of the service
+docker-compose restart blip
+
+# This will often do it.  If not, try bringing down the full stack and restarting
+docker-compose down
+docker-compose up
+
+# If this doesn't work, try restarting Docker For Mac and bring up the stack as per ussual.
+# On very rare occasions, there is a corrupted volume mount.
+# To fix this, remove the container and it's volumes, and restart the service
+docker-compose rm -fsv blip
+docker-compose up blip
+```
+
+# Tidepool Helper Script
+
+Included in the `bin` directory of this repo is a bash script named `tidepool_docker`.
 
 ## Working With Yarn For NodeJS Services
 
@@ -683,7 +790,22 @@ exit
 
 This is overkill when just doing a simple command (streamlined alternative outlined below), but it's very hand when you need to perform multiple operations or simply poke around the container's file system.
 
-Because issuing yarn commands is such a common process for our NodeJS services, we have a `tidepool` helper specifically for that:
+
+| Command                       | Description                                                                                                                                                         |
+|-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `up [service]`                | start and/or (re)build the entire tidepool stack or the specified service                                                                                           |
+| `down`                        | shut down and remove the entire tidepool stack                                                                                                                      |
+| `stop`                        | shut down the entire tidepool stack or the specified service                                                                                                        |
+| `rm [service]`                | stops and removes containers and volumes for the entire tidepool stack or the specified service                                                                     |
+| `restart [service]`           | restart the entire tidepool stack or the specified service                                                                                                          |
+| `pull [service]`              | pull the latest images for the entire tidepool stack or the specified service                                                                                       |
+| `logs [service]`              | tail logs for the entire tidepool stack or the specified service                                                                                                    |
+| `rebuild [service]`           | rebuild and run image for all services in the tidepool stack or the specified service                                                                               |
+| `exec service [...cmds]`      | run arbitrary shell commands in the currently running service container                                                                                             |
+| `link node_service package`   | yarn link a mounted package and restart the Node.js service (package must be mounted into a root directory that matches it's name)                                  |
+| `unlink node_service package` | yarn unlink a mounted package, reinstall the remote package, and restart the Node.js service (package must be mounted into a root directory that matches it's name) |
+| `yarn node_service [...cmds]` | shortcut to run yarn commands against the specified Node.js service                                                                                                 |
+| `help`                        | show more detailed usage text than what's listed here                                                                                                               |
 
 ```bash
 # Examples (from your local terminal)
@@ -710,6 +832,30 @@ To persist updates to your `yarn.lock` (or `package-lock.json` in some repos) an
 
 This will allow your changes to be tracked properly in version control, and Tilt is configured to recognize when a `yarn.lock` or `package-lock.json` file changes and will automatically run `yarn install` for you in the service container (so you don't have to do it in 2 places).
 
+
+| Service                                                           | Standard Port(s)       |
+| ----------------------------------------------------------------- | ---------------------- |
+| [blip](https://github.com/tidepool-org/blip)                      | N/A (see below)        |
+| [export](https://github.com/tidepool-org/export)                  | 9300                   |
+| [gatekeeper](https://github.com/tidepool-org/gatekeeper)          | 9123                   |
+| [hakken](https://github.com/tidepool-org/hakken)                  | 8000                   |
+| [highwater](https://github.com/tidepool-org/highwater)            | 9191                   |
+| [hydrophone](https://github.com/tidepool-org/hydrophone)          | 9157                   |
+| [jellyfish](https://github.com/tidepool-org/jellyfish)            | 9122                   |
+| [message-api](https://github.com/tidepool-org/message-api)        | 9119                   |
+| [platform-auth](https://github.com/tidepool-org/platform)         | 9222                   |
+| [platform-blob](https://github.com/tidepool-org/platform)         | 9225                   |
+| [platform-data](https://github.com/tidepool-org/platform)         | 9220                   |
+| [platform-image](https://github.com/tidepool-org/platform)        | 9226                   |
+| [platform-migrations](https://github.com/tidepool-org/platform)   | N/A (see below)        |
+| [platform-notification](https://github.com/tidepool-org/platform) | 9223                   |
+| [platform-task](https://github.com/tidepool-org/platform)         | 9224                   |
+| [platform-tools](https://github.com/tidepool-org/platform)        | N/A (see below)        |
+| [platform-user](https://github.com/tidepool-org/platform)         | 9221                   |
+| [seagull](https://github.com/tidepool-org/seagull)                | 9120                   |
+| [shoreline](https://github.com/tidepool-org/shoreline)            | 9107                   |
+| [styx](https://github.com/tidepool-org/styx)                      | 8009, 8010 (see below) |
+| [tide-whisperer](https://github.com/tidepool-org/tide-whisperer)  | 9127                   |
 
 [[back to top]](#welcome)
 
