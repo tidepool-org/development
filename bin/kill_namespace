@@ -1,4 +1,7 @@
 (
+tmpfile=$(mktemp)
+trap "rm -f $tmpfile" EXIT
+
 NAMESPACE=flux
 kubectl proxy &
 kubectl get namespace $NAMESPACE -o json |jq '.spec = {"finalizers":[]}' >temp.json
