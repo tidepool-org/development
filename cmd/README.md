@@ -6,7 +6,6 @@ in a HIPAA compliant way.
 You need Docker to run `tpctl`. 
 We package `tpctl` in a Docker container to ensure that it can be run in any environment.  Please install Docker on your local machine.
 
-You’ll need repo scope to access private repositories.
 
 You also need an AWS account with an identity that has the right:
 * to create a Kubernetes cluster in EKS, 
@@ -77,8 +76,7 @@ GIT_CONFIG=${GIT_CONFIG:-~/.gitconfig}
 ```
 
 ### GitHub 
-In order to update your Git configuration repo with the tags of new versions of Docker images that you use, you must provide a [GitHub personal access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) that provides
-write access to the GitHub configuration repository:
+In order to update your Git configuration repo with the tags of new versions of Docker images that you use, you must provide a [GitHub personal access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) with repo scope to access private repositories.
 
 ```bash
 export GITHUB_TOKEN=....
