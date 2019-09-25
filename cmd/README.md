@@ -35,7 +35,7 @@ GIT_CONFIG=\${GIT_CONFIG:-~/.gitconfig}
 
 mkdir -p \$HELM_HOME
 
-docker run -it \
+docker run --rm -it \
 -e REMOTE_REPO=\${REMOTE_REPO} \
 -e GITHUB_TOKEN=\${GITHUB_TOKEN} \
 -v \${HELM_HOME}:/root/.helm \
