@@ -43,7 +43,7 @@ docker run --rm -it \
 -v \${AWS_CONFIG}:/root/.aws \
 -v \${KUBE_CONFIG}:/root/.kube/config \
 -v \${GIT_CONFIG}:/root/.gitconfig \
-tidepool/tpctl /root/tpctl $*
+tidepool/tpctl /root/tpctl \$*
 !
 chmod +x tpctl
 ```
