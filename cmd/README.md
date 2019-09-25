@@ -27,22 +27,22 @@ Execute the following to create a file called `tpctl` and to make it executable:
 cat <<! >tpctl
 #!/bin/bash
 
-HELM_HOME=${HELM_HOME:-~/.helm}
-GITHUB_ID=${GITHUB_ID:-~/.ssh/id_rsa}
-KUBE_CONFIG=${KUBECONFIG:-~/.kube/config}
-AWS_CONFIG=${AWS_CONFIG:-~/.aws}
-GIT_CONFIG=${GIT_CONFIG:-~/.gitconfig}
+HELM_HOME=\${HELM_HOME:-~/.helm}
+GITHUB_ID=\${GITHUB_ID:-~/.ssh/id_rsa}
+KUBE_CONFIG=\${KUBECONFIG:-~/.kube/config}
+AWS_CONFIG=\${AWS_CONFIG:-~/.aws}
+GIT_CONFIG=\${GIT_CONFIG:-~/.gitconfig}
 
-mkdir -p $HELM_HOME
+mkdir -p \$HELM_HOME
 
 docker run -it \
--e REMOTE_REPO=${REMOTE_REPO} \
--e GITHUB_TOKEN=${GITHUB_TOKEN} \
--v ${HELM_HOME}:/root/.helm \
--v ${GITHUB_ID}:/root/.ssh/id_rsa \
--v ${AWS_CONFIG}:/root/.aws \
--v ${KUBE_CONFIG}:/root/.kube/config \
--v ${GIT_CONFIG}:/root/.gitconfig \
+-e REMOTE_REPO=\${REMOTE_REPO} \
+-e GITHUB_TOKEN=\${GITHUB_TOKEN} \
+-v \${HELM_HOME}:/root/.helm \
+-v \${GITHUB_ID}:/root/.ssh/id_rsa \
+-v \${AWS_CONFIG}:/root/.aws \
+-v \${KUBE_CONFIG}:/root/.kube/config \
+-v \${GIT_CONFIG}:/root/.gitconfig \
 tidepool/tpctl /root/tpctl $*
 !
 chmod +x tpctl
