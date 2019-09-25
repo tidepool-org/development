@@ -136,7 +136,7 @@ In order to clone private repos in your organization, `tpctl` needs access to yo
 Most of the operations of `tpctl` either use or manipulate a GitHub repository.  You may use `tpctl` to configure an existing GitHub repository.  To do so, provide the name of the repository as the *full name* (including `git@`):
 
 ```bash
-export REMOTE_REPO=git@github.org:tidepool-org/cluster-test1 
+export REMOTE_REPO=git@github.com:tidepool-org/cluster-test1 
 ```
 
 Alternatively, if you have not already created a GitHub repository you may create one using `tpctl`:
