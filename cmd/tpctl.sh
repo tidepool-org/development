@@ -361,11 +361,11 @@ function merge_kubeconfig {
                     then
                         info "merging kubeconfig into $kubeconfig"
                         KUBECONFIG=$kubeconfig:$local_kube_config kubectl config view --flatten >$TMP_DIR/updated.yaml
-                        mv $TMP_DIR/updated.yaml $kubeconfig
+                        cat $TMP_DIR/updated.yaml > $kubeconfig
                     else
                         mkdir -p $(dirname $kubeconfig)
                         info "creating new $kubeconfig"
-                        cp $local_kube_config $kubeconfig
+                        cat $local_kube_config > $kubeconfig
                     fi
         fi
 }
