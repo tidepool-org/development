@@ -27,23 +27,23 @@ Execute the following to create a file called `tpctl` and to make it executable:
 cat <<! >tpctl
 #!/bin/bash
 
-HELM_HOME=${HELM_HOME:-~/.helm}
-GITHUB_ID=${GITHUB_ID:-~/.ssh/id_rsa}
-KUBE_CONFIG=${KUBECONFIG:-~/.kube/config}
-AWS_CONFIG=${AWS_CONFIG:-~/.aws}
-GIT_CONFIG=${GIT_CONFIG:-~/.gitconfig}
+HELM_HOME=\${HELM_HOME:-~/.helm}
+GITHUB_ID=\${GITHUB_ID:-~/.ssh/id_rsa}
+KUBE_CONFIG=\${KUBECONFIG:-~/.kube/config}
+AWS_CONFIG=\${AWS_CONFIG:-~/.aws}
+GIT_CONFIG=\${GIT_CONFIG:-~/.gitconfig}
 
-mkdir -p $HELM_HOME
+mkdir -p \$HELM_HOME
 
-docker run -it \
--e REMOTE_REPO=${REMOTE_REPO} \
--e GITHUB_TOKEN=${GITHUB_TOKEN} \
--v ${HELM_HOME}:/root/.helm \
--v ${GITHUB_ID}:/root/.ssh/id_rsa \
--v ${AWS_CONFIG}:/root/.aws \
--v ${KUBE_CONFIG}:/root/.kube/config \
--v ${GIT_CONFIG}:/root/.gitconfig \
-tidepool/tpctl /root/tpctl $*
+docker run --rm -it \
+-e REMOTE_REPO=\${REMOTE_REPO} \
+-e GITHUB_TOKEN=\${GITHUB_TOKEN} \
+-v \${HELM_HOME}:/root/.helm \
+-v \${GITHUB_ID}:/root/.ssh/id_rsa \
+-v \${AWS_CONFIG}:/root/.aws \
+-v \${KUBE_CONFIG}:/root/.kube/config \
+-v \${GIT_CONFIG}:/root/.gitconfig \
+tidepool/tpctl /root/tpctl \$*
 !
 chmod +x tpctl
 ```
@@ -136,7 +136,7 @@ In order to clone private repos in your organization, `tpctl` needs access to yo
 Most of the operations of `tpctl` either use or manipulate a GitHub repository.  You may use `tpctl` to configure an existing GitHub repository.  To do so, provide the name of the repository as the *full name* (including `git@`):
 
 ```bash
-export REMOTE_REPO=git@github.org:tidepool-org/cluster-test1 
+export REMOTE_REPO=git@github.com:tidepool-org/cluster-test1 
 ```
 
 Alternatively, if you have not already created a GitHub repository you may create one using `tpctl`:

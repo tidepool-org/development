@@ -109,7 +109,7 @@ function check_remote_repo {
                 panic "must provide REMOTE_REPO"
         fi
 
-        if [[ $REMOTE_REPO != git@github.com* ]]
+        if [[ $REMOTE_REPO != */* ]]
         then
                 REMOTE_REPO="git@github.com:tidepool-org/$REMOTE_REPO"
         fi
