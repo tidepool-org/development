@@ -8,7 +8,7 @@ GIT_CONFIG=${GIT_CONFIG:-~/.gitconfig}
 
 if [ -z "$GITHUB_TOKEN" ]
 then
-	echo "GITHUB_TOKEN with access to rights to create and modify repos is required."
+	echo "GITHUB_TOKEN with repo scope is needed."
 	exit 1
 fi
 
