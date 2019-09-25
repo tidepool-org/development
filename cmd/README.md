@@ -34,6 +34,10 @@ AWS_CONFIG=\${AWS_CONFIG:-~/.aws}
 GIT_CONFIG=\${GIT_CONFIG:-~/.gitconfig}
 
 mkdir -p \$HELM_HOME
+if [ ! -f "\$KUBE_CONFIG" ]
+then
+        cat >\$KUBE_CONFIG
+fi
 
 docker run --rm -it \
 -e REMOTE_REPO=\${REMOTE_REPO} \

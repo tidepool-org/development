@@ -552,12 +552,12 @@ function make_key {
         start "authorizing access to ${REMOTE_REPO}"
 
         local key=$(fluxctl --k8s-fwd-ns=flux identity)
-        local reponame="$(echo $REMOTE_REPO | cut -d/ -f2 | sed -e 's/\.git//')"
+        local reponame="$(echo $REMOTE_REPO | cut -d: -f2 | sed -e 's/\.git//')"
         local cluster=$(get_cluster)
 
         curl -X POST -i\
                 -H"Authorization: token $GITHUB_TOKEN"\
-                --data @- https://api.github.com/repos/tidepool-org/$reponame/keys << EOF
+                --data @- https://api.github.com/repos/$reponame/keys << EOF
         {
 
                 "title" : "flux key for $cluster created by make_flux",
