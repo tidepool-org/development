@@ -6,7 +6,7 @@ in a HIPAA compliant way.
 You need Docker to run `tpctl`. 
 We package `tpctl` in a Docker container to ensure that it can be run in any environment.  Please install Docker on your local machine.
 
-You need a GitHub account and the ability to create/write to a GitHub repository.
+You’ll need repo scope to access private repositories.
 
 You also need an AWS account with an identity that has the right:
 * to create a Kubernetes cluster in EKS, 
@@ -43,7 +43,6 @@ docker run --rm -it \
 -e REMOTE_REPO=\${REMOTE_REPO} \
 -e GITHUB_TOKEN=\${GITHUB_TOKEN} \
 -v \${HELM_HOME}:/root/.helm \
--v \${GITHUB_ID}:/root/.ssh/id_rsa \
 -v \${AWS_CONFIG}:/root/.aws \
 -v \${KUBE_CONFIG}:/root/.kube/config \
 -v \${GIT_CONFIG}:/root/.gitconfig \

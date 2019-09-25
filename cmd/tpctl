@@ -2,10 +2,15 @@
 
 # set defaults
 HELM_HOME=${HELM_HOME:-~/.helm}
-GITHUB_ID=${GITHUB_ID:-~/.ssh/id_rsa}
 KUBE_CONFIG=${KUBECONFIG:-~/.kube/config}
 AWS_CONFIG=${AWS_CONFIG:-~/.aws}
 GIT_CONFIG=${GIT_CONFIG:-~/.gitconfig}
+
+if [ -z "$GITHUB_TOKEN" ]
+then
+	echo "GITHUB_TOKEN with access to rights to create and modify repos is required."
+	exit 1
+fi
 
 mkdir -p $HELM_HOME
 if [ ! -f "$KUBE_CONFIG" ]
@@ -14,13 +19,12 @@ then
 fi
 
 docker run -it \
--e REMOTE_REPO=${REMOTE_REPO} \
 -e GITHUB_TOKEN=${GITHUB_TOKEN} \
+-e REMOTE_REPO=${REMOTE_REPO} \
+-v ${GIT_CONFIG}:/root/.gitconfig \
 -v ${HELM_HOME}:/root/.helm \
--v ${GITHUB_ID}:/root/.ssh/id_rsa \
 -v ${AWS_CONFIG}:/root/.aws \
 -v ${KUBE_CONFIG}:/root/.kube/config \
--v ${GIT_CONFIG}:/root/.gitconfig \
 tidepool/tpctl /root/tpctl $*
 
 
