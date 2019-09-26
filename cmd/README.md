@@ -151,213 +151,306 @@ To create a EKS cluster running the Tidepool services with GitOps
 and a service mesh that provides HIPAA compliance, you perform
 a series of steps:
 
-* Create an GitHub Configuration Repository
+### Create a GitHub Configuration Repository
 
-  This creates an empty GitHub repository for storing the desired state of your EKS
-  cluster.
+This creates an empty *private* GitHub repository for storing the desired state of your EKS
+cluster. We call this the *config repo*.
+```bash
+tpctl repo
+```
 
-  ```bash
-  tpctl repo
+### Create a Configuration File
+
+This creates a file in your GitHub config repo called `values.yaml` that contains
+all the data needed to construct the other Kubernetes configuration files.  Under normal circumstances, this is the *only* file that you will manually edit.
+
+```bash
+tpctl values
+```
+
+In this file, you find parameters that you may change to customize the installation.  
+
+By default, the cluster name is derived from the GitHub repository name.  You may override it.
+
+In addition, the default `values.yaml` file defines a single Tidepool environment named `qa2`. You must modify this environment or add others.
+
+Importantly, be sure to set the DNS names for your Tidepool services.  Assuming that you have the authority to do so, TLS certificates are automatically generated for the names that your provide and DNS aliases to the DNS names you provide are also created.
+
+### Generate the Configuration
+
+From the  `values.yaml` file  `tpctl`  can generate all the Kubernetes manifest files, the AWS IAM roles and  policies, and the `eksctl` `ClusterConfig` file that is used to build a cluster.  Do this after you have created and edited your `values.yaml` file.  If you edit your `values.yaml` file, rerun this step:
+
+```bash
+tpctl config
   ```
 
-* Create an Configuration File
+### Create an AWS EKS Cluster
 
-  This creates a file in your GitHub configuration repo called `values.yaml` that contains
-  all the data needed to construct the other Kubernetes configuration files.
+Once you have generated the manifest files, you may create your EKS cluster.
 
-  ```bash
-  tpctl values
-  ```
+```bash
+tpctl cluster
+```
 
-  In this file, you find parameters that you may change to customize the installation.  
+This step takes *15-20 minutes*, during which time AWS provisions a new EKS cluster.  It will result in a number of AWS Cloudformation stacks being generated. These stacks will have the prefix:
 
-  By default, the cluster name is derived from the GitHub repository name.  You may override it.
+```
+eksctl-${ClusterName}-
+```
 
-  In addition, the default `values.yaml` file defines a single Tidepool environment named `qa2`. You must modify this environment or add others.
+### Install a Service Mesh
 
-  Importantly, be sure to set the DNS names for your Tidepool services. 
-  Assuming that you have the authority to do so, TLS certificates are automatically generated for the names that your provide and DNS aliases to the DNS names you provide are also created.
+A service mesh encrypt inter-service traffic to ensure that personal health information (PHI) is protected in transit from exposure tounauthorized parties. 
 
-* Generate the Configuration
+You may install a service mesh as follows.
 
-  From the  `values.yaml` file  `tpctl`  can generate all the Kubernetes manifest files, the AWS IAM roles and  policies, and the `eksctl` `ClusterConfig` file that is used to build a cluster.  You do this with:
+```bash
+tpctl mesh
+```
 
-  ```bash
-  tpctl config
-  ```
-
-* Create an AWS EKS Cluster
-
-  Once you have generated the manifest files, you may create your EKS cluster.
-
-  ```bash
-  tpctl cluster
-  ```
-
-* Install a Service Mesh
-
-  A service mesh encrypt inter-service traffic to ensure that personal health information (PHI) is protected in transit from exposure to unauthorized parties. 
-
-  You may install a service mesh as follows.
-
-  ```bash
-  tpctl mesh
-  ```
-
-  This must be done *before* the next step.
-
-* Install the Flux GitOps Controller
-
-  The Flux GitOps controller keeps your Kubernetes cluster up to date with the contents of the GitHub configuration repo.  It also keeps your GitHub configuration repo up to date with the latest versions of Docker images of your services that are published in Docker Hub.
+This must be done *before* the next step because the mesh intercepts future requests to install resources into your cluster.  In some cases, it will add a sidecar to your pods. This is called `automatic sidecar injection`. So, if your mesh is not running, those pods will not have a sidecar to encrypt their traffic.  
   
-  To install the GitOps operator:
-  
+If that happens, install the mesh then delete the pods manually that were added when the mesh was non-operational. 
 
-  ```bash
-  tpctl flux
+### Install the Flux GitOps Controller
+
+The Flux GitOps controller keeps your Kubernetes cluster up to date with the contents of the GitHub configuration repo.  It also keeps your GitHub configuration repo up to date with the latest versions of Docker images of your services that are published in Docker Hub.
+  
+To install the GitOps operator:
+
+
+```bash
+tpctl flux
   ```
 
-  In addition, this command installs the `tiller`
-  server (the counterpart to the `Helm` client) and creates and installs TLS certificates that the Helm client needs to communicate with `tiller` server.
+In addition, this command installs the `tiller` server (the counterpart to the `Helm` client) and creates and installs TLS certificates that the Helm client needs to communicate with `tiller` server.
+
+## Common Issues
+
+Sometimes, one of the steps will fail. Most of the time, you can simply retry that step.  However, in the case of `tpctl cluster` and  `tpctl mesh`, certain side-effects 
+persist that may impede your progress.  
+
+### Delete a Cluster
+
+To reverse the side-effects of `tpctl cluster`, you may delete your cluster and await the completion of the deletion:
+
+```bash
+   tpctl delete_cluster await_deletion
+```
+Deleting a cluster will take roughtly 10 minutes.
+
+### Delete a Service Mesh
+
+To reverse the side-effects of `tpctl mesh`, you may delete your mesh with:
+
+```bash
+   tpctl remove_mesh
+```
 
 ## Advanced Usage
 In addition to the basic commands above, you may:
 
-* edit any of file in the configuration repo
+### Edit A Configuration File
+
+We do not recommend that you make manual changes to the files in your config repo, *except* the `values.yaml` file. 
   
-  You may access the GitHub configuration repo using standard Git commands.  In addition, `tpctl` makes it convenient to clone the repo into a directory for you to make changes. 
+However, you may access the GitHub configuration repo using standard Git commands.  In addition, `tpctl` makes it convenient to clone the repo into a directory for you to make changes. 
 
-  With this command, `tpctl` opens a shell with a clone of th repo in the current directory.  You may makes changes to that clone as you see fit.  When you exit the shell, `tpctl` will commit those changes (with your permission) and push them to GitHub.
+With this command, `tpctl` opens a shell with a clone of the config repo in the current directory.  You may makes changes to that clone as you see fit.  When you exit the shell, `tpctl` will commit those changes (with your permission) and push them to GitHub.
 
-  ```bash
-  tpctl edit_repo
-  ```
+```bash
+tpctl edit_repo
+```
  
-* regenerate client certs for Helm to access Tiller
+### Regenerate Helm Client Certs 
 
-  If you are managing multiple Kubernetes clusters with a TLS-enabled `tiller`, you must switch between TLS certificates.  You may use this command to change to or regenerate the TLS certificates in you `~/.helm` directory:
+If you are managing multiple Kubernetes clusters with a TLS-enabled `tiller`, you must switch between TLS certificates.  You may use this command to change to or regenerate the TLS certificates in you `~/.helm` directory:
 
-  ```bash
-  tpctl regenerate_cert 
-  ```
+```bash
+tpctl regenerate_cert 
+```
 
-* edit your values.yaml file
+### Edit Your values.yaml File
 
-  If you need to modify the configuration parameters in the `values.yaml` file, you may do so with standard Git commands to operate on your Git repo.  `tpctl` makes it even easier by checking out the Git repo on your behalf and opening the `vi` editor:
+If you need to modify the configuration parameters in the `values.yaml` file, you may do so with standard Git commands to operate on your Git repo.  `tpctl` makes it even easier by checking out the Git repo on your behalf and opening the `vi` editor:
 
-  ```bash
-  tpctl edit_values
-  ```
+```bash
+tpctl edit_values
+```
 
-* copy S3 assets to new bucket
+### Copy S3 Assets To A New Bucket
 
-  If you are launching a new cluster, you must provide S3 assets for email verification.  You may copy the standard assets by using this command:
+If you are launching a new cluster, you must provide S3 assets for email verification.  You may copy the standard assets by using this command:
 
-  ```bash
-  tpctl copy_assets
-  ```
+```bash
+tpctl copy_assets
+```
 
-* migrate secrets from legacy GitHub repo to AWS secrets manager
+### Migrate Legacy Secrets
   
-  If you are migrating from one of the Tidepool legacy environments, you may migrate the secrets that are used in one of those environments to AWS Secrets Manager and modify your configuration repo to access those secrets:
+If you are migrating from one of the Tidepool legacy environments, you may migrate the secrets that are used in one of those environments to AWS Secrets Manager and modify your configuration repo to access those secrets:
 
-  ```bash
-  tpctl migrate_secrets
-  ```
+```bash
+tpctl migrate_secrets
+```
 
-* generate random secrets and persist into AWS secrets manager
+### Generate and Persist Random Secrets
 
-  If you are creating a new environment, you can generate a new set of secrets and persist those secrets in AWS Secrets Manager and modify your configuration repot to access those secrets:
+If you are creating a new environment, you can generate a new set of secrets and persist those secrets in AWS Secrets Manager and modify your configuration repot to access those secrets:
 
-  ```bash
-  tpctl randomize_secrets
-  ```
+```bash
+tpctl randomize_secrets
+```
 
-* read STDIN for plaintext K8s secrets
+### Load Plaintext Secrets
 
-  If you have secrets to persist and use in your cluster, such as 
-  those provided by a third party vendor, you may upload those secrets to AWS Secrets Manager and update your config repo to access those secrets by providing those secrets (as *plaintext* Kubernetes secrets) via the standard input to `tpctl`:
+If you have secrets to persist and use in your cluster, such as those provided by a third party vendor, you may upload those secrets to AWS Secrets Manager and update your config repo to access those secrets by providing those secrets (as *plaintext* Kubernetes secrets) via the standard input to `tpctl`:
 
-  ```bash
-  tpctl upsert_plaintext_secrets
-  ```
+```bash
+tpctl upsert_plaintext_secrets
+```
 
-* add system:master USERS to K8s cluster
+### Add system:master Users 
 
-  If you have additional `system:master` users to add to your cluster, you may add them to your `values.yaml` file and run this command to install them in your cluster:
+If you have additional `system:master` users to add to your cluster, you may add them to your `values.yaml` file and run this command to install them in your cluster:
 
-  ```bash
-  tpctl install_users
-  ```
+```bash
+tpctl install_users
+```
 
-* copy deploy key from Flux to GitHub config repo
+This operation is not idempotent. Any users will be added to the existing set of users.  So, only run this if you are adding new system master users.  
 
-  If you delete and reinstall Flux manually, it will create a new public key that you must provide to your GitHub repo in order to authenticate 
-  Flux and authorize it to modify the repo.  You do that with:
+You may inspect the existing set of users with:
+```
+kubectl describe configmap -n kube-system aws-auth
+```
+
+Here is example output:
+```
+$ kubectl describe configmap -n kube-system aws-auth
+Name:         aws-auth
+Namespace:    kube-system
+Labels:       <none>
+Annotations:  <none>
+
+Data
+====
+mapRoles:
+----
+- groups:
+  - system:bootstrappers
+  - system:nodes
+  rolearn: arn:aws:iam::118346523422:role/eksctl-qatest-nodegroup-ng-1-NodeInstanceRole-1L2G21MV64ISS
+  username: system:node:{{EC2PrivateDNSName}}
+- groups:
+  - system:bootstrappers
+  - system:nodes
+  rolearn: arn:aws:iam::118346523422:role/eksctl-qatest-nodegroup-ng-kiam-NodeInstanceRole-1TKZB1U4OVJDW
+  username: system:node:{{EC2PrivateDNSName}}
+- groups:
+  - system:masters
+  rolearn: arn:aws:iam::118346523422:user/lennartgoedhart-cli
+  username: lennartgoedhart-cli
+- groups:
+  - system:masters
+  rolearn: arn:aws:iam::118346523422:user/benderr-cli
+  username: benderr-cli
+- groups:
+  - system:masters
+  rolearn: arn:aws:iam::118346523422:user/derrick-cli
+  username: derrick-cli
+- groups:
+  - system:masters
+  rolearn: arn:aws:iam::118346523422:user/mikeallgeier-cli
+  username: mikeallgeier-cli
+```
+
+### Upload Deploy Key To GitHub Config Repo
+
+In order to manipulate your Github config repo, Flux needs to be authorized to do so.  This authorization step is normally performed when `flux` is installed with `tpctl flux`. 
+Should  you delete and reinstall Flux manually, it will create a new public key that you must provide to your GitHub repo in order to authenticate Flux and authorize it to modify the repo.  You do that with:
 
   ```bash
   tpctl deploy_key
   ``` 
 
-* initiate deletion of the AWS EKS cluster
+You may inspect your Github config repo to see that the key was deployed by going to the `Settings` tab of the config repo and looking under `Deploy Keys`. 
 
-  If you wish to delete a AWS EKS cluster that you created with `tpctl`, you may do so with:
+### Initiate Deletion of Your AWS EKS Cluster
 
-  ```bash
-  tpctl delete_cluster
-  ```
+If you wish to delete a AWS EKS cluster that you created with `tpctl`, you may do so with:
 
-  Note that this only starts the process.  The command returns *before* the process has completed.
+```bash
+tpctl delete_cluster
+```
 
-* await completion of deletion of the AWS EKS cluster
+Note that this only starts the process.  The command returns *before* the process has completed.
+The entire process may take up to 20 minutes.
 
-  To await the completion of the deletion of an AWS EKS cluster, you may do this:
+### Await Completion Of Deletion Of Your AWS EKS Cluster
 
-  ```bash
-  tpctl await_deletion
-  ```
+To await the completion of the deletion of an AWS EKS cluster, you may do this:
 
-* copy the KUBECONFIG into the local $KUBECONFIG file
+```bash
+tpctl await_deletion
+```
 
-  If you need to regenerate your local ~/.kube/config, you add the credentials of your cluster with:
+### Merge/Copy the KUBECONFIG Into the Your Local $KUBECONFIG File
 
-  ```bash
-  tpctl merge_kubeconfig
-  ```
+You may change which cluster that `kubectl` accesses by changing the file that is uses to access your cluster or by changing its contents.  That file is identified in the environment variable `KUBECONFIG`.  
 
-* open the Gloo dashboard
+If you are only managing a single cluster, then you can simply set that environment variable to point to that file.
 
-  We use the Gloo API Gateway.  If you would like to see the gateways, virtual services, and/or routes that are installed, you may use this command to open up a web page to the Gloo dashboard:
+However, in the common case that you are manipulating several clusters, it may be inconvenient to change that environment variable every time you want to switch clusters.
 
-  ```bash
-  tpctl gloo_dashboard
-  ```
+To address this common case, a single `KUBECONFIG` file may contain the information needed to access multiple clusters.  It also contains an indication of *which* of those clusters to access.
+The latter indicator may be easily modified with the `kubectx` command.
 
-* open the service mesh dashboard
+We store a `KUBECONFIG` file in your config repo that only contains the info needed for the associated cluster.
 
-  If you have installed a service mesh, you may view a dashboard to monitor traffic in a web page:
-  ```bash
-  tpctl linkerd_dashboard
-  ```
+You may merge the `KUBECONFIG` file from your config repo into a local `KUBECONFIG` file called `~/.kube/config` using:
 
-* create managed policies
-  ```bash
-  tpctl managed_policies
-  ```
+```bash
+tpctl merge_kubeconfig
+```
+Then, you may use `kubectx` to select which cluster to modify.
 
-* show recent git diff
+### Open the Gloo Dashboard
 
-  If you would like to see the most recent changes to your config repo, you may use standard Git tools, or you may simply run:
-  ```bash
-  tpctl diff
-  ```
+We use the Gloo API Gateway.  If you would like to see the gateways, virtual services, and/or routes that are installed, you may use this command to open up a web page to the Gloo dashboard:
 
-## The values.yaml File
+```bash
+tpctl gloo_dashboard
+```
+
+### Open the Service Mesh Dashboard
+
+If you have installed a service mesh, you may view a dashboard to monitor traffic in a web page:
+  
+```bash
+tpctl linkerd_dashboard
+```
+
+### Create Managed Policies
+  
+```bash
+tpctl managed_policies
+```
+
+### Show Recent git diff
+
+If you would like to see the most recent changes to your config repo, you may use standard Git tools, or you may simply run:
+
+```bash
+tpctl diff
+```
+
+## Inside The values.yaml File 
 
 Your primary configuration file, `values.yaml`, contains all the information needed to create your Kubernetes cluster and its services.  Here is an annotated example:
 
-
 ### GitHub Config
+
 This section establishes where the GitHub repo is located.  
 ```yaml
 github:
