@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -i
 #
 # Configure EKS cluster to run Tidepool services
 #
@@ -111,14 +111,20 @@ function check_remote_repo {
 
         if [[ $REMOTE_REPO != */* ]]
         then
-                REMOTE_REPO="git@github.com:tidepool-org/$REMOTE_REPO"
+                GIT_REMOTE_REPO="git@github.com:tidepool-org/$REMOTE_REPO"
+	else
+                GIT_REMOTE_REPO=$REMOTE_REPO
         fi
+        HTTPS_REMOTE_REPO=$(echo $GIT_REMOTE_REPO | sed -e "s#git@github.com:#https://github.com/#")
+
+	confirm "Is $REMOTE_REPO the repo you want to use? "
 }
 
 # clean up all temporary files
 function cleanup {
         if [ -f "$TMP_DIR" ]
         then
+		cd /
                 rm -rf $TMP_DIR
         fi
 }
@@ -135,26 +141,30 @@ function setup_tmpdir {
         fi
 }
 
+function repo_with_token {
+	local repo=$1
+	echo $repo | sed -e "s#https://#https://$GITHUB_TOKEN@#"
+}
+
+
 # clone config repo, change to that directory
 function clone_remote {
         cd $TMP_DIR
-        if [[ ! -d $(basename $REMOTE_REPO) ]]; then
-                establish_ssh
+        if [[ ! -d $(basename $HTTPS_REMOTE_REPO) ]]; then
                 start "cloning remote"
-                git clone $REMOTE_REPO
-                expect_success "Cannot clone $REMOTE_REPO"
+		git clone $(repo_with_token $HTTPS_REMOTE_REPO)
+                expect_success "Cannot clone $HTTPS_REMOTE_REPO"
                 complete "cloned remote"
         fi
-        cd $(basename $REMOTE_REPO)
+        cd $(basename $HTTPS_REMOTE_REPO)
 }
 
 # clone quickstart repo, export TEMPLATE_DIR
 function set_template_dir {
         if [[ ! -d $TEMPLATE_DIR ]]; then
-                establish_ssh
                 start "cloning quickstart"
                 pushd $TMP_DIR >/dev/null 2>&1
-                git clone git@github.com:/tidepool-org/eks-template
+		git clone $(repo_with_token https://github.com/tidepool-org/eks-template)
                 export TEMPLATE_DIR=$(pwd)/eks-template
                 popd >/dev/null 2>&1
                 complete "cloned quickstart"
@@ -164,12 +174,11 @@ function set_template_dir {
 # clone development repo, exports DEV_DIR and CHART_DIR
 function set_tools_dir {
         if [[ ! -d $CHART_DIR ]]; then
-                establish_ssh
                 start "cloning development tools"
                 pushd $TMP_DIR >/dev/null 2>&1
-                git clone git@github.com:/tidepool-org/development
+		git clone $(repo_with_token https://github.com/tidepool-org/development)
                 cd development
-                       git checkout k8s
+		git checkout develop
                 DEV_DIR=$(pwd)
                 CHART_DIR=${DEV_DIR}/charts/tidepool/0.1.7
                 popd >/dev/null 2>&1
@@ -180,10 +189,9 @@ function set_tools_dir {
 # clone secret-map repo, export SM_DIR
 function clone_secret_map {
         if [[ ! -d $SM_DIR ]]; then
-                establish_ssh
                 start "cloning secret-map"
                 pushd $TMP_DIR >/dev/null 2>&1
-                git clone git@github.com:/tidepool-org/secret-map
+		git clone $(repo_with_token https://github.com/tidepool-org/secret-map)
                 SM_DIR=$(pwd)/secret-map
                 popd >/dev/null 2>&1
                 complete "cloned secret-map"
@@ -354,11 +362,11 @@ function merge_kubeconfig {
                     then
                         info "merging kubeconfig into $kubeconfig"
                         KUBECONFIG=$kubeconfig:$local_kube_config kubectl config view --flatten >$TMP_DIR/updated.yaml
-                        mv $TMP_DIR/updated.yaml $kubeconfig
+                        cat $TMP_DIR/updated.yaml > $kubeconfig
                     else
                         mkdir -p $(dirname $kubeconfig)
                         info "creating new $kubeconfig"
-                        cp $local_kube_config $kubeconfig
+                        cat $local_kube_config > $kubeconfig
                     fi
         fi
 }
@@ -516,10 +524,10 @@ function expect_cluster_exists {
 function make_flux {
         local cluster=$(get_cluster)
         local email=$(get_email)
-
         start "installing flux into cluster $cluster"
+        establish_ssh
         EKSCTL_EXPERIMENTAL=true unbuffer eksctl install \
-                flux -f config.yaml --git-url=${REMOTE_REPO}.git --git-email=$email --git-label=$cluster  | tee  $TMP_DIR/eksctl.out
+                flux -f config.yaml --git-url=${GIT_REMOTE_REPO}.git --git-email=$email --git-label=$cluster  | tee  $TMP_DIR/eksctl.out
         expect_success "eksctl install flux failed."
         git pull
         complete  "installed flux into cluster $cluster"
@@ -549,15 +557,15 @@ function save_ca {
 
 # save deploy key to config repo
 function make_key {
-        start "authorizing access to ${REMOTE_REPO}"
+        start "authorizing access to ${GIT_REMOTE_REPO}"
 
         local key=$(fluxctl --k8s-fwd-ns=flux identity)
-        local reponame="$(echo $REMOTE_REPO | cut -d/ -f2 | sed -e 's/\.git//')"
+        local reponame="$(echo $GIT_REMOTE_REPO | cut -d: -f2 | sed -e 's/\.git//')"
         local cluster=$(get_cluster)
 
         curl -X POST -i\
                 -H"Authorization: token $GITHUB_TOKEN"\
-                --data @- https://api.github.com/repos/tidepool-org/$reponame/keys << EOF
+                --data @- https://api.github.com/repos/$reponame/keys << EOF
         {
 
                 "title" : "flux key for $cluster created by make_flux",
@@ -565,7 +573,7 @@ function make_key {
                 "read_only" : false
         }
 EOF
-        complete  "authorized access to ${REMOTE_REPO}"
+        complete  "authorized access to ${GIT_REMOTE_REPO}"
 }
 
 # update flux and helm operator manifests
@@ -689,16 +697,17 @@ function expect_values_not_exist {
 function make_values {
         start "creating values.yaml"
         add_file "values.yaml"
-        local https=$(echo $REMOTE_REPO | sed -e "s#git@github.com:#https://github.com/#")
         cat $TMP_DIR/eks-template/values.yaml >values.yaml
         cat >>values.yaml <<!
 github:
-  git: $REMOTE_REPO
-  https: $https
+  git: $GIT_REMOTE_REPO
+  https: $HTTPS_REMOTE_REPO
 
 !
 
-yq r values.yaml -j | jq '.cluster.metadata.name = .github.git' | jq '.cluster.metadata.name |= gsub(".*\/"; "")' | jq '.cluster.metadata.name |= gsub("cluster-"; "")' | yq r - > xxx.yaml
+        yq r values.yaml -j | jq '.cluster.metadata.name = .github.git' | \
+        jq '.cluster.metadata.name |= gsub(".*\/"; "")' | \
+        jq '.cluster.metadata.name |= gsub("cluster-"; "")' | yq r - > xxx.yaml
         mv xxx.yaml values.yaml
         if [ "$APPROVE" != "true" ]
         then
@@ -723,7 +732,7 @@ function diff_config {
 function edit_values {
         if [ -f values.yaml ]
         then
-                info "editing values file for repo $REMOTE_REPO"
+                info "editing values file for repo $GIT_REMOTE_REPO"
                 ${EDITOR:-vi} values.yaml
         else
                 panic "values.yaml does not exist."
@@ -772,12 +781,22 @@ function remove_mesh {
 function create_repo {
         read -p "${GREEN}repo name?${RESET} "  -r
         REMOTE_REPO=$REPLY
-        if [[ "$REMOTE_REPO" != *\/* ]] && [[ "$REMOTE_REPO" != *\\* ]]
-        then
-                  REMOTE_REPO=tidepool-org/$REMOTE_REPO
-        fi
-        git init
-        hub create $REMOTE_REPO
+	DATA='{"name":"yolo-test", "private":"true"}'
+	D=$(echo $DATA | sed -e "s/yolo-test/$REMOTE_REPO/")
+
+	read -p "${GREEN}Is this for an organization? ${RESET}" -r
+	if [[ "$REPLY" =~ (y|Y)* ]]
+	then
+	    read -p $"${GREEN} Name of organization [tidepool-org]?${RESET} " ORG
+	    ORG=${ORG:-tidepool-org}
+	    REMOTE_REPO=$ORG/$REMOTE_REPO
+	    curl https://api.github.com/orgs/$ORG/repos?access_token=${GITHUB_TOKEN} -d "$D"
+        else
+	    read -p $"${GREEN} User name?${RESET} " -r
+	    REMOTE_REPO=$REPLY/$REMOTE_REPO
+	    curl https://api.github.com/user/repos?access_token=${GITHUB_TOKEN} -d "$D"
+	fi
+	complete "private repo created"
         check_remote_repo
 }
 
@@ -895,8 +914,6 @@ then
         help
         exit 0
 fi
-
-echo $*
 
 APPROVE=false
 PARAMS=""
