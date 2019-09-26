@@ -112,6 +112,8 @@ function check_remote_repo {
         if [[ $REMOTE_REPO != */* ]]
         then
                 GIT_REMOTE_REPO="git@github.com:tidepool-org/$REMOTE_REPO"
+	else
+                GIT_REMOTE_REPO=$REMOTE_REPO
         fi
         HTTPS_REMOTE_REPO=$(echo $GIT_REMOTE_REPO | sed -e "s#git@github.com:#https://github.com/#")
 }
@@ -704,7 +706,9 @@ github:
 
 !
 
-yq r values.yaml -j | jq '.cluster.metadata.name = .github.git' | jq '.cluster.metadata.name |= gsub(".*\/"; "")' | jq '.cluster.metadata.name |= gsub("cluster-"; "")' | yq r - > xxx.yaml
+        yq r values.yaml -j | jq '.cluster.metadata.name = .github.git' | \
+        jq '.cluster.metadata.name |= gsub(".*\/"; "")' | \
+        jq '.cluster.metadata.name |= gsub("cluster-"; "")' | yq r - > xxx.yaml
         mv xxx.yaml values.yaml
         if [ "$APPROVE" != "true" ]
         then
