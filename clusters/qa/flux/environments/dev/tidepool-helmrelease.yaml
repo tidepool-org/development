@@ -33,7 +33,7 @@ spec:
   chart:
     git: git@github.com:tidepool-org/development
     path: charts/tidepool/0.1.5
-    ref: non-tidepool
+    ref: develop
   values:
     gloo:
       enabled: false
