@@ -128,6 +128,7 @@ git config --global user.name "Your Name"
 
 ### SSH
 In order to clone the `flux` tool repo, `tpctl` needs access to your GitHub public key.  This is typically stored in:
+
 ```
 ~/.ssh/id_rsa
 ```
@@ -217,7 +218,7 @@ To install the GitOps operator:
 
 ```bash
 tpctl flux
-  ```
+```
 
 In addition, this command installs the `tiller` server (the counterpart to the `Helm` client) and creates and installs TLS certificates that the Helm client needs to communicate with `tiller` server.
 
@@ -231,7 +232,7 @@ persist that may impede your progress.
 To reverse the side-effects of `tpctl cluster`, you may delete your cluster and await the completion of the deletion:
 
 ```bash
-   tpctl delete_cluster await_deletion
+tpctl delete_cluster await_deletion
 ```
 Deleting a cluster will take roughtly 10 minutes.
 
@@ -240,7 +241,7 @@ Deleting a cluster will take roughtly 10 minutes.
 To reverse the side-effects of `tpctl mesh`, you may delete your mesh with:
 
 ```bash
-   tpctl remove_mesh
+tpctl remove_mesh
 ```
 
 ## Advanced Usage
@@ -322,7 +323,8 @@ kubectl describe configmap -n kube-system aws-auth
 ```
 
 Here is example output:
-```
+
+```bash
 $ kubectl describe configmap -n kube-system aws-auth
 Name:         aws-auth
 Namespace:    kube-system
