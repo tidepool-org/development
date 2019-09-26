@@ -192,11 +192,7 @@ Once you have generated the manifest files, you may create your EKS cluster.
 tpctl cluster
 ```
 
-This step takes *15-20 minutes*, during which time AWS provisions a new EKS cluster.  It will result in a number of AWS Cloudformation stacks being generated. These stacks will have the prefix:
-
-```
-eksctl-${ClusterName}-
-```
+This step takes *15-20 minutes*, during which time AWS provisions a new EKS cluster.  It will result in a number of AWS Cloudformation stacks being generated. These stacks will have the prefix: `eksctl-${ClusterName}-`.
 
 ### Install a Service Mesh
 
@@ -264,7 +260,7 @@ tpctl edit_repo
  
 ### Regenerate Helm Client Certs 
 
-If you are managing multiple Kubernetes clusters with a TLS-enabled `tiller`, you must switch between TLS certificates.  You may use this command to change to or regenerate the TLS certificates in you `~/.helm` directory:
+If you are managing multiple Kubernetes clusters with a TLS-enabled `tiller`, you must switch between TLS certificates.  You may use this command to change to or regenerate the TLS certificates in your `~/.helm` directory:
 
 ```bash
 tpctl regenerate_cert 
