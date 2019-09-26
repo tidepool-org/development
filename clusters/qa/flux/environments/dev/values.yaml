@@ -1,40 +1,3 @@
----
-apiVersion: flux.weave.works/v1beta1
-kind: HelmRelease
-metadata:
-  name: tidepool
-  namespace: dev
-  annotations:
-    flux.weave.works/automated: "true"
-    #flux.weave.works/tag.shoreline: "regexp:^v\d+\.\d+\.\d+$"
-    #flux.weave.works/tag.shoreline: "semver:~1."
-    #flux.weave.works/tag.shoreline: "glob:master-*"
-    flux.weave.works/tag.auth: glob:develop-*
-    flux.weave.works/tag.blip: glob:release-1.28.0*
-    flux.weave.works/tag.blob: glob:develop-*
-    flux.weave.works/tag.data: glob:develop-*
-    flux.weave.works/tag.export: glob:develop-*
-    flux.weave.works/tag.gatekeeper: glob:develop-*
-    flux.weave.works/tag.highwater: glob:develop-*
-    flux.weave.works/tag.hydrophone: glob:develop-*
-    flux.weave.works/tag.image: glob:develop-*
-    flux.weave.works/tag.jellyfish: glob:develop-*
-    flux.weave.works/tag.messageapi: glob:develop-*
-    flux.weave.works/tag.migrations: glob:develop-*
-    flux.weave.works/tag.notification: glob:develop-*
-    flux.weave.works/tag.seagull: glob:develop-*
-    flux.weave.works/tag.shoreline: glob:develop-*
-    flux.weave.works/tag.task: glob:develop-*
-    flux.weave.works/tag.tidewhisperer: glob:develop-*
-    flux.weave.works/tag.tools: glob:develop-*
-    flux.weave.works/tag.user: glob:develop-*
-spec:
-  releaseName: dev-tidepool
-  chart:
-    git: git@github.com:tidepool-org/development
-    path: charts/tidepool/0.1.5
-    ref: non-tidepool
-  values:
     gloo:
       enabled: false
     mongodb:
@@ -80,7 +43,7 @@ spec:
       namespace:
         create: false
     blip:
-      image: tidepool/blip:release-1.28.0-88c9d329877859415bc5554876beb96917671914
+      image: tidepool/blip:master-e648e128f30b4fa511ffcfcf3f1817b5ae9e9c00
     export:
       enabled: true
       image: tidepool/export:develop-974488dcc53cfcbbf8fafbd40053fcf7878ff183
@@ -97,30 +60,30 @@ spec:
     messageapi:
       image: tidepool/message-api:develop-c5ac4c43231c33c2dca7485a88fe27ba64769a06
     auth:
-      image: tidepool/platform-auth:develop-9139822572a890eb372d19332d45093c0233cfea
+      image: tidepool/platform-auth:develop-0d46e42db4c6aaafc05b7889d04d8c3f6102815d
     blob:
       bucket: tidepool-qa1-data
-      image: tidepool/platform-blob:develop-9139822572a890eb372d19332d45093c0233cfea
+      image: tidepool/platform-blob:develop-0d46e42db4c6aaafc05b7889d04d8c3f6102815d
     data:
-      image: tidepool/platform-data:develop-9139822572a890eb372d19332d45093c0233cfea
+      image: tidepool/platform-data:develop-0d46e42db4c6aaafc05b7889d04d8c3f6102815d
     image:
       bucket: tidepool-qa1-data
-      image: tidepool/platform-image:develop-9139822572a890eb372d19332d45093c0233cfea
+      image: tidepool/platform-image:develop-0d46e42db4c6aaafc05b7889d04d8c3f6102815d
     migrations:
-      image: tidepool/platform-migrations:develop-9139822572a890eb372d19332d45093c0233cfea
+      image: tidepool/platform-migrations:develop-0d46e42db4c6aaafc05b7889d04d8c3f6102815d
     notification:
       enabled: false
-      image: tidepool/platform-notification:develop-9139822572a890eb372d19332d45093c0233cfea
+      image: tidepool/platform-notification:develop-0d46e42db4c6aaafc05b7889d04d8c3f6102815d
     task:
-      image: tidepool/platform-task:develop-9139822572a890eb372d19332d45093c0233cfea
+      image: tidepool/platform-task:develop-0d46e42db4c6aaafc05b7889d04d8c3f6102815d
     tools:
       enabled: false
-      image: tidepool/platform-tools:develop-9139822572a890eb372d19332d45093c0233cfea
+      image: tidepool/platform-tools:develop-0d46e42db4c6aaafc05b7889d04d8c3f6102815d
     user:
-      image: tidepool/platform-user:develop-9139822572a890eb372d19332d45093c0233cfea
+      image: tidepool/platform-user:develop-0d46e42db4c6aaafc05b7889d04d8c3f6102815d
     seagull:
       image: tidepool/seagull:develop-3b61d504616e7af2c6e3a0d0a68ad602428b1036
     shoreline:
-      image: tidepool/shoreline:develop-5aa298a526412cd50e76c5ffecb4211e615ae4b1
+      image: tidepool/shoreline:develop-67d50c8555969458465b8c1d0aa7c05fd23b8ccf
     tidewhisperer:
       image: tidepool/tide-whisperer:develop-4cb2f869234a0cbb679af33a73be082b04f28a57
