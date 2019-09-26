@@ -26,6 +26,7 @@ spec:
       - x-tidepool-session-token
       - x-tidepool-trace-request
       - x-tidepool-trace-session
+      - set-cookie
       allowMethods:
       - GET
       - POST
