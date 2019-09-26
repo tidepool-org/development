@@ -5,6 +5,7 @@ HELM_HOME=${HELM_HOME:-~/.helm}
 KUBE_CONFIG=${KUBECONFIG:-~/.kube/config}
 AWS_CONFIG=${AWS_CONFIG:-~/.aws}
 GIT_CONFIG=${GIT_CONFIG:-~/.gitconfig}
+SSH_HOME=${SSH_HOME:-~/.ssh}
 
 if [ -z "$GITHUB_TOKEN" ]
 then
@@ -15,15 +16,16 @@ fi
 mkdir -p $HELM_HOME
 if [ ! -f "$KUBE_CONFIG" ]
 then
-	cat >$KUBE_CONFIG
+	touch $KUBE_CONFIG
 fi
 
 docker run -it \
 -e GITHUB_TOKEN=${GITHUB_TOKEN} \
 -e REMOTE_REPO=${REMOTE_REPO} \
--v ${GIT_CONFIG}:/root/.gitconfig \
+-v ${SSH_HOME}:/root/.ssh:ro \
+-v ${GIT_CONFIG}:/root/.gitconfig:ro \
 -v ${HELM_HOME}:/root/.helm \
--v ${AWS_CONFIG}:/root/.aws \
+-v ${AWS_CONFIG}:/root/.aws:ro \
 -v ${KUBE_CONFIG}:/root/.kube/config \
 tidepool/tpctl /root/tpctl $*
 

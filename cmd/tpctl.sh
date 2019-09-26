@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -i
 #
 # Configure EKS cluster to run Tidepool services
 #
@@ -122,6 +122,7 @@ function check_remote_repo {
 function cleanup {
         if [ -f "$TMP_DIR" ]
         then
+		cd /
                 rm -rf $TMP_DIR
         fi
 }
@@ -148,7 +149,6 @@ function repo_with_token {
 function clone_remote {
         cd $TMP_DIR
         if [[ ! -d $(basename $HTTPS_REMOTE_REPO) ]]; then
-                establish_ssh
                 start "cloning remote"
 		git clone $(repo_with_token $HTTPS_REMOTE_REPO)
                 expect_success "Cannot clone $HTTPS_REMOTE_REPO"
@@ -160,7 +160,6 @@ function clone_remote {
 # clone quickstart repo, export TEMPLATE_DIR
 function set_template_dir {
         if [[ ! -d $TEMPLATE_DIR ]]; then
-                establish_ssh
                 start "cloning quickstart"
                 pushd $TMP_DIR >/dev/null 2>&1
 		git clone $(repo_with_token https://github.com/tidepool-org/eks-template)
@@ -173,7 +172,6 @@ function set_template_dir {
 # clone development repo, exports DEV_DIR and CHART_DIR
 function set_tools_dir {
         if [[ ! -d $CHART_DIR ]]; then
-                establish_ssh
                 start "cloning development tools"
                 pushd $TMP_DIR >/dev/null 2>&1
 		git clone $(repo_with_token https://github.com/tidepool-org/development)
@@ -189,7 +187,6 @@ function set_tools_dir {
 # clone secret-map repo, export SM_DIR
 function clone_secret_map {
         if [[ ! -d $SM_DIR ]]; then
-                establish_ssh
                 start "cloning secret-map"
                 pushd $TMP_DIR >/dev/null 2>&1
 		git clone $(repo_with_token https://github.com/tidepool-org/secret-map)
@@ -525,8 +522,8 @@ function expect_cluster_exists {
 function make_flux {
         local cluster=$(get_cluster)
         local email=$(get_email)
-
         start "installing flux into cluster $cluster"
+        establish_ssh
         EKSCTL_EXPERIMENTAL=true unbuffer eksctl install \
                 flux -f config.yaml --git-url=${GIT_REMOTE_REPO}.git --git-email=$email --git-label=$cluster  | tee  $TMP_DIR/eksctl.out
         expect_success "eksctl install flux failed."
@@ -782,12 +779,22 @@ function remove_mesh {
 function create_repo {
         read -p "${GREEN}repo name?${RESET} "  -r
         REMOTE_REPO=$REPLY
-        if [[ "$REMOTE_REPO" != *\/* ]] && [[ "$REMOTE_REPO" != *\\* ]]
-        then
-                  REMOTE_REPO=tidepool-org/$REMOTE_REPO
-        fi
-        git init
-        hub create $REMOTE_REPO
+	DATA='{"name":"yolo-test", "private":"true"}'
+	D=$(echo $DATA | sed -e "s/yolo-test/$REMOTE_REPO/")
+
+	read -p "${GREEN}Is this for an organization? ${RESET}" -r
+	if [[ "$REPLY" =~ (y|Y)* ]]
+	then
+	    read -p $"${GREEN} Name of organization [tidepool-org]?${RESET} " ORG
+	    ORG=${ORG:-tidepool-org}
+	    REMOTE_REPO=$ORG/$REMOTE_REPO
+	    curl https://api.github.com/orgs/$ORG/repos?access_token=${GITHUB_TOKEN} -d "$D"
+        else
+	    read -p $"${GREEN} User name?${RESET} " -r
+	    REMOTE_REPO=$REPLY/$REMOTE_REPO
+	    curl https://api.github.com/user/repos?access_token=${GITHUB_TOKEN} -d "$D"
+	fi
+	complete "private repo created"
         check_remote_repo
 }
 

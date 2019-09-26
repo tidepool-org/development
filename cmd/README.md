@@ -27,20 +27,21 @@ cat <<! >tpctl
 #!/bin/bash
 
 HELM_HOME=\${HELM_HOME:-~/.helm}
-GITHUB_ID=\${GITHUB_ID:-~/.ssh/id_rsa}
 KUBE_CONFIG=\${KUBECONFIG:-~/.kube/config}
 AWS_CONFIG=\${AWS_CONFIG:-~/.aws}
 GIT_CONFIG=\${GIT_CONFIG:-~/.gitconfig}
+SSH_HOME=\${SSH_HOME:-~/.ssh}
 
 mkdir -p \$HELM_HOME
 if [ ! -f "\$KUBE_CONFIG" ]
 then
-        cat >\$KUBE_CONFIG
+        touch \$KUBE_CONFIG
 fi
 
 docker run --rm -it \
 -e REMOTE_REPO=\${REMOTE_REPO} \
 -e GITHUB_TOKEN=\${GITHUB_TOKEN} \
+-v \${SSH_HOME}:/root/.ssh \
 -v \${HELM_HOME}:/root/.helm \
 -v \${AWS_CONFIG}:/root/.aws \
 -v \${KUBE_CONFIG}:/root/.kube/config \
@@ -69,7 +70,6 @@ We explain these in detail below. If the assumptions we make are incorrect for y
 
 ```bash
 HELM_HOME=${HELM_HOME:-~/.helm}          
-GITHUB_ID=${GITHUB_ID:-~/.ssh/id_rsa}
 KUBE_CONFIG=${KUBECONFIG:-~/.kube/config}
 AWS_CONFIG=${AWS_CONFIG:-~/.aws}
 GIT_CONFIG=${GIT_CONFIG:-~/.gitconfig}
@@ -127,7 +127,7 @@ git config --global user.name "Your Name"
 ```   
 
 ### SSH
-In order to clone private repos in your organization, `tpctl` needs access to your GitHub public key.  This is typically stored in:
+In order to clone the `flux` tool repo, `tpctl` needs access to your GitHub public key.  This is typically stored in:
 ```
 ~/.ssh/id_rsa
 ```
