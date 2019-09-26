@@ -116,6 +116,8 @@ function check_remote_repo {
                 GIT_REMOTE_REPO=$REMOTE_REPO
         fi
         HTTPS_REMOTE_REPO=$(echo $GIT_REMOTE_REPO | sed -e "s#git@github.com:#https://github.com/#")
+
+	confirm "Is $REMOTE_REPO the repo you want to use? "
 }
 
 # clean up all temporary files
