@@ -1001,7 +1001,9 @@ do
                 update_flux
                 save_changes "Added flux"
                 clone_secret_map
+        	establish_ssh
                 migrate_secrets
+        establish_ssh
                 save_changes "Added migrated secrets"
                 ;;
         repo)
@@ -1097,6 +1099,7 @@ do
                 clone_remote
                 set_tools_dir
                 clone_secret_map
+        	establish_ssh
                 migrate_secrets
                 save_changes "Added migrated secrets"
                 ;;
