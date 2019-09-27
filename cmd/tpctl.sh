@@ -5,6 +5,25 @@
 
 set -o pipefail
 
+function cluster_in_context {
+	KUBECONFIG=$(get_kubeconfig) kubectl config current-context
+}
+
+function cluster_in_repo {
+	yq r kubeconfig.yaml -j current-context | sed -e 's/"//g' -e "s/'//g"
+}
+
+function confirm_matching_cluster {
+	local in_context=$(cluster_in_context)
+	local in_repo=$(cluster_in_repo)
+	if  [ "${in_repo}" != "${in_context}" ]
+	then
+		echo "${in_context} is cluster selected in KUBECONFIG config file"
+		echo "${in_repo} is cluster named in $REMOTE_REPO repo"
+		confirm "Is $REMOTE_REPO the repo you want to use? "
+	fi
+}
+
 function establish_ssh {
         ssh-add -l &>/dev/null
         if [ "$?" == 2 ]; then
@@ -117,7 +136,6 @@ function check_remote_repo {
         fi
         HTTPS_REMOTE_REPO=$(echo $GIT_REMOTE_REPO | sed -e "s#git@github.com:#https://github.com/#")
 
-	confirm "Is $REMOTE_REPO the repo you want to use? "
 }
 
 # clean up all temporary files
@@ -604,9 +622,12 @@ function update_flux {
         complete "updated flux and flux-helm-operator manifests"
 }
 
+function mykubectl {
+	KUBECONFIG=~/.kube/config kubectl $@
+}
+
 # create service mesh
 function make_mesh {
-	export KUBECONFIG=$(realpath ./kubeconfig.yaml)
         linkerd check --pre
         expect_success "Failed linkerd pre-check."
         start "installing mesh"
@@ -615,7 +636,7 @@ function make_mesh {
         mkdir -p linkerd
         add_file "linkerd/linkerd-config.yaml"
         (cd linkerd; linkerd install config | separate_files | add_names)
-        linkerd install config | kubectl apply -f -
+        linkerd install config | mykubectl apply -f -
 
         linkerd check config
         while [ $? -ne 0 ]
@@ -628,7 +649,7 @@ function make_mesh {
 
         add_file "linkerd/linkerd-control-plane.yaml"
         (cd linkerd; linkerd install control-plane | separate_files | add_names)
-        linkerd install control-plane | kubectl apply -f -
+        linkerd install control-plane | mykubectl apply -f -
 
         linkerd check
         while [ $? -ne 0 ]
@@ -771,11 +792,10 @@ function delete_cluster {
 
 # remove service mesh from cluster and config repo
 function remove_mesh {
-	export KUBECONFIG=$(realpath ./kubeconfig.yaml)
         start "removing linkerd"
-        linkerd install --ignore-cluster | kubectl delete -f -
+        linkerd install --ignore-cluster | mykubectl delete -f -
         rm -rf linkerd
-        complete "removed linkerd"
+	complete "removed linkerd"
 }
 
 function create_repo {
@@ -801,12 +821,12 @@ function create_repo {
 }
 
 function gloo_dashboard {
-        kubectl port-forward -n gloo-system  deployment/api-server 8081:8080 &
+        mykubectl port-forward -n gloo-system  deployment/api-server 8081:8080 &
         open -a "Google Chrome"  http://localhost:8081
 }
 
 function remove_gloo {
-        glooctl install gateway --dry-run | kubectl delete -f -
+        glooctl install gateway --dry-run | mykubectl delete -f -
 }
 
 # await deletion of a CloudFormation template that represents a cluster before returning
@@ -1024,6 +1044,7 @@ do
                 clone_remote
                 set_template_dir
                 set_tools_dir
+		confirm_matching_cluster
                 make_flux
                 save_ca
                 make_cert
@@ -1036,6 +1057,7 @@ do
                 setup_tmpdir
                 clone_remote
                 set_tools_dir
+		confirm_matching_cluster
                 make_mesh
                 save_changes "Added linkerd mesh"
                 ;;
@@ -1091,6 +1113,7 @@ do
                 check_remote_repo
                 setup_tmpdir
                 clone_remote
+		confirm_matching_cluster
                 make_users
                 ;;
         deploy_key)
@@ -1103,6 +1126,7 @@ do
         delete_cluster)
                 check_remote_repo
                 setup_tmpdir
+		confirm_matching_cluster
                 clone_remote
                 delete_cluster
                 ;;
@@ -1110,6 +1134,7 @@ do
                 check_remote_repo
                 setup_tmpdir
                 clone_remote
+		confirm_matching_cluster
                 await_deletion
                 info "cluster deleted"
                 ;;
@@ -1117,6 +1142,7 @@ do
                 check_remote_repo
                 setup_tmpdir
                 clone_remote
+		confirm_matching_cluster
                 remove_mesh
                 save_changes "Removed mesh."
                 ;;
@@ -1134,12 +1160,24 @@ do
                 merge_kubeconfig
                 ;;
         remove_gloo)
+                check_remote_repo
+                setup_tmpdir
+                clone_remote
+		confirm_matching_cluster
                 remove_gloo
                 ;;
         gloo_dashboard)
+                check_remote_repo
+                setup_tmpdir
+                clone_remote
+		confirm_matching_cluster
                 gloo_dashboard
                 ;;
         linkerd_dashboard)
+                check_remote_repo
+                setup_tmpdir
+                clone_remote
+		confirm_matching_cluster
                 linkerd_dashboard
                 ;;
         managed_policies)
