@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/local/bin/python3
 #
 # Generate separate files (into the current directory) from a YAML map  whose keys are the file names and the values are file contents
 # Optionally add a header and a footer
