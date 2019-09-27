@@ -1,3 +1,4 @@
+{{ if .Values.gloo.enabled }}
 apiVersion: gateway.solo.io.v2/v2
 kind: Gateway
 metadata:
@@ -12,3 +13,4 @@ spec:
   proxyNames:
   - gateway-proxy-v2
   useProxyProto: false
+{{ end }}

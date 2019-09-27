@@ -1,3 +1,4 @@
+{{ if .Values.gloo.enabled }}
 apiVersion: gateway.solo.io.v2/v2
 kind: Gateway
 metadata:
@@ -32,3 +33,4 @@ spec:
             session: "%REQ(x-tidepool-trace-session)%"
             content: "%REQ(content-type)%"
             authorization: "%REQ(authorization)%"
+{{ end }}
