@@ -2,15 +2,48 @@
 `tpctl` is used to create AWS EKS clusters that run the Tidepool services
 in a HIPAA compliant way.
 
-## Prerequisites
-You need Docker to run `tpctl`. 
-We package `tpctl` in a Docker container to ensure that it can be run in any environment.  Please install Docker on your local machine.
+## Running `tpctl` (via Docker)
 
+`tpctl` is a bash script that runs `tpctl.sh` in a Docker container. `tpctl.sh` requires a number of tools be installed in its environment.  The Docker container cointains those tools.
+
+However, we need to communicate using ssh, and using ssh-agent with Docker is challenging if you are running Docker for Mac. We have not attempted to do so.  
+
+We mount your ssh crendentials.  This will require you to enter in a passphrase if your SSHcredentials are protected by one.
 
 You also need an AWS account with an identity that has the right:
 * to create a Kubernetes cluster in EKS, 
 * to create secrets in the AWS Secrets Manager; and,
 * to create stacks in AWS CloudFormation.
+
+## Run `tpctl.sh` Natively
+
+Mounting your credentials works ok for a single SSH identity, but if you have multiple identities that must be shared, then you will run into problems.  In that case, you will find it easier to simply install the prerequisites onto your local Mac.  Most of these can be installed  using `'brew bundle  on the following Brewfile:
+
+```bash
+tap "weaveworks/tap"
+brew "awscli"
+brew "kubernetes-helm"
+brew "eksctl"
+brew "kubernetes-cli"
+brew "aws-iam-authenticator"
+brew "jq"
+brew "yq"
+brew "derailed/k9s/k9s"
+brew "fluxctl"
+brew "coreutils"
+brew "python3"
+brew "hub"
+brew "jsonnet"
+brew "kubecfg"
+brew "expect"
+brew "cfssl"
+brew "weaveworks/tap/eksctl"
+```
+
+In addition, you will need to install `python3` with three packages:
+```bash
+pip3 install --upgrade --user awscli boto3 environs
+```
 
 ## Installation
 You may pull down the latest version Docker image of `tpctl`
