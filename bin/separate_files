@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/python3
 #
 # Generate separate files (into the current directory) from a YAML map  whose keys are the file names and the values are file contents
 # Optionally add a header and a footer
@@ -31,8 +31,8 @@ def mkdir_p(path):
 
 for value in input:
     if value != None and "kind" in value:
-        path = "%s/%s" % (convert(value["kind"]), value["metadata"]
-                          ["namespace"] if "namespace" in value["metadata"] else "none")
+        path = "%s/%s" % (convert(value["metadata"]["namespace"])
+                          if "namespace" in value["metadata"] else "global", value["kind"])
         name = "%s.yaml" % value["metadata"]["name"]
         mkdir_p(path)
         print(path + "/" + name)
