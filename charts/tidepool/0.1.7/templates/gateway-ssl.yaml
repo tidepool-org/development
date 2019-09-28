@@ -4,7 +4,7 @@ kind: Gateway
 metadata:
   annotations:
     origin: default
-  name: gateway-ssl
+  name: gateway-proxy-v2-ssl
   namespace: {{ .Values.ingress.deployment.namespace | default "gloo-system" }}
 spec:
   bindAddress: '::'
