@@ -13,6 +13,20 @@ function cluster_in_repo {
 	yq r kubeconfig.yaml -j current-context | sed -e 's/"//g' -e "s/'//g"
 }
 
+# install gloo
+function install_gloo {
+        start "installing gloo" 
+        local config=$(get_config)
+	jsonnet --tla-code config="$config" $TEMPLATE_DIR/gloo/gloo-values.yaml.jsonnet | yq r - > $TMP_DIR/gloo-values.yaml
+	expect_success "Templating failure gloo/gloo-values.yaml.jsonnet"
+	rm -rf gloo
+	mkdir -p gloo
+	(cd gloo; glooctl install gateway -n gloo-system --values $TMP_DIR/gloo-values.yaml --dry-run | separate_files | add_names)
+	glooctl install gateway -n gloo-system --values $TMP_DIR/gloo-values.yaml
+	expect_success "Gloo installation failure"
+	completed "installed gloo"
+}
+
 function confirm_matching_cluster {
 	local in_context=$(cluster_in_context)
 	local in_repo=$(cluster_in_repo)
@@ -455,6 +469,8 @@ function template_files {
 function make_shared_config {
         start "creating namespaces and package manifests"
         local config=$(get_config)
+	rm -rf namespaces
+	rm -r pkgs
         template_files "$config" $TEMPLATE_DIR/namespaces $TEMPLATE_DIR/
         local dir
         for dir in $(enabled_pkgs $TEMPLATE_DIR/pkgs pkgs)
@@ -499,6 +515,7 @@ function environment_template_files {
 function make_environment_config {
         local config=$(get_config)
         local env
+	rm -rf environments
         for env in $(get_environments)
         do
                 start "creating $env environment manifests"
@@ -602,8 +619,10 @@ function update_flux {
         then
                 yq r flux/flux-deployment.yaml -j > $TMP_DIR/flux.json
                 yq r flux/helm-operator-deployment.yaml -j > $TMP_DIR/helm.json
-                jsonnet  --tla-code-file flux="$TMP_DIR/flux.json"  --tla-code-file helm="$TMP_DIR/helm.json" $TEMPLATE_DIR/flux/flux.jsonnet >$TMP_DIR/updated.json
-                expect_success "Templating failure flux/flux.jsonnet"
+                yq r flux/tiller-dep.yaml -j > $TMP_DIR/tiller.json
+
+		jsonnet  --tla-code-file flux="$TMP_DIR/flux.json"  --tla-code-file helm="$TMP_DIR/helm.json" $TEMPLATE_DIR/flux/flux.jsonnet >$TMP_DIR/updated.json --tla-code-file tiller="$TMP_DIR/tiller.json"
+		expect_success "Templating failure flux/flux.jsonnet"
 
                 add_file flux/flux-deployment-updated.yaml
                 yq r $TMP_DIR/updated.json flux >flux/flux-deployment-updated.yaml
@@ -613,11 +632,18 @@ function update_flux {
                 yq r $TMP_DIR/updated.json helm >flux/helm-operator-deployment-updated.yaml
                 expect_success "Serialization flux/helm-operator-deployment-updated.yaml"
 
+                add_file flux/tiller-dep-updated.yaml
+                yq r $TMP_DIR/updated.json tiller >flux/tiller-dep-updated.yaml
+                expect_success "Serialization flux/tiller-dep--updated.yaml"
+
                 rename_file flux/flux-deployment.yaml flux/flux-deployment.yaml.orig
                 mv flux/flux-deployment.yaml flux/flux-deployment.yaml.orig
 
                 rename_file flux/helm-operator-deployment.yaml flux/helm-operator-deployment.yaml.orig
                 mv flux/helm-operator-deployment.yaml flux/helm-operator-deployment.yaml.orig
+
+                rename_file flux/tiller-dep.yaml flux/tiller-dep.yaml.orig
+                mv flux/tiller-dep.yaml flux/tiller-dep.yaml.orig
         fi
         complete "updated flux and flux-helm-operator manifests"
 }
@@ -633,6 +659,7 @@ function make_mesh {
         start "installing mesh"
         info "linkerd check --pre"
 
+	rm -rf linkerd
         mkdir -p linkerd
         add_file "linkerd/linkerd-config.yaml"
         (cd linkerd; linkerd install config | separate_files | add_names)
@@ -888,7 +915,7 @@ function linkerd_dashboard {
 
 # show help
 function help {
-      echo "$0 [-h|--help] (all|values|edit_values|config|edit_repo|cluster|flux|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|managed_policies|diff)*"
+      echo "$0 [-h|--help] (all|values|edit_values|config|edit_repo|cluster|flux|gloo|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|managed_policies|diff)*"
       echo
       echo
       echo "So you want to built a Kubernetes cluster that runs Tidepool. Great!"
@@ -896,8 +923,9 @@ function help {
       echo "Second, create/edit a configuration file with $0 values."
       echo "Third, gerenate the rest of the configuration with $0 config."
       echo "Fourth, generate the actual AWS EKS cluster with $0 cluster."
-      echo "Fifth, install a service mesh (to encrypt inter-service traffic for HIPPA compliance with $0 mesh"
-      echo "Sixth, install the GitOps controller with $0 flux."
+      echo "Fifth, install gloo with $0 gloo."
+      echo "Sixth, install a service mesh (to encrypt inter-service traffic for HIPPA compliance with $0 mesh"
+      echo "Seventh, install the GitOps controller with $0 flux."
       echo "That is it!"
       echo
       echo "----- Basic Commands -----"
@@ -905,6 +933,7 @@ function help {
       echo "values  - create initial values.yaml file"
       echo "config  - create K8s and eksctl K8s manifest files"
       echo "cluster - create AWS EKS cluster, add system:master USERS"
+      echo "gloo    - install gloo"
       echo "mesh    - install service mesh"
       echo "flux    - install flux GitOps controller, Tiller server, client certs for Helm to access Tiller, and deploy key into GitHub"
       echo
@@ -1039,6 +1068,17 @@ do
                 make_users
                 save_changes "Added cluster and users"
                 ;;
+	gloo)
+                check_remote_repo
+                expect_github_token
+                setup_tmpdir
+                clone_remote
+                set_template_dir
+                set_tools_dir
+		confirm_matching_cluster
+		install_gloo
+		save_changes "Installed gloo"
+		;;
         flux)
                 check_remote_repo
                 expect_github_token
