@@ -1021,6 +1021,8 @@ do
                 merge_kubeconfig
                 make_users
                 save_changes "Added cluster and users"
+                install_gloo
+                save_changes "Added gloo"
                 make_mesh
                 save_changes "Added linkerd mesh"
                 make_flux
