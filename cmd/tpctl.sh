@@ -1,4 +1,4 @@
-#!/bin/bash -i
+#!/bin/bash -ix
 #
 # Configure EKS cluster to run Tidepool services
 #
@@ -6,7 +6,13 @@
 set -o pipefail
 
 function cluster_in_context {
-	KUBECONFIG=$(get_kubeconfig) kubectl config current-context
+	context=$(KUBECONFIG=$(get_kubeconfig) kubectl config current-context 2>/dev/null)
+	if [ $? -eq 0 ]
+	then
+		echo $context
+	else
+		echo "none"
+	fi
 }
 
 function cluster_in_repo {
@@ -559,6 +565,7 @@ function make_flux {
         local email=$(get_email)
         start "installing flux into cluster $cluster"
         establish_ssh
+	rm -rf flux
         EKSCTL_EXPERIMENTAL=true unbuffer eksctl install \
                 flux -f config.yaml --git-url=${GIT_REMOTE_REPO}.git --git-email=$email --git-label=$cluster  | tee  $TMP_DIR/eksctl.out
         expect_success "eksctl install flux failed."
@@ -1169,8 +1176,8 @@ do
         delete_cluster)
                 check_remote_repo
                 setup_tmpdir
-		confirm_matching_cluster
                 clone_remote
+		confirm_matching_cluster
                 delete_cluster
                 ;;
         await_deletion)
