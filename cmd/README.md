@@ -8,7 +8,7 @@ in a HIPAA compliant way.
 
 However, we need to communicate using ssh, and using ssh-agent with Docker is challenging if you are running Docker for Mac. We have not attempted to do so.  
 
-We mount your ssh crendentials.  This will require you to enter in a passphrase if your SSHcredentials are protected by one.
+We mount your SSH crendentials.  This will require you to enter in a passphrase if your SSH credentials are protected by one.
 
 You also need an AWS account with an identity that has the right:
 * to create a Kubernetes cluster in EKS, 
