@@ -467,17 +467,15 @@ function template_files {
 
 # make K8s manifest files for shared services
 function make_shared_config {
-        start "creating namespaces and package manifests"
+        start "creating package manifests"
         local config=$(get_config)
-	rm -rf namespaces
-	rm -r pkgs
-        template_files "$config" $TEMPLATE_DIR/namespaces $TEMPLATE_DIR/
+	rm -rf pkgs
         local dir
         for dir in $(enabled_pkgs $TEMPLATE_DIR/pkgs pkgs)
         do
                 template_files "$config" $TEMPLATE_DIR/pkgs/$dir $TEMPLATE_DIR/
         done
-        complete "created namespaces and package manifests"
+        complete "created package manifests"
 }
 
 # make EKSCTL manifest file
