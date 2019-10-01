@@ -210,7 +210,7 @@ function set_tools_dir {
                 pushd $TMP_DIR >/dev/null 2>&1
 		git clone $(repo_with_token https://github.com/tidepool-org/development)
                 cd development
-		git checkout dexcom
+		git checkout develop
                 DEV_DIR=$(pwd)
                 CHART_DIR=${DEV_DIR}/charts/tidepool/0.1.7
                 popd >/dev/null 2>&1
