@@ -4,7 +4,7 @@ apiVersion: v1
 data:
   ClinicRole: {{ .ClinicRole | default "" }}
   PatientRole: {{ .PatientRole | default "" }}
-  Timeout: {{ .Timeout | default "15000000000" | quote }}
+  Timeout: {{ .Timeout | default "15000000" | quote }}
 {{- end }}
 kind: ConfigMap
 metadata:

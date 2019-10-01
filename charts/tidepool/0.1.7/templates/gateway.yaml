@@ -1,9 +1,10 @@
+{{ if .Values.gloo.enabled }}
 apiVersion: gateway.solo.io.v2/v2
 kind: Gateway
 metadata:
   annotations:
     origin: default
-  name: gateway
+  name: gateway-proxy-v2
   namespace: {{ .Values.ingress.deployment.namespace | default "gloo-system" }}
 spec:
   bindAddress: '::'
@@ -12,3 +13,4 @@ spec:
   proxyNames:
   - gateway-proxy-v2
   useProxyProto: false
+{{ end }}

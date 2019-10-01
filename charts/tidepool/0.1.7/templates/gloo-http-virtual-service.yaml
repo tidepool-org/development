@@ -24,4 +24,23 @@ spec:
       delegateAction:
         name: 'tidepool-routes'
         namespace: {{ $.Release.Namespace }}
+{{ else }}
+---
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: 'gloo-http'
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  displayName: 'http-virtual-service'
+  virtualHost:
+    domains:
+{{- range $dnsName := .Values.ingress.gateway.https.dnsNames }}
+    - '{{ $dnsName }}'
+{{- end }}
+    routes:
+    - matcher:
+        prefix: '/'
+      redirectAction:
+        httpsRedirect: true
 {{- end -}}

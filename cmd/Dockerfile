@@ -2,9 +2,9 @@ FROM ubuntu:18.04
 ENV TERM xterm-256color
 ENV TZ America/Los_Angeles
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt update && apt upgrade && \
+RUN apt update -y && apt upgrade -y && \
     apt install nano python3-pip curl git openjdk-8-jdk vim python3 build-essential file locales jq expect -y && \
-    pip3 install --upgrade --user awscli boto3
+    pip3 install --upgrade --user awscli boto3 environs
 RUN locale-gen en_US.UTF-8
 RUN curl -sL https://github.com/google/jsonnet/releases/download/v0.14.0/jsonnet-bin-v0.14.0-linux.tar.gz | tar xz -C /tmp && \ 
     mv /tmp/jsonnet /usr/local/bin
@@ -40,5 +40,5 @@ RUN curl -sL -o /usr/local/bin/glooctl https://github.com/solo-io/gloo/releases/
 COPY tpctl.sh /root/tpctl
 COPY separate_files /usr/local/bin/separate_files
 COPY external_secret /usr/local/bin/external_secret
-RUN chmod +x /usr/local/bin/*
+RUN ln -s /usr/bin/python3 /usr/local/bin/python3 && chmod +x /usr/local/bin/*
 CMD [ "/root/tpctl"  ]

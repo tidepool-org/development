@@ -5,6 +5,39 @@
 
 set -o pipefail
 
+function cluster_in_context {
+	KUBECONFIG=$(get_kubeconfig) kubectl config current-context
+}
+
+function cluster_in_repo {
+	yq r kubeconfig.yaml -j current-context | sed -e 's/"//g' -e "s/'//g"
+}
+
+# install gloo
+function install_gloo {
+        start "installing gloo" 
+        local config=$(get_config)
+	jsonnet --tla-code config="$config" $TEMPLATE_DIR/gloo/gloo-values.yaml.jsonnet | yq r - > $TMP_DIR/gloo-values.yaml
+	expect_success "Templating failure gloo/gloo-values.yaml.jsonnet"
+	rm -rf gloo
+	mkdir -p gloo
+	(cd gloo; glooctl install gateway -n gloo-system --values $TMP_DIR/gloo-values.yaml --dry-run | separate_files | add_names)
+	glooctl install gateway -n gloo-system --values $TMP_DIR/gloo-values.yaml
+	expect_success "Gloo installation failure"
+	completed "installed gloo"
+}
+
+function confirm_matching_cluster {
+	local in_context=$(cluster_in_context)
+	local in_repo=$(cluster_in_repo)
+	if  [ "${in_repo}" != "${in_context}" ]
+	then
+		echo "${in_context} is cluster selected in KUBECONFIG config file"
+		echo "${in_repo} is cluster named in $REMOTE_REPO repo"
+		confirm "Is $REMOTE_REPO the repo you want to use? "
+	fi
+}
+
 function establish_ssh {
         ssh-add -l &>/dev/null
         if [ "$?" == 2 ]; then
@@ -117,7 +150,6 @@ function check_remote_repo {
         fi
         HTTPS_REMOTE_REPO=$(echo $GIT_REMOTE_REPO | sed -e "s#git@github.com:#https://github.com/#")
 
-	confirm "Is $REMOTE_REPO the repo you want to use? "
 }
 
 # clean up all temporary files
@@ -435,15 +467,15 @@ function template_files {
 
 # make K8s manifest files for shared services
 function make_shared_config {
-        start "creating namespaces and package manifests"
+        start "creating package manifests"
         local config=$(get_config)
-        template_files "$config" $TEMPLATE_DIR/namespaces $TEMPLATE_DIR/
+	rm -rf pkgs
         local dir
         for dir in $(enabled_pkgs $TEMPLATE_DIR/pkgs pkgs)
         do
                 template_files "$config" $TEMPLATE_DIR/pkgs/$dir $TEMPLATE_DIR/
         done
-        complete "created namespaces and package manifests"
+        complete "created package manifests"
 }
 
 # make EKSCTL manifest file
@@ -481,6 +513,7 @@ function environment_template_files {
 function make_environment_config {
         local config=$(get_config)
         local env
+	rm -rf environments
         for env in $(get_environments)
         do
                 start "creating $env environment manifests"
@@ -584,8 +617,10 @@ function update_flux {
         then
                 yq r flux/flux-deployment.yaml -j > $TMP_DIR/flux.json
                 yq r flux/helm-operator-deployment.yaml -j > $TMP_DIR/helm.json
-                jsonnet  --tla-code-file flux="$TMP_DIR/flux.json"  --tla-code-file helm="$TMP_DIR/helm.json" $TEMPLATE_DIR/flux/flux.jsonnet >$TMP_DIR/updated.json
-                expect_success "Templating failure flux/flux.jsonnet"
+                yq r flux/tiller-dep.yaml -j > $TMP_DIR/tiller.json
+
+		jsonnet  --tla-code-file flux="$TMP_DIR/flux.json"  --tla-code-file helm="$TMP_DIR/helm.json" $TEMPLATE_DIR/flux/flux.jsonnet >$TMP_DIR/updated.json --tla-code-file tiller="$TMP_DIR/tiller.json"
+		expect_success "Templating failure flux/flux.jsonnet"
 
                 add_file flux/flux-deployment-updated.yaml
                 yq r $TMP_DIR/updated.json flux >flux/flux-deployment-updated.yaml
@@ -595,27 +630,38 @@ function update_flux {
                 yq r $TMP_DIR/updated.json helm >flux/helm-operator-deployment-updated.yaml
                 expect_success "Serialization flux/helm-operator-deployment-updated.yaml"
 
+                add_file flux/tiller-dep-updated.yaml
+                yq r $TMP_DIR/updated.json tiller >flux/tiller-dep-updated.yaml
+                expect_success "Serialization flux/tiller-dep--updated.yaml"
+
                 rename_file flux/flux-deployment.yaml flux/flux-deployment.yaml.orig
                 mv flux/flux-deployment.yaml flux/flux-deployment.yaml.orig
 
                 rename_file flux/helm-operator-deployment.yaml flux/helm-operator-deployment.yaml.orig
                 mv flux/helm-operator-deployment.yaml flux/helm-operator-deployment.yaml.orig
+
+                rename_file flux/tiller-dep.yaml flux/tiller-dep.yaml.orig
+                mv flux/tiller-dep.yaml flux/tiller-dep.yaml.orig
         fi
         complete "updated flux and flux-helm-operator manifests"
 }
 
+function mykubectl {
+	KUBECONFIG=~/.kube/config kubectl $@
+}
+
 # create service mesh
 function make_mesh {
-	export KUBECONFIG=$(realpath ./kubeconfig.yaml)
         linkerd check --pre
         expect_success "Failed linkerd pre-check."
         start "installing mesh"
         info "linkerd check --pre"
 
+	rm -rf linkerd
         mkdir -p linkerd
         add_file "linkerd/linkerd-config.yaml"
         (cd linkerd; linkerd install config | separate_files | add_names)
-        linkerd install config | kubectl apply -f -
+        linkerd install config | mykubectl apply -f -
 
         linkerd check config
         while [ $? -ne 0 ]
@@ -628,7 +674,7 @@ function make_mesh {
 
         add_file "linkerd/linkerd-control-plane.yaml"
         (cd linkerd; linkerd install control-plane | separate_files | add_names)
-        linkerd install control-plane | kubectl apply -f -
+        linkerd install control-plane | mykubectl apply -f -
 
         linkerd check
         while [ $? -ne 0 ]
@@ -771,11 +817,10 @@ function delete_cluster {
 
 # remove service mesh from cluster and config repo
 function remove_mesh {
-	export KUBECONFIG=$(realpath ./kubeconfig.yaml)
         start "removing linkerd"
-        linkerd install --ignore-cluster | kubectl delete -f -
+        linkerd install --ignore-cluster | mykubectl delete -f -
         rm -rf linkerd
-        complete "removed linkerd"
+	complete "removed linkerd"
 }
 
 function create_repo {
@@ -801,12 +846,12 @@ function create_repo {
 }
 
 function gloo_dashboard {
-        kubectl port-forward -n gloo-system  deployment/api-server 8081:8080 &
+        mykubectl port-forward -n gloo-system  deployment/api-server 8081:8080 &
         open -a "Google Chrome"  http://localhost:8081
 }
 
 function remove_gloo {
-        glooctl install gateway --dry-run | kubectl delete -f -
+        glooctl install gateway --dry-run | mykubectl delete -f -
 }
 
 # await deletion of a CloudFormation template that represents a cluster before returning
@@ -868,7 +913,7 @@ function linkerd_dashboard {
 
 # show help
 function help {
-      echo "$0 [-h|--help] (all|values|edit_values|config|edit_repo|cluster|flux|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|managed_policies|diff)*"
+      echo "$0 [-h|--help] (all|values|edit_values|config|edit_repo|cluster|flux|gloo|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|managed_policies|diff)*"
       echo
       echo
       echo "So you want to built a Kubernetes cluster that runs Tidepool. Great!"
@@ -876,8 +921,9 @@ function help {
       echo "Second, create/edit a configuration file with $0 values."
       echo "Third, gerenate the rest of the configuration with $0 config."
       echo "Fourth, generate the actual AWS EKS cluster with $0 cluster."
-      echo "Fifth, install a service mesh (to encrypt inter-service traffic for HIPPA compliance with $0 mesh"
-      echo "Sixth, install the GitOps controller with $0 flux."
+      echo "Fifth, install gloo with $0 gloo."
+      echo "Sixth, install a service mesh (to encrypt inter-service traffic for HIPPA compliance with $0 mesh"
+      echo "Seventh, install the GitOps controller with $0 flux."
       echo "That is it!"
       echo
       echo "----- Basic Commands -----"
@@ -885,6 +931,7 @@ function help {
       echo "values  - create initial values.yaml file"
       echo "config  - create K8s and eksctl K8s manifest files"
       echo "cluster - create AWS EKS cluster, add system:master USERS"
+      echo "gloo    - install gloo"
       echo "mesh    - install service mesh"
       echo "flux    - install flux GitOps controller, Tiller server, client certs for Helm to access Tiller, and deploy key into GitHub"
       echo
@@ -972,6 +1019,8 @@ do
                 merge_kubeconfig
                 make_users
                 save_changes "Added cluster and users"
+                install_gloo
+                save_changes "Added gloo"
                 make_mesh
                 save_changes "Added linkerd mesh"
                 make_flux
@@ -981,7 +1030,9 @@ do
                 update_flux
                 save_changes "Added flux"
                 clone_secret_map
+        	establish_ssh
                 migrate_secrets
+        establish_ssh
                 save_changes "Added migrated secrets"
                 ;;
         repo)
@@ -1017,6 +1068,17 @@ do
                 make_users
                 save_changes "Added cluster and users"
                 ;;
+	gloo)
+                check_remote_repo
+                expect_github_token
+                setup_tmpdir
+                clone_remote
+                set_template_dir
+                set_tools_dir
+		confirm_matching_cluster
+		install_gloo
+		save_changes "Installed gloo"
+		;;
         flux)
                 check_remote_repo
                 expect_github_token
@@ -1024,6 +1086,7 @@ do
                 clone_remote
                 set_template_dir
                 set_tools_dir
+		confirm_matching_cluster
                 make_flux
                 save_ca
                 make_cert
@@ -1036,6 +1099,7 @@ do
                 setup_tmpdir
                 clone_remote
                 set_tools_dir
+		confirm_matching_cluster
                 make_mesh
                 save_changes "Added linkerd mesh"
                 ;;
@@ -1075,6 +1139,7 @@ do
                 clone_remote
                 set_tools_dir
                 clone_secret_map
+        	establish_ssh
                 migrate_secrets
                 save_changes "Added migrated secrets"
                 ;;
@@ -1091,6 +1156,7 @@ do
                 check_remote_repo
                 setup_tmpdir
                 clone_remote
+		confirm_matching_cluster
                 make_users
                 ;;
         deploy_key)
@@ -1103,6 +1169,7 @@ do
         delete_cluster)
                 check_remote_repo
                 setup_tmpdir
+		confirm_matching_cluster
                 clone_remote
                 delete_cluster
                 ;;
@@ -1110,6 +1177,7 @@ do
                 check_remote_repo
                 setup_tmpdir
                 clone_remote
+		confirm_matching_cluster
                 await_deletion
                 info "cluster deleted"
                 ;;
@@ -1117,6 +1185,7 @@ do
                 check_remote_repo
                 setup_tmpdir
                 clone_remote
+		confirm_matching_cluster
                 remove_mesh
                 save_changes "Removed mesh."
                 ;;
@@ -1134,12 +1203,24 @@ do
                 merge_kubeconfig
                 ;;
         remove_gloo)
+                check_remote_repo
+                setup_tmpdir
+                clone_remote
+		confirm_matching_cluster
                 remove_gloo
                 ;;
         gloo_dashboard)
+                check_remote_repo
+                setup_tmpdir
+                clone_remote
+		confirm_matching_cluster
                 gloo_dashboard
                 ;;
         linkerd_dashboard)
+                check_remote_repo
+                setup_tmpdir
+                clone_remote
+		confirm_matching_cluster
                 linkerd_dashboard
                 ;;
         managed_policies)

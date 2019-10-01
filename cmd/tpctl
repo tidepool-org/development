@@ -22,7 +22,7 @@ fi
 docker run -it \
 -e GITHUB_TOKEN=${GITHUB_TOKEN} \
 -e REMOTE_REPO=${REMOTE_REPO} \
--v ${SSH_HOME}:/root/.ssh:ro \
+-v ${SSH_HOME}:/root/.ssh \
 -v ${GIT_CONFIG}:/root/.gitconfig:ro \
 -v ${HELM_HOME}:/root/.helm \
 -v ${AWS_CONFIG}:/root/.aws:ro \

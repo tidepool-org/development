@@ -78,7 +78,7 @@ spec:
               key: StateSalt
               optional: true
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
-          value: "internal.{{.Release.Namespace}}"
+          value: {{ .Values.global.gateway.default.host }}
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.auth}}
         - name: TIDEPOOL_AUTH_SERVICE_SECRET
