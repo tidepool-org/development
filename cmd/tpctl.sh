@@ -873,7 +873,8 @@ function await_deletion {
 # migrate secrets from legacy GitHub repo to AWS secrets manager
 function migrate_secrets {
         local cluster=$(get_cluster)
-        get_secrets | external_secret upsert $cluster plaintext | separate_files | add_names
+	mkdir -p external-secrets
+	(cd external-secrets; get_secrets | external_secret upsert $cluster plaintext | separate_files | add_names)
 }
 
 function create_secrets_managed_policy {
@@ -1137,7 +1138,8 @@ do
                 clone_remote
                 set_tools_dir
                 local cluster=$(get_cluster)
-                randomize_secrets | external_secret upsert $cluster encoded | separate_files | add_names
+		mkdir -p external-secrets
+		(cd external-secrets; randomize_secrets | external_secret upsert $cluster encoded | separate_files | add_names)
                 save_changes "Added random secrets"
                 ;;
         migrate_secrets)
@@ -1156,7 +1158,8 @@ do
                 clone_remote
                 set_tools_dir
                 local cluster=$(get_cluster)
-                external_secret upsert $cluster plaintext | separate_files | add_names
+		mkdir -p external-secrets
+		(cd external-secrets; external_secret upsert $cluster plaintext | separate_files | add_names)
                 save_changes "Added plaintext secrets"
                 ;;
         install_users)
