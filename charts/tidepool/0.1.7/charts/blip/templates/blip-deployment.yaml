@@ -45,6 +45,10 @@ spec:
         - name: WEBPACK_DEVTOOL
           value: {{ .Values.webpackDevTool }}
 {{- end }}
+{{ if .Values.webpackDevToolViz }}
+        - name: WEBPACK_DEVTOOL_VIZ
+          value: {{ .Values.webpackDevToolViz }}
+{{- end }}
 {{ if .Values.disableDevTools }}
         - name: DEV_TOOLS
           value: 'false'
