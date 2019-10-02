@@ -15,6 +15,13 @@ function cluster_in_context {
 	fi
 }
 
+function make_envrc {
+	local context=$(get_context)
+	context=$(yq r kubeconfig.yaml current-context)
+	echo "kubectx $context" >.envrc
+	add_file ".envrc"
+}
+
 function cluster_in_repo {
 	yq r kubeconfig.yaml -j current-context | sed -e 's/"//g' -e "s/'//g"
 }
@@ -388,6 +395,7 @@ function make_cluster {
         expect_success "eksctl create cluster failed."
         git pull
         add_file "./kubeconfig.yaml"
+	make_envrc
         complete "created cluster $cluster"
 }
 
@@ -921,7 +929,7 @@ function linkerd_dashboard {
 
 # show help
 function help {
-      echo "$0 [-h|--help] (all|values|edit_values|config|edit_repo|cluster|flux|gloo|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|managed_policies|diff)*"
+      echo "$0 [-h|--help] (all|values|edit_values|config|edit_repo|cluster|flux|gloo|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|managed_policies|diff|envrc)*"
       echo
       echo
       echo "So you want to built a Kubernetes cluster that runs Tidepool. Great!"
@@ -962,6 +970,7 @@ function help {
       echo "linkerd_dashboard - open the Linkerd dashboard"
       echo "managed_policies - create managed policies"
       echo "diff - show recent git diff"
+      echo "envrc - create .envrc file for direnv to change kubecontexts"
 }
 
 if [ $# -eq 0 ]
@@ -1245,6 +1254,13 @@ do
                 clone_remote
                 diff_config
                 ;;
+	envrc)
+                check_remote_repo
+                setup_tmpdir
+                clone_remote
+		make_envrc
+                save_changes "Added envrc"
+		;;
         *)
                 panic "unknown command: $param"
                 ;;

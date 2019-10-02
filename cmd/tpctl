@@ -9,8 +9,8 @@ SSH_KEY=${SSH_KEY:-id_rsa}
 AGENT_CONTAINER=""
 
 function shutdown_agent {
-	docker kill ssh-agent
-	docker rm $AGENT_CONTAINER
+	docker kill ssh-agent >/dev/null
+	docker rm $AGENT_CONTAINER >/dev/null
 }
 
 running=$(docker inspect -f '{{.State.Running}}' ssh-agent 2>/dev/null)
