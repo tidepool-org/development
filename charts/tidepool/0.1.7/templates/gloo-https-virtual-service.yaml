@@ -42,7 +42,7 @@ spec:
       maxAge: 600s
     domains:
 {{- range $dnsName := $spec.dnsNames }}
-    - '{{ if ne $port "443" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf " %s" $dnsName -}}{{- end -}}'
+    - '{{ if ne $port "443" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf "%s" $dnsName -}}{{- end -}}'
 {{- end  }}
     routes:
     - matcher:
