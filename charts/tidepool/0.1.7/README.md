@@ -106,8 +106,8 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `gatekeeper.deployment.image` | gatekeeper Docker image | `` |
 | `gatekeeper.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
 | `global.fullnameOverride`                                |                                                                                              | ``                                                    |
-| `global.gateway.host`                          | Host to use for email verification                                                      | `localhost`   |
-| `global.gateway.protocol`                          | Protocol to use for email verification.                                                      | `http`                                                    |
+| `global.gateway.default.host`                          | Host to use for email verification                                                      | `localhost`   |
+| `global.gateway.default.protocol`                          | Protocol to use for email verification.                                                      | `http`                                                    |
 | `global.logLevel`                              | Default log level | `info`                                        |
 | `global.nameOverride`                                    | If non-empty, Helm chart name to use                                                         | ``                                                    |
 | `global.ports.auth`                                      | Auth service container port                                                                  | `9222`                                                |

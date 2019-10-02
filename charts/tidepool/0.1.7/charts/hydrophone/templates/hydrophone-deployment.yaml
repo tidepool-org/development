@@ -68,7 +68,7 @@ spec:
                 }
             }
         - name: PROTOCOL
-          value: "{{ .Values.global.gateway.protocol }}"
+          value: "{{ .Values.global.gateway.default.protocol }}"
         - name: TIDEPOOL_HYDROPHONE_SERVICE
           value: |
             {
