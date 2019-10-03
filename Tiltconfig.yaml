@@ -110,6 +110,7 @@ blip:
   containerPath: '/app'
   apiHost: 'http://localhost:3000'
   webpackDevTool: cheap-module-eval-source-map
+  webpackDevToolViz: cheap-source-map # Suggest changing to the slower, but far more helpful `source-map` if debugging errors in viz package files
   webpackPublicPath: 'http://localhost:3000'
   disableDevTools: false # Suggest changing to `true` if working with large data sets in local development build
   linkedPackages:
