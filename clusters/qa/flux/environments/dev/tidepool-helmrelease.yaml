@@ -90,7 +90,7 @@ spec:
       image: tidepool/highwater:develop-5288888159293ec640ac3623191ec395a260eba7
     hydrophone:
       bucket: tidepool-qa1-asset
-      image: tidepool/hydrophone:develop-471c14613e64c38a934962bc7d1829f4eb6cadf6
+      image: tidepool/hydrophone:develop-81b6894d5047096d39b14773cc00d82874053efb
     jellyfish:
       bucket: tidepool-qa1-data
       image: tidepool/jellyfish:develop-33e891e9f666f7608bce9a693fd4c7b2add7537b
