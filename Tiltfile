@@ -105,6 +105,7 @@ def provisionServerSecrets ():
     'image',
     'kissmetrics',
     'mailchimp',
+    'marketo',
     'mongo',
     'notification',
     'server',
