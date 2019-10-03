@@ -6,36 +6,49 @@
 set -o pipefail
 
 function cluster_in_context {
-	KUBECONFIG=$(get_kubeconfig) kubectl config current-context
+        context=$(KUBECONFIG=$(get_kubeconfig) kubectl config current-context 2>/dev/null)
+        if [ $? -eq 0 ]
+        then
+                echo $context
+        else
+                echo "none"
+        fi
+}
+
+function make_envrc {
+        local context=$(get_context)
+        context=$(yq r kubeconfig.yaml current-context)
+        echo "kubectx $context" >.envrc
+        add_file ".envrc"
 }
 
 function cluster_in_repo {
-	yq r kubeconfig.yaml -j current-context | sed -e 's/"//g' -e "s/'//g"
+        yq r kubeconfig.yaml -j current-context | sed -e 's/"//g' -e "s/'//g"
 }
 
 # install gloo
 function install_gloo {
         start "installing gloo" 
         local config=$(get_config)
-	jsonnet --tla-code config="$config" $TEMPLATE_DIR/gloo/gloo-values.yaml.jsonnet | yq r - > $TMP_DIR/gloo-values.yaml
-	expect_success "Templating failure gloo/gloo-values.yaml.jsonnet"
-	rm -rf gloo
-	mkdir -p gloo
-	(cd gloo; glooctl install gateway -n gloo-system --values $TMP_DIR/gloo-values.yaml --dry-run | separate_files | add_names)
-	glooctl install gateway -n gloo-system --values $TMP_DIR/gloo-values.yaml
-	expect_success "Gloo installation failure"
-	completed "installed gloo"
+        jsonnet --tla-code config="$config" $TEMPLATE_DIR/gloo/gloo-values.yaml.jsonnet | yq r - > $TMP_DIR/gloo-values.yaml
+        expect_success "Templating failure gloo/gloo-values.yaml.jsonnet"
+        rm -rf gloo
+        mkdir -p gloo
+        (cd gloo; glooctl install gateway -n gloo-system --values $TMP_DIR/gloo-values.yaml --dry-run | separate_files | add_names)
+        glooctl install gateway -n gloo-system --values $TMP_DIR/gloo-values.yaml
+        expect_success "Gloo installation failure"
+        completed "installed gloo"
 }
 
 function confirm_matching_cluster {
-	local in_context=$(cluster_in_context)
-	local in_repo=$(cluster_in_repo)
-	if  [ "${in_repo}" != "${in_context}" ]
-	then
-		echo "${in_context} is cluster selected in KUBECONFIG config file"
-		echo "${in_repo} is cluster named in $REMOTE_REPO repo"
-		confirm "Is $REMOTE_REPO the repo you want to use? "
-	fi
+        local in_context=$(cluster_in_context)
+        local in_repo=$(cluster_in_repo)
+        if  [ "${in_repo}" != "${in_context}" ]
+        then
+                echo "${in_context} is cluster selected in KUBECONFIG config file"
+                echo "${in_repo} is cluster named in $REMOTE_REPO repo"
+                confirm "Is $REMOTE_REPO the repo you want to use? "
+        fi
 }
 
 function establish_ssh {
@@ -145,7 +158,7 @@ function check_remote_repo {
         if [[ $REMOTE_REPO != */* ]]
         then
                 GIT_REMOTE_REPO="git@github.com:tidepool-org/$REMOTE_REPO"
-	else
+        else
                 GIT_REMOTE_REPO=$REMOTE_REPO
         fi
         HTTPS_REMOTE_REPO=$(echo $GIT_REMOTE_REPO | sed -e "s#git@github.com:#https://github.com/#")
@@ -156,7 +169,7 @@ function check_remote_repo {
 function cleanup {
         if [ -f "$TMP_DIR" ]
         then
-		cd /
+                cd /
                 rm -rf $TMP_DIR
         fi
 }
@@ -174,8 +187,8 @@ function setup_tmpdir {
 }
 
 function repo_with_token {
-	local repo=$1
-	echo $repo | sed -e "s#https://#https://$GITHUB_TOKEN@#"
+        local repo=$1
+        echo $repo | sed -e "s#https://#https://$GITHUB_TOKEN@#"
 }
 
 
@@ -184,7 +197,7 @@ function clone_remote {
         cd $TMP_DIR
         if [[ ! -d $(basename $HTTPS_REMOTE_REPO) ]]; then
                 start "cloning remote"
-		git clone $(repo_with_token $HTTPS_REMOTE_REPO)
+                git clone $(repo_with_token $HTTPS_REMOTE_REPO)
                 expect_success "Cannot clone $HTTPS_REMOTE_REPO"
                 complete "cloned remote"
         fi
@@ -196,7 +209,7 @@ function set_template_dir {
         if [[ ! -d $TEMPLATE_DIR ]]; then
                 start "cloning quickstart"
                 pushd $TMP_DIR >/dev/null 2>&1
-		git clone $(repo_with_token https://github.com/tidepool-org/eks-template)
+                git clone $(repo_with_token https://github.com/tidepool-org/eks-template)
                 export TEMPLATE_DIR=$(pwd)/eks-template
                 popd >/dev/null 2>&1
                 complete "cloned quickstart"
@@ -208,9 +221,9 @@ function set_tools_dir {
         if [[ ! -d $CHART_DIR ]]; then
                 start "cloning development tools"
                 pushd $TMP_DIR >/dev/null 2>&1
-		git clone $(repo_with_token https://github.com/tidepool-org/development)
+                git clone $(repo_with_token https://github.com/tidepool-org/development)
                 cd development
-		git checkout develop
+                git checkout develop
                 DEV_DIR=$(pwd)
                 CHART_DIR=${DEV_DIR}/charts/tidepool/0.1.7
                 popd >/dev/null 2>&1
@@ -223,7 +236,7 @@ function clone_secret_map {
         if [[ ! -d $SM_DIR ]]; then
                 start "cloning secret-map"
                 pushd $TMP_DIR >/dev/null 2>&1
-		git clone $(repo_with_token https://github.com/tidepool-org/secret-map)
+                git clone $(repo_with_token https://github.com/tidepool-org/secret-map)
                 SM_DIR=$(pwd)/secret-map
                 popd >/dev/null 2>&1
                 complete "cloned secret-map"
@@ -277,12 +290,13 @@ function get_iam_users {
 
 # retrieve bucket name or create from convention
 function get_bucket {
-        local env = $1
-        local bucket=$(yq r values.yaml environments.${env}.asset | sed -e "/^  .*/d" -e s/:.*//)
+        local env=$1
+        local kind=$2
+        local bucket=$(yq r values.yaml environments.${env}.tidepool.buckets.${kind} | sed -e "/^  .*/d" -e s/:.*//)
         if [ "$bucket" == "null" ]
         then
                 local cluster=$(get_cluster)
-                echo "tidepool-${cluster}-${env}-asset"
+                echo "tidepool-${cluster}-${env}-${kind}"
         else
                 echo $bucket
         fi
@@ -293,7 +307,7 @@ function make_assets {
         local env
         for env in $(get_environments)
         do
-                local bucket=$(get_bucket $env)
+                local bucket=$(get_bucket $env asset)
                   start "creating asset bucket $bucket"
                   aws s3 mb s3://$bucket
                   info "copying  dev assets into $bucket"
@@ -382,6 +396,7 @@ function make_cluster {
         expect_success "eksctl create cluster failed."
         git pull
         add_file "./kubeconfig.yaml"
+        make_envrc
         complete "created cluster $cluster"
 }
 
@@ -469,7 +484,7 @@ function template_files {
 function make_shared_config {
         start "creating package manifests"
         local config=$(get_config)
-	rm -rf pkgs
+        rm -rf pkgs
         local dir
         for dir in $(enabled_pkgs $TEMPLATE_DIR/pkgs pkgs)
         do
@@ -513,7 +528,7 @@ function environment_template_files {
 function make_environment_config {
         local config=$(get_config)
         local env
-	rm -rf environments
+        rm -rf environments
         for env in $(get_environments)
         do
                 start "creating $env environment manifests"
@@ -559,6 +574,7 @@ function make_flux {
         local email=$(get_email)
         start "installing flux into cluster $cluster"
         establish_ssh
+        rm -rf flux
         EKSCTL_EXPERIMENTAL=true unbuffer eksctl install \
                 flux -f config.yaml --git-url=${GIT_REMOTE_REPO}.git --git-email=$email --git-label=$cluster  | tee  $TMP_DIR/eksctl.out
         expect_success "eksctl install flux failed."
@@ -619,8 +635,8 @@ function update_flux {
                 yq r flux/helm-operator-deployment.yaml -j > $TMP_DIR/helm.json
                 yq r flux/tiller-dep.yaml -j > $TMP_DIR/tiller.json
 
-		jsonnet  --tla-code-file flux="$TMP_DIR/flux.json"  --tla-code-file helm="$TMP_DIR/helm.json" $TEMPLATE_DIR/flux/flux.jsonnet >$TMP_DIR/updated.json --tla-code-file tiller="$TMP_DIR/tiller.json"
-		expect_success "Templating failure flux/flux.jsonnet"
+                jsonnet  --tla-code-file flux="$TMP_DIR/flux.json"  --tla-code-file helm="$TMP_DIR/helm.json" $TEMPLATE_DIR/flux/flux.jsonnet >$TMP_DIR/updated.json --tla-code-file tiller="$TMP_DIR/tiller.json"
+                expect_success "Templating failure flux/flux.jsonnet"
 
                 add_file flux/flux-deployment-updated.yaml
                 yq r $TMP_DIR/updated.json flux >flux/flux-deployment-updated.yaml
@@ -647,7 +663,7 @@ function update_flux {
 }
 
 function mykubectl {
-	KUBECONFIG=~/.kube/config kubectl $@
+        KUBECONFIG=~/.kube/config kubectl $@
 }
 
 # create service mesh
@@ -657,7 +673,7 @@ function make_mesh {
         start "installing mesh"
         info "linkerd check --pre"
 
-	rm -rf linkerd
+        rm -rf linkerd
         mkdir -p linkerd
         add_file "linkerd/linkerd-config.yaml"
         (cd linkerd; linkerd install config | separate_files | add_names)
@@ -820,28 +836,28 @@ function remove_mesh {
         start "removing linkerd"
         linkerd install --ignore-cluster | mykubectl delete -f -
         rm -rf linkerd
-	complete "removed linkerd"
+        complete "removed linkerd"
 }
 
 function create_repo {
         read -p "${GREEN}repo name?${RESET} "  -r
         REMOTE_REPO=$REPLY
-	DATA='{"name":"yolo-test", "private":"true"}'
-	D=$(echo $DATA | sed -e "s/yolo-test/$REMOTE_REPO/")
+        DATA='{"name":"yolo-test", "private":"true"}'
+        D=$(echo $DATA | sed -e "s/yolo-test/$REMOTE_REPO/")
 
-	read -p "${GREEN}Is this for an organization? ${RESET}" -r
-	if [[ "$REPLY" =~ (y|Y)* ]]
-	then
-	    read -p $"${GREEN} Name of organization [tidepool-org]?${RESET} " ORG
-	    ORG=${ORG:-tidepool-org}
-	    REMOTE_REPO=$ORG/$REMOTE_REPO
-	    curl https://api.github.com/orgs/$ORG/repos?access_token=${GITHUB_TOKEN} -d "$D"
+        read -p "${GREEN}Is this for an organization? ${RESET}" -r
+        if [[ "$REPLY" =~ (y|Y)* ]]
+        then
+            read -p $"${GREEN} Name of organization [tidepool-org]?${RESET} " ORG
+            ORG=${ORG:-tidepool-org}
+            REMOTE_REPO=$ORG/$REMOTE_REPO
+            curl https://api.github.com/orgs/$ORG/repos?access_token=${GITHUB_TOKEN} -d "$D"
         else
-	    read -p $"${GREEN} User name?${RESET} " -r
-	    REMOTE_REPO=$REPLY/$REMOTE_REPO
-	    curl https://api.github.com/user/repos?access_token=${GITHUB_TOKEN} -d "$D"
-	fi
-	complete "private repo created"
+            read -p $"${GREEN} User name?${RESET} " -r
+            REMOTE_REPO=$REPLY/$REMOTE_REPO
+            curl https://api.github.com/user/repos?access_token=${GITHUB_TOKEN} -d "$D"
+        fi
+        complete "private repo created"
         check_remote_repo
 }
 
@@ -866,7 +882,8 @@ function await_deletion {
 # migrate secrets from legacy GitHub repo to AWS secrets manager
 function migrate_secrets {
         local cluster=$(get_cluster)
-        get_secrets | external_secret upsert $cluster plaintext | separate_files | add_names
+        mkdir -p external-secrets
+        (cd external-secrets; get_secrets | external_secret upsert $cluster plaintext | separate_files | add_names)
 }
 
 function create_secrets_managed_policy {
@@ -881,6 +898,7 @@ function create_secrets_managed_policy {
                 start "Creating IAM Managed Policy for secrets management for $cluster in region $region"
                 local cf_file=file://$(realpath $file)
                 local account=$(get_aws_account)
+                # XXX - only supports case where cluster == env
 
                 cat >$file <<EOF
                   AWSTemplateFormatVersion: 2010-09-09
@@ -898,7 +916,40 @@ function create_secrets_managed_policy {
                             - secretsmanager:GetSecretValue
                             Resource:
                             - "arn:aws:secretsmanager:${region}:${account}:secret:${cluster}/*"
+                          - Effect: Allow
+                            Action:
+                            - "ses:*"
+                            Resource: "*"
 EOF
+        	for env in $(get_environments)
+        	do
+                	local dataBucket=$(get_bucket $env data)
+                	local assetBucket=$(get_bucket $env asset)
+			cat >>$file <<EOF
+                          - Effect: Allow
+                            Action:
+                            - s3:ListBucket
+                            Resource:
+                            - "arn:aws:s3:::${dataBucket}/*"
+                          - Effect: Allow
+                            Action:
+                            - s3:GetObject
+                            - s3:PutObject
+                            - s3:DeleteObject
+                            Resource:
+                            - "arn:aws:s3:::${dataBucket}/*"
+                          - Effect: Allow
+                            Action:
+                            - s3:ListBucket
+                            Resource:
+                            - "arn:aws:s3:::${assetBucket}/*"
+                          - Effect: Allow
+                            Action:
+                            - s3:GetObject
+                            Resource:
+                            - "arn:aws:s3:::${assetBucket}/*"
+EOF
+		done
                 aws cloudformation create-stack --stack-name ${stack_name} --capabilities CAPABILITY_NAMED_IAM --template-body ${cf_file}
 
                 aws cloudformation wait stack-create-complete --stack-name ${stack_name}
@@ -913,7 +964,7 @@ function linkerd_dashboard {
 
 # show help
 function help {
-      echo "$0 [-h|--help] (all|values|edit_values|config|edit_repo|cluster|flux|gloo|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|managed_policies|diff)*"
+      echo "$0 [-h|--help] (all|values|edit_values|config|edit_repo|cluster|flux|gloo|regenerate_cert|copy_assets|mesh|migrate_secrets|randomize_secrets|upsert_plaintext_secrets|install_users|deploy_key|delete_cluster|await_deletion|remove_mesh|merge_kubeconfig|gloo_dashboard|linkerd_dashboard|managed_policies|diff|envrc)*"
       echo
       echo
       echo "So you want to built a Kubernetes cluster that runs Tidepool. Great!"
@@ -954,6 +1005,7 @@ function help {
       echo "linkerd_dashboard - open the Linkerd dashboard"
       echo "managed_policies - create managed policies"
       echo "diff - show recent git diff"
+      echo "envrc - create .envrc file for direnv to change kubecontexts"
 }
 
 if [ $# -eq 0 ]
@@ -1030,7 +1082,7 @@ do
                 update_flux
                 save_changes "Added flux"
                 clone_secret_map
-        	establish_ssh
+                establish_ssh
                 migrate_secrets
         establish_ssh
                 save_changes "Added migrated secrets"
@@ -1068,17 +1120,17 @@ do
                 make_users
                 save_changes "Added cluster and users"
                 ;;
-	gloo)
+        gloo)
                 check_remote_repo
                 expect_github_token
                 setup_tmpdir
                 clone_remote
                 set_template_dir
                 set_tools_dir
-		confirm_matching_cluster
-		install_gloo
-		save_changes "Installed gloo"
-		;;
+                confirm_matching_cluster
+                install_gloo
+                save_changes "Installed gloo"
+                ;;
         flux)
                 check_remote_repo
                 expect_github_token
@@ -1086,7 +1138,7 @@ do
                 clone_remote
                 set_template_dir
                 set_tools_dir
-		confirm_matching_cluster
+                confirm_matching_cluster
                 make_flux
                 save_ca
                 make_cert
@@ -1099,7 +1151,7 @@ do
                 setup_tmpdir
                 clone_remote
                 set_tools_dir
-		confirm_matching_cluster
+                confirm_matching_cluster
                 make_mesh
                 save_changes "Added linkerd mesh"
                 ;;
@@ -1130,7 +1182,8 @@ do
                 clone_remote
                 set_tools_dir
                 local cluster=$(get_cluster)
-                randomize_secrets | external_secret upsert $cluster encoded | separate_files | add_names
+                mkdir -p external-secrets
+                (cd external-secrets; randomize_secrets | external_secret upsert $cluster encoded | separate_files | add_names)
                 save_changes "Added random secrets"
                 ;;
         migrate_secrets)
@@ -1139,7 +1192,7 @@ do
                 clone_remote
                 set_tools_dir
                 clone_secret_map
-        	establish_ssh
+                establish_ssh
                 migrate_secrets
                 save_changes "Added migrated secrets"
                 ;;
@@ -1149,14 +1202,15 @@ do
                 clone_remote
                 set_tools_dir
                 local cluster=$(get_cluster)
-                external_secret upsert $cluster plaintext | separate_files | add_names
+                mkdir -p external-secrets
+                (cd external-secrets; external_secret upsert $cluster plaintext | separate_files | add_names)
                 save_changes "Added plaintext secrets"
                 ;;
         install_users)
                 check_remote_repo
                 setup_tmpdir
                 clone_remote
-		confirm_matching_cluster
+                confirm_matching_cluster
                 make_users
                 ;;
         deploy_key)
@@ -1169,15 +1223,15 @@ do
         delete_cluster)
                 check_remote_repo
                 setup_tmpdir
-		confirm_matching_cluster
                 clone_remote
+                confirm_matching_cluster
                 delete_cluster
                 ;;
         await_deletion)
                 check_remote_repo
                 setup_tmpdir
                 clone_remote
-		confirm_matching_cluster
+                confirm_matching_cluster
                 await_deletion
                 info "cluster deleted"
                 ;;
@@ -1185,7 +1239,7 @@ do
                 check_remote_repo
                 setup_tmpdir
                 clone_remote
-		confirm_matching_cluster
+                confirm_matching_cluster
                 remove_mesh
                 save_changes "Removed mesh."
                 ;;
@@ -1206,21 +1260,21 @@ do
                 check_remote_repo
                 setup_tmpdir
                 clone_remote
-		confirm_matching_cluster
+                confirm_matching_cluster
                 remove_gloo
                 ;;
         gloo_dashboard)
                 check_remote_repo
                 setup_tmpdir
                 clone_remote
-		confirm_matching_cluster
+                confirm_matching_cluster
                 gloo_dashboard
                 ;;
         linkerd_dashboard)
                 check_remote_repo
                 setup_tmpdir
                 clone_remote
-		confirm_matching_cluster
+                confirm_matching_cluster
                 linkerd_dashboard
                 ;;
         managed_policies)
@@ -1234,6 +1288,13 @@ do
                 setup_tmpdir
                 clone_remote
                 diff_config
+                ;;
+        envrc)
+                check_remote_repo
+                setup_tmpdir
+                clone_remote
+                make_envrc
+                save_changes "Added envrc"
                 ;;
         *)
                 panic "unknown command: $param"

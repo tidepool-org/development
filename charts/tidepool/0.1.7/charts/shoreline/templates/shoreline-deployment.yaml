@@ -34,24 +34,39 @@ spec:
         {{ include "charts.mongo.params" .}}
         - name: TIDEPOOL_STORE_DATABASE
           value: user
-        - name: CLINIC_LISTS
+        - name: MARKETO_CLINIC_ROLE
           valueFrom:
-            secretKeyRef:
-              name: mailchimp
-              key: ClinicLists
-              optional: false
-        - name: MAILCHIMP_URL
-          valueFrom:
-            secretKeyRef:
-              name: mailchimp
-              key: URL
+            configMapKeyRef:
+              name: marketo
+              key: ClinicRole
               optional: true
-        - name: PERSONAL_LISTS
+        - name: MARKETO_PATIENT_ROLE
+          valueFrom:
+            configMapKeyRef:
+              name: marketo
+              key: PatientRole
+              optional: true
+        - name: MARKETO_TIMEOUT
+          valueFrom:
+            configMapKeyRef:
+              name: marketo
+              key: Timeout
+              optional: true
+        - name: MARKETO_ID
           valueFrom:
             secretKeyRef:
-              name: mailchimp
-              key: PersonalLists
-              optional: false
+              name: marketo
+              key: ID
+        - name: MARKETO_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: marketo
+              key: Secret
+        - name: MARKETO_URL
+          valueFrom:
+            secretKeyRef:
+              name: marketo
+              key: URL
         - name: DEMO_CLINIC_USER_ID
           valueFrom:
             configMapKeyRef:
@@ -86,12 +101,6 @@ spec:
             secretKeyRef:
               name: shoreline
               key: UserLongTermKey 
-              optional: true
-        - name: MAILCHIMP_APIKEY
-          valueFrom:
-            secretKeyRef:
-              name: mailchimp
-              key: ApiKey
               optional: true
         - name: TIDEPOOL_SHORELINE_ENV
           value: |

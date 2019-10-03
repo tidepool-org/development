@@ -5,7 +5,21 @@ HELM_HOME=${HELM_HOME:-~/.helm}
 KUBE_CONFIG=${KUBECONFIG:-~/.kube/config}
 AWS_CONFIG=${AWS_CONFIG:-~/.aws}
 GIT_CONFIG=${GIT_CONFIG:-~/.gitconfig}
-SSH_HOME=${SSH_HOME:-~/.ssh}
+SSH_KEY=${SSH_KEY:-id_rsa}
+AGENT_CONTAINER=""
+
+function shutdown_agent {
+	docker kill ssh-agent >/dev/null
+	docker rm $AGENT_CONTAINER >/dev/null
+}
+
+running=$(docker inspect -f '{{.State.Running}}' ssh-agent 2>/dev/null)
+if [ $? -ne 0 -o "$running" == "false"  ]
+then
+	AGENT_CONTAINER=$(docker run -d --name=ssh-agent nardeas/ssh-agent)
+	docker run --rm --volumes-from=ssh-agent -v ~/.ssh:/.ssh -it nardeas/ssh-agent ssh-add /root/.ssh/${SSH_KEY}
+        trap shutdown_agent EXIT
+fi
 
 if [ -z "$GITHUB_TOKEN" ]
 then
@@ -20,13 +34,13 @@ then
 fi
 
 docker run -it \
+--volumes-from=ssh-agent \
+-e SSH_AUTH_SOCK=/.ssh-agent/socket \
 -e GITHUB_TOKEN=${GITHUB_TOKEN} \
 -e REMOTE_REPO=${REMOTE_REPO} \
--v ${SSH_HOME}:/root/.ssh \
 -v ${GIT_CONFIG}:/root/.gitconfig:ro \
 -v ${HELM_HOME}:/root/.helm \
 -v ${AWS_CONFIG}:/root/.aws:ro \
 -v ${KUBE_CONFIG}:/root/.kube/config \
 tidepool/tpctl /root/tpctl $*
-
 
