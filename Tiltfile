@@ -98,7 +98,7 @@ def provisionServerSecrets ():
   required_secrets = [
     'auth',
     'blob',
-    'jellyfish',
+    'carelink',
     'data',
     'dexcom',
     'export',
@@ -115,13 +115,11 @@ def provisionServerSecrets ():
   ]
 
   secretHelmKeyMap = {
-    'jellyfish': 'carelink.secret.enabled',
     'kissmetrics': 'global.secret.templated',
     'mailchimp': 'global.secret.templated',
   }
 
   secretChartPathMap = {
-    'jellyfish': 'carelink/templates/carelink-secret.yaml',
     'kissmetrics': 'highwater/charts/kissmetrics/templates/kissmetrics-secret.yaml',
     'mailchimp': 'shoreline/charts/mailchimp/templates/mailchimp-secret.yaml',
   }
