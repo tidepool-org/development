@@ -628,6 +628,7 @@ EOF
 # update flux and helm operator manifests
 function update_flux {
         start "updating flux and flux-helm-operator manifests"
+	local config=$(get_config)
 
         if [ -f flux/flux-deployment.yaml ]
         then
@@ -635,7 +636,7 @@ function update_flux {
                 yq r flux/helm-operator-deployment.yaml -j > $TMP_DIR/helm.json
                 yq r flux/tiller-dep.yaml -j > $TMP_DIR/tiller.json
 
-                jsonnet  --tla-code-file flux="$TMP_DIR/flux.json"  --tla-code-file helm="$TMP_DIR/helm.json" $TEMPLATE_DIR/flux/flux.jsonnet >$TMP_DIR/updated.json --tla-code-file tiller="$TMP_DIR/tiller.json"
+                jsonnet --tla-code config="$config" --tla-code-file flux="$TMP_DIR/flux.json"  --tla-code-file helm="$TMP_DIR/helm.json" $TEMPLATE_DIR/flux/flux.jsonnet >$TMP_DIR/updated.json --tla-code-file tiller="$TMP_DIR/tiller.json"
                 expect_success "Templating failure flux/flux.jsonnet"
 
                 add_file flux/flux-deployment-updated.yaml
