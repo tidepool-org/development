@@ -517,9 +517,18 @@ function environment_template_files {
                 mkdir -p $dir
                 if [ "${file: -8}" == ".jsonnet" ]
                 then
-                        add_file $dir/${file%.jsonnet}
-                        jsonnet --tla-code config="$config" --tla-str namespace=$env $fullpath | yq r - > $dir/${file%.jsonnet}
+			local out=$dir/${file%.jsonnet}
+			local prev=$TMP_DIR/$dir/${file%.jsonnet}
+                        add_file $out
+			if [ -f  $prev ]
+			then
+				yq r $prev -j > $TMP_DIR/${file%.jsonnet}
+			else
+				echo "{}" > $TMP_DIR/${file%.jsonnet}
+			fi
+                        jsonnet  --tla-code-file prev=$TMP_DIR/${file%.jsonnet}  --tla-code config="$config" --tla-str namespace=$env $fullpath | yq r - > $dir/${file%.jsonnet}
                         expect_success "Templating failure $filename"
+			rm $TMP_DIR/${file%.jsonnet}
                 fi
         done
 }
@@ -528,7 +537,7 @@ function environment_template_files {
 function make_environment_config {
         local config=$(get_config)
         local env
-        rm -rf environments
+        mv environments $TMP_DIR
         for env in $(get_environments)
         do
                 start "creating $env environment manifests"
