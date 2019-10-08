@@ -20,6 +20,7 @@ spec:
       - fileSink:
           path: /dev/stdout
           jsonFormat:
+            ip: "%DOWNSTREAM_DIRECT_REMOTE_ADDRESS%"
             duration: "%DURATION%"
             response: "%RESPONSE_CODE%"
             upstream: "%UPSTREAM_CLUSTER%"

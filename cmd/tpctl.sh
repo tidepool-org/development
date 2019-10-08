@@ -1,4 +1,4 @@
-#!/bin/bash -i
+#!/bin/bash -ix
 #
 # Configure EKS cluster to run Tidepool services
 #
@@ -26,15 +26,52 @@ function cluster_in_repo {
         yq r kubeconfig.yaml -j current-context | sed -e 's/"//g' -e "s/'//g"
 }
 
+function get_sumo_accessID {
+	echo $1 | jq '.accessID' | sed -e 's/"//g'
+}
+
+function get_sumo_accessKey {
+	echo $1 | jq '.accessKey' | sed -e 's/"//g'
+}
+
+function install_sumo {
+        start "installing sumo" 
+        local config=$(get_config)
+	local cluster=$(get_cluster)
+	local namespace=$(require_value "pkgs.sumologic.namespace")
+	local apiEndpoint=$(require_value "pkgs.sumologic.apiEndpoint")
+        local sumoSecret=$(aws secretsmanager get-secret-value  --secret-id $cluster/$namespace/sumologic | jq '.SecretString | fromjson')
+	local accessID=$(get_sumo_accessID $sumoSecret)
+	local accessKey=$(get_sumo_accessKey $sumoSecret)
+	curl -s https://raw.githubusercontent.com/SumoLogic/sumologic-kubernetes-collection/master/deploy/docker/setup/setup.sh \
+		| bash -s - -k $cluster -n $namespace -d false $apiEndpoint $accessID $accessKey > pkgs/sumologic/sumologic.yaml
+	complete "installed sumo"
+}
+
+
+function add_gloo_manifest {
+        config=$1
+        file=$2
+        (cd gloo; \
+        jsonnet --tla-code config="$config" $TEMPLATE_DIR/gloo/${file}.yaml.jsonnet | separate_files | add_names; \
+        expect_success "Templating failure gloo/$1.yaml.jsonnet")
+}
+
 # install gloo
 function install_gloo {
         start "installing gloo" 
         local config=$(get_config)
         jsonnet --tla-code config="$config" $TEMPLATE_DIR/gloo/gloo-values.yaml.jsonnet | yq r - > $TMP_DIR/gloo-values.yaml
         expect_success "Templating failure gloo/gloo-values.yaml.jsonnet"
+
         rm -rf gloo
         mkdir -p gloo
         (cd gloo; glooctl install gateway -n gloo-system --values $TMP_DIR/gloo-values.yaml --dry-run | separate_files | add_names)
+        expect_success "Templating failure gloo/gloo-values.yaml.jsonnet"
+        add_gloo_manifest "$config" gateway-ssl
+        add_gloo_manifest "$config" gateway
+        add_gloo_manifest "$config" settings
+
         glooctl install gateway -n gloo-system --values $TMP_DIR/gloo-values.yaml
         expect_success "Gloo installation failure"
         completed "installed gloo"
@@ -517,9 +554,18 @@ function environment_template_files {
                 mkdir -p $dir
                 if [ "${file: -8}" == ".jsonnet" ]
                 then
-                        add_file $dir/${file%.jsonnet}
-                        jsonnet --tla-code config="$config" --tla-str namespace=$env $fullpath | yq r - > $dir/${file%.jsonnet}
+			local out=$dir/${file%.jsonnet}
+			local prev=$TMP_DIR/$dir/${file%.jsonnet}
+                        add_file $out
+			if [ -f  $prev ]
+			then
+				yq r $prev -j > $TMP_DIR/${file%.jsonnet}
+			else
+				echo "{}" > $TMP_DIR/${file%.jsonnet}
+			fi
+                        jsonnet  --tla-code-file prev=$TMP_DIR/${file%.jsonnet}  --tla-code config="$config" --tla-str namespace=$env $fullpath | yq r - > $dir/${file%.jsonnet}
                         expect_success "Templating failure $filename"
+			rm $TMP_DIR/${file%.jsonnet}
                 fi
         done
 }
@@ -528,7 +574,7 @@ function environment_template_files {
 function make_environment_config {
         local config=$(get_config)
         local env
-        rm -rf environments
+        mv environments $TMP_DIR
         for env in $(get_environments)
         do
                 start "creating $env environment manifests"
@@ -986,6 +1032,7 @@ function help {
       echo "gloo    - install gloo"
       echo "mesh    - install service mesh"
       echo "flux    - install flux GitOps controller, Tiller server, client certs for Helm to access Tiller, and deploy key into GitHub"
+      echo "sumo    - install sumologic collector"
       echo
       echo "If you run into trouble or have specific needs, check out these commands:"
       echo
@@ -1296,6 +1343,12 @@ do
                 clone_remote
                 make_envrc
                 save_changes "Added envrc"
+                ;;
+        sumo)
+                check_remote_repo
+                setup_tmpdir
+                clone_remote
+                install_sumo
                 ;;
         *)
                 panic "unknown command: $param"

@@ -44,6 +44,14 @@ spec:
 {{- range $dnsName := $spec.dnsNames }}
     - '{{ if ne $port "443" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf "%s" $dnsName -}}{{- end -}}'
 {{- end  }}
+{{ if .Values.ingress.service.https.strict }}
+    virtualHostPlugins:
+      headerManipulation:
+        requestHeadersToAdd:
+        - header:
+            key: Strict-Transport-Security
+            value: max-age=31536000
+{{ end }}
     routes:
     - matcher:
         prefix: '/'
