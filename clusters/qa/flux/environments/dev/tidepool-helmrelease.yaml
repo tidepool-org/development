@@ -105,9 +105,9 @@ spec:
       image: tidepool/platform-data:develop-9139822572a890eb372d19332d45093c0233cfea
     image:
       bucket: tidepool-qa1-data
-      image: tidepool/platform-image:develop-9139822572a890eb372d19332d45093c0233cfea
+      image: tidepool/platform-image:develop-c21328b48a583b35906a26d04c3c741921c586b1
     migrations:
-      image: tidepool/platform-migrations:develop-9139822572a890eb372d19332d45093c0233cfea
+      image: tidepool/platform-migrations:develop-c21328b48a583b35906a26d04c3c741921c586b1
     notification:
       enabled: false
       image: tidepool/platform-notification:develop-9139822572a890eb372d19332d45093c0233cfea
