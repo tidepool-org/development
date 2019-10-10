@@ -60,6 +60,6 @@ spec:
         - containerPort: {{.Values.global.ports.image}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
       restartPolicy: Always

@@ -93,6 +93,6 @@ spec:
         - containerPort: {{.Values.global.ports.auth}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always
