@@ -30,9 +30,8 @@ spec:
     spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}
-{{ if .Values.serviceAccount.create }}
-      serviceAccount: hydrophone
-      serviceAccountName: hydrophone
+{{ if .Values.serviceAccount.name }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
 {{- end }}
       containers:
       - env:
