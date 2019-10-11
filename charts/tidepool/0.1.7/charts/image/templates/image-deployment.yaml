@@ -29,9 +29,8 @@ spec:
     spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}
-{{ if .Values.serviceAccount.create }}
-      serviceAccount: image
-      serviceAccountName: image
+{{ if .Values.serviceAccount.name }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
 {{- end }}
       containers:
       - env:
@@ -60,6 +59,6 @@ spec:
         - containerPort: {{.Values.global.ports.image}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
       restartPolicy: Always
