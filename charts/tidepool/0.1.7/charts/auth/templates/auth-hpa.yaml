@@ -9,11 +9,11 @@ metadata:
   labels:
 {{ include "charts.labels.standard" .}}
 spec:
-  maxReplicas: {{ .Values.hpa.data.maxReplicas | default 10 }}
-  minReplicas: {{ .Values.hpa.data.minReplicas | default 1 }}
+  maxReplicas: {{ .Values.hpa.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.hpa.minReplicas | default 1 }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: auth
-  targetCPUUtilizationPercentage: {{ .Values.hpa.data.targetCPUUtilizationPercentage | default 50 }}
+  targetCPUUtilizationPercentage: {{ .Values.hpa.targetCPUUtilizationPercentage | default 50 }}
 {{- end }}
