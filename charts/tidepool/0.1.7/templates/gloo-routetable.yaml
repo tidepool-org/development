@@ -505,7 +505,7 @@ spec:
       - DELETE
       prefix: /export/
     routePlugins:
-      timeout: '2m'
+      timeout: '5m'
     routeAction:
       single:
         upstream:
