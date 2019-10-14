@@ -543,7 +543,7 @@ spec:
       single:
         kube:
           ref:
-            name: messageapi
+            name: message-api
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.messageapi }}
     routePlugins:
@@ -677,7 +677,7 @@ spec:
       single:
         kube:
           ref:
-            name: tidewhisperer
+            name: tide-whisperer
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.tidewhisperer }}
     routePlugins:
