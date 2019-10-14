@@ -593,7 +593,7 @@ spec:
       - DELETE
       prefix: /export/
     routePlugins:
-      timeout: '5m'
+      timeout: '2m'
     routeAction:
       single:
         kube:
@@ -681,6 +681,7 @@ spec:
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.tidewhisperer }}
     routePlugins:
+      timeout: '1m'
       prefixRewrite:
         prefixRewrite: /
   - matcher:
