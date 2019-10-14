@@ -326,6 +326,7 @@ spec:
     routePlugins:
       prefixRewrite:
         prefixRewrite: /
+  - matcher:
       methods:
       - GET
       - POST
