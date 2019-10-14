@@ -1,3 +1,4 @@
+  - matcher:
 apiVersion: gateway.solo.io/v1
 kind: RouteTable
 metadata:
@@ -90,6 +91,7 @@ spec:
   - matcher:
       methods:
       - GET
+      - POST
       regex: /v1/users/[^/]+/data_sets
     routeAction:
       single:
@@ -325,9 +327,11 @@ spec:
     routePlugins:
       prefixRewrite:
         prefixRewrite: /
-  - matcher:
       methods:
       - GET
+      - POST
+      - DELETE
+      - PUT
       prefix: /v1/data_sets
     routeAction:
       single:
