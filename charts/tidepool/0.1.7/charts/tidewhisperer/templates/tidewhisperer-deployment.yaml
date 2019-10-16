@@ -15,7 +15,7 @@ spec:
       app: tide-whisperer
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: 1
+  replicas: {{ .Values.deployment.replicas | default 1 }}
   strategy: {}
   template:
     metadata:
