@@ -32,7 +32,7 @@ spec:
       containers:
       - env:
         - name: API_HOST
-          value: "internal.{{.Release.Namespace}}"
+          value: "http://internal.{{.Release.Namespace}}"
         - name: DEBUG_LEVEL
           value: debug
         - name: HTTP_PORT
