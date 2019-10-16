@@ -57,16 +57,19 @@ spec:
             secretKeyRef:
               name: marketo
               key: ID
+              optional: true
         - name: MARKETO_SECRET
           valueFrom:
             secretKeyRef:
               name: marketo
               key: Secret
+              optional: true
         - name: MARKETO_URL
           valueFrom:
             secretKeyRef:
               name: marketo
               key: URL
+              optional: true
         - name: DEMO_CLINIC_USER_ID
           valueFrom:
             configMapKeyRef:
