@@ -9,6 +9,6 @@ spec:
   minAvailable: {{ .Values.pdb.minAvailable | default 1 }}
   selector:
     matchLabels:
-      app.kubernetes.io/instance: {{ .Release.Namespace }
+      app.kubernetes.io/instance: {{ .Release.Namespace }}
       app.kubernetes.io/name: export
 {{ end }}
