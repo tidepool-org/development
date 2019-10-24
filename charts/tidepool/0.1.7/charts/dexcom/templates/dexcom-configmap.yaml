@@ -7,7 +7,11 @@ metadata:
   labels:
 {{ include "charts.labels.standard" . }}
 data:
+{{ if .Values.configmap.redirectURL }}
+  RedirectURL: {{ .Values.configmap.redirectURL }}
+{{ else }} 
   RedirectURL: "{{include "charts.host.external.tp" .}}/v1/oauth/dexcom/redirect"
+{{ end }}
   TokenURL: "https://api.dexcom.com/v1/oauth2/token"                
   AuthorizeURL: "https://api.dexcom.com/v1/oauth2/login?prompt=login" 
   ClientURL: "https://api.dexcom.com"    
