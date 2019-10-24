@@ -5,4 +5,5 @@ secret:
     ClientSecret: ""
     StateSalt: ""                            # the Dexcom client API url
 configmap:
-  enabled: false
+  enabled: true
+  redirectURL: ""
