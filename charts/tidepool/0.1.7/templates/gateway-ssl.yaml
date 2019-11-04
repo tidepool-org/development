@@ -35,4 +35,5 @@ spec:
             content: "%REQ(content-type)%"
             authorization: "%REQ(authorization)%"
             remoteAddress: "%DOWNSTREAM_REMOTE_ADDRESS%"
+            forwardedFor: "%REQ(X-FORWARDED-FOR)%"
 {{ end }}
