@@ -283,7 +283,7 @@ spec:
   - matcher:
       methods:
       - GET
-      prefix: /v1/device/data/"
+      prefix: /v1/device/data/
     routeAction:
       single:
         kube:
