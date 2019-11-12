@@ -56,11 +56,16 @@ spec:
         - name: PORT
           value: "{{.Values.global.ports.tidewhisperer}}"
         image: "{{ .Values.deployment.image }}"
-        livenessProbe:
+        readinessProbe:
           httpGet:
-            path: /status
+            path: /ready
             port: {{.Values.global.ports.tidewhisperer}}
           initialDelaySeconds: 30
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: {{.Values.global.ports.tidewhisperer}}
+          initialDelaySeconds: 3
           periodSeconds: 10
         name: tide-whisperer
         ports:

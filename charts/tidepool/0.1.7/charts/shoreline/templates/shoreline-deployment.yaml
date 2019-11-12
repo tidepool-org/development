@@ -114,10 +114,15 @@ spec:
         image: "{{ .Values.deployment.image }}"
         livenessProbe:
           httpGet:
-            path: /status
+            path: /live
             port: {{ .Values.global.ports.shoreline }}
           initialDelaySeconds: 3
           periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: {{ .Values.global.ports.shoreline }}
+          initialDelaySeconds: 30
         name: shoreline
         ports:
         - containerPort: {{ .Values.global.ports.shoreline }}
