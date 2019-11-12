@@ -1,3 +1,4 @@
+{{ if .Values.gloo.enabled }}
 apiVersion: gateway.solo.io.v2/v2
 kind: Gateway
 metadata:
@@ -9,6 +10,13 @@ spec:
   bindAddress: '::'
   bindPort: 8443
   httpGateway: {}
+    plugins: 
+      httpConnectionManagerSettings: 
+        tracing: 
+          verbose: true
+          requestHeadersForTags: [ "path", "origin" ]
+      healthCheck: 
+        path: '/status'
   proxyNames:
   - gateway-proxy-v2
   ssl: true
@@ -35,3 +43,4 @@ spec:
             authorization: "%REQ(authorization)%"
             remoteAddress: "%DOWNSTREAM_REMOTE_ADDRESS%"
             forwardedFor: "%REQ(X-FORWARDED-FOR)%"
+{{ end }}

@@ -1,3 +1,4 @@
+{{ if .Values.gloo.enabled }}
 apiVersion: gateway.solo.io.v2/v2
 kind: Gateway
 metadata:
@@ -8,7 +9,37 @@ metadata:
 spec:
   bindAddress: '::'
   bindPort: 8080
-  httpGateway: {}
+  httpGateway: 
+    plugins: 
+      httpConnectionManagerSettings: 
+        tracing: 
+          verbose: true
+          requestHeadersForTags: [ "path", "origin" ]
+      healthCheck: 
+        path: '/status'
   proxyNames:
   - gateway-proxy-v2
   useProxyProto: false
+  plugins:
+    accessLoggingService:
+      accessLog:
+      - fileSink:
+          path: /dev/stdout
+          jsonFormat:
+            ip: "%DOWNSTREAM_DIRECT_REMOTE_ADDRESS%"
+            duration: "%DURATION%"
+            response: "%RESPONSE_CODE%"
+            upstream: "%UPSTREAM_CLUSTER%"
+            startTime: "%START_TIME%"
+            authority: "%REQ(:authority)%"
+            scheme: "%REQ(:scheme)%"
+            path: "%REQ(:path)%"
+            method: "%REQ(:method)%"
+            token: "%REQ(x-tidepool-session-token)%"
+            request: "%REQ(x-tidepool-trace-request)%"
+            session: "%REQ(x-tidepool-trace-session)%"
+            content: "%REQ(content-type)%"
+            authorization: "%REQ(authorization)%"
+            remoteAddress: "%DOWNSTREAM_REMOTE_ADDRESS%"
+            forwardedFor: "%REQ(X-FORWARDED-FOR)%"
+{[ end }}
