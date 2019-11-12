@@ -682,8 +682,6 @@ spec:
           port: {{ .Values.global.ports.tidewhisperer }}
     routePlugins:
       timeout: '1m'
-      prefixRewrite:
-        prefixRewrite: /
   - matcher:
       methods:
       - GET
