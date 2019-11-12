@@ -12,6 +12,7 @@ spec:
   httpGateway: {}
     plugins: 
       httpConnectionManagerSettings: 
+        use_remote_address: true
         tracing: 
           verbose: true
           requestHeadersForTags: [ "path", "origin" ]
