@@ -17,7 +17,7 @@ spec:
     gloo: gateway-proxy-v2
   type: ClusterIP 
 {{ else }}
-  externalName: {{ .Values.ingress.deployment.name -}}.{{- .Values.ingress.deployment.namespace -}}.svc.cluster.local
+  externalName: internal-gateway-proxy-v2.{{- .Values.ingress.deployment.namespace -}}.svc.cluster.local
   ports:
   - port: 80
   type: ExternalName
