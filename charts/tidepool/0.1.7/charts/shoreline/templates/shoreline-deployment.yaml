@@ -105,40 +105,12 @@ spec:
               name: shoreline
               key: UserLongTermKey 
               optional: true
-        - name: TIDEPOOL_SHORELINE_ENV
-          value: |
-            {
-                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.global.ports.gatekeeper}}"]}},
-                "hakken": {
-                  "host": "hakken",
-                  "skipHakken": true
-                },
-                "highwater": {
-                    "metricsSource": "shoreline",
-                    "metricsVersion": "v0.0.1",
-                    "name": "highwater",
-                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.global.ports.highwater}}"]}
-                }
-            }
-        - name: TIDEPOOL_SHORELINE_SERVICE
-          value: |
-            {
-                "mongo": {
-                    "connectionString": ""
-                },
-                "oauth2": {
-                    "expireDays": 14
-                },
-                "service": {
-                    "host": "localhost:{{.Values.global.ports.shoreline}}",
-                    "protocol": "http",
-                    "service": "shoreline"
-                },
-                "user": {
-                    "longTermDaysDuration": 30,
-                    "tokenDurationSecs": 2592000
-                }
-            }
+        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+          value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
+        - name: TIDEPOOOL_HIGHWATER_CLIENT_ADDRESS
+          value: "http://highwater:{{.Values.global.ports.highwater}}"
+        - name: PORT
+          value: "{{.Values.global.ports.shoreline}}"
         image: "{{ .Values.deployment.image }}"
         livenessProbe:
           httpGet:

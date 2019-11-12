@@ -45,41 +45,16 @@ spec:
             secretKeyRef:
               name: auth
               key: ServiceAuth
-        - name: TIDEPOOL_TIDE_WHISPERER_ENV
-          value: |
-            {
-                "auth": {
-                  "address": "http://auth:{{.Values.global.ports.auth}}",
-                  "userAgent": "Tidepool-TideWhisperer"
-                },
-                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.global.ports.gatekeeper}}"]}},
-                "hakken": {
-                  "host": "hakken",
-                  "skipHakken": true
-                  },
-                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.global.ports.seagull}}"]}},
-                "shoreline": {
-                    "name": "tide-whisperer",
-                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:{{.Values.global.ports.shoreline}}"]},
-                    "tokenRefreshInterval": "1h"
-                }
-            }
-        - name: TIDEPOOL_TIDE_WHISPERER_SERVICE
-          value: |
-            {
-                "mongo": {
-                    "connectionString": ""
-                },
-                "schemaVersion": {
-                    "maximum": 99,
-                    "minimum": 1
-                },
-                "service": {
-                    "host": "localhost:{{.Values.global.ports.tidewhisperer}}",
-                    "protocol": "http",
-                    "service": "tide-whisperer"
-                }
-            }
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: "http://auth:{{.Values.global.ports.auth}}"
+        - name: TIDEPOOL_SEAGULL_CLIENT_ADDRESS
+          value: "http://seagull:{{.Values.global.ports.seagull}}"
+        - name: TIDEPOOL_SHORELINE_CLIENT_ADDRESS
+          value: "http://shoreline:{{.Values.global.ports.shoreline}}"
+        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+          value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
+        - name: PORT
+          value: "{{.Values.global.ports.tidewhisperer}}"
         image: "{{ .Values.deployment.image }}"
         livenessProbe:
           httpGet:
