@@ -7,18 +7,7 @@ metadata:
   labels:
 {{ include "charts.labels.standard" .}}
 spec:
-{{ if .Values.gloo.enabled }}
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 8080
-  selector:
-    gloo: gateway-proxy-v2
-  type: ClusterIP 
-{{ else }}
-  externalName: internal-gateway-proxy-v2.{{- .Values.ingress.deployment.namespace -}}.svc.cluster.local
+  externalName: {{ .Values.ingress.deployment.name }}.{{- .Values.ingress.deployment.namespace -}}.svc.cluster.local
   ports:
   - port: 80
   type: ExternalName
-{{ end }}
