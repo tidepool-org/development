@@ -4,9 +4,12 @@
 ---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
+
 metadata:
   name: 'gloo-http'
   namespace: '{{ .Release.Namespace }}'
+  labels:
+    source: 'external'
 spec:
   displayName: 'http-virtual-service'
   virtualHost:
@@ -31,6 +34,8 @@ kind: VirtualService
 metadata:
   name: 'gloo-http'
   namespace: '{{ .Release.Namespace }}'
+  labels:
+    source: 'external'
 spec:
   displayName: 'http-virtual-service'
   virtualHost:

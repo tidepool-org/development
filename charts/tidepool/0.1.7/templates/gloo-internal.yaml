@@ -5,6 +5,8 @@ kind: VirtualService
 metadata:
   name: internal
   namespace: '{{ $.Release.Namespace }}'
+  labels:
+    source: 'internal'
 spec:
   displayName: internal
   virtualHost:
