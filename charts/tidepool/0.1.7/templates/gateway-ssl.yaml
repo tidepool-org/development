@@ -1,4 +1,3 @@
-{{ if .Values.gloo.enabled }}
 apiVersion: gateway.solo.io.v2/v2
 kind: Gateway
 metadata:
@@ -36,4 +35,3 @@ spec:
             authorization: "%REQ(authorization)%"
             remoteAddress: "%DOWNSTREAM_REMOTE_ADDRESS%"
             forwardedFor: "%REQ(X-FORWARDED-FOR)%"
-{{ end }}
