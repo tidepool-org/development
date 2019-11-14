@@ -35,6 +35,42 @@ spec:
         {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: Scopes
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: dexcom
+              key: ClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: dexcom
+              key: ClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: dexcom
+              key: StateSalt
+              optional: true
         - name: TIDEPOOL_TASK_QUEUE_DELAY
           value: {{ .Values.deployment.env.queue.delay | quote }}
         - name: TIDEPOOL_TASK_QUEUE_WORKERS

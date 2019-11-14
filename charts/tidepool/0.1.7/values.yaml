@@ -44,8 +44,8 @@ ingress:
       enabled: false
       strict: false
   deployment:
-    name: gateway-proxy-v2                                             
-    namespace: gloo-system  
+    name: gateway-proxy-v2                                             # name of the proxy for INTERNAL traffic
+    namespace: gloo-system                                             # namespace of the proxy for INTERNAL traffic
   gateway:
     http:
       port: "80"
