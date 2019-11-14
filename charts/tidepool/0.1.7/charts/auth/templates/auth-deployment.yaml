@@ -36,6 +36,12 @@ spec:
         {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: AuthorizeURL
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
           valueFrom:
             configMapKeyRef:
