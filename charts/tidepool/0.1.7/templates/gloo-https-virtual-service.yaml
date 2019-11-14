@@ -11,7 +11,7 @@ spec:
   displayName: gloo-https
   sslConfig:
     secretRef:
-      name: '{{ .Values.ingress.certificate.secretName }}'
+      name: '{{ .Values.ingress.certificate.secretName | default "tls" }}'
       namespace: '{{ $.Release.Namespace }}'
     sniDomains:
 {{- range $dnsName := $spec.dnsNames }}
