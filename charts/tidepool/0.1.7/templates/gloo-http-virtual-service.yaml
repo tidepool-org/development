@@ -19,8 +19,8 @@ spec:
 {{- end -}}
 {{- end }}
     routes:
-    - matcher:
-        prefix: '/'
+    - matchers:
+      - prefix: '/'
       delegateAction:
         name: 'tidepool-routes'
         namespace: {{ $.Release.Namespace }}
@@ -39,8 +39,8 @@ spec:
     - '{{ $dnsName }}'
 {{- end }}
     routes:
-    - matcher:
-        prefix: '/'
+    - matchers:
+      - prefix: '/'
       redirectAction:
         httpsRedirect: true
 {{- end -}}

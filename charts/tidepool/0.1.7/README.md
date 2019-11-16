@@ -145,7 +145,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `image.deployment.image` | image Docker image | `` |
 | `image.secret.enabled`                                         | whether to create image secret| ``                                         |
 | `image.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
-| `ingress.deployment.name`                              | Name of the API gateway proxy                                                                | `gateway-proxy-v2`                                    |
+| `ingress.deployment.name`                              | Name of the API gateway proxy                                                                | `internal-gateway-proxy`                                    |
 | `ingress.deployment.namespace`                         | Namespace of the API gateway proxy                                                           | `gloo-system`                                         |
 | `ingress.gateway.http.dnsNames`                             | List of host to listen to                                                                    | `localhost`                                           |
 | `ingress.gateway.https.dnsNames`                            | List of Subject Alternative Names to use                                                     | `[]`                                                  |

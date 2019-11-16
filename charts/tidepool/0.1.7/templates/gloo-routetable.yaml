@@ -5,8 +5,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   routes:
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - POST
       - DELETE
@@ -18,8 +18,8 @@ spec:
             name: auth
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.auth }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - POST
       - DELETE
@@ -31,8 +31,8 @@ spec:
             name: auth
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.auth }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /request-password-from-uploader
     routeAction:
@@ -42,8 +42,8 @@ spec:
             name: blip
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blip }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - POST
       - DELETE
@@ -56,8 +56,8 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - PUT
       - DELETE
@@ -69,8 +69,8 @@ spec:
             name: auth
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.auth }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /verification-with-password
     routeAction:
@@ -80,8 +80,8 @@ spec:
             name: blip
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blip }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - POST
       prefix: /event/csp-report/violation
     routeAction:
@@ -91,8 +91,8 @@ spec:
             name: blip
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blip }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - DELETE
       regex: /v1/oauth/[^/]+/authorize
@@ -103,8 +103,8 @@ spec:
             name: auth
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.auth }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - POST
       regex: /v1/users/[^/]+/data_sets
@@ -115,8 +115,8 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - POST
       - DELETE
@@ -128,8 +128,8 @@ spec:
             name: image
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.image }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       regex: /v1/oauth/[^/]+/redirect
     routeAction:
@@ -139,8 +139,8 @@ spec:
             name: auth
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.auth }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - POST
       regex: /v1/users/[^/]+/datasets
@@ -151,8 +151,8 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /request-password-reset
     routeAction:
@@ -162,8 +162,8 @@ spec:
             name: blip
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blip }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /confirm-password-reset
     routeAction:
@@ -173,8 +173,8 @@ spec:
             name: blip
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blip }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       regex: /v1/blobs/[^/]+/content
     routeAction:
@@ -184,8 +184,8 @@ spec:
             name: blob
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blob }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - PUT
       - DELETE
@@ -197,8 +197,8 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - POST
       - DELETE
@@ -210,8 +210,8 @@ spec:
             name: image
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.image }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - PUT
       - DELETE
@@ -223,8 +223,8 @@ spec:
             name: auth
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.auth }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - POST
       - DELETE
@@ -236,8 +236,8 @@ spec:
             name: blob
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blob }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - DELETE
       regex: /v1/users/[^/]+/data
     routeAction:
@@ -247,8 +247,8 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - POST
       prefix: /v1/device/upload/cl
     routeAction:
@@ -258,8 +258,8 @@ spec:
             name: jellyfish
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.jellyfish }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /email-verification
     routeAction:
@@ -269,8 +269,8 @@ spec:
             name: blip
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blip }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /clinician-details
     routeAction:
@@ -280,8 +280,8 @@ spec:
             name: blip
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blip }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /v1/device/data/
     routeAction:
@@ -291,8 +291,8 @@ spec:
             name: jellyfish
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.jellyfish }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /browser-warning
     routeAction:
@@ -302,8 +302,8 @@ spec:
             name: blip
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blip }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - DELETE
       regex: /v1/blobs/[^/]+
@@ -314,8 +314,8 @@ spec:
             name: blob
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blob }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - PUT
       - DELETE
@@ -327,8 +327,8 @@ spec:
             name: task
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.task }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - DELETE
       regex: /v1/users/[^/*]
@@ -339,8 +339,8 @@ spec:
             name: user
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.user }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - OPTIONS
       - POST
@@ -355,11 +355,10 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
-    routePlugins:
-      prefixRewrite:
-        prefixRewrite: /
-  - matcher:
-      methods:
+    options:
+      prefixRewrite: /
+  - matchers:
+    - methods:
       - GET
       prefix: /v1/synctasks/
     routeAction:
@@ -369,8 +368,8 @@ spec:
             name: jellyfish
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.jellyfish }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - OPTIONS
       - POST
@@ -385,11 +384,10 @@ spec:
             name: user
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.user }}
-    routePlugins:
-      prefixRewrite:
-        prefixRewrite: /
-  - matcher:
-      methods:
+    options:
+      prefixRewrite: /
+  - matchers:
+    - methods:
       - GET
       - POST
       - DELETE
@@ -402,8 +400,8 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - POST
       - PUT
       - DELETE
@@ -415,8 +413,8 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - POST
       prefix: /serverlogin
     routeAction:
@@ -426,8 +424,8 @@ spec:
             name: shoreline
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.shoreline }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - PUT
       - DELETE
@@ -439,8 +437,8 @@ spec:
             name: image
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.image }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - OPTIONS
       - POST
@@ -455,15 +453,14 @@ spec:
             name: seagull
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.seagull }}
-    routePlugins:
-      prefixRewrite:
-        prefixRewrite: /
+    options:
+      prefixRewrite: /
       retries:
         retryOn: '5xx'
         numRetries: 3
         perTryTimeout: '1s'
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /patients
     routeAction:
@@ -473,8 +470,8 @@ spec:
             name: blip
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blip }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - OPTIONS
       - POST
@@ -489,11 +486,10 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
-    routePlugins:
-      prefixRewrite:
-        prefixRewrite: /
-  - matcher:
-      methods:
+    options:
+      prefixRewrite: /
+  - matchers:
+    - methods:
       - GET
       - OPTIONS
       - POST
@@ -508,11 +504,10 @@ spec:
             name: highwater
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.highwater }}
-    routePlugins:
-      prefixRewrite:
-        prefixRewrite: /
-  - matcher:
-      methods:
+    options:
+      prefixRewrite: /
+  - matchers:
+    - methods:
       - GET
       - OPTIONS
       - POST
@@ -527,11 +522,10 @@ spec:
             name: hydrophone
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.hydrophone }}
-    routePlugins:
-      prefixRewrite:
-        prefixRewrite: /
-  - matcher:
-      methods:
+    options:
+      prefixRewrite: /
+  - matchers:
+    - methods:
       - GET
       - OPTIONS
       - POST
@@ -546,11 +540,10 @@ spec:
             name: message-api
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.messageapi }}
-    routePlugins:
-      prefixRewrite:
-        prefixRewrite: /
-  - matcher:
-      methods:
+    options:
+      prefixRewrite: /
+  - matchers:
+    - methods:
       - GET
       - POST
       prefix: /v1/tasks
@@ -561,8 +554,8 @@ spec:
             name: task
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.task }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /profile
     routeAction:
@@ -572,8 +565,8 @@ spec:
             name: blip
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blip }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /v1/time
     routeAction:
@@ -583,8 +576,8 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - OPTIONS
       - POST
@@ -592,7 +585,7 @@ spec:
       - PATCH
       - DELETE
       prefix: /export/
-    routePlugins:
+    options:
       timeout: '2m'
     routeAction:
       single:
@@ -601,8 +594,8 @@ spec:
             name: export
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.export }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - OPTIONS
       - POST
@@ -617,8 +610,8 @@ spec:
             name: gatekeeper
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.gatekeeper }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /signup
     routeAction:
@@ -628,8 +621,8 @@ spec:
             name: blip
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blip }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /terms
     routeAction:
@@ -639,8 +632,8 @@ spec:
             name: blip
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.blip }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - POST
       prefix: /data/
     routeAction:
@@ -650,8 +643,8 @@ spec:
             name: jellyfish
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.jellyfish }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       - OPTIONS
       - POST
@@ -666,11 +659,10 @@ spec:
             name: shoreline
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.shoreline }}
-    routePlugins:
-      prefixRewrite:
-        prefixRewrite: /
-  - matcher:
-      methods:
+    options:
+      prefixRewrite: /
+  - matchers:
+    - methods:
       - GET
       prefix: /data/
     routeAction:
@@ -680,12 +672,11 @@ spec:
             name: tide-whisperer
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.tidewhisperer }}
-    routePlugins:
+    options:
       timeout: '1m'
-      prefixRewrite:
-        prefixRewrite: /
-  - matcher:
-      methods:
+      prefixRewrite: /
+  - matchers:
+    - methods:
       - GET
       prefix: /info
     routeAction:
@@ -695,8 +686,8 @@ spec:
             name: jellyfish
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.jellyfish }}
-  - matcher:
-      methods:
+  - matchers:
+    - methods:
       - GET
       prefix: /
     routeAction:

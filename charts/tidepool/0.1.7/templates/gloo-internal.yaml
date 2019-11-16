@@ -11,8 +11,8 @@ spec:
     domains:
     - internal.{{ $.Release.Namespace }}
     routes:
-    - matcher:
-        prefix: '/'
+    - matchers:
+      - prefix: '/'
       delegateAction:
         name: 'tidepool-routes'
         namespace: {{ $.Release.Namespace }}
