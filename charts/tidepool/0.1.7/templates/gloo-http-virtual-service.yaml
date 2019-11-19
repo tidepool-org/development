@@ -5,7 +5,7 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: 'gloo-http'
+  name: 'http'
   namespace: '{{ .Release.Namespace }}'
 spec:
   displayName: 'http-virtual-service'
