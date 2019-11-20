@@ -5,10 +5,10 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: 'http'
+  name: http
   namespace: '{{ .Release.Namespace }}'
 spec:
-  displayName: 'http-virtual-service'
+  displayName: http
   virtualHost:
     domains:
 {{- range $dnsName := $spec.dnsNames -}}

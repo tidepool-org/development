@@ -8,7 +8,7 @@ metadata:
   name: https
   namespace: '{{ .Release.Namespace }}'
 spec:
-  displayName: gloo-https
+  displayName: https
   sslConfig:
     secretRef:
       name: '{{ .Values.ingress.certificate.secretName | default "tls" }}'
