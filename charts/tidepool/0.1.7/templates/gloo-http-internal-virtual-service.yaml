@@ -1,3 +1,4 @@
+{{ if .Values.gloo.enabled }}
 ---
 # file: gloo-internal-virtualservice.yaml
 apiVersion: gateway.solo.io/v1
@@ -16,3 +17,4 @@ spec:
       delegateAction:
         name: 'tidepool-routes'
         namespace: {{ $.Release.Namespace }}
+{{ end }}
