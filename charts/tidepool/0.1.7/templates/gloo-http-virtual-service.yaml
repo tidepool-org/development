@@ -32,7 +32,7 @@ metadata:
   name: http
   namespace: '{{ .Release.Namespace }}'
 spec:
-  displayName: 'http-virtual-service'
+  displayName: http
   virtualHost:
     domains:
 {{- range $dnsName := .Values.ingress.gateway.https.dnsNames }}
