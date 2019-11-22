@@ -21,7 +21,7 @@ spec:
     routes:
     - matchers:
       - prefix: '/'
-{{- if .Values.ingress.service.http.redirect -}}
+{{ if .Values.ingress.service.http.redirect }}
       redirectAction:
         httpsRedirect: true
 {{ else }}
