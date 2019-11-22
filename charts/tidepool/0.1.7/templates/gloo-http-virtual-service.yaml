@@ -21,26 +21,12 @@ spec:
     routes:
     - matchers:
       - prefix: '/'
+{{ if .Values.ingress.service.http.redirect }}
+      redirectAction:
+        httpsRedirect: true
+{{ else }}
       delegateAction:
         name: 'tidepool-routes'
         namespace: {{ $.Release.Namespace }}
-{{ else }}
----
-apiVersion: gateway.solo.io/v1
-kind: VirtualService
-metadata:
-  name: http
-  namespace: '{{ .Release.Namespace }}'
-spec:
-  displayName: http
-  virtualHost:
-    domains:
-{{- range $dnsName := .Values.ingress.gateway.https.dnsNames }}
-    - '{{ $dnsName }}'
-{{- end }}
-    routes:
-    - matchers:
-      - prefix: '/'
-      redirectAction:
-        httpsRedirect: true
+{{ end }}
 {{- end -}}
