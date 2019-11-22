@@ -1,3 +1,4 @@
+{{ if .Values.gloo.enabled }}
 {{ if or .Values.ingress.service.http.enabled .Values.ingress.service.https.enabled -}}
 ---
 apiVersion: v1
@@ -29,3 +30,4 @@ spec:
     gloo: {{ .Values.ingress.deployment.name }}
   type: {{ include "charts.service.type" . }}
 {{- end }}
+{{ end }}

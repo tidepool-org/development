@@ -3,16 +3,16 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: internal
+  name: http-internal
   namespace: '{{ $.Release.Namespace }}'
 spec:
-  displayName: internal
+  displayName: http-internal
   virtualHost:
     domains:
     - internal.{{ $.Release.Namespace }}
     routes:
-    - matcher:
-        prefix: '/'
+    - matchers:
+      - prefix: '/'
       delegateAction:
         name: 'tidepool-routes'
         namespace: {{ $.Release.Namespace }}

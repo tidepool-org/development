@@ -5,10 +5,10 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: 'gloo-http'
+  name: http
   namespace: '{{ .Release.Namespace }}'
 spec:
-  displayName: 'http-virtual-service'
+  displayName: http
   virtualHost:
     domains:
 {{- range $dnsName := $spec.dnsNames -}}
@@ -19,8 +19,8 @@ spec:
 {{- end -}}
 {{- end }}
     routes:
-    - matcher:
-        prefix: '/'
+    - matchers:
+      - prefix: '/'
       delegateAction:
         name: 'tidepool-routes'
         namespace: {{ $.Release.Namespace }}
@@ -29,18 +29,18 @@ spec:
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: 'gloo-http'
+  name: http
   namespace: '{{ .Release.Namespace }}'
 spec:
-  displayName: 'http-virtual-service'
+  displayName: http
   virtualHost:
     domains:
 {{- range $dnsName := .Values.ingress.gateway.https.dnsNames }}
     - '{{ $dnsName }}'
 {{- end }}
     routes:
-    - matcher:
-        prefix: '/'
+    - matchers:
+      - prefix: '/'
       redirectAction:
         httpsRedirect: true
 {{- end -}}
