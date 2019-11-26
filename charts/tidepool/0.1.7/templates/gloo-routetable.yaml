@@ -506,6 +506,10 @@ spec:
           port: {{ .Values.global.ports.highwater }}
     options:
       prefixRewrite: /
+      retries:
+        retryOn: '5xx'
+        numRetries: 3
+        perTryTimeout: '1s'
   - matchers:
     - methods:
       - GET
