@@ -400,6 +400,8 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
+    options:
+      timeout: "30s"
   - matchers:
     - methods:
       - POST
@@ -413,6 +415,8 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
+    options:
+      timeout: "30s"
   - matchers:
     - methods:
       - POST
@@ -458,7 +462,7 @@ spec:
       retries:
         retryOn: '5xx'
         numRetries: 3
-        perTryTimeout: '1s'
+        perTryTimeout: '15s'
   - matchers:
     - methods:
       - GET
@@ -509,7 +513,7 @@ spec:
       retries:
         retryOn: '5xx'
         numRetries: 3
-        perTryTimeout: '1s'
+        perTryTimeout: '15s'
   - matchers:
     - methods:
       - GET
@@ -546,6 +550,7 @@ spec:
           port: {{ .Values.global.ports.messageapi }}
     options:
       prefixRewrite: /
+      timeout: '30s'
   - matchers:
     - methods:
       - GET
@@ -665,6 +670,7 @@ spec:
           port: {{ .Values.global.ports.shoreline }}
     options:
       prefixRewrite: /
+      timeout: '30s'
   - matchers:
     - methods:
       - GET
