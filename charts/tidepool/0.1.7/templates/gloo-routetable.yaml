@@ -319,7 +319,7 @@ spec:
       - GET
       - PUT
       - DELETE
-      regex: /v1/tasks/[^/*]
+      regex: /v1/tasks/[^/]+
     routeAction:
       single:
         kube:
@@ -331,7 +331,7 @@ spec:
     - methods:
       - GET
       - DELETE
-      regex: /v1/users/[^/*]
+      regex: /v1/users/[^/]+
     routeAction:
       single:
         kube:
