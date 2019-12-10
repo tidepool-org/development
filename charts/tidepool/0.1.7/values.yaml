@@ -54,6 +54,10 @@ ingress:
       dnsNames: []                              # list of DNS names
 gloo:
   enabled: true
+  generate:
+   virtualServices: true
+   gateways: true
+   loadBalancer: true
   settings:
     create: true
   crds:

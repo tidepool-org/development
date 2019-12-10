@@ -108,6 +108,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.fullnameOverride`                                |                                                                                              | ``                                                    |
 | `global.gateway.default.host`                          | Host to use for email verification                                                      | `localhost`   |
 | `global.gateway.default.protocol`                          | Protocol to use for email verification.                                                      | `http`                                                    |
+| `global.gateway.default.domain`                          | Domain to use for cookies
 | `global.logLevel`                              | Default log level | `info`                                        |
 | `global.nameOverride`                                    | If non-empty, Helm chart name to use                                                         | ``                                                    |
 | `global.ports.auth`                                      | Auth service container port                                                                  | `9222`                                                |
@@ -129,10 +130,13 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.ports.user`                                      | User service container port                                                                  | `9221`
 | `global.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
 | `global.secret.enabled`                                  | whether to generate all secret files | `false`                                           |
-| `gloo.enabled`                                           | Whether to include an API Gateway with this installation                                     | `true`                                                |
-| `gloo.gatewayProxies.gatewayProxyV2.service.httpPort`  | HTTP port to listen to | `8080`                                                  |
-| `gloo.gatewayProxies.gatewayProxyV2.service.httpsPort`  | HTTPS port to listen to | `8433`                                                  |
-| `gloo.gatewayProxies.gatewayProxyV2.service.type`  | Type on service | `ClusterIP`                                                  |
+| `gloo.enabled`                                           | Whether to launch Gloo control and plane
+| `gloo.generate.virtualServices`                          | Whether to include an Gloo virtual services resources in installation
+| `gloo.generate.gateways`                          | Whether to include a Gloo vGateway resources
+| `gloo.generate.loadBalancer`                          | Whether to include a load balancer
+| `gloo.gatewayProxies.gatewayProxy.service.httpPort`  | HTTP port to listen to | `8080`                                                  |
+| `gloo.gatewayProxies.gatewayProxy.service.httpsPort`  | HTTPS port to listen to | `8433`                                                  |
+| `gloo.gatewayProxies.gatewayProxy.service.type`  | Type on service | `ClusterIP`                                                  |
 | `highwater.deployment.image` | highwater Docker image | `` |
 | `highwater.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
 | `hydrophone.deployment.env.fromAddress`                                 | Email address to use for replies to sigups                                                   | `Tidepool <noreply@tidepool.org>`                     |

@@ -1,3 +1,4 @@
+{{ if .Values.gloo.generate.virtualServices }}
 {{- if .Values.ingress.service.http.enabled -}}
 {{- $spec := .Values.ingress.gateway.http -}}
 {{- $port := $spec.port | default "80" -}}
@@ -29,4 +30,5 @@ spec:
         name: 'tidepool-routes'
         namespace: {{ $.Release.Namespace }}
 {{ end }}
+{{- end -}}
 {{- end -}}

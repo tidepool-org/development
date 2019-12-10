@@ -1,4 +1,4 @@
-{{ if .Values.gloo.enabled }}
+{{ if .Values.gloo.generate.loadBalancer }}
 {{ if or .Values.ingress.service.http.enabled .Values.ingress.service.https.enabled -}}
 ---
 apiVersion: v1
