@@ -36,6 +36,10 @@ tidepool:
     create: true
     annotations: {}                             # namespace annotations
 
+linkerd:
+  generate:
+    serviceProfiles: false
+
 ingress:
   service:
     http:

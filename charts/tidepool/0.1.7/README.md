@@ -166,6 +166,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `kissmetrics.secret.data_.Token` | plaintext Kissmetrics Token | `` |
 | `kissmetrics.secret.data_.UCSFAPIKey` | plaintext UCSF Kissmetrics Token | `` |
 | `kissmetrics.secret.data_.UCSFWhitelist` | plaintext UCSF metrics whitelist | `` |
+| `linkerd.generate.serviceProfiles` | whether to generate Linkerd ServiceProfiles | `false` |
 | `mailchimp.secret.enabled` | whether to create Mailchimp secret | `false` |
 | `mailchimp.secret.data_.ApiKey` | plaintext Mailchimp API key | `` |
 | `mailchimp.secret.data_.ClinicLists` | plaintext clinic mailing lists| `` |
