@@ -294,7 +294,7 @@ spec:
       method: GET
       pathRegex: /v1/time.*
     name: /v1/time_get
-  ---
+---
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
