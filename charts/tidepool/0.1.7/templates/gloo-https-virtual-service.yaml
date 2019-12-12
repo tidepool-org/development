@@ -1,3 +1,4 @@
+{{ if .Values.gloo.generate.virtualServices }}
 {{- if .Values.ingress.service.https.enabled -}}
 {{- $spec := .Values.ingress.gateway.https -}}
 {{- $port := $spec.port | default "443" -}}
@@ -58,4 +59,5 @@ spec:
       delegateAction:
         name: 'tidepool-routes'
         namespace: {{ .Release.Namespace }}
+{{ end -}}
 {{ end -}}
