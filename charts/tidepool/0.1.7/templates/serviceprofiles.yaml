@@ -3,1235 +3,2343 @@ apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
   name: auth.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
+  namespace: '{{ .Release.Namespace }}'
 spec:
   routes:
   - condition:
       method: GET
       pathRegex: /v1/users/[^/]+/restricted_tokens
-    name: /v1/users/{id}/restricted_tokens_get
+    name: /v1/users/{id}/restricted_tokens_get_auth
   - condition:
       method: POST
       pathRegex: /v1/users/[^/]+/restricted_tokens
-    name: /v1/users/{id}/restricted_tokens_post
+    name: /v1/users/{id}/restricted_tokens_post_auth
   - condition:
       method: DELETE
       pathRegex: /v1/users/[^/]+/restricted_tokens
-    name: /v1/users/{id}/restricted_tokens_delete
+    name: /v1/users/{id}/restricted_tokens_delete_auth
   - condition:
       method: GET
       pathRegex: /v1/users/[^/]+/provider_sessions
-    name: /v1/users/{id}/provider_sessions_get
+    name: /v1/users/{id}/provider_sessions_get_auth
   - condition:
       method: POST
       pathRegex: /v1/users/[^/]+/provider_sessions
-    name: /v1/users/{id}/provider_sessions_post
+    name: /v1/users/{id}/provider_sessions_post_auth
   - condition:
       method: DELETE
       pathRegex: /v1/users/[^/]+/provider_sessions
-    name: /v1/users/{id}/provider_sessions_delete
+    name: /v1/users/{id}/provider_sessions_delete_auth
   - condition:
       method: GET
       pathRegex: /v1/provider_sessions/[^/]+
-    name: /v1/provider_sessions/{id}_get
+    name: /v1/provider_sessions/{id}_get_auth
   - condition:
       method: PUT
       pathRegex: /v1/provider_sessions/[^/]+
-    name: /v1/provider_sessions/{id}_put
+    name: /v1/provider_sessions/{id}_put_auth
   - condition:
       method: DELETE
       pathRegex: /v1/provider_sessions/[^/]+
-    name: /v1/provider_sessions/{id}_delete
+    name: /v1/provider_sessions/{id}_delete_auth
   - condition:
       method: GET
       pathRegex: /v1/oauth/[^/]+/authorize
-    name: /v1/oauth/{id}/authorize_get
+    name: /v1/oauth/{id}/authorize_get_auth
   - condition:
       method: DELETE
       pathRegex: /v1/oauth/[^/]+/authorize
-    name: /v1/oauth/{id}/authorize_delete
+    name: /v1/oauth/{id}/authorize_delete_auth
   - condition:
       method: GET
       pathRegex: /v1/oauth/[^/]+/redirect
-    name: /v1/oauth/{id}/redirect_get
+    name: /v1/oauth/{id}/redirect_get_auth
   - condition:
       method: GET
       pathRegex: /v1/restricted_tokens.*
-    name: /v1/restricted_tokens_get
+    name: /v1/restricted_tokens_get_auth
   - condition:
       method: PUT
       pathRegex: /v1/restricted_tokens.*
-    name: /v1/restricted_tokens_put
+    name: /v1/restricted_tokens_put_auth
   - condition:
       method: DELETE
       pathRegex: /v1/restricted_tokens.*
-    name: /v1/restricted_tokens_delete
+    name: /v1/restricted_tokens_delete_auth
 ---
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
   name: blip.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
+  namespace: '{{ .Release.Namespace }}'
 spec:
   routes:
   - condition:
       method: GET
       pathRegex: /request-password-from-uploader.*
-    name: /request-password-from-uploader_get
+    name: /request-password-from-uploader_get_blip
   - condition:
       method: GET
       pathRegex: /verification-with-password.*
-    name: /verification-with-password_get
+    name: /verification-with-password_get_blip
   - condition:
       method: POST
       pathRegex: /event/csp-report/violation.*
-    name: /event/csp-report/violation_post
+    name: /event/csp-report/violation_post_blip
   - condition:
       method: GET
       pathRegex: /request-password-reset.*
-    name: /request-password-reset_get
+    name: /request-password-reset_get_blip
   - condition:
       method: GET
       pathRegex: /confirm-password-reset.*
-    name: /confirm-password-reset_get
+    name: /confirm-password-reset_get_blip
   - condition:
       method: GET
       pathRegex: /email-verification.*
-    name: /email-verification_get
+    name: /email-verification_get_blip
   - condition:
       method: GET
       pathRegex: /clinician-details.*
-    name: /clinician-details_get
+    name: /clinician-details_get_blip
   - condition:
       method: GET
       pathRegex: /browser-warning.*
-    name: /browser-warning_get
+    name: /browser-warning_get_blip
   - condition:
       method: GET
       pathRegex: /patients.*
-    name: /patients_get
+    name: /patients_get_blip
   - condition:
       method: GET
       pathRegex: /profile.*
-    name: /profile_get
+    name: /profile_get_blip
   - condition:
       method: GET
       pathRegex: /signup.*
-    name: /signup_get
+    name: /signup_get_blip
   - condition:
       method: GET
       pathRegex: /terms.*
-    name: /terms_get
+    name: /terms_get_blip
   - condition:
       method: GET
       pathRegex: /.*
-    name: /_get
----
-apiVersion: linkerd.io/v1alpha2
-kind: ServiceProfile
-metadata:
-  name: blob.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
-spec:
-  routes:
-  - condition:
-      method: GET
-      pathRegex: /v1/blobs/[^/]+/content
-    name: /v1/blobs/{id}/content_get
-  - condition:
-      method: GET
-      pathRegex: /v1/users/[^/]+/blobs
-    name: /v1/users/{id}/blobs_get
-  - condition:
-      method: POST
-      pathRegex: /v1/users/[^/]+/blobs
-    name: /v1/users/{id}/blobs_post
-  - condition:
-      method: DELETE
-      pathRegex: /v1/users/[^/]+/blobs
-    name: /v1/users/{id}/blobs_delete
-  - condition:
-      method: GET
-      pathRegex: /v1/blobs/[^/]+
-    name: /v1/blobs/{id}_get
-  - condition:
-      method: DELETE
-      pathRegex: /v1/blobs/[^/]+
-    name: /v1/blobs/{id}_delete
+    name: /_get_blip
 ---
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
   name: data.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
+  namespace: '{{ .Release.Namespace }}'
 spec:
   routes:
   - condition:
       method: GET
       pathRegex: /v1/users/[^/]+/data_sources
-    name: /v1/users/{id}/data_sources_get
+    name: /v1/users/{id}/data_sources_get_data
   - condition:
       method: POST
       pathRegex: /v1/users/[^/]+/data_sources
-    name: /v1/users/{id}/data_sources_post
+    name: /v1/users/{id}/data_sources_post_data
   - condition:
       method: DELETE
       pathRegex: /v1/users/[^/]+/data_sources
-    name: /v1/users/{id}/data_sources_delete
+    name: /v1/users/{id}/data_sources_delete_data
   - condition:
       method: OPTIONS
       pathRegex: /v1/users/[^/]+/data_sources
-    name: /v1/users/{id}/data_sources_options
+    name: /v1/users/{id}/data_sources_options_data
   - condition:
       method: GET
       pathRegex: /v1/users/[^/]+/data_sets
-    name: /v1/users/{id}/data_sets_get
+    name: /v1/users/{id}/data_sets_get_data
+    timeout: 60s
   - condition:
       method: POST
       pathRegex: /v1/users/[^/]+/data_sets
-    name: /v1/users/{id}/data_sets_post
+    name: /v1/users/{id}/data_sets_post_data
+    timeout: 60s
   - condition:
       method: GET
       pathRegex: /v1/users/[^/]+/datasets
-    name: /v1/users/{id}/datasets_get
+    name: /v1/users/{id}/datasets_get_data
   - condition:
       method: POST
       pathRegex: /v1/users/[^/]+/datasets
-    name: /v1/users/{id}/datasets_post
+    name: /v1/users/{id}/datasets_post_data
   - condition:
       method: GET
       pathRegex: /v1/data_sources/[^/]+
-    name: /v1/data_sources/{id}_get
+    name: /v1/data_sources/{id}_get_data
   - condition:
       method: PUT
       pathRegex: /v1/data_sources/[^/]+
-    name: /v1/data_sources/{id}_put
+    name: /v1/data_sources/{id}_put_data
   - condition:
       method: DELETE
       pathRegex: /v1/data_sources/[^/]+
-    name: /v1/data_sources/{id}_delete
+    name: /v1/data_sources/{id}_delete_data
   - condition:
       method: DELETE
       pathRegex: /v1/users/[^/]+/data
-    name: /v1/users/{id}/data_delete
-  - condition:
-      method: GET
-      pathRegex: /.*
-    name: /dataservices/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /.*
-    name: /dataservices/_options
-  - condition:
-      method: POST
-      pathRegex: /.*
-    name: /dataservices/_post
-  - condition:
-      method: PUT
-      pathRegex: /.*
-    name: /dataservices/_put
-  - condition:
-      method: PATCH
-      pathRegex: /.*
-    name: /dataservices/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /.*
-    name: /dataservices/_delete
+    name: /v1/users/{id}/data_delete_data
   - condition:
       method: GET
       pathRegex: /v1/data_sets.*
-    name: /v1/data_sets_get
+    name: /v1/data_sets_get_data
+    timeout: 60s
   - condition:
       method: POST
       pathRegex: /v1/data_sets.*
-    name: /v1/data_sets_post
+    name: /v1/data_sets_post_data
+    timeout: 60s
   - condition:
       method: DELETE
       pathRegex: /v1/data_sets.*
-    name: /v1/data_sets_delete
+    name: /v1/data_sets_delete_data
+    timeout: 60s
   - condition:
       method: PUT
       pathRegex: /v1/data_sets.*
-    name: /v1/data_sets_put
+    name: /v1/data_sets_put_data
+    timeout: 60s
   - condition:
       method: POST
       pathRegex: /v1/datasets.*
-    name: /v1/datasets_post
+    name: /v1/datasets_post_data
+    timeout: 30s
   - condition:
       method: PUT
       pathRegex: /v1/datasets.*
-    name: /v1/datasets_put
+    name: /v1/datasets_put_data
+    timeout: 30s
   - condition:
       method: DELETE
       pathRegex: /v1/datasets.*
-    name: /v1/datasets_delete
-  - condition:
-      method: GET
-      pathRegex: /.*
-    name: /v1/data/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /.*
-    name: /v1/data/_options
-  - condition:
-      method: POST
-      pathRegex: /.*
-    name: /v1/data/_post
-  - condition:
-      method: PUT
-      pathRegex: /.*
-    name: /v1/data/_put
-  - condition:
-      method: PATCH
-      pathRegex: /.*
-    name: /v1/data/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /.*
-    name: /v1/data/_delete
+    name: /v1/datasets_delete_data
+    timeout: 30s
   - condition:
       method: GET
       pathRegex: /v1/time.*
-    name: /v1/time_get
----
-apiVersion: linkerd.io/v1alpha2
-kind: ServiceProfile
-metadata:
-  name: export.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
-spec:
-  routes:
-  - condition:
-      method: GET
-      pathRegex: /export/.*
-    name: /export/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /export/.*
-    name: /export/_options
-  - condition:
-      method: POST
-      pathRegex: /export/.*
-    name: /export/_post
-  - condition:
-      method: PUT
-      pathRegex: /export/.*
-    name: /export/_put
-  - condition:
-      method: PATCH
-      pathRegex: /export/.*
-    name: /export/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /export/.*
-    name: /export/_delete
----
-apiVersion: linkerd.io/v1alpha2
-kind: ServiceProfile
-metadata:
-  name: gatekeeper.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
-spec:
-  routes:
-  - condition:
-      method: GET
-      pathRegex: /access/.*
-    name: /access/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /access/.*
-    name: /access/_options
-  - condition:
-      method: POST
-      pathRegex: /access/.*
-    name: /access/_post
-  - condition:
-      method: PUT
-      pathRegex: /access/.*
-    name: /access/_put
-  - condition:
-      method: PATCH
-      pathRegex: /access/.*
-    name: /access/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /access/.*
-    name: /access/_delete
----
-apiVersion: linkerd.io/v1alpha2
-kind: ServiceProfile
-metadata:
-  name: highwater.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
-spec:
-  routes:
+    name: /v1/time_get_data
   - condition:
       method: GET
       pathRegex: /.*
-    name: /metrics/_get
+    name: /dataservices/_get_data
   - condition:
       method: OPTIONS
       pathRegex: /.*
-    name: /metrics/_options
+    name: /dataservices/_options_data
   - condition:
       method: POST
       pathRegex: /.*
-    name: /metrics/_post
+    name: /dataservices/_post_data
   - condition:
       method: PUT
       pathRegex: /.*
-    name: /metrics/_put
+    name: /dataservices/_put_data
   - condition:
       method: PATCH
       pathRegex: /.*
-    name: /metrics/_patch
+    name: /dataservices/_patch_data
   - condition:
       method: DELETE
       pathRegex: /.*
-    name: /metrics/_delete
----
-apiVersion: linkerd.io/v1alpha2
-kind: ServiceProfile
-metadata:
-  name: hydrophone.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
-spec:
-  routes:
-  - condition:
-      method: GET
-      pathRegex: /.*
-    name: /confirm/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /.*
-    name: /confirm/_options
-  - condition:
-      method: POST
-      pathRegex: /.*
-    name: /confirm/_post
-  - condition:
-      method: PUT
-      pathRegex: /.*
-    name: /confirm/_put
-  - condition:
-      method: PATCH
-      pathRegex: /.*
-    name: /confirm/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /.*
-    name: /confirm/_delete
+    name: /dataservices/_delete_data
 ---
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
   name: image.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
+  namespace: '{{ .Release.Namespace }}'
 spec:
   routes:
   - condition:
       method: GET
       pathRegex: /v1/users/[^/]+/images/.+
-    name: /v1/users/{id}/images/.+_get
+    name: /v1/users/{id}/images/.+_get_image
   - condition:
       method: POST
       pathRegex: /v1/users/[^/]+/images/.+
-    name: /v1/users/{id}/images/.+_post
+    name: /v1/users/{id}/images/.+_post_image
   - condition:
       method: DELETE
       pathRegex: /v1/users/[^/]+/images/.+
-    name: /v1/users/{id}/images/.+_delete
+    name: /v1/users/{id}/images/.+_delete_image
   - condition:
       method: GET
       pathRegex: /v1/users/[^/]+/images
-    name: /v1/users/{id}/images_get
+    name: /v1/users/{id}/images_get_image
   - condition:
       method: POST
       pathRegex: /v1/users/[^/]+/images
-    name: /v1/users/{id}/images_post
+    name: /v1/users/{id}/images_post_image
   - condition:
       method: DELETE
       pathRegex: /v1/users/[^/]+/images
-    name: /v1/users/{id}/images_delete
+    name: /v1/users/{id}/images_delete_image
   - condition:
       method: GET
       pathRegex: /v1/images.*
-    name: /v1/images_get
+    name: /v1/images_get_image
   - condition:
       method: PUT
       pathRegex: /v1/images.*
-    name: /v1/images_put
+    name: /v1/images_put_image
   - condition:
       method: DELETE
       pathRegex: /v1/images.*
-    name: /v1/images_delete
+    name: /v1/images_delete_image
 ---
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
-  name: internal.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
+  name: blob.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
 spec:
   routes:
   - condition:
       method: GET
-      pathRegex: /
-    name: /v1/users/{id}/restricted_tokens_get
-  - condition:
-      method: GET
-      pathRegex: /v1/users/[^/]+/restricted_tokens
-    name: /v1/users/{id}/restricted_tokens_get
-  - condition:
-      method: POST
-      pathRegex: /v1/users/[^/]+/restricted_tokens
-    name: /v1/users/{id}/restricted_tokens_post
-  - condition:
-      method: DELETE
-      pathRegex: /v1/users/[^/]+/restricted_tokens
-    name: /v1/users/{id}/restricted_tokens_delete
-  - condition:
-      method: GET
-      pathRegex: /v1/users/[^/]+/provider_sessions
-    name: /v1/users/{id}/provider_sessions_get
-  - condition:
-      method: POST
-      pathRegex: /v1/users/[^/]+/provider_sessions
-    name: /v1/users/{id}/provider_sessions_post
-  - condition:
-      method: DELETE
-      pathRegex: /v1/users/[^/]+/provider_sessions
-    name: /v1/users/{id}/provider_sessions_delete
-  - condition:
-      method: GET
-      pathRegex: /request-password-from-uploader
-    name: /request-password-from-uploader_get
-  - condition:
-      method: GET
-      pathRegex: /v1/users/[^/]+/data_sources
-    name: /v1/users/{id}/data_sources_get
-  - condition:
-      method: POST
-      pathRegex: /v1/users/[^/]+/data_sources
-    name: /v1/users/{id}/data_sources_post
-  - condition:
-      method: DELETE
-      pathRegex: /v1/users/[^/]+/data_sources
-    name: /v1/users/{id}/data_sources_delete
-  - condition:
-      method: OPTIONS
-      pathRegex: /v1/users/[^/]+/data_sources
-    name: /v1/users/{id}/data_sources_options
-  - condition:
-      method: GET
-      pathRegex: /v1/provider_sessions/[^/]+
-    name: /v1/provider_sessions/{id}_get
-  - condition:
-      method: PUT
-      pathRegex: /v1/provider_sessions/[^/]+
-    name: /v1/provider_sessions/{id}_put
-  - condition:
-      method: DELETE
-      pathRegex: /v1/provider_sessions/[^/]+
-    name: /v1/provider_sessions/{id}_delete
-  - condition:
-      method: GET
-      pathRegex: /verification-with-password
-    name: /verification-with-password_get
-  - condition:
-      method: POST
-      pathRegex: /event/csp-report/violation
-    name: /event/csp-report/violation_post
-  - condition:
-      method: GET
-      pathRegex: /v1/oauth/[^/]+/authorize
-    name: /v1/oauth/{id}/authorize_get
-  - condition:
-      method: DELETE
-      pathRegex: /v1/oauth/[^/]+/authorize
-    name: /v1/oauth/{id}/authorize_delete
-  - condition:
-      method: GET
-      pathRegex: /v1/users/[^/]+/data_sets
-    name: /v1/users/{id}/data_sets_get
-  - condition:
-      method: POST
-      pathRegex: /v1/users/[^/]+/data_sets
-    name: /v1/users/{id}/data_sets_post
-  - condition:
-      method: GET
-      pathRegex: /v1/users/[^/]+/images/.+
-    name: /v1/users/{id}/images/.+_get
-  - condition:
-      method: POST
-      pathRegex: /v1/users/[^/]+/images/.+
-    name: /v1/users/{id}/images/.+_post
-  - condition:
-      method: DELETE
-      pathRegex: /v1/users/[^/]+/images/.+
-    name: /v1/users/{id}/images/.+_delete
-  - condition:
-      method: GET
-      pathRegex: /v1/oauth/[^/]+/redirect
-    name: /v1/oauth/{id}/redirect_get
-  - condition:
-      method: GET
-      pathRegex: /v1/users/[^/]+/datasets
-    name: /v1/users/{id}/datasets_get
-  - condition:
-      method: POST
-      pathRegex: /v1/users/[^/]+/datasets
-    name: /v1/users/{id}/datasets_post
-  - condition:
-      method: GET
-      pathRegex: /request-password-reset
-    name: /request-password-reset_get
-  - condition:
-      method: GET
-      pathRegex: /confirm-password-reset
-    name: /confirm-password-reset_get
-  - condition:
-      method: GET
       pathRegex: /v1/blobs/[^/]+/content
-    name: /v1/blobs/{id}/content_get
-  - condition:
-      method: GET
-      pathRegex: /v1/data_sources/[^/]+
-    name: /v1/data_sources/{id}_get
-  - condition:
-      method: PUT
-      pathRegex: /v1/data_sources/[^/]+
-    name: /v1/data_sources/{id}_put
-  - condition:
-      method: DELETE
-      pathRegex: /v1/data_sources/[^/]+
-    name: /v1/data_sources/{id}_delete
-  - condition:
-      method: GET
-      pathRegex: /v1/users/[^/]+/images
-    name: /v1/users/{id}/images_get
-  - condition:
-      method: POST
-      pathRegex: /v1/users/[^/]+/images
-    name: /v1/users/{id}/images_post
-  - condition:
-      method: DELETE
-      pathRegex: /v1/users/[^/]+/images
-    name: /v1/users/{id}/images_delete
-  - condition:
-      method: GET
-      pathRegex: /v1/restricted_tokens
-    name: /v1/restricted_tokens_get
-  - condition:
-      method: PUT
-      pathRegex: /v1/restricted_tokens
-    name: /v1/restricted_tokens_put
-  - condition:
-      method: DELETE
-      pathRegex: /v1/restricted_tokens
-    name: /v1/restricted_tokens_delete
+    name: /v1/blobs/{id}/content_get_blob
   - condition:
       method: GET
       pathRegex: /v1/users/[^/]+/blobs
-    name: /v1/users/{id}/blobs_get
+    name: /v1/users/{id}/blobs_get_blob
   - condition:
       method: POST
       pathRegex: /v1/users/[^/]+/blobs
-    name: /v1/users/{id}/blobs_post
+    name: /v1/users/{id}/blobs_post_blob
   - condition:
       method: DELETE
       pathRegex: /v1/users/[^/]+/blobs
-    name: /v1/users/{id}/blobs_delete
-  - condition:
-      method: DELETE
-      pathRegex: /v1/users/[^/]+/data
-    name: /v1/users/{id}/data_delete
-  - condition:
-      method: POST
-      pathRegex: /v1/device/upload/cl
-    name: /v1/device/upload/cl_post
-  - condition:
-      method: GET
-      pathRegex: /email-verification
-    name: /email-verification_get
-  - condition:
-      method: GET
-      pathRegex: /clinician-details
-    name: /clinician-details_get
-  - condition:
-      method: GET
-      pathRegex: /v1/device/data/
-    name: /v1/device/data/_get
-  - condition:
-      method: GET
-      pathRegex: /browser-warning
-    name: /browser-warning_get
+    name: /v1/users/{id}/blobs_delete_blob
   - condition:
       method: GET
       pathRegex: /v1/blobs/[^/]+
-    name: /v1/blobs/{id}_get
+    name: /v1/blobs/{id}_get_blob
   - condition:
       method: DELETE
       pathRegex: /v1/blobs/[^/]+
-    name: /v1/blobs/{id}_delete
-  - condition:
-      method: GET
-      pathRegex: /v1/tasks/[^/*]
-    name: /v1/tasks/{id2}_get
-  - condition:
-      method: PUT
-      pathRegex: /v1/tasks/[^/*]
-    name: /v1/tasks/{id2}_put
-  - condition:
-      method: DELETE
-      pathRegex: /v1/tasks/[^/*]
-    name: /v1/tasks/{id2}_delete
-  - condition:
-      method: GET
-      pathRegex: /v1/users/[^/*]
-    name: /v1/users/{id2}_get
-  - condition:
-      method: DELETE
-      pathRegex: /v1/users/[^/*]
-    name: /v1/users/{id2}_delete
-  - condition:
-      method: GET
-      pathRegex: /dataservices/
-    name: /dataservices/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /dataservices/
-    name: /dataservices/_options
-  - condition:
-      method: POST
-      pathRegex: /dataservices/
-    name: /dataservices/_post
-  - condition:
-      method: PUT
-      pathRegex: /dataservices/
-    name: /dataservices/_put
-  - condition:
-      method: PATCH
-      pathRegex: /dataservices/
-    name: /dataservices/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /dataservices/
-    name: /dataservices/_delete
-  - condition:
-      method: GET
-      pathRegex: /v1/synctasks/
-    name: /v1/synctasks/_get
-  - condition:
-      method: GET
-      pathRegex: /userservices/
-    name: /userservices/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /userservices/
-    name: /userservices/_options
-  - condition:
-      method: POST
-      pathRegex: /userservices/
-    name: /userservices/_post
-  - condition:
-      method: PUT
-      pathRegex: /userservices/
-    name: /userservices/_put
-  - condition:
-      method: PATCH
-      pathRegex: /userservices/
-    name: /userservices/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /userservices/
-    name: /userservices/_delete
-  - condition:
-      method: GET
-      pathRegex: /v1/data_sets
-    name: /v1/data_sets_get
-  - condition:
-      method: POST
-      pathRegex: /v1/data_sets
-    name: /v1/data_sets_post
-  - condition:
-      method: DELETE
-      pathRegex: /v1/data_sets
-    name: /v1/data_sets_delete
-  - condition:
-      method: PUT
-      pathRegex: /v1/data_sets
-    name: /v1/data_sets_put
-  - condition:
-      method: POST
-      pathRegex: /v1/datasets
-    name: /v1/datasets_post
-  - condition:
-      method: PUT
-      pathRegex: /v1/datasets
-    name: /v1/datasets_put
-  - condition:
-      method: DELETE
-      pathRegex: /v1/datasets
-    name: /v1/datasets_delete
-  - condition:
-      method: POST
-      pathRegex: /serverlogin
-    name: /serverlogin_post
-  - condition:
-      method: GET
-      pathRegex: /v1/images
-    name: /v1/images_get
-  - condition:
-      method: PUT
-      pathRegex: /v1/images
-    name: /v1/images_put
-  - condition:
-      method: DELETE
-      pathRegex: /v1/images
-    name: /v1/images_delete
-  - condition:
-      method: GET
-      pathRegex: /metadata/
-    name: /metadata/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /metadata/
-    name: /metadata/_options
-  - condition:
-      method: POST
-      pathRegex: /metadata/
-    name: /metadata/_post
-  - condition:
-      method: PUT
-      pathRegex: /metadata/
-    name: /metadata/_put
-  - condition:
-      method: PATCH
-      pathRegex: /metadata/
-    name: /metadata/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /metadata/
-    name: /metadata/_delete
-  - condition:
-      method: GET
-      pathRegex: /patients
-    name: /patients_get
-  - condition:
-      method: GET
-      pathRegex: /v1/data/
-    name: /v1/data/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /v1/data/
-    name: /v1/data/_options
-  - condition:
-      method: POST
-      pathRegex: /v1/data/
-    name: /v1/data/_post
-  - condition:
-      method: PUT
-      pathRegex: /v1/data/
-    name: /v1/data/_put
-  - condition:
-      method: PATCH
-      pathRegex: /v1/data/
-    name: /v1/data/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /v1/data/
-    name: /v1/data/_delete
-  - condition:
-      method: GET
-      pathRegex: /metrics/
-    name: /metrics/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /metrics/
-    name: /metrics/_options
-  - condition:
-      method: POST
-      pathRegex: /metrics/
-    name: /metrics/_post
-  - condition:
-      method: PUT
-      pathRegex: /metrics/
-    name: /metrics/_put
-  - condition:
-      method: PATCH
-      pathRegex: /metrics/
-    name: /metrics/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /metrics/
-    name: /metrics/_delete
-  - condition:
-      method: GET
-      pathRegex: /confirm/
-    name: /confirm/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /confirm/
-    name: /confirm/_options
-  - condition:
-      method: POST
-      pathRegex: /confirm/
-    name: /confirm/_post
-  - condition:
-      method: PUT
-      pathRegex: /confirm/
-    name: /confirm/_put
-  - condition:
-      method: PATCH
-      pathRegex: /confirm/
-    name: /confirm/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /confirm/
-    name: /confirm/_delete
-  - condition:
-      method: GET
-      pathRegex: /message/
-    name: /message/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /message/
-    name: /message/_options
-  - condition:
-      method: POST
-      pathRegex: /message/
-    name: /message/_post
-  - condition:
-      method: PUT
-      pathRegex: /message/
-    name: /message/_put
-  - condition:
-      method: PATCH
-      pathRegex: /message/
-    name: /message/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /message/
-    name: /message/_delete
-  - condition:
-      method: GET
-      pathRegex: /v1/tasks
-    name: /v1/tasks_get
-  - condition:
-      method: POST
-      pathRegex: /v1/tasks
-    name: /v1/tasks_post
-  - condition:
-      method: GET
-      pathRegex: /profile
-    name: /profile_get
-  - condition:
-      method: GET
-      pathRegex: /v1/time
-    name: /v1/time_get
-  - condition:
-      method: GET
-      pathRegex: /export/
-    name: /export/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /export/
-    name: /export/_options
-  - condition:
-      method: POST
-      pathRegex: /export/
-    name: /export/_post
-  - condition:
-      method: PUT
-      pathRegex: /export/
-    name: /export/_put
-  - condition:
-      method: PATCH
-      pathRegex: /export/
-    name: /export/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /export/
-    name: /export/_delete
-  - condition:
-      method: GET
-      pathRegex: /access/
-    name: /access/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /access/
-    name: /access/_options
-  - condition:
-      method: POST
-      pathRegex: /access/
-    name: /access/_post
-  - condition:
-      method: PUT
-      pathRegex: /access/
-    name: /access/_put
-  - condition:
-      method: PATCH
-      pathRegex: /access/
-    name: /access/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /access/
-    name: /access/_delete
-  - condition:
-      method: GET
-      pathRegex: /signup
-    name: /signup_get
-  - condition:
-      method: GET
-      pathRegex: /terms
-    name: /terms_get
-  - condition:
-      method: POST
-      pathRegex: /data/
-    name: /data/_post
-  - condition:
-      method: GET
-      pathRegex: /auth/
-    name: /auth/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /auth/
-    name: /auth/_options
-  - condition:
-      method: POST
-      pathRegex: /auth/
-    name: /auth/_post
-  - condition:
-      method: PUT
-      pathRegex: /auth/
-    name: /auth/_put
-  - condition:
-      method: PATCH
-      pathRegex: /auth/
-    name: /auth/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /auth/
-    name: /auth/_delete
-  - condition:
-      method: GET
-      pathRegex: /data/.*
-    name: /data/_get
-  - condition:
-      method: GET
-      pathRegex: /info
-    name: /info_get
-  - condition:
-      method: GET
-      pathRegex: /
-    name: /_get
+    name: /v1/blobs/{id}_delete_blob
 ---
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
   name: jellyfish.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
+  namespace: '{{ .Release.Namespace }}'
 spec:
   routes:
   - condition:
       method: POST
       pathRegex: /v1/device/upload/cl.*
-    name: /v1/device/upload/cl_post
+    name: /v1/device/upload/cl_post_jellyfish
   - condition:
       method: GET
       pathRegex: /v1/device/data/.*
-    name: /v1/device/data/_get
+    name: /v1/device/data/_get_jellyfish
   - condition:
       method: GET
       pathRegex: /v1/synctasks/.*
-    name: /v1/synctasks/_get
+    name: /v1/synctasks/_get_jellyfish
   - condition:
       method: POST
       pathRegex: /data/.*
-    name: /data/_post
+    name: /data/_post_jellyfish
   - condition:
       method: GET
       pathRegex: /info.*
-    name: /info_get
----
-apiVersion: linkerd.io/v1alpha2
-kind: ServiceProfile
-metadata:
-  name: message-api.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
-spec:
-  routes:
-  - condition:
-      method: GET
-      pathRegex: /.*
-    name: /message/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /.*
-    name: /message/_options
-  - condition:
-      method: POST
-      pathRegex: /.*
-    name: /message/_post
-  - condition:
-      method: PUT
-      pathRegex: /.*
-    name: /message/_put
-  - condition:
-      method: PATCH
-      pathRegex: /.*
-    name: /message/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /.*
-    name: /message/_delete
----
-apiVersion: linkerd.io/v1alpha2
-kind: ServiceProfile
-metadata:
-  name: seagull.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
-spec:
-  routes:
-  - condition:
-      method: GET
-      pathRegex: /.*
-    name: /metadata/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /.*
-    name: /metadata/_options
-  - condition:
-      method: POST
-      pathRegex: /.*
-    name: /metadata/_post
-  - condition:
-      method: PUT
-      pathRegex: /.*
-    name: /metadata/_put
-  - condition:
-      method: PATCH
-      pathRegex: /.*
-    name: /metadata/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /.*
-    name: /metadata/_delete
----
-apiVersion: linkerd.io/v1alpha2
-kind: ServiceProfile
-metadata:
-  name: shoreline.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
-spec:
-  routes:
-  - condition:
-      method: POST
-      pathRegex: /serverlogin.*
-    name: /serverlogin_post
-  - condition:
-      method: GET
-      pathRegex: /.*
-    name: /auth/_get
-  - condition:
-      method: OPTIONS
-      pathRegex: /.*
-    name: /auth/_options
-  - condition:
-      method: POST
-      pathRegex: /.*
-    name: /auth/_post
-  - condition:
-      method: PUT
-      pathRegex: /.*
-    name: /auth/_put
-  - condition:
-      method: PATCH
-      pathRegex: /.*
-    name: /auth/_patch
-  - condition:
-      method: DELETE
-      pathRegex: /.*
-    name: /auth/_delete
+    name: /info_get_jellyfish
 ---
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
   name: task.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
+  namespace: '{{ .Release.Namespace }}'
 spec:
   routes:
   - condition:
       method: GET
-      pathRegex: /v1/tasks/[^/*]
-    name: /v1/tasks/{id2}_get
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_get_task
   - condition:
       method: PUT
-      pathRegex: /v1/tasks/[^/*]
-    name: /v1/tasks/{id2}_put
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_put_task
   - condition:
       method: DELETE
-      pathRegex: /v1/tasks/[^/*]
-    name: /v1/tasks/{id2}_delete
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_delete_task
   - condition:
       method: GET
       pathRegex: /v1/tasks.*
-    name: /v1/tasks_get
+    name: /v1/tasks_get_task
   - condition:
       method: POST
       pathRegex: /v1/tasks.*
-    name: /v1/tasks_post
----
-apiVersion: linkerd.io/v1alpha2
-kind: ServiceProfile
-metadata:
-  name: tide-whisperer.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
-spec:
-  routes:
-  - condition:
-      method: GET
-      pathRegex: /.*
-    name: /data/_get
+    name: /v1/tasks_post_task
 ---
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
   name: user.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: {{ .Release.Namespace }}
+  namespace: '{{ .Release.Namespace }}'
 spec:
   routes:
   - condition:
       method: GET
-      pathRegex: /v1/users/[^/*]
-    name: /v1/users/{id2}_get
+      pathRegex: /v1/users/[^/]+
+    name: /v1/users/{id}_get_user
   - condition:
       method: DELETE
-      pathRegex: /v1/users/[^/*]
-    name: /v1/users/{id2}_delete
+      pathRegex: /v1/users/[^/]+
+    name: /v1/users/{id}_delete_user
   - condition:
       method: GET
       pathRegex: /.*
-    name: /userservices/_get
+    name: /userservices/_get_user
   - condition:
       method: OPTIONS
       pathRegex: /.*
-    name: /userservices/_options
+    name: /userservices/_options_user
   - condition:
       method: POST
       pathRegex: /.*
-    name: /userservices/_post
+    name: /userservices/_post_user
   - condition:
       method: PUT
       pathRegex: /.*
-    name: /userservices/_put
+    name: /userservices/_put_user
   - condition:
       method: PATCH
       pathRegex: /.*
-    name: /userservices/_patch
+    name: /userservices/_patch_user
   - condition:
       method: DELETE
       pathRegex: /.*
-    name: /userservices/_delete
+    name: /userservices/_delete_user
+---
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: shoreline.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: POST
+      pathRegex: /serverlogin.*
+    name: /serverlogin_post_shoreline
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /auth/_get_shoreline
+    timeout: 30s
+  - condition:
+      method: OPTIONS
+      pathRegex: /.*
+    name: /auth/_options_shoreline
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /.*
+    name: /auth/_post_shoreline
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /.*
+    name: /auth/_put_shoreline
+    timeout: 30s
+  - condition:
+      method: PATCH
+      pathRegex: /.*
+    name: /auth/_patch_shoreline
+    timeout: 30s
+  - condition:
+      method: DELETE
+      pathRegex: /.*
+    name: /auth/_delete_shoreline
+    timeout: 30s
+---
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: export.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /export/.*
+    name: /export/_get_export
+    timeout: 2m
+  - condition:
+      method: OPTIONS
+      pathRegex: /export/.*
+    name: /export/_options_export
+    timeout: 2m
+  - condition:
+      method: POST
+      pathRegex: /export/.*
+    name: /export/_post_export
+    timeout: 2m
+  - condition:
+      method: PUT
+      pathRegex: /export/.*
+    name: /export/_put_export
+    timeout: 2m
+  - condition:
+      method: PATCH
+      pathRegex: /export/.*
+    name: /export/_patch_export
+    timeout: 2m
+  - condition:
+      method: DELETE
+      pathRegex: /export/.*
+    name: /export/_delete_export
+    timeout: 2m
+---
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: gatekeeper.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /access/status.*
+    name: /access/status_get_gatekeeper
+  - condition:
+      method: GET
+      pathRegex: /access/groups/.*
+    name: /access/groups/_get_gatekeeper
+  - condition:
+      method: GET
+      pathRegex: /access/[^/]+/[^/]+.*
+    name: /access/[^/]+/[^/]+_get_gatekeeper
+  - condition:
+      method: POST
+      pathRegex: /access/[^/]+/[^/]+.*
+    name: /access/[^/]+/[^/]+_post_gatekeeper
+  - condition:
+      method: GET
+      pathRegex: /access/[^/]+.*
+    name: /access/[^/]+_get_gatekeeper
+---
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: tide-whisperer.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /data/_get_tide-whisperer
+    timeout: 1m
+---
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: seagull.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /metadata/_get_seagull
+  - condition:
+      method: OPTIONS
+      pathRegex: /.*
+    name: /metadata/_options_seagull
+  - condition:
+      method: POST
+      pathRegex: /.*
+    name: /metadata/_post_seagull
+  - condition:
+      method: PUT
+      pathRegex: /.*
+    name: /metadata/_put_seagull
+  - condition:
+      method: PATCH
+      pathRegex: /.*
+    name: /metadata/_patch_seagull
+  - condition:
+      method: DELETE
+      pathRegex: /.*
+    name: /metadata/_delete_seagull
+---
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: highwater.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /metrics/_get_highwater
+  - condition:
+      method: OPTIONS
+      pathRegex: /.*
+    name: /metrics/_options_highwater
+  - condition:
+      method: POST
+      pathRegex: /.*
+    name: /metrics/_post_highwater
+  - condition:
+      method: PUT
+      pathRegex: /.*
+    name: /metrics/_put_highwater
+  - condition:
+      method: PATCH
+      pathRegex: /.*
+    name: /metrics/_patch_highwater
+  - condition:
+      method: DELETE
+      pathRegex: /.*
+    name: /metrics/_delete_highwater
+---
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: hydrophone.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /confirm/_get_hydrophone
+  - condition:
+      method: OPTIONS
+      pathRegex: /.*
+    name: /confirm/_options_hydrophone
+  - condition:
+      method: POST
+      pathRegex: /.*
+    name: /confirm/_post_hydrophone
+  - condition:
+      method: PUT
+      pathRegex: /.*
+    name: /confirm/_put_hydrophone
+  - condition:
+      method: PATCH
+      pathRegex: /.*
+    name: /confirm/_patch_hydrophone
+  - condition:
+      method: DELETE
+      pathRegex: /.*
+    name: /confirm/_delete_hydrophone
+---
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: message-api.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /message/_get_message-api
+    timeout: 30s
+  - condition:
+      method: OPTIONS
+      pathRegex: /.*
+    name: /message/_options_message-api
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /.*
+    name: /message/_post_message-api
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /.*
+    name: /message/_put_message-api
+    timeout: 30s
+  - condition:
+      method: PATCH
+      pathRegex: /.*
+    name: /message/_patch_message-api
+    timeout: 30s
+  - condition:
+      method: DELETE
+      pathRegex: /.*
+    name: /message/_delete_message-api
+    timeout: 30s
+---
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: internal-gateway-proxy.gloo-system.svc.cluster.local
+  namespace: gloo-system
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/restricted_tokens
+    name: /v1/users/{id}/restricted_tokens_get_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/restricted_tokens
+    name: /v1/users/{id}/restricted_tokens_post_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/restricted_tokens
+    name: /v1/users/{id}/restricted_tokens_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/provider_sessions
+    name: /v1/users/{id}/provider_sessions_get_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/provider_sessions
+    name: /v1/users/{id}/provider_sessions_post_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/provider_sessions
+    name: /v1/users/{id}/provider_sessions_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /request-password-from-uploader.*
+    name: /request-password-from-uploader_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/data_sources
+    name: /v1/users/{id}/data_sources_get_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/data_sources
+    name: /v1/users/{id}/data_sources_post_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/data_sources
+    name: /v1/users/{id}/data_sources_delete_internal-gateway-proxy
+  - condition:
+      method: OPTIONS
+      pathRegex: /v1/users/[^/]+/data_sources
+    name: /v1/users/{id}/data_sources_options_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/provider_sessions/[^/]+
+    name: /v1/provider_sessions/{id}_get_internal-gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /v1/provider_sessions/[^/]+
+    name: /v1/provider_sessions/{id}_put_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/provider_sessions/[^/]+
+    name: /v1/provider_sessions/{id}_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /verification-with-password.*
+    name: /verification-with-password_get_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /event/csp-report/violation.*
+    name: /event/csp-report/violation_post_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/oauth/[^/]+/authorize
+    name: /v1/oauth/{id}/authorize_get_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/oauth/[^/]+/authorize
+    name: /v1/oauth/{id}/authorize_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/data_sets
+    name: /v1/users/{id}/data_sets_get_internal-gateway-proxy
+    timeout: 60s
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/data_sets
+    name: /v1/users/{id}/data_sets_post_internal-gateway-proxy
+    timeout: 60s
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/images/.+
+    name: /v1/users/{id}/images/.+_get_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/images/.+
+    name: /v1/users/{id}/images/.+_post_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/images/.+
+    name: /v1/users/{id}/images/.+_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/oauth/[^/]+/redirect
+    name: /v1/oauth/{id}/redirect_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/datasets
+    name: /v1/users/{id}/datasets_get_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/datasets
+    name: /v1/users/{id}/datasets_post_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /request-password-reset.*
+    name: /request-password-reset_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /confirm-password-reset.*
+    name: /confirm-password-reset_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/blobs/[^/]+/content
+    name: /v1/blobs/{id}/content_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/data_sources/[^/]+
+    name: /v1/data_sources/{id}_get_internal-gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /v1/data_sources/[^/]+
+    name: /v1/data_sources/{id}_put_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/data_sources/[^/]+
+    name: /v1/data_sources/{id}_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/images
+    name: /v1/users/{id}/images_get_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/images
+    name: /v1/users/{id}/images_post_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/images
+    name: /v1/users/{id}/images_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/restricted_tokens.*
+    name: /v1/restricted_tokens_get_internal-gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /v1/restricted_tokens.*
+    name: /v1/restricted_tokens_put_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/restricted_tokens.*
+    name: /v1/restricted_tokens_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/blobs
+    name: /v1/users/{id}/blobs_get_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/blobs
+    name: /v1/users/{id}/blobs_post_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/blobs
+    name: /v1/users/{id}/blobs_delete_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/data
+    name: /v1/users/{id}/data_delete_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/device/upload/cl.*
+    name: /v1/device/upload/cl_post_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /email-verification.*
+    name: /email-verification_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /clinician-details.*
+    name: /clinician-details_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/device/data/.*
+    name: /v1/device/data/_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /browser-warning.*
+    name: /browser-warning_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/blobs/[^/]+
+    name: /v1/blobs/{id}_get_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/blobs/[^/]+
+    name: /v1/blobs/{id}_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_get_internal-gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_put_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+
+    name: /v1/users/{id}_get_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+
+    name: /v1/users/{id}_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/synctasks/.*
+    name: /v1/synctasks/_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/data_sets.*
+    name: /v1/data_sets_get_internal-gateway-proxy
+    timeout: 60s
+  - condition:
+      method: POST
+      pathRegex: /v1/data_sets.*
+    name: /v1/data_sets_post_internal-gateway-proxy
+    timeout: 60s
+  - condition:
+      method: DELETE
+      pathRegex: /v1/data_sets.*
+    name: /v1/data_sets_delete_internal-gateway-proxy
+    timeout: 60s
+  - condition:
+      method: PUT
+      pathRegex: /v1/data_sets.*
+    name: /v1/data_sets_put_internal-gateway-proxy
+    timeout: 60s
+  - condition:
+      method: POST
+      pathRegex: /v1/datasets.*
+    name: /v1/datasets_post_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /v1/datasets.*
+    name: /v1/datasets_put_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: DELETE
+      pathRegex: /v1/datasets.*
+    name: /v1/datasets_delete_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /serverlogin.*
+    name: /serverlogin_post_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/images.*
+    name: /v1/images_get_internal-gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /v1/images.*
+    name: /v1/images_put_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/images.*
+    name: /v1/images_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /patients.*
+    name: /patients_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/tasks.*
+    name: /v1/tasks_get_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/tasks.*
+    name: /v1/tasks_post_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /profile.*
+    name: /profile_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/time.*
+    name: /v1/time_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /export/.*
+    name: /export/_get_internal-gateway-proxy
+    timeout: 2m
+  - condition:
+      method: OPTIONS
+      pathRegex: /export/.*
+    name: /export/_options_internal-gateway-proxy
+    timeout: 2m
+  - condition:
+      method: POST
+      pathRegex: /export/.*
+    name: /export/_post_internal-gateway-proxy
+    timeout: 2m
+  - condition:
+      method: PUT
+      pathRegex: /export/.*
+    name: /export/_put_internal-gateway-proxy
+    timeout: 2m
+  - condition:
+      method: PATCH
+      pathRegex: /export/.*
+    name: /export/_patch_internal-gateway-proxy
+    timeout: 2m
+  - condition:
+      method: DELETE
+      pathRegex: /export/.*
+    name: /export/_delete_internal-gateway-proxy
+    timeout: 2m
+  - condition:
+      method: GET
+      pathRegex: /access/status.*
+    name: /access/status_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /access/groups/.*
+    name: /access/groups/_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /access/[^/]+/[^/]+.*
+    name: /access/[^/]+/[^/]+_get_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /access/[^/]+/[^/]+.*
+    name: /access/[^/]+/[^/]+_post_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /access/[^/]+.*
+    name: /access/[^/]+_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /signup.*
+    name: /signup_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /terms.*
+    name: /terms_get_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /data/.*
+    name: /data/_post_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /info.*
+    name: /info_get_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /auth/.*
+    name: /auth/_get_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: OPTIONS
+      pathRegex: /auth/.*
+    name: /auth/_options_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /auth/.*
+    name: /auth/_post_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /auth/.*
+    name: /auth/_put_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: PATCH
+      pathRegex: /auth/.*
+    name: /auth/_patch_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: DELETE
+      pathRegex: /auth/.*
+    name: /auth/_delete_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: GET
+      pathRegex: /data/.*
+    name: /data/_get_internal-gateway-proxy
+    timeout: 1m
+  - condition:
+      method: GET
+      pathRegex: /userservices/.*
+    name: /userservices/_get_internal-gateway-proxy
+  - condition:
+      method: OPTIONS
+      pathRegex: /userservices/.*
+    name: /userservices/_options_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /userservices/.*
+    name: /userservices/_post_internal-gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /userservices/.*
+    name: /userservices/_put_internal-gateway-proxy
+  - condition:
+      method: PATCH
+      pathRegex: /userservices/.*
+    name: /userservices/_patch_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /userservices/.*
+    name: /userservices/_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /metadata/.*
+    name: /metadata/_get_internal-gateway-proxy
+  - condition:
+      method: OPTIONS
+      pathRegex: /metadata/.*
+    name: /metadata/_options_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /metadata/.*
+    name: /metadata/_post_internal-gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /metadata/.*
+    name: /metadata/_put_internal-gateway-proxy
+  - condition:
+      method: PATCH
+      pathRegex: /metadata/.*
+    name: /metadata/_patch_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /metadata/.*
+    name: /metadata/_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /metrics/.*
+    name: /metrics/_get_internal-gateway-proxy
+  - condition:
+      method: OPTIONS
+      pathRegex: /metrics/.*
+    name: /metrics/_options_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /metrics/.*
+    name: /metrics/_post_internal-gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /metrics/.*
+    name: /metrics/_put_internal-gateway-proxy
+  - condition:
+      method: PATCH
+      pathRegex: /metrics/.*
+    name: /metrics/_patch_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /metrics/.*
+    name: /metrics/_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /confirm/.*
+    name: /confirm/_get_internal-gateway-proxy
+  - condition:
+      method: OPTIONS
+      pathRegex: /confirm/.*
+    name: /confirm/_options_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /confirm/.*
+    name: /confirm/_post_internal-gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /confirm/.*
+    name: /confirm/_put_internal-gateway-proxy
+  - condition:
+      method: PATCH
+      pathRegex: /confirm/.*
+    name: /confirm/_patch_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /confirm/.*
+    name: /confirm/_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /message/.*
+    name: /message/_get_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: OPTIONS
+      pathRegex: /message/.*
+    name: /message/_options_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /message/.*
+    name: /message/_post_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /message/.*
+    name: /message/_put_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: PATCH
+      pathRegex: /message/.*
+    name: /message/_patch_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: DELETE
+      pathRegex: /message/.*
+    name: /message/_delete_internal-gateway-proxy
+    timeout: 30s
+  - condition:
+      method: GET
+      pathRegex: /dataservices/.*
+    name: /dataservices/_get_internal-gateway-proxy
+  - condition:
+      method: OPTIONS
+      pathRegex: /dataservices/.*
+    name: /dataservices/_options_internal-gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /dataservices/.*
+    name: /dataservices/_post_internal-gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /dataservices/.*
+    name: /dataservices/_put_internal-gateway-proxy
+  - condition:
+      method: PATCH
+      pathRegex: /dataservices/.*
+    name: /dataservices/_patch_internal-gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /dataservices/.*
+    name: /dataservices/_delete_internal-gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /_get_internal-gateway-proxy
+---
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: gateway-proxy.gloo-system.svc.cluster.local
+  namespace: gloo-system
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/restricted_tokens
+    name: /v1/users/{id}/restricted_tokens_get_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/restricted_tokens
+    name: /v1/users/{id}/restricted_tokens_post_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/restricted_tokens
+    name: /v1/users/{id}/restricted_tokens_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/provider_sessions
+    name: /v1/users/{id}/provider_sessions_get_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/provider_sessions
+    name: /v1/users/{id}/provider_sessions_post_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/provider_sessions
+    name: /v1/users/{id}/provider_sessions_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /request-password-from-uploader.*
+    name: /request-password-from-uploader_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/data_sources
+    name: /v1/users/{id}/data_sources_get_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/data_sources
+    name: /v1/users/{id}/data_sources_post_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/data_sources
+    name: /v1/users/{id}/data_sources_delete_gateway-proxy
+  - condition:
+      method: OPTIONS
+      pathRegex: /v1/users/[^/]+/data_sources
+    name: /v1/users/{id}/data_sources_options_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/provider_sessions/[^/]+
+    name: /v1/provider_sessions/{id}_get_gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /v1/provider_sessions/[^/]+
+    name: /v1/provider_sessions/{id}_put_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/provider_sessions/[^/]+
+    name: /v1/provider_sessions/{id}_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /verification-with-password.*
+    name: /verification-with-password_get_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /event/csp-report/violation.*
+    name: /event/csp-report/violation_post_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/oauth/[^/]+/authorize
+    name: /v1/oauth/{id}/authorize_get_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/oauth/[^/]+/authorize
+    name: /v1/oauth/{id}/authorize_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/data_sets
+    name: /v1/users/{id}/data_sets_get_gateway-proxy
+    timeout: 60s
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/data_sets
+    name: /v1/users/{id}/data_sets_post_gateway-proxy
+    timeout: 60s
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/images/.+
+    name: /v1/users/{id}/images/.+_get_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/images/.+
+    name: /v1/users/{id}/images/.+_post_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/images/.+
+    name: /v1/users/{id}/images/.+_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/oauth/[^/]+/redirect
+    name: /v1/oauth/{id}/redirect_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/datasets
+    name: /v1/users/{id}/datasets_get_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/datasets
+    name: /v1/users/{id}/datasets_post_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /request-password-reset.*
+    name: /request-password-reset_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /confirm-password-reset.*
+    name: /confirm-password-reset_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/blobs/[^/]+/content
+    name: /v1/blobs/{id}/content_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/data_sources/[^/]+
+    name: /v1/data_sources/{id}_get_gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /v1/data_sources/[^/]+
+    name: /v1/data_sources/{id}_put_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/data_sources/[^/]+
+    name: /v1/data_sources/{id}_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/images
+    name: /v1/users/{id}/images_get_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/images
+    name: /v1/users/{id}/images_post_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/images
+    name: /v1/users/{id}/images_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/restricted_tokens.*
+    name: /v1/restricted_tokens_get_gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /v1/restricted_tokens.*
+    name: /v1/restricted_tokens_put_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/restricted_tokens.*
+    name: /v1/restricted_tokens_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/blobs
+    name: /v1/users/{id}/blobs_get_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/blobs
+    name: /v1/users/{id}/blobs_post_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/blobs
+    name: /v1/users/{id}/blobs_delete_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/data
+    name: /v1/users/{id}/data_delete_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/device/upload/cl.*
+    name: /v1/device/upload/cl_post_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /email-verification.*
+    name: /email-verification_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /clinician-details.*
+    name: /clinician-details_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/device/data/.*
+    name: /v1/device/data/_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /browser-warning.*
+    name: /browser-warning_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/blobs/[^/]+
+    name: /v1/blobs/{id}_get_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/blobs/[^/]+
+    name: /v1/blobs/{id}_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_get_gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_put_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+
+    name: /v1/users/{id}_get_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+
+    name: /v1/users/{id}_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/synctasks/.*
+    name: /v1/synctasks/_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/data_sets.*
+    name: /v1/data_sets_get_gateway-proxy
+    timeout: 60s
+  - condition:
+      method: POST
+      pathRegex: /v1/data_sets.*
+    name: /v1/data_sets_post_gateway-proxy
+    timeout: 60s
+  - condition:
+      method: DELETE
+      pathRegex: /v1/data_sets.*
+    name: /v1/data_sets_delete_gateway-proxy
+    timeout: 60s
+  - condition:
+      method: PUT
+      pathRegex: /v1/data_sets.*
+    name: /v1/data_sets_put_gateway-proxy
+    timeout: 60s
+  - condition:
+      method: POST
+      pathRegex: /v1/datasets.*
+    name: /v1/datasets_post_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /v1/datasets.*
+    name: /v1/datasets_put_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: DELETE
+      pathRegex: /v1/datasets.*
+    name: /v1/datasets_delete_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /serverlogin.*
+    name: /serverlogin_post_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/images.*
+    name: /v1/images_get_gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /v1/images.*
+    name: /v1/images_put_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /v1/images.*
+    name: /v1/images_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /patients.*
+    name: /patients_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/tasks.*
+    name: /v1/tasks_get_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /v1/tasks.*
+    name: /v1/tasks_post_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /profile.*
+    name: /profile_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /v1/time.*
+    name: /v1/time_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /export/.*
+    name: /export/_get_gateway-proxy
+    timeout: 2m
+  - condition:
+      method: OPTIONS
+      pathRegex: /export/.*
+    name: /export/_options_gateway-proxy
+    timeout: 2m
+  - condition:
+      method: POST
+      pathRegex: /export/.*
+    name: /export/_post_gateway-proxy
+    timeout: 2m
+  - condition:
+      method: PUT
+      pathRegex: /export/.*
+    name: /export/_put_gateway-proxy
+    timeout: 2m
+  - condition:
+      method: PATCH
+      pathRegex: /export/.*
+    name: /export/_patch_gateway-proxy
+    timeout: 2m
+  - condition:
+      method: DELETE
+      pathRegex: /export/.*
+    name: /export/_delete_gateway-proxy
+    timeout: 2m
+  - condition:
+      method: GET
+      pathRegex: /access/status.*
+    name: /access/status_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /access/groups/.*
+    name: /access/groups/_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /access/[^/]+/[^/]+.*
+    name: /access/[^/]+/[^/]+_get_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /access/[^/]+/[^/]+.*
+    name: /access/[^/]+/[^/]+_post_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /access/[^/]+.*
+    name: /access/[^/]+_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /signup.*
+    name: /signup_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /terms.*
+    name: /terms_get_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /data/.*
+    name: /data/_post_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /info.*
+    name: /info_get_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /auth/.*
+    name: /auth/_get_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: OPTIONS
+      pathRegex: /auth/.*
+    name: /auth/_options_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /auth/.*
+    name: /auth/_post_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /auth/.*
+    name: /auth/_put_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: PATCH
+      pathRegex: /auth/.*
+    name: /auth/_patch_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: DELETE
+      pathRegex: /auth/.*
+    name: /auth/_delete_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: GET
+      pathRegex: /data/.*
+    name: /data/_get_gateway-proxy
+    timeout: 1m
+  - condition:
+      method: GET
+      pathRegex: /userservices/.*
+    name: /userservices/_get_gateway-proxy
+  - condition:
+      method: OPTIONS
+      pathRegex: /userservices/.*
+    name: /userservices/_options_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /userservices/.*
+    name: /userservices/_post_gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /userservices/.*
+    name: /userservices/_put_gateway-proxy
+  - condition:
+      method: PATCH
+      pathRegex: /userservices/.*
+    name: /userservices/_patch_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /userservices/.*
+    name: /userservices/_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /metadata/.*
+    name: /metadata/_get_gateway-proxy
+  - condition:
+      method: OPTIONS
+      pathRegex: /metadata/.*
+    name: /metadata/_options_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /metadata/.*
+    name: /metadata/_post_gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /metadata/.*
+    name: /metadata/_put_gateway-proxy
+  - condition:
+      method: PATCH
+      pathRegex: /metadata/.*
+    name: /metadata/_patch_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /metadata/.*
+    name: /metadata/_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /metrics/.*
+    name: /metrics/_get_gateway-proxy
+  - condition:
+      method: OPTIONS
+      pathRegex: /metrics/.*
+    name: /metrics/_options_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /metrics/.*
+    name: /metrics/_post_gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /metrics/.*
+    name: /metrics/_put_gateway-proxy
+  - condition:
+      method: PATCH
+      pathRegex: /metrics/.*
+    name: /metrics/_patch_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /metrics/.*
+    name: /metrics/_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /confirm/.*
+    name: /confirm/_get_gateway-proxy
+  - condition:
+      method: OPTIONS
+      pathRegex: /confirm/.*
+    name: /confirm/_options_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /confirm/.*
+    name: /confirm/_post_gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /confirm/.*
+    name: /confirm/_put_gateway-proxy
+  - condition:
+      method: PATCH
+      pathRegex: /confirm/.*
+    name: /confirm/_patch_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /confirm/.*
+    name: /confirm/_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /message/.*
+    name: /message/_get_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: OPTIONS
+      pathRegex: /message/.*
+    name: /message/_options_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /message/.*
+    name: /message/_post_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /message/.*
+    name: /message/_put_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: PATCH
+      pathRegex: /message/.*
+    name: /message/_patch_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: DELETE
+      pathRegex: /message/.*
+    name: /message/_delete_gateway-proxy
+    timeout: 30s
+  - condition:
+      method: GET
+      pathRegex: /dataservices/.*
+    name: /dataservices/_get_gateway-proxy
+  - condition:
+      method: OPTIONS
+      pathRegex: /dataservices/.*
+    name: /dataservices/_options_gateway-proxy
+  - condition:
+      method: POST
+      pathRegex: /dataservices/.*
+    name: /dataservices/_post_gateway-proxy
+  - condition:
+      method: PUT
+      pathRegex: /dataservices/.*
+    name: /dataservices/_put_gateway-proxy
+  - condition:
+      method: PATCH
+      pathRegex: /dataservices/.*
+    name: /dataservices/_patch_gateway-proxy
+  - condition:
+      method: DELETE
+      pathRegex: /dataservices/.*
+    name: /dataservices/_delete_gateway-proxy
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /_get_gateway-proxy
+---
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: internal.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/restricted_tokens
+    name: /v1/users/{id}/restricted_tokens_get_internal
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/restricted_tokens
+    name: /v1/users/{id}/restricted_tokens_post_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/restricted_tokens
+    name: /v1/users/{id}/restricted_tokens_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/provider_sessions
+    name: /v1/users/{id}/provider_sessions_get_internal
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/provider_sessions
+    name: /v1/users/{id}/provider_sessions_post_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/provider_sessions
+    name: /v1/users/{id}/provider_sessions_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /request-password-from-uploader.*
+    name: /request-password-from-uploader_get_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/data_sources
+    name: /v1/users/{id}/data_sources_get_internal
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/data_sources
+    name: /v1/users/{id}/data_sources_post_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/data_sources
+    name: /v1/users/{id}/data_sources_delete_internal
+  - condition:
+      method: OPTIONS
+      pathRegex: /v1/users/[^/]+/data_sources
+    name: /v1/users/{id}/data_sources_options_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/provider_sessions/[^/]+
+    name: /v1/provider_sessions/{id}_get_internal
+  - condition:
+      method: PUT
+      pathRegex: /v1/provider_sessions/[^/]+
+    name: /v1/provider_sessions/{id}_put_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/provider_sessions/[^/]+
+    name: /v1/provider_sessions/{id}_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /verification-with-password.*
+    name: /verification-with-password_get_internal
+  - condition:
+      method: POST
+      pathRegex: /event/csp-report/violation.*
+    name: /event/csp-report/violation_post_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/oauth/[^/]+/authorize
+    name: /v1/oauth/{id}/authorize_get_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/oauth/[^/]+/authorize
+    name: /v1/oauth/{id}/authorize_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/data_sets
+    name: /v1/users/{id}/data_sets_get_internal
+    timeout: 60s
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/data_sets
+    name: /v1/users/{id}/data_sets_post_internal
+    timeout: 60s
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/images/.+
+    name: /v1/users/{id}/images/.+_get_internal
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/images/.+
+    name: /v1/users/{id}/images/.+_post_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/images/.+
+    name: /v1/users/{id}/images/.+_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/oauth/[^/]+/redirect
+    name: /v1/oauth/{id}/redirect_get_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/datasets
+    name: /v1/users/{id}/datasets_get_internal
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/datasets
+    name: /v1/users/{id}/datasets_post_internal
+  - condition:
+      method: GET
+      pathRegex: /request-password-reset.*
+    name: /request-password-reset_get_internal
+  - condition:
+      method: GET
+      pathRegex: /confirm-password-reset.*
+    name: /confirm-password-reset_get_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/blobs/[^/]+/content
+    name: /v1/blobs/{id}/content_get_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/data_sources/[^/]+
+    name: /v1/data_sources/{id}_get_internal
+  - condition:
+      method: PUT
+      pathRegex: /v1/data_sources/[^/]+
+    name: /v1/data_sources/{id}_put_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/data_sources/[^/]+
+    name: /v1/data_sources/{id}_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/images
+    name: /v1/users/{id}/images_get_internal
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/images
+    name: /v1/users/{id}/images_post_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/images
+    name: /v1/users/{id}/images_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/restricted_tokens.*
+    name: /v1/restricted_tokens_get_internal
+  - condition:
+      method: PUT
+      pathRegex: /v1/restricted_tokens.*
+    name: /v1/restricted_tokens_put_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/restricted_tokens.*
+    name: /v1/restricted_tokens_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/blobs
+    name: /v1/users/{id}/blobs_get_internal
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/blobs
+    name: /v1/users/{id}/blobs_post_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/blobs
+    name: /v1/users/{id}/blobs_delete_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/data
+    name: /v1/users/{id}/data_delete_internal
+  - condition:
+      method: POST
+      pathRegex: /v1/device/upload/cl.*
+    name: /v1/device/upload/cl_post_internal
+  - condition:
+      method: GET
+      pathRegex: /email-verification.*
+    name: /email-verification_get_internal
+  - condition:
+      method: GET
+      pathRegex: /clinician-details.*
+    name: /clinician-details_get_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/device/data/.*
+    name: /v1/device/data/_get_internal
+  - condition:
+      method: GET
+      pathRegex: /browser-warning.*
+    name: /browser-warning_get_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/blobs/[^/]+
+    name: /v1/blobs/{id}_get_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/blobs/[^/]+
+    name: /v1/blobs/{id}_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_get_internal
+  - condition:
+      method: PUT
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_put_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+
+    name: /v1/users/{id}_get_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+
+    name: /v1/users/{id}_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/synctasks/.*
+    name: /v1/synctasks/_get_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/data_sets.*
+    name: /v1/data_sets_get_internal
+    timeout: 60s
+  - condition:
+      method: POST
+      pathRegex: /v1/data_sets.*
+    name: /v1/data_sets_post_internal
+    timeout: 60s
+  - condition:
+      method: DELETE
+      pathRegex: /v1/data_sets.*
+    name: /v1/data_sets_delete_internal
+    timeout: 60s
+  - condition:
+      method: PUT
+      pathRegex: /v1/data_sets.*
+    name: /v1/data_sets_put_internal
+    timeout: 60s
+  - condition:
+      method: POST
+      pathRegex: /v1/datasets.*
+    name: /v1/datasets_post_internal
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /v1/datasets.*
+    name: /v1/datasets_put_internal
+    timeout: 30s
+  - condition:
+      method: DELETE
+      pathRegex: /v1/datasets.*
+    name: /v1/datasets_delete_internal
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /serverlogin.*
+    name: /serverlogin_post_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/images.*
+    name: /v1/images_get_internal
+  - condition:
+      method: PUT
+      pathRegex: /v1/images.*
+    name: /v1/images_put_internal
+  - condition:
+      method: DELETE
+      pathRegex: /v1/images.*
+    name: /v1/images_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /patients.*
+    name: /patients_get_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/tasks.*
+    name: /v1/tasks_get_internal
+  - condition:
+      method: POST
+      pathRegex: /v1/tasks.*
+    name: /v1/tasks_post_internal
+  - condition:
+      method: GET
+      pathRegex: /profile.*
+    name: /profile_get_internal
+  - condition:
+      method: GET
+      pathRegex: /v1/time.*
+    name: /v1/time_get_internal
+  - condition:
+      method: GET
+      pathRegex: /export/.*
+    name: /export/_get_internal
+    timeout: 2m
+  - condition:
+      method: OPTIONS
+      pathRegex: /export/.*
+    name: /export/_options_internal
+    timeout: 2m
+  - condition:
+      method: POST
+      pathRegex: /export/.*
+    name: /export/_post_internal
+    timeout: 2m
+  - condition:
+      method: PUT
+      pathRegex: /export/.*
+    name: /export/_put_internal
+    timeout: 2m
+  - condition:
+      method: PATCH
+      pathRegex: /export/.*
+    name: /export/_patch_internal
+    timeout: 2m
+  - condition:
+      method: DELETE
+      pathRegex: /export/.*
+    name: /export/_delete_internal
+    timeout: 2m
+  - condition:
+      method: GET
+      pathRegex: /access/status.*
+    name: /access/status_get_internal
+  - condition:
+      method: GET
+      pathRegex: /access/groups/.*
+    name: /access/groups/_get_internal
+  - condition:
+      method: GET
+      pathRegex: /access/[^/]+/[^/]+.*
+    name: /access/[^/]+/[^/]+_get_internal
+  - condition:
+      method: POST
+      pathRegex: /access/[^/]+/[^/]+.*
+    name: /access/[^/]+/[^/]+_post_internal
+  - condition:
+      method: GET
+      pathRegex: /access/[^/]+.*
+    name: /access/[^/]+_get_internal
+  - condition:
+      method: GET
+      pathRegex: /signup.*
+    name: /signup_get_internal
+  - condition:
+      method: GET
+      pathRegex: /terms.*
+    name: /terms_get_internal
+  - condition:
+      method: POST
+      pathRegex: /data/.*
+    name: /data/_post_internal
+  - condition:
+      method: GET
+      pathRegex: /info.*
+    name: /info_get_internal
+  - condition:
+      method: GET
+      pathRegex: /auth/.*
+    name: /auth/_get_internal
+    timeout: 30s
+  - condition:
+      method: OPTIONS
+      pathRegex: /auth/.*
+    name: /auth/_options_internal
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /auth/.*
+    name: /auth/_post_internal
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /auth/.*
+    name: /auth/_put_internal
+    timeout: 30s
+  - condition:
+      method: PATCH
+      pathRegex: /auth/.*
+    name: /auth/_patch_internal
+    timeout: 30s
+  - condition:
+      method: DELETE
+      pathRegex: /auth/.*
+    name: /auth/_delete_internal
+    timeout: 30s
+  - condition:
+      method: GET
+      pathRegex: /data/.*
+    name: /data/_get_internal
+    timeout: 1m
+  - condition:
+      method: GET
+      pathRegex: /userservices/.*
+    name: /userservices/_get_internal
+  - condition:
+      method: OPTIONS
+      pathRegex: /userservices/.*
+    name: /userservices/_options_internal
+  - condition:
+      method: POST
+      pathRegex: /userservices/.*
+    name: /userservices/_post_internal
+  - condition:
+      method: PUT
+      pathRegex: /userservices/.*
+    name: /userservices/_put_internal
+  - condition:
+      method: PATCH
+      pathRegex: /userservices/.*
+    name: /userservices/_patch_internal
+  - condition:
+      method: DELETE
+      pathRegex: /userservices/.*
+    name: /userservices/_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /metadata/.*
+    name: /metadata/_get_internal
+  - condition:
+      method: OPTIONS
+      pathRegex: /metadata/.*
+    name: /metadata/_options_internal
+  - condition:
+      method: POST
+      pathRegex: /metadata/.*
+    name: /metadata/_post_internal
+  - condition:
+      method: PUT
+      pathRegex: /metadata/.*
+    name: /metadata/_put_internal
+  - condition:
+      method: PATCH
+      pathRegex: /metadata/.*
+    name: /metadata/_patch_internal
+  - condition:
+      method: DELETE
+      pathRegex: /metadata/.*
+    name: /metadata/_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /metrics/.*
+    name: /metrics/_get_internal
+  - condition:
+      method: OPTIONS
+      pathRegex: /metrics/.*
+    name: /metrics/_options_internal
+  - condition:
+      method: POST
+      pathRegex: /metrics/.*
+    name: /metrics/_post_internal
+  - condition:
+      method: PUT
+      pathRegex: /metrics/.*
+    name: /metrics/_put_internal
+  - condition:
+      method: PATCH
+      pathRegex: /metrics/.*
+    name: /metrics/_patch_internal
+  - condition:
+      method: DELETE
+      pathRegex: /metrics/.*
+    name: /metrics/_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /confirm/.*
+    name: /confirm/_get_internal
+  - condition:
+      method: OPTIONS
+      pathRegex: /confirm/.*
+    name: /confirm/_options_internal
+  - condition:
+      method: POST
+      pathRegex: /confirm/.*
+    name: /confirm/_post_internal
+  - condition:
+      method: PUT
+      pathRegex: /confirm/.*
+    name: /confirm/_put_internal
+  - condition:
+      method: PATCH
+      pathRegex: /confirm/.*
+    name: /confirm/_patch_internal
+  - condition:
+      method: DELETE
+      pathRegex: /confirm/.*
+    name: /confirm/_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /message/.*
+    name: /message/_get_internal
+    timeout: 30s
+  - condition:
+      method: OPTIONS
+      pathRegex: /message/.*
+    name: /message/_options_internal
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /message/.*
+    name: /message/_post_internal
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /message/.*
+    name: /message/_put_internal
+    timeout: 30s
+  - condition:
+      method: PATCH
+      pathRegex: /message/.*
+    name: /message/_patch_internal
+    timeout: 30s
+  - condition:
+      method: DELETE
+      pathRegex: /message/.*
+    name: /message/_delete_internal
+    timeout: 30s
+  - condition:
+      method: GET
+      pathRegex: /dataservices/.*
+    name: /dataservices/_get_internal
+  - condition:
+      method: OPTIONS
+      pathRegex: /dataservices/.*
+    name: /dataservices/_options_internal
+  - condition:
+      method: POST
+      pathRegex: /dataservices/.*
+    name: /dataservices/_post_internal
+  - condition:
+      method: PUT
+      pathRegex: /dataservices/.*
+    name: /dataservices/_put_internal
+  - condition:
+      method: PATCH
+      pathRegex: /dataservices/.*
+    name: /dataservices/_patch_internal
+  - condition:
+      method: DELETE
+      pathRegex: /dataservices/.*
+    name: /dataservices/_delete_internal
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /_get_internal
 {{ end }}

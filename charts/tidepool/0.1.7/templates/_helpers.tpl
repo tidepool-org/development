@@ -95,6 +95,8 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: auth
               key: ServiceAuth
+        - name: OC_AGENT_HOST
+          value: "oc-collector.tracing:55678"
 {{ end }}
 
 {{ define "charts.mongo.params" }}

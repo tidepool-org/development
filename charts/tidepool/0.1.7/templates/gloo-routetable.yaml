@@ -115,6 +115,8 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
+    options:
+      timeout: "60s"
   - matchers:
     - methods:
       - GET
@@ -342,24 +344,6 @@ spec:
   - matchers:
     - methods:
       - GET
-      - OPTIONS
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /dataservices/
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: data
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.data }}
-    options:
-      prefixRewrite: /
-  - matchers:
-    - methods:
-      - GET
       prefix: /v1/synctasks/
     routeAction:
       single:
@@ -368,24 +352,7 @@ spec:
             name: jellyfish
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.jellyfish }}
-  - matchers:
-    - methods:
-      - GET
-      - OPTIONS
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /userservices/
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: user
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.user }}
-    options:
-      prefixRewrite: /
+
   - matchers:
     - methods:
       - GET
@@ -416,7 +383,7 @@ spec:
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
     options:
-      timeout: "30s"
+      timeout: "60s"
   - matchers:
     - methods:
       - POST
@@ -444,6 +411,209 @@ spec:
   - matchers:
     - methods:
       - GET
+      prefix: /patients
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: blip
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.blip }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      prefix: /v1/tasks
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: task
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.task }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /profile
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: blip
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.blip }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /v1/time
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: data
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.data }}
+  - matchers:
+    - methods:
+      - GET
+      - OPTIONS
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /export/
+    options:
+      timeout: '2m'
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: export
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.export }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /access/status
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: gatekeeper
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.gatekeeper }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /access/groups/
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: gatekeeper
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.gatekeeper }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      prefix: /access/[^/]+/[^/]+
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: gatekeeper
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.gatekeeper }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /access/[^/]+
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: gatekeeper
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.gatekeeper }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /signup
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: blip
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.blip }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /terms
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: blip
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.blip }}
+  - matchers:
+    - methods:
+      - POST
+      prefix: /data/
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: jellyfish
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.jellyfish }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /info
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: jellyfish
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.jellyfish }}
+  - matchers:
+    - methods:
+      - GET
+      - OPTIONS
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /auth/
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: shoreline
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.shoreline }}
+    options:
+      prefixRewrite: /
+      timeout: '30s'
+  - matchers:
+    - methods:
+      - GET
+      prefix: /data/
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: tide-whisperer
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.tidewhisperer }}
+    options:
+      timeout: '1m'
+      prefixRewrite: /
+  - matchers:
+    - methods:
+      - GET
+      - OPTIONS
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /userservices/
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: user
+            namespace: '{{ .Release.Namespace }}'
+          port: {{ .Values.global.ports.user }}
+    options:
+      prefixRewrite: /
+  - matchers:
+    - methods:
+      - GET
       - OPTIONS
       - POST
       - PUT
@@ -463,35 +633,6 @@ spec:
         retryOn: '5xx'
         numRetries: 3
         perTryTimeout: '15s'
-  - matchers:
-    - methods:
-      - GET
-      prefix: /patients
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
-  - matchers:
-    - methods:
-      - GET
-      - OPTIONS
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /v1/data/
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: data
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.data }}
-    options:
-      prefixRewrite: /
   - matchers:
     - methods:
       - GET
@@ -554,30 +695,12 @@ spec:
   - matchers:
     - methods:
       - GET
+      - OPTIONS
       - POST
-      prefix: /v1/tasks
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: task
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.task }}
-  - matchers:
-    - methods:
-      - GET
-      prefix: /profile
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
-  - matchers:
-    - methods:
-      - GET
-      prefix: /v1/time
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /dataservices/
     routeAction:
       single:
         kube:
@@ -585,117 +708,8 @@ spec:
             name: data
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
-  - matchers:
-    - methods:
-      - GET
-      - OPTIONS
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /export/
-    options:
-      timeout: '2m'
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: export
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.export }}
-  - matchers:
-    - methods:
-      - GET
-      - OPTIONS
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /access/
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: gatekeeper
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.gatekeeper }}
-  - matchers:
-    - methods:
-      - GET
-      prefix: /signup
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
-  - matchers:
-    - methods:
-      - GET
-      prefix: /terms
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
-  - matchers:
-    - methods:
-      - POST
-      prefix: /data/
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: jellyfish
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.jellyfish }}
-  - matchers:
-    - methods:
-      - GET
-      - OPTIONS
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /auth/
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: shoreline
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.shoreline }}
     options:
       prefixRewrite: /
-      timeout: '30s'
-  - matchers:
-    - methods:
-      - GET
-      prefix: /data/
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: tide-whisperer
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.tidewhisperer }}
-    options:
-      timeout: '1m'
-      prefixRewrite: /
-  - matchers:
-    - methods:
-      - GET
-      prefix: /info
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: jellyfish
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.jellyfish }}
   - matchers:
     - methods:
       - GET
