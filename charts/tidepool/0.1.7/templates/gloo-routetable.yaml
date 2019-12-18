@@ -401,7 +401,7 @@ spec:
             namespace: '{{ .Release.Namespace }}'
           port: {{ .Values.global.ports.data }}
     options:
-      timeout: "30s"
+      timeout: "60s"
   - matchers:
     - methods:
       - POST
