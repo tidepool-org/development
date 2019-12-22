@@ -25,7 +25,7 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
 {{ if .Values.podAnnotations }}
-      ahnnotations:
+      annotations:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
