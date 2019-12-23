@@ -601,24 +601,6 @@ spec:
       - PUT
       - PATCH
       - DELETE
-      prefix: /userservices/
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: user
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.user }}
-    options:
-      prefixRewrite: /
-  - matchers:
-    - methods:
-      - GET
-      - OPTIONS
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
       prefix: /metadata/
     routeAction:
       single:
@@ -692,24 +674,6 @@ spec:
     options:
       prefixRewrite: /
       timeout: '30s'
-  - matchers:
-    - methods:
-      - GET
-      - OPTIONS
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /dataservices/
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: data
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.data }}
-    options:
-      prefixRewrite: /
   - matchers:
     - methods:
       - GET
