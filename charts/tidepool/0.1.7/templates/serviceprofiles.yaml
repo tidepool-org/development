@@ -323,6 +323,7 @@ spec:
       method: POST
       pathRegex: /data/.*
     name: /data/_post_jellyfish
+    timeout: 60s
   - condition:
       method: GET
       pathRegex: /info.*
@@ -988,7 +989,8 @@ spec:
   - condition:
       method: POST
       pathRegex: /data/.*
-    name: /data/_post_internal
+    n3ame: /data/_post_internal
+    timeout: 60s
   - condition:
       method: GET
       pathRegex: /info.*
