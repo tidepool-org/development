@@ -989,7 +989,7 @@ spec:
   - condition:
       method: POST
       pathRegex: /data/.*
-    n3ame: /data/_post_internal
+    name: /data/_post_internal
     timeout: 60s
   - condition:
       method: GET
