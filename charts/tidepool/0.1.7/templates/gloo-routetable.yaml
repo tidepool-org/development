@@ -474,41 +474,8 @@ spec:
   - matchers:
     - methods:
       - GET
-      prefix: /access/status
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: gatekeeper
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.gatekeeper }}
-  - matchers:
-    - methods:
-      - GET
-      prefix: /access/groups/
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: gatekeeper
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.gatekeeper }}
-  - matchers:
-    - methods:
-      - GET
       - POST
-      prefix: /access/[^/]+/[^/]+
-    routeAction:
-      single:
-        kube:
-          ref:
-            name: gatekeeper
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.gatekeeper }}
-  - matchers:
-    - methods:
-      - GET
-      prefix: /access/[^/]+
+      prefix: /access/
     routeAction:
       single:
         kube:
