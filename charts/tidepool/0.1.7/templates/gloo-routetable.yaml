@@ -497,7 +497,7 @@ spec:
     - methods:
       - GET
       - POST
-      prefix: /access/[^/]+/[^/]+
+      regex: /access/[^/]+/[^/]+
     routeAction:
       single:
         kube:
@@ -508,7 +508,7 @@ spec:
   - matchers:
     - methods:
       - GET
-      prefix: /access/[^/]+
+      regex: /access/[^/]+
     routeAction:
       single:
         kube:
