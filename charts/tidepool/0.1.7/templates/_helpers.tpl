@@ -4,7 +4,7 @@ Expand the name of the chart.
 */}}
 
 {{- define "charts.host.external.tp" -}} 
-{{- .Values.global.gateway.default.protocol -}}:{{- .Values.global.gateway.default.host }}
+{{- .Values.global.gateway.default.protocol -}}://{{- .Values.global.gateway.default.host }}
 {{- end }}
 
 {{- define "charts.name" -}}
@@ -95,6 +95,8 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: auth
               key: ServiceAuth
+        - name: OC_AGENT_HOST
+          value: "oc-collector.tracing:55678"
 {{ end }}
 
 {{ define "charts.mongo.params" }}

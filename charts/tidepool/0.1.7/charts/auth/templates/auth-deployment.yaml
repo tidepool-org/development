@@ -9,13 +9,14 @@ metadata:
   namespace: {{.Release.Namespace}}
   annotations:
     secret.reloader.stakater.com/reload: "server,mongo,dexcom,auth"
+    configmap.reloader.stakater.com/reload: "dexcom"
 spec:
   selector:
     matchLabels:
       app: auth
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: 1
+  replicas: {{ .Values.deployment.replicas | default 1 }}
   strategy: {}
   template:
     metadata:
@@ -78,7 +79,7 @@ spec:
               key: StateSalt
               optional: true
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
-          value: {{ .Values.global.gateway.default.host }}
+          value: {{ .Values.global.gateway.default.domain }}
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.auth}}
         - name: TIDEPOOL_AUTH_SERVICE_SECRET
@@ -93,6 +94,6 @@ spec:
         - containerPort: {{.Values.global.ports.auth}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
       restartPolicy: Always

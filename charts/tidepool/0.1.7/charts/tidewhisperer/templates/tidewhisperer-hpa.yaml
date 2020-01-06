@@ -9,11 +9,11 @@ metadata:
   labels:
 {{ include "charts.labels.standard" .}}
 spec:
-  maxReplicas: {{ .Values.tidewhisperer.hpa.data.maxReplicas | default 10 }}
-  minReplicas: {{ .Values.tidewhisperer.hpa.data.minReplicas | default 1 }}
+  maxReplicas: {{ .Values.hpa.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.hpa.minReplicas | default 1 }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: tide-whisperer
-  targetCPUUtilizationPercentage: {{ .Values.tidewhisperer.hpa.data.targetCPUUtilizationPercentage | default 50 }}
+  targetCPUUtilizationPercentage: {{ .Values.hpa.targetCPUUtilizationPercentage | default 50 }}
 {{- end }}

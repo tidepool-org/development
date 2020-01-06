@@ -16,7 +16,7 @@ spec:
       app: shoreline
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: 1
+  replicas: {{ .Values.deployment.replicas | default 1 }}
   strategy: {}
   template:
     metadata:
@@ -57,16 +57,19 @@ spec:
             secretKeyRef:
               name: marketo
               key: ID
+              optional: true
         - name: MARKETO_SECRET
           valueFrom:
             secretKeyRef:
               name: marketo
               key: Secret
+              optional: true
         - name: MARKETO_URL
           valueFrom:
             secretKeyRef:
               name: marketo
               key: URL
+              optional: true
         - name: DEMO_CLINIC_USER_ID
           valueFrom:
             configMapKeyRef:
@@ -148,6 +151,6 @@ spec:
         - containerPort: {{ .Values.global.ports.shoreline }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
       restartPolicy: Always

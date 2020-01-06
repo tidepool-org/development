@@ -12,3 +12,6 @@ serviceAccount:
   create: false
 hpa:
   enabled: false
+pdb:
+  enabled: false
+  minAvailable: 1

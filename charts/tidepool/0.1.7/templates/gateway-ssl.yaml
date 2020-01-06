@@ -1,25 +1,26 @@
-{{ if .Values.gloo.enabled }}
-apiVersion: gateway.solo.io.v2/v2
+{{ if .Values.gloo.generate.gateways }}
+apiVersion: gateway.solo.io/v1
 kind: Gateway
 metadata:
   annotations:
     origin: default
-  name: gateway-proxy-v2-ssl
+  name: gateway-proxy-ssl
   namespace: {{ .Values.ingress.deployment.namespace | default "gloo-system" }}
 spec:
   bindAddress: '::'
   bindPort: 8443
   httpGateway: {}
   proxyNames:
-  - gateway-proxy-v2
+  - gateway-proxy
   ssl: true
   useProxyProto: false
-  plugins:
+  options:
     accessLoggingService:
       accessLog:
       - fileSink:
           path: /dev/stdout
           jsonFormat:
+            ip: "%DOWNSTREAM_DIRECT_REMOTE_ADDRESS%"
             duration: "%DURATION%"
             response: "%RESPONSE_CODE%"
             upstream: "%UPSTREAM_CLUSTER%"
@@ -33,4 +34,6 @@ spec:
             session: "%REQ(x-tidepool-trace-session)%"
             content: "%REQ(content-type)%"
             authorization: "%REQ(authorization)%"
+            remoteAddress: "%DOWNSTREAM_REMOTE_ADDRESS%"
+            forwardedFor: "%REQ(X-FORWARDED-FOR)%"
 {{ end }}
