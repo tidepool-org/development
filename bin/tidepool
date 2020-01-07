@@ -111,6 +111,7 @@ destroy() {
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
     run_docker_compose rm -fsv
+    rm -r ${DIR}/local/charts
   else
     echo "Destroy command aborted"
   fi
