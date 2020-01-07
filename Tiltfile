@@ -35,7 +35,7 @@ def main():
         local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 &>/dev/null &')
 
     # Ensure proxy services are deployed
-    gateway_proxy_service = local('kubectl get service gateway-proxy-v2 --ignore-not-found')
+    gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found')
     if not gateway_proxy_service:
       local('tilt up --file=Tiltfile.gateway --hud=0 --port=0 &>/dev/null &')
 
