@@ -263,36 +263,6 @@ docker-compose -f 'docker-compose.k8s.yml' up -d
 
 ### Retrieve and store the Kubernetes server config
 
-| Repository Name                                                  | Docker Container Name (`<docker-container-name>`) | Description                     | Language                       | Git Clone URL (`<git-clone-url>`)                  | Default Clone Directory (`<default-clone-directory>`)     |
-| ---------------------------------------------------------------- | ------------------------------------------------- | ------------------------------- | ------------------------------ | -------------------------------------------------- | --------------------------------------------------------- |
-| [blip](https://github.com/tidepool-org/blip)                     | blip                                              | Web (ie. http://localhost:3000) | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/blip.git           | blip                                                      |
-| [export](https://github.com/tidepool-org/export)                 | export                                            | Export                          | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/export.git         | export                                                    |
-| [gatekeeper](https://github.com/tidepool-org/gatekeeper)         | gatekeeper                                        | Permissions                     | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/gatekeeper.git     | gatekeeper                                                |
-| [hakken](https://github.com/tidepool-org/hakken)                 | hakken                                            | Discovery                       | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/hakken.git         | hakken                                                    |
-| [highwater](https://github.com/tidepool-org/highwater)           | highwater                                         | Metrics                         | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/highwater.git      | highwater                                                 |
-| [hydrophone](https://github.com/tidepool-org/hydrophone)         | hydrophone                                        | Email, Invitations              | [Golang](https://golang.org/)  | https://github.com/tidepool-org/hydrophone.git     | hydrophone/src/github.com/tidepool-org/hydrophone         |
-| [jellyfish](https://github.com/tidepool-org/jellyfish)           | jellyfish                                         | Data Ingestion [LEGACY]         | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/jellyfish.git      | jellyfish                                                 |
-| [message-api](https://github.com/tidepool-org/message-api)       | message-api                                       | Notes                           | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/message-api.git    | message-api                                               |
-| [platform](https://github.com/tidepool-org/platform)             | (see below)                                       | (see below)                     | [Golang](https://golang.org/)  | https://github.com/tidepool-org/platform.git       | platform/src/github.com/tidepool-org/platform             |
-| [seagull](https://github.com/tidepool-org/seagull)               | seagull                                           | Metadata                        | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/seagull.git        | seagull                                                   |
-| [shoreline](https://github.com/tidepool-org/shoreline)           | shoreline                                         | Authentication                  | [Golang](https://golang.org/)  | https://github.com/tidepool-org/shoreline.git      | shoreline/src/github.com/tidepool-org/shoreline           |
-| [styx](https://github.com/tidepool-org/styx)                     | styx                                              | Router                          | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/styx.git           | styx                                                      |
-| [tide-whisperer](https://github.com/tidepool-org/tide-whisperer) | tide-whisperer                                    | Download                        | [Golang](https://golang.org/)  | https://github.com/tidepool-org/tide-whisperer.git | tide-whisperer/src/github.com/tidepool-org/tide-whisperer |
-
-Please note that the `platform` repository actually contains source code for multiple Docker containers, specifically:
-
-| Docker Container Name | Description                      |
-| --------------------- | -------------------------------- |
-| platform-auth         | Authentication                   |
-| platform-blob         | Blob Storage                     |
-| platform-data         | Data Ingestion (next generation) |
-| platform-image        | Images                           |
-| platform-migrations   | Database Migrations              |
-| platform-notification | Notifications (TBD)              |
-| platform-task         | Background Jobs                  |
-| platform-tools        | Tools, Utilities                 |
-| platform-user         | Users                            |
-
 ```bash
 docker-compose -f 'docker-compose.k8s.yml' logs -f server
 ```
