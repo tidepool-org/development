@@ -10,6 +10,7 @@ global:
     default:
       protocol: http
       host: localhost:3000
+      domain: localhost
   ports:
     viz:
       stories: 8083
@@ -28,7 +29,7 @@ global:
 ### Global Config End ###
 
 ### Gateway Config Start ###
-gateway-proxy-v2:
+gateway-proxy:
   portForwards: ['3000']
 
 gloo:
@@ -36,11 +37,11 @@ gloo:
 
 ingress:
   deployment:
-    name: gateway-proxy-v2
+    name: gateway-proxy
     namespace: default
   gateway:
     http:
-      dnsNames: [ "localhost" ]
+      dnsNames: [ "*" ]
       port: "3000"
 
 apiServer:
@@ -110,7 +111,7 @@ blip:
   containerPath: '/app'
   apiHost: 'http://localhost:3000'
   webpackDevTool: cheap-module-eval-source-map
-  webpackDevToolViz: cheap-source-map # Suggest changing to the slower, but far more helpful `source-map` if debugging errors in viz package files
+  webpackDevToolViz: cheap-source-map # Suggest changing `cheap-source-map` to the slower, but far more helpful `source-map` if debugging errors in viz package files
   webpackPublicPath: 'http://localhost:3000'
   disableDevTools: false # Suggest changing to `true` if working with large data sets in local development build
   linkedPackages:
@@ -128,8 +129,9 @@ blip:
       packageName: '@tidepool/viz'
       hostPath: ../viz
       enabled: false
-  restartContainer: false
   securityContext: *global-security-context
+  buildTarget: development # set to `production` to run minified production builds
+  restartContainer: false # Set to `true` if buildTarget = `production`
 
 blob:
   deployment:

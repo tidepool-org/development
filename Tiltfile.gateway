@@ -39,7 +39,6 @@ def extractGlooGatewayCharts():
 ### Cluster Role Bindings Start ###
 def provisionClusterRoleBindings():
   serviceaccounts_filename_map = {
-    'apiserver-ui': 'apiserver-service-account',
     'discovery': 'discovery-service-account',
     'gateway': 'gateway-service-account',
     'gateway-proxy': 'gateway-proxy-service-account',
@@ -113,8 +112,8 @@ def provisionGlooGateway():
   )))
 
   # Expose the gateway proxy on a host port
-  gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
-  k8s_resource('gateway-proxy-v2', port_forwards=gateway_port_forwards)
+  gateway_port_forwards = getNested(config,'gateway-proxy.portForwards', ['3000'])
+  k8s_resource('gateway-proxy', port_forwards=gateway_port_forwards)
 ### Gloo Gateway End ###
 
 # Unleash the beast
