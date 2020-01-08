@@ -10,6 +10,7 @@ global:
     default:
       protocol: http
       host: localhost:3000
+      domain: localhost
   ports:
     viz:
       stories: 8083
@@ -28,7 +29,7 @@ global:
 ### Global Config End ###
 
 ### Gateway Config Start ###
-gateway-proxy-v2:
+gateway-proxy:
   portForwards: ['3000']
 
 gloo:
@@ -36,11 +37,11 @@ gloo:
 
 ingress:
   deployment:
-    name: gateway-proxy-v2
+    name: gateway-proxy
     namespace: default
   gateway:
     http:
-      dnsNames: [ "localhost" ]
+      dnsNames: [ "*" ]
       port: "3000"
 
 apiServer:

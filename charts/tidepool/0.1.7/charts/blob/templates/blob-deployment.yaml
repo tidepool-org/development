@@ -15,7 +15,7 @@ spec:
       app: blob
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: 1
+  replicas: {{ .Values.deployment.replicas | default 1 }}
   strategy: {}
   template:
     metadata:
@@ -30,10 +30,11 @@ spec:
     spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}
-{{ if .Values.serviceAccount.create }}
-      serviceAccount: blob
-      serviceAccountName: blob
+{{ if .Values.serviceAccount.name }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
 {{- end }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
       containers:
       - env:
         {{ include "charts.platform.env.mongo" .}}
@@ -61,6 +62,4 @@ spec:
         - containerPort: {{.Values.global.ports.blob}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
       restartPolicy: Always

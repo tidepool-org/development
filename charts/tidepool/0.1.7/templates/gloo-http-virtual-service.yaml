@@ -1,3 +1,4 @@
+{{ if .Values.gloo.generate.virtualServices }}
 {{- if .Values.ingress.service.http.enabled -}}
 {{- $spec := .Values.ingress.gateway.http -}}
 {{- $port := $spec.port | default "80" -}}
@@ -5,10 +6,10 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: 'gloo-http'
+  name: http
   namespace: '{{ .Release.Namespace }}'
 spec:
-  displayName: 'http-virtual-service'
+  displayName: http
   virtualHost:
     domains:
 {{- range $dnsName := $spec.dnsNames -}}
@@ -19,28 +20,15 @@ spec:
 {{- end -}}
 {{- end }}
     routes:
-    - matcher:
-        prefix: '/'
+    - matchers:
+      - prefix: '/'
+{{ if .Values.ingress.service.http.redirect }}
+      redirectAction:
+        httpsRedirect: true
+{{ else }}
       delegateAction:
         name: 'tidepool-routes'
         namespace: {{ $.Release.Namespace }}
-{{ else }}
----
-apiVersion: gateway.solo.io/v1
-kind: VirtualService
-metadata:
-  name: 'gloo-http'
-  namespace: '{{ .Release.Namespace }}'
-spec:
-  displayName: 'http-virtual-service'
-  virtualHost:
-    domains:
-{{- range $dnsName := .Values.ingress.gateway.https.dnsNames }}
-    - '{{ $dnsName }}'
-{{- end }}
-    routes:
-    - matcher:
-        prefix: '/'
-      redirectAction:
-        httpsRedirect: true
+{{ end }}
+{{- end -}}
 {{- end -}}

@@ -36,15 +36,20 @@ tidepool:
     create: true
     annotations: {}                             # namespace annotations
 
+linkerd:
+  generate:
+    serviceProfiles: false
+
 ingress:
   service:
     http:
       enabled: true
     https:
       enabled: false
+      strict: false
   deployment:
-    name: gateway-proxy-v2                                             
-    namespace: gloo-system  
+    name: internal-gateway-proxy                                       # name of the proxy for INTERNAL traffic
+    namespace: gloo-system                                             # namespace of the proxy for INTERNAL traffic
   gateway:
     http:
       port: "80"
@@ -53,6 +58,10 @@ ingress:
       dnsNames: []                              # list of DNS names
 gloo:
   enabled: true
+  generate:
+   virtualServices: true
+   gateways: true
+   loadBalancer: true
   settings:
     create: true
   crds:

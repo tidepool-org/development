@@ -16,7 +16,7 @@ spec:
       app: tools
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: 1
+  replicas: {{ .Values.deployment.replicas | default 1 }}
   template:
     metadata:
       labels:
@@ -48,7 +48,7 @@ spec:
         name: tools
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
       restartPolicy: Always
 {{- end }}

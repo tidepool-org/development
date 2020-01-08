@@ -1,0 +1,10 @@
+deployment:
+  podAnnotations: {}
+  image: tidepool/tide-whisperer:master-d64636a94823ceb329ade5ff8e0a7716a5108fef
+resources: {}
+securityContext: {}
+hpa:
+  enabled: false
+pdb:
+  enabled: false
+  minAvailable: 1

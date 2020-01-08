@@ -1,7 +1,7 @@
 enabled: true
 deployment:
   podAnnotations: {}
-  image: tidepool/jellyfish:develop-2ed5f94724055c613be193cfbbbc3a8e41919de1
+  image: tidepool/jellyfish:master-737f1009a70fd3856e08c9b858ab86752a181b1d
   env:
     store:
       s3:
@@ -14,3 +14,6 @@ serviceAccount:
 hpa:
   enabled: false
 nodeEnvironment: production
+pdb:
+  enabled: false
+  minAvailable: 1

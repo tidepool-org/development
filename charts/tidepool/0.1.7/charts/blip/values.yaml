@@ -1,7 +1,10 @@
 deployment:
   podAnnotations: {}
-  image: tidepool/blip:release-1.23.0-264f7ad48eb7d8099b00dce07fa8576f7068d0a0
+  image: tidepool/blip:master-d073e04204ff5ba7fce90883f742175571867f38
 resources: {}
 securityContext: {}
 hpa:
   enabled: false
+pdb:
+  enabled: false
+  minAvailable: 1

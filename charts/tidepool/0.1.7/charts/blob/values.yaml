@@ -4,7 +4,7 @@ secret:
     ServiceAuth: ""
 deployment:
   podAnnotations: {}
-  image: tidepool/platform-blob:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
+  image: tidepool/platform-blob:PR-master-ce332730900058846e113e9820b60f41a3a95313
   env:
     store:
       s3:
@@ -20,3 +20,6 @@ serviceAccount:
   create: false
 hpa:
   enabled: false
+pdb:
+  enabled: false
+  minAvailable: 1
