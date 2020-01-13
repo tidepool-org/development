@@ -331,7 +331,9 @@ This can be done with the `tidepool` helper script:
 tidepool server-init-metrics
 ```
 
-NOTE: This only needs to be run once. After the running the command, and each time the server starts up, it will take a minute or two before the metrics start showing up.
+This only needs to be run once. After the running the command, and each time the server starts up, it will take a minute or two before the metrics start showing up.
+
+If you're running the K9s UI during the initial deployment, you'll need to restart it to see the metrics coming in.
 
 [[back to top]](#welcome)
 
