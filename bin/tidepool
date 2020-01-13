@@ -18,6 +18,9 @@ USAGE: tidepool command [service] [...additional args]
   server-set-config               Save Kubernetes server config to ~/.kube/config. Required only
                                   after the initial provisioning
 
+  server-init-metrics             Initializes a metrics-server deployment to allow viewing CPU and
+                                  MEM usage metrics for all cluster resources
+
   server-docker [...cmds]         Run docker commands within the context of the Kubernetes server
   server-exec [...cmds]           Run shell commands in the Kubernetes server container
 
@@ -110,10 +113,58 @@ destroy() {
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
-    run_docker_compose rm -fsv
+    cd ${DIR} && run_docker_compose rm -fsv
     rm -r ${DIR}/local/charts
   else
     echo "Destroy command aborted"
+  fi
+}
+
+init_metrics_server() {
+  read -p "Continuing will require us to remove your ~/.helm directory if present. Do you want to continue? [N|y] " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]
+  then
+    # Add --authentication-token-webhook=true line to kubelet.sh in server container
+    cd ${DIR} && docker-compose -f 'docker-compose.k8s.yml' exec server sh -c "sed -i '/--authorization-mode=Webhook/a --authentication-token-webhook=true \\\' kubelet.sh"
+
+    # Restart the server and wait till ready
+    cd ${DIR} && run_docker_compose restart
+    set_kubeconfig
+
+    sleep 10
+
+    # Wait until kubectl ready
+    until kubectl api-resources; do
+      sleep 5;
+    done
+
+    # Remove tiller if present
+    helm reset || true
+    rm -rf ~/.helm
+    kubectl delete deployment tiller-deploy --namespace kube-system --ignore-not-found
+    kubectl delete serviceaccount --namespace kube-system tiller --ignore-not-found
+    kubectl delete clusterrolebinding tiller-cluster-rule --ignore-not-found
+
+    # Create necessary helm service account and clusterrolebinding for tiller
+    kubectl create serviceaccount --namespace kube-system tiller
+    kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+
+    # Install tiller
+    helm init --service-account tiller --upgrade
+
+    sleep 10
+
+    # Wait until tiller ready
+    until helm list; do
+      sleep 5;
+    done
+
+    # (Re)Install metrics server
+    helm delete --purge metrics-server || true
+    helm install stable/metrics-server -f ${DIR}/local/metrics-server.yml --name metrics-server
+  else
+    echo "Metrics server initialization aborted"
   fi
 }
 
@@ -122,6 +173,7 @@ case ${1-help} in
   server-stop) (cd ${DIR} && run_docker_compose stop ${2-});;
   server-logs) (cd ${DIR} && run_docker_compose logs --tail=100 -f server);;
   server-set-config) set_kubeconfig;;
+  server-init-metrics) init_metrics_server;;
   server-docker) run_docker "${@:2}";;
   server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
   server-prune) (run_docker "system prune --volumes -af");;
