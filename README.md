@@ -21,6 +21,7 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [With The Tidepool Helper Script (recommended)](#with-the-tidepool-helper-script-recommended)
   - [Without The Tidepool Helper Script](#without-the-tidepool-helper-script)
   - [Monitor Kubernetes State With K9s (Optional)](#monitor-kubernetes-state-with-k9s-optional)
+  - [Add CPU/MEM Usage Metrics (Optional)](#add-cpumem-usage-metrics-optional)
 - [Using Tidepool](#using-tidepool)
   - [Creating An Account](#creating-an-account)
   - [Verifying An Account Email](#verifying-an-account-email)
@@ -319,6 +320,18 @@ After [Installing the k9s CLI](https://github.com/derailed/k9s#installation), yo
 ```bash
 k9s
 ```
+
+## Add CPU/MEM Usage Metrics (Optional)
+
+If you would like to see metrics for CPU and Memory usage in, for instance, the K9s UI, you'll need to install the kubernetes `metrics-server` service.
+
+This can be done with the `tidepool` helper script:
+
+```bash
+tidepool server-init-metrics
+```
+
+NOTE: This only needs to be run once. After the running the command, and each time the server starts up, it will take a minute or two before the metrics start showing up.
 
 [[back to top]](#welcome)
 

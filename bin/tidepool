@@ -18,6 +18,9 @@ USAGE: tidepool command [service] [...additional args]
   server-set-config               Save Kubernetes server config to ~/.kube/config. Required only
                                   after the initial provisioning
 
+  server-init-metrics             Initializes a metrics-server deployment to allow viewing CPU and
+                                  MEM usage metrics for all cluster resources
+
   server-docker [...cmds]         Run docker commands within the context of the Kubernetes server
   server-exec [...cmds]           Run shell commands in the Kubernetes server container
 
@@ -117,7 +120,7 @@ destroy() {
   fi
 }
 
-init-metrics-server() {
+init_metrics_server() {
   read -p "Continuing will require us to remove your ~/.helm directory if present. Do you want to continue? [N|y] " -n 1 -r
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]
@@ -170,6 +173,7 @@ case ${1-help} in
   server-stop) (cd ${DIR} && run_docker_compose stop ${2-});;
   server-logs) (cd ${DIR} && run_docker_compose logs --tail=100 -f server);;
   server-set-config) set_kubeconfig;;
+  server-init-metrics) init_metrics_server;;
   server-docker) run_docker "${@:2}";;
   server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
   server-prune) (run_docker "system prune --volumes -af");;
@@ -183,6 +187,5 @@ case ${1-help} in
   port-forward) (cd ${DIR} && kubectl port-forward svc/${2} ${3});;
   verify-account-email) mongo_exec "mongo --eval 'db.users.update({username: \"${@:2}\"},{\$set:{\"authenticated\":true}});' user";;
   restart-proxy) restart gateway-proxy;;
-  init-metrics-server) init-metrics-server;;
   *) usage;;
 esac
