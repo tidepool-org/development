@@ -115,14 +115,14 @@ Managing a K8s cluster can be very challenging, and even more so when using one 
 
 By using our Tilt setup, developers can very easily run a live-reloading instance of any of our frontend or backend services without needing to directly use or understand Helm or Kubernetes. All that's needed is uncommenting a couple of lines in a `Tiltconfig.yaml` file, and updating the local paths to where the developer has checked out the respective git repo, if different than the default defined in the config.
 
-**IMPORTANT NOTE:** We currently run against version `v0.10.23` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
+**IMPORTANT NOTE:** We currently run against version `v0.11.0` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
 
 ```bash
 # MacOS
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.10.23/tilt.0.10.23.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.11.0/tilt.0.11.0.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 
 # Linux
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.10.23/tilt.0.10.23.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.11.0/tilt.0.11.0.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 ```
 
 After installing Tilt, you can verify the correct version by typing `tilt version` in your terminal.
