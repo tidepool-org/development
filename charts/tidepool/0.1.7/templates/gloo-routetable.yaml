@@ -1,8 +1,8 @@
 apiVersion: gateway.solo.io/v1
 kind: RouteTable
 metadata:
-  name: tidepool-routes
-  namespace: {{ .Release.Namespace }}
+name: tidepool-routes
+namespace: {{ .Release.Namespace }}
 spec:
   routes:
   - matchers:
@@ -13,11 +13,9 @@ spec:
       regex: /v1/users/[^/]+/restricted_tokens
     routeAction:
       single:
-        kube:
-          ref:
-            name: auth
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.auth }}
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -26,22 +24,18 @@ spec:
       regex: /v1/users/[^/]+/provider_sessions
     routeAction:
       single:
-        kube:
-          ref:
-            name: auth
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.auth }}
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /request-password-from-uploader
     routeAction:
       single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -51,11 +45,9 @@ spec:
       regex: /v1/users/[^/]+/data_sources
     routeAction:
       single:
-        kube:
-          ref:
-            name: data
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.data }}
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -64,33 +56,27 @@ spec:
       regex: /v1/provider_sessions/[^/]+
     routeAction:
       single:
-        kube:
-          ref:
-            name: auth
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.auth }}
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /verification-with-password
     routeAction:
       single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - POST
       prefix: /event/csp-report/violation
     routeAction:
       single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -98,11 +84,9 @@ spec:
       regex: /v1/oauth/[^/]+/authorize
     routeAction:
       single:
-        kube:
-          ref:
-            name: auth
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.auth }}
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -110,11 +94,9 @@ spec:
       regex: /v1/users/[^/]+/data_sets
     routeAction:
       single:
-        kube:
-          ref:
-            name: data
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.data }}
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
     options:
       timeout: "60s"
   - matchers:
@@ -125,22 +107,18 @@ spec:
       regex: /v1/users/[^/]+/images/.+
     routeAction:
       single:
-        kube:
-          ref:
-            name: image
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.image }}
+        upstream:
+          name: {{ .Release.Namespace }}-image-{{ .Values.global.ports.image }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       regex: /v1/oauth/[^/]+/redirect
     routeAction:
       single:
-        kube:
-          ref:
-            name: auth
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.auth }}
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -148,44 +126,36 @@ spec:
       regex: /v1/users/[^/]+/datasets
     routeAction:
       single:
-        kube:
-          ref:
-            name: data
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.data }}
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /request-password-reset
     routeAction:
       single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /confirm-password-reset
     routeAction:
       single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       regex: /v1/blobs/[^/]+/content
     routeAction:
       single:
-        kube:
-          ref:
-            name: blob
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blob }}
+        upstream:
+          name: {{ .Release.Namespace }}-blob-{{ .Values.global.ports.blob }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -194,11 +164,9 @@ spec:
       regex: /v1/data_sources/[^/]+
     routeAction:
       single:
-        kube:
-          ref:
-            name: data
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.data }}
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -207,11 +175,9 @@ spec:
       regex: /v1/users/[^/]+/images
     routeAction:
       single:
-        kube:
-          ref:
-            name: image
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.image }}
+        upstream:
+          name: {{ .Release.Namespace }}-image-{{ .Values.global.ports.image }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -220,11 +186,9 @@ spec:
       prefix: /v1/restricted_tokens
     routeAction:
       single:
-        kube:
-          ref:
-            name: auth
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.auth }}
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -233,77 +197,63 @@ spec:
       regex: /v1/users/[^/]+/blobs
     routeAction:
       single:
-        kube:
-          ref:
-            name: blob
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blob }}
+        upstream:
+          name: {{ .Release.Namespace }}-blob-{{ .Values.global.ports.blob }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - DELETE
       regex: /v1/users/[^/]+/data
     routeAction:
       single:
-        kube:
-          ref:
-            name: data
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.data }}
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - POST
       prefix: /v1/device/upload/cl
     routeAction:
       single:
-        kube:
-          ref:
-            name: jellyfish
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.jellyfish }}
+        upstream:
+          name: {{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /email-verification
     routeAction:
       single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /clinician-details
     routeAction:
       single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /v1/device/data/
     routeAction:
       single:
-        kube:
-          ref:
-            name: jellyfish
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.jellyfish }}
+        upstream:
+          name: {{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /browser-warning
     routeAction:
       single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -311,11 +261,9 @@ spec:
       regex: /v1/blobs/[^/]+
     routeAction:
       single:
-        kube:
-          ref:
-            name: blob
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blob }}
+        upstream:
+          name: {{ .Release.Namespace }}-blob-{{ .Values.global.ports.blob }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -324,11 +272,9 @@ spec:
       regex: /v1/tasks/[^/]+
     routeAction:
       single:
-        kube:
-          ref:
-            name: task
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.task }}
+        upstream:
+          name: {{ .Release.Namespace }}-task-{{ .Values.global.ports.task }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -336,22 +282,18 @@ spec:
       regex: /v1/users/[^/]+
     routeAction:
       single:
-        kube:
-          ref:
-            name: user
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.user }}
+        upstream:
+          name: {{ .Release.Namespace }}-user-{{ .Values.global.ports.user }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /v1/synctasks/
     routeAction:
       single:
-        kube:
-          ref:
-            name: jellyfish
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.jellyfish }}
+        upstream:
+          name: {{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}
+          namespace: {{ .Values.global.upstreams.namespace }}
 
   - matchers:
     - methods:
@@ -362,11 +304,9 @@ spec:
       prefix: /v1/data_sets
     routeAction:
       single:
-        kube:
-          ref:
-            name: data
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.data }}
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
     options:
       timeout: "60s"
   - matchers:
@@ -377,11 +317,9 @@ spec:
       prefix: /v1/datasets
     routeAction:
       single:
-        kube:
-          ref:
-            name: data
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.data }}
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
     options:
       timeout: "60s"
   - matchers:
@@ -390,11 +328,9 @@ spec:
       prefix: /serverlogin
     routeAction:
       single:
-        kube:
-          ref:
-            name: shoreline
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.shoreline }}
+        upstream:
+          name: {{ .Release.Namespace }}-shoreline-{{ .Values.global.ports.shoreline }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -403,22 +339,18 @@ spec:
       prefix: /v1/images
     routeAction:
       single:
-        kube:
-          ref:
-            name: image
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.image }}
+        upstream:
+          name: {{ .Release.Namespace }}-image-{{ .Values.global.ports.image }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /patients
     routeAction:
       single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -426,33 +358,27 @@ spec:
       prefix: /v1/tasks
     routeAction:
       single:
-        kube:
-          ref:
-            name: task
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.task }}
+        upstream:
+          name: {{ .Release.Namespace }}-task-{{ .Values.global.ports.task }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /profile
     routeAction:
       single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /v1/time
     routeAction:
       single:
-        kube:
-          ref:
-            name: data
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.data }}
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -466,33 +392,27 @@ spec:
       timeout: '2m'
     routeAction:
       single:
-        kube:
-          ref:
-            name: export
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.export }}
+        upstream:
+          name: {{ .Release.Namespace }}-export-{{ .Values.global.ports.export }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /access/status
     routeAction:
       single:
-        kube:
-          ref:
-            name: gatekeeper
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.gatekeeper }}
+        upstream:
+          name: {{ .Release.Namespace }}-gatekeeper-{{ .Values.global.ports.gatekeeper }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /access/groups/
     routeAction:
       single:
-        kube:
-          ref:
-            name: gatekeeper
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.gatekeeper }}
+        upstream:
+          name: {{ .Release.Namespace }}-gatekeeper-{{ .Values.global.ports.gatekeeper }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -500,55 +420,45 @@ spec:
       regex: /access/[^/]+/[^/]+
     routeAction:
       single:
-        kube:
-          ref:
-            name: gatekeeper
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.gatekeeper }}
+        upstream:
+          name: {{ .Release.Namespace }}-gatekeeper-{{ .Values.global.ports.gatekeeper }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       regex: /access/[^/]+
     routeAction:
       single:
-        kube:
-          ref:
-            name: gatekeeper
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.gatekeeper }}
+        upstream:
+          name: {{ .Release.Namespace }}-gatekeeper-{{ .Values.global.ports.gatekeeper }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /signup
     routeAction:
       single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
       prefix: /terms
     routeAction:
       single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - POST
       prefix: /data/
     routeAction:
       single:
-        kube:
-          ref:
-            name: jellyfish
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.jellyfish }}
+        upstream:
+          name: {{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}
+          namespace: {{ .Values.global.upstreams.namespace }}
     options:
       timeout: "60s"
   - matchers:
@@ -557,11 +467,9 @@ spec:
       prefix: /info
     routeAction:
       single:
-        kube:
-          ref:
-            name: jellyfish
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.jellyfish }}
+        upstream:
+          name: {{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}
+          namespace: {{ .Values.global.upstreams.namespace }}
   - matchers:
     - methods:
       - GET
@@ -573,11 +481,9 @@ spec:
       prefix: /auth/
     routeAction:
       single:
-        kube:
-          ref:
-            name: shoreline
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.shoreline }}
+        upstream:
+          name: {{ .Release.Namespace }}-shoreline-{{ .Values.global.ports.shoreline }}
+          namespace: {{ .Values.global.upstreams.namespace }}
     options:
       prefixRewrite: /
       timeout: '30s'
@@ -587,11 +493,9 @@ spec:
       prefix: /data/
     routeAction:
       single:
-        kube:
-          ref:
-            name: tide-whisperer
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.tidewhisperer }}
+        upstream:
+          name: {{ .Release.Namespace }}-tide-whisperer-{{ .Values.global.ports.tidewhisperer }}
+          namespace: {{ .Values.global.upstreams.namespace }}
     options:
       timeout: '1m'
       prefixRewrite: /
@@ -606,11 +510,9 @@ spec:
       prefix: /userservices/
     routeAction:
       single:
-        kube:
-          ref:
-            name: user
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.user }}
+        upstream:
+          name: {{ .Release.Namespace }}-user-{{ .Values.global.ports.user }}
+          namespace: {{ .Values.global.upstreams.namespace }}
     options:
       prefixRewrite: /
   - matchers:
@@ -624,11 +526,9 @@ spec:
       prefix: /metadata/
     routeAction:
       single:
-        kube:
-          ref:
-            name: seagull
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.seagull }}
+        upstream:
+          name: {{ .Release.Namespace }}-seagull-{{ .Values.global.ports.seagull }}
+          namespace: {{ .Values.global.upstreams.namespace }}
     options:
       prefixRewrite: /
       retries:
@@ -646,11 +546,9 @@ spec:
       prefix: /metrics/
     routeAction:
       single:
-        kube:
-          ref:
-            name: highwater
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.highwater }}
+        upstream:
+          name: {{ .Release.Namespace }}-highwater-{{ .Values.global.ports.highwater }}
+          namespace: {{ .Values.global.upstreams.namespace }}
     options:
       prefixRewrite: /
       retries:
@@ -668,11 +566,9 @@ spec:
       prefix: /confirm/
     routeAction:
       single:
-        kube:
-          ref:
-            name: hydrophone
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.hydrophone }}
+        upstream:
+          name: {{ .Release.Namespace }}-hydrophone-{{ .Values.global.ports.hydrophone }}
+          namespace: {{ .Values.global.upstreams.namespace }}
     options:
       prefixRewrite: /
   - matchers:
@@ -686,11 +582,9 @@ spec:
       prefix: /message/
     routeAction:
       single:
-        kube:
-          ref:
-            name: message-api
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.messageapi }}
+        upstream:
+          name: {{ .Release.Namespace }}-message-api-{{ .Values.global.ports.messageapi }}
+          namespace: {{ .Values.global.upstreams.namespace }}
     options:
       prefixRewrite: /
       timeout: '30s'
@@ -705,11 +599,9 @@ spec:
       prefix: /dataservices/
     routeAction:
       single:
-        kube:
-          ref:
-            name: data
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.data }}
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
     options:
       prefixRewrite: /
   - matchers:
@@ -718,8 +610,6 @@ spec:
       prefix: /
     routeAction:
       single:
-        kube:
-          ref:
-            name: blip
-            namespace: '{{ .Release.Namespace }}'
-          port: {{ .Values.global.ports.blip }}
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
