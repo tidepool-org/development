@@ -1,8 +1,8 @@
 apiVersion: gateway.solo.io/v1
 kind: RouteTable
 metadata:
-name: tidepool-routes
-namespace: {{ .Release.Namespace }}
+  name: tidepool-routes
+  namespace: {{ .Release.Namespace }}
 spec:
   routes:
   - matchers:
