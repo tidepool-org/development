@@ -7,8 +7,8 @@ metadata:
 {{ include "charts.labels.standard" .}}
   name: nosqlclient
   namespace: {{.Release.Namespace}}
-  annotations:
 {{ if .Values.deployment.annotations }}
+  annotations:
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
 spec:
