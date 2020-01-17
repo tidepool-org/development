@@ -7,6 +7,10 @@ metadata:
 {{ include "charts.labels.standard" .}}
   name: blip
   namespace: {{.Release.Namespace}}
+  annotations:
+{{ if .Values.deployment.annotations }}
+    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{- end }}
 spec:
   selector:
     matchLabels:

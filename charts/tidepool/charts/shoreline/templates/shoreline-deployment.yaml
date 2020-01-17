@@ -8,8 +8,9 @@ metadata:
   name: shoreline
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo,shoreline,userdata"
-    configmap.reloader.stakater.com/reload: "shoreline"
+{{ if .Values.deployment.annotations }}
+    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{- end }}
 spec:
   selector:
     matchLabels:

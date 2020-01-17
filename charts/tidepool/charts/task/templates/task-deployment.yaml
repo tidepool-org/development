@@ -8,8 +8,9 @@ metadata:
   name: task
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo,task,dexcom"
-    configmap.reloader.stakater.com/reload: "dexcom"
+{{ if .Values.deployment.annotations }}
+    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{- end }}
 spec:
   selector:
     matchLabels:
