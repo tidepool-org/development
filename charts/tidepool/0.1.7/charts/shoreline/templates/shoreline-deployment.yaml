@@ -29,6 +29,7 @@ spec:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
+      priorityClassName: high-priority
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
