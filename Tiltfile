@@ -32,12 +32,12 @@ def main():
     if not getNested(config, 'mongodb.useExternal'):
       mongodb_service = local('kubectl get service mongodb --ignore-not-found')
       if not mongodb_service:
-        local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 &>/dev/null &')
+        local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 >/dev/null 2>&1 &')
 
     # Ensure proxy services are deployed
     gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found')
     if not gateway_proxy_service:
-      local('tilt up --file=Tiltfile.gateway --hud=0 --port=0 &>/dev/null &')
+      local('tilt up --file=Tiltfile.gateway --hud=0 --port=0 >/dev/null 2>&1 &')
 
     # Wait until mongodb and gateway proxy services are forwarding before provisioning rest of stack
     if not getNested(config, 'mongodb.useExternal'):
