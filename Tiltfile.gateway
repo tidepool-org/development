@@ -21,6 +21,7 @@ def main():
     extractGlooGatewayCharts()
     provisionClusterRoleBindings()
     provisionConfigMaps()
+    provisionCRDs()
 
   provisionGlooGateway()
 
@@ -35,6 +36,35 @@ def extractGlooGatewayCharts():
       local('mkdir -p {}'.format(absolute_gloo_chart_dir))
       local('tar -xzf {} -C {}'.format(chart, absolute_gloo_chart_dir));
 ### Extract Gloo Charts End ###
+
+### Custom Resource Definitions Start ###
+def provisionCRDs():
+  crds_filename_map = {
+    'authconfig': 'auth_config',
+    'gateway': 'gateway',
+    'proxy': 'proxy',
+    'routetable': 'route_table',
+    'settings': 'settings',
+    'upstreamgroup': 'upstream_group',
+    'upstream': 'upstream',
+    'virtualservice': 'virtual_service',
+  }
+
+  gloo_crds = listdir('{}/gloo/crds'.format(absolute_gloo_chart_dir))
+
+  print(gloo_crds);
+  for crd in crds_filename_map.keys():
+    createdCRD = local('kubectl get crd {crd} --ignore-not-found'.format(
+      crd = crd
+    ))
+
+    if not createdCRD:
+      for template in gloo_crds:
+        if template.find(crds_filename_map[crd]) >= 0:
+          local('kubectl --namespace=default apply --validate=0 --force -f {template}'.format(
+            template=template,
+          ))
+### Custom Resource Definitions End ###
 
 ### Cluster Role Bindings Start ###
 def provisionClusterRoleBindings():
