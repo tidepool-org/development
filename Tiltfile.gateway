@@ -10,7 +10,7 @@ tidepool_helm_chart_dir = "./charts/tidepool/{}".format(tidepool_helm_charts_ver
 
 gloo_chart_dir = './local/charts'
 absolute_gloo_chart_dir = getAbsoluteDir(gloo_chart_dir)
-gloo_helm_template_cmd = 'helm template --name tilt-proxy --namespace default '
+gloo_helm_template_cmd = 'helm template --namespace default '
 
 is_shutdown = isShutdown()
 ### Config End ###
@@ -21,6 +21,7 @@ def main():
     extractGlooGatewayCharts()
     provisionClusterRoleBindings()
     provisionConfigMaps()
+    provisionCRDs()
 
   provisionGlooGateway()
 
@@ -35,6 +36,35 @@ def extractGlooGatewayCharts():
       local('mkdir -p {}'.format(absolute_gloo_chart_dir))
       local('tar -xzf {} -C {}'.format(chart, absolute_gloo_chart_dir));
 ### Extract Gloo Charts End ###
+
+### Custom Resource Definitions Start ###
+def provisionCRDs():
+  crds_filename_map = {
+    'authconfig': 'auth_config',
+    'gateway': 'gateway',
+    'proxy': 'proxy',
+    'routetable': 'route_table',
+    'settings': 'settings',
+    'upstreamgroup': 'upstream_group',
+    'upstream': 'upstream',
+    'virtualservice': 'virtual_service',
+  }
+
+  gloo_crds = listdir('{}/gloo/crds'.format(absolute_gloo_chart_dir))
+
+  print(gloo_crds);
+  for crd in crds_filename_map.keys():
+    createdCRD = local('kubectl get crd {crd} --ignore-not-found'.format(
+      crd = crd
+    ))
+
+    if not createdCRD:
+      for template in gloo_crds:
+        if template.find(crds_filename_map[crd]) >= 0:
+          local('kubectl --namespace=default apply --validate=0 --force -f {template}'.format(
+            template=template,
+          ))
+### Custom Resource Definitions End ###
 
 ### Cluster Role Bindings Start ###
 def provisionClusterRoleBindings():
@@ -55,11 +85,11 @@ def provisionClusterRoleBindings():
     if not createdServiceAccount:
       for template in gloo_templates:
         if template.find(serviceaccounts_filename_map[serviceaccount]) >= 0:
-          local('{templateCmd} -x {template} -f {overridesFile} {chartDir}/gloo | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+          local('{templateCmd} -s {template} -f {overridesFile} {chartDir}/gloo -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
             chartDir=absolute_gloo_chart_dir,
             templateCmd=gloo_helm_template_cmd,
             overridesFile=tidepool_helm_overrides_file,
-            template=template,
+            template=template.replace('{}/gloo/'.format(absolute_gloo_chart_dir), ""),
           ))
 
     clusterrolebinding = local('kubectl get clusterrolebinding {serviceaccount}-admin --ignore-not-found'.format(
@@ -91,11 +121,11 @@ def provisionConfigMaps():
   for configmap in required_configmaps:
     for template in gloo_templates:
       if template.find(configmaps_filename_map[configmap]) >= 0:
-        local('{templateCmd} -x {template} -f {overridesFile} {chartDir}/gloo | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+        local('{templateCmd} -s {template} -f {overridesFile} {chartDir}/gloo -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
           chartDir=absolute_gloo_chart_dir,
           templateCmd=gloo_helm_template_cmd,
           overridesFile=tidepool_helm_overrides_file,
-          template=template,
+          template=template.replace('{}/gloo/'.format(absolute_gloo_chart_dir), ""),
         ))
 ### Config Maps End ###
 
