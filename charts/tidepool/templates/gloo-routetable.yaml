@@ -1,0 +1,606 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: tidepool-routes
+  namespace: {{ .Release.Namespace }}
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      regex: /v1/users/[^/]+/restricted_tokens
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      regex: /v1/users/[^/]+/provider_sessions
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /request-password-from-uploader
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      regex: /v1/users/[^/]+/data_sources
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      - DELETE
+      regex: /v1/provider_sessions/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /verification-with-password
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - POST
+      prefix: /event/csp-report/violation
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - DELETE
+      regex: /v1/oauth/[^/]+/authorize
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      regex: /v1/users/[^/]+/data_sets
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+    options:
+      timeout: "60s"
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      regex: /v1/users/[^/]+/images/.+
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-image-{{ .Values.global.ports.image }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      regex: /v1/oauth/[^/]+/redirect
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      regex: /v1/users/[^/]+/datasets
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /request-password-reset
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /confirm-password-reset
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      regex: /v1/blobs/[^/]+/content
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blob-{{ .Values.global.ports.blob }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      - DELETE
+      regex: /v1/data_sources/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      regex: /v1/users/[^/]+/images
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-image-{{ .Values.global.ports.image }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      - DELETE
+      prefix: /v1/restricted_tokens
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ .Values.global.ports.auth }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      regex: /v1/users/[^/]+/blobs
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blob-{{ .Values.global.ports.blob }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - DELETE
+      regex: /v1/users/[^/]+/data
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - POST
+      prefix: /v1/device/upload/cl
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /email-verification
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /clinician-details
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /v1/device/data/
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /browser-warning
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - DELETE
+      regex: /v1/blobs/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blob-{{ .Values.global.ports.blob }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      - DELETE
+      regex: /v1/tasks/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-task-{{ .Values.global.ports.task }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - DELETE
+      regex: /v1/users/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-user-{{ .Values.global.ports.user }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /v1/synctasks/
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      - PUT
+      prefix: /v1/data_sets
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+    options:
+      timeout: "60s"
+  - matchers:
+    - methods:
+      - POST
+      - PUT
+      - DELETE
+      prefix: /v1/datasets
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+    options:
+      timeout: "60s"
+  - matchers:
+    - methods:
+      - POST
+      prefix: /serverlogin
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-shoreline-{{ .Values.global.ports.shoreline }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      - DELETE
+      prefix: /v1/images
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-image-{{ .Values.global.ports.image }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /patients
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      prefix: /v1/tasks
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-task-{{ .Values.global.ports.task }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /profile
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /v1/time
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /export/
+    options:
+      timeout: '2m'
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-export-{{ .Values.global.ports.export }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /access/status
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-gatekeeper-{{ .Values.global.ports.gatekeeper }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /access/groups/
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-gatekeeper-{{ .Values.global.ports.gatekeeper }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      regex: /access/[^/]+/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-gatekeeper-{{ .Values.global.ports.gatekeeper }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      regex: /access/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-gatekeeper-{{ .Values.global.ports.gatekeeper }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /signup
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /terms
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - POST
+      prefix: /data/
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+    options:
+      timeout: "60s"
+  - matchers:
+    - methods:
+      - GET
+      prefix: /info
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-jellyfish-{{ .Values.global.ports.jellyfish }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /auth/
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-shoreline-{{ .Values.global.ports.shoreline }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+    options:
+      prefixRewrite: /
+      timeout: '30s'
+  - matchers:
+    - methods:
+      - GET
+      prefix: /data/
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-tide-whisperer-{{ .Values.global.ports.tidewhisperer }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+    options:
+      timeout: '1m'
+      prefixRewrite: /
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /userservices/
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-user-{{ .Values.global.ports.user }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+    options:
+      prefixRewrite: /
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /metadata/
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-seagull-{{ .Values.global.ports.seagull }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+    options:
+      prefixRewrite: /
+      retries:
+        retryOn: '5xx'
+        numRetries: 3
+        perTryTimeout: '15s'
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /metrics/
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-highwater-{{ .Values.global.ports.highwater }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+    options:
+      prefixRewrite: /
+      retries:
+        retryOn: '5xx'
+        numRetries: 3
+        perTryTimeout: '15s'
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /confirm/
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-hydrophone-{{ .Values.global.ports.hydrophone }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+    options:
+      prefixRewrite: /
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /message/
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-message-api-{{ .Values.global.ports.messageapi }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+    options:
+      prefixRewrite: /
+      timeout: '30s'
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /dataservices/
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-data-{{ .Values.global.ports.data }}
+          namespace: {{ .Values.global.upstreams.namespace }}
+    options:
+      prefixRewrite: /
+  - matchers:
+    - methods:
+      - GET
+      prefix: /
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
+          namespace: {{ .Values.global.upstreams.namespace }}
