@@ -147,10 +147,6 @@ spec:
       pathRegex: /v1/users/[^/]+/data_sources
     name: /v1/users/{id}/data_sources_delete_data
   - condition:
-      method: OPTIONS
-      pathRegex: /v1/users/[^/]+/data_sources
-    name: /v1/users/{id}/data_sources_options_data
-  - condition:
       method: GET
       pathRegex: /v1/users/[^/]+/data_sets
     name: /v1/users/{id}/data_sets_get_data
@@ -390,11 +386,6 @@ spec:
     name: /auth/_get_shoreline
     timeout: 30s
   - condition:
-      method: OPTIONS
-      pathRegex: /.*
-    name: /auth/_options_shoreline
-    timeout: 30s
-  - condition:
       method: POST
       pathRegex: /.*
     name: /auth/_post_shoreline
@@ -426,11 +417,6 @@ spec:
       method: GET
       pathRegex: /export/.*
     name: /export/_get_export
-    timeout: 2m
-  - condition:
-      method: OPTIONS
-      pathRegex: /export/.*
-    name: /export/_options_export
     timeout: 2m
   - condition:
       method: POST
@@ -506,10 +492,6 @@ spec:
       pathRegex: /.*
     name: /metadata/_get_seagull
   - condition:
-      method: OPTIONS
-      pathRegex: /.*
-    name: /metadata/_options_seagull
-  - condition:
       method: POST
       pathRegex: /.*
     name: /metadata/_post_seagull
@@ -537,10 +519,6 @@ spec:
       method: GET
       pathRegex: /.*
     name: /metrics/_get_highwater
-  - condition:
-      method: OPTIONS
-      pathRegex: /.*
-    name: /metrics/_options_highwater
   - condition:
       method: POST
       pathRegex: /.*
@@ -570,10 +548,6 @@ spec:
       pathRegex: /.*
     name: /confirm/_get_hydrophone
   - condition:
-      method: OPTIONS
-      pathRegex: /.*
-    name: /confirm/_options_hydrophone
-  - condition:
       method: POST
       pathRegex: /.*
     name: /confirm/_post_hydrophone
@@ -601,11 +575,6 @@ spec:
       method: GET
       pathRegex: /.*
     name: /message/_get_message-api
-    timeout: 30s
-  - condition:
-      method: OPTIONS
-      pathRegex: /.*
-    name: /message/_options_message-api
     timeout: 30s
   - condition:
       method: POST
@@ -675,10 +644,6 @@ spec:
       method: DELETE
       pathRegex: /v1/users/[^/]+/data_sources
     name: /v1/users/{id}/data_sources_delete_internal
-  - condition:
-      method: OPTIONS
-      pathRegex: /v1/users/[^/]+/data_sources
-    name: /v1/users/{id}/data_sources_options_internal
   - condition:
       method: GET
       pathRegex: /v1/provider_sessions/[^/]+
@@ -934,11 +899,6 @@ spec:
     name: /export/_get_internal
     timeout: 2m
   - condition:
-      method: OPTIONS
-      pathRegex: /export/.*
-    name: /export/_options_internal
-    timeout: 2m
-  - condition:
       method: POST
       pathRegex: /export/.*
     name: /export/_post_internal
@@ -1001,11 +961,6 @@ spec:
     name: /auth/_get_internal
     timeout: 30s
   - condition:
-      method: OPTIONS
-      pathRegex: /auth/.*
-    name: /auth/_options_internal
-    timeout: 30s
-  - condition:
       method: POST
       pathRegex: /auth/.*
     name: /auth/_post_internal
@@ -1035,10 +990,6 @@ spec:
       pathRegex: /metadata/.*
     name: /metadata/_get_internal
   - condition:
-      method: OPTIONS
-      pathRegex: /metadata/.*
-    name: /metadata/_options_internal
-  - condition:
       method: POST
       pathRegex: /metadata/.*
     name: /metadata/_post_internal
@@ -1058,10 +1009,6 @@ spec:
       method: GET
       pathRegex: /metrics/.*
     name: /metrics/_get_internal
-  - condition:
-      method: OPTIONS
-      pathRegex: /metrics/.*
-    name: /metrics/_options_internal
   - condition:
       method: POST
       pathRegex: /metrics/.*
@@ -1083,10 +1030,6 @@ spec:
       pathRegex: /confirm/.*
     name: /confirm/_get_internal
   - condition:
-      method: OPTIONS
-      pathRegex: /confirm/.*
-    name: /confirm/_options_internal
-  - condition:
       method: POST
       pathRegex: /confirm/.*
     name: /confirm/_post_internal
@@ -1106,11 +1049,6 @@ spec:
       method: GET
       pathRegex: /message/.*
     name: /message/_get_internal
-    timeout: 30s
-  - condition:
-      method: OPTIONS
-      pathRegex: /message/.*
-    name: /message/_options_internal
     timeout: 30s
   - condition:
       method: POST

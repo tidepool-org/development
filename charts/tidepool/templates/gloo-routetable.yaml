@@ -41,7 +41,6 @@ spec:
       - GET
       - POST
       - DELETE
-      - OPTIONS
       regex: /v1/users/[^/]+/data_sources
     routeAction:
       single:
@@ -382,7 +381,6 @@ spec:
   - matchers:
     - methods:
       - GET
-      - OPTIONS
       - POST
       - PUT
       - PATCH
@@ -473,7 +471,6 @@ spec:
   - matchers:
     - methods:
       - GET
-      - OPTIONS
       - POST
       - PUT
       - PATCH
@@ -502,7 +499,6 @@ spec:
   - matchers:
     - methods:
       - GET
-      - OPTIONS
       - POST
       - PUT
       - PATCH
@@ -518,7 +514,6 @@ spec:
   - matchers:
     - methods:
       - GET
-      - OPTIONS
       - POST
       - PUT
       - PATCH
@@ -538,7 +533,6 @@ spec:
   - matchers:
     - methods:
       - GET
-      - OPTIONS
       - POST
       - PUT
       - PATCH
@@ -558,7 +552,6 @@ spec:
   - matchers:
     - methods:
       - GET
-      - OPTIONS
       - POST
       - PUT
       - PATCH
@@ -574,7 +567,6 @@ spec:
   - matchers:
     - methods:
       - GET
-      - OPTIONS
       - POST
       - PUT
       - PATCH
@@ -591,7 +583,6 @@ spec:
   - matchers:
     - methods:
       - GET
-      - OPTIONS
       - POST
       - PUT
       - PATCH
