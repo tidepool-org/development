@@ -17,7 +17,7 @@ def main():
 ### MongoDB Start ###
 def provisionMongoDB ():
   mongodb_data_dir = getNested(config, 'mongodb.hostPath')
-  mongo_helm_template_cmd = 'helm template --name tilt-mongodb --namespace default '
+  mongo_helm_template_cmd = 'helm template --namespace default '
 
   if mongodb_data_dir:
     mongo_helm_template_cmd += '--set "mongodb.hostPath={}" '.format(mongodb_data_dir)

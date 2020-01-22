@@ -12,4 +12,3 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: marketo
-type: Opaque

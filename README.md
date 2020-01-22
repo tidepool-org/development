@@ -97,14 +97,14 @@ kubectl version
 
 The Tidepool services (and supporting services such as the [MongoDB](https://www.mongodb.com/) database and the [Gloo Gateway](https://gloo.solo.io/) for routing requests) are defined by [Helm](https://helm.sh/) templates, which the `helm` tool uses to convert into manifests that can be applied to the our local [Kubernetes](https://kubernetes.io/) (K8s) cluster.
 
-**IMPORTANT NOTE:** We currently run against version `v2.16.1` of Helm, so be sure to install the correct version when following the [Helm Installation Instructions](https://helm.sh/docs/intro/install/#from-the-binary-releases).
+**IMPORTANT NOTE:** We currently run against version `v3.0.2` of Helm, so be sure to install the correct version when following the [Helm Installation Instructions](https://helm.sh/docs/intro/install/#from-the-binary-releases).
 
 ```bash
 # MacOS
-curl -fsSL https://get.helm.sh/helm-v2.16.1-darwin-amd64.tar.gz | tar -xzv darwin-amd64 && sudo mv darwin-amd64/helm /usr/local/bin/helm
+curl -fsSL https://get.helm.sh/helm-v3.0.2-darwin-amd64.tar.gz | tar -xzv darwin-amd64 && sudo mv darwin-amd64/helm /usr/local/bin/helm
 
 # Linux
-curl -fsSL https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xzv linux-amd64 && sudo mv linux-amd64/helm /usr/local/bin/helm
+curl -fsSL https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz | tar -xzv linux-amd64 && sudo mv linux-amd64/helm /usr/local/bin/helm
 ```
 
 After installing Helm, you can verify the correct version by typing `helm version` in your terminal.
