@@ -29,9 +29,6 @@ global:
 ### Global Config End ###
 
 ### Gateway Config Start ###
-crds:
-  create: true
-
 gateway-proxy:
   portForwards: ['3000']
 
