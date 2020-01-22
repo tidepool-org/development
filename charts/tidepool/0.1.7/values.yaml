@@ -3,6 +3,8 @@ global:
   nameOverride: ""                                # the name to use for the helm chart, if given
   region: "us-west-2"                         # AWS region
   logLevel: info                                # the default log level for all services
+  upstreams:
+    namespace: default
   gateway:
     default:
       protocol: http
