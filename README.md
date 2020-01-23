@@ -21,6 +21,7 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [With The Tidepool Helper Script (recommended)](#with-the-tidepool-helper-script-recommended)
   - [Without The Tidepool Helper Script](#without-the-tidepool-helper-script)
   - [Monitor Kubernetes State With K9s (Optional)](#monitor-kubernetes-state-with-k9s-optional)
+  - [Add CPU/MEM Usage Metrics (Optional)](#add-cpumem-usage-metrics-optional)
 - [Using Tidepool](#using-tidepool)
   - [Creating An Account](#creating-an-account)
   - [Verifying An Account Email](#verifying-an-account-email)
@@ -96,14 +97,14 @@ kubectl version
 
 The Tidepool services (and supporting services such as the [MongoDB](https://www.mongodb.com/) database and the [Gloo Gateway](https://gloo.solo.io/) for routing requests) are defined by [Helm](https://helm.sh/) templates, which the `helm` tool uses to convert into manifests that can be applied to the our local [Kubernetes](https://kubernetes.io/) (K8s) cluster.
 
-**IMPORTANT NOTE:** We currently run against version `v2.16.1` of Helm, so be sure to install the correct version when following the [Helm Installation Instructions](https://helm.sh/docs/intro/install/#from-the-binary-releases).
+**IMPORTANT NOTE:** We currently run against version `v3.0.2` of Helm, so be sure to install the correct version when following the [Helm Installation Instructions](https://helm.sh/docs/intro/install/#from-the-binary-releases).
 
 ```bash
 # MacOS
-curl -fsSL https://get.helm.sh/helm-v2.16.1-darwin-amd64.tar.gz | tar -xzv darwin-amd64 && sudo mv darwin-amd64/helm /usr/local/bin/helm
+curl -fsSL https://get.helm.sh/helm-v3.0.2-darwin-amd64.tar.gz | tar -xzv darwin-amd64 && sudo mv darwin-amd64/helm /usr/local/bin/helm
 
 # Linux
-curl -fsSL https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz | tar -xzv linux-amd64 && sudo mv linux-amd64/helm /usr/local/bin/helm
+curl -fsSL https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz | tar -xzv linux-amd64 && sudo mv linux-amd64/helm /usr/local/bin/helm
 ```
 
 After installing Helm, you can verify the correct version by typing `helm version` in your terminal.
@@ -114,14 +115,14 @@ Managing a K8s cluster can be very challenging, and even more so when using one 
 
 By using our Tilt setup, developers can very easily run a live-reloading instance of any of our frontend or backend services without needing to directly use or understand Helm or Kubernetes. All that's needed is uncommenting a couple of lines in a `Tiltconfig.yaml` file, and updating the local paths to where the developer has checked out the respective git repo, if different than the default defined in the config.
 
-**IMPORTANT NOTE:** We currently run against version `v0.10.23` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
+**IMPORTANT NOTE:** We currently run against version `v0.11.0` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
 
 ```bash
 # MacOS
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.10.23/tilt.0.10.23.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.11.0/tilt.0.11.0.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 
 # Linux
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.10.23/tilt.0.10.23.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.11.0/tilt.0.11.0.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 ```
 
 After installing Tilt, you can verify the correct version by typing `tilt version` in your terminal.
@@ -319,6 +320,20 @@ After [Installing the k9s CLI](https://github.com/derailed/k9s#installation), yo
 ```bash
 k9s
 ```
+
+## Add CPU/MEM Usage Metrics (Optional)
+
+If you would like to see metrics for CPU and Memory usage in, for instance, the K9s UI, you'll need to install the kubernetes `metrics-server` service.
+
+This can be done with the `tidepool` helper script:
+
+```bash
+tidepool server-init-metrics
+```
+
+This only needs to be run once. After the running the command, and each time the server starts up, it will take a minute or two before the metrics start showing up.
+
+If you're running the K9s UI during the initial deployment, you'll need to restart it to see the metrics coming in.
 
 [[back to top]](#welcome)
 
