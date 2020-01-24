@@ -6,10 +6,11 @@ global:
   upstreams:
     namespace: default
   gateway:
+    enabled: true
+    proxyProtocol: false
     default:
       protocol: http
       host: localhost
-      proxyProtocol: false
   ports:
     blip: 3000                                                        # blip service internal port
     export: 9300                                                      # export service internal port
@@ -32,7 +33,14 @@ global:
     enabled: false
     templated: false
     generated: false
+  linkerd:
+    serviceProfiles:
+      enabled: true
+  routeTable:
+    enabled: true
+    name: tidepool-routes
   virtualServices:
+    enabled: true
     http:
       dnsNames:
       - localhost
@@ -57,18 +65,11 @@ tidepool:
   namespace:
     create: true
     annotations: {}                             # namespace annotations
-
-linkerd:
-  generate:
-    serviceProfiles: false
-
 ingress:
   deployment:
     namespace: gloo-system                                             # namespace of the proxy for INTERNAL traffic
 gloo:
-  enabled: true
-  generate:
-    gateways: true
+  enabled: false
   settings:
     create: true
   crds:
@@ -146,7 +147,7 @@ gloo:
         disableGeneratedGateways: true
       tracing: null
 mongodb:
-  enabled: true
+  enabled: false
   usePassword: false
   image:
     tag: "3.6"

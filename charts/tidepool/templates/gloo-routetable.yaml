@@ -1,7 +1,8 @@
+{{ if .Values.global.routeTable.enabled }}
 apiVersion: gateway.solo.io/v1
 kind: RouteTable
 metadata:
-  name: tidepool-routes
+  name: {{ .Values.global.routeTable.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
   routes:
@@ -604,3 +605,4 @@ spec:
         upstream:
           name: {{ .Release.Namespace }}-blip-{{ .Values.global.ports.blip }}
           namespace: {{ .Values.global.upstreams.namespace }}
+{{- end }}

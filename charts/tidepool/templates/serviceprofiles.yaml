@@ -1,4 +1,4 @@
-{{- if .Values.linkerd.generate.serviceProfiles }}
+{{- if .Values.global.linkerd.serviceProfiles.enabled }}
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
