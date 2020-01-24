@@ -19,7 +19,7 @@ spec:
 {{ if eq $dnsName "*" }}
     - '*'
 {{- else }}
-    - '{{ if ne $port "80" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else }} {{ printf "%s" $dnsName -}}{{- end }}'
+    - '{{ if ne $port "80" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else }}{{ printf "%s" $dnsName -}}{{- end }}'
 {{- end }}
 {{- end }}
     routes:

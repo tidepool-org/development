@@ -50,13 +50,13 @@ spec:
         - x-tidepool-trace-request
         - x-tidepool-trace-session
         maxAge: 600s
-{{ if $hsts }}
+{{- if $hsts }}
       headerManipulation:
         requestHeadersToAdd:
         - header:
             key: Strict-Transport-Security
             value: max-age=31536000
-{{ end }}
+{{- end }}
     routes:
     - matchers:
       - prefix: '/'
