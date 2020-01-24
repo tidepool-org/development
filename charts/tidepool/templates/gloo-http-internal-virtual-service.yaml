@@ -18,5 +18,5 @@ spec:
     - matchers:
       - prefix: '/'
       delegateAction:
-        name: 'tidepool-routes'
-        namespace: {{ $.Release.Namespace }}
+        name: {{ .Values.global.virtualServices.routeTableName }}
+        namespace: {{ .Release.Namespace }}

@@ -144,6 +144,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.virtualServices.https.hsts`                            | Whether to enable hsts | `false`                                                  |
 | `global.virtualServices.https.labels`                            | Labels to apply to https virtual service  | { type: external, protocol: https } |
 | `global.virtualServices.https.port`                            | Port to listen on |  443                                                 |
+| `global.virtualServices.routeTableName`                             | Name to use for route table | `tidepool-routes`                                        |
 | `global.secret.enabled`                                  | Whether to generate all secret files | `false`                                           |
 | `gloo.enabled`                                           | Whether to launch Gloo control and plane
 | `gloo.generate.gateways`                          | Whether to include a Gloo Gateway resources

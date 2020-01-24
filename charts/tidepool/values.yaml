@@ -33,6 +33,7 @@ global:
     templated: false
     generated: false
   virtualServices:
+    routeTableName: tidepool-routes
     http:
       dnsNames:
       - localhost
