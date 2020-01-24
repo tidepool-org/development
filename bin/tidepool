@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -e
 shopt -s extglob
 
 DIR=$(cd $(dirname $(dirname ${0})); pwd)
@@ -62,6 +62,11 @@ USAGE: tidepool command [service] [...additional args]
   restart-proxy                   Restart the external gateway proxy
                                   Useful if the exposed "blip" port stops responding on host machine
 
+
+  ### Other Commands ###
+
+  doctor                          Check to see if all dependancies are up-to-date, and recommended
+                                  environment variables are set
 EOF
 }
 
@@ -74,6 +79,36 @@ restart() { (kubectl scale deployment ${1} --replicas=0 && kubectl scale deploym
 run_exec() { args="${@:2}" && (kubectl exec -ti svc/${1} -c ${1} -- /bin/sh -c "${args}") }
 
 mongo_exec() { args="${@:1}" && (kubectl exec -ti svc/mongodb -c mongo -- /bin/sh -c "${args}") }
+
+check_version() {
+  pkg=${1}
+  version_cmd=${2}
+  min=${3}
+  if (echo a ${min}; ${pkg} ${version_cmd} | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/' | eval 'version=$(cat); echo "${pkg} $version"') | sort -Vk2 | tail -1 | grep -q ${pkg}; then
+      echo -e "✔ ${pkg} is up to date"
+  else
+      echo -e "✘ ${pkg} is out of date. Please install version >= ${min}"
+  fi
+}
+
+check_environment() {
+  if [[ ! -z ${!1} ]]; then
+    echo -e "✔ \$${1} is set"
+  else
+    echo -e "✘ \$${1} is not set. See \"Environment Setup\" in README"
+  fi
+}
+
+doctor() {
+  check_version helm 'version --short' 3.0.2
+  check_version tilt 'version' 0.11.0
+  check_version docker '-v' 19.0.0
+  check_version docker-compose '-v' 1.25.0
+  check_version kubectl 'version --client --short' 1.15.1
+
+  check_environment KUBECONFIG
+  check_environment TIDEPOOL_DOCKER_MONGO_VOLUME
+}
 
 run_yarn() {
   NODE_SERVICES='@(blip|export|gatekeeper|highwater|jellyfish|message-api|seagull)'
@@ -157,5 +192,6 @@ case ${1-help} in
   port-forward) (cd ${DIR} && kubectl port-forward svc/${2} ${3});;
   verify-account-email) mongo_exec "mongo --eval 'db.users.update({username: \"${@:2}\"},{\$set:{\"authenticated\":true}});' user";;
   restart-proxy) restart gateway-proxy;;
+  doctor) doctor;;
   *) usage;;
 esac
