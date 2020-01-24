@@ -9,6 +9,7 @@ global:
     default:
       protocol: http
       host: localhost
+      proxyProtocol: false
   ports:
     blip: 3000                                                        # blip service internal port
     export: 9300                                                      # export service internal port

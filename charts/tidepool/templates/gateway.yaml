@@ -48,5 +48,5 @@ spec:
           path: /dev/stdout
   proxyNames:
   - gateway-proxy
-  useProxyProto: true
+  useProxyProto: {{ .Values.global.gateway.proxyProtocol }}
 {{- end }}

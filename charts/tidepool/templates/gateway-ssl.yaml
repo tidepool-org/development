@@ -28,7 +28,7 @@ spec:
   proxyNames:
   - gateway-proxy
   ssl: true
-  useProxyProto: true
+  useProxyProto: {{ Values.global.gateway.proxyProtocol }}
   options:
     accessLoggingService:
       accessLog:

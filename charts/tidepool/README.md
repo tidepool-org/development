@@ -111,6 +111,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.gateway.default.host`                          | Host to use for email verification                                                      | `localhost`   |
 | `global.gateway.default.protocol`                          | Protocol to use for email verification.                                                      | `http`                                                    |
 | `global.gateway.default.domain`                          | Domain to use for cookies
+|  `global.gateway.proxyProtocol`                          | Whether to use proxy protocol in external gateway | false |
 | `global.logLevel`                              | Default log level | `info`                                        |
 | `global.nameOverride`                                    | If non-empty, Helm chart name to use                                                         | ``                                                    |
 | `global.ports.auth`                                      | Auth service container port                                                                  | `9222`                                                |
