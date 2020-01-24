@@ -139,7 +139,8 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `image.deployment.image`                             | image Docker image                                                                        | ``                                  |  
 | `image.secret.enabled`                               | whether to create image secret                                                            | ``                                  |  
 | `image.secret.data_.ServiceAuth`                     | plaintext service authorization secret                                                    | ``                                  |  
-| `ingress.deployment.namespace`                       | namespace of the API gateway proxy                                                        | `gloo-system`                       |  
+| `ingress.deployment.name`                            | name of a non-proxy protocol gateway proxy                                                | `gloo-system`                       |  
+| `ingress.deployment.namespace`                       | namespace of a non-proxy protocol API gateway proxy                                       | `gloo-system`                       |  
 | `jellyfish.deployment.env.store.s3.bucket`           | S3 bucket where jellyfish data is written                                                 | `data`                              |  
 | `jellyfish.deployment.env.store.type`                | if `s3`, store jellyfish data in Amazon S3. If `file` store jellyfishdata in local files. | `file`                              |  
 | `jellyfish.deployment.image`                         | jellyfish Docker image                                                                    | ``                                  |  
