@@ -1,4 +1,4 @@
-{{- $spec := .Values.global.virtualServices.httpInternal -}}
+{{- $spec := .Values.global.virtualServices.httpInternal }}
 ---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService

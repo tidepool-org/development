@@ -1,6 +1,6 @@
-{{- $spec := .Values.global.virtualServices.http -}}
-{{- $port := $spec.port | default "80" -}}
-{{ if $spec.enabled }}
+{{- $spec := .Values.global.virtualServices.http }}
+{{- $port := $spec.port | default "80" }}
+{{- if $spec.enabled }}
 ---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
@@ -15,8 +15,8 @@ spec:
   displayName: http
   virtualHost:
     domains:
-{{- range $dnsName := $spec.dnsNames -}}
-{{ if eq $dnsName "*" }}
+{{- range $dnsName := $spec.dnsNames }}
+{{- if eq $dnsName "*" }}
     - '*'
 {{- else }}
     - '{{ if ne $port "80" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else }}{{ printf "%s" $dnsName -}}{{- end }}'
