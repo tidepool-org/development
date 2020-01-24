@@ -1,3 +1,4 @@
+{{ if .Values.global.virtualServices.enabled }}
 {{- $spec := .Values.global.virtualServices.http }}
 {{- $port := $spec.port | default "80" }}
 {{- if $spec.enabled }}
@@ -30,7 +31,8 @@ spec:
         httpsRedirect: true
 {{- else }}
       delegateAction:
-        name: {{ .Values.global.virtualServices.routeTableName }}
+        name: {{ .Values.global.routeTable.name }}
         namespace: {{ $.Release.Namespace }}
+{{- end }}
 {{- end }}
 {{- end }}

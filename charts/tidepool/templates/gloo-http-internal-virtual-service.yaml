@@ -1,3 +1,4 @@
+{{ if .Values.global.virtualServices.enabled }}
 {{- $spec := .Values.global.virtualServices.httpInternal }}
 ---
 apiVersion: gateway.solo.io/v1
@@ -18,5 +19,6 @@ spec:
     - matchers:
       - prefix: '/'
       delegateAction:
-        name: {{ .Values.global.virtualServices.routeTableName }}
+        name: {{ .Values.global.routeTable.name }}
         namespace: {{ .Release.Namespace }}
+{{- end }}
