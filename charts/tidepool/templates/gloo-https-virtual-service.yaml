@@ -1,18 +1,22 @@
-{{ if .Values.gloo.generate.virtualServices }}
-{{- if .Values.ingress.service.https.enabled -}}
-{{- $spec := .Values.ingress.gateway.https -}}
-{{- $port := $spec.port | default "443" -}}
+{{- $spec := .Values.global.virtualServices.https }}
+{{- if $spec.enabled }}
+{{- $port := $spec.port | default "443" }}
+{{- $hsts := $spec.hsts | default true }}
 ---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
   name: https
   namespace: '{{ .Release.Namespace }}'
+  labels:
+  {{- range $key, $value := $spec.labels}}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
 spec:
   displayName: https
   sslConfig:
     secretRef:
-      name: '{{ .Values.ingress.certificate.secretName | default "tls" }}'
+      name: {{ $spec.certificateSecretName | default "https-certificate" | quote }}
       namespace: '{{ $.Release.Namespace }}'
     sniDomains:
 {{- range $dnsName := $spec.dnsNames }}
@@ -23,7 +27,6 @@ spec:
 {{- range $dnsName := $spec.dnsNames }}
     - '{{ if ne $port "443" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf "%s" $dnsName -}}{{- end -}}'
 {{- end  }}
-{{ if .Values.ingress.service.https.strict }}
     options:
       cors:
         allowCredentials: true
@@ -47,6 +50,7 @@ spec:
         - x-tidepool-trace-request
         - x-tidepool-trace-session
         maxAge: 600s
+{{ if $hsts }}
       headerManipulation:
         requestHeadersToAdd:
         - header:
@@ -59,5 +63,4 @@ spec:
       delegateAction:
         name: 'tidepool-routes'
         namespace: {{ .Release.Namespace }}
-{{ end -}}
 {{ end -}}

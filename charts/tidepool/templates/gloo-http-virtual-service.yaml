@@ -1,13 +1,16 @@
-{{ if .Values.gloo.generate.virtualServices }}
-{{- if .Values.ingress.service.http.enabled -}}
-{{- $spec := .Values.ingress.gateway.http -}}
+{{- $spec := .Values.global.virtualServices.http -}}
 {{- $port := $spec.port | default "80" -}}
+{{ if $spec.enabled }}
 ---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
   name: http
   namespace: '{{ .Release.Namespace }}'
+  labels:
+  {{- range $key, $value := $spec.labels}}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
 spec:
   displayName: http
   virtualHost:
@@ -16,19 +19,18 @@ spec:
 {{ if eq $dnsName "*" }}
     - '*'
 {{- else }}
-    - '{{ if ne $port "80" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf "%s" $dnsName -}}{{- end -}}'
-{{- end -}}
+    - '{{ if ne $port "80" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else }} {{ printf "%s" $dnsName -}}{{- end }}'
+{{- end }}
 {{- end }}
     routes:
     - matchers:
       - prefix: '/'
-{{ if .Values.ingress.service.http.redirect }}
+{{- if $spec.redirect }}
       redirectAction:
         httpsRedirect: true
-{{ else }}
+{{- else }}
       delegateAction:
         name: 'tidepool-routes'
         namespace: {{ $.Release.Namespace }}
-{{ end }}
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}

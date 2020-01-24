@@ -4,11 +4,11 @@ kind: Gateway
 metadata:
   annotations:
     origin: default
-  name: gateway-proxy-ssl
+  name: internal-gateway-proxy
   namespace: {{ .Values.ingress.deployment.namespace | default "gloo-system" }}
 spec:
   bindAddress: '::'
-  bindPort: 8443
+  bindPort: 8080
   httpGateway:
     options:
       healthCheck:
@@ -23,12 +23,8 @@ spec:
     virtualServiceNamespaces:
     - '*'
     virtualServiceSelector:
-      protocol: https
-      type: external
-  proxyNames:
-  - gateway-proxy
-  ssl: true
-  useProxyProto: true
+      protocol: http
+      type: internal
   options:
     accessLoggingService:
       accessLog:
@@ -50,4 +46,8 @@ spec:
             token: '%REQ(x-tidepool-session-token)%'
             upstream: '%UPSTREAM_CLUSTER%'
           path: /dev/stdout
+  proxyNames:
+  - internal-gateway-proxy
+  ssl: false
+  useProxyProto: false
 {{- end }}
