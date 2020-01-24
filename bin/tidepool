@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -eu
 shopt -s extglob
 
 DIR=$(cd $(dirname $(dirname ${0})); pwd)
@@ -100,6 +100,7 @@ check_environment() {
 }
 
 doctor() {
+  set +u
   echo "Checking dependancy versions..."
   check_version helm 'version --short' 3.0.2
   check_version tilt 'version' 0.11.0
