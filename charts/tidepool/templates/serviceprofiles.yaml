@@ -1,4 +1,4 @@
-{{ if .Values.linkerd.generate.serviceProfiles }}
+{{- if .Values.linkerd.generate.serviceProfiles }}
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
@@ -1074,4 +1074,4 @@ spec:
       method: GET
       pathRegex: /.*
     name: /_get_internal
-{{ end }}
+{{- end }}

@@ -38,7 +38,9 @@ This chart bootstraps an Tidepool Environment on a [Kubernetes](http://kubernete
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm install --name my-release .
+$ helm2 install --name my-release .
+or
+$ helm3 install my-release .
 ```
 
 The command deploys Tidepool on the Kubernetes cluster in the default configuration.
@@ -109,6 +111,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.gateway.default.host`                          | Host to use for email verification                                                      | `localhost`   |
 | `global.gateway.default.protocol`                          | Protocol to use for email verification.                                                      | `http`                                                    |
 | `global.gateway.default.domain`                          | Domain to use for cookies
+|  `global.gateway.proxyProtocol`                          | Whether to use proxy protocol in external gateway | false |
 | `global.logLevel`                              | Default log level | `info`                                        |
 | `global.nameOverride`                                    | If non-empty, Helm chart name to use                                                         | ``                                                    |
 | `global.ports.auth`                                      | Auth service container port                                                                  | `9222`                                                |
@@ -129,14 +132,21 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.ports.tidewhisperer`                             | Tide whisperer service container port                                                        | `9127`                                                |
 | `global.ports.user`                                      | User service container port                                                                  | `9221`
 | `global.region`                                  | AWS region to deploy in                                                                      | `us-west-2`                                           |
-| `global.secret.enabled`                                  | whether to generate all secret files | `false`                                           |
+| `global.virtualServices.http.dnsNames`                             | List of Subject Alternative Names to use                                                                       | [ `localhost` ]                                          |
+| `global.virtualServices.http.enabled`                            | Whether to enable http ingress                                                     | `true`                                                  |
+| `global.virtualServices.http.labels`                            | Labels to apply to http virtual service  | { type: external, protocol: http } |
+| `global.virtualServices.http.port`                            | Port to listen on |   80                                                |
+| `global.virtualServices.http.redirect`                            | Whether to redirect http to https | `false`                                                  |
+| `global.virtualServices.httpInternal.labels`                            | Labels to apply to internal http virtual service  | { type: internal, protocol: http } |
+| `global.virtualServices.https.certificateSecretName`                            |  Name of secret holding TLS certificate                                                    | `https-certificate`                                                  |
+| `global.virtualServices.https.dnsNames`                            | List of Subject Alternative Names to use                                                     | `[]`                                                  |
+| `global.virtualServices.https.enabled`                            | Whether to enable https ingress | `false`                                                  |
+| `global.virtualServices.https.hsts`                            | Whether to enable hsts | `false`                                                  |
+| `global.virtualServices.https.labels`                            | Labels to apply to https virtual service  | { type: external, protocol: https } |
+| `global.virtualServices.https.port`                            | Port to listen on |  443                                                 |
+| `global.secret.enabled`                                  | Whether to generate all secret files | `false`                                           |
 | `gloo.enabled`                                           | Whether to launch Gloo control and plane
-| `gloo.generate.virtualServices`                          | Whether to include an Gloo virtual services resources in installation
-| `gloo.generate.gateways`                          | Whether to include a Gloo vGateway resources
-| `gloo.generate.loadBalancer`                          | Whether to include a load balancer
-| `gloo.gatewayProxies.gatewayProxy.service.httpPort`  | HTTP port to listen to | `8080`                                                  |
-| `gloo.gatewayProxies.gatewayProxy.service.httpsPort`  | HTTPS port to listen to | `8433`                                                  |
-| `gloo.gatewayProxies.gatewayProxy.service.type`  | Type on service | `ClusterIP`                                                  |
+| `gloo.generate.gateways`                          | Whether to include a Gloo Gateway resources
 | `highwater.deployment.image` | highwater Docker image | `` |
 | `highwater.nodeEnvironment`                     | Node environment (passed as NODE_ENV)                                                        | `production`                                          |
 | `hydrophone.deployment.env.fromAddress`                                 | Email address to use for replies to sigups                                                   | `Tidepool <noreply@tidepool.org>`                     |
@@ -149,13 +159,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `image.deployment.image` | image Docker image | `` |
 | `image.secret.enabled`                                         | whether to create image secret| ``                                         |
 | `image.secret.data_.ServiceAuth`                                         | plaintext service authorization secret | ``                                         |
-| `ingress.deployment.name`                              | Name of the API gateway proxy                                                                | `internal-gateway-proxy`                                    |
 | `ingress.deployment.namespace`                         | Namespace of the API gateway proxy                                                           | `gloo-system`                                         |
-| `ingress.gateway.http.dnsNames`                             | List of host to listen to                                                                    | `localhost`                                           |
-| `ingress.gateway.https.dnsNames`                            | List of Subject Alternative Names to use                                                     | `[]`                                                  |
-| `ingress.service.annotations`                             |  The service annotations | `{}`                                           |
-| `ingress.service.http.enabled`                             |  Whether to provide HTTP access | `true`                                           |
-| `ingress.service.https.enabled`                             |  Whether to provide HTTPS access | `false`                                           |
 | `jellyfish.deployment.env.store.s3.bucket`                                      | S3 bucket where jellyfish data is written | `data`                                      |
 | `jellyfish.deployment.env.store.type`                                      | If `s3`, store jellyfish data in Amazon S3. If `file` store jellyfishdata in local files. | `file`                                                |
 | `jellyfish.deployment.image` | jellyfish Docker image | `` |

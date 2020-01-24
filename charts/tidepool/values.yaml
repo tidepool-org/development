@@ -9,6 +9,7 @@ global:
     default:
       protocol: http
       host: localhost
+      proxyProtocol: false
   ports:
     blip: 3000                                                        # blip service internal port
     export: 9300                                                      # export service internal port
@@ -31,7 +32,26 @@ global:
     enabled: false
     templated: false
     generated: false
-
+  virtualServices:
+    http:
+      dnsNames:
+      - localhost
+      enabled: true
+      redirect: false
+      labels:
+        type: external
+        protocol: http
+    httpInternal:
+      labels:
+        type: internal
+        protocol: http
+    https:
+      dnsNames: []
+      enabled: false
+      hsts: false
+      labels:
+        type: external
+        protocol: https
 # environment-wide secrets
 tidepool:
   namespace:
@@ -43,27 +63,12 @@ linkerd:
     serviceProfiles: false
 
 ingress:
-  service:
-    http:
-      enabled: true
-    https:
-      enabled: false
-      strict: false
   deployment:
-    name: internal-gateway-proxy                                       # name of the proxy for INTERNAL traffic
     namespace: gloo-system                                             # namespace of the proxy for INTERNAL traffic
-  gateway:
-    http:
-      port: "80"
-      dnsNames: [ "*" ]                 # list of DNS names
-    https:
-      dnsNames: []                              # list of DNS names
 gloo:
   enabled: true
   generate:
-   virtualServices: true
-   gateways: true
-   loadBalancer: true
+    gateways: true
   settings:
     create: true
   crds:
@@ -72,14 +77,74 @@ gloo:
     fdsMode: WHITELIST
   namespace:
     create: false
+  global:
+    image:
+      registry: quay.io/solo-io
+      pullPolicy: IfNotPresent
+      tag: 1.3.2
+    glooRbac:
+      create: true
+    glooStats:
+      enabled: true
+  gateway:
+    deployment:
+      image:
+        repository: gateway
+      replicas: 1
+      runAsuser: 10101
+      stats:
+        enabled: true
+    enabled: true
+    proxyServiceAccount: {}
+    readGatewaysFromAllNamespaces: true
+    upgrade: false
+    validation: 
+      enabled: false
   gatewayProxies:
-    gatewayProxyV2:
+    internalGatewayProxy:
+      configMap:
+        data: null
+      kind:
+        deployment:
+          replicas: 1
+      podTemplate: &podtemplate
+        disableNetBind: false
+        floatingUserId: false
+        probes: false
+        image:
+          repository: gloo-envoy-wrapper
+        httpPort: 8080
+        httpsPort: 8443
+        runAsUser: 10101
+        extraAnnotations: {}
       service:
-        httpPort: 8080                                               # HTTP port to listen on
-        httpsPort: 8443                                             # HTTPS port to listen on
+        httpPort: 80
+        httpsPort: 443
+        type: ClusterIP
+        extraAnnotations: {}
+      readConfig: true
+      gatewaySettings:
+        disableGeneratedGateways: true
+      tracing: null
+    gatewayProxy:
+      configMap:
+        data: null
+      kind:
+        deployment:
+          replicas: 1
+      podTemplate: *podtemplate
+      service:
+        httpPort: 8080
+        httpsPort: 8443
         type: LoadBalancer                                              # Type of service to create (alternative: ClusterIP)
-        #extraAnnotations:                                           # Use to create an AWS Network Load Balancer 
-          #service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+        extraAnnotations:
+          service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
+          service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+          service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+      readConfig: true
+      gatewaySettings:
+        disableGeneratedGateways: true
+      tracing: null
 mongodb:
   enabled: true
   usePassword: false
