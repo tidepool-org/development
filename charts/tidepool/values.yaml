@@ -91,7 +91,7 @@ gloo:
       image:
         repository: gateway
       replicas: 1
-      runAsuser: 10101,
+      runAsuser: 10101
       stats:
         enabled: true
     enabled: true
