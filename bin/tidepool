@@ -100,12 +100,14 @@ check_environment() {
 }
 
 doctor() {
+  echo "Checking dependancy versions..."
   check_version helm 'version --short' 3.0.2
   check_version tilt 'version' 0.11.0
   check_version docker '-v' 19.0.0
   check_version docker-compose '-v' 1.25.0
   check_version kubectl 'version --client --short' 1.15.1
-
+  echo
+  echo "Checking environment config..."
   check_environment KUBECONFIG
   check_environment TIDEPOOL_DOCKER_MONGO_VOLUME
 }
