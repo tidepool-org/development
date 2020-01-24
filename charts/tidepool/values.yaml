@@ -67,7 +67,8 @@ tidepool:
     annotations: {}                             # namespace annotations
 ingress:
   deployment:
-    namespace: gloo-system                                             # namespace of the proxy for INTERNAL traffic
+    name: internal-gateway-proxy                                       # name of proxy for non proxy protocol traffic
+    namespace: gloo-system                                             # namespace of non proxy protocol traffic:w
 gloo:
   enabled: false
   settings:
