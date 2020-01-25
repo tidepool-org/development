@@ -2,7 +2,7 @@
 apiVersion: gateway.solo.io/v1
 kind: RouteTable
 metadata:
-  name: {{ .Values.global.routeTable.Name }}
+  name: {{ .Values.global.routeTable.name }}
   namespace: {{ .Release.Namespace }}
 spec:
   routes:
