@@ -110,23 +110,21 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.ports.tidewhisperer`                         | tide whisperer service container port                                                     | `9127`                              |  
 | `global.ports.user`                                  | user service container port                                                               | `9221`                              |  
 | `global.region`                                      | AWS region to deploy in                                                                   | `us-west-2`                         |  
-| `global.routeTable.enabled`                          | whether to generate Gloo route table                                                      | `true`                              |  
-| `global.routeTable.name`                             | name to use for Gloo route table                                                          | `tidepool-routes`                   |  
-| `global.virtualServices.enabled`                     | whether to generate Gloo virtualServices or route tables                                  | `true`                              |  
-| `global.virtualServices.http.dnsNames`               | list of Subject Alternative Names to use                                                  | [ `localhost` ]                     |  
-| `global.virtualServices.http.enabled`                | whether to enable http ingress                                                            | `true`                              |  
-| `global.virtualServices.http.labels`                 | labels to apply to http virtual service                                                   | { type: external, protocol: http }  |  
-| `global.virtualServices.http.port`                   | port to listen on                                                                         | 80                                  |  
-| `global.virtualServices.http.redirect`               | whether to redirect http to https                                                         | `false`                             |  
-| `global.virtualServices.httpInternal.labels`         | labels to apply to internal http virtual service                                          | { type: internal, protocol: http }  |  
-| `global.virtualServices.https.certificateSecretName` | name of secret holding TLS certificate                                                    | `https-certificate`                 |  
-| `global.virtualServices.https.dnsNames`              | list of Subject Alternative Names to use                                                  | `[]`                                |  
-| `global.virtualServices.https.enabled`               | whether to enable https ingress                                                           | `false`                             |  
-| `global.virtualServices.https.hsts`                  | whether to enable hsts                                                                    | `false`                             |  
-| `global.virtualServices.https.labels`                | labels to apply to https virtual service                                                  | { type: external, protocol: https } |  
-| `global.virtualServices.https.port`                  | port to listen on                                                                         | 443                                 |  
 | `global.secret.enabled`                              | whether to generate all secret files                                                      | `false`                             |  
-| `gloo.enabled`                                       | whether to launch Gloo control and plane                                                  | `false`                             |  
+| `glooingress.virtualServices.enabled`                | whether to generate Gloo virtualServices or route tables                                  | `true`                              |  
+| `glooingress.virtualServices.http.dnsNames`          | list of Subject Alternative Names to use                                                  | [ `localhost` ]                     |  
+| `glooingress.virtualServices.http.enabled`           | whether to enable http ingress                                                            | `true`                              |  
+| `glooingress.virtualServices.http.labels`            | labels to apply to http virtual service                                                   | { type: external, protocol: http }  |  
+| `glooingress.virtualServices.http.port`              | port to listen on                                                                         | 80                                  |  
+| `glooingress.virtualServices.http.redirect`          | whether to redirect http to https                                                         | `false`                             |  
+| `glooingress.virtualServices.httpInternal.labels`    | labels to apply to internal http virtual service                                          | { type: internal, protocol: http }  |  
+| `glooingress.virtualServices.https.certificateSecretN` | name of secret holding TLS certificate                                                    | `https-certificate`                 |  
+| `glooingress.virtualServices.https.dnsNames`         | list of Subject Alternative Names to use                                                  | `[]`                                |  
+| `glooingress.virtualServices.https.enabled`          | whether to enable https ingress                                                           | `false`                             |  
+| `glooingress.virtualServices.https.hsts`             | whether to enable hsts                                                                    | `false`                             |  
+| `glooingress.virtualServices.https.labels`           | labels to apply to https virtual service                                                  | { type: external, protocol: https } |  
+| `glooingress.virtualServices.https.port`             | port to listen on                                                                         | 443                                 |  
+| `glooingress.gloo.enabled`                           | whether to install Gloo helm chart                                                        | `false`                             |  
 | `highwater.deployment.image`                         | highwater Docker image                                                                    | ``                                  |  
 | `highwater.nodeEnvironment`                          | node environment (passed as NODE_ENV)                                                     | `production`                        |  
 | `hydrophone.deployment.env.fromAddress`              | email address to use for replies to sigups                                                | `Tidepool <noreply@tidepool.org>`   |  
@@ -151,7 +149,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `kissmetrics.secret.data_.Token`                     | plaintext Kissmetrics Token                                                               | ``                                  |  
 | `kissmetrics.secret.data_.UCSFAPIKey`                | plaintext UCSF Kissmetrics Token                                                          | ``                                  |  
 | `kissmetrics.secret.data_.UCSFWhitelist`             | plaintext UCSF metrics whitelist                                                          | ``                                  |  
-| `linkerd.generate.serviceProfiles`                   | whether to generate Linkerd ServiceProfiles                                               | `false`                             |  
+| `linkerdsupport.enabled`                             | whether to include linkerdsupport subchart with Linkerd service profiles                  | `false`                             |  
 | `messageapi.deployment.env.window`                   |                                                                                           | `21`                                |  
 | `messageapi.deployment.image`                        | message-api Docker image                                                                  | ``                                  |  
 | `messageapi.nodeEnvironment`                         | node environment (passed as NODE_ENV)                                                     | `production`                        |  
