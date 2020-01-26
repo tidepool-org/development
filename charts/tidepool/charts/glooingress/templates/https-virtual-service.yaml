@@ -1,6 +1,5 @@
-{{ if .Values.global.virtualServices.enabled }}
-{{- $spec := .Values.global.virtualServices.https }}
-{{- if $spec.enabled }}
+{{- $spec := .Values.virtualServices.https }}
+{{ if $spec.enabled }}
 {{- $port := $spec.port | default "443" }}
 {{- $hsts := $spec.hsts | default true }}
 ---
@@ -62,7 +61,6 @@ spec:
     - matchers:
       - prefix: '/'
       delegateAction:
-        name: {{ .Values.global.routeTable.name }}
+        name: tidepool-routes
         namespace: {{ .Release.Namespace }}
-{{- end }}
 {{- end }}

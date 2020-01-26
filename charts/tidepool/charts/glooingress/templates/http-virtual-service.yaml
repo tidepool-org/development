@@ -1,7 +1,6 @@
-{{ if .Values.global.virtualServices.enabled }}
-{{- $spec := .Values.global.virtualServices.http }}
+{{- $spec := .Values.virtualServices.http }}
+{{ if $spec.enabled }}
 {{- $port := $spec.port | default "80" }}
-{{- if $spec.enabled }}
 ---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
@@ -31,8 +30,7 @@ spec:
         httpsRedirect: true
 {{- else }}
       delegateAction:
-        name: {{ .Values.global.routeTable.name }}
+        name: tidepool-routes
         namespace: {{ $.Release.Namespace }}
-{{- end }}
 {{- end }}
 {{- end }}

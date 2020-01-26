@@ -85,12 +85,11 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `dexcom.secret.data_.StateSalt`                      | plaintext Dexcom Oauth2 state salt                                                        | `false`                             |  
 | `gatekeeper.deployment.image`                        | gatekeeper Docker image                                                                   | ``                                  |  
 | `gatekeeper.nodeEnvironment`                         | node environment (passed as NODE_ENV)                                                     | `production`                        |  
+| `glooingress.enabled`                                | whether to use Gloo API Gateway for ingress                                               | `true`
 | `global.fullnameOverride`                            |                                                                                           | ``                                  |  
-| `global.gateway.enabled`                             | whether to generate Gloo gateways                                                         | `true`                              |  
 | `global.gateway.default.host`                        | host to use for email verification                                                        | `localhost`                         |  
 | `global.gateway.default.protocol`                    | protocol to use for email verification.                                                   | `http`                              |  
 | `global.gateway.default.domain`                      | domain to use for cookies                                                                 | ''                                  |  
-| `global.gateway.proxyProtocol`                       | whether to use proxy protocol in external gateway                                         | false                               |  
 | `global.logLevel`                                    | default log level                                                                         | `info`                              |  
 | `global.nameOverride`                                | if non-empty, Helm chart name to use                                                      | ``                                  |  
 | `global.ports.auth`                                  | auth service container port                                                               | `9222`                              |  
@@ -111,24 +110,6 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `global.ports.user`                                  | user service container port                                                               | `9221`                              |  
 | `global.region`                                      | AWS region to deploy in                                                                   | `us-west-2`                         |  
 | `global.secret.enabled`                              | whether to generate all secret files                                                      | `false`                             |  
-| `glooingress.virtualServices.enabled`                | whether to generate Gloo virtualServices or route tables                                  | `true`                              |  
-| `glooingress.virtualServices.http.dnsNames`          | list of Subject Alternative Names to use                                                  | [ `localhost` ]                     |  
-| `glooingress.virtualServices.http.enabled`           | whether to enable http ingress                                                            | `true`                              |  
-| `glooingress.virtualServices.http.labels`            | labels to apply to http virtual service                                                   | { type: external, protocol: http }  |  
-| `glooingress.virtualServices.http.port`              | port to listen on                                                                         | 80                                  |  
-| `glooingress.virtualServices.http.redirect`          | whether to redirect http to https                                                         | `false`                             |  
-| `glooingress.virtualServices.httpInternal.labels`    | labels to apply to internal http virtual service                                          | { type: internal, protocol: http }  |  
-| `glooingress.virtualServices.https.certificateSecretN` | name of secret holding TLS certificate                                                    | `https-certificate`                 |  
-| `glooingress.virtualServices.https.dnsNames`         | list of Subject Alternative Names to use                                                  | `[]`                                |  
-| `glooingress.virtualServices.https.enabled`          | whether to enable https ingress                                                           | `false`                             |  
-| `glooingress.virtualServices.https.hsts`             | whether to enable hsts                                                                    | `false`                             |  
-| `glooingress.virtualServices.https.labels`           | labels to apply to https virtual service                                                  | { type: external, protocol: https } |  
-| `glooingress.virtualServices.https.port`             | port to listen on                                                                         | 443                                 |  
-| `glooingress.gloo.enabled`                           | whether to install Gloo helm chart                                                        | `false`                             |  
-| `highwater.deployment.image`                         | highwater Docker image                                                                    | ``                                  |  
-| `highwater.nodeEnvironment`                          | node environment (passed as NODE_ENV)                                                     | `production`                        |  
-| `hydrophone.deployment.env.fromAddress`              | email address to use for replies to sigups                                                | `Tidepool <noreply@tidepool.org>`   |  
-| `hydrophone.deployment.env.store.s3.bucket`          | S3 bucket where email templates are stored                                                | `asset`                             |  
 | `hydrophone.deployment.image`                        | hydrophone Docker image                                                                   | ``                                  |  
 | `image.deployment.env.store.s3.bucket`               | S3 bucket where image data is written                                                     | `data`                              |  
 | `image.deployment.env.store.file.directory`          | directory to use when storing images on file storage                                      | `_data/image`                       |  
@@ -137,8 +118,6 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `image.deployment.image`                             | image Docker image                                                                        | ``                                  |  
 | `image.secret.enabled`                               | whether to create image secret                                                            | ``                                  |  
 | `image.secret.data_.ServiceAuth`                     | plaintext service authorization secret                                                    | ``                                  |  
-| `ingress.deployment.name`                            | name of a non-proxy protocol gateway proxy                                                | `gloo-system`                       |  
-| `ingress.deployment.namespace`                       | namespace of a non-proxy protocol API gateway proxy                                       | `gloo-system`                       |  
 | `jellyfish.deployment.env.store.s3.bucket`           | S3 bucket where jellyfish data is written                                                 | `data`                              |  
 | `jellyfish.deployment.env.store.type`                | if `s3`, store jellyfish data in Amazon S3. If `file` store jellyfishdata in local files. | `file`                              |  
 | `jellyfish.deployment.image`                         | jellyfish Docker image                                                                    | ``                                  |  

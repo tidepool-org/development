@@ -1,11 +1,12 @@
-{{ if .Values.global.gateway.enabled }}
+{{ $spec := .Values.gateway.gatewayProxySsl }}
+{{ if $spec.enabled }}
 apiVersion: gateway.solo.io/v1
 kind: Gateway
 metadata:
   annotations:
     origin: default
   name: gateway-proxy-ssl
-  namespace: {{ .Values.ingress.deployment.namespace | default "gloo-system" }}
+  namespace: {{ .Release.Namespace }}
 spec:
   bindAddress: '::'
   bindPort: 8443
@@ -20,15 +21,14 @@ spec:
           - origin
           verbose: true
         useRemoteAddress: true
-    virtualServiceNamespaces:
-    - '*'
     virtualServiceSelector:
-      protocol: https
-      type: external
+    {{- range $key, $value := $spec.labels }}
+      {{ $key }}: {{ $value | quote }}
+    {{- end }}
   proxyNames:
-  - gateway-proxy
+  - {{ $spec.proxy.name }}
   ssl: true
-  useProxyProto: {{ .Values.global.gateway.proxyProtocol }}
+  useProxyProto: {{ $spec.proxyProtocol }}
   options:
     accessLoggingService:
       accessLog:

@@ -1,5 +1,5 @@
-{{ if .Values.global.virtualServices.enabled }}
-{{- $spec := .Values.global.virtualServices.httpInternal }}
+{{- $spec := .Values.virtualServices.httpInternal }}
+{{ if $spec.enabled }}
 ---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
@@ -14,11 +14,19 @@ spec:
   displayName: http-internal
   virtualHost:
     domains:
+{{- if $spec.matchAnyHost }}
+    - '*'
+{{- else }}
     - internal.{{ $.Release.Namespace }}
+{{- $port := $spec.port | default "80" }}
+{{- range $dnsName := $spec.dnsNames }}
+    - '{{ if ne $port "80" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else }}{{ printf "%s" $dnsName -}}{{- end }}'
+{{- end }}
+{{- end }}
     routes:
     - matchers:
       - prefix: '/'
       delegateAction:
-        name: {{ .Values.global.routeTable.name }}
+        name: tidepool-routes
         namespace: {{ .Release.Namespace }}
 {{- end }}

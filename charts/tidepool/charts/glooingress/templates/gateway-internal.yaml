@@ -1,11 +1,12 @@
-{{ if .Values.global.gateway.enabled }}
+{{ $spec := .Values.gateway.internalGatewayProxy }}
+{{ if $spec.enabled }}
 apiVersion: gateway.solo.io/v1
 kind: Gateway
 metadata:
   annotations:
     origin: default
   name: internal-gateway-proxy
-  namespace: {{ .Values.ingress.deployment.namespace | default "gloo-system" }}
+  namespace: {{ .Release.Namespace }}
 spec:
   bindAddress: '::'
   bindPort: 8080
@@ -20,11 +21,10 @@ spec:
           - origin
           verbose: true
         useRemoteAddress: true
-    virtualServiceNamespaces:
-    - '*'
     virtualServiceSelector:
-      protocol: http
-      type: internal
+    {{- range $key, $value := $spec.labels }}
+      {{ $key }}: {{ $value | quote }}
+    {{- end }}
   options:
     accessLoggingService:
       accessLog:
@@ -47,7 +47,7 @@ spec:
             upstream: '%UPSTREAM_CLUSTER%'
           path: /dev/stdout
   proxyNames:
-  - internal-gateway-proxy
+  - {{ $spec.proxy.name }}
   ssl: false
   useProxyProto: false
 {{- end }}
