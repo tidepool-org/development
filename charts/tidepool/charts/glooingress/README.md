@@ -57,6 +57,7 @@ The following tables lists the configurable parameters of the chart and their de
 | Parameter                                            | Description                                                                               | Default                             |  
 |------------------------------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------|
 | `discovery.namespace`                    | namespace where the gloo upstreams are stored                                             |  release namespace                  |
+| `enabled`                                | whether to enable the Gloo integrations                                                   | `true`                              |
 | `gateway.proxy.name`                     | name of the proxy to use for this gateway                                                 | `gateway-proxy`                     |
 | `gateway.proxy.namespace`                | namespace of the proxy to use for this gateway                                            | release namespace                   |
 | `gloo.enabled`                           | whether to install the Gloo control plane                                                 | `false`                             |
