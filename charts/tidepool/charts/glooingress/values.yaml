@@ -1,22 +1,22 @@
-enabled: true
+enabled: true                           # whether to enable the Gloo API Gateway integration
 discovery: {}
-  #namespace: 
+  #namespace:                           # namespace where the Gloo discovery service runs
 gateway:
   proxy: 
-    name: "gateway-proxy"
-    #namespace:
+    name: "gateway-proxy"               # name of the Gloo gateway proxy that will host the virtual service
+    #namespace:                         # namespace of the Gloo gateway proxy that will host the virtual service
 routeTable:
-  name: tidepool-routes
+  name: tidepool-routes                 # name to use for the routeTable that will route tidepool requests
 virtualServices:
   http:
-    dnsNames: [ "localhost" ]
-    enabled: true
-    redirect: false
+    dnsNames: [ "localhost" ]           # DNS names served with HTTP 
+    enabled: true                       # whether to accept HTTP requests
+    redirect: false                     # whether to redirect HTTP requests to HTTPS
   https:
-    dnsNames: []
-    enabled: false
-    hsts: false
+    dnsNames: []                        # DNS names served with HTTPS
+    enabled: false                      # whether to serve HTTPS
+    hsts: false                         # whether to require Strict Transport Security
 gloo:
-  enabled: false
-  crds:
-    create: true
+  enabled: false                        # whether to install the Gloo API Gateway control plane
+  crds:                                 
+    create: true                        # whether to create the Gloo CRDs
