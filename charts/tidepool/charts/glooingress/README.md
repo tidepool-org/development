@@ -10,7 +10,6 @@ a number of parameters that may be changed in order to support various use cases
 
 Key questions are:
 1. Does your ingress support http only, http and https, or http redirect to https?
-1. Does your load balancer support the proxy protocol?
 1. Do you run the Gloo control plane in the same namespace as the Tidepool services?
 
 Answers to these design questions will dictate how you configure this helm chart.
@@ -52,33 +51,21 @@ In all cases, you must provide the domain names to route.
 
 ## Configuration
 
-The following tables lists the configurable parameters of the Ambassador chart and their default values.
+The following tables lists the configurable parameters of the chart and their default values.
 
 
 | Parameter                                            | Description                                                                               | Default                             |  
 |------------------------------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------|
-| `gateway.gatewayProxy.enabled`           | whether to generate a external http gateway                                               | `true`
-| `gateway.gatewayProxy.proxy.name`        | name of the proxy to use for this gateway                                                 | `gateway-proxy`
-| `gateway.gatewayProxy.proxy.namespace`   | namespace of the proxy to use for this gateway                                            | release namespace
-| `gateway.gatewayProxy.proxyProtocol`     | whether to use the proxy protocol for this gateway                                        | `true`
-| `gateway.gatewayProxySsl.enabled`        | whether to generate a external https gateway                                              | `true`
-| `gateway.gatewayProxySsl.proxy.name`     | name of the proxy to use for this gateway                                                 | `gateway-proxy`
-| `gateway.gatewayProxySsl.proxy.namespace` | namespace of the proxy to use for this gateway                                           | release namespace
-| `gateway.gatewayProxySsl.proxyProtocol`  | whether to use the proxy protocol for this gateway                                        | `true`
-| `gateway.internalGatewayProxy.enabled`   | whether to generate a internal http gateway                                               | `true`
-| `gateway.internalGatewayProxy.proxy.name`     | name of the proxy to use for this gateway                                            | `internal-gateway-proxy`
-| `gateway.internalGatewayProxy.proxy.namespace` | namespace of the proxy to use for this gateway                                      | release namespace
-| `gateway.internalGatewayProxy.proxyProtocol`  | whether to use the proxy protocol for this gateway                                   | false
-| `virtualServices.http.dnsNames`          | list of Subject Alternative Names to use                                                  | [ `localhost` ]                     |  
+| `gateway.proxy.name`                     | name of the proxy to use for this gateway                                                 | `gateway-proxy`                     |
+| `gateway.proxy.namespace`                | namespace of the proxy to use for this gateway                                            | release namespace                   |
 | `virtualServices.http.enabled`           | whether to enable http ingress                                                            | `true`                              |  
-| `virtualServices.http.labels`            | labels to apply to http virtual service                                                   | { type: external, protocol: http }  |  
+| `virtualServices.http.labels`            | labels to apply to http virtual service                                                   | {}                                  |  
 | `virtualServices.http.port`              | port to listen on                                                                         | 80                                  |  
 | `virtualServices.http.redirect`          | whether to redirect http to https                                                         | `false`                             |  
-| `virtualServices.httpInternal.labels`    | labels to apply to internal http virtual service                                          | { type: internal, protocol: http }  |  
 | `virtualServices.https.certificateSecretName` | name of secret holding TLS certificate                                               | `https-certificate`                 |  
 | `virtualServices.https.dnsNames`         | list of Subject Alternative Names to use                                                  | `[]`                                |  
 | `virtualServices.https.enabled`          | whether to enable https ingress                                                           | `false`                             |  
 | `virtualServices.https.hsts`             | whether to enable hsts                                                                    | `false`                             |  
-| `virtualServices.https.labels`           | labels to apply to https virtual service                                                  | { type: external, protocol: https } |  
+| `virtualServices.https.labels`           | labels to apply to https virtual service                                                  | { }                                 |  
 | `virtualServices.https.port`             | port to listen on                                                                         | 443                                 |  
 | `gloo.enabled`                           | whether to install Gloo helm chart                                                        | `false`                             |  

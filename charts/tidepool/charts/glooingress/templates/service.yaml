@@ -1,4 +1,4 @@
-{{ $proxy := .Values.gateway.internalGatewayProxy.proxy }}
+{{ $proxy := .Values.gateway.proxy }}
 ---
 apiVersion: v1
 kind: Service

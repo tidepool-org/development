@@ -30,7 +30,7 @@ spec:
         httpsRedirect: true
 {{- else }}
       delegateAction:
-        name: tidepool-routes
+        name: {{ .Values.routeTable.name }}
         namespace: {{ $.Release.Namespace }}
 {{- end }}
 {{- end }}
