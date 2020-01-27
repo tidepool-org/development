@@ -6,7 +6,7 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: {{ $internal.name | default 'http-internal' }}
+  name: {{ $internal.name }}
   namespace: '{{ .Release.Namespace }}'
   labels:
   {{- range $key, $value := $internal.labels}}
