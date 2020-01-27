@@ -56,8 +56,12 @@ The following tables lists the configurable parameters of the chart and their de
 
 | Parameter                                            | Description                                                                               | Default                             |  
 |------------------------------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------|
+| `discovery.namespace`                    | namespace where the gloo upstreams are stored                                             |  release namespace                  |
 | `gateway.proxy.name`                     | name of the proxy to use for this gateway                                                 | `gateway-proxy`                     |
 | `gateway.proxy.namespace`                | namespace of the proxy to use for this gateway                                            | release namespace                   |
+| `gloo.enabled`                           | whether to install the Gloo control plane                                                 | `false`                             |
+| `gloo.crds.create`                       | whether to install the Gloo crds                                                          | `true`                              |
+| `routeTable.name`                        | name to use for the Gloo RouteTable                                                       | release namespace                   |
 | `virtualServices.http.enabled`           | whether to enable http ingress                                                            | `true`                              |  
 | `virtualServices.http.labels`            | labels to apply to http virtual service                                                   | {}                                  |  
 | `virtualServices.http.port`              | port to listen on                                                                         | 80                                  |  
@@ -65,7 +69,7 @@ The following tables lists the configurable parameters of the chart and their de
 | `virtualServices.https.certificateSecretName` | name of secret holding TLS certificate                                               | `https-certificate`                 |  
 | `virtualServices.https.dnsNames`         | list of Subject Alternative Names to use                                                  | `[]`                                |  
 | `virtualServices.https.enabled`          | whether to enable https ingress                                                           | `false`                             |  
-| `virtualServices.https.hsts`             | whether to enable hsts                                                                    | `false`                             |  
+| `virtualServices.https.hsts`             | whether to enable strict transport security                                               | `false`                             |  
 | `virtualServices.https.labels`           | labels to apply to https virtual service                                                  | { }                                 |  
 | `virtualServices.https.port`             | port to listen on                                                                         | 443                                 |  
 | `gloo.enabled`                           | whether to install Gloo helm chart                                                        | `false`                             |  
