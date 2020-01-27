@@ -49,6 +49,7 @@ The following tables lists the configurable parameters of the chart and their de
 | `enabled`                                | whether to enable the Gloo integrations                                                   | `true`                              |
 | `gateway.proxy.name`                     | name of the proxy to use for this gateway                                                 | `gateway-proxy`                     |
 | `gateway.proxy.namespace`                | namespace of the proxy to use for this gateway                                            | release namespace                   |
+| `gateway.proxy.port`                     | port of the gateway proxy                                                                 | `80`                                |
 | `gloo.enabled`                           | whether to install the Gloo control plane                                                 | `false`                             |
 | `gloo.crds.create`                       | whether to install the Gloo crds                                                          | `true`                              |
 | `routeTable.name`                        | name to use for the Gloo RouteTable                                                       | release namespace                   |

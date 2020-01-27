@@ -4,6 +4,7 @@ discovery: {}
 gateway:
   proxy: 
     name: "gateway-proxy"               # name of the Gloo gateway proxy that will host the virtual service
+    port: 80
     #namespace:                         # namespace of the Gloo gateway proxy that will host the virtual service
 routeTable:
   name: tidepool-routes                 # name to use for the routeTable that will route tidepool requests

@@ -10,5 +10,5 @@ metadata:
 spec:
   externalName: {{ $proxy.name }}.{{ $proxy.namespace | default .Release.Namespace }}.svc.cluster.local
   ports:
-  - port: 80
+  - port: {{ $proxy.port }}
   type: ExternalName
