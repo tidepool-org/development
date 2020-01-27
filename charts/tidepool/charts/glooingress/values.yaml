@@ -9,13 +9,20 @@ routeTable:
   name: tidepool-routes                 # name to use for the routeTable that will route tidepool requests
 virtualServices:
   http:
+    name: http
     dnsNames: [ "localhost" ]           # DNS names served with HTTP 
     enabled: true                       # whether to accept HTTP requests
     redirect: false                     # whether to redirect HTTP requests to HTTPS
+    labels: {}
   https:
+    name: https
     dnsNames: []                        # DNS names served with HTTPS
     enabled: false                      # whether to serve HTTPS
     hsts: false                         # whether to require Strict Transport Security
+    labels: {}
+  httpInternal:
+    name: http-internal
+    labels: {}
 gloo:
   enabled: false                        # whether to install the Gloo API Gateway control plane
   crds:                                 

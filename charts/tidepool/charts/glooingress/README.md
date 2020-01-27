@@ -14,42 +14,31 @@ Key questions are:
 
 Answers to these design questions will dictate how you configure this helm chart.
 
+## Gloo Virtual Services
+This subchart creates your Gloo Virtual Services.  You may enable http and/or https access.  You may also redirect http to https.  In all cases, you must provide the domain names to route. 
+
 ## Deploying Gloo Control Plane in the Same Namespace
 You may use the subchart to deploy the Gloo control plane within the same namespace as the Tidepool environment.
 This configuration is desirable for testing where there are no other clients of the Gloo API gateway.
 
 In this case, set the `gloo.enabled` flag to true.
 
+The default configuration of Gloo will create two Gloo Gateway resources, one for HTTP traffic and one for HTTPS traffic.  The Gloo Virtual Services created by the chart will be associated with those Gateways.
+
 ## Deploying Gloo Control Plane in a Separate Namespace
-You may use this subchart to create Gloo Virtual Services that are consumed by a Gloo Gateway of your choosing.
-These are enabled by default and provided labels.  You may use these labels to associate the Virtual Services with your Gateway.
+If you deploy the Gloo control plane to a separate namesspace, you will need to associate the Gloo Virtual Services created by the chart with your Gloo Gateway resources. 
 
-### Gloo Gateways
-Your Gloo Gateway resources must be created in the same namespace as your Gloo Gateway Proxies (data plane). Hence, if you want 
-to isolate your traffic in a proxy in the same namespace as the Tidepool environment, you will want to create a Gateway resource in
-the same namespaces.  
+There are two ways to do so.  First, you may select all Virtual Services that match certain labels and appear in certain namespaces.  Second, you may name the virtual services explicitly.  For the former, you may provide labels.  For the latter, you may provie the names of the virtual services. 
 
-#### Gateway in Same Namespace
-You may use this subchart to create a Gloo Gateway in the same namespace. 
+If you are using http redirection or not using http access, then a special "internal" Virtual Service must be created that will accept http traffic that originates from Tidepool microservices. You may name that virtual service or provide labels for it.
 
-To do this, set `internalGatewayProxy.enabled` to `true`.  This will create an http-only ingress.
-
-#### Gateway in Different Namespace
-If you are sharing a Gloo Gateway, you may not, you may not want to install Gloo in the same namespace as Tidepool.  This configuration makes
-sense if there are multiple Tidepool environments sharing a single Gloo Gateway, or the Gloo Gateway is also used by other non-Tidepool services.
-
-In this case, you may use the `virtualServiceNamespace` field and/or the `virtualServiceSelectors` field of the Gateway resource to associate
-the virtual services with your external Gateway.
-
-## Gloo Virtual Services
-This subchart creates your Gloo Virtual Services.  You may enable http and/or https access.  You may also redirect http to https.
-In all cases, you must provide the domain names to route. 
-
-### HTTP Redirect
+Refer to the Gloo documentation on how to do associate Gloo Virtual Services with Gloo Gateways.
 
 ### TLS Termination
 
-## Configuration
+You may use the Gloo virtual services to terminate HTTPS traffic. Simply store the TLS certificate and provide the name of the secret (which must be in the same namespace).
+
+## Configuration Parameters
 
 The following tables lists the configurable parameters of the chart and their default values.
 
@@ -64,13 +53,17 @@ The following tables lists the configurable parameters of the chart and their de
 | `gloo.crds.create`                       | whether to install the Gloo crds                                                          | `true`                              |
 | `routeTable.name`                        | name to use for the Gloo RouteTable                                                       | release namespace                   |
 | `virtualServices.http.enabled`           | whether to enable http ingress                                                            | `true`                              |  
+| `virtualServices.http.name`              | name of the Gloo http virtual service                                                     | `http`                              |  
 | `virtualServices.http.labels`            | labels to apply to http virtual service                                                   | {}                                  |  
 | `virtualServices.http.port`              | port to listen on                                                                         | 80                                  |  
 | `virtualServices.http.redirect`          | whether to redirect http to https                                                         | `false`                             |  
+| `virtualServices.httpInternal.name`      | name of the Gloo http internal virtual service                                            | `http-internal`                     |  
+| `virtualServices.httpInternal.labels`    | labels to apply to http internal virtual service                                          | { }                                 |  
 | `virtualServices.https.certificateSecretName` | name of secret holding TLS certificate                                               | `https-certificate`                 |  
 | `virtualServices.https.dnsNames`         | list of Subject Alternative Names to use                                                  | `[]`                                |  
 | `virtualServices.https.enabled`          | whether to enable https ingress                                                           | `false`                             |  
 | `virtualServices.https.hsts`             | whether to enable strict transport security                                               | `false`                             |  
 | `virtualServices.https.labels`           | labels to apply to https virtual service                                                  | { }                                 |  
+| `virtualServices.https.name`             | name of the Gloo http virtual service                                                     | `http`                              |  
 | `virtualServices.https.port`             | port to listen on                                                                         | 443                                 |  
 | `gloo.enabled`                           | whether to install Gloo helm chart                                                        | `false`                             |  

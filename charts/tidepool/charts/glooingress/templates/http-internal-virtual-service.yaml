@@ -1,3 +1,4 @@
+{{- $internal := .Values.virtualServices.httpInternal }}
 {{- $spec := .Values.virtualServices.http }}
 {{- $port := $spec.port | default "80" }}
 {{ if or (not $spec.enabled) ($spec.redirect) }}
@@ -5,11 +6,10 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: http-internal
+  name: {{ $internal.name | default 'http-internal' }}
   namespace: '{{ .Release.Namespace }}'
   labels:
-    internal: true
-  {{- range $key, $value := $spec.labels}}
+  {{- range $key, $value := $internal.labels}}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:

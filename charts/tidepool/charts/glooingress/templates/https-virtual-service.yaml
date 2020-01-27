@@ -6,7 +6,7 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: https
+  name: {{ $spec.name | default 'https' ||
   namespace: '{{ .Release.Namespace }}'
   labels:
   {{- range $key, $value := $spec.labels }}
