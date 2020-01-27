@@ -1,39 +1,26 @@
 {{- $spec := .Values.virtualServices.http }}
-{{ if $spec.enabled }}
 {{- $port := $spec.port | default "80" }}
+{{ if or (not $spec.enabled) ($spec.redirect) }}
 ---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: http
+  name: http-internal
   namespace: '{{ .Release.Namespace }}'
   labels:
+    internal: true
   {{- range $key, $value := $spec.labels}}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
-  displayName: http
+  displayName: http-internal
   virtualHost:
     domains:
-{{ if and $spec.serveAllDomains }}
-    - '*'
-{{ else }}
-{{ if not $spec.redirect }}
     - internal.{{ .Release.Namespace }}
-{{ end }}
-{{- range $dnsName := $spec.dnsNames }}
-    - '{{ if ne $port "80" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else }}{{ printf "%s" $dnsName -}}{{- end }}'
-{{- end }}
-{{- end }}
     routes:
     - matchers:
       - prefix: '/'
-{{- if $spec.redirect }}
-      redirectAction:
-        httpsRedirect: true
-{{- else }}
       delegateAction:
         name: {{ .Values.routeTable.name }}
         namespace: {{ $.Release.Namespace }}
-{{- end }}
 {{- end }}
