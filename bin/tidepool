@@ -93,7 +93,7 @@ check_version() {
 
 check_environment() {
   if [[ ! -z ${!1} ]]; then
-    echo -e "✔ \$${1} is set"
+    echo "✔ \$${1} is set"
   else
     echo -e "✘ \$${1} is not set. See \"Environment Setup\" in README"
   fi
