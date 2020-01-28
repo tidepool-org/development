@@ -1,0 +1,14 @@
+{{ $proxy := .Values.gateway.proxy }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: internal 
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "charts.labels.standard" .}}
+spec:
+  externalName: {{ $proxy.name }}.{{ $proxy.namespace | default .Release.Namespace }}.svc.cluster.local
+  ports:
+  - port: {{ $proxy.port }}
+  type: ExternalName

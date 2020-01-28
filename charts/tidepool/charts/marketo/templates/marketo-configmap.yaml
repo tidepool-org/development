@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+{{ with .Values.configmap.data_ }}
+data:
+  ClinicRole: {{ .ClinicRole | default "" }}
+  PatientRole: {{ .PatientRole | default "" }}
+  Timeout: {{ .Timeout | default "15000000" | quote }}
+{{- end }}
+kind: ConfigMap
+metadata:
+  name: marketo
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: marketo

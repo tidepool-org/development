@@ -1,0 +1,11 @@
+enabled: true
+deployment:
+  podAnnotations: {}
+  image: tidepool/platform-migrations:PR-master-ce332730900058846e113e9820b60f41a3a95313
+resources: {}
+securityContext: {}
+hpa:
+  enabled: false
+pdb:
+  enabled: false
+  minAvailable: 1

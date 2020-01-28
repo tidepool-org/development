@@ -1,0 +1,106 @@
+---
+{{- define "charts.hydrophone.s3.url" -}} {{include "charts.s3.url" .}}/{{ .Values.deployment.env.store.s3.bucket }} {{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hydrophone
+{{ include "charts.labels.standard" .}}
+  name: hydrophone
+  namespace: {{.Release.Namespace}}
+  annotations:
+{{ if .Values.deployment.annotations }}
+    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: hydrophone
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: {{ .Values.deployment.replicas | default 1 }}
+  template:
+    metadata:
+{{ if .Values.podAnnotations }}
+      annotations:
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
+      labels:
+        app: hydrophone
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      initContainers:
+      {{ include "charts.init.shoreline" .}}
+{{ if .Values.serviceAccount.name }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+{{- end }}
+      containers:
+      - env:
+        {{ include "charts.mongo.params" .}}
+        - name: TIDEPOOL_STORE_DATABASE
+          value: confirm
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server
+              key: ServiceAuth
+        - name: REGION
+          value: {{.Values.global.region}}
+        - name: TIDEPOOL_HYDROPHONE_ENV
+          value: |
+            {
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.global.ports.gatekeeper}}"]}},
+                "hakken": {
+                  "host": "hakken",
+                  "skipHakken": true
+                },
+                "highwater": {
+                    "metricsSource": "hydrophone",
+                    "metricsVersion": "v0.0.1",
+                    "name": "highwater",
+                    "serviceSpec": {"type": "static", "hosts": ["http://highwater:{{.Values.global.ports.highwater}}"]}
+                },
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.global.ports.seagull}}"]}},
+                "shoreline": {
+                    "name": "hydrophone",
+                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:{{.Values.global.ports.shoreline}}"]},
+                    "tokenRefreshInterval": "1h"
+                }
+            }
+        - name: PROTOCOL
+          value: "{{ .Values.global.gateway.default.protocol }}"
+        - name: TIDEPOOL_HYDROPHONE_SERVICE
+          value: |
+            {
+                "hydrophone": {
+                    "assetUrl": {{- include "charts.hydrophone.s3.url" . | quote }},
+                    "webUrl": {{- include "charts.host.external.tp" . | quote }}
+                },
+                "mongo": {
+                    "connectionString": ""
+                },
+                "service": {
+                    "host": "localhost:{{.Values.global.ports.hydrophone}}",
+                    "protocol": "http",
+                    "service": "hydrophone"
+                },
+                "sesEmail": {
+                    "fromAddress": "{{.Values.deployment.env.fromAddress}}"
+                }
+            }
+        image: "{{ .Values.deployment.image }}"
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: {{.Values.global.ports.hydrophone}}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: hydrophone
+        ports:
+        - containerPort: {{.Values.global.ports.hydrophone}}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      restartPolicy: Always

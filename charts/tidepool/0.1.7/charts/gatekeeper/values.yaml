@@ -1,8 +1,0 @@
-deployment:
-  podAnnotations: {}
-  image: tidepool/gatekeeper:develop-6a0e3e6d83552ce378b21d76354973dcb95c9fa1
-resources: {}
-securityContext: {}
-hpa:
-  enabled: false
-nodeEnvironment: production 

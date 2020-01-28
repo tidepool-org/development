@@ -20,23 +20,22 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        "sidecar.istio.io/inject": "false"
       labels:
         app: mongodb
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-{{ if .Values.mongodb.persistent }}
+{{- if .Values.mongodb.persistent }}
       volumes:
       - name: '{{.Values.mongodb.volume}}'
         persistentVolumeClaim:
-{{ if .Values.mongodb.hostPath }}
+          claimName: {{.Values.mongodb.volume}}
+{{- if .Values.mongodb.hostPath }}
         hostPath:
           path: '{{.Values.mongodb.hostPath}}'
           type: Directory
-{{ end }}
-{{ if .Values.mongodb.seed }}
+{{- end }}
+{{- if .Values.mongodb.seed }}
       - name: dump
         emptyDir: {}
           claimName: {{.Values.mongodb.volume}}
@@ -49,15 +48,15 @@ spec:
         volumeMounts:
         - mountPath: /input
           name: dump
-{{ end }}
-{{ end }}
+{{- end }}
+{{- end }}
       containers:
       - image: "{{ .Values.mongodb.image }}"
         name: mongo
         ports:
         - containerPort: {{.Values.mongodb.port}}
         resources: {}
-{{ if .Values.mongodb.seed }}
+{{- if .Values.mongodb.seed }}
       - image: "{{ .Values.mongodb.image }}"
         name: seeder
         volumeMounts:
@@ -72,10 +71,10 @@ spec:
             - /dump/ready
           initialDelaySeconds: 3
           periodSeconds: 5
-{{ end }}
-{{ if .Values.mongodb.persistent }}
+{{- end }}
+{{- if .Values.mongodb.persistent }}
         volumeMounts:
         - mountPath: /data/db
           name: {{.Values.mongodb.volume}}
-{{ end }}
+{{- end }}
       restartPolicy: Always

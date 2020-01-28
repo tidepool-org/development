@@ -1,0 +1,21 @@
+configmap:
+  enabled: false
+  data:
+    ClinicDemoUserId: ""
+secret:
+  enabled: false
+  data_:
+    ServiceAuth: ""
+    UserLongTermKey:
+    UserMailVerification: ""
+    ClinicDemoUserId: ""
+deployment:
+  podAnnotations: {}
+  image: tidepool/shoreline:master-66e766fffb4058781a24740b6a809bb12e2d08a9
+resources: {}
+securityContext: {}
+hpa:
+  enabled: false
+pdb:
+  enabled: false
+  minAvailable: 1

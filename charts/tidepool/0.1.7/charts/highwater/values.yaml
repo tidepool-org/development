@@ -1,8 +1,0 @@
-deployment:
-  podAnnotations: {}
-  image: tidepool/highwater:develop-aaefb43df9a132f6c012f7216952e8650e6f6b4a
-resources: {}
-securityContext: {}
-hpa:
-  enabled: false
-nodeEnvironment: production 

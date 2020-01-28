@@ -21,6 +21,7 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [With The Tidepool Helper Script (recommended)](#with-the-tidepool-helper-script-recommended)
   - [Without The Tidepool Helper Script](#without-the-tidepool-helper-script)
   - [Monitor Kubernetes State With K9s (Optional)](#monitor-kubernetes-state-with-k9s-optional)
+  - [Add CPU/MEM Usage Metrics (Optional)](#add-cpumem-usage-metrics-optional)
 - [Using Tidepool](#using-tidepool)
   - [Creating An Account](#creating-an-account)
   - [Verifying An Account Email](#verifying-an-account-email)
@@ -96,7 +97,17 @@ kubectl version
 
 The Tidepool services (and supporting services such as the [MongoDB](https://www.mongodb.com/) database and the [Gloo Gateway](https://gloo.solo.io/) for routing requests) are defined by [Helm](https://helm.sh/) templates, which the `helm` tool uses to convert into manifests that can be applied to the our local [Kubernetes](https://kubernetes.io/) (K8s) cluster.
 
-Please install the `helm` CLI tool via the [Helm Installation Instructions](https://helm.sh/docs/using_helm/#installing-helm).
+**IMPORTANT NOTE:** We currently run against version `v3.0.2` of Helm, so be sure to install the correct version when following the [Helm Installation Instructions](https://helm.sh/docs/intro/install/#from-the-binary-releases).
+
+```bash
+# MacOS
+curl -fsSL https://get.helm.sh/helm-v3.0.2-darwin-amd64.tar.gz | tar -xzv darwin-amd64 && sudo mv darwin-amd64/helm /usr/local/bin/helm
+
+# Linux
+curl -fsSL https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz | tar -xzv linux-amd64 && sudo mv linux-amd64/helm /usr/local/bin/helm
+```
+
+After installing Helm, you can verify the correct version by typing `helm version` in your terminal.
 
 ## Install Tilt
 
@@ -104,14 +115,14 @@ Managing a K8s cluster can be very challenging, and even more so when using one 
 
 By using our Tilt setup, developers can very easily run a live-reloading instance of any of our frontend or backend services without needing to directly use or understand Helm or Kubernetes. All that's needed is uncommenting a couple of lines in a `Tiltconfig.yaml` file, and updating the local paths to where the developer has checked out the respective git repo, if different than the default defined in the config.
 
-**IMPORTANT NOTE:** We currently run against version `v0.10.8` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
+**IMPORTANT NOTE:** We currently run against version `v0.11.0` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
 
 ```bash
 # MacOS
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.10.8/tilt.0.10.8.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.11.0/tilt.0.11.0.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 
 # Linux
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.10.8/tilt.0.10.8.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.11.0/tilt.0.11.0.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 ```
 
 After installing Tilt, you can verify the correct version by typing `tilt version` in your terminal.
@@ -253,36 +264,6 @@ docker-compose -f 'docker-compose.k8s.yml' up -d
 
 ### Retrieve and store the Kubernetes server config
 
-| Repository Name                                                  | Docker Container Name (`<docker-container-name>`) | Description                     | Language                       | Git Clone URL (`<git-clone-url>`)                  | Default Clone Directory (`<default-clone-directory>`)     |
-| ---------------------------------------------------------------- | ------------------------------------------------- | ------------------------------- | ------------------------------ | -------------------------------------------------- | --------------------------------------------------------- |
-| [blip](https://github.com/tidepool-org/blip)                     | blip                                              | Web (ie. http://localhost:3000) | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/blip.git           | blip                                                      |
-| [export](https://github.com/tidepool-org/export)                 | export                                            | Export                          | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/export.git         | export                                                    |
-| [gatekeeper](https://github.com/tidepool-org/gatekeeper)         | gatekeeper                                        | Permissions                     | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/gatekeeper.git     | gatekeeper                                                |
-| [hakken](https://github.com/tidepool-org/hakken)                 | hakken                                            | Discovery                       | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/hakken.git         | hakken                                                    |
-| [highwater](https://github.com/tidepool-org/highwater)           | highwater                                         | Metrics                         | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/highwater.git      | highwater                                                 |
-| [hydrophone](https://github.com/tidepool-org/hydrophone)         | hydrophone                                        | Email, Invitations              | [Golang](https://golang.org/)  | https://github.com/tidepool-org/hydrophone.git     | hydrophone/src/github.com/tidepool-org/hydrophone         |
-| [jellyfish](https://github.com/tidepool-org/jellyfish)           | jellyfish                                         | Data Ingestion [LEGACY]         | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/jellyfish.git      | jellyfish                                                 |
-| [message-api](https://github.com/tidepool-org/message-api)       | message-api                                       | Notes                           | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/message-api.git    | message-api                                               |
-| [platform](https://github.com/tidepool-org/platform)             | (see below)                                       | (see below)                     | [Golang](https://golang.org/)  | https://github.com/tidepool-org/platform.git       | platform/src/github.com/tidepool-org/platform             |
-| [seagull](https://github.com/tidepool-org/seagull)               | seagull                                           | Metadata                        | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/seagull.git        | seagull                                                   |
-| [shoreline](https://github.com/tidepool-org/shoreline)           | shoreline                                         | Authentication                  | [Golang](https://golang.org/)  | https://github.com/tidepool-org/shoreline.git      | shoreline/src/github.com/tidepool-org/shoreline           |
-| [styx](https://github.com/tidepool-org/styx)                     | styx                                              | Router                          | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/styx.git           | styx                                                      |
-| [tide-whisperer](https://github.com/tidepool-org/tide-whisperer) | tide-whisperer                                    | Download                        | [Golang](https://golang.org/)  | https://github.com/tidepool-org/tide-whisperer.git | tide-whisperer/src/github.com/tidepool-org/tide-whisperer |
-
-Please note that the `platform` repository actually contains source code for multiple Docker containers, specifically:
-
-| Docker Container Name | Description                      |
-| --------------------- | -------------------------------- |
-| platform-auth         | Authentication                   |
-| platform-blob         | Blob Storage                     |
-| platform-data         | Data Ingestion (next generation) |
-| platform-image        | Images                           |
-| platform-migrations   | Database Migrations              |
-| platform-notification | Notifications (TBD)              |
-| platform-task         | Background Jobs                  |
-| platform-tools        | Tools, Utilities                 |
-| platform-user         | Users                            |
-
 ```bash
 docker-compose -f 'docker-compose.k8s.yml' logs -f server
 ```
@@ -339,6 +320,20 @@ After [Installing the k9s CLI](https://github.com/derailed/k9s#installation), yo
 ```bash
 k9s
 ```
+
+## Add CPU/MEM Usage Metrics (Optional)
+
+If you would like to see metrics for CPU and Memory usage in, for instance, the K9s UI, you'll need to install the kubernetes `metrics-server` service.
+
+This can be done with the `tidepool` helper script:
+
+```bash
+tidepool server-init-metrics
+```
+
+This only needs to be run once. After the running the command, and each time the server starts up, it will take a minute or two before the metrics start showing up.
+
+If you're running the K9s UI during the initial deployment, you'll need to restart it to see the metrics coming in.
 
 [[back to top]](#welcome)
 
@@ -907,10 +902,10 @@ Currently, there is a known issue where at times the gateway proxy service that 
 
 This will present itself usually with the web app getting stuck in a loading state in the browser, or possibly resolving with an error message like: `‘No healthy upstream on blip (http://localhost:3000)`
 
-The solution is to restart the `gateway-proxy-v2` service, which should instantly restore access:
+The solution is to restart the `gateway-proxy` service, which should instantly restore access:
 
 ```bash
-tidepool restart gateway-proxy-v2
+tidepool restart gateway-proxy
 
 # or use the built-in shortcut
 tidepool restart-proxy

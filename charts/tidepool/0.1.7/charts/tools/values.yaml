@@ -1,8 +1,0 @@
-enabled: true
-deployment:
-  podAnnotations: {}
-  image: tidepool/platform-tools:develop-e95a3af6080aab5b845d1531015f0c5fd7134f80
-resources: {}
-securityContext: {}
-hpa:
-  enabled: false

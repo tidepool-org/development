@@ -18,6 +18,9 @@ USAGE: tidepool command [service] [...additional args]
   server-set-config               Save Kubernetes server config to ~/.kube/config. Required only
                                   after the initial provisioning
 
+  server-init-metrics             Initializes a metrics-server deployment to allow viewing CPU and
+                                  MEM usage metrics for all cluster resources
+
   server-docker [...cmds]         Run docker commands within the context of the Kubernetes server
   server-exec [...cmds]           Run shell commands in the Kubernetes server container
 
@@ -110,10 +113,29 @@ destroy() {
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
-    run_docker_compose rm -fsv
+    cd ${DIR} && run_docker_compose rm -fsv
+    rm -r ${DIR}/local/charts
   else
     echo "Destroy command aborted"
   fi
+}
+
+init_metrics_server() {
+    cd ${DIR} && docker-compose -f 'docker-compose.k8s.yml' exec server sh -c "if ! grep -qF 'authentication-token-webhook=true' kubelet.sh; then sed -i '/--authorization-mode=Webhook/a --authentication-token-webhook=true \\\' kubelet.sh; fi"
+
+    # Restart the server and wait till ready
+    cd ${DIR} && run_docker_compose restart
+    set_kubeconfig
+
+    # Wait until kubectl ready
+    until kubectl cluster-info; do
+      sleep 5;
+    done
+
+    # (Re)Install metrics server
+    helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+    helm uninstall metrics-server || true
+    helm install metrics-server stable/metrics-server -f ${DIR}/local/metrics-server.yml
 }
 
 case ${1-help} in
@@ -121,6 +143,7 @@ case ${1-help} in
   server-stop) (cd ${DIR} && run_docker_compose stop ${2-});;
   server-logs) (cd ${DIR} && run_docker_compose logs --tail=100 -f server);;
   server-set-config) set_kubeconfig;;
+  server-init-metrics) init_metrics_server;;
   server-docker) run_docker "${@:2}";;
   server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
   server-prune) (run_docker "system prune --volumes -af");;
@@ -133,6 +156,6 @@ case ${1-help} in
   yarn) run_yarn ${2} "${@:3}";;
   port-forward) (cd ${DIR} && kubectl port-forward svc/${2} ${3});;
   verify-account-email) mongo_exec "mongo --eval 'db.users.update({username: \"${@:2}\"},{\$set:{\"authenticated\":true}});' user";;
-  restart-proxy) restart gateway-proxy-v2;;
+  restart-proxy) restart gateway-proxy;;
   *) usage;;
 esac

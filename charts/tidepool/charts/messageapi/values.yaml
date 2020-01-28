@@ -1,0 +1,13 @@
+deployment:
+  podAnnotations: {}
+  image: tidepool/message-api:master-73e5dc0b12f03bc0ec1428cde45520317dbf4688
+  env:
+    window: 21
+resources: {}
+securityContext: {}
+hpa:
+  enabled: false
+nodeEnvironment: production
+pdb:
+  enabled: false
+  minAvailable: 1

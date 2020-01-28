@@ -1,0 +1,11 @@
+deployment:
+  podAnnotations: {}
+  image: tidepool/seagull:master-0ac202bfccc0994d264b5fe9fcc06d2a56c55977
+resources: {}
+securityContext: {}
+hpa:
+  enabled: false
+nodeEnvironment: production
+pdb:
+  enabled: false
+  minAvailable: 1
