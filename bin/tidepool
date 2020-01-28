@@ -87,7 +87,7 @@ check_version() {
   if (echo a ${min}; ${pkg} ${version_cmd} | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/' | eval 'version=$(cat); echo "${pkg} $version"') | sort -Vk2 | tail -1 | grep -q ${pkg}; then
       echo "✔ ${pkg} is up to date"
   else
-      echo -e "✘ ${pkg} is out of date. Please install version >= ${min}"
+      echo "✘ ${pkg} is out of date. Please install version >= ${min}"
   fi
 }
 
