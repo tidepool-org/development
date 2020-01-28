@@ -84,7 +84,7 @@ check_version() {
   pkg=${1}
   version_cmd=${2}
   min=${3}
-  if (echo a ${min}; ${pkg} ${version_cmd} | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/' | eval 'version=$(cat); echo "${pkg} $version"') | sort -Vk2 | tail -1 | grep -q ${pkg}; then
+  if [ $([[ $($pkg $version_cmd) =~ [0-9\.]+ ]] && printf "${min}\n${BASH_REMATCH}" | sort -V | head -n1) = "$min" ]; then
       echo "✔ ${pkg} is up to date"
   else
       echo "✘ ${pkg} is out of date. Please install version >= ${min}"
