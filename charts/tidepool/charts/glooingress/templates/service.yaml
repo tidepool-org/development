@@ -1,3 +1,4 @@
+{{ $proxy := .Values.gateway.proxy }}
 ---
 apiVersion: v1
 kind: Service
@@ -7,7 +8,7 @@ metadata:
   labels:
 {{ include "charts.labels.standard" .}}
 spec:
-  externalName: {{ .Values.ingress.deployment.name }}.{{- .Values.ingress.deployment.namespace -}}.svc.cluster.local
+  externalName: {{ $proxy.name }}.{{ $proxy.namespace | default .Release.Namespace }}.svc.cluster.local
   ports:
-  - port: 80
+  - port: {{ $proxy.port }}
   type: ExternalName

@@ -1,13 +1,12 @@
-{{ if .Values.global.virtualServices.enabled }}
-{{- $spec := .Values.global.virtualServices.https }}
-{{- if $spec.enabled }}
+{{- $spec := .Values.virtualServices.https }}
+{{ if $spec.enabled }}
 {{- $port := $spec.port | default "443" }}
 {{- $hsts := $spec.hsts | default true }}
 ---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: https
+  name: {{ $spec.name }}
   namespace: '{{ .Release.Namespace }}'
   labels:
   {{- range $key, $value := $spec.labels }}
@@ -62,7 +61,6 @@ spec:
     - matchers:
       - prefix: '/'
       delegateAction:
-        name: {{ .Values.global.routeTable.name }}
+        name: {{ .Values.routeTable.name }}
         namespace: {{ .Release.Namespace }}
-{{- end }}
 {{- end }}
