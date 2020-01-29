@@ -37,10 +37,6 @@ spec:
         {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
-        - name: DOCKER_IMAGE
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.containers[0].image
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:
