@@ -271,9 +271,12 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
               preBuildCommand += 'cd {hostPath} && rm -rf packageMounts/{packageName};'.format(
                 hostPath=hostPath,
                 packageName=packageName,
-              );
+              )
 
-        buildCommand += ' --build-arg LINKED_PKGS={}'.format(','.join(activeLinkedPackages))
+        buildCommand += ' --build-arg LINKED_PKGS={linkedPackages} --build-arg ROLLBAR_POST_SERVER_TOKEN={rollbarPostServerToken}'.format(
+          linkedPackages=','.join(activeLinkedPackages),
+          rollbarPostServerToken=overrides.get('rollbarPostServerToken'),
+        )
 
       buildCommand += ' {}'.format(hostPath)
 
@@ -285,7 +288,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       if overrides.get('restartContainer', True):
         run_commands.append(restart_container())
 
-      live_update_commands = fallback_commands + sync_commands + run_commands;
+      live_update_commands = fallback_commands + sync_commands + run_commands
 
       custom_build(
         ref=getNested(overrides, 'deployment.image'),
