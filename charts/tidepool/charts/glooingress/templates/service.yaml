@@ -1,4 +1,4 @@
-{{ $proxy := .Values.gateway.proxy }}
+{{ $proxy := .Values.global.gateway.proxy }}
 ---
 apiVersion: v1
 kind: Service

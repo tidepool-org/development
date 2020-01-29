@@ -2,7 +2,7 @@
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
-  name: {{ .Values.gateway.proxy.name }}.{{ .Values.gateway.proxy.namespace }}.svc.cluster.local
+  name: {{ .Values.global.gateway.proxy.name }}.{{ .Values.global.gateway.proxy.namespace }}.svc.cluster.local
   namespace: '{{ .Release.Namespace }}'
 spec:
   routes:

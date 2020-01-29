@@ -1,11 +1,12 @@
 enabled: true                           # whether to enable the Gloo API Gateway integration
 discovery: {}
   #namespace:                           # namespace where the Gloo discovery service runs
-gateway:
-  proxy: 
-    name: "gateway-proxy"               # name of the Gloo gateway proxy that will host the virtual service
-    port: 80
-    #namespace:                         # namespace of the Gloo gateway proxy that will host the virtual service
+global:
+  gateway:
+    proxy: 
+      name: "gateway-proxy"               # name of the Gloo gateway proxy that will host the virtual service
+      #namespace:                         # namespace of the Gloo gateway proxy that will host the virtual service
+      port: 80
 routeTable:
   name: tidepool-routes                 # name to use for the routeTable that will route tidepool requests
 virtualServices:
