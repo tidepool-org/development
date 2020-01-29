@@ -1,4 +1,5 @@
 global:
+  maxTimeout: 120s
   fullnameOverride: ""                            #
   nameOverride: ""                                # the name to use for the helm chart, if given
   region: "us-west-2"                         # AWS region

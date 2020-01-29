@@ -1,3 +1,16 @@
+---
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: {{ .Values.gateway.proxy.name }}.{{ .Values.gateway.proxy.namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      pathRegex: '/.*'
+    name: all
+    timeout: {{ .Values.global.maxTimeout }}
+---
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
