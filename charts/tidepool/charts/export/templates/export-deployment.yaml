@@ -9,6 +9,7 @@ metadata:
   name: export
   namespace: {{.Release.Namespace}}
   annotations:
+    secret.reloader.stakater.com/reload: "export"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
