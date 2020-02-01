@@ -8,6 +8,7 @@ metadata:
   name: blob
   namespace: {{.Release.Namespace}}
   annotations:
+    secret.reloader.stakater.com/reload: "server,mongo,blob"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
