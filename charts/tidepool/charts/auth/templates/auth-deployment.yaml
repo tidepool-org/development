@@ -8,6 +8,8 @@ metadata:
   name: auth
   namespace: {{.Release.Namespace}}
   annotations:
+    secret.reloader.stakater.com/reload: "server,mongo,dexcom,auth"
+    configmap.reloader.stakater.com/reload: "dexcom"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
