@@ -9,6 +9,7 @@ metadata:
   name: hydrophone
   namespace: {{.Release.Namespace}}
   annotations:
+    secret.reloader.stakater.com/reload: "server,mongo"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}

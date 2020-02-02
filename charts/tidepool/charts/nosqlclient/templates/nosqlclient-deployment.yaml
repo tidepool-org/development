@@ -7,8 +7,9 @@ metadata:
 {{ include "charts.labels.standard" .}}
   name: nosqlclient
   namespace: {{.Release.Namespace}}
-{{ if .Values.deployment.annotations }}
   annotations:
+    secret.reloader.stakater.com/reload: "mongo"
+{{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
 spec:
