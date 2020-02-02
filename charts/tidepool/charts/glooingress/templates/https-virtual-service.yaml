@@ -28,6 +28,10 @@ spec:
     - '{{ if ne $port "443" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else -}} {{ printf "%s" $dnsName -}}{{- end -}}'
 {{- end  }}
     options:
+      stats:
+{{- if $spec.options.stats }}
+{{- toYaml $spec.options.stats | nindent 8 }}
+{{- end }}
       cors:
         allowCredentials: true
         allowHeaders:

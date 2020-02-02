@@ -14,6 +14,11 @@ metadata:
 spec:
   displayName: http
   virtualHost:
+{{- if $spec.options.stats }}
+    options:
+      stats:
+{{- toYaml $spec.options.stats | nindent 8 }}
+{{- end }}
     domains:
 {{ if and $spec.serveAllDomains }}
     - '*'
