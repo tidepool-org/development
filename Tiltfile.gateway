@@ -5,8 +5,7 @@ tidepool_helm_overrides_file = getHelmOverridesFile()
 config = getConfig()
 watch_file(tidepool_helm_overrides_file)
 
-tidepool_helm_charts_version = config.get('tidepool_helm_charts_version')
-tidepool_helm_chart_dir = "./charts/tidepool/{}".format(tidepool_helm_charts_version)
+tidepool_helm_chart_dir = "./charts/tidepool"
 
 gloo_chart_dir = './local/charts'
 absolute_gloo_chart_dir = getAbsoluteDir(gloo_chart_dir)
