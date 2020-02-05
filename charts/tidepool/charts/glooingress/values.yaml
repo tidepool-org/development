@@ -16,15 +16,18 @@ virtualServices:
     enabled: true                       # whether to accept HTTP requests
     redirect: false                     # whether to redirect HTTP requests to HTTPS
     labels: {}
+    options: {}
   https:
     name: https
     dnsNames: []                        # DNS names served with HTTPS
     enabled: false                      # whether to serve HTTPS
     hsts: false                         # whether to require Strict Transport Security
     labels: {}
+    options: {}
   httpInternal:
     name: http-internal
     labels: {}
+    options: {}
 gloo:
   enabled: false                        # whether to install the Gloo API Gateway control plane
   crds:                                 

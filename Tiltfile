@@ -5,8 +5,7 @@ tidepool_helm_overrides_file = getHelmOverridesFile()
 config = getConfig()
 watch_file(tidepool_helm_overrides_file)
 
-tidepool_helm_charts_version = config.get('tidepool_helm_charts_version')
-tidepool_helm_chart_dir = "./charts/tidepool/{}".format(tidepool_helm_charts_version)
+tidepool_helm_chart_dir = "./charts/tidepool"
 
 is_shutdown = isShutdown()
 ### Config End ###

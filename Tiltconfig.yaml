@@ -3,7 +3,6 @@
 # parameters, and update the `hostPath` if you've checked the repo out to a different location.
 
 ### Global Config Start ###
-tidepool_helm_charts_version: '0.1.7' # Version of the Tidepool helm charts to deploy.
 
 global:
   gateway:
