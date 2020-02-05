@@ -99,10 +99,10 @@ userdata:
 auth:
   deployment:
     # image: tidepool-k8s-auth
-  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  # hostPath: ../platform
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.auth'
-  rebuildCommand: 'make service-build'
+  rebuildCommand: 'SERVICE=auth make service-build'
 
 blip:
   deployment:
@@ -136,18 +136,18 @@ blip:
 blob:
   deployment:
     # image: tidepool-k8s-blob
-  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  # hostPath: ../platform
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.blob'
-  rebuildCommand: 'make service-build'
+  rebuildCommand: 'SERVICE=blob make service-build'
 
 data:
   deployment:
     # image: tidepool-k8s-data
-  # hostPath: '~/go/src/github.com/tidepool-org/platform'
-  containerPath: '/go/src/github.com/tidepool-org/platform'
+  # hostPath: ../platform
+  containerPath: ../platform
   dockerFile: 'Dockerfile.data'
-  rebuildCommand: 'make service-build'
+  rebuildCommand: 'SERVICE=data make service-build'
 
 export:
   deployment:
@@ -170,17 +170,17 @@ highwater:
 hydrophone:
   deployment:
     # image: tidepool-k8s-hydrophone
-  # hostPath: '~/go/src/github.com/tidepool-org/hydrophone'
+  # hostPath: ../hydrophone
   containerPath: '/go/src/github.com/tidepool-org/hydrophone'
   rebuildCommand: './build.sh'
 
 image:
   deployment:
     # image: tidepool-k8s-image
-  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  # hostPath: ../platform
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.image'
-  rebuildCommand: 'make service-build'
+  rebuildCommand: 'SERVICE=image make service-build'
 
 jellyfish:
   deployment:
@@ -197,18 +197,18 @@ message-api:
 migrations:
   deployment:
     # image: tidepool-k8s-migrations
-  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  # hostPath: ../platform
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.migrations'
-  rebuildCommand: 'make service-build'
+  rebuildCommand: 'SERVICE=migrations make service-build'
 
 notification:
   deployment:
     # image: tidepool-k8s-notification
-  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  # hostPath: ../platform
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.notification'
-  rebuildCommand: 'make service-build'
+  rebuildCommand: 'SERVICE=notification make service-build'
 
 seagull:
   deployment:
@@ -219,7 +219,7 @@ seagull:
 shoreline:
   deployment:
     # image: tidepool-k8s-shoreline
-  # hostPath: '~/go/src/github.com/tidepool-org/shoreline'
+  # hostPath: ../shoreline
   containerPath: '/go/src/github.com/tidepool-org/shoreline'
   rebuildCommand: './build.sh'
   configmap:
@@ -230,31 +230,31 @@ shoreline:
 task:
   deployment:
     # image: tidepool-k8s-task
-  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  # hostPath: ../platform
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.task'
-  rebuildCommand: 'make service-build'
+  rebuildCommand: 'SERVICE=task make service-build'
 
 tide-whisperer:
   deployment:
     # image: tidepool-k8s-tide-whisperer
-  # hostPath: '~/go/src/github.com/tidepool-org/tide-whisperer'
+  # hostPath: ../tide-whisperer
   containerPath: '/go/src/github.com/tidepool-org/tide-whisperer'
   rebuildCommand: './build.sh'
 
 tools:
   deployment:
     # image: tidepool-k8s-tools
-  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  # hostPath: ../platform
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.tools'
-  rebuildCommand: 'make service-build'
+  rebuildCommand: 'SERVICE=tools make service-build'
 
 user:
   deployment:
     # image: tidepool-k8s-user
-  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  # hostPath: ../platform
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.user'
-  rebuildCommand: 'make service-build'
+  rebuildCommand: 'SERVICE=user make service-build'
 ### Tidepool Services Config End ###
