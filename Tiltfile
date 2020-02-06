@@ -197,7 +197,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       run_commands = []
       build_deps = [hostPath]
 
-      buildCommand = 'docker build --file {dockerFile} -t $EXPECTED_REF'.format(
+      buildCommand = 'DOCKER_BUILDKIT=1 docker build --file {dockerFile} -t $EXPECTED_REF'.format(
         dockerFile='{}/{}'.format(hostPath, dockerFile),
         target=target,
       )
@@ -259,7 +259,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
 
             if not is_shutdown:
               # Copy the package source into the Dockerfile build context
-              preBuildCommand += 'cd {hostPath} && mkdir -p packageMounts/{packageName} && rsync -a --delete --exclude "node_modules" --exclude ".git" --exclude "dist" --exclude "coverage" {packageHostPath}/ {hostPath}/packageMounts/{packageName};'.format(
+              preBuildCommand += 'cd {hostPath} && mkdir -p packageMounts/{packageName} && rsync -a --delete --exclude "node_modules" --exclude "stub" --exclude ".git" --exclude "dist" --exclude "coverage" {packageHostPath}/ {hostPath}/packageMounts/{packageName};'.format(
                 hostPath=hostPath,
                 packageHostPath=packageHostPath,
                 packageName=packageName,
@@ -268,7 +268,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
           else:
             if not is_shutdown:
               # Remove the package source from the Dockerfile build context
-              preBuildCommand += 'cd {hostPath} && rm -rf packageMounts/{packageName};'.format(
+              preBuildCommand += 'cd {hostPath}/packageMounts/{packageName} && find . -type f -not -name \'stub\' -delete && find . -type d -empty -delete;'.format(
                 hostPath=hostPath,
                 packageName=packageName,
               );
