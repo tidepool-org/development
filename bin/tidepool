@@ -103,7 +103,7 @@ doctor() {
   set +u
   echo "Checking dependancy versions..."
   check_version helm 'version --short' 3.0.2
-  check_version tilt 'version' 0.11.0
+  check_version tilt 'version' 0.11.4
   check_version docker '-v' 19.0.0
   check_version docker-compose '-v' 1.25.0
   check_version kubectl 'version --client --short' 1.15.1
@@ -139,10 +139,14 @@ set_tilt_env() {
   esac
 }
 
-set_kubeconfig() {
+wait_for_kubernetes_ready() {
   until curl -s --fail http://127.0.0.1:10080/kubernetes-ready; do
     sleep 1;
   done
+}
+
+set_kubeconfig() {
+  wait_for_kubernetes_ready
   curl http://127.0.0.1:10080/config > ~/.kube/config
 }
 
@@ -158,15 +162,26 @@ destroy() {
   fi
 }
 
+server_init() {
+  $0 server-start
+  set_kubeconfig
+  init_metrics_server
+}
+
+server_set_experimental() {
+  # Set docker to experimental mode
+  cd ${DIR} && docker-compose -f 'docker-compose.k8s.yml' exec server sh -c "if ! grep -qF '\"experimental\": true' /etc/docker/daemon.json; then echo $'{\n    \"experimental\": true\n}' | sudo tee /etc/docker/daemon.json; fi"
+}
+
 init_metrics_server() {
     cd ${DIR} && docker-compose -f 'docker-compose.k8s.yml' exec server sh -c "if ! grep -qF 'authentication-token-webhook=true' kubelet.sh; then sed -i '/--authorization-mode=Webhook/a --authentication-token-webhook=true \\\' kubelet.sh; fi"
 
     # Restart the server and wait till ready
     cd ${DIR} && run_docker_compose restart
-    set_kubeconfig
+    wait_for_kubernetes_ready
 
     # Wait until kubectl ready
-    until kubectl cluster-info; do
+    until kubectl get nodes; do
       sleep 5;
     done
 
@@ -181,7 +196,7 @@ case ${1-help} in
   server-stop) (cd ${DIR} && run_docker_compose stop ${2-});;
   server-logs) (cd ${DIR} && run_docker_compose logs --tail=100 -f server);;
   server-set-config) set_kubeconfig;;
-  server-init-metrics) init_metrics_server;;
+  server-init) server_init;;
   server-docker) run_docker "${@:2}";;
   server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
   server-prune) (run_docker "system prune --volumes -af");;
