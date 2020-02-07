@@ -295,7 +295,6 @@ spec:
         upstream:
           name: {{ .Release.Namespace }}-jellyfish-{{ $ports.jellyfish }}
           namespace: {{ $discoveryNamespace }}
-
   - matchers:
     - methods:
       - GET
@@ -597,6 +596,7 @@ spec:
           namespace: {{ $discoveryNamespace }}
     options:
       prefixRewrite: /
+      timeout: "60s"
   - matchers:
     - methods:
       - GET
