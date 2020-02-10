@@ -115,6 +115,11 @@ blip:
   webpackPublicPath: 'http://localhost:3000'
   disableDevTools: false # Suggest changing to `true` if working with large data sets in local development build
   linkedPackages:
+    - name: viz
+      packageName: '@tidepool/viz'
+      hostPath: ../viz
+      enabled: false
+
     - name: tideline
       packageName: tideline
       hostPath: ../tideline
@@ -123,11 +128,6 @@ blip:
     - name: tidepool-platform-client
       packageName: tidepool-platform-client
       hostPath: ../platform-client
-      enabled: false
-
-    - name: viz
-      packageName: '@tidepool/viz'
-      hostPath: ../viz
       enabled: false
   securityContext: *global-security-context
   buildTarget: development # set to `production` to run minified production builds
