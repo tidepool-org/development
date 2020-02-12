@@ -160,7 +160,7 @@ Create liveness and readiness probes for platform services.
 {{- end -}} 
 {{- define "charts.init.shoreline" -}}
       - name: init-shoreline
-        image: busybox
+        image: busybox:1.31.1
         command: ['sh', '-c', 'until nc -zvv shoreline {{.Values.global.ports.shoreline}}; do echo waiting for shoreline; sleep 2; done;']
 {{- end -}} 
 
