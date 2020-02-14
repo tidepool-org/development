@@ -12,3 +12,4 @@ dependencies:
   repository: "https://kubernetes-charts.storage.googleapis.com/"
   condition: mongodb.enabled
 
+home: https://github.com/tidepool-org/development/charts

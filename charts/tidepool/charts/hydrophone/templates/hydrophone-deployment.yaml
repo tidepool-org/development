@@ -48,6 +48,14 @@ spec:
               key: ServiceAuth
         - name: REGION
           value: {{.Values.global.region}}
+        - name: SHORELINE_HOST
+          value: "http://shoreline:{{.Values.global.ports.shoreline}}"
+        - name: SEAGULL_HOST
+          value: "http://seagull:{{.Values.global.ports.seagull}}"
+        - name: GATEKEEPER_HOST
+          value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
+        - name: HIGHWATER_HOST
+          value: "http://highwater:{{.Values.global.ports.highwater}}"
         - name: TIDEPOOL_HYDROPHONE_ENV
           value: |
             {
