@@ -216,19 +216,13 @@ Once you've completed the [Initial Setup](#initial-setup), getting the Tidepool 
 
 ## With The Tidepool Helper Script (recommended)
 
-### Start the kubernetes server
+### Start the kubernetes server and store the Kubernetes server config locally
 
 ```bash
-tidepool server-start
+tidepool server-init
 ```
 
-### Retrieve and store the Kubernetes server config
-
-```bash
-tidepool server-set-config
-```
-
-This will save the Kubernetes server config to `~/.kube/config`. This is only required after the initial server start provisioning.
+This will save the Kubernetes server config to `~/.kube/config`. This is only required for the initial server provisioning.
 
 ### Start the tidepool services
 
