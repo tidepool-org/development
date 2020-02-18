@@ -38,7 +38,7 @@ spec:
       - env:
         {{ include "charts.mongo.params" .}}
         - name: IS_SHADOW
-          value: {{ .Values.deployment.isShadow | default false }}
+          value: {{ .Values.deployment.isShadow | default false  | quote }}
         - name: TIDEPOOL_STORE_DATABASE
           value: user
         - name: MARKETO_CLINIC_ROLE
