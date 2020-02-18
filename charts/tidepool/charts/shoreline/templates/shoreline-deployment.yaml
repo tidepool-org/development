@@ -37,6 +37,8 @@ spec:
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
+        - name: IS_SHADOW
+          value: {{ .Values.deployment.isShadow | default false }}
         - name: TIDEPOOL_STORE_DATABASE
           value: user
         - name: MARKETO_CLINIC_ROLE
