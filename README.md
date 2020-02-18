@@ -21,7 +21,6 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [With The Tidepool Helper Script (recommended)](#with-the-tidepool-helper-script-recommended)
   - [Without The Tidepool Helper Script](#without-the-tidepool-helper-script)
   - [Monitor Kubernetes State With K9s (Optional)](#monitor-kubernetes-state-with-k9s-optional)
-  - [Add CPU/MEM Usage Metrics (Optional)](#add-cpumem-usage-metrics-optional)
 - [Using Tidepool](#using-tidepool)
   - [Creating An Account](#creating-an-account)
   - [Verifying An Account Email](#verifying-an-account-email)
@@ -307,27 +306,13 @@ docker-compose -f 'docker-compose.k8s.yml' stop
 
 While the tilt terminal UI shows a good deal of information, there may be times as a developer that you want a little deeper insight into what's happening inside Kubernetes.
 
-[K9s](https://k9ss.io/) is a CLI tool that provides a terminal UI to interact with your Kubernetes clusters.  It allows you to view in realtime the status of your Kubernetes pods and services without needing to learn the intricacies of `kubectl`, the powerful-but-complex Kubernetes CLI tool.
+[K9s](https://k9ss.io/) is a CLI tool that provides a terminal UI to interact with your Kubernetes clusters.  It allows you to view in realtime the status of your Kubernetes pods and services, including CPU and memory usage metrics, without needing to learn the intricacies of `kubectl`, the powerful-but-complex Kubernetes CLI tool.
 
 After [Installing the k9s CLI](https://github.com/derailed/k9s#installation), you can simply start the Terminal UI with:
 
 ```bash
 k9s
 ```
-
-## Add CPU/MEM Usage Metrics (Optional)
-
-If you would like to see metrics for CPU and Memory usage in, for instance, the K9s UI, you'll need to install the kubernetes `metrics-server` service.
-
-This can be done with the `tidepool` helper script:
-
-```bash
-tidepool server-init-metrics
-```
-
-This only needs to be run once. After the running the command, and each time the server starts up, it will take a minute or two before the metrics start showing up.
-
-If you're running the K9s UI during the initial deployment, you'll need to restart it to see the metrics coming in.
 
 [[back to top]](#welcome)
 
