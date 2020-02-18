@@ -20,9 +20,6 @@ USAGE: tidepool command [service] [...additional args]
   server-stop                     Stop the Kubernetes server
   server-logs                     Tail logs for the Kubernetes server
 
-  server-set-config               Save Kubernetes server config to ~/.kube/config. Required only
-                                  after the initial provisioning
-
   server-docker [...cmds]         Run docker commands within the context of the Kubernetes server
   server-exec [...cmds]           Run shell commands in the Kubernetes server container
 
@@ -189,11 +186,10 @@ init_metrics_server() {
 }
 
 case ${1-help} in
+  server-init) server_init;;
   server-start) (cd ${DIR} && run_docker_compose up -d ${2-});;
   server-stop) (cd ${DIR} && run_docker_compose stop ${2-});;
   server-logs) (cd ${DIR} && run_docker_compose logs --tail=100 -f server);;
-  server-set-config) set_kubeconfig;;
-  server-init) server_init;;
   server-docker) run_docker "${@:2}";;
   server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
   server-prune) (run_docker "system prune --volumes -af" && run_docker "builder prune --all -f");;
