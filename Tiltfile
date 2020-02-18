@@ -215,7 +215,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
 
       # Run yarn install in container whenever yarn.lock changes on host
       run_commands.append(run(
-        'cd {} && yarn install --silent'.format(containerPath),
+        'cd {} && yarn install --silent --no-progress'.format(containerPath),
         trigger=[
           '{}/yarn.lock'.format(hostPath),
         ]
@@ -252,7 +252,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
 
             # Run yarn install in linked package directory when it's yarn.lock changes
             run_commands.append(run(
-              'cd /app/packageMounts/{} && yarn install --silent'.format(packageName),
+              'cd /app/packageMounts/{} && yarn install --silent --no-progress'.format(packageName),
               trigger=[
                 '{}/yarn.lock'.format(packageHostPath),
               ]
