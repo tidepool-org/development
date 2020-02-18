@@ -170,11 +170,6 @@ server_init() {
   init_metrics_server
 }
 
-server_set_experimental() {
-  # Set docker to experimental mode
-  cd ${DIR} && docker-compose -f 'docker-compose.k8s.yml' exec server sh -c "if ! grep -qF '\"experimental\": true' /etc/docker/daemon.json; then echo $'{\n    \"experimental\": true\n}' | sudo tee /etc/docker/daemon.json; fi"
-}
-
 init_metrics_server() {
     cd ${DIR} && docker-compose -f 'docker-compose.k8s.yml' exec server sh -c "if ! grep -qF 'authentication-token-webhook=true' kubelet.sh; then sed -i '/--authorization-mode=Webhook/a --authentication-token-webhook=true \\\' kubelet.sh; fi"
 
