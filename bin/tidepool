@@ -11,15 +11,14 @@ USAGE: tidepool command [service] [...additional args]
 
   ### Kubernetes Server Commands ###
 
+  server-init                     Used once to initially provision the k8s stack. Specifically, it:
+                                    1. Provisions and starts the Kubernetes server
+                                    2. Saves the Kubernetes server config to ~/.kube/config.
+                                    3. Deploys metrics-server to monitor CPU and MEM usage for resources
+
   server-start                    Start (and provision if needed) the Kubernetes server
   server-stop                     Stop the Kubernetes server
   server-logs                     Tail logs for the Kubernetes server
-
-  server-set-config               Save Kubernetes server config to ~/.kube/config. Required only
-                                  after the initial provisioning
-
-  server-init-metrics             Initializes a metrics-server deployment to allow viewing CPU and
-                                  MEM usage metrics for all cluster resources
 
   server-docker [...cmds]         Run docker commands within the context of the Kubernetes server
   server-exec [...cmds]           Run shell commands in the Kubernetes server container
@@ -103,7 +102,7 @@ doctor() {
   set +u
   echo "Checking dependancy versions..."
   check_version helm 'version --short' 3.0.2
-  check_version tilt 'version' 0.11.0
+  check_version tilt 'version' 0.11.4
   check_version docker '-v' 19.0.0
   check_version docker-compose '-v' 1.25.0
   check_version kubectl 'version --client --short' 1.15.1
@@ -139,10 +138,14 @@ set_tilt_env() {
   esac
 }
 
-set_kubeconfig() {
+wait_for_kubernetes_ready() {
   until curl -s --fail http://127.0.0.1:10080/kubernetes-ready; do
     sleep 1;
   done
+}
+
+set_kubeconfig() {
+  wait_for_kubernetes_ready
   curl http://127.0.0.1:10080/config > ~/.kube/config
 }
 
@@ -158,15 +161,21 @@ destroy() {
   fi
 }
 
+server_init() {
+  $0 server-start
+  set_kubeconfig
+  init_metrics_server
+}
+
 init_metrics_server() {
     cd ${DIR} && docker-compose -f 'docker-compose.k8s.yml' exec server sh -c "if ! grep -qF 'authentication-token-webhook=true' kubelet.sh; then sed -i '/--authorization-mode=Webhook/a --authentication-token-webhook=true \\\' kubelet.sh; fi"
 
     # Restart the server and wait till ready
     cd ${DIR} && run_docker_compose restart
-    set_kubeconfig
+    wait_for_kubernetes_ready
 
     # Wait until kubectl ready
-    until kubectl cluster-info; do
+    until kubectl get nodes; do
       sleep 5;
     done
 
@@ -177,16 +186,15 @@ init_metrics_server() {
 }
 
 case ${1-help} in
+  server-init) server_init;;
   server-start) (cd ${DIR} && run_docker_compose up -d ${2-});;
   server-stop) (cd ${DIR} && run_docker_compose stop ${2-});;
   server-logs) (cd ${DIR} && run_docker_compose logs --tail=100 -f server);;
-  server-set-config) set_kubeconfig;;
-  server-init-metrics) init_metrics_server;;
   server-docker) run_docker "${@:2}";;
   server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
-  server-prune) (run_docker "system prune --volumes -af");;
+  server-prune) (run_docker "system prune --volumes -af" && run_docker "builder prune --all -f");;
   server-destroy) (cd ${DIR} && destroy);;
-  start) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up --port=0 ${2-});;
+  start) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up -dv --port=0 ${2-});;
   stop) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
   restart) restart ${2-};;
   logs) (cd ${DIR} && kubectl logs svc/${2} --tail=100 -c ${2} -f);;

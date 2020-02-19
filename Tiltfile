@@ -197,7 +197,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       run_commands = []
       build_deps = [hostPath]
 
-      buildCommand = 'docker build --file {dockerFile} -t $EXPECTED_REF'.format(
+      buildCommand = 'DOCKER_BUILDKIT=1 docker build --file {dockerFile} -t $EXPECTED_REF'.format(
         dockerFile='{}/{}'.format(hostPath, dockerFile),
         target=target,
       )
@@ -215,10 +215,9 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
 
       # Run yarn install in container whenever yarn.lock changes on host
       run_commands.append(run(
-        'cd {} && yarn install --silent'.format(containerPath),
+        'cd {} && yarn install --silent --no-progress'.format(containerPath),
         trigger=[
           '{}/yarn.lock'.format(hostPath),
-          '{}/package-lock.json'.format(hostPath),
         ]
       ))
 
@@ -253,13 +252,15 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
 
             # Run yarn install in linked package directory when it's yarn.lock changes
             run_commands.append(run(
-              'cd /app/packageMounts/{} && yarn install --silent'.format(packageName),
-              trigger='{}/yarn.lock'.format(packageHostPath),
+              'cd /app/packageMounts/{} && yarn install --silent --no-progress'.format(packageName),
+              trigger=[
+                '{}/yarn.lock'.format(packageHostPath),
+              ]
             ))
 
             if not is_shutdown:
               # Copy the package source into the Dockerfile build context
-              preBuildCommand += 'cd {hostPath} && mkdir -p packageMounts/{packageName} && rsync -a --delete --exclude "node_modules" --exclude ".git" --exclude "dist" --exclude "coverage" {packageHostPath}/ {hostPath}/packageMounts/{packageName};'.format(
+              preBuildCommand += 'cd {hostPath} && mkdir -p packageMounts/{packageName} && rsync -a --delete --exclude "node_modules" --exclude "stub" --exclude ".git" --exclude "dist" --exclude "coverage" {packageHostPath}/ {hostPath}/packageMounts/{packageName};'.format(
                 hostPath=hostPath,
                 packageHostPath=packageHostPath,
                 packageName=packageName,
@@ -268,7 +269,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
           else:
             if not is_shutdown:
               # Remove the package source from the Dockerfile build context
-              preBuildCommand += 'cd {hostPath} && rm -rf packageMounts/{packageName};'.format(
+              preBuildCommand += 'cd {hostPath}/packageMounts/{packageName} && find . -type f -not -name \'stub\' -delete && find . -type d -empty -delete;'.format(
                 hostPath=hostPath,
                 packageName=packageName,
               )

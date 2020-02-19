@@ -13,7 +13,7 @@ coverage
 tmp
 web
 *.log
-*/packageMounts
-*/packageMountDeps
+packageMounts
 local/*
 !local/Tiltconfig.yaml
+package.json
