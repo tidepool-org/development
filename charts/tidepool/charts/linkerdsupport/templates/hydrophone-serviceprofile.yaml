@@ -1,0 +1,302 @@
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: hydrophone.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: {{ .Release.Namespace }}
+spec:
+  routes:
+  - condition:
+      method: PUT
+      pathRegex: /accept/forgot
+    name: PUT /confirm/accept/forgot
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 400
+          min: 400
+    - condition:
+        status:
+          max: 401
+          min: 401
+    - condition:
+        status:
+          max: 404
+          min: 404
+  - condition:
+      method: PUT
+      pathRegex: /accept/invite/[^/]*/[^/]*
+    name: PUT /confirm/accept/invite/{userId}/{invitedBy}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 400
+          min: 400
+    - condition:
+        status:
+          max: 403
+          min: 403
+    - condition:
+        status:
+          max: 404
+          min: 404
+    - condition:
+        status:
+          max: 500
+          min: 500
+      isFailure: true
+  - condition:
+      method: PUT
+      pathRegex: /accept/signup/[^/]*
+    name: PUT /confirm/accept/signup/{confirmKey}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 400
+          min: 400
+    - condition:
+        status:
+          max: 409
+          min: 409
+    - condition:
+        status:
+          max: 500
+          min: 500
+      isFailure: true
+  - condition:
+      method: PUT
+      pathRegex: /dismiss/invite/[^/]*/[^/]*
+    name: PUT /confirm/dismiss/invite/{userId}/{invitedBy}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 400
+          min: 400
+    - condition:
+        status:
+          max: 401
+          min: 401
+    - condition:
+        status:
+          max: 404
+          min: 404
+    - condition:
+        status:
+          max: 500
+          min: 500
+      isFailure: true
+  - condition:
+      method: PUT
+      pathRegex: /dismiss/signup/[^/]*
+    name: PUT /confirm/dismiss/signup/{userId}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 400
+          min: 400
+    - condition:
+        status:
+          max: 404
+          min: 404
+  - condition:
+      method: POST
+      pathRegex: /forgot/[^/]*
+    name: POST /confirm/forgot/{email}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 400
+          min: 400
+  - condition:
+      method: GET
+      pathRegex: /invitations/[^/]*
+    name: GET /confirm/invitations/{userId}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 400
+          min: 400
+    - condition:
+        status:
+          max: 401
+          min: 401
+  - condition:
+      method: GET
+      pathRegex: /invite/[^/]*
+    name: GET /confirm/invite/{userId}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 400
+          min: 400
+    - condition:
+        status:
+          max: 401
+          min: 401
+    - condition:
+        status:
+          max: 500
+          min: 500
+      isFailure: true
+  - condition:
+      method: POST
+      pathRegex: /resend/signup/[^/]*
+    name: POST /confirm/resend/signup/{email}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 404
+          min: 404
+    - condition:
+        status:
+          max: 500
+          min: 500
+      isFailure: true
+  - condition:
+      method: POST
+      pathRegex: /send/invite/[^/]*
+    name: POST /confirm/send/invite/{userId}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 400
+          min: 400
+    - condition:
+        status:
+          max: 401
+          min: 401
+    - condition:
+        status:
+          max: 500
+          min: 500
+      isFailure: true
+  - condition:
+      method: POST
+      pathRegex: /send/signup/[^/]*
+    name: POST /confirm/send/signup/{userId}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 400
+          min: 400
+    - condition:
+        status:
+          max: 401
+          min: 401
+    - condition:
+        status:
+          max: 403
+          min: 403
+    - condition:
+        status:
+          max: 500
+          min: 500
+      isFailure: true
+  - condition:
+      method: GET
+      pathRegex: /signup/[^/]*
+    name: GET /confirm/signup/{userId}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 400
+          min: 400
+    - condition:
+        status:
+          max: 401
+          min: 401
+    - condition:
+        status:
+          max: 404
+          min: 404
+    - condition:
+        status:
+          max: 500
+          min: 500
+      isFailure: true
+  - condition:
+      method: PUT
+      pathRegex: /signup/[^/]*
+    name: PUT /confirm/signup/{userId}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 400
+          min: 400
+    - condition:
+        status:
+          max: 404
+          min: 404
+  - condition:
+      method: PUT
+      pathRegex: /[^/]*/invited/[^/]*
+    name: PUT /confirm/{userId}/invited/{invitedAddress}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 400
+          min: 400
+    - condition:
+        status:
+          max: 401
+          min: 401
+    - condition:
+        status:
+          max: 500
+          min: 500
+      isFailure: true
