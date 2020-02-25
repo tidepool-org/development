@@ -1,0 +1,95 @@
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: gatekeeper.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: {{ .Release.Namespace }}
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /access/groups/[^/]*
+    name: GET /access/groups/{userId}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 401
+          min: 401
+    - condition:
+        status:
+          max: 404
+          min: 404
+    - condition:
+        status:
+          max: 500
+          min: 500
+      isFailure: true
+  - condition:
+      method: GET
+      pathRegex: /access/[^/]*
+    name: GET /access/{groupId}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 401
+          min: 401
+    - condition:
+        status:
+          max: 404
+          min: 404
+    - condition:
+        status:
+          max: 500
+          min: 500
+      isFailure: true
+  - condition:
+      method: GET
+      pathRegex: /access/[^/]*/[^/]*
+    name: GET /access/{groupId}/{userId}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 401
+          min: 401
+    - condition:
+        status:
+          max: 404
+          min: 404
+    - condition:
+        status:
+          max: 500
+          min: 500
+      isFailure: true
+  - condition:
+      method: POST
+      pathRegex: /access/[^/]*/[^/]*
+    name: POST /access/{groupId}/{userId}
+    responseClasses:
+    - condition:
+        status:
+          max: 200
+          min: 200
+    - condition:
+        status:
+          max: 401
+          min: 401
+    - condition:
+        status:
+          max: 404
+          min: 404
+    - condition:
+        status:
+          max: 500
+          min: 500
+      isFailure: true

@@ -494,34 +494,6 @@ spec:
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
 metadata:
-  name: gatekeeper.{{ .Release.Namespace }}.svc.cluster.local
-  namespace: '{{ .Release.Namespace }}'
-spec:
-  routes:
-  - condition:
-      method: GET
-      pathRegex: /access/status.*
-    name: /access/status_get_gatekeeper
-  - condition:
-      method: GET
-      pathRegex: /access/groups/.*
-    name: /access/groups/_get_gatekeeper
-  - condition:
-      method: GET
-      pathRegex: /access/[^/]+/[^/]+.*
-    name: /access/[^/]+/[^/]+_get_gatekeeper
-  - condition:
-      method: POST
-      pathRegex: /access/[^/]+/[^/]+.*
-    name: /access/[^/]+/[^/]+_post_gatekeeper
-  - condition:
-      method: GET
-      pathRegex: /access/[^/]+.*
-    name: /access/[^/]+_get_gatekeeper
----
-apiVersion: linkerd.io/v1alpha2
-kind: ServiceProfile
-metadata:
   name: tide-whisperer.{{ .Release.Namespace }}.svc.cluster.local
   namespace: '{{ .Release.Namespace }}'
 spec:
