@@ -9,6 +9,7 @@ deployment:
     store:
       s3:
         bucket: "data"
+        prefix: "blobs"
       file:
         prefix: "blobs"
         directory: "_data/blobs"                                            # directory to use if using local file storage

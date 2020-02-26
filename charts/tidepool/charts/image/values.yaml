@@ -13,6 +13,7 @@ deployment:
         prefix: "images"
       s3:
         bucket:  "data"
+        prefix: "images"
       type: file
       #type: s3
 resources: {}
