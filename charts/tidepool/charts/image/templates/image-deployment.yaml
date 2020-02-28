@@ -37,7 +37,7 @@ spec:
 {{- end }}
       containers:
       - env:
-        {{ include "charts.platform.env.mongo" .}}
+        {{ include "charts.mongo.params" . }}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
         - name: TIDEPOOL_IMAGE_SERVICE_SECRET

@@ -33,8 +33,6 @@ spec:
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
-        - name: TIDEPOOL_STORE_DATABASE
-          value: 'messages'
         - name: DISCOVERY_HOST
           value: 'hakken'
         - name: GATEKEEPER_SERVICE

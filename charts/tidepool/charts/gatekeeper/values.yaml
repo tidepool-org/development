@@ -9,3 +9,4 @@ nodeEnvironment: production
 pdb:
   enabled: false
   minAvailable: 1
+database: gatekeeper

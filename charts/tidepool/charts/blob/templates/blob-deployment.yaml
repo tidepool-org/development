@@ -40,7 +40,7 @@ spec:
         {{- toYaml .Values.securityContext | nindent 8 }}
       containers:
       - env:
-        {{ include "charts.platform.env.mongo" .}}
+        {{ include "charts.mongo.params" . }}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
         - name: TIDEPOOL_BLOB_SERVICE_SECRET

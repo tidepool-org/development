@@ -131,13 +131,9 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: mongo
               key: Tls
-{{ end }}
-
-{{ define "charts.platform.env.mongo" }}
-{{ include "charts.mongo.params" . }}
         - name: TIDEPOOL_STORE_DATABASE
-          value: tidepool
-{{ end }}        
+          value: {{ .Values.database }}
+{{ end }}
 
 {{/*
 Create liveness and readiness probes for platform services.

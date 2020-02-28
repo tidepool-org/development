@@ -37,8 +37,6 @@ spec:
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
-        - name: TIDEPOOL_STORE_DATABASE
-          value: 'data'
         - name: SKIP_HAKKEN
           value: "true"
         - name: DISCOVERY_HOST

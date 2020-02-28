@@ -36,8 +36,6 @@ spec:
       containers:
       - env:
         {{- include "charts.mongo.params" . }}
-        - name: TIDEPOOL_STORE_DATABASE
-          value: data
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:

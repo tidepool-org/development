@@ -25,3 +25,4 @@ hpa:
 pdb:
   enabled: false
   minAvailable: 1
+database: tidepool

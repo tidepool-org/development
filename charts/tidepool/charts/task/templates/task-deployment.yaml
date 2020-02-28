@@ -36,7 +36,7 @@ spec:
       {{ include "charts.init.shoreline" .}}
       containers:
       - env:
-        {{ include "charts.platform.env.mongo" .}}
+        {{ include "charts.mongo.params" . }}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
