@@ -71,4 +71,7 @@ spec:
         image: "{{ .Values.deployment.image }}"
         ports:
         - containerPort: {{ .Values.service.port }}
+{{- if .Values.extraContainers }}
+{{ toYaml .Values.extraContainers | indent 8}}
+{{- end }}
       restartPolicy: Always

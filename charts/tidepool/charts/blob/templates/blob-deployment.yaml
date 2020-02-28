@@ -65,4 +65,7 @@ spec:
         - containerPort: {{.Values.global.ports.blob}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
+{{- if .Values.extraContainers }}
+{{ toYaml .Values.extraContainers | indent 8}}
+{{- end }}
       restartPolicy: Always

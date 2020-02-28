@@ -69,6 +69,9 @@ spec:
 {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
+{{- if .Values.extraContainers }}
+{{ toYaml .Values.extraContainers | indent 8}}
+{{- end }}
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}
       restartPolicy: Always
