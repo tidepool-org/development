@@ -69,6 +69,13 @@ spec:
         - containerPort: {{.Values.global.ports.seagull}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          capabilities:
+            drop:
+            - ALL
 {{- if .Values.extraContainers }}
 {{ toYaml .Values.extraContainers | indent 8}}
 {{- end }}

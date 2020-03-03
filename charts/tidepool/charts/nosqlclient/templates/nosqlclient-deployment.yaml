@@ -71,6 +71,13 @@ spec:
         image: "{{ .Values.deployment.image }}"
         ports:
         - containerPort: {{ .Values.service.port }}
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          capabilities:
+            drop:
+            - ALL
 {{- if .Values.extraContainers }}
 {{ toYaml .Values.extraContainers | indent 8}}
 {{- end }}
