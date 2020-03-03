@@ -11,7 +11,7 @@ spec:
   ports:
   - name: "http"
     port: {{.Values.global.ports.notification}}
-    targetPort: {{.Values.global.ports.notification}}
+    targetPort: http
   selector:
     app: notification
     app.kubernetes.io/name: {{ include "charts.name" . }}

@@ -11,7 +11,7 @@ spec:
   ports:
   - name: "http"
     port: {{.Values.global.ports.messageapi}}
-    targetPort: {{.Values.global.ports.messageapi}}
+    targetPort: http
   selector:
     app: message-api
     app.kubernetes.io/name: {{ include "charts.name" . }}

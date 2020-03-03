@@ -11,7 +11,7 @@ spec:
   ports:
   - name: "http"
     port: {{.Values.global.ports.tidewhisperer}}
-    targetPort: {{.Values.global.ports.tidewhisperer}}
+    targetPort: http
   selector:
     app: tide-whisperer
     app.kubernetes.io/name: {{ include "charts.name" . }}

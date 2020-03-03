@@ -11,7 +11,7 @@ spec:
   ports:
   - name: "http"
     port: {{.Values.global.ports.highwater}}
-    targetPort: {{.Values.global.ports.highwater}}
+    targetPort: http
   selector:
     app: highwater
     app.kubernetes.io/name: {{ include "charts.name" . }}

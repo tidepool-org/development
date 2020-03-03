@@ -11,7 +11,7 @@ spec:
   ports:
   - name: "http"
     port: {{.Values.global.ports.jellyfish}}
-    targetPort: {{.Values.global.ports.jellyfish}}
+    targetPort: http
   selector:
     app: jellyfish
     app.kubernetes.io/name: {{ include "charts.name" . }}

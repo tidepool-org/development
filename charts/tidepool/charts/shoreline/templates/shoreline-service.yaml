@@ -11,7 +11,7 @@ spec:
   ports:
   - name: "http"
     port: {{.Values.global.ports.shoreline}}
-    targetPort: {{.Values.global.ports.shoreline}}
+    targetPort: http
   selector:
     app: shoreline
     app.kubernetes.io/name: {{ include "charts.name" . }}

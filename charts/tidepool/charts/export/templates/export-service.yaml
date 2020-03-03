@@ -12,7 +12,7 @@ spec:
   ports:
   - name: "http"
     port: {{.Values.global.ports.export}}
-    targetPort: {{.Values.global.ports.export}}
+    targetPort: http
   selector:
     app: export
     app.kubernetes.io/name: {{ include "charts.name" . }}

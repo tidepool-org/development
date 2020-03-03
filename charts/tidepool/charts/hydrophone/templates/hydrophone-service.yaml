@@ -11,7 +11,7 @@ spec:
   ports:
   - name: "http"
     port: {{.Values.global.ports.hydrophone}}
-    targetPort: {{.Values.global.ports.hydrophone}}
+    targetPort: http
   selector:
     app: hydrophone
     app.kubernetes.io/name: {{ include "charts.name" . }}

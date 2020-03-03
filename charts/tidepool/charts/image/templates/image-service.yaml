@@ -11,7 +11,7 @@ spec:
   ports:
   - name: "http"
     port: {{.Values.global.ports.image}}
-    targetPort: {{.Values.global.ports.image}}
+    targetPort: http
   selector:
     app: image
     app.kubernetes.io/name: {{ include "charts.name" . }}
