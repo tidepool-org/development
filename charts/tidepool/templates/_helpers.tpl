@@ -84,6 +84,8 @@ Create environment variables used by all platform services.
 {{ end }}
 
 {{ define "charts.platform.env.misc" }}
+        - name: AWS_REGION
+          value: {{ .Values.global.region }}
         - name: TIDEPOOL_ENV
           value: local
         - name: TIDEPOOL_LOGGER_LEVEL
