@@ -1,12 +1,15 @@
-apiVersion: rbac.authorization.k8s.io/v1beta1
+{{- if .Values.rbac.create }}
+apiVersion: rbac.authorization.k8s.io/{{ .Values.rbac.apiVersion }}
 kind: ClusterRoleBinding
 metadata:
-  name: external-dns-viewer
+  name: {{ template "external-dns.fullname" . }}
+  labels: {{ include "external-dns.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: external-dns
+  name: {{ template "external-dns.fullname" . }}
 subjects:
 - kind: ServiceAccount
-  name: external-dns
-  namespace: default
+  name: {{ template "external-dns.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}

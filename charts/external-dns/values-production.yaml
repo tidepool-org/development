@@ -40,7 +40,7 @@ sources:
 # - crd
 
 ## DNS provider where the DNS records will be created. Available providers are:
-## - aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, infoblox, rfc2136, transip
+## - aws, azure, cloudflare, coredns, designate, digitalocoean, google, infoblox, rfc2136, transip
 ##
 provider: aws
 
@@ -97,7 +97,7 @@ aws:
   ## Maximum number of changes that will be applied in each batch
   ##
   batchChangeSize: 1000
-  ## AWS Zone tags
+  ## Zone Tag Filter
   ##
   zoneTags: []
   ## Enable AWS Prefer CNAME. Available values are: true, false
@@ -106,6 +106,7 @@ aws:
   ## Enable AWS evaluation of target health. Available values are: true, false
   ##
   evaluateTargetHealth: ""
+
 ## Azure configuration to be set via arguments/env. variables
 ##
 azure:
@@ -164,14 +165,14 @@ coredns:
   ## Secure (https) endpoints can be used as well, in that case `etcdTLS` section
   ## should be filled in accordingly
   ##
-  etcdEndpoints: "http://etcd-extdns:2379"
+  etcdEndpoints: "https://etcd-extdns:2379"
   ## Configuration of the secure communication and client authentication to the etcd cluster
   ## If enabled all the values under this key must hold a valid data
   ##
   etcdTLS:
     ## Enable or disable secure communication and client authentication to the etcd cluster
     ##
-    enabled: false
+    enabled: true
     ## Name of the existing secret containing cert files for client communication
     ## ref: https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/security.md
     ## ref (secret creation):
@@ -210,18 +211,6 @@ designate:
     ##
     filename: "designate-ca.pem"
 
-  ## Use a host path custom CA (optional)
-  ##  This conflicts setting the above customCA to true and chart rendering will fail if you set customCA to true and specify customCAHostPath
-  # customCAHostPath: /path/to/cafile
-
-  ## Set Openstack environment variables (optional).  Username and password will be saved in a kubernetes secret.
-  ## The alternative to this is to export the necessary Openstack environment variables in the extraEnv argument.
-  # username: "someuser"
-  # password: "p@55w0rd"
-  # authUrl: "https://mykeystone.example.net:5000/v3/"
-  # regionName: "dev"
-  # userDomainName: "development"
-  # projectName: "myteamname"
 ## DigitalOcean configuration to be set via arguments/env. variables
 ##
 digitalocean:
@@ -302,12 +291,12 @@ annotationFilter: ""
 ## When enabled, prints DNS record changes rather than actually performing them
 ##
 dryRun: false
-## When enabled, triggers run loop on create/update/delete events (optional, in addition of regular interval)
-##
-triggerLoopOnEvent: false
 ## Adjust the interval for DNS updates
 ##
 interval: "1m"
+## When enabled, triggers run loop on create/update/delete events (optional, in addition of regular interval)
+##
+triggerLoopOnEvent: false
 ## Verbosity of the ExternalDNS logs. Available values are:
 ## - panic, debug, info, warn, error, fatal
 ##
@@ -351,7 +340,7 @@ extraEnv: []
 
 ## Replica count
 ##
-replicas: 1
+replicas: 3
 
 ## Affinity for pod assignment (this value is evaluated as a template)
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
@@ -424,9 +413,6 @@ rbac:
   ##
   serviceAccountName: default
   ## Annotations for the Service Account
-  #
-  serviceAccount:
-    create: true
   ##
   serviceAccountAnnotations: {}
   ## RBAC API version
@@ -439,15 +425,15 @@ rbac:
 ## Kubernetes Security Context
 ## https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 ##
-securityContext: {}
-  # allowPrivilegeEscalation: false
-  # readOnlyRootFilesystem: true
-  # capabilities:
-  #   drop: ["ALL"]
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]
 podSecurityContext:
   fsGroup: 1001
   runAsUser: 1001
-  # runAsNonRoot: true
+  runAsNonRoot: true
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -494,7 +480,7 @@ extraVolumeMounts: []
 ## Prometheus Exporter / Metrics
 ##
 metrics:
-  enabled: false
+  enabled: true
   ## Metrics exporter pod Annotation and Labels
   ##
   # podAnnotations:
