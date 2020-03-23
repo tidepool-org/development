@@ -1,15 +1,9 @@
 apiVersion: v2
 description: A Helm chart for Tidepool
 name: tidepool
-version: 0.3.7
+version: 0.4.0
 maintainers:
   - name: Derrick Burns
     email: derrick@tidepool.org
 icon: https://www.tidepool.org/static/media/tidepool-t-logo.41feef82.png
-dependencies:
-- name: mongodb
-  version: "6.1.2"
-  repository: "https://kubernetes-charts.storage.googleapis.com/"
-  condition: mongodb.enabled
-
 home: https://github.com/tidepool-org/development/charts
