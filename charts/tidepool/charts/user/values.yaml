@@ -5,6 +5,7 @@ secret:
 deployment:
   podAnnotations: {}
   image: tidepool/platform-user:PR-master-ce332730900058846e113e9820b60f41a3a95313
+  replicas: 1
 resources: {}
 securityContext: {}
 hpa:

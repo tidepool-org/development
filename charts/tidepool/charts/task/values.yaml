@@ -5,6 +5,7 @@ secret:
 deployment:
   podAnnotations: {}
   image: tidepool/platform-task:PR-master-ce332730900058846e113e9820b60f41a3a95313
+  replicas: 1
   env:
     queue:
       delay: 5

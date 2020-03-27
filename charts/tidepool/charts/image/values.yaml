@@ -6,6 +6,7 @@ secret:
 deployment:
   podAnnotations: {}
   image: tidepool/platform-image:PR-master-ce332730900058846e113e9820b60f41a3a95313
+  replicas: 1
   env:
     store:
       file:

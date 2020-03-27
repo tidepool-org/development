@@ -17,7 +17,7 @@ spec:
       app: blip
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: {{ .Values.deployment.replicas | default 1 }}
+  replicas: {{ .Values.deployment.replicas }}
   strategy: {}
   template:
     metadata:

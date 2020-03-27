@@ -1,6 +1,7 @@
 deployment:
   podAnnotations: {}
   image: tidepool/gatekeeper:master-03ab418230def26a638664bfbfd0a49736c96aa3
+  replicas: 1
 resources: {}
 securityContext: {}
 hpa:

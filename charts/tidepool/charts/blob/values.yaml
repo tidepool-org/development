@@ -4,6 +4,7 @@ secret:
     ServiceAuth: ""
 deployment:
   podAnnotations: {}
+  replicas: 1
   image: tidepool/platform-blob:PR-master-ce332730900058846e113e9820b60f41a3a95313
   env:
     store:

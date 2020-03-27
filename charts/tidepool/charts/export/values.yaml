@@ -5,6 +5,7 @@ secret:
 deployment:
   podAnnotations: {}
   image: tidepool/export:master-60d1212cea0b917927f99e16e12997df58d144d2
+  replicas: 1
 resources: {}
 securityContext: {}
 hpa:
