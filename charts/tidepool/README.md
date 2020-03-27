@@ -142,7 +142,6 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `mongo.secret.data_.Tls`                             | plaintext, If true, use SSL on Mongo connection                                           | `false`                             |  
 | `mongo.secret.data_.Username`                        | plaintext, If non-empty, Mongo username                                                   | ``                                  |  
 | `mongodb.enabled`                                    | whether to include an mongodb with this installation                                      | `false`                             |  
-| `nosqlclient.enabled`                                | enable nosqlclient                                                                        | `false`                             |  
 | `notification.deployment.image`                      | notification Docker image                                                                 | ``                                  |  
 | `notification.secret.enabled`                        | wheter to create notification secret                                                      | ``                                  |  
 | `notification.secret.data_.ServiceAuth`              | plaintext service authorization secret                                                    | ``                                  |  
