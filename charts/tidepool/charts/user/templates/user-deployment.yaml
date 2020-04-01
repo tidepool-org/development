@@ -8,7 +8,7 @@ metadata:
   name: user
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo,user,userdata"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},user,userdata"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}

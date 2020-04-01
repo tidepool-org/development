@@ -9,7 +9,7 @@ metadata:
   name: tools
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "mongo,userdata"
+    secret.reloader.stakater.com/reload: "{{ .Values.mongo.secretName }},userdata"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}

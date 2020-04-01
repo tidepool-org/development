@@ -105,33 +105,33 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_STORE_SCHEME
           valueFrom:
             secretKeyRef:
-              name: mongo
+              name: {{ .Values.mongo.secretName }}
               key: Scheme
         - name: TIDEPOOL_STORE_USERNAME
           valueFrom:
             secretKeyRef:
-              name: mongo
+              name: {{ .Values.mongo.secretName }}
               key: Username
         - name: TIDEPOOL_STORE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mongo
+              name: {{ .Values.mongo.secretName }}
               key: Password
               optional: true
         - name: TIDEPOOL_STORE_ADDRESSES
           valueFrom:
             secretKeyRef:
-              name: mongo
+              name: {{ .Values.mongo.secretName }}
               key: Addresses
         - name: TIDEPOOL_STORE_OPT_PARAMS
           valueFrom:
             secretKeyRef:
-              name: mongo
+              name: {{ .Values.mongo.secretName }}
               key: OptParams
         - name: TIDEPOOL_STORE_TLS
           valueFrom:
             secretKeyRef:
-              name: mongo
+              name: {{ .Values.mongo.secretName }}
               key: Tls
 {{ end }}
 

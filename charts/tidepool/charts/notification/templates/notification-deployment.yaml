@@ -8,7 +8,7 @@ metadata:
   name: notification
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo,notification"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},notification"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}

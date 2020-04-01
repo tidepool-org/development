@@ -18,3 +18,5 @@ nodeEnvironment: production
 pdb:
   enabled: false
   minAvailable: 1
+mongo:
+  secretName: mongo
