@@ -168,6 +168,7 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `{name}.hpa.data.maxReplicas`                        | maximum number of replicase that HPA will maintain                                        | 'false'                             |  
 | `{name}.hpa.data.minReplicas`                        | minimum number of replicase that HPA will maintain                                        | 'false'                             |  
 | `{name}.hpa.data.targetCPUUtilizationPercentage`     | target CPU utilization percentage for HPA to maintain                                     | 'false'                             |  
+| `{name}.mongo.secretName`                            | name of mongo database secret to use                                                      | 'mongo'                             |  
 | `{name}.resources.limits.cpu`                        | cpu limit                                                                                 | `200m`                              |  
 | `{name}.resources.limits.memory`                     | memory limit                                                                              | `128Mi`                             |  
 | `{name}.resources.requests.cpu`                      | cpu limit                                                                                 | `50m`                               |  
@@ -190,9 +191,7 @@ $ helm upgrade --install --wait my-release -f values.yaml .
 ```
 
 ### Using a Pre-existing Mongo Instance
-By default, this helm chart will install a version of mongodb in the Kubernetes cluster.  You may disable this by setting `mongodb.enabled` to `false`.
-
-To use an existing Mongo server, simply provide the Mongo connection parameters are above.
+To use an existing Mongo server, simply provide the Mongo connection parameters in the mongo secret.
 
 N.B If you are running Mongo on your local laptop and typically access it using host `localhost`, you cannot simply use the host name `localhost` because that name is overloaded to mean something different in the Kubernetes cluster. Instead, you must provide an alias that resolves to your `localhost`.  Do this by creating the alias in your `/etc/hosts` file.  Then, you may use that alias to identify your Mongo server.
 
