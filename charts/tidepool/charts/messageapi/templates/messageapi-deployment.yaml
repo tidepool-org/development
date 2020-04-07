@@ -66,6 +66,8 @@ spec:
         - name: SKIP_HAKKEN
           value: "true"
         image: "{{ .Values.deployment.image }}" 
+        securityContext:
+          {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         livenessProbe:
           httpGet:
             path: /status

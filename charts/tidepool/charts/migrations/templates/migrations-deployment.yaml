@@ -42,6 +42,8 @@ spec:
         - name: TIDEPOOL_SESSION_STORE_DATABASE
           value: user
         image: {{ .Values.deployment.image | quote}}
+        securityContext:
+          {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         name: migrations
         resources:
           {{- toYaml .Values.resources | nindent 10 }}

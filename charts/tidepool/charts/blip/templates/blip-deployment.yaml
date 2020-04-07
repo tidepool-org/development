@@ -32,6 +32,8 @@ spec:
     spec:
       containers:
       - image: "{{ .Values.deployment.image }}"
+        securityContext:
+          {{- .Values.podSecurityContext | toYaml | nindent 10 }}
 {{ if .Values.command }}
         command: {{ .Values.command }}
 {{- end }}

@@ -52,6 +52,8 @@ spec:
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
         image: "{{ .Values.deployment.image }}"
+        securityContext:
+          {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.data}}
         name: data
         ports:

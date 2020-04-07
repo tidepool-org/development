@@ -46,6 +46,8 @@ spec:
               name: export
               key: SessionEncryptionKey
         image: "{{ .Values.deployment.image }}"
+        securityContext:
+          {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         livenessProbe:
           httpGet:
             path: /export/status

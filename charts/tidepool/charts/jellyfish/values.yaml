@@ -1,6 +1,5 @@
 enabled: true
 deployment:
-  podAnnotations: {}
   image: tidepool/jellyfish:master-737f1009a70fd3856e08c9b858ab86752a181b1d
   replicas: 1
   env:
@@ -9,6 +8,8 @@ deployment:
         bucket: "data"
     type: file
 resources: {}
+podSecurityContext: {}
+podAnnotations: {}
 securityContext: {}
 serviceAccount:
   create: false

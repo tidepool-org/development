@@ -3,7 +3,6 @@ secret:
   data_:
     ServiceAuth: ""
 deployment:
-  podAnnotations: {}
   replicas: 1
   image: tidepool/platform-blob:PR-master-ce332730900058846e113e9820b60f41a3a95313
   env:
@@ -17,6 +16,8 @@ deployment:
       type: file
       #type: s3
 resources: {}
+podSecurityContext: {}
+podAnnotations: {}
 securityContext: {}
 serviceAccount:
   create: false

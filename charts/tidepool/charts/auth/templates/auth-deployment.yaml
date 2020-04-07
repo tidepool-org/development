@@ -91,6 +91,8 @@ spec:
               name: auth
               key: ServiceAuth
         image: "{{ .Values.deployment.image }}"
+        securityContext:
+          {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.auth}}
         name: auth
         ports:

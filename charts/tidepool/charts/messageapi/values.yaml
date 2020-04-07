@@ -1,10 +1,11 @@
 deployment:
-  podAnnotations: {}
   image: tidepool/message-api:master-73e5dc0b12f03bc0ec1428cde45520317dbf4688
   replicas: 1
   env:
     window: 21
 resources: {}
+podSecurityContext: {}
+podAnnotations: {}
 securityContext: {}
 hpa:
   enabled: false

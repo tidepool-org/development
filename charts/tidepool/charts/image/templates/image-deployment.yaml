@@ -56,6 +56,8 @@ spec:
         - name: TIDEPOOL_IMAGE_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
           value: '{{.Values.deployment.env.store.s3.prefix}}'
         image: "{{ .Values.deployment.image }}"
+        securityContext:
+          {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.image }}
         name: image
         ports:

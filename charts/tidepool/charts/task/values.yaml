@@ -3,7 +3,6 @@ secret:
   data_:
     ServiceAuth: ""
 deployment:
-  podAnnotations: {}
   image: tidepool/platform-task:PR-master-ce332730900058846e113e9820b60f41a3a95313
   replicas: 1
   env:
@@ -11,6 +10,8 @@ deployment:
       delay: 5
       workers: 5
 resources: {}
+podSecurityContext: {}
+podAnnotations: {}
 securityContext: {}
 hpa:
   enabled: false

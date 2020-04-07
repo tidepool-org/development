@@ -1,5 +1,4 @@
 deployment:
-  podAnnotations: {}
   image: tidepool/hydrophone:master-8537584fb9633995c36e2df333e9709f94b30095
   replicas: 1
   env:
@@ -8,6 +7,8 @@ deployment:
       s3:
         bucket: "asset"
 resources: {}
+podSecurityContext: {}
+podAnnotations: {}
 securityContext: {}
 serviceAccount:
   create: false

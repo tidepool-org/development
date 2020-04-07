@@ -68,6 +68,8 @@ spec:
         - name: TIDEPOOL_CONFIRMATION_STORE_DATABASE
           value: confirm
         image: "{{ .Values.deployment.image }}"
+        securityContext:
+          {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.user }}
         name: user
         ports:
