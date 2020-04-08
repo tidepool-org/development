@@ -103,7 +103,6 @@ def provisionServerSecrets ():
     'export',
     'image',
     'kissmetrics',
-    'mailchimp',
     'marketo',
     'mongo',
     'notification',
@@ -116,12 +115,10 @@ def provisionServerSecrets ():
 
   secretHelmKeyMap = {
     'kissmetrics': 'global.secret.templated',
-    'mailchimp': 'global.secret.templated',
   }
 
   secretChartPathMap = {
     'kissmetrics': 'highwater/charts/kissmetrics/templates/kissmetrics-secret.yaml',
-    'mailchimp': 'shoreline/charts/mailchimp/templates/mailchimp-secret.yaml',
   }
 
   # Skip secrets already available on cluster
