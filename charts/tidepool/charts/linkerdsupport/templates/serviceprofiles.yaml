@@ -1,3 +1,4 @@
+{{ if .Values.enabled -}}
 ---
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
@@ -1126,3 +1127,4 @@ spec:
       method: GET
       pathRegex: /.*
     name: /_get_internal
+{{- end }}
