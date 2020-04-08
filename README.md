@@ -143,6 +143,12 @@ For example, if you want the code to be cloned into the `~/Tidepool/development`
 git clone https://github.com/tidepool-org/development.git ~/Tidepool/development
 ```
 
+After cloning the repository, you'll need to check out the `k8s-stable` branch.
+
+```bash
+git checkout k8s-stable
+```
+
 For more information about `git`, please see [Git](https://git-scm.com/) and [Try Git](https://try.github.io/).
 
 ## Add Tidepool Helper Script (recommended)
