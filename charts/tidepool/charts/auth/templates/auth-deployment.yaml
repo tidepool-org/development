@@ -90,6 +90,30 @@ spec:
             secretKeyRef:
               name: auth
               key: ServiceAuth
+        - name: TIDEPOOL_APPLE_DEVICE_CHECKER_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: auth
+              key: AppleDeviceCheckKey
+              optional: true
+        - name: TIDEPOOL_APPLE_DEVICE_CHECKER_KEY_ID
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppleDeviceCheckKeyId
+              optional: true
+        - name: TIDEPOOL_APPLE_DEVICE_CHECKER_KEY_ISSUER
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppleDeviceCheckKeyIssuer
+              optional: true
+        - name: TIDEPOOL_APPLE_DEVICE_CHECKER_USE_DEVELOPMENT
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppleDeviceCheckUseDevelopment
+              optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
