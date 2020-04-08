@@ -43,9 +43,6 @@ def main():
       print("Preparing mongodb service...")
       local('while ! nc -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
 
-    print("Preparing gateway services...")
-    local('while ! nc -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
-
   else:
     # Shut down the mongodb and gateway services
     if not getNested(config, 'mongodb.useExternal'):
