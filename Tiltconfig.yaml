@@ -34,13 +34,10 @@ gateway-proxy:
 gloo:
   enabled: false # we provision this in Tiltfile directly with kubectl
 
-ingress:
-  deployment:
-    name: gateway-proxy
-    namespace: default
-  gateway:
+glooingress:
+  virtualServices:
     http:
-      dnsNames: [ "*" ]
+      dnsNames: ["*"]
       port: "3000"
 
 apiServer:
