@@ -43,9 +43,6 @@ def main():
       print("Preparing mongodb service...")
       local('while ! nc -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
 
-    print("Preparing gateway services...")
-    local('while ! nc -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
-
   else:
     # Shut down the mongodb and gateway services
     if not getNested(config, 'mongodb.useExternal'):
@@ -103,7 +100,6 @@ def provisionServerSecrets ():
     'export',
     'image',
     'kissmetrics',
-    'mailchimp',
     'marketo',
     'mongo',
     'notification',
@@ -116,12 +112,10 @@ def provisionServerSecrets ():
 
   secretHelmKeyMap = {
     'kissmetrics': 'global.secret.templated',
-    'mailchimp': 'global.secret.templated',
   }
 
   secretChartPathMap = {
     'kissmetrics': 'highwater/charts/kissmetrics/templates/kissmetrics-secret.yaml',
-    'mailchimp': 'shoreline/charts/mailchimp/templates/mailchimp-secret.yaml',
   }
 
   # Skip secrets already available on cluster
