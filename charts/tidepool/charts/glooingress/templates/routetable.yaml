@@ -32,6 +32,25 @@ spec:
   - matchers:
     - methods:
       - GET
+      - POST
+      regex: /v1/users/[^/]+/device_authorizations(/[^/]+)?
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ $ports.auth }}
+          namespace: {{ $discoveryNamespace }}
+  - matchers:
+    - methods:
+      - POST
+      regex: /v1/device_authorizations
+    routeAction:
+      single:
+        upstream:
+          name: {{ .Release.Namespace }}-auth-{{ $ports.auth }}
+          namespace: {{ $discoveryNamespace }}
+  - matchers:
+    - methods:
+      - GET
       prefix: /request-password-from-uploader
     routeAction:
       single:
