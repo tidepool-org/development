@@ -209,6 +209,14 @@ notification:
   dockerFile: 'Dockerfile.notification'
   rebuildCommand: 'make service-build'
 
+prescription:
+  deployment:
+    # image: tidepool-k8s-prescription
+  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  containerPath: '/go/src/github.com/tidepool-org/platform'
+  dockerFile: 'Dockerfile.prescription'
+  rebuildCommand: 'make service-build'
+
 seagull:
   deployment:
     # image: tidepool-k8s-seagull

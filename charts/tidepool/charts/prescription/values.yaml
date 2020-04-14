@@ -1,0 +1,14 @@
+secret:
+  enabled: true
+  data_:
+    ServiceAuth: "dflksd"
+deployment:
+  image: tidepool/platform-prescription:PR-create-prescription-ce332730900058846e113e9820b60f41a3a95313
+  podAnnotations: {}
+resources: {}
+securityContext: {}
+hpa:
+  enabled: false
+pdb:
+  enabled: false
+  minAvailable: 1
