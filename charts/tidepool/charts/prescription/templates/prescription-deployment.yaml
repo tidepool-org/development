@@ -8,7 +8,7 @@ metadata:
   name: prescription
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,mongo,prescription"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},prescription"
 spec:
   selector:
     matchLabels:

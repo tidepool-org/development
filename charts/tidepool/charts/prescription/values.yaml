@@ -1,7 +1,7 @@
 secret:
   enabled: true
   data_:
-    ServiceAuth: "dflksd"
+    ServiceAuth: ""
 deployment:
   image: tidepool/platform-prescription:PR-create-prescription-ce332730900058846e113e9820b60f41a3a95313
   podAnnotations: {}
@@ -12,3 +12,5 @@ hpa:
 pdb:
   enabled: false
   minAvailable: 1
+mongo:
+  secretName: mongo

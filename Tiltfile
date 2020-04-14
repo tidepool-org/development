@@ -103,6 +103,7 @@ def provisionServerSecrets ():
     'marketo',
     'mongo',
     'notification',
+    'prescription',
     'server',
     'shoreline',
     'task',
