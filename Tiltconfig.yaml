@@ -10,6 +10,9 @@ global:
       protocol: http
       host: localhost:3000
       domain: localhost
+    proxy:
+      name: gateway-proxy
+      namespace: default
   ports:
     viz:
       stories: 8083
