@@ -600,6 +600,7 @@ spec:
       method: GET
       pathRegex: /.*
     name: /confirm/_get_hydrophone
+    timeout: 1m
   - condition:
       method: POST
       pathRegex: /.*

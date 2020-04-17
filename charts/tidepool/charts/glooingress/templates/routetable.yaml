@@ -584,6 +584,7 @@ spec:
           namespace: {{ $discoveryNamespace }}
     options:
       prefixRewrite: /
+      timeout: '1m'
   - matchers:
     - methods:
       - GET
