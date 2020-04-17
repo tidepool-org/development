@@ -3,7 +3,7 @@ secret:
   data_:
     ServiceAuth: ""
 deployment:
-  image: tidepool/platform-auth:PR-master-ce332730900058846e113e9820b60f41a3a95313
+  image: tidepool/platform-auth:master-latest
   podAnnotations: {}
 resources: {}
 securityContext: {}

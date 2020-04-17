@@ -4,7 +4,7 @@ secret:
     ServiceAuth: ""
 deployment:
   podAnnotations: {}
-  image: tidepool/platform-task:PR-master-ce332730900058846e113e9820b60f41a3a95313
+  image: tidepool/platform-task:master-latest
   env:
     queue:
       delay: 5

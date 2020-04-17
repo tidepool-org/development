@@ -1,7 +1,7 @@
 enabled: true
 deployment:
   podAnnotations: {}
-  image: tidepool/platform-migrations:PR-master-ce332730900058846e113e9820b60f41a3a95313
+  image: tidepool/platform-migrations:master-latest
 resources: {}
 securityContext: {}
 hpa:

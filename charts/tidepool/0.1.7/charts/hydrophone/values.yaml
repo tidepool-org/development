@@ -1,6 +1,6 @@
 deployment:
   podAnnotations: {}
-  image: tidepool/hydrophone:master-8537584fb9633995c36e2df333e9709f94b30095
+  image: tidepool/hydrophone:master-latest
   env:
     fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send
     store:

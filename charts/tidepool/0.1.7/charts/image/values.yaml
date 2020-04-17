@@ -5,7 +5,7 @@ secret:
     ServiceAuth: ""
 deployment:
   podAnnotations: {}
-  image: tidepool/platform-image:PR-master-ce332730900058846e113e9820b60f41a3a95313
+  image: tidepool/platform-image:master-latest
   env:
     store:
       file:
