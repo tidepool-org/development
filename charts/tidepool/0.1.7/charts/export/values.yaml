@@ -4,8 +4,7 @@ secret:
     SessionEncryptionKey: ""
 deployment:
   podAnnotations: {}
-  image: tidepool/export:master-60d1212cea0b917927f99e16e12997df58d144d2
-resources: {}
+  image: tidepool/export:master-latest
 securityContext: {}
 hpa:
   enabled: false

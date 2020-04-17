@@ -11,7 +11,7 @@ secret:
     ClinicDemoUserId: ""
 deployment:
   podAnnotations: {}
-  image: tidepool/shoreline:master-66e766fffb4058781a24740b6a809bb12e2d08a9
+  image: tidepool/shoreline:master-latest
 resources: {}
 securityContext: {}
 hpa:
