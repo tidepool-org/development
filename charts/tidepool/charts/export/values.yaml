@@ -3,7 +3,7 @@ secret:
   data_:
     SessionEncryptionKey: ""
 deployment:
-  image: tidepool/export:master-60d1212cea0b917927f99e16e12997df58d144d2
+  image: tidepool/export:master-latest
   replicas: 1
 resources: {}
 podSecurityContext: {}

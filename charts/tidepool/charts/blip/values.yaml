@@ -1,6 +1,6 @@
 deployment:
   podAnnotations: {}
-  image: tidepool/blip:master-d073e04204ff5ba7fce90883f742175571867f38
+  image: tidepool/blip:master-latest
   replicas: 1
 resources: {}
 podSecurityContext: {}

@@ -1,5 +1,5 @@
 deployment:
-  image: tidepool/seagull:master-0ac202bfccc0994d264b5fe9fcc06d2a56c55977
+  image: tidepool/seagull:master-latest
   replicas: 1
 resources: {}
 podSecurityContext: {}

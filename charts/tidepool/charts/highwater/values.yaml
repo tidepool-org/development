@@ -1,5 +1,5 @@
 deployment:
-  image: tidepool/highwater:master-8db30b8b1e4ca759e8377de4a09dd9a6f6a5ce88
+  image: tidepool/highwater:master-latest
   replicas: 1
 resources: {}
 podSecurityContext: {}

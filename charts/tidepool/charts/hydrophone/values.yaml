@@ -1,5 +1,5 @@
 deployment:
-  image: tidepool/hydrophone:master-8537584fb9633995c36e2df333e9709f94b30095
+  image: tidepool/hydrophone:master-latest
   replicas: 1
   env:
     fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send

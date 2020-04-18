@@ -3,7 +3,7 @@ secret:
   data_:
     ServiceAuth: ""
 deployment:
-  image: tidepool/platform-task:PR-master-ce332730900058846e113e9820b60f41a3a95313
+  image: tidepool/platform-task:master-latest
   replicas: 1
   env:
     queue:

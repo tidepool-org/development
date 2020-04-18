@@ -4,7 +4,7 @@ secret:
   data_:
     ServiceAuth: ""
 deployment:
-  image: tidepool/platform-image:PR-master-ce332730900058846e113e9820b60f41a3a95313
+  image: tidepool/platform-image:master-latest
   replicas: 1
   env:
     store:

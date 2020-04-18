@@ -10,7 +10,7 @@ secret:
     UserMailVerification: ""
     ClinicDemoUserId: ""
 deployment:
-  image: tidepool/shoreline:master-66e766fffb4058781a24740b6a809bb12e2d08a9
+  image: tidepool/shoreline:master-latest
   replicas: 1
 resources: {}
 podSecurityContext: {}

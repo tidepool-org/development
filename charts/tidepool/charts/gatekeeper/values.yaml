@@ -1,5 +1,5 @@
 deployment:
-  image: tidepool/gatekeeper:master-03ab418230def26a638664bfbfd0a49736c96aa3
+  image: tidepool/gatekeeper:master-latest
   replicas: 1
 resources: {}
 podSecurityContext: {}

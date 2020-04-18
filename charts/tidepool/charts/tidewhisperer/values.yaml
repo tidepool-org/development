@@ -1,5 +1,5 @@
 deployment:
-  image: tidepool/tide-whisperer:master-d64636a94823ceb329ade5ff8e0a7716a5108fef
+  image: tidepool/tide-whisperer:master-latest
   replicas: 1
 resources: {}
 podSecurityContext: {}
