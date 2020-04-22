@@ -1,4 +1,0 @@
-nosqlclient:
-  enabled: true
-  image: tidepool/nosqlclient:2.3.0
-  port: 3000
