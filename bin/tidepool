@@ -13,7 +13,7 @@ USAGE: tidepool command [service] [...additional args]
 
   server-init                     Used once to initially provision the k8s stack. Specifically, it:
                                     1. Provisions and starts the Kubernetes server
-                                    2. Saves the Kubernetes server config to ~/.kube/config.
+                                    2. Saves the Kubernetes server config to ${KUBECONFIG}.
                                     3. Deploys metrics-server to monitor CPU and MEM usage for resources
 
   server-start                    Start (and provision if needed) the Kubernetes server
@@ -73,7 +73,7 @@ run_docker() { args="${@:1}" && (set_docker_env && docker ${args}) }
 
 run_docker_compose() { args="${@:1}" && (docker-compose -f 'docker-compose.k8s.yml' ${args}) }
 
-restart() { (kubectl scale deployment ${1} --replicas=0 && kubectl scale deployment ${1} --replicas=1) }
+restart() { (for P in ${@}; do kubectl scale deployment --replicas=0 ${P} && kubectl scale deployment --replicas=1 ${P}; done) }
 
 run_exec() { args="${@:2}" && (kubectl exec -ti svc/${1} -c ${1} -- /bin/sh -c "${args}") }
 
@@ -146,7 +146,7 @@ wait_for_kubernetes_ready() {
 
 set_kubeconfig() {
   wait_for_kubernetes_ready
-  curl http://127.0.0.1:10080/config > ~/.kube/config
+  curl http://127.0.0.1:10080/config > ${KUBECONFIG}
 }
 
 destroy() {
@@ -196,7 +196,7 @@ case ${1-help} in
   server-destroy) (cd ${DIR} && destroy);;
   start) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up -dv --port=0 ${2-});;
   stop) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
-  restart) restart ${2-};;
+  restart) shift 1 && restart ${@};;
   logs) (cd ${DIR} && kubectl logs svc/${2} --tail=100 -c ${2} -f);;
   exec) run_exec ${2} ${@:3};;
   yarn) run_yarn ${2} "${@:3}";;
