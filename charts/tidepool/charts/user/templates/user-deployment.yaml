@@ -35,7 +35,7 @@ spec:
       {{ include "charts.init.shoreline" .}}
       containers:
 {{ if .Values.initContainers }}
-        {{- .Values.initContainers | toYaml | nindent 8 }}
+        {{- .Values.initContainers | toYaml | nindent 6 }}
       {{- end }}
       - env:
         {{ include "charts.platform.env.mongo" .}}

@@ -34,7 +34,7 @@ spec:
     spec:
 {{ if .Values.initContainers }}
       initContainers:
-        {{- .Values.initContainers | toYaml | nindent 8 }}
+        {{- .Values.initContainers | toYaml | nindent 6 }}
       {{- end }}
       containers:
       - env:

@@ -12,6 +12,7 @@ deployment:
   image: tidepool/platform-auth:master-latest
   replicas: 1
 resources: {}
+initContainers: []
 podSecurityContext: {}
 podAnnotations: {}
 securityContext: {}

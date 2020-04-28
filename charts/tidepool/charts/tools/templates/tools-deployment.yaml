@@ -34,7 +34,7 @@ spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}
 {{ if .Values.initContainers }}
-        {{- .Values.initContainers | toYaml | nindent 8 }}
+        {{- .Values.initContainers | toYaml | nindent 6 }}
       {{- end }}
       containers:
       - env:
