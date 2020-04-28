@@ -31,8 +31,12 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-{{ if .Values.initContainers }}
+      {{ if .Values.initContainers }}
       initContainers:
+      {{- range .Values.initContainers }}
+      {{ . }}
+      {{- end }}
+      {{- end }}
         {{- .Values.initContainers | toYaml | nindent 6 }}
       {{- end }}
 {{ if .Values.serviceAccount.name }}

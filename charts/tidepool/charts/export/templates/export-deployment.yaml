@@ -32,9 +32,11 @@ spec:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
-{{ if .Values.initContainers }}
+      {{ if .Values.initContainers }}
       initContainers:
-        {{- .Values.initContainers | toYaml | nindent 6 }}
+      {{- range .Values.initContainers }}
+      {{ . }}
+      {{- end }}
       {{- end }}
       containers:
       - env:
