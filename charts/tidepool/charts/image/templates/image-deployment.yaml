@@ -32,6 +32,9 @@ spec:
     spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}
+{{ if .Values.initContainers }}
+        {{- .Values.initContainers | toYaml | nindent 8 }}
+      {{- end }}
 {{ if .Values.serviceAccount.name }}
       serviceAccountName: {{ .Values.serviceAccount.name }}
 {{- end }}
