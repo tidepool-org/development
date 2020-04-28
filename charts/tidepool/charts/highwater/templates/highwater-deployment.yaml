@@ -32,9 +32,8 @@ spec:
     spec:
       {{ if .Values.initContainers }}
       initContainers:
-      {{- range .Values.initContainers }}
-      {{ . }}
-      {{- end }}
+{{- with .Values.initContainers }}
+{{toYaml . | indent 6}}{{- end }}
       {{- end }}
       containers:
       - env:

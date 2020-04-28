@@ -32,11 +32,10 @@ spec:
 {{- end }}
     spec:
       initContainers:
-      {{ include "charts.init.shoreline" . }}
+      {{ include "charts.init.shoreline" .}}
       {{ if .Values.initContainers }}
-      {{- range .Values.initContainers }}
-      {{ . }}
-      {{- end }}
+{{- with .Values.initContainers }}
+{{toYaml . | indent 6}}{{- end }}
       {{- end }}
       containers:
       - env:

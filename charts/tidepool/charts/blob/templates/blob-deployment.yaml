@@ -34,10 +34,9 @@ spec:
       initContainers:
       {{ include "charts.init.shoreline" .}}
       {{ if .Values.initContainers }}
-      {{- range .Values.initContainers }}
-      {{ . }}
-      {{ end -}}
-      {{ end -}}
+{{- with .Values.initContainers }}
+{{toYaml . | indent 6}}{{- end }}
+      {{- end }}
 {{ if .Values.serviceAccount.name }}
       serviceAccountName: {{ .Values.serviceAccount.name }}
 {{- end }}

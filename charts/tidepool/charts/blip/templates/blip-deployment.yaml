@@ -30,12 +30,11 @@ spec:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
-      initContainers:
       {{ if .Values.initContainers }}
-      {{- range .Values.initContainers }}
-      {{ . }}
-      {{ end -}}
-      {{ end -}}
+      initContainers:
+{{- with .Values.initContainers }}
+{{toYaml . | indent 6}}{{- end }}
+      {{- end }}
       containers:
       - image: "{{ .Values.deployment.image }}"
         securityContext:
