@@ -32,8 +32,9 @@ spec:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
-      {{ if .Values.initContainers }}
       initContainers:
+      {{ if .Values.initContainers }}
+      {{ include "charts.init.shoreline" .}}
 {{- with .Values.initContainers }}
 {{toYaml . | indent 6}}{{- end }}
       {{- end }}
