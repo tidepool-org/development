@@ -85,9 +85,10 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `dexcom.secret.data_.StateSalt`                      | plaintext Dexcom Oauth2 state salt                                                        | `false`                             |  
 | `gatekeeper.deployment.image`                        | gatekeeper Docker image                                                                   | ``                                  |  
 | `gatekeeper.nodeEnvironment`                         | node environment (passed as NODE_ENV)                                                     | `production`                        |  
-| `glooingress.enabled`                                | whether to use Gloo API Gateway for ingress                                               | `true`
+| `glooingress.enabled`                                | whether to use Gloo API Gateway for ingress                                               | `true`                              |
 | `global.fullnameOverride`                            |                                                                                           | ``                                  |  
-| `global.gateway.default.host`                        | host to use for email verification                                                        | `localhost`                         |  
+| `global.gateway.default.apiHost`                     | host to use for API calls                                                                 | `localhost`                         |
+| `global.gateway.default.appHost`                     | host to use for front end calls                                                           | `localhost`                         |
 | `global.gateway.default.protocol`                    | protocol to use for email verification.                                                   | `http`                              |  
 | `global.gateway.default.domain`                      | domain to use for cookies                                                                 | ''                                  |  
 | `global.logLevel`                                    | default log level                                                                         | `info`                              |  

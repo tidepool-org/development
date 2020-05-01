@@ -3,8 +3,12 @@
 Expand the name of the chart.
 */}}
 
-{{- define "charts.host.external.tp" -}} 
-{{- .Values.global.gateway.default.protocol -}}://{{- .Values.global.gateway.default.host }}
+{{- define "charts.host.app" -}}
+{{- .Values.global.gateway.default.protocol -}}://{{- .Values.global.gateway.default.appHost }}
+{{- end }}
+
+{{- define "charts.host.api" -}}
+{{- .Values.global.gateway.default.protocol -}}://{{- .Values.global.gateway.default.apiHost }}
 {{- end }}
 
 {{- define "charts.name" -}}
