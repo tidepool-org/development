@@ -64,6 +64,16 @@ spec:
               name: marketo
               key: Timeout
               optional: true
+        - name: PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: token-signing-key
+              key: private
+        - name: PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: token-signing-key
+              key: public
         - name: MARKETO_ID
           valueFrom:
             secretKeyRef:

@@ -1,7 +1,7 @@
 apiVersion: v2
 description: A Helm chart for Tidepool
 name: tidepool
-version: 0.4.20
+version: 0.4.21
 maintainers:
   - name: Derrick Burns
     email: derrick@tidepool.org
