@@ -1,0 +1,51 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: gatekeeper
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+      prefix: /access/status
+    routeAction:
+      single:
+        upstream:
+          name: gatekeeper
+          namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - GET
+      prefix: /access/groups/
+    routeAction:
+      single:
+        upstream:
+          name: gatekeeper
+          namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      regex: /access/[^/]+/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: gatekeeper
+          namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - GET
+      regex: /access/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: gatekeeper
+          namespace: {{ .Release.Namespace }}
+    options:
+      timeout: '30s'
+{{- end }}

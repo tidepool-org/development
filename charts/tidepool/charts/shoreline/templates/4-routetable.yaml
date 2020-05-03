@@ -1,0 +1,34 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: shoreline
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - POST
+      prefix: /serverlogin
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+          namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /auth/
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+          namespace: {{ .Release.Namespace }}
+{{- end }}

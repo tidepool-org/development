@@ -1,0 +1,34 @@
+{{ if .Values.global.linkerdsupport.enabled }}
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: export.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /export/.*
+    name: /export/_get_export
+    timeout: 2m
+  - condition:
+      method: POST
+      pathRegex: /export/.*
+    name: /export/_post_export
+    timeout: 2m
+  - condition:
+      method: PUT
+      pathRegex: /export/.*
+    name: /export/_put_export
+    timeout: 2m
+  - condition:
+      method: PATCH
+      pathRegex: /export/.*
+    name: /export/_patch_export
+    timeout: 2m
+  - condition:
+      method: DELETE
+      pathRegex: /export/.*
+    name: /export/_delete_export
+    timeout: 2m
+{{- end }}

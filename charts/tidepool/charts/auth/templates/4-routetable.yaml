@@ -1,0 +1,94 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: auth
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      regex: /v1/users/[^/]+/restricted_tokens
+    routeAction:
+      single:
+        upstream:
+          name: auth
+          namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      regex: /v1/users/[^/]+/provider_sessions
+    routeAction:
+      single:
+        upstream:
+          name: auth
+          namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      regex: /v1/users/[^/]+/device_authorizations(/[^/]+)?
+    routeAction:
+      single:
+        upstream:
+          name: auth
+          namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - POST
+      regex: /v1/device_authorizations
+    routeAction:
+      single:
+        upstream:
+          name: auth
+          namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      - DELETE
+      regex: /v1/provider_sessions/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: auth
+          namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - DELETE
+      regex: /v1/oauth/[^/]+/authorize
+    routeAction:
+      single:
+        upstream:
+          name: auth
+          namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - GET
+      regex: /v1/oauth/[^/]+/redirect
+    routeAction:
+      single:
+        upstream:
+          name: auth
+          namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      - DELETE
+      prefix: /v1/restricted_tokens
+    routeAction:
+      single:
+        upstream:
+          name: auth
+          namespace: {{ .Release.Namespace }}
+{{- end }}

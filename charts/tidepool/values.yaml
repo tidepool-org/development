@@ -11,6 +11,10 @@ global:
     proxy:
       name: gateway-proxy
       namespace: gloo-system
+  glooingress:
+    enabled: true
+  linkerdsupport:
+      enabled: true
   ports:
     blip: 3000                                     # blip service internal port
     export: 9300                                   # export service internal port
@@ -33,10 +37,6 @@ global:
     enabled: false
     generated: false
     templated: false
-glooingress:
-  enabled: true
-linkerdsupport:
-  enabled: false
 tidepool:
   namespace:
     create: true

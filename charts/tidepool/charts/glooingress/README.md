@@ -52,7 +52,6 @@ The following tables lists the configurable parameters of the chart and their de
 | `globa.gateway.proxy.namespace`                | namespace of the proxy to use for this gateway                                            | release namespace                   |
 | `gloo.enabled`                           | whether to install the Gloo control plane                                                 | `false`                             |
 | `gloo.crds.create`                       | whether to install the Gloo crds                                                          | `true`                              |
-| `routeTable.name`                        | name to use for the Gloo RouteTable                                                       | release namespace                   |
 | `virtualServices.http.enabled`           | whether to enable http ingress                                                            | `true`                              |  
 | `virtualServices.http.name`              | name of the Gloo http virtual service                                                     | `http`                              |  
 | `virtualServices.http.labels`            | labels to apply to http virtual service                                                   | {}                                  |  

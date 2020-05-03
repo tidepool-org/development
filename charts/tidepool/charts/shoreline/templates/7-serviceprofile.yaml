@@ -1,0 +1,78 @@
+{{ if .Values.global.linkerdsupport.enabled }}
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: shoreline.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: POST
+      pathRegex: /serverlogin.*
+    name: /serverlogin_post_shoreline
+  - condition:
+      method: GET
+      pathRegex: /users
+    name: /users_get_shoreline
+    timeout: 30s
+  - condition:
+      method: GET
+      pathRegex: /login
+    name: /login_get_shoreline
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /login
+    name: /login_post_shoreline
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /login/.*
+    name: /longtermlogin_post_shoreline
+    timeout: 30s
+  - condition:
+      method: GET
+      pathRegex: /user/.*
+    name: /user_get_shoreline
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /user
+    name: /user_post_shoreline
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /logout
+    name: /logout_post_shoreline
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /user/.*
+    name: /user_put_shoreline
+    timeout: 30s
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /auth/_get_shoreline
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /.*
+    name: /auth/_post_shoreline
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /.*
+    name: /auth/_put_shoreline
+    timeout: 30s
+  - condition:
+      method: PATCH
+      pathRegex: /.*
+    name: /auth/_patch_shoreline
+    timeout: 30s
+  - condition:
+      method: DELETE
+      pathRegex: /.*
+    name: /auth/_delete_shoreline
+    timeout: 30s
+{{- end }}

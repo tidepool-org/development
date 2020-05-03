@@ -1,0 +1,29 @@
+{{ if .Values.global.linkerdsupport.enabled }}
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: seagull.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /metadata/_get_seagull
+  - condition:
+      method: POST
+      pathRegex: /.*
+    name: /metadata/_post_seagull
+  - condition:
+      method: PUT
+      pathRegex: /.*
+    name: /metadata/_put_seagull
+  - condition:
+      method: PATCH
+      pathRegex: /.*
+    name: /metadata/_patch_seagull
+  - condition:
+      method: DELETE
+      pathRegex: /.*
+    name: /metadata/_delete_seagull
+{{- end }}
