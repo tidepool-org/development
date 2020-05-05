@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   kube:
-    serviceName: tidewhisperer
+    serviceName: tide-whisperer
     serviceNamespace: {{ .Release.Namespace }}
     servicePort: {{ .Values.global.ports.tidewhisperer }}
 {{- end }}

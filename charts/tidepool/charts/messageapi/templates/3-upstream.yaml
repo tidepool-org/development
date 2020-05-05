@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   kube:
-    serviceName: messageapi
+    serviceName: message-api
     serviceNamespace: {{ .Release.Namespace }}
     servicePort: {{ .Values.global.ports.messageapi }}
 {{- end }}
