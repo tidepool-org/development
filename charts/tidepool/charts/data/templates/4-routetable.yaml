@@ -1,0 +1,117 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: data
+  namespace: "{{ .Release.Namespace }}"
+  labels:
+    namespace: "{{ .Release.Namespace }}"
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      regex: "/v1/users/[^/]+/data_sources"
+    routeAction:
+      single:
+        upstream:
+          name: data
+          namespace: "{{ .Release.Namespace }}"
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      regex: "/v1/users/[^/]+/data_sets"
+    routeAction:
+      single:
+        upstream: 
+          name: data
+          namespace: "{{ .Release.Namespace }}"
+    options:
+      timeout: "60s"
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      regex: "/v1/users/[^/]+/datasets"
+    routeAction:
+      single:
+        upstream:
+          name: data
+          namespace: "{{ .Release.Namespace }}"
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      - DELETE
+      regex: "/v1/data_sources/[^/]+"
+    routeAction:
+      single:
+        upstream:
+          name: data
+          namespace: "{{ .Release.Namespace }}"
+  - matchers:
+    - methods:
+      - DELETE
+      regex: "/v1/users/[^/]+/data"
+    routeAction:
+      single:
+        upstream:
+          name: data
+          namespace: "{{ .Release.Namespace }}"
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      - PUT
+      prefix: /v1/data_sets
+    routeAction:
+      single:
+        upstream:
+          name: data
+          namespace: "{{ .Release.Namespace }}"
+    options:
+      timeout: "60s"
+  - matchers:
+    - methods:
+      - POST
+      - PUT
+      - DELETE
+      prefix: /v1/datasets
+    routeAction:
+      single:
+        upstream:
+          name: data
+          namespace: "{{ .Release.Namespace }}"
+    options:
+      timeout: "60s"
+  - matchers:
+    - methods:
+      - GET
+      prefix: /v1/time
+    routeAction:
+      single:
+        upstream:
+          name: data
+          namespace: "{{ .Release.Namespace }}"
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /dataservices/
+    routeAction:
+      single:
+        upstream:
+          name: data
+          namespace: "{{ .Release.Namespace }}"
+    options:
+      prefixRewrite: /
+      timeout: "60s"
+{{- end }}

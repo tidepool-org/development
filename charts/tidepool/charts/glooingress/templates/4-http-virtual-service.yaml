@@ -1,3 +1,4 @@
+{{ if .Values.global.glooingress.enabled }}
 {{- $spec := .Values.virtualServices.http }}
 {{ if $spec.enabled }}
 {{- $port := $spec.port | default "80" }}
@@ -20,12 +21,12 @@ spec:
 {{- toYaml $spec.options.stats | nindent 8 }}
 {{- end }}
     domains:
-{{ if and $spec.serveAllDomains }}
+{{- if and $spec.serveAllDomains }}
     - '*'
-{{ else }}
-{{ if not $spec.redirect }}
+{{- else }}
+{{- if not $spec.redirect }}
     - internal.{{ .Release.Namespace }}
-{{ end }}
+{{- end }}
 {{- range $dnsName := $spec.dnsNames }}
     - '{{ if ne $port "80" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else }}{{ printf "%s" $dnsName -}}{{- end }}'
 {{- end }}
@@ -38,7 +39,10 @@ spec:
         httpsRedirect: true
 {{- else }}
       delegateAction:
-        name: {{ .Values.routeTable.name }}
-        namespace: {{ $.Release.Namespace }}
+        selector:
+          labels:
+            namespace: {{ $.Release.Namespace }}
+            app: tidepool
+{{- end }}
 {{- end }}
 {{- end }}

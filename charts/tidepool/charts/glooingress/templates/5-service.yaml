@@ -1,3 +1,4 @@
+{{ if .Values.global.glooingress.enabled }}
 {{ $proxy := .Values.global.gateway.proxy }}
 ---
 apiVersion: v1
@@ -11,3 +12,4 @@ spec:
   ports:
   - port: {{ $proxy.port }}
   type: ExternalName
+{{- end }}

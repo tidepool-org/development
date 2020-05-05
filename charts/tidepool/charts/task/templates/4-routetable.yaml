@@ -1,0 +1,33 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: task
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      - DELETE
+      regex: /v1/tasks/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: task
+          namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      prefix: /v1/tasks
+    routeAction:
+      single:
+        upstream:
+          name: task
+          namespace: {{ .Release.Namespace }}
+{{- end }}

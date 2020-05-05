@@ -1,0 +1,28 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: hydrophone
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /confirm/
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+          namespace: {{ .Release.Namespace }}
+    options:
+      prefixRewrite: /
+      timeout: '1m'
+{{- end }}

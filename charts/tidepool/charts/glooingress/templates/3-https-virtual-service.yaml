@@ -1,7 +1,9 @@
+{{ if .Values.global.glooingress.enabled }}
 {{- $spec := .Values.virtualServices.https }}
 {{ if $spec.enabled }}
 {{- $port := $spec.port | default "443" }}
 {{- $hsts := $spec.hsts | default true }}
+{{- $cors := $spec.cors | default true }}
 ---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
@@ -32,6 +34,7 @@ spec:
 {{- if $spec.options.stats }}
 {{- toYaml $spec.options.stats | nindent 8 }}
 {{- end }}
+{{- if $cors }}
       cors:
         allowCredentials: true
         allowHeaders:
@@ -54,6 +57,7 @@ spec:
         - x-tidepool-trace-request
         - x-tidepool-trace-session
         maxAge: 600s
+{{- end }}
 {{- if $hsts }}
       headerManipulation:
         requestHeadersToAdd:
@@ -65,6 +69,9 @@ spec:
     - matchers:
       - prefix: '/'
       delegateAction:
-        name: {{ .Values.routeTable.name }}
-        namespace: {{ .Release.Namespace }}
+        selector:
+          labels:
+            namespace: {{ $.Release.Namespace }}
+            app: tidepool
+{{- end }}
 {{- end }}

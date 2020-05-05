@@ -1,0 +1,27 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: export
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /export/
+    options:
+      timeout: '2m'
+    routeAction:
+      single:
+        upstream:
+          name: export
+          namespace: {{ .Release.Namespace }}
+{{- end }}

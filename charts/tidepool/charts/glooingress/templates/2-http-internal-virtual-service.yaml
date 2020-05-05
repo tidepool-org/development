@@ -1,3 +1,4 @@
+{{ if .Values.global.glooingress.enabled }}
 {{- $internal := .Values.virtualServices.httpInternal }}
 {{- $spec := .Values.virtualServices.http }}
 {{- $port := $spec.port | default "80" }}
@@ -26,6 +27,9 @@ spec:
     - matchers:
       - prefix: '/'
       delegateAction:
-        name: {{ .Values.routeTable.name }}
-        namespace: {{ $.Release.Namespace }}
+        selector:
+          labels:
+            namespace: {{ .Release.Namespace }}
+            app: tidepool
+{{- end }}
 {{- end }}

@@ -1,0 +1,29 @@
+{{ if .Values.global.linkerdsupport.enabled }}
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: highwater.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /metrics/_get_highwater
+  - condition:
+      method: POST
+      pathRegex: /.*
+    name: /metrics/_post_highwater
+  - condition:
+      method: PUT
+      pathRegex: /.*
+    name: /metrics/_put_highwater
+  - condition:
+      method: PATCH
+      pathRegex: /.*
+    name: /metrics/_patch_highwater
+  - condition:
+      method: DELETE
+      pathRegex: /.*
+    name: /metrics/_delete_highwater
+{{- end }}

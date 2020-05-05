@@ -1,0 +1,30 @@
+{{ if .Values.global.linkerdsupport.enabled }}
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: jellyfish.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: POST
+      pathRegex: /v1/device/upload/cl.*
+    name: /v1/device/upload/cl_post_jellyfish
+  - condition:
+      method: GET
+      pathRegex: /v1/device/data/.*
+    name: /v1/device/data/_get_jellyfish
+  - condition:
+      method: GET
+      pathRegex: /v1/synctasks/.*
+    name: /v1/synctasks/_get_jellyfish
+  - condition:
+      method: POST
+      pathRegex: /data/.*
+    name: /data/_post_jellyfish
+    timeout: 60s
+  - condition:
+      method: GET
+      pathRegex: /info.*
+    name: /info_get_jellyfish
+{{- end }}

@@ -1,0 +1,12 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: shoreline
+  namespace: {{ .Release.Namespace }}
+spec:
+  kube:
+    serviceName: shoreline
+    serviceNamespace: {{ .Release.Namespace }}
+    servicePort: {{ .Values.global.ports.shoreline }}
+{{- end }}
