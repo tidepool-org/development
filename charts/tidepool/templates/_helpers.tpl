@@ -4,11 +4,11 @@ Expand the name of the chart.
 */}}
 
 {{- define "charts.host.app" -}}
-{{- .Values.global.gateway.default.protocol -}}://{{- .Values.global.gateway.default.appHost }}
+{{- .Values.global.gateway.default.protocol -}}://{{- .Values.global.gateway.default.appHost | default .Values.global.gateway.default.host }}
 {{- end }}
 
 {{- define "charts.host.api" -}}
-{{- .Values.global.gateway.default.protocol -}}://{{- .Values.global.gateway.default.apiHost }}
+{{- .Values.global.gateway.default.protocol -}}://{{- .Values.global.gateway.default.apiHost | default .Values.global.gateway.default.host }}
 {{- end }}
 
 {{- define "charts.name" -}}
