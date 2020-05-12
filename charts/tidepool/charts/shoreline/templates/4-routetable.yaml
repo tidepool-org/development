@@ -31,4 +31,7 @@ spec:
         upstream:
           name: shoreline
           namespace: {{ .Release.Namespace }}
+    options:
+      prefixRewrite: /
+      timeout: '30s'
 {{- end }}
