@@ -11,7 +11,7 @@ spec:
   weight: 10000
   routes:
   - matchers:
-      prefix: /
+    - prefix: /
     routeAction:
       single:
         upstream:
