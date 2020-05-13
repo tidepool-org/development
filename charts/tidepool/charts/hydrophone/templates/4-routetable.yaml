@@ -9,20 +9,131 @@ metadata:
     app: tidepool
 spec:
   routes:
+
   - matchers:
     - methods:
-      - GET
       - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /confirm/
+      prefix: /confirm/send
     routeAction:
       single:
         upstream:
           name: hydrophone
           namespace: {{ .Release.Namespace }}
     options:
-      prefixRewrite: /
       timeout: '1m'
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
+      - POST
+      prefix: /confirm/resend/signup
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+          namespace: {{ .Release.Namespace }}
+    options:
+      timeout: '1m'
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
+      - PUT
+      prefix: /confirm/accept/
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+          namespace: {{ .Release.Namespace }}
+    options:
+      timeout: '1m'
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
+      - GET
+      prefix: /confirm/signup
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+          namespace: {{ .Release.Namespace }}
+    options:
+      timeout: '1m'
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
+      - GET
+      prefix: /confirm/invite
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+          namespace: {{ .Release.Namespace }}
+    options:
+      timeout: '1m'
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
+      - GET
+      prefix: /confirm/invitations/
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+          namespace: {{ .Release.Namespace }}
+    options:
+      timeout: '1m'
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
+      - PUT
+      prefix: /confirm/dismiss/
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+          namespace: {{ .Release.Namespace }}
+    options:
+      timeout: '1m'
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
+      - PUT
+      regex: /confirm/signup/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+          namespace: {{ .Release.Namespace }}
+    options:
+      timeout: '1m'
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
+      - PUT
+      regex: /confirm/[^/]+/invited/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+          namespace: {{ .Release.Namespace }}
+    options:
+      timeout: '1m'
+      jwt:
+        disable: true   
+
 {{- end }}

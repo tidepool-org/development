@@ -23,6 +23,5 @@ spec:
           name: messageapi
           namespace: {{ .Release.Namespace }}
     options:
-      prefixRewrite: /
       timeout: '30s'
 {{- end }}

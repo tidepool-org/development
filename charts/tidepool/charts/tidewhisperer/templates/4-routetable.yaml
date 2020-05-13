@@ -20,5 +20,4 @@ spec:
           namespace: {{ .Release.Namespace }}
     options:
       timeout: '1m'
-      prefixRewrite: /
 {{- end }}

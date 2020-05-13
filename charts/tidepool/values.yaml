@@ -13,8 +13,10 @@ global:
       namespace: gloo-system
   glooingress:
     enabled: true
+    jwt:
+      enabled: false
   linkerdsupport:
-      enabled: true
+    enabled: true
   ports:
     blip: 3000                                     # blip service internal port
     export: 9300                                   # export service internal port

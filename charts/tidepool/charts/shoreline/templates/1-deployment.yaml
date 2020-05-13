@@ -43,7 +43,7 @@ spec:
       - env:
         {{ include "charts.mongo.params" .}}
         - name: API_HOST
-          value: {{ include "charts.host.api" .}}
+          value: {{ .Values.global.gateway.default.apiHost | default .Values.global.gateway.default.host }}
         - name: TIDEPOOL_STORE_DATABASE
           value: user
         - name: MARKETO_CLINIC_ROLE

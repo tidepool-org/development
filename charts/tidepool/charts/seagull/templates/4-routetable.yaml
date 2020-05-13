@@ -23,7 +23,6 @@ spec:
           name: seagull
           namespace: {{ .Release.Namespace }}
     options:
-      prefixRewrite: /
       retries:
         retryOn: '5xx'
         numRetries: 3

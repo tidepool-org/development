@@ -15,10 +15,29 @@ metadata:
 spec:
   displayName: http
   virtualHost:
+{{ $optionsExist := false }}
 {{- if $spec.options.stats }}
+{{ $optionsExist = true }}
     options:
       stats:
 {{- toYaml $spec.options.stats | nindent 8 }}
+{{- end }}
+{{- if and $spec.extauth $spec.extauth.enabled }}
+{{- if not $optionsExist }}
+{{ $optionsExist = true }}
+    options:
+{{- end }}
+      extauth:
+        configRef:
+          name: {{ $spec.extauth.name }}
+          namespace: {{ $spec.extauth.namespace }}
+{{- end }}
+{{- if and $spec.jwt $spec.jwt.enabled }}
+{{- if not $optionsExist }}
+{{ $optionsExist = true }}
+    options:
+{{- end }}
+{{- toYaml $spec.jwt.config | nindent 6 }}
 {{- end }}
     domains:
 {{- if and $spec.serveAllDomains }}
@@ -31,6 +50,7 @@ spec:
     - '{{ if ne $port "80" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else }}{{ printf "%s" $dnsName -}}{{- end }}'
 {{- end }}
 {{- end }}
+
     routes:
     - matchers:
       - prefix: '/'

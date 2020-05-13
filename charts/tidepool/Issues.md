@@ -48,5 +48,7 @@ tidewhisperer - phase one PR done
 seagull - phase one PR done
   /metadata/
 
+shoreline - phase one PR in progress
+
 
 

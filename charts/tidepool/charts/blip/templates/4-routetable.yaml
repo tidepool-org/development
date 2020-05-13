@@ -17,4 +17,7 @@ spec:
         upstream:
           name: blip
           namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
 {{- end }}

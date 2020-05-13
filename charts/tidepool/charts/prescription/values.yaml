@@ -1,5 +1,5 @@
 secret:
-  enabled: true
+  enabled: false
   data_:
     ServiceAuth: ""
 deployment:

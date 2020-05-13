@@ -45,7 +45,6 @@ The following tables lists the configurable parameters of the chart and their de
 
 | Parameter                                            | Description                                                                               | Default                             |  
 |------------------------------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------|
-| `discovery.namespace`                    | namespace where the gloo upstreams are stored                                             |  release namespace                  |
 | `enabled`                                | whether to enable the Gloo integrations                                                   | `true`                              |
 | `global.gateway.proxy.port`                     | port of the gateway proxy                                                                 | `80`                                |
 | `global.gateway.proxy.name`                     | name of the proxy to use for this gateway                                                 | `gateway-proxy`                     |
@@ -57,8 +56,12 @@ The following tables lists the configurable parameters of the chart and their de
 | `virtualServices.http.labels`            | labels to apply to http virtual service                                                   | {}                                  |  
 | `virtualServices.http.port`              | port to listen on                                                                         | 80                                  |  
 | `virtualServices.http.redirect`          | whether to redirect http to https                                                         | `false`                             |  
+| `virtualServices.http.jwt.enabled`            | whether to use Gloo JWT authentication on the external http virtual service   | `false`                             |
+| `virtualServices.http.jwt.config`             | configuration to use for Gloo JWT authentication                              | `{}`                                |
 | `virtualServices.httpInternal.name`      | name of the Gloo http internal virtual service                                            | `http-internal`                     |  
 | `virtualServices.httpInternal.labels`    | labels to apply to http internal virtual service                                          | { }                                 |  
+| `virtualServices.httpInternal.jwt.enabled`    | whether to use Gloo JWT authentication on the internal http virtual service   | `false`                             |
+| `virtualServices.httpInternal.jwt.config`     | configuration to use for Gloo JWT authentication                              | `{}`                                |
 | `virtualServices.https.certificateSecretName` | name of secret holding TLS certificate                                               | `https-certificate`                 |  
 | `virtualServices.https.dnsNames`         | list of Subject Alternative Names to use                                                  | `[]`                                |  
 | `virtualServices.https.enabled`          | whether to enable https ingress                                                           | `false`                             |  
