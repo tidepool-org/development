@@ -1,13 +1,15 @@
-load('./Tiltfile.global', 'getNested', 'getConfig')
+load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig')
 
 ### Config Start ###
 config = getConfig()
-mongo_helm_chart_dir = "./charts/mongo"
+mongo_helm_chart_dir = getAbsoluteDir('./local/tilt/charts/mongo')
 ### Config End ###
 
 ### Main Start ###
 def main():
-  # Provision the gloo gateway service
+  # Download mongo helm chart
+  #extractMongoCharts()
+  # Provision mongo db
   provisionMongoDB()
 
   # Back out of actual provisioning for debugging purposes by uncommenting below
