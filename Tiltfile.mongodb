@@ -7,8 +7,6 @@ mongo_helm_chart_dir = getAbsoluteDir('./local/tilt/charts/mongo')
 
 ### Main Start ###
 def main():
-  # Download mongo helm chart
-  #extractMongoCharts()
   # Provision mongo db
   provisionMongoDB()
 
