@@ -103,6 +103,7 @@ def provisionServerSecrets ():
     'marketo',
     'mongo',
     'notification',
+    'prescription',
     'server',
     'shoreline',
     'task',
@@ -121,11 +122,11 @@ def provisionServerSecrets ():
   # Skip secrets already available on cluster
   existing_secrets = str(local("kubectl get secrets -o=jsonpath='{.items[?(@.type==\"Opaque\")].metadata.name}'")).split()
   for existing_secret in existing_secrets:
-    if required_secrets.index(existing_secret) >= 0:
+    if existing_secret in required_secrets:
       required_secrets.remove(existing_secret)
 
   for secret in required_secrets:
-    secretChartPath = secretChartPathMap.get(secret, '{secret}/templates/{secret}-secret.yaml'.format(
+    secretChartPath = secretChartPathMap.get(secret, '{secret}/templates/0-secret.yaml'.format(
       secret=secret,
     ))
 
@@ -160,7 +161,7 @@ def provisionConfigMaps ():
       required_configmaps.remove(existing_configmap)
 
   for configmap in required_configmaps:
-    configmapChartPath = '{configmap}/templates/{configmap}-configmap.yaml'.format(
+    configmapChartPath = '{configmap}/templates/0-configmap.yaml'.format(
       configmap=configmap,
     )
 

@@ -3,3 +3,5 @@ docker-compose.override.yml
 local/*
 !local/README.md
 !local/metrics-server.yml
+!local/tilt/
+.envrc
