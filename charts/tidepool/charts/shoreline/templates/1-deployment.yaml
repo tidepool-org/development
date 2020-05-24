@@ -69,11 +69,13 @@ spec:
             secretKeyRef:
               name: token-signing-key
               key: private
+              optional: true
         - name: PUBLIC_KEY
           valueFrom:
             secretKeyRef:
               name: token-signing-key
               key: public
+              optional: true
         - name: MARKETO_ID
           valueFrom:
             secretKeyRef:
