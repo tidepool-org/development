@@ -12,6 +12,15 @@ spec:
   - matchers:
     - methods:
       - GET
+      exact: /auth/status
+    routeAction:
+      single:
+        upstream:
+          name: auth
+          namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - GET
       - POST
       - DELETE
       regex: /v1/users/[^/]+/restricted_tokens

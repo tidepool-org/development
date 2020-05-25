@@ -12,6 +12,18 @@ spec:
   - matchers:
     - methods:
       - GET
+      exact: /data/status
+    routeAction:
+      single:
+        upstream:
+          name: tidewhisperer
+          namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
       prefix: /data/
     routeAction:
       single:

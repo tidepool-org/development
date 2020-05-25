@@ -18,6 +18,9 @@ spec:
         upstream:
           name: gatekeeper
           namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
   - matchers:
     - methods:
       - GET

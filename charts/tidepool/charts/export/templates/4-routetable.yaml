@@ -12,6 +12,18 @@ spec:
   - matchers:
     - methods:
       - GET
+      exact: /export/status
+    routeAction:
+      single:
+        upstream:
+          name: export
+          namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+       disable: true
+  - matchers:
+    - methods:
+      - GET
       - POST
       - PUT
       - PATCH

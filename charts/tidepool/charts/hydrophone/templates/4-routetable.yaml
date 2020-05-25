@@ -12,6 +12,19 @@ spec:
 
   - matchers:
     - methods:
+      - GET
+      exact: /confirm/status
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+          namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
       - POST
       prefix: /confirm/send
     routeAction:

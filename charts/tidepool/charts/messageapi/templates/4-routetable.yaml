@@ -12,6 +12,18 @@ spec:
   - matchers:
     - methods:
       - GET
+      exact: /message/status
+    routeAction:
+      single:
+        upstream:
+          name: messageapi
+          namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
       - POST
       - PUT
       - PATCH
