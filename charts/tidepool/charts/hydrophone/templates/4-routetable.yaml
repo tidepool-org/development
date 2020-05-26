@@ -22,6 +22,7 @@ spec:
     options:
       jwt:
         disable: true
+      prefixRewrite: /status
 
   - matchers:
     - methods:
