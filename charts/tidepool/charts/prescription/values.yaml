@@ -3,7 +3,8 @@ secret:
   data_:
     ServiceAuth: ""
 deployment:
-  image: tidepool/platform-prescription:PR-create-prescription-ce332730900058846e113e9820b60f41a3a95313
+  image: tidepool/platform-prescription:add-prescription-service-bc54703cd71ee5998bacff4b63511d45c9dbdf00
+  replicas: 1
   podAnnotations: {}
 resources: {}
 securityContext: {}
