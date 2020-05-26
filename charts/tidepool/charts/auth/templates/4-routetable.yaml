@@ -84,6 +84,9 @@ spec:
         upstream:
           name: auth
           namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
   - matchers:
     - methods:
       - GET
@@ -93,6 +96,9 @@ spec:
         upstream:
           name: auth
           namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
   - matchers:
     - methods:
       - GET
