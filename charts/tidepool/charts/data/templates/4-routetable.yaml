@@ -115,13 +115,7 @@ spec:
         disable: true
       prefixRewrite: /v1/time
   - matchers:
-    - methods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /dataservices/
+    - prefix: /dataservices/
     routeAction:
       single:
         upstream:
