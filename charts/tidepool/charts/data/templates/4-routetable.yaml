@@ -98,6 +98,22 @@ spec:
         upstream:
           name: data
           namespace: "{{ .Release.Namespace }}"
+    options:
+      jwt:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      prefix: /dataservices/v1/time
+    routeAction:
+      single:
+        upstream:
+          name: data
+          namespace: "{{ .Release.Namespace }}"
+    options:
+      jwt:
+        disable: true
+      prefixRewrite: /v1/time
   - matchers:
     - methods:
       - GET
