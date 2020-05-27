@@ -22,13 +22,7 @@ spec:
       jwt:
         disable: true
   - matchers:
-    - methods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /metadata/
+    - prefix: /metadata/
     routeAction:
       single:
         upstream:

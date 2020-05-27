@@ -22,13 +22,7 @@ spec:
       jwt:
        disable: true
   - matchers:
-    - methods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /export/
+    - prefix: /export/
     options:
       timeout: '2m'
     routeAction:

@@ -22,13 +22,7 @@ spec:
       jwt:
         disable: true
   - matchers:
-    - methods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /metrics/
+    - prefix: /metrics/
     routeAction:
       single:
         upstream:

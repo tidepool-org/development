@@ -12,7 +12,7 @@ spec:
   - matchers:
     - methods:
       - GET
-      prefix: /access/status
+      exact: /access/status
     routeAction:
       single:
         upstream:
