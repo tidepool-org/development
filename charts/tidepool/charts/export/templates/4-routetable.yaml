@@ -23,11 +23,13 @@ spec:
        disable: true
   - matchers:
     - prefix: /export/
-    options:
-      timeout: '2m'
     routeAction:
       single:
         upstream:
           name: export
           namespace: {{ .Release.Namespace }}
+    options:
+      timeout: '2m'
+      jwt:
+       disable: true
 {{- end }}
