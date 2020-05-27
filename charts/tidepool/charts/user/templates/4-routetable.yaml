@@ -22,6 +22,19 @@ spec:
   - matchers:
     - methods:
       - GET
+      prefix: /userservices/status
+    routeAction:
+      single:
+        upstream:
+          name: user
+          namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
+      prefixRewrite: /status
+  - matchers:
+    - methods:
+      - GET
       - POST
       - PUT
       - PATCH
