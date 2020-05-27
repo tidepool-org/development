@@ -33,13 +33,7 @@ spec:
         disable: true
       prefixRewrite: /status
   - matchers:
-    - methods:
-      - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /userservices/
+    - prefix: /userservices/
     routeAction:
       single:
         upstream:
