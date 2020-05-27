@@ -97,6 +97,7 @@ spec:
         name: task
         ports:
         - containerPort: {{.Values.global.ports.task}}
+          name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       securityContext:

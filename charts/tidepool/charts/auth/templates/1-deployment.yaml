@@ -125,6 +125,7 @@ spec:
         name: auth
         ports:
         - containerPort: {{.Values.global.ports.auth}}
+          name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       securityContext:

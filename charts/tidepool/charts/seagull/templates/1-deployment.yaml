@@ -76,6 +76,7 @@ spec:
         name: seagull
         ports:
         - containerPort: {{.Values.global.ports.seagull}}
+          name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       securityContext:

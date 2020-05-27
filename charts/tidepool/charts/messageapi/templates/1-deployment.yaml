@@ -82,6 +82,7 @@ spec:
         name: message-api
         ports:
         - containerPort: {{.Values.global.ports.messageapi}}
+          name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       securityContext:

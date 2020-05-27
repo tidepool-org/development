@@ -71,6 +71,7 @@ spec:
         name: blip
         ports:
         - containerPort: {{.Values.global.ports.blip}}
+          name: "http"
 {{ range $key, $port := .Values.global.ports.viz }}
         - containerPort: {{ $port }}
 {{- end }}

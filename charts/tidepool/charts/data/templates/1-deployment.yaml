@@ -62,6 +62,7 @@ spec:
         name: data
         ports:
         - containerPort: {{.Values.global.ports.data}}
+          name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       securityContext:

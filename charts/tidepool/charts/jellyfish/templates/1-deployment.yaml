@@ -94,6 +94,7 @@ spec:
         name: jellyfish
         ports:
         - containerPort: {{ .Values.global.ports.jellyfish }}
+          name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       securityContext:

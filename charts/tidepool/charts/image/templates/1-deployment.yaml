@@ -66,6 +66,7 @@ spec:
         name: image
         ports:
         - containerPort: {{.Values.global.ports.image}}
+          name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       securityContext:

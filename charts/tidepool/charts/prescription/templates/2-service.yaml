@@ -11,7 +11,7 @@ spec:
   ports:
   - name: "http"
     port: {{ .Values.global.ports.prescription }}
-    targetPort: {{ .Values.global.ports.prescription }}
+    targetPort: "http"
   selector:
     app: prescription
     app.kubernetes.io/name: {{ include "charts.name" . }}

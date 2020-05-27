@@ -99,6 +99,7 @@ spec:
         name: tide-whisperer
         ports:
         - containerPort: {{.Values.global.ports.tidewhisperer}}
+          name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       securityContext:

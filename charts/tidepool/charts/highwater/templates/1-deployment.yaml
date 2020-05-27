@@ -97,6 +97,7 @@ spec:
         name: highwater
         ports:
         - containerPort: {{.Values.global.ports.highwater}}
+          name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       securityContext:

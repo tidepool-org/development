@@ -11,7 +11,7 @@ spec:
   ports:
   - name: "http"
     port: {{.Values.global.ports.seagull}}
-    targetPort: {{.Values.global.ports.seagull}}
+    targetPort: "http"
   selector:
     app: seagull
     app.kubernetes.io/name: {{ include "charts.name" . }}

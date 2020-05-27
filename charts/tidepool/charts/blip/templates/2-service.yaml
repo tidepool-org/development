@@ -11,7 +11,7 @@ spec:
   ports:
   - name: "http"
     port: {{.Values.global.ports.blip}}
-    targetPort: {{.Values.global.ports.blip}}
+    targetPort: "http"
 {{ range $key, $port := .Values.global.ports.viz }}
   - name: 'http-viz-{{ $key }}'
     port: {{ $port }}

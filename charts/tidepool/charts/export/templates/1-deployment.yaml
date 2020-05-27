@@ -62,6 +62,7 @@ spec:
         name: export
         ports:
         - containerPort: {{.Values.global.ports.export}}
+          name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       securityContext:

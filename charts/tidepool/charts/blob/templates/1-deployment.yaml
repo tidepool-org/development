@@ -69,6 +69,7 @@ spec:
         name: blob
         ports:
         - containerPort: {{.Values.global.ports.blob}}
+          name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       restartPolicy: Always

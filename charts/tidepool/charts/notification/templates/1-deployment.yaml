@@ -56,6 +56,7 @@ spec:
         name: notification
         ports:
         - containerPort: {{.Values.global.ports.notification}}
+          name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       securityContext:
