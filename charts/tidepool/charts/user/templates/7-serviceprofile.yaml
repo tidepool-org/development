@@ -14,4 +14,5 @@ spec:
       method: DELETE
       pathRegex: /v1/users/[^/]+
     name: /v1/users/{id}_delete_user
+    timeout: 90s
 {{- end }}
