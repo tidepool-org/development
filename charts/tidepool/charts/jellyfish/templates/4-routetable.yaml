@@ -47,9 +47,9 @@ spec:
           namespace: {{ .Release.Namespace }}
     options:
       timeout: "60s"
-{{ if .Values.shadowing }}
+{{- if .Values.shadowing }}
       shadowing:
-{{ toYaml .Values.shadowing | nindent 8 }}
+{{- toYaml .Values.shadowing | nindent 8 }}
 {{- end }}
   - matchers:
     - methods:
