@@ -11,8 +11,17 @@ spec:
   routes:
   - matchers:
     - methods:
-      - GET
       - DELETE
+      regex: /v1/users/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: user
+          namespace: {{ .Release.Namespace }}
+    options:
+      timeout: "90s"
+    - methods:
+      - GET
       regex: /v1/users/[^/]+
     routeAction:
       single:
