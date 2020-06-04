@@ -20,6 +20,7 @@ spec:
           namespace: {{ .Release.Namespace }}
     options:
       timeout: "90s"
+  - matchers:
     - methods:
       - GET
       regex: /v1/users/[^/]+
