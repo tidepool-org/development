@@ -32,6 +32,10 @@ spec:
           namespace: "{{ .Release.Namespace }}"
     options:
       timeout: "60s"
+{{- if .Values.shadowing }}
+      shadowing:
+{{- toYaml .Values.shadowing | nindent 8 }}
+{{- end }}
   - matchers:
     - methods:
       - GET
@@ -76,6 +80,10 @@ spec:
           namespace: "{{ .Release.Namespace }}"
     options:
       timeout: "60s"
+{{- if .Values.shadowing }}
+      shadowing:
+{{- toYaml .Values.shadowing | nindent 8 }}
+{{- end }}
   - matchers:
     - methods:
       - POST
@@ -89,6 +97,10 @@ spec:
           namespace: "{{ .Release.Namespace }}"
     options:
       timeout: "60s"
+{{- if .Values.shadowing }}
+      shadowing:
+{{- toYaml .Values.shadowing | nindent 8 }}
+{{- end }}
   - matchers:
     - methods:
       - GET
