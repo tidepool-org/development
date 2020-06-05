@@ -34,5 +34,5 @@ spec:
     options:
       jwt:
         disable: true
-      timeout: '1m'
+      timeout: '3m'
 {{- end }}

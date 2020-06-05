@@ -29,7 +29,7 @@ spec:
           name: export
           namespace: {{ .Release.Namespace }}
     options:
-      timeout: '2m'
+      timeout: '3m'
       jwt:
        disable: true
 {{- end }}
