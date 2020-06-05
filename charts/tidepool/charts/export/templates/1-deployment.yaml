@@ -50,6 +50,12 @@ spec:
             secretKeyRef:
               name: export
               key: SessionEncryptionKey
+        - name: EXPORT_TIMEOUT
+          valueFrom:
+            configMapKeyRef:
+              name: export
+              key: Timeout
+              optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
