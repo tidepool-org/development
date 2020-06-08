@@ -10,5 +10,5 @@ spec:
       method: GET
       pathRegex: /.*
     name: /data/_get_tide-whisperer
-    timeout: 1m
+    timeout: 3m
 {{- end }}
