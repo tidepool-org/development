@@ -16,6 +16,8 @@ resources: {}
 podSecurityContext: {}
 podAnnotations: {}
 securityContext: {}
+serviceMonitor:
+  enabled: false
 hpa:
   enabled: false
 pdb:
