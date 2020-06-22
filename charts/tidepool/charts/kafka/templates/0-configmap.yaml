@@ -11,7 +11,7 @@ data:
 {{ if .Values.configmap.TopicPrefix }}
   TopicPrefix: {{ .Values.configmap.TopicPrefix }}
 {{ else }}
-  TopicPrefix: "{{ .Release.Namespace }}_"
+  TopicPrefix: "{{ .Release.Namespace }}-"
 {{ end }}
   EmailsTopic: {{ .Values.configmap.EmailsTopic }}
 {{ end }}
