@@ -27,7 +27,7 @@ spec:
                   name: travis
                   key: Token
           args:
-            - "-s"
+            - "-v"
             - "-X"
             - "POST"
             - "-H"
