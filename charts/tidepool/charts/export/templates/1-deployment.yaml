@@ -65,6 +65,7 @@ spec:
             port: {{ .Values.global.ports.export }}
           initialDelaySeconds: 30
           periodSeconds: 10
+          timeoutSeconds: 5
         name: export
         ports:
         - containerPort: {{.Values.global.ports.export}}
