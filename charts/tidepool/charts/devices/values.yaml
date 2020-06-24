@@ -1,0 +1,11 @@
+deployment:
+  image: tidepool/devices:master-latest
+  replicas: 0
+  podAnnotations: {}
+resources: {}
+securityContext: {}
+hpa:
+  enabled: false
+pdb:
+  enabled: false
+  minAvailable: 1
