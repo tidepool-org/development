@@ -20,6 +20,12 @@ spec:
         dremio-configmap/checksum: {{ (.Files.Glob "config/*").AsConfig | sha256sum }}
     spec:
       terminationGracePeriodSeconds: 5
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{- range $key, $value := .Values.tolerations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+      {{- end }}
       {{- if .Values.nodeSelector }}
       nodeSelector:
         {{- range $key, $value := .Values.nodeSelector }}
