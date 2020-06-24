@@ -40,4 +40,5 @@ spec:
             - "Authorization: token $TOKEN"
             - "-d"
             - "'{\"request\":{\"branch\":\"tk-cond-api\",\"config\":{\"env\":[\"TEST_JOB={{ .Values.tidepool.tests.job }}\"]}}}'"
+            - "https://api.travis-ci.com/repo/tidepool-org%2FAPITests/requests"
 {{- end }}
