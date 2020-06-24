@@ -27,7 +27,7 @@ spec:
                   name: travis
                   key: Token
           args:
-            - "-v"
+            - "-i"
             - "-X"
             - "POST"
             - "-H"
@@ -39,6 +39,6 @@ spec:
             - "-H"
             - "Authorization: token $(TOKEN)"
             - "-d"
-            - "{\"request\":{\"branch\":\"tk-cond-api\",\"config\":{\"env\":[\"TEST_JOB={{ .Values.tidepool.tests.job }}\"]}}}"
+            - "{\"request\":{\"branch\":\"master\",\"config\":{\"env\":[\"TEST_JOB={{ .Values.tidepool.tests.job }}\"]}}}"
             - "https://api.travis-ci.com/repo/tidepool-org%2FAPITests/requests"
 {{- end }}
