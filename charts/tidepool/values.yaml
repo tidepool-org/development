@@ -42,6 +42,8 @@ global:
     generated: false
     templated: false
 tidepool:
+  tests:
+    enabled: false
   namespace:
     create: true
     annotations: {}                                # namespace annotations

@@ -1,0 +1,24 @@
+{{- if .Values.tidepool.tests.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-tests-launcher"
+  labels:
+{{ include "charts.labels.standard" .}}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}-tests-launcher"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: run-tests-job
+          image: "alpine:3.3"
+          command: ["/bin/sleep","10"]
+{{- end }}
