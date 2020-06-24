@@ -43,6 +43,7 @@ global:
     templated: false
 tidepool:
   tests:
+    job: "none"
     enabled: false
   namespace:
     create: true

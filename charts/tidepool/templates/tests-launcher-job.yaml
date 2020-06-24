@@ -1,4 +1,4 @@
-{{- if .Values.tidepool.tests.enabled }}
+{{- if and (eq .Values.tidepool.tests.enabled true) (ne .Values.tidepool.tests.job "none") }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -19,6 +19,25 @@ spec:
       restartPolicy: Never
       containers:
         - name: run-tests-job
-          image: "alpine:3.3"
-          command: ["/bin/sleep","10"]
+          image: "curlimages/curl:latest"
+          env:
+            - name: TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: travis
+                  key: Token
+          args:
+            - "-s"
+            - "-X"
+            - "POST"
+            - "-H"
+            - "\"Content-Type: application/json\""
+            - "-H"
+            - "Accept: application/json"
+            - "-H"
+            - "Travis-API-Version: 3"
+            - "-H"
+            - "Authorization: token $TOKEN"
+            - "-d"
+            - "'{\"request\":{\"branch\":\"tk-cond-api\",\"config\":{\"env\":[\"TEST_JOB={{ .Values.tidepool.tests.job }}\"]}}}'"
 {{- end }}
