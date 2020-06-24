@@ -30,7 +30,7 @@ spec:
       - env:
         {{ include "charts.platform.env.misc" .}}
         - name: TIDEPOOL_SERVER_PORT
-          value: {{.Values.global.ports.devices}}
+          value: "{{.Values.global.ports.devices}}"
         image: "{{ .Values.deployment.image }}"
         name: devices
         ports:
