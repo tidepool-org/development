@@ -1,4 +1,5 @@
 ---
+{{- define "charts.assets.s3.url" -}} {{include "charts.s3.url" .}}/{{ .Values.deployment.env.store.s3.bucket }} {{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -44,6 +45,28 @@ spec:
               key: ServiceAuth
         - name: TIDEPOOL_PRESCRIPTION_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.prescription}}
+        - name: TIDEPOOL_KAFKA_BROKERS
+          valueFrom:
+            configMapKeyRef:
+              name: kafka
+              key: Brokers
+              optional: false
+        - name: TIDEPOOL_KAFKA_TOPIC_PREFIX
+          valueFrom:
+            configMapKeyRef:
+              name: kafka
+              key: TopicPrefix
+              optional: false
+        - name: TIDEPOOL_KAFKA_EMAILS_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: kafka
+              key: EmailsTopic
+              optional: false
+        - name: TIDEPOOL_WEBAPP_URL
+          value: "{{ include "charts.host.app" . }}"
+        - name: TIDEPOOL_ASSETS_URL
+          value: "{{ include "charts.assets.s3.url" . }}"
         image: "{{ .Values.deployment.image }}"
         {{ template "charts.platform.probes" .Values.global.ports.prescription}}
         name: prescription
