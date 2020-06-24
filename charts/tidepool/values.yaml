@@ -19,6 +19,7 @@ global:
     enabled: true
   ports:
     blip: 3000                                     # blip service internal port
+    devices: 9228                                  # devices service internal port
     export: 9300                                   # export service internal port
     gatekeeper: 9123                               # gatekeeper service internal port
     highwater: 9191                                # highwater service internal port
