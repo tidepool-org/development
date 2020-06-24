@@ -30,9 +30,7 @@ spec:
       terminationGracePeriodSeconds: 5
       {{- if .Values.tolerations }}
       tolerations:
-        {{- range $key, $value := .Values.tolerations }}
-        {{ $key }}: {{ $value }}
-        {{- end }}
+        {{ toYaml .Values.tolerations | nindent 8 }}
       {{- end }}
       {{- if .Values.nodeSelector }}
       nodeSelector:
