@@ -3,3 +3,6 @@ secret:
   data_:
     public: ""
     private: ""
+nodeSelector: {}
+tolerations: []
+affinity: {}

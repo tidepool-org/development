@@ -2,3 +2,6 @@ secret:
   enabled: false
   data_:
     ServiceAuth: ""
+nodeSelector: {}
+tolerations: []
+affinity: {}

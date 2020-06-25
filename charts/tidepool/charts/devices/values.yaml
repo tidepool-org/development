@@ -9,3 +9,6 @@ hpa:
 pdb:
   enabled: false
   minAvailable: 1
+nodeSelector: {}
+tolerations: []
+affinity: {}

@@ -8,3 +8,6 @@ secret:
     Database: ""
     Tls: ""
     OptParams: ""
+nodeSelector: {}
+tolerations: []
+affinity: {}

@@ -20,3 +20,6 @@ pdb:
   minAvailable: 1
 mongo:
   secretName: mongo
+nodeSelector: {}
+tolerations: []
+affinity: {}

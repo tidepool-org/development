@@ -38,3 +38,6 @@ virtualServices:
       enabled: false
     jwt:
       enabled: false
+nodeSelector: {}
+tolerations: []
+affinity: {}

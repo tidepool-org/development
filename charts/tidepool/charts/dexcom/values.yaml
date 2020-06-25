@@ -7,3 +7,6 @@ secret:
 configmap:
   enabled: true
   redirectURL: ""
+nodeSelector: {}
+tolerations: []
+affinity: {}

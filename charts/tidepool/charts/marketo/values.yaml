@@ -9,3 +9,6 @@ configmap:
     ClinicRole: "clinic"
     PatientRole: "user"
     Timeout: "15000000"
+nodeSelector: {}
+tolerations: []
+affinity: {}

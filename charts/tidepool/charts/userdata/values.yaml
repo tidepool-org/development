@@ -4,3 +4,6 @@ secret:
     UserPasswordSalt: ""
     UserIdSalt: ""
     GroupIdEncryptionKey: ""
+nodeSelector: {}
+tolerations: []
+affinity: {}
