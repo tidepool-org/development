@@ -42,6 +42,9 @@ global:
     generated: false
     templated: false
 tidepool:
+  tests:
+    job: "none"
+    enabled: false
   namespace:
     create: true
     annotations: {}                                # namespace annotations

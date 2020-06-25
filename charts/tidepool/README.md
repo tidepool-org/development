@@ -155,6 +155,8 @@ The following tables lists the configurable parameters of the Ambassador chart a
 | `task.deployment.image`                              | task Docker image                                                                         | ``                                  |  
 | `task.secret.data_.ServiceAuth`                      | task authorization, if empty, random value is generated                                   | ``                                  |  
 | `tidepool.namespace.create`                          | whether to create namespace                                                               | `false`                             |  
+| `tidepool.tests.enabled`                             | whether to trigger integration tests job                                                  | `false`                             |  
+| `tidepool.tests.job`                                 | the name of APITests travis job to run                                                    | ``                                  |  
 | `tidewhisperer.deployment.image`                     | tidewhisperer Docker image                                                                | ``                                  |  
 | `tools.deployment.image`                             | tools Docker image                                                                        | ``                                  |  
 | `tools.enabled`                                      | whether to Enable tools service                                                           | `true`                              |  

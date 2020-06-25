@@ -1,0 +1,44 @@
+{{- if and (eq .Values.tidepool.tests.enabled true) (ne .Values.tidepool.tests.job "none") }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-tests-launcher"
+  labels:
+{{ include "charts.labels.standard" .}}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}-tests-launcher"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: run-tests-job
+          image: "curlimages/curl:latest"
+          env:
+            - name: TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: travis
+                  key: Token
+          args:
+            - "-i"
+            - "-X"
+            - "POST"
+            - "-H"
+            - "Content-Type: application/json"
+            - "-H"
+            - "Accept: application/json"
+            - "-H"
+            - "Travis-API-Version: 3"
+            - "-H"
+            - "Authorization: token $(TOKEN)"
+            - "-d"
+            - "{\"request\":{\"branch\":\"master\",\"config\":{\"env\":[\"TEST_JOB={{ .Values.tidepool.tests.job }}\"]}}}"
+            - "https://api.travis-ci.com/repo/tidepool-org%2FAPITests/requests"
+{{- end }}
