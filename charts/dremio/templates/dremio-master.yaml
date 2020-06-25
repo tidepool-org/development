@@ -38,6 +38,8 @@ spec:
         {{ $key }}: {{ $value }}
         {{- end }}
       {{- end }}
+      serviceAccount: {{ .Values.serviceAccount.name }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       containers:
       - name: dremio-master-coordinator
         image: {{.Values.image}}:{{.Values.imageTag}}
