@@ -11,6 +11,8 @@ spec:
   template:
     metadata:
       name: "{{ .Release.Name }}-tests-launcher"
+      annotations:
+        "linkerd.io/inject": "disabled"
       labels:
         app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
         app.kubernetes.io/instance: {{ .Release.Name | quote }}
