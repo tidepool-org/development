@@ -163,7 +163,21 @@ Create liveness and readiness probes for platform services.
           initialDelaySeconds: 5
           periodSeconds: 10
           timeoutSeconds: 5
-{{- end -}} 
+{{- end -}}
+{{- define "charts.platform.grpc_probes" -}}
+        livenessProbe:
+          exec:
+            command: ["/bin/grpc_health_probe", "-addr=:{{.}}"]
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command: ["/bin/grpc_health_probe", "-addr=:{{.}}"]
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+{{- end -}}
 {{- define "charts.init.shoreline" -}}
       - name: init-shoreline
         image: busybox:1.31.1

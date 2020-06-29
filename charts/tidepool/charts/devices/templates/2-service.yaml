@@ -10,8 +10,11 @@ metadata:
 spec:
   ports:
   - name: "grpc"
-    port: {{ .Values.global.ports.devices }}
+    port: {{ .Values.global.ports.devices_grpc }}
     targetPort: "grpc"
+  - name: "http"
+    port: {{ .Values.global.ports.devices_http }}
+    targetPort: "http"
   selector:
     app: devices
     app.kubernetes.io/name: {{ include "charts.name" . }}
