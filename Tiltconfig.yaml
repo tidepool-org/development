@@ -294,7 +294,7 @@ prescription:
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.prescription'
-  rebuildCommand: 'make service-build'
+  rebuildCommand: 'SERVICE=prescription make service-build'
 
 seagull:
   deployment:
