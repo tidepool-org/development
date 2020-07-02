@@ -1,0 +1,21 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: devices
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+    prefix: /v1/devices
+  routeAction:
+    single:
+      upstream:
+        name: devices
+        namespace: {{ .Release.Namespace }}
+{{- end }}
