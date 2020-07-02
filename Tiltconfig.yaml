@@ -3,7 +3,6 @@
 # parameters, and update the `hostPath` if you've checked the repo out to a different location.
 
 ### Global Config Start ###
-
 global:
   gateway:
     default:
@@ -50,6 +49,7 @@ apiServer:
   enable: false
 ### Gateway Config End ###
 
+### MongoDB Config Start ###
 mongodb:
   persistent: true
   enabled: false # False to disable the helm-chart-defined mongo, as we deploy our own directly within the Tiltfile
