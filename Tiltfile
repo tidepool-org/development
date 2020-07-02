@@ -5,8 +5,7 @@ tidepool_helm_overrides_file = getHelmOverridesFile()
 config = getConfig()
 watch_file(tidepool_helm_overrides_file)
 
-tidepool_helm_charts_version = config.get('tidepool_helm_charts_version')
-tidepool_helm_chart_dir = "./charts/tidepool/{}".format(tidepool_helm_charts_version)
+tidepool_helm_chart_dir = "./charts/tidepool"
 
 is_shutdown = isShutdown()
 ### Config End ###
@@ -43,9 +42,6 @@ def main():
     if not getNested(config, 'mongodb.useExternal'):
       print("Preparing mongodb service...")
       local('while ! nc -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
-
-    print("Preparing gateway services...")
-    local('while ! nc -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
 
   else:
     # Shut down the mongodb and gateway services
@@ -104,10 +100,10 @@ def provisionServerSecrets ():
     'export',
     'image',
     'kissmetrics',
-    'mailchimp',
     'marketo',
     'mongo',
     'notification',
+    'prescription',
     'server',
     'shoreline',
     'task',
@@ -117,22 +113,20 @@ def provisionServerSecrets ():
 
   secretHelmKeyMap = {
     'kissmetrics': 'global.secret.templated',
-    'mailchimp': 'global.secret.templated',
   }
 
   secretChartPathMap = {
     'kissmetrics': 'highwater/charts/kissmetrics/templates/kissmetrics-secret.yaml',
-    'mailchimp': 'shoreline/charts/mailchimp/templates/mailchimp-secret.yaml',
   }
 
   # Skip secrets already available on cluster
   existing_secrets = str(local("kubectl get secrets -o=jsonpath='{.items[?(@.type==\"Opaque\")].metadata.name}'")).split()
   for existing_secret in existing_secrets:
-    if required_secrets.index(existing_secret) >= 0:
+    if existing_secret in required_secrets:
       required_secrets.remove(existing_secret)
 
   for secret in required_secrets:
-    secretChartPath = secretChartPathMap.get(secret, '{secret}/templates/{secret}-secret.yaml'.format(
+    secretChartPath = secretChartPathMap.get(secret, '{secret}/templates/0-secret.yaml'.format(
       secret=secret,
     ))
 
@@ -167,7 +161,7 @@ def provisionConfigMaps ():
       required_configmaps.remove(existing_configmap)
 
   for configmap in required_configmaps:
-    configmapChartPath = '{configmap}/templates/{configmap}-configmap.yaml'.format(
+    configmapChartPath = '{configmap}/templates/0-configmap.yaml'.format(
       configmap=configmap,
     )
 

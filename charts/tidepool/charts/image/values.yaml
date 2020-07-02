@@ -1,0 +1,34 @@
+iamRole: ""
+secret:
+  enabled: false
+  data_:
+    ServiceAuth: ""
+deployment:
+  image: tidepool/platform-image:master-latest
+  replicas: 1
+  env:
+    store:
+      file:
+        directory: "_data/image"                                            # directory to use if using local file storage
+        prefix: "images"
+      s3:
+        bucket:  "data"
+        prefix: "images"
+      type: file
+      #type: s3
+resources: {}
+podSecurityContext: {}
+podAnnotations: {}
+securityContext: {}
+serviceAccount:
+  create: false
+hpa:
+  enabled: false
+pdb:
+  enabled: false
+  minAvailable: 1
+mongo:
+  secretName: mongo
+nodeSelector: {}
+tolerations: []
+affinity: {}

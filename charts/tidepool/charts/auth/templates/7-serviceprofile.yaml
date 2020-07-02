@@ -1,0 +1,69 @@
+{{ if .Values.global.linkerdsupport.enabled }}
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: auth.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/restricted_tokens
+    name: /v1/users/{id}/restricted_tokens_get_auth
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/restricted_tokens
+    name: /v1/users/{id}/restricted_tokens_post_auth
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/restricted_tokens
+    name: /v1/users/{id}/restricted_tokens_delete_auth
+  - condition:
+      method: GET
+      pathRegex: /v1/users/[^/]+/provider_sessions
+    name: /v1/users/{id}/provider_sessions_get_auth
+  - condition:
+      method: POST
+      pathRegex: /v1/users/[^/]+/provider_sessions
+    name: /v1/users/{id}/provider_sessions_post_auth
+  - condition:
+      method: DELETE
+      pathRegex: /v1/users/[^/]+/provider_sessions
+    name: /v1/users/{id}/provider_sessions_delete_auth
+  - condition:
+      method: GET
+      pathRegex: /v1/provider_sessions/[^/]+
+    name: /v1/provider_sessions/{id}_get_auth
+  - condition:
+      method: PUT
+      pathRegex: /v1/provider_sessions/[^/]+
+    name: /v1/provider_sessions/{id}_put_auth
+  - condition:
+      method: DELETE
+      pathRegex: /v1/provider_sessions/[^/]+
+    name: /v1/provider_sessions/{id}_delete_auth
+  - condition:
+      method: GET
+      pathRegex: /v1/oauth/[^/]+/authorize
+    name: /v1/oauth/{id}/authorize_get_auth
+  - condition:
+      method: DELETE
+      pathRegex: /v1/oauth/[^/]+/authorize
+    name: /v1/oauth/{id}/authorize_delete_auth
+  - condition:
+      method: GET
+      pathRegex: /v1/oauth/[^/]+/redirect
+    name: /v1/oauth/{id}/redirect_get_auth
+  - condition:
+      method: GET
+      pathRegex: /v1/restricted_tokens.*
+    name: /v1/restricted_tokens_get_auth
+  - condition:
+      method: PUT
+      pathRegex: /v1/restricted_tokens.*
+    name: /v1/restricted_tokens_put_auth
+  - condition:
+      method: DELETE
+      pathRegex: /v1/restricted_tokens.*
+    name: /v1/restricted_tokens_delete_auth
+{{- end }}

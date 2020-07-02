@@ -1,0 +1,36 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: highwater
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+      exact: /metrics/status
+    routeAction:
+      single:
+        upstream:
+          name: highwater
+          namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
+  - matchers:
+    - prefix: /metrics/
+    routeAction:
+      single:
+        upstream:
+          name: highwater
+          namespace: {{ .Release.Namespace }}
+    options:
+      retries:
+        retryOn: '5xx'
+        numRetries: 3
+        perTryTimeout: '15s'
+{{- end }}

@@ -5,14 +5,17 @@ tidepool_helm_overrides_file = getHelmOverridesFile()
 config = getConfig()
 watch_file(tidepool_helm_overrides_file)
 
-tidepool_helm_charts_version = config.get('tidepool_helm_charts_version')
-tidepool_helm_chart_dir = "./charts/tidepool/{}".format(tidepool_helm_charts_version)
-
-gloo_chart_dir = './local/charts'
-absolute_gloo_chart_dir = getAbsoluteDir(gloo_chart_dir)
+local_helm_chart_dir = './local/charts'
+absolute_gloo_chart_dir = getAbsoluteDir(local_helm_chart_dir)
 gloo_helm_template_cmd = 'helm template --namespace default '
+local_downloads_dir = getAbsoluteDir('./local/downloads')
 
 is_shutdown = isShutdown()
+
+gloo_version = '1.3.5'
+gloo_archive_name = 'gloo-{}.tgz'.format(gloo_version)
+gloo_helm_url = 'https://storage.googleapis.com/solo-public-helm/charts/{}'.format(gloo_archive_name)
+
 ### Config End ###
 
 ### Main Start ###
@@ -31,10 +34,19 @@ def main():
 
 ### Extract Gloo Charts Start ###
 def extractGlooGatewayCharts():
-  for chart in listdir('{}/charts'.format(tidepool_helm_chart_dir)):
-    if chart.find('gloo') >= 0:
-      local('mkdir -p {}'.format(absolute_gloo_chart_dir))
-      local('tar -xzf {} -C {}'.format(chart, absolute_gloo_chart_dir));
+  local('mkdir -p {}'.format(local_downloads_dir))
+  chart = '{}/{}'.format(local_downloads_dir, gloo_archive_name)
+  exists = False
+  for chart in listdir(local_downloads_dir):
+    if chart.find(gloo_archive_name) >= 0:
+      exists = True
+      break
+
+  if exists == False:
+    local('cd {} && curl -O {}'.format(local_downloads_dir, gloo_helm_url))
+
+  local('mkdir -p {}'.format(absolute_gloo_chart_dir))
+  local('tar -xzf {} -C {}'.format(chart, absolute_gloo_chart_dir));
 ### Extract Gloo Charts End ###
 
 ### Custom Resource Definitions Start ###

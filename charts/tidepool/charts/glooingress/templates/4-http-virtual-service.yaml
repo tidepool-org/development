@@ -1,0 +1,68 @@
+{{ if .Values.global.glooingress.enabled }}
+{{- $spec := .Values.virtualServices.http }}
+{{ if $spec.enabled }}
+{{- $port := $spec.port | default "80" }}
+---
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: {{ $spec.name  }}
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+  {{- range $key, $value := $spec.labels}}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+spec:
+  displayName: http
+  virtualHost:
+{{ $optionsExist := false }}
+{{- if $spec.options.stats }}
+{{ $optionsExist = true }}
+    options:
+      stats:
+{{- toYaml $spec.options.stats | nindent 8 }}
+{{- end }}
+{{- if and $spec.extauth $spec.extauth.enabled }}
+{{- if not $optionsExist }}
+{{ $optionsExist = true }}
+    options:
+{{- end }}
+      extauth:
+        configRef:
+          name: {{ $spec.extauth.name }}
+          namespace: {{ $spec.extauth.namespace }}
+{{- end }}
+{{- if and $spec.jwt $spec.jwt.enabled }}
+{{- if not $optionsExist }}
+{{ $optionsExist = true }}
+    options:
+{{- end }}
+{{- toYaml $spec.jwt.config | nindent 6 }}
+{{- end }}
+    domains:
+{{- if and $spec.serveAllDomains }}
+    - '*'
+{{- else }}
+{{- if not $spec.redirect }}
+    - internal.{{ .Release.Namespace }}
+{{- end }}
+{{- range $dnsName := $spec.dnsNames }}
+    - '{{ if ne $port "80" -}}{{- printf "%s:%s" $dnsName $port -}} {{- else }}{{ printf "%s" $dnsName -}}{{- end }}'
+{{- end }}
+{{- end }}
+
+    routes:
+    - matchers:
+      - prefix: '/'
+{{- if $spec.redirect }}
+      redirectAction:
+        httpsRedirect: true
+{{- else }}
+      delegateAction:
+        selector:
+          labels:
+            namespace: {{ $.Release.Namespace }}
+            app: tidepool
+{{- end }}
+{{- end }}
+{{- end }}

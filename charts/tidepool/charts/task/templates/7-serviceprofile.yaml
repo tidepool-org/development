@@ -1,0 +1,29 @@
+{{ if .Values.global.linkerdsupport.enabled }}
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: task.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_get_task
+  - condition:
+      method: PUT
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_put_task
+  - condition:
+      method: DELETE
+      pathRegex: /v1/tasks/[^/]+
+    name: /v1/tasks/{id}_delete_task
+  - condition:
+      method: GET
+      pathRegex: /v1/tasks.*
+    name: /v1/tasks_get_task
+  - condition:
+      method: POST
+      pathRegex: /v1/tasks.*
+    name: /v1/tasks_post_task
+{{- end }}

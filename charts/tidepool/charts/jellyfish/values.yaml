@@ -1,0 +1,26 @@
+enabled: true
+deployment:
+  image: tidepool/jellyfish:master-latest
+  replicas: 1
+  env:
+    store:
+      s3:
+        bucket: "data"
+    type: file
+resources: {}
+podSecurityContext: {}
+podAnnotations: {}
+securityContext: {}
+serviceAccount:
+  create: false
+hpa:
+  enabled: false
+nodeEnvironment: production
+pdb:
+  enabled: false
+  minAvailable: 1
+mongo:
+  secretName: mongo
+nodeSelector: {}
+tolerations: []
+affinity: {}

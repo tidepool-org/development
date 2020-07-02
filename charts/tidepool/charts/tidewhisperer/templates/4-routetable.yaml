@@ -1,0 +1,38 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: tidewhisperer
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+      exact: /data/status
+    routeAction:
+      single:
+        upstream:
+          name: tidewhisperer
+          namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
+      prefixRewrite: /status
+  - matchers:
+    - methods:
+      - GET
+      prefix: /data/
+    routeAction:
+      single:
+        upstream:
+          name: tidewhisperer
+          namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
+      timeout: '3m'
+{{- end }}

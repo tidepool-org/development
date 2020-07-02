@@ -3,7 +3,6 @@
 # parameters, and update the `hostPath` if you've checked the repo out to a different location.
 
 ### Global Config Start ###
-tidepool_helm_charts_version: '0.1.7' # Version of the Tidepool helm charts to deploy.
 
 global:
   gateway:
@@ -11,6 +10,11 @@ global:
       protocol: http
       host: localhost:3000
       domain: localhost
+    proxy:
+      name: gateway-proxy
+      namespace: default
+  linkerdsupport:
+    enabled: false
   ports:
     viz:
       stories: 8083
@@ -32,16 +36,14 @@ global:
 gateway-proxy:
   portForwards: ['3000']
 
-gloo:
-  enabled: false # we provision this in Tiltfile directly with kubectl
-
-ingress:
-  deployment:
-    name: gateway-proxy
-    namespace: default
-  gateway:
+glooingress:
+  enabled: true
+  jwt:
+    enabled: false
+  virtualServices:
     http:
-      dnsNames: [ "*" ]
+      name: "internal"
+      dnsNames: ["*"]
       port: "3000"
 
 apiServer:
@@ -84,6 +86,80 @@ dexcom:
       ClientSecret: ""
       StateSalt: ""
 ### Dexcom API Config End ###
+
+### JWT Token Signing Keys Config Start ###
+token-signing-key:
+  secret:
+    enabled: true
+    data_:
+      public: |
+        -----BEGIN PUBLIC KEY-----
+        MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA4m4UpnQdXbPKBY6mm8Pf
+        ThSd8FV7uMk+X5yBe3tfOjcAZVJEJGNGpaXI8xO2A9zQiAQr5dstSF/b2NdctLK9
+        u9D7vcBJ+S5MMo7GiWROZmKLCRXYlKa9mQMls3ZsCyjwF83HaXYLHZo8idfij5vD
+        e1XPPtbewQK5+m8HP7n8uF3qdXDTtXHAd+lI3faB8gMh56XnM3oP1bpe1M/zB88P
+        tJGqyMzMlo4Hz3x9zVtlQqFQsgh0DCw6mzfKeJkRLYIxk42wfjM0QeuLBgRMZrIQ
+        mtduvPR91jvoHw6ov2gyA68iLGL7Bh6BbLjbPQCH/5OzuTHVd3dOl/KaSSb1Wicm
+        R1hYcAbr2TnBRp7I/pLdrdPaSC65xpZZnOaNoB5CKv2gSaxJpRrwJSnCIaw+qG9v
+        gNlYdQxjEqdjryOOks/PJn0L5wiQespD6i7zTBeRRdwWBMnkgKgQVVUQt6rgLNQk
+        J8oWeHmTjJANmAntFLeAyHsVGKB/3pWaFF+tWveUIrQKvvaHt0G2KrUBRhLJNcQR
+        fKrvzvvT6w33tZAx75iOhkX1CbzrK/zRj0+fGoIu0PfRQXu2e8qRaiMmZiIHUZY/
+        pTf/TSrCNO1wldByDVs5vwSVM8gvvR1MBic4hoMHkYOcb8GFq26Pi3HMyXE/fmKP
+        itDtdf0AtwqBUC5R0ou7omkCAwEAAQ==
+        -----END PUBLIC KEY-----
+      private: |
+        -----BEGIN RSA PRIVATE KEY-----
+        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
+        -----END RSA PRIVATE KEY-----
+### JWT Token Signing Keys Config End ###
 
 ### User Data Secret Config Start ###
 userdata:
@@ -210,6 +286,15 @@ notification:
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.notification'
   rebuildCommand: 'SERVICE=notification make service-build'
+
+prescription:
+  deployment:
+    replicas: 0
+    # image: tidepool-k8s-prescription
+  # hostPath: '~/go/src/github.com/tidepool-org/platform'
+  containerPath: '/go/src/github.com/tidepool-org/platform'
+  dockerFile: 'Dockerfile.prescription'
+  rebuildCommand: 'make service-build'
 
 seagull:
   deployment:

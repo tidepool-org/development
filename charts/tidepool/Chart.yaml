@@ -1,0 +1,10 @@
+apiVersion: v2
+description: A Helm chart for Tidepool
+name: tidepool
+version: 0.7.3
+maintainers:
+  - name: Derrick Burns
+    email: derrick@tidepool.org
+    url: https://github.com/derrickburns
+icon: https://www.tidepool.org/static/media/tidepool-t-logo.41feef82.png
+home: https://github.com/tidepool-org/development/charts

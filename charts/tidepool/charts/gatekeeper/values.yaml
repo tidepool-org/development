@@ -1,0 +1,18 @@
+deployment:
+  image: tidepool/gatekeeper:master-latest
+  replicas: 1
+resources: {}
+podSecurityContext: {}
+podAnnotations: {}
+securityContext: {}
+hpa:
+  enabled: false
+nodeEnvironment: production
+pdb:
+  enabled: false
+  minAvailable: 1
+mongo:
+  secretName: mongo
+nodeSelector: {}
+tolerations: []
+affinity: {}

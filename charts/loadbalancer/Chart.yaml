@@ -1,7 +1,0 @@
-apiVersion: v1
-description: A Helm chart to create a load balancer for the Tidepool API Gateway
-name: loadbalancer
-version: 0.1.0
-maintainers:
-  - name: Derrick Burns
-    email: derrick@tidepool.org

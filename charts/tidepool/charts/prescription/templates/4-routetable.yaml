@@ -1,0 +1,25 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: prescription
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      prefix: /v1/prescriptions
+    routeAction:
+      single:
+        upstream:
+          name: prescription
+          namespace: {{ .Release.Namespace }}
+{{- end }}

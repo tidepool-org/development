@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "charts.labels.standard" . }}
+{{ with .Values.configmap.data_ }}
+data:
+  AppleDeviceCheckKeyId: {{ .AppleDeviceCheckKeyId | default "" }}
+  AppleDeviceCheckKeyIssuer: {{ .AppleDeviceCheckKeyIssuer | default "" }}
+  AppleDeviceCheckUseDevelopment: "{{ .AppleDeviceCheckUseDevelopment | default "true" }}"
+{{- end }}

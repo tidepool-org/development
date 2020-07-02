@@ -1,0 +1,20 @@
+deployment:
+  image: tidepool/message-api:master-latest
+  replicas: 1
+  env:
+    window: 21
+resources: {}
+podSecurityContext: {}
+podAnnotations: {}
+securityContext: {}
+hpa:
+  enabled: false
+nodeEnvironment: production
+pdb:
+  enabled: false
+  minAvailable: 1
+mongo:
+  secretName: mongo
+nodeSelector: {}
+tolerations: []
+affinity: {}

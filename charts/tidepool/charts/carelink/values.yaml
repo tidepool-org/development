@@ -1,0 +1,7 @@
+secret:
+  enabled: false
+  data_:
+    CareLinkSalt: ""
+nodeSelector: {}
+tolerations: []
+affinity: {}

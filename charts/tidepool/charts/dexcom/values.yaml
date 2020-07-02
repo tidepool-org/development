@@ -1,0 +1,12 @@
+secret:
+  enabled: false
+  data_:
+    ClientId: ""
+    ClientSecret: ""
+    StateSalt: ""                            # the Dexcom client API url
+configmap:
+  enabled: true
+  redirectURL: ""
+nodeSelector: {}
+tolerations: []
+affinity: {}

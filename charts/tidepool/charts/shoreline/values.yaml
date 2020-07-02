@@ -1,0 +1,30 @@
+configmap:
+  enabled: false
+  data:
+    ClinicDemoUserId: ""
+secret:
+  enabled: false
+  data_:
+    ServiceAuth: ""
+    UserLongTermKey:
+    UserMailVerification: ""
+    ClinicDemoUserId: ""
+deployment:
+  image: tidepool/shoreline:master-latest
+  replicas: 1
+resources: {}
+podSecurityContext: {}
+podAnnotations: {}
+securityContext: {}
+serviceMonitor:
+  enabled: false
+hpa:
+  enabled: false
+pdb:
+  enabled: false
+  minAvailable: 1
+mongo:
+  secretName: mongo
+nodeSelector: {}
+tolerations: []
+affinity: {}

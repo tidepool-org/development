@@ -1,0 +1,24 @@
+secret:
+  enabled: false
+  data_:
+    ServiceAuth: ""
+deployment:
+  image: tidepool/platform-prescription:add-prescription-service-bc54703cd71ee5998bacff4b63511d45c9dbdf00
+  replicas: 1
+  podAnnotations: {}
+  env:
+    store:
+      s3:
+        bucket: "asset"
+resources: {}
+securityContext: {}
+hpa:
+  enabled: false
+pdb:
+  enabled: false
+  minAvailable: 1
+mongo:
+  secretName: mongo
+nodeSelector: {}
+tolerations: []
+affinity: {}

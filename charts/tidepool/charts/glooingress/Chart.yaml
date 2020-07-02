@@ -1,0 +1,10 @@
+apiVersion: v2
+description: A Helm chart to use Gloo for Tidepool ingress 
+name: glooingress
+version: 0.1.0
+appVersion: 1.3.2
+maintainers:
+  - name: Derrick Burns
+    email: derrick@tidepool.org
+icon: https://www.tidepool.org/static/media/tidepool-t-logo.41feef82.png
+home: https://github.com/tidepool-org/development/charts

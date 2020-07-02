@@ -1,7 +1,0 @@
-#!/bin/bash
-#
-# Get AWS Account from aws-auth configmap of current Kubectl context
-#
-# Usage: $0
-
-kubectl get -n kube-system configmap aws-auth -o json | jq '.data.mapRoles' | sed -e 's/.*arn:aws:iam:://' -e 's/:.*//'

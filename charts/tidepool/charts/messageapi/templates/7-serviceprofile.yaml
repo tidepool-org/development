@@ -1,0 +1,34 @@
+{{ if .Values.global.linkerdsupport.enabled }}
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: message-api.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /message/_get_message-api
+    timeout: 30s
+  - condition:
+      method: POST
+      pathRegex: /.*
+    name: /message/_post_message-api
+    timeout: 30s
+  - condition:
+      method: PUT
+      pathRegex: /.*
+    name: /message/_put_message-api
+    timeout: 30s
+  - condition:
+      method: PATCH
+      pathRegex: /.*
+    name: /message/_patch_message-api
+    timeout: 30s
+  - condition:
+      method: DELETE
+      pathRegex: /.*
+    name: /message/_delete_message-api
+    timeout: 30s
+{{- end }}
