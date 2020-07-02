@@ -289,7 +289,6 @@ notification:
 
 prescription:
   deployment:
-    replicas: 0
     # image: tidepool-k8s-prescription
   # hostPath: '~/go/src/github.com/tidepool-org/platform'
   containerPath: '/go/src/github.com/tidepool-org/platform'
