@@ -228,16 +228,6 @@ data:
   dockerFile: 'Dockerfile.data'
   rebuildCommand: 'SERVICE=data make service-build'
 
-devices:
-  enabled: false
-  deployment:
-    enabled: false
-    # image: tidepool-k8s-devices
-  # hostPath: '~/go/src/github.com/tidepool-org/platform'
-  containerPath: '/go/src/github.com/tidepool-org/platform'
-  dockerFile: 'Dockerfile.device'
-  rebuildCommand: 'SERVICE=device make service-build'
-
 export:
   deployment:
     # image: tidepool-k8s-export
