@@ -268,9 +268,11 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
                 packageName=packageName,
               )
 
-        buildCommand += ' --build-arg LINKED_PKGS={linkedPackages} --build-arg ROLLBAR_POST_SERVER_TOKEN={rollbarPostServerToken}'.format(
+        buildCommand += ' --build-arg LINKED_PKGS={linkedPackages} --build-arg ROLLBAR_POST_SERVER_TOKEN={rollbarPostServerToken} --build-arg I18N_ENABLED={i18nEnabled} --build-arg RX_ENABLED={rxEnabled}'.format(
           linkedPackages=','.join(activeLinkedPackages),
           rollbarPostServerToken=overrides.get('rollbarPostServerToken'),
+          i18nEnabled=overrides.get('i18nEnabled'),
+          rxEnabled=overrides.get('rxEnabled'),
         )
 
       buildCommand += ' {}'.format(hostPath)
