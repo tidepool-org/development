@@ -22,4 +22,13 @@ spec:
         upstream:
           name: prescription
           namespace: {{ .Release.Namespace }}
+  - matchers:
+    - methods:
+      - GET
+        regex: /v1/users/[^/]+/prescriptions
+    routeAction:
+      single:
+        upstream:
+          name: prescription
+          namespace: {{ .Release.Namespace }}
 {{- end }}
