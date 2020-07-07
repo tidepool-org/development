@@ -25,7 +25,7 @@ spec:
   - matchers:
     - methods:
       - GET
-        regex: /v1/users/[^/]+/prescriptions
+      regex: /v1/users/[^/]+/prescriptions
     routeAction:
       single:
         upstream:
