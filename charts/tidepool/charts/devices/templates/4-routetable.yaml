@@ -2,7 +2,7 @@
 apiVersion: gateway.solo.io/v1
 kind: RouteTable
 metadata:
-  name: prescription
+  name: devices
   namespace: {{ .Release.Namespace }}
   labels:
     namespace: {{ .Release.Namespace }}
@@ -12,23 +12,10 @@ spec:
   - matchers:
     - methods:
       - GET
-      - POST
-      - PUT
-      - PATCH
-      - DELETE
-      prefix: /v1/prescriptions
+      prefix: /v1/devices
     routeAction:
       single:
         upstream:
-          name: prescription
-          namespace: {{ .Release.Namespace }}
-  - matchers:
-    - methods:
-      - GET
-      regex: /v1/users/[^/]+/prescriptions
-    routeAction:
-      single:
-        upstream:
-          name: prescription
+          name: devices
           namespace: {{ .Release.Namespace }}
 {{- end }}
