@@ -9,6 +9,7 @@ spec:
   minAvailable: {{ .Values.pdb.minAvailable | default 1 }}
   selector:
     matchLabels:
-      app.kubernetes.io/instance: {{ .Release.Namespace }}
-      app.kubernetes.io/name: image
+      app: image
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
 {{ end }}
