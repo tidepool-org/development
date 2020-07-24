@@ -64,7 +64,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
           value: http://data:{{.Values.global.ports.data}}
         - name: TIDEPOOL_DEVICES_CLIENT_ADDRESS
-          value: dns://devices:{{.Values.global.ports.devices_grpc}}
+          value: devices:{{.Values.global.ports.devices_grpc}}
         - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
           valueFrom:
             configMapKeyRef:
