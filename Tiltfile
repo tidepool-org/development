@@ -1,3 +1,4 @@
+allow_k8s_contexts('kind-admin@mk')
 load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmOverridesFile', 'isShutdown')
 
 ### Config Start ###
@@ -50,7 +51,7 @@ def main():
     local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.gateway &>/dev/null &')
 
     # Clean up any tilt up backround processes
-    local("for pid in $(ps -ef | awk '/tilt\ up/ {print $2}'); do kill -9 $pid; done")
+    local('for pid in $(ps -ef | awk "/tilt\r up/ {print $2}"); do kill -9 $pid; done')
 
   # Apply any service overrides
   tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
@@ -281,14 +282,16 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       if overrides.get('rebuildCommand'):
         run_commands.append(run(overrides.get('rebuildCommand')))
 
-      # Apply any rebuild commands specified
-      if overrides.get('restartContainer', True):
-        run_commands.append(restart_container())
+      # Apply container process restart if specified
+      entrypoint = overrides.get('restartContainerCommand', []);
+      if overrides.get('restartContainerCommand'):
+        run_commands.append(run('./tilt/restart.sh'))
 
       live_update_commands = fallback_commands + sync_commands + run_commands
 
       custom_build(
         ref=getNested(overrides, 'deployment.image'),
+        entrypoint=entrypoint,
         command='{} {} {}'.format(preBuildCommand, buildCommand, postBuildCommand),
         deps=build_deps,
         disable_push=True,

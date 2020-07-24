@@ -209,8 +209,8 @@ blip:
       hostPath: ../platform-client
       enabled: false
   securityContext: *global-security-context
-  buildTarget: development # set to `production` to run minified production builds
-  restartContainer: false # Set to `true` if buildTarget = `production`
+  # buildTarget: production # Uncomment to run minified production builds
+  # restartContainerCommand: './tilt/start.sh npm run server' # Uncomment if buildTarget = `production`
 
 blob:
   deployment:
