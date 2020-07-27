@@ -15,6 +15,7 @@ serviceAccount:
   create: false
 hpa:
   enabled: false
+  minReplicas: 1
 nodeEnvironment: production
 pdb:
   enabled: false
