@@ -1,15 +1,17 @@
 {{ if .Values.pdb.enabled }}
+{{- if or (and .Values.controller.hpa.enabled (gt (.Values.controller.hpa.minReplicas | int) 1)) (gt (.Values.deployment.replicas | int) 1) -}}
 ---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: data
+  name: {{ include "charts.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
   minAvailable: {{ .Values.pdb.minAvailable | default 1 }}
   selector:
     matchLabels:
-      app: data
+      app: {{ include "charts.name" . }}
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+{{ end }}
 {{ end }}
