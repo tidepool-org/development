@@ -10,7 +10,7 @@ spec:
   minAvailable: {{ .Values.pdb.minAvailable | default 1 }}
   selector:
     matchLabels:
-      app: {{ include "charts.name" . }}
+      app: tide-whisperer
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
 {{ end }}
