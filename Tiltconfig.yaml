@@ -191,7 +191,7 @@ blip:
   rxEnabled: 'false' # Feature flag to enable prescriptions UI. Note must use 'true' or 'false'. Quotes mandatory.
   webpackDevTool: cheap-module-eval-source-map
   webpackDevToolViz: cheap-source-map # Suggest changing `cheap-source-map` to the slower, but far more helpful `source-map` if debugging errors in viz package files
-  webpackPublicPath: 'http://localhost:3000'
+  webpackPublicPath: 'http://localhost:3000/'
   disableDevTools: false # Suggest changing to `true` if working with large data sets in local development build
   linkedPackages:
     - name: viz
