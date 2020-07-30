@@ -64,8 +64,9 @@ spec:
             path: /export/status
             port: {{ .Values.global.ports.export }}
           initialDelaySeconds: 30
+          failureThreshold: 6
           periodSeconds: 10
-          timeoutSeconds: 5
+          timeoutSeconds: 10
         name: export
         ports:
         - containerPort: {{.Values.global.ports.export}}
