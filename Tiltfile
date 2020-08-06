@@ -1,5 +1,6 @@
+load('Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmOverridesFile', 'isShutdown')
+
 allow_k8s_contexts('kind-admin@mk')
-load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmOverridesFile', 'isShutdown')
 
 ### Config Start ###
 tidepool_helm_overrides_file = getHelmOverridesFile()
@@ -16,9 +17,6 @@ def main():
 
   # Set up tidepool helm template command
   tidepool_helm_template_cmd = 'helm template --namespace default '
-
-  gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
-  gateway_port_forward_host_port = gateway_port_forwards[0].split(':')[0]
 
   mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
   mongodb_port_forward_host_port = mongodb_port_forwards[0].split(':')[0]
@@ -226,6 +224,12 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
         ]))
 
         activeLinkedPackages = []
+
+        # Blip builds use up available inodes in the file system very fast, so we remove any dangling
+        # images or build cache artifacts after each build to help avoid a disk-pressure taint in Kubernetes.
+        postBuildCommand = ' && {currentDir}/bin/tidepool server-docker images purge && {currentDir}/bin/tidepool server-docker builder prune -f'.format(
+          currentDir=os.getcwd(),
+        )
 
         for package in overrides.get('linkedPackages'):
           packageName = package.get('packageName')
