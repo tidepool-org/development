@@ -9,6 +9,8 @@ resources: {}
 podSecurityContext: {}
 podAnnotations: {}
 securityContext: {}
+serviceMonitor:
+  enabled: false
 hpa:
   enabled: false
   minReplicas: 1
