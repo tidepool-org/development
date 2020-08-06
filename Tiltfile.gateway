@@ -1,5 +1,6 @@
-allow_k8s_contexts('kind-admin@mk')
 load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmOverridesFile', 'isShutdown')
+
+allow_k8s_contexts('kind-admin@mk')
 
 ### Config Start ###
 tidepool_helm_overrides_file = getHelmOverridesFile()

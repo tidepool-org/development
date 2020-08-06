@@ -1,5 +1,6 @@
-allow_k8s_contexts('kind-admin@mk')
 load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig')
+
+allow_k8s_contexts('kind-admin@mk')
 
 ### Config Start ###
 config = getConfig()
