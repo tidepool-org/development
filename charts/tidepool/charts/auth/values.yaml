@@ -18,6 +18,7 @@ podAnnotations: {}
 securityContext: {}
 hpa:
   enabled: false
+  minReplicas: 1
 pdb:
   enabled: false
   minAvailable: 1
