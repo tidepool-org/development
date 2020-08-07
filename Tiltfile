@@ -1,12 +1,13 @@
-load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmOverridesFile', 'isShutdown')
+load('Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmOverridesFile', 'isShutdown')
+
+allow_k8s_contexts('kind-admin@mk')
 
 ### Config Start ###
 tidepool_helm_overrides_file = getHelmOverridesFile()
 config = getConfig()
 watch_file(tidepool_helm_overrides_file)
 
-tidepool_helm_charts_version = config.get('tidepool_helm_charts_version')
-tidepool_helm_chart_dir = "./charts/tidepool/{}".format(tidepool_helm_charts_version)
+tidepool_helm_chart_dir = "./charts/tidepool"
 
 is_shutdown = isShutdown()
 ### Config End ###
@@ -16,9 +17,6 @@ def main():
 
   # Set up tidepool helm template command
   tidepool_helm_template_cmd = 'helm template --namespace default '
-
-  gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
-  gateway_port_forward_host_port = gateway_port_forwards[0].split(':')[0]
 
   mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
   mongodb_port_forward_host_port = mongodb_port_forwards[0].split(':')[0]
@@ -44,9 +42,6 @@ def main():
       print("Preparing mongodb service...")
       local('while ! nc -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
 
-    print("Preparing gateway services...")
-    local('while ! nc -z localhost {}; do sleep 1; done'.format(gateway_port_forward_host_port))
-
   else:
     # Shut down the mongodb and gateway services
     if not getNested(config, 'mongodb.useExternal'):
@@ -54,7 +49,7 @@ def main():
     local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.gateway &>/dev/null &')
 
     # Clean up any tilt up backround processes
-    local("for pid in $(ps -ef | awk '/tilt\ up/ {print $2}'); do kill -9 $pid; done")
+    local('for pid in $(ps -ef | awk "/tilt\r up/ {print $2}"); do kill -9 $pid; done')
 
   # Apply any service overrides
   tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
@@ -104,10 +99,10 @@ def provisionServerSecrets ():
     'export',
     'image',
     'kissmetrics',
-    'mailchimp',
     'marketo',
     'mongo',
     'notification',
+    'prescription',
     'server',
     'shoreline',
     'task',
@@ -117,22 +112,20 @@ def provisionServerSecrets ():
 
   secretHelmKeyMap = {
     'kissmetrics': 'global.secret.templated',
-    'mailchimp': 'global.secret.templated',
   }
 
   secretChartPathMap = {
     'kissmetrics': 'highwater/charts/kissmetrics/templates/kissmetrics-secret.yaml',
-    'mailchimp': 'shoreline/charts/mailchimp/templates/mailchimp-secret.yaml',
   }
 
   # Skip secrets already available on cluster
   existing_secrets = str(local("kubectl get secrets -o=jsonpath='{.items[?(@.type==\"Opaque\")].metadata.name}'")).split()
   for existing_secret in existing_secrets:
-    if required_secrets.index(existing_secret) >= 0:
+    if existing_secret in required_secrets:
       required_secrets.remove(existing_secret)
 
   for secret in required_secrets:
-    secretChartPath = secretChartPathMap.get(secret, '{secret}/templates/{secret}-secret.yaml'.format(
+    secretChartPath = secretChartPathMap.get(secret, '{secret}/templates/0-secret.yaml'.format(
       secret=secret,
     ))
 
@@ -167,7 +160,7 @@ def provisionConfigMaps ():
       required_configmaps.remove(existing_configmap)
 
   for configmap in required_configmaps:
-    configmapChartPath = '{configmap}/templates/{configmap}-configmap.yaml'.format(
+    configmapChartPath = '{configmap}/templates/0-configmap.yaml'.format(
       configmap=configmap,
     )
 
@@ -232,6 +225,12 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
 
         activeLinkedPackages = []
 
+        # Blip builds use up available inodes in the file system very fast, so we remove any dangling
+        # images or build cache artifacts after each build to help avoid a disk-pressure taint in Kubernetes.
+        postBuildCommand = ' && {currentDir}/bin/tidepool server-docker images purge && {currentDir}/bin/tidepool server-docker builder prune -f'.format(
+          currentDir=os.getcwd(),
+        )
+
         for package in overrides.get('linkedPackages'):
           packageName = package.get('packageName')
           packageHostPath = getAbsoluteDir(package.get('hostPath'))
@@ -274,9 +273,11 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
                 packageName=packageName,
               )
 
-        buildCommand += ' --build-arg LINKED_PKGS={linkedPackages} --build-arg ROLLBAR_POST_SERVER_TOKEN={rollbarPostServerToken}'.format(
+        buildCommand += ' --build-arg LINKED_PKGS={linkedPackages} --build-arg ROLLBAR_POST_SERVER_TOKEN={rollbarPostServerToken} --build-arg I18N_ENABLED={i18nEnabled} --build-arg RX_ENABLED={rxEnabled}'.format(
           linkedPackages=','.join(activeLinkedPackages),
           rollbarPostServerToken=overrides.get('rollbarPostServerToken'),
+          i18nEnabled=overrides.get('i18nEnabled'),
+          rxEnabled=overrides.get('rxEnabled'),
         )
 
       buildCommand += ' {}'.format(hostPath)
@@ -285,14 +286,16 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       if overrides.get('rebuildCommand'):
         run_commands.append(run(overrides.get('rebuildCommand')))
 
-      # Apply any rebuild commands specified
-      if overrides.get('restartContainer', True):
-        run_commands.append(restart_container())
+      # Apply container process restart if specified
+      entrypoint = overrides.get('restartContainerCommand', []);
+      if overrides.get('restartContainerCommand'):
+        run_commands.append(run('./tilt/restart.sh'))
 
       live_update_commands = fallback_commands + sync_commands + run_commands
 
       custom_build(
         ref=getNested(overrides, 'deployment.image'),
+        entrypoint=entrypoint,
         command='{} {} {}'.format(preBuildCommand, buildCommand, postBuildCommand),
         deps=build_deps,
         disable_push=True,

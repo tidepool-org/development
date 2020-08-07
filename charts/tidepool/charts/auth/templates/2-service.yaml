@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: auth
+{{ include "charts.labels.standard" .}}
+  name: auth
+  namespace: {{.Release.Namespace}}
+spec:
+  ports:
+  - name: "http"
+    port: {{ .Values.global.ports.auth }}
+    targetPort: "http"
+  selector:
+    app: auth
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+status:
+  loadBalancer: {}

@@ -1,9 +1,0 @@
-name: fluxcloud
-image: "justinbarrick/fluxcloud:v0.3.6"
-port: 80
-containerPort: 3032
-github: "https://github.com/tidepool-org/dev-ops"
-secretName: "slack"
-slack:
-  channel: "#flux"
-  username: "derrickburns"

@@ -1,0 +1,45 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: image
+  namespace: "{{ .Release.Namespace }}"
+  labels:
+    namespace: "{{ .Release.Namespace }}"
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      regex: "/v1/users/[^/]+/images/.+"
+    routeAction:
+      single:
+        upstream:
+          name: image
+          namespace: "{{ .Release.Namespace }}"
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      regex: "/v1/users/[^/]+/images"
+    routeAction:
+      single:
+        upstream:
+          name: image
+          namespace: "{{ .Release.Namespace }}"
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      - DELETE
+      prefix: "/v1/images"
+    routeAction:
+      single:
+        upstream:
+          name: image
+          namespace: "{{ .Release.Namespace }}"
+{{- end }}

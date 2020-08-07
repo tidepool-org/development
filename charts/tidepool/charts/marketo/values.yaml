@@ -1,0 +1,14 @@
+secret:
+  enabled: false
+  data_:
+    ID: ""
+    Secret: ""
+    URL: ""
+configmap:
+  data_:
+    ClinicRole: "clinic"
+    PatientRole: "user"
+    Timeout: "15000000"
+nodeSelector: {}
+tolerations: []
+affinity: {}

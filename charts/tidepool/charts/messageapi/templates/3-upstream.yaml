@@ -1,0 +1,12 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: messageapi
+  namespace: {{ .Release.Namespace }}
+spec:
+  kube:
+    serviceName: message-api
+    serviceNamespace: {{ .Release.Namespace }}
+    servicePort: {{ .Values.global.ports.messageapi }}
+{{- end }}

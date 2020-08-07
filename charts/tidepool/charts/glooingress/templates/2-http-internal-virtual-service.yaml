@@ -1,0 +1,55 @@
+{{ if .Values.global.glooingress.enabled }}
+{{- $internal := .Values.virtualServices.httpInternal }}
+{{- $spec := .Values.virtualServices.http }}
+{{- $port := $spec.port | default "80" }}
+{{ if or (not $spec.enabled) ($spec.redirect) }}
+---
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: {{ $internal.name }}
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+  {{- range $key, $value := $internal.labels}}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+spec:
+  displayName: http-internal
+  virtualHost:
+{{ $optionsExist := false }}
+{{- if $spec.options.stats }}
+{{ $optionsExist = true }}
+    options: 
+      stats:
+{{- toYaml $spec.options.stats | nindent 8 }}
+{{- end }}
+{{- if and $spec.extauth $spec.extauth.enabled }}
+{{- if not $optionsExist }}
+{{ $optionsExist = true }}
+    options:
+{{- end }}
+      extauth:
+        configRef:
+          name: {{ $spec.extauth.name }}
+          namespace: {{ $spec.extauth.namespace }}
+{{- end }}
+{{- if and $spec.jwt $spec.jwt.enabled }}
+{{- if not $optionsExist }}
+{{ $optionsExist = true }}
+    options:
+{{- end }}
+{{- toYaml $spec.jwt.config | nindent 6 }}
+{{- end }}
+    domains:
+    - internal.{{ .Release.Namespace }}
+    routes:
+    - matchers:
+      - prefix: '/'
+      delegateAction:
+        selector:
+          labels:
+            namespace: {{ .Release.Namespace }}
+            app: tidepool
+
+{{- end }}
+{{- end }}

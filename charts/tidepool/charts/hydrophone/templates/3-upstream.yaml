@@ -1,0 +1,12 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: hydrophone
+  namespace: {{ .Release.Namespace }}
+spec:
+  kube:
+    serviceName: hydrophone
+    serviceNamespace: {{ .Release.Namespace }}
+    servicePort: {{ .Values.global.ports.hydrophone }}
+{{- end }}

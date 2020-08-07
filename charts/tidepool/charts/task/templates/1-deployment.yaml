@@ -1,0 +1,117 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: task
+{{ include "charts.labels.standard" .}}
+  name: task
+  namespace: {{.Release.Namespace}}
+  annotations:
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},task,dexcom"
+    configmap.reloader.stakater.com/reload: "dexcom"
+{{ if .Values.deployment.annotations }}
+    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: task
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: {{ .Values.deployment.replicas }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: task
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+{{ if .Values.podAnnotations }}
+      annotations:
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
+    spec:
+      initContainers:
+      {{ if .Values.initContainers }}
+      {{ include "charts.init.shoreline" .}}
+{{- with .Values.initContainers }}
+{{toYaml . | indent 6}}{{- end }}
+      {{- end }}
+      containers:
+      - env:
+        {{ include "charts.platform.env.mongo" .}}
+        {{ include "charts.platform.env.misc" .}}
+        {{ include "charts.platform.env.clients" .}}
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: Scopes
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: dexcom
+              key: ClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: dexcom
+              key: ClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: dexcom
+              key: StateSalt
+              optional: true
+        - name: TIDEPOOL_TASK_QUEUE_DELAY
+          value: {{ .Values.deployment.env.queue.delay | quote }}
+        - name: TIDEPOOL_TASK_QUEUE_WORKERS
+          value: {{ .Values.deployment.env.queue.workers | quote }}
+        - name: TIDEPOOL_TASK_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: task
+              key: ServiceAuth
+        - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
+          value: :{{ .Values.global.ports.task }}
+        image: "{{ .Values.deployment.image }}"
+        securityContext:
+          {{- .Values.podSecurityContext | toYaml | nindent 10 }}
+        {{ template "charts.platform.probes" .Values.global.ports.task}}
+        name: task
+        ports:
+        - containerPort: {{.Values.global.ports.task}}
+          name: "http"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      securityContext:
+          {{- toYaml .Values.securityContext | nindent 8 }}
+      restartPolicy: Always
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

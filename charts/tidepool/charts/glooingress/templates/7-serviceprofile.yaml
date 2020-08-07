@@ -1,0 +1,14 @@
+{{ if .Values.global.linkerdsupport.enabled }}
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: internal.{{ .Release.Namespace }}.svc.cluster.local
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /.*
+    name: /internal/all
+    timeout: 3m
+{{- end }}

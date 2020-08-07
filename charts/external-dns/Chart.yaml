@@ -1,7 +1,0 @@
-apiVersion: v1
-description: A Helm chart for the External-DNS service
-name: development
-version: 0.1.0
-maintainers:
-  - name: development
-    email: derrick@tidepool.org

@@ -1,0 +1,23 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: blip
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  weight: 10000
+  routes:
+  - matchers:
+    - prefix: /
+    routeAction:
+      single:
+        upstream:
+          name: blip
+          namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
+{{- end }}

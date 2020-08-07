@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: message-api
+{{ include "charts.labels.standard" .}}
+  name: message-api
+  namespace: {{.Release.Namespace}}
+spec:
+  ports:
+  - name: "http"
+    port: {{.Values.global.ports.messageapi}}
+    targetPort: "http"
+  selector:
+    app: message-api
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+status:
+  loadBalancer: {}

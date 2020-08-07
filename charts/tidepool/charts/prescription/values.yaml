@@ -1,0 +1,25 @@
+secret:
+  enabled: false
+  data_:
+    ServiceAuth: ""
+deployment:
+  image: tidepool/platform-prescription:master-latest
+  replicas: 1
+  podAnnotations: {}
+  env:
+    store:
+      s3:
+        bucket: "asset"
+resources: {}
+securityContext: {}
+hpa:
+  enabled: false
+  minReplicas: 1
+pdb:
+  enabled: false
+  minAvailable: 1
+mongo:
+  secretName: mongo
+nodeSelector: {}
+tolerations: []
+affinity: {}

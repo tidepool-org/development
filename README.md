@@ -72,18 +72,18 @@ If you installed Docker Desktop, the `docker-compose` tool will have been automa
 
 The Kubernetes command-line tool, [kubectl](https://kubernetes.io/docs/user-guide/kubectl/), allows you to run commands against Kubernetes clusters.
 
-It's important to install a version that's at minimum up-to-date with the version of the Kubernetes server we're running (currently `1.15.1`). Please follow the [kubectl installation instructions](https://kubernetes.io/docs/tasks/tools/install-kubectl/) for your operating system.
+It's important to install a version that's at minimum up-to-date with the version of the Kubernetes server we're running locally (currently `1.18.2`). Please follow the [kubectl installation instructions](https://kubernetes.io/docs/tasks/tools/install-kubectl/) for your operating system.
 
 For reference, the following should work:
 
 ```bash
 # MacOS
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.1/bin/darwin/amd64/kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.2/bin/darwin/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 
 # Linux
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.1/bin/linux/amd64/kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.2/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 ```
@@ -116,14 +116,14 @@ Managing a K8s cluster can be very challenging, and even more so when using one 
 
 By using our Tilt setup, developers can very easily run a live-reloading instance of any of our frontend or backend services without needing to directly use or understand Helm or Kubernetes. All that's needed is uncommenting a couple of lines in a `Tiltconfig.yaml` file, and updating the local paths to where the developer has checked out the respective git repo, if different than the default defined in the config.
 
-**IMPORTANT NOTE:** We currently run against version `v0.11.4` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
+**IMPORTANT NOTE:** We currently run against version `v0.16.1` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
 
 ```bash
 # MacOS
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.11.4/tilt.0.11.4.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.16.1/tilt.0.16.1.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 
 # Linux
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.11.4/tilt.0.11.4.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.16.1/tilt.0.16.1.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 ```
 
 After installing Tilt, you can verify the correct version by typing `tilt version` in your terminal.
@@ -225,11 +225,19 @@ Once you've completed the [Initial Setup](#initial-setup), getting the Tidepool 
 
 ### Start the kubernetes server and store the Kubernetes server config locally
 
+One-time initial startup:
+
 ```bash
 tidepool server-init
 ```
 
-This will save the Kubernetes server config to `~/.kube/config`. This is only required for the initial server provisioning.
+This will save the Kubernetes server config to the path defined in your `$KUBECONFIG` environment variable and install the `metrics-server` service. This is only required for the initial server provisioning.
+
+For subsequent server starts, run:
+
+```bash
+tidepool server-start
+```
 
 ### Start the tidepool services
 
@@ -667,7 +675,7 @@ git clone https://github.com/tidepool-org/viz.git ../viz
 
 ### Linking A Package With Tilt Config
 
-Next, you need to set the linked package's `active` value to `true` in your `local/Tiltconfig.yaml` file.
+Next, you need to set the linked package's `enabled` value to `true` in your `local/Tiltconfig.yaml` file.
 
 You will also need to ensure that the `blip.deployment.image` and `blip.hostPath` values are uncommented
 
@@ -695,7 +703,6 @@ blip:
       packageName: "@tidepool/viz"
       hostPath: ../viz # Path matches where the cloned viz repo location
       enabled: true # Set from false to true
-  restartContainer: false
 ```
 
 When you save this, if the services are already running, or you start the services with `tidepool start`, Tilt will automatically build and deploy a new `blip` container image with the `viz` repo package mounted at `/app/packageMounts/@tidepool/viz`, and will have already installed the `viz` npm dependancies and `npm link`-ed the package to `blip`

@@ -1,0 +1,26 @@
+secret:
+  enabled: false
+  data_:
+    ServiceAuth: ""
+deployment:
+  image: tidepool/platform-task:master-latest
+  replicas: 1
+  env:
+    queue:
+      delay: 5
+      workers: 5
+resources: {}
+podSecurityContext: {}
+podAnnotations: {}
+securityContext: {}
+hpa:
+  enabled: false
+  minReplicas: 1
+pdb:
+  enabled: false
+  minAvailable: 1
+mongo:
+  secretName: mongo
+nodeSelector: {}
+tolerations: []
+affinity: {}

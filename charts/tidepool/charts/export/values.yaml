@@ -1,0 +1,24 @@
+enabled: true
+secret:
+  data_:
+    SessionEncryptionKey: ""
+deployment:
+  image: tidepool/export:master-latest
+  replicas: 1
+resources: {}
+podSecurityContext: {}
+podAnnotations: {}
+securityContext: {}
+serviceMonitor:
+  enabled: false
+hpa:
+  enabled: false
+  minReplicas: 1
+pdb:
+  enabled: false
+  minAvailable: 1
+mongo:
+  secretName: mongo
+nodeSelector: {}
+tolerations: []
+affinity: {}

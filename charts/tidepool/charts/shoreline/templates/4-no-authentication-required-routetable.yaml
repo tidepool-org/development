@@ -1,0 +1,98 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: shoreline-no-authentication-required
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  routes:
+
+  - matchers:
+    - methods:
+      - POST
+      prefix: /auth/serverlogin
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+          namespace: {{ .Release.Namespace }}
+    options:
+      prefixRewrite: /serverlogin
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
+      - POST
+      prefix: /serverlogin
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+          namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
+      - POST
+      prefix: /auth/user
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+          namespace: {{ .Release.Namespace }}
+    options:
+      prefixRewrite: /user
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
+      - POST
+      prefix: /auth/login
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+          namespace: {{ .Release.Namespace }}
+    options:
+      prefixRewrite: /login
+      timeout: '30s'
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
+      - POST
+      prefix: /auth/logout
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+          namespace: {{ .Release.Namespace }}
+    options:
+      prefixRewrite: /logout
+      timeout: '30s'
+      jwt:
+        disable: true
+
+  - matchers:
+    - methods:
+      - GET
+      prefix: /auth/private
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+          namespace: {{ .Release.Namespace }}
+    options:
+      prefixRewrite: /private
+      timeout: '30s'
+      jwt:
+        disable: true
+{{- end }}

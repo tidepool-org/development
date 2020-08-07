@@ -1,0 +1,36 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: seagull
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+      exact: /metadata/status
+    routeAction:
+      single:
+        upstream:
+          name: seagull
+          namespace: {{ .Release.Namespace }}
+    options:
+      jwt:
+        disable: true
+  - matchers:
+    - prefix: /metadata/
+    routeAction:
+      single:
+        upstream:
+          name: seagull
+          namespace: {{ .Release.Namespace }}
+    options:
+      retries:
+        retryOn: '5xx'
+        numRetries: 3
+        perTryTimeout: '15s'
+{{- end }}

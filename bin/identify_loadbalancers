@@ -1,7 +1,0 @@
-#!/bin/bash
-#
-# Identify the load balancers running in the Kubernetes cluster of the current Kubectl context
-#
-# $0
-
-kubectl get svc -o json --all-namespaces | jq '.items | .[] | .status.loadBalancer | select(.ingress != null) | .ingress | .[] | .hostname' | sed -e 's#"##g'

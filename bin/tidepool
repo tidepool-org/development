@@ -102,10 +102,10 @@ doctor() {
   set +u
   echo "Checking dependancy versions..."
   check_version helm 'version --short' 3.0.2
-  check_version tilt 'version' 0.11.4
+  check_version tilt 'version' 0.16.1
   check_version docker '-v' 19.0.0
   check_version docker-compose '-v' 1.25.0
-  check_version kubectl 'version --client --short' 1.15.1
+  check_version kubectl 'version --client --short' 1.18.2
   echo
   echo "Checking environment config..."
   check_environment KUBECONFIG
@@ -146,7 +146,7 @@ wait_for_kubernetes_ready() {
 
 set_kubeconfig() {
   wait_for_kubernetes_ready
-  curl http://127.0.0.1:10080/config > ${KUBECONFIG}
+  curl http://127.0.0.1:10080/config | sed "s|172.30.99.1|127.0.0.1|g" > ${KUBECONFIG}
 }
 
 destroy() {
@@ -194,7 +194,7 @@ case ${1-help} in
   server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
   server-prune) (run_docker "system prune --volumes -af" && run_docker "builder prune --all -f");;
   server-destroy) (cd ${DIR} && destroy);;
-  start) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up -dv --port=0 ${2-});;
+  start) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up -dv --port=0 --hud=true ${2-});;
   stop) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
   restart) shift 1 && restart ${@};;
   logs) (cd ${DIR} && kubectl logs svc/${2} --tail=100 -c ${2} -f);;

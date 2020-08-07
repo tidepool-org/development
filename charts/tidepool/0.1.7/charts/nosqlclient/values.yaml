@@ -1,5 +1,0 @@
-enabled: false
-deployment:
-  image: tidepool/nosqlclient:2.3.2
-service:
-  port: 3000

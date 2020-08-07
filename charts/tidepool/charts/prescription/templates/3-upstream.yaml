@@ -1,0 +1,12 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: prescription
+  namespace: {{ .Release.Namespace }}
+spec:
+  kube:
+    serviceName: prescription
+    serviceNamespace: {{ .Release.Namespace }}
+    servicePort: {{ .Values.global.ports.prescription }}
+{{- end }}

@@ -1,0 +1,8 @@
+secret:
+  enabled: false
+  data_:
+    public: ""
+    private: ""
+nodeSelector: {}
+tolerations: []
+affinity: {}

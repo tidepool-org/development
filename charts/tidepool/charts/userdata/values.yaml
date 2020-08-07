@@ -1,0 +1,9 @@
+secret: 
+  enabled: false
+  data_: 
+    UserPasswordSalt: ""
+    UserIdSalt: ""
+    GroupIdEncryptionKey: ""
+nodeSelector: {}
+tolerations: []
+affinity: {}

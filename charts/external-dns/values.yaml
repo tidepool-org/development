@@ -1,7 +1,0 @@
-domainfilter: tidepool.org
-provider: aws
-image: registry.opensource.zalan.do/teapot/external-dns
-tag: latest
-awszonetype: public # only look at public hosted zones (valid values are public, private or no value for both)
-ownerid: external-dns # comment to place in text record
-
