@@ -18,7 +18,7 @@ hpa:
   minReplicas: 1
 pdb:
   enabled: false
-  minAvailable: 1
+  minAvailable: "50%"
 mongo:
   secretName: mongo
 nodeSelector: {}
