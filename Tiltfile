@@ -1,8 +1,13 @@
-load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmOverridesFile', 'isShutdown')
+load('Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmValuesFile', 'getHelmOverridesFile', 'isShutdown')
+
+allow_k8s_contexts('kind-admin@mk')
 
 ### Config Start ###
+tidepool_helm_values_file = getHelmValuesFile()
 tidepool_helm_overrides_file = getHelmOverridesFile()
 config = getConfig()
+
+watch_file(tidepool_helm_values_file)
 watch_file(tidepool_helm_overrides_file)
 
 tidepool_helm_chart_dir = "./charts/tidepool"
@@ -15,9 +20,6 @@ def main():
 
   # Set up tidepool helm template command
   tidepool_helm_template_cmd = 'helm template --namespace default '
-
-  gateway_port_forwards = getNested(config,'gateway-proxy-v2.portForwards', ['3000'])
-  gateway_port_forward_host_port = gateway_port_forwards[0].split(':')[0]
 
   mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
   mongodb_port_forward_host_port = mongodb_port_forwards[0].split(':')[0]
@@ -50,10 +52,13 @@ def main():
     local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.gateway &>/dev/null &')
 
     # Clean up any tilt up backround processes
-    local("for pid in $(ps -ef | awk '/tilt\ up/ {print $2}'); do kill -9 $pid; done")
+    local('for pid in $(ps -ef | awk "/tilt\r up/ {print $2}"); do kill -9 $pid; done')
 
   # Apply any service overrides
-  tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
+  tidepool_helm_template_cmd += '-f {baseConfig} -f {overrides} '.format(
+    baseConfig=tidepool_helm_values_file,
+    overrides=tidepool_helm_overrides_file,
+  )
   tidepool_helm_template_cmd = applyServiceOverrides(tidepool_helm_template_cmd)
 
   # Don't provision the gloo gateway here - we do that in Tiltfile.gateway
@@ -137,10 +142,11 @@ def provisionServerSecrets ():
     secretKey = secretHelmKeyMap.get(secret, '{}.secret.enabled'.format(secret))
 
     # Generate the secret and apply it to the cluster
-    local('helm template {chartDir} --namespace default --set "{secretKey}=true" -s {templatePath} -f {overrides} -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+    local('helm template {chartDir} --namespace default --set "{secretKey}=true" -s {templatePath} -f {baseConfig} -f {overrides} -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
       chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
       templatePath=templatePath,
       secretKey=secretKey,
+      baseConfig=tidepool_helm_values_file,
       overrides=tidepool_helm_overrides_file,
     ))
 ### Secrets End ###
@@ -170,8 +176,9 @@ def provisionConfigMaps ():
     )
 
     # Generate the configmap and apply it to the cluster
-    local('helm template {chartDir} --namespace default -s {templatePath} -f {overrides} -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+    local('helm template {chartDir} --namespace default -s {templatePath} -f {baseConfig} -f {overrides} -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
       chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
+      baseConfig=tidepool_helm_values_file,
       overrides=tidepool_helm_overrides_file,
       templatePath=templatePath
     ))
@@ -191,7 +198,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       run_commands = []
       build_deps = [hostPath]
 
-      buildCommand = 'docker build --file {dockerFile} -t $EXPECTED_REF'.format(
+      buildCommand = 'DOCKER_BUILDKIT=1 docker build --file {dockerFile} -t $EXPECTED_REF'.format(
         dockerFile='{}/{}'.format(hostPath, dockerFile),
         target=target,
       )
@@ -209,10 +216,9 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
 
       # Run yarn install in container whenever yarn.lock changes on host
       run_commands.append(run(
-        'cd {} && yarn install --silent'.format(containerPath),
+        'cd {} && yarn install --silent --no-progress'.format(containerPath),
         trigger=[
           '{}/yarn.lock'.format(hostPath),
-          '{}/package-lock.json'.format(hostPath),
         ]
       ))
 
@@ -226,6 +232,12 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
         ]))
 
         activeLinkedPackages = []
+
+        # Blip builds use up available inodes in the file system very fast, so we remove any dangling
+        # images or build cache artifacts after each build to help avoid a disk-pressure taint in Kubernetes.
+        postBuildCommand = ' && {currentDir}/bin/tidepool server-docker images purge && {currentDir}/bin/tidepool server-docker builder prune -f'.format(
+          currentDir=os.getcwd(),
+        )
 
         for package in overrides.get('linkedPackages'):
           packageName = package.get('packageName')
@@ -247,13 +259,15 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
 
             # Run yarn install in linked package directory when it's yarn.lock changes
             run_commands.append(run(
-              'cd /app/packageMounts/{} && yarn install --silent'.format(packageName),
-              trigger='{}/yarn.lock'.format(packageHostPath),
+              'cd /app/packageMounts/{} && yarn install --silent --no-progress'.format(packageName),
+              trigger=[
+                '{}/yarn.lock'.format(packageHostPath),
+              ]
             ))
 
             if not is_shutdown:
               # Copy the package source into the Dockerfile build context
-              preBuildCommand += 'cd {hostPath} && mkdir -p packageMounts/{packageName} && rsync -a --delete --exclude "node_modules" --exclude ".git" --exclude "dist" --exclude "coverage" {packageHostPath}/ {hostPath}/packageMounts/{packageName};'.format(
+              preBuildCommand += 'cd {hostPath} && mkdir -p packageMounts/{packageName} && rsync -a --delete --exclude "node_modules" --exclude "stub" --exclude ".git" --exclude "dist" --exclude "coverage" {packageHostPath}/ {hostPath}/packageMounts/{packageName};'.format(
                 hostPath=hostPath,
                 packageHostPath=packageHostPath,
                 packageName=packageName,
@@ -262,12 +276,17 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
           else:
             if not is_shutdown:
               # Remove the package source from the Dockerfile build context
-              preBuildCommand += 'cd {hostPath} && rm -rf packageMounts/{packageName};'.format(
+              preBuildCommand += 'cd {hostPath}/packageMounts/{packageName} && find . -type f -not -name \'stub\' -delete && find . -type d -empty -delete;'.format(
                 hostPath=hostPath,
                 packageName=packageName,
-              );
+              )
 
-        buildCommand += ' --build-arg LINKED_PKGS={}'.format(','.join(activeLinkedPackages))
+        buildCommand += ' --build-arg LINKED_PKGS={linkedPackages} --build-arg ROLLBAR_POST_SERVER_TOKEN={rollbarPostServerToken} --build-arg I18N_ENABLED={i18nEnabled} --build-arg RX_ENABLED={rxEnabled}'.format(
+          linkedPackages=','.join(activeLinkedPackages),
+          rollbarPostServerToken=overrides.get('rollbarPostServerToken'),
+          i18nEnabled=overrides.get('i18nEnabled'),
+          rxEnabled=overrides.get('rxEnabled'),
+        )
 
       buildCommand += ' {}'.format(hostPath)
 
@@ -275,14 +294,16 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
       if overrides.get('rebuildCommand'):
         run_commands.append(run(overrides.get('rebuildCommand')))
 
-      # Apply any rebuild commands specified
-      if overrides.get('restartContainer', True):
-        run_commands.append(restart_container())
+      # Apply container process restart if specified
+      entrypoint = overrides.get('restartContainerCommand', []);
+      if overrides.get('restartContainerCommand'):
+        run_commands.append(run('./tilt/restart.sh'))
 
-      live_update_commands = fallback_commands + sync_commands + run_commands;
+      live_update_commands = fallback_commands + sync_commands + run_commands
 
       custom_build(
         ref=getNested(overrides, 'deployment.image'),
+        entrypoint=entrypoint,
         command='{} {} {}'.format(preBuildCommand, buildCommand, postBuildCommand),
         deps=build_deps,
         disable_push=True,

@@ -1,8 +1,13 @@
-load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmOverridesFile', 'isShutdown')
+load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmValuesFile', 'getHelmOverridesFile', 'isShutdown')
+
+allow_k8s_contexts('kind-admin@mk')
 
 ### Config Start ###
+tidepool_helm_values_file = getHelmValuesFile()
 tidepool_helm_overrides_file = getHelmOverridesFile()
 config = getConfig()
+
+watch_file(tidepool_helm_values_file)
 watch_file(tidepool_helm_overrides_file)
 
 local_helm_chart_dir = './local/charts'
@@ -97,9 +102,10 @@ def provisionClusterRoleBindings():
     if not createdServiceAccount:
       for template in gloo_templates:
         if template.find(serviceaccounts_filename_map[serviceaccount]) >= 0:
-          local('{templateCmd} -s {template} -f {overridesFile} {chartDir}/gloo -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+          local('{templateCmd} -s {template} -f {baseConfig} -f {overridesFile} {chartDir}/gloo -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
             chartDir=absolute_gloo_chart_dir,
             templateCmd=gloo_helm_template_cmd,
+            baseConfig=tidepool_helm_values_file,
             overridesFile=tidepool_helm_overrides_file,
             template=template.replace('{}/gloo/'.format(absolute_gloo_chart_dir), ""),
           ))
@@ -133,9 +139,10 @@ def provisionConfigMaps():
   for configmap in required_configmaps:
     for template in gloo_templates:
       if template.find(configmaps_filename_map[configmap]) >= 0:
-        local('{templateCmd} -s {template} -f {overridesFile} {chartDir}/gloo -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+        local('{templateCmd} -s {template} -f {baseConfig} -f {overridesFile} {chartDir}/gloo -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
           chartDir=absolute_gloo_chart_dir,
           templateCmd=gloo_helm_template_cmd,
+          baseConfig=tidepool_helm_values_file,
           overridesFile=tidepool_helm_overrides_file,
           template=template.replace('{}/gloo/'.format(absolute_gloo_chart_dir), ""),
         ))
@@ -147,9 +154,10 @@ def provisionGlooGateway():
     if template.find('service-account') >= 0 or template.find('gateway-proxy-configmap') >= 0:
       local('rm {}'.format(template))
 
-  k8s_yaml(local('{templateCmd} -f {overridesFile} {chartDir}/gloo'.format(
+  k8s_yaml(local('{templateCmd} -f {baseConfig} -f {overridesFile} {chartDir}/gloo'.format(
     chartDir=absolute_gloo_chart_dir,
     templateCmd=gloo_helm_template_cmd,
+    baseConfig=tidepool_helm_values_file,
     overridesFile=tidepool_helm_overrides_file,
   )))
 

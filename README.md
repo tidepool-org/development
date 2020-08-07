@@ -21,7 +21,6 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [With The Tidepool Helper Script (recommended)](#with-the-tidepool-helper-script-recommended)
   - [Without The Tidepool Helper Script](#without-the-tidepool-helper-script)
   - [Monitor Kubernetes State With K9s (Optional)](#monitor-kubernetes-state-with-k9s-optional)
-  - [Add CPU/MEM Usage Metrics (Optional)](#add-cpumem-usage-metrics-optional)
 - [Using Tidepool](#using-tidepool)
   - [Creating An Account](#creating-an-account)
   - [Verifying An Account Email](#verifying-an-account-email)
@@ -73,18 +72,18 @@ If you installed Docker Desktop, the `docker-compose` tool will have been automa
 
 The Kubernetes command-line tool, [kubectl](https://kubernetes.io/docs/user-guide/kubectl/), allows you to run commands against Kubernetes clusters.
 
-It's important to install a version that's at minimum up-to-date with the version of the Kubernetes server we're running (currently `1.15.1`). Please follow the [kubectl installation instructions](https://kubernetes.io/docs/tasks/tools/install-kubectl/) for your operating system.
+It's important to install a version that's at minimum up-to-date with the version of the Kubernetes server we're running locally (currently `1.18.2`). Please follow the [kubectl installation instructions](https://kubernetes.io/docs/tasks/tools/install-kubectl/) for your operating system.
 
 For reference, the following should work:
 
 ```bash
 # MacOS
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.1/bin/darwin/amd64/kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.2/bin/darwin/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 
 # Linux
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.1/bin/linux/amd64/kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.2/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 ```
@@ -117,14 +116,14 @@ Managing a K8s cluster can be very challenging, and even more so when using one 
 
 By using our Tilt setup, developers can very easily run a live-reloading instance of any of our frontend or backend services without needing to directly use or understand Helm or Kubernetes. All that's needed is uncommenting a couple of lines in a `Tiltconfig.yaml` file, and updating the local paths to where the developer has checked out the respective git repo, if different than the default defined in the config.
 
-**IMPORTANT NOTE:** We currently run against version `v0.11.0` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
+**IMPORTANT NOTE:** We currently run against version `v0.16.1` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
 
 ```bash
 # MacOS
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.11.0/tilt.0.11.0.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.16.1/tilt.0.16.1.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 
 # Linux
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.11.0/tilt.0.11.0.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.16.1/tilt.0.16.1.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 ```
 
 After installing Tilt, you can verify the correct version by typing `tilt version` in your terminal.
@@ -224,19 +223,21 @@ Once you've completed the [Initial Setup](#initial-setup), getting the Tidepool 
 
 ## With The Tidepool Helper Script (recommended)
 
-### Start the kubernetes server
+### Start the kubernetes server and store the Kubernetes server config locally
+
+One-time initial startup:
+
+```bash
+tidepool server-init
+```
+
+This will save the Kubernetes server config to the path defined in your `$KUBECONFIG` environment variable and install the `metrics-server` service. This is only required for the initial server provisioning.
+
+For subsequent server starts, run:
 
 ```bash
 tidepool server-start
 ```
-
-### Retrieve and store the Kubernetes server config
-
-```bash
-tidepool server-set-config
-```
-
-This will save the Kubernetes server config to `~/.kube/config`. This is only required after the initial server start provisioning.
 
 ### Start the tidepool services
 
@@ -321,27 +322,13 @@ docker-compose -f 'docker-compose.k8s.yml' stop
 
 While the tilt terminal UI shows a good deal of information, there may be times as a developer that you want a little deeper insight into what's happening inside Kubernetes.
 
-[K9s](https://k9ss.io/) is a CLI tool that provides a terminal UI to interact with your Kubernetes clusters.  It allows you to view in realtime the status of your Kubernetes pods and services without needing to learn the intricacies of `kubectl`, the powerful-but-complex Kubernetes CLI tool.
+[K9s](https://k9ss.io/) is a CLI tool that provides a terminal UI to interact with your Kubernetes clusters.  It allows you to view in realtime the status of your Kubernetes pods and services, including CPU and memory usage metrics, without needing to learn the intricacies of `kubectl`, the powerful-but-complex Kubernetes CLI tool.
 
 After [Installing the k9s CLI](https://github.com/derailed/k9s#installation), you can simply start the Terminal UI with:
 
 ```bash
 k9s
 ```
-
-## Add CPU/MEM Usage Metrics (Optional)
-
-If you would like to see metrics for CPU and Memory usage in, for instance, the K9s UI, you'll need to install the kubernetes `metrics-server` service.
-
-This can be done with the `tidepool` helper script:
-
-```bash
-tidepool server-init-metrics
-```
-
-This only needs to be run once. After the running the command, and each time the server starts up, it will take a minute or two before the metrics start showing up.
-
-If you're running the K9s UI during the initial deployment, you'll need to restart it to see the metrics coming in.
 
 [[back to top]](#welcome)
 
@@ -381,15 +368,18 @@ Fortunately, at [Tidepool Web](https://app.tidepool.org), we worry about that fo
 
 ## Tilt Config Overrides
 
-Custom Tilt configuration and overrides of the Tidepool, MongoDB, and Gateway services is done through a local copy of the `Tiltconfig.yaml` file, which should be copied to `local/Tiltconfig.yaml` and updated there.
+Custom Tilt configuration and overrides of the Tidepool, MongoDB, and Gateway services is done through a `local/Tiltconfig.yaml` file.
 
-While updates can be made directly to the root `Tiltconfig.yaml` file,making your changes to the local copy ensures that they are made in a directory that's ignored by version control.
+While updates can be made directly to the root `Tiltconfig.yaml` file,making your changes to a local overrides file ensures that your changes are ignored by version control.
+
+It also means less work for you when pulling in upstream updates to the root config file.
 
 ```bash
-cp Tiltconfig.yaml local/Tiltconfig.yaml
+# Create an empty Tiltconfig.yaml file in your local directory
+touch local/Tiltconfig.yaml
 ```
 
-The overrides file is read by the `Tiltfile` (and `Tiltfile.mongodb` and `Tiltfile.proxy`) at the root of this repo, and any changes defined for the helm charts will be passed through to helm to override settings in the helm chart `values.yaml`.
+Both the root `Tiltconfig.yaml` and the overrides file is read by the `Tiltfile` (and `Tiltfile.mongodb` and `Tiltfile.proxy`) at the root of this repo, and any changes defined for the helm charts will be passed through to helm to override settings in the helm chart `values.yaml`.
 
 In addition to the helm chart overrides, there are some extra configuration parameters to instruct Tilt on how to build local images for any of the Tidepool services.
 
@@ -591,14 +581,14 @@ To build and run a Docker image from the source code you just cloned, you simply
 For instance, to have Tilt build a local image for `shoreline`:
 
 ```yaml
-### Change this:
+### Copy this service definition from the root Tiltconfig.yaml:
 shoreline:
   # deployment:
   #   image: tidepool-k8s-shoreline
   # hostPath: "~/go/src/github.com/tidepool-org/shoreline"
   # ...
 
-### To this:
+### Paste it into your local/Tiltconfig.yaml file and make your updates:
 shoreline:
   deployment:
     image: tidepool-k8s-shoreline
@@ -688,7 +678,7 @@ git clone https://github.com/tidepool-org/viz.git ../viz
 
 ### Linking A Package With Tilt Config
 
-Next, you need to set the linked package's `active` value to `true` in your `local/Tiltconfig.yaml` file.
+Next, you need to set the linked package's `enabled` value to `true` in your `local/Tiltconfig.yaml` file.
 
 You will also need to ensure that the `blip.deployment.image` and `blip.hostPath` values are uncommented
 
@@ -716,7 +706,6 @@ blip:
       packageName: "@tidepool/viz"
       hostPath: ../viz # Path matches where the cloned viz repo location
       enabled: true # Set from false to true
-  restartContainer: false
 ```
 
 When you save this, if the services are already running, or you start the services with `tidepool start`, Tilt will automatically build and deploy a new `blip` container image with the `viz` repo package mounted at `/app/packageMounts/@tidepool/viz`, and will have already installed the `viz` npm dependancies and `npm link`-ed the package to `blip`
