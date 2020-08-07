@@ -8,8 +8,11 @@ def getNested(dict, path, fallback=None):
     value = value.get(path_segment, {})
   return value or fallback
 
+def getHelmValuesFile():
+  return './Tiltconfig.yaml'
+
 def getHelmOverridesFile():
-  tidepool_helm_overrides_file = './Tiltconfig.yaml'
+  tidepool_helm_overrides_file = getHelmValuesFile()
   localOverrides = read_yaml('./local/Tiltconfig.yaml', False)
 
   if type(localOverrides) == 'dict':
@@ -18,7 +21,10 @@ def getHelmOverridesFile():
   return tidepool_helm_overrides_file
 
 def getConfig():
-  return read_yaml(getHelmOverridesFile())
+  config = read_yaml(getHelmValuesFile())
+  overrides = read_yaml(getHelmOverridesFile())
+  config.update(overrides)
+  return config
 
 def isShutdown():
   return bool(int(str(local('printf ${SHUTTING_DOWN-0}'))))

@@ -368,15 +368,18 @@ Fortunately, at [Tidepool Web](https://app.tidepool.org), we worry about that fo
 
 ## Tilt Config Overrides
 
-Custom Tilt configuration and overrides of the Tidepool, MongoDB, and Gateway services is done through a local copy of the `Tiltconfig.yaml` file, which should be copied to `local/Tiltconfig.yaml` and updated there.
+Custom Tilt configuration and overrides of the Tidepool, MongoDB, and Gateway services is done through a `local/Tiltconfig.yaml` file.
 
-While updates can be made directly to the root `Tiltconfig.yaml` file,making your changes to the local copy ensures that they are made in a directory that's ignored by version control.
+While updates can be made directly to the root `Tiltconfig.yaml` file,making your changes to a local overrides file ensures that your changes are ignored by version control.
+
+It also means less work for you when pulling in upstream updates to the root config file.
 
 ```bash
-cp Tiltconfig.yaml local/Tiltconfig.yaml
+# Create an empty Tiltconfig.yaml file in your local directory
+touch local/Tiltconfig.yaml
 ```
 
-The overrides file is read by the `Tiltfile` (and `Tiltfile.mongodb` and `Tiltfile.proxy`) at the root of this repo, and any changes defined for the helm charts will be passed through to helm to override settings in the helm chart `values.yaml`.
+Both the root `Tiltconfig.yaml` and the overrides file is read by the `Tiltfile` (and `Tiltfile.mongodb` and `Tiltfile.proxy`) at the root of this repo, and any changes defined for the helm charts will be passed through to helm to override settings in the helm chart `values.yaml`.
 
 In addition to the helm chart overrides, there are some extra configuration parameters to instruct Tilt on how to build local images for any of the Tidepool services.
 
@@ -578,14 +581,14 @@ To build and run a Docker image from the source code you just cloned, you simply
 For instance, to have Tilt build a local image for `shoreline`:
 
 ```yaml
-### Change this:
+### Copy this service definition from the root Tiltconfig.yaml:
 shoreline:
   # deployment:
   #   image: tidepool-k8s-shoreline
   # hostPath: "~/go/src/github.com/tidepool-org/shoreline"
   # ...
 
-### To this:
+### Paste it into your local/Tiltconfig.yaml file and make your updates:
 shoreline:
   deployment:
     image: tidepool-k8s-shoreline
