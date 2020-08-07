@@ -1,10 +1,13 @@
-load('Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmOverridesFile', 'isShutdown')
+load('Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig', 'getHelmValuesFile', 'getHelmOverridesFile', 'isShutdown')
 
 allow_k8s_contexts('kind-admin@mk')
 
 ### Config Start ###
+tidepool_helm_values_file = getHelmValuesFile()
 tidepool_helm_overrides_file = getHelmOverridesFile()
 config = getConfig()
+
+watch_file(tidepool_helm_values_file)
 watch_file(tidepool_helm_overrides_file)
 
 tidepool_helm_chart_dir = "./charts/tidepool"
@@ -52,7 +55,10 @@ def main():
     local('for pid in $(ps -ef | awk "/tilt\r up/ {print $2}"); do kill -9 $pid; done')
 
   # Apply any service overrides
-  tidepool_helm_template_cmd += '-f {} '.format(tidepool_helm_overrides_file)
+  tidepool_helm_template_cmd += '-f {baseConfig} -f {overrides} '.format(
+    baseConfig=tidepool_helm_values_file,
+    overrides=tidepool_helm_overrides_file,
+  )
   tidepool_helm_template_cmd = applyServiceOverrides(tidepool_helm_template_cmd)
 
   # Don't provision the gloo gateway here - we do that in Tiltfile.gateway
@@ -136,10 +142,11 @@ def provisionServerSecrets ():
     secretKey = secretHelmKeyMap.get(secret, '{}.secret.enabled'.format(secret))
 
     # Generate the secret and apply it to the cluster
-    local('helm template {chartDir} --namespace default --set "{secretKey}=true" -s {templatePath} -f {overrides} -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+    local('helm template {chartDir} --namespace default --set "{secretKey}=true" -s {templatePath} -f {baseConfig} -f {overrides} -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
       chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
       templatePath=templatePath,
       secretKey=secretKey,
+      baseConfig=tidepool_helm_values_file,
       overrides=tidepool_helm_overrides_file,
     ))
 ### Secrets End ###
@@ -169,8 +176,9 @@ def provisionConfigMaps ():
     )
 
     # Generate the configmap and apply it to the cluster
-    local('helm template {chartDir} --namespace default -s {templatePath} -f {overrides} -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
+    local('helm template {chartDir} --namespace default -s {templatePath} -f {baseConfig} -f {overrides} -g | kubectl --namespace=default apply --validate=0 --force -f -'.format(
       chartDir=getAbsoluteDir(tidepool_helm_chart_dir),
+      baseConfig=tidepool_helm_values_file,
       overrides=tidepool_helm_overrides_file,
       templatePath=templatePath
     ))
