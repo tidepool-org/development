@@ -1,0 +1,22 @@
+{{ if .Values.serviceMonitor.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: {{ include "charts.name" . }}
+{{ include "charts.labels.standard" .}}
+  name: {{ include "charts.name" . }}
+  namespace: {{.Release.Namespace}}
+spec:
+  endpoints:
+  - path: /metrics
+    port: http
+  jobLabel: {{ include "charts.name" . }}
+  namespaceSelector:
+    matchNames:
+    - {{.Release.Namespace}}
+  selector:
+    matchLabels:
+      app: tide-whisperer
+{{ end }}

@@ -13,6 +13,8 @@ pdb:
   minAvailable: "50%"
 mongo:
   secretName: mongo
+serviceMonitor:
+  enabled: false
 nodeSelector: {}
 tolerations: []
 affinity: {}
