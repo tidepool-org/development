@@ -9,4 +9,6 @@ metadata:
 {{ include "charts.labels.standard" .}}
 data:
   ClinicDemoUserId: {{ .Values.configmap.data.ClinicDemoUserId | quote }}
+  KeycloakClientId: {{ .Values.configmap.data.KeycloakClientId | quote }}
+  KeycloakRealmUrl: {{ .Values.configmap.data.KeycloakRealmUrl | quote }}
 {{- end }}

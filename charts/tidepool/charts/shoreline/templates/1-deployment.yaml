@@ -176,6 +176,30 @@ spec:
                     "tokenDurationSecs": 2592000
                 }
             }
+        - name: TIDEPOOL_KEYCLOAK_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: shoreline
+              key: KeycloakClientId
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: shoreline
+              key: KeycloakClientSecret
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_REALM_URL
+          valueFrom:
+            secretKeyRef:
+              name: shoreline
+              key: KeycloakRealmUrl
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_MIGRATION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: shoreline
+              key: KeycloakMigrationSecret
+              optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
