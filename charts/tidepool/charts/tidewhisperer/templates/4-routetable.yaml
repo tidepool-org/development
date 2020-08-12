@@ -17,7 +17,6 @@ spec:
       single:
         upstream:
           name: tidewhisperer
-          namespace: {{ .Release.Namespace }}
     options:
       jwt:
         disable: true
@@ -30,7 +29,6 @@ spec:
       single:
         upstream:
           name: tidewhisperer
-          namespace: {{ .Release.Namespace }}
     options:
       jwt:
         disable: true

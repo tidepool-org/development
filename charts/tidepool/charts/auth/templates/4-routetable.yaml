@@ -17,7 +17,6 @@ spec:
       single:
         upstream:
           name: auth
-          namespace: {{ .Release.Namespace }}
     options:
       jwt:
         disable: true
@@ -32,7 +31,6 @@ spec:
       single:
         upstream:
           name: auth
-          namespace: {{ .Release.Namespace }}
   - matchers:
     - methods:
       - GET
@@ -43,7 +41,6 @@ spec:
       single:
         upstream:
           name: auth
-          namespace: {{ .Release.Namespace }}
   - matchers:
     - methods:
       - GET
@@ -53,7 +50,6 @@ spec:
       single:
         upstream:
           name: auth
-          namespace: {{ .Release.Namespace }}
   - matchers:
     - methods:
       - POST
@@ -62,7 +58,6 @@ spec:
       single:
         upstream:
           name: auth
-          namespace: {{ .Release.Namespace }}
   - matchers:
     - methods:
       - GET
@@ -73,7 +68,6 @@ spec:
       single:
         upstream:
           name: auth
-          namespace: {{ .Release.Namespace }}
   - matchers:
     - methods:
       - GET
@@ -83,7 +77,6 @@ spec:
       single:
         upstream:
           name: auth
-          namespace: {{ .Release.Namespace }}
     options:
       jwt:
         disable: true
@@ -95,7 +88,6 @@ spec:
       single:
         upstream:
           name: auth
-          namespace: {{ .Release.Namespace }}
     options:
       jwt:
         disable: true
@@ -109,5 +101,4 @@ spec:
       single:
         upstream:
           name: auth
-          namespace: {{ .Release.Namespace }}
 {{- end }}

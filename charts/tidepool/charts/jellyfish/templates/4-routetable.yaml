@@ -17,7 +17,6 @@ spec:
       single:
         upstream:
           name: jellyfish
-          namespace: {{ .Release.Namespace }}
   - matchers:
     - methods:
       - GET
@@ -26,7 +25,6 @@ spec:
       single:
         upstream:
           name: jellyfish
-          namespace: {{ .Release.Namespace }}
   - matchers:
     - methods:
       - GET
@@ -35,7 +33,6 @@ spec:
       single:
         upstream:
           name: jellyfish
-          namespace: {{ .Release.Namespace }}
   - matchers:
     - methods:
       - POST
@@ -44,7 +41,6 @@ spec:
       single:
         upstream:
           name: jellyfish
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: "60s"
 {{- if .Values.shadowing }}
@@ -59,5 +55,4 @@ spec:
       single:
         upstream:
           name: jellyfish
-          namespace: {{ .Release.Namespace }}
 {{- end }}

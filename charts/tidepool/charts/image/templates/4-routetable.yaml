@@ -19,7 +19,6 @@ spec:
       single:
         upstream:
           name: image
-          namespace: "{{ .Release.Namespace }}"
   - matchers:
     - methods:
       - GET
@@ -30,7 +29,6 @@ spec:
       single:
         upstream:
           name: image
-          namespace: "{{ .Release.Namespace }}"
   - matchers:
     - methods:
       - GET
@@ -41,5 +39,4 @@ spec:
       single:
         upstream:
           name: image
-          namespace: "{{ .Release.Namespace }}"
 {{- end }}

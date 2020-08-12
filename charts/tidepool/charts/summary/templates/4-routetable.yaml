@@ -2,21 +2,27 @@
 apiVersion: gateway.solo.io/v1
 kind: RouteTable
 metadata:
-  name: blip
+  name: summary
   namespace: {{ .Release.Namespace }}
   labels:
     namespace: {{ .Release.Namespace }}
     app: tidepool
 spec:
-  weight: 10000
   routes:
   - matchers:
-    - prefix: /
+    - methods:
+      - POST
+      regex: /v1/users/[^/]+/summary
     routeAction:
       single:
         upstream:
-          name: blip
-    options:
-      jwt:
-        disable: true
+          name: summary
+  - matchers:
+    - methods:
+      - POST
+      regex: /v1/clinics/[^/]+/summaries
+    routeAction:
+      single:
+        upstream:
+          name: summary
 {{- end }}

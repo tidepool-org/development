@@ -17,7 +17,6 @@ spec:
       single:
         upstream:
           name: messageapi
-          namespace: {{ .Release.Namespace }}
     options:
       jwt:
         disable: true
@@ -33,7 +32,6 @@ spec:
       single:
         upstream:
           name: messageapi
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: '30s'
 {{- end }}

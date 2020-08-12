@@ -17,7 +17,6 @@ spec:
       single:
         upstream:
           name: seagull
-          namespace: {{ .Release.Namespace }}
     options:
       jwt:
         disable: true
@@ -27,7 +26,6 @@ spec:
       single:
         upstream:
           name: seagull
-          namespace: {{ .Release.Namespace }}
     options:
       retries:
         retryOn: '5xx'
