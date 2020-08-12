@@ -188,11 +188,29 @@ spec:
               name: shoreline
               key: KeycloakClientSecret
               optional: true
-        - name: TIDEPOOL_KEYCLOAK_REALM_URL
+        - name: TIDEPOOL_KEYCLOAK_ADMIN_USERNAME
           valueFrom:
             configMapKeyRef:
               name: shoreline
-              key: KeycloakRealmUrl
+              key: KeycloakAdminUsername
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: shoreline
+              key: KeycloakClientSecret
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: shoreline
+              key: KeycloakBaseUrl
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_REALM
+          valueFrom:
+            configMapKeyRef:
+              name: shoreline
+              key: KeycloakRealm
               optional: true
         - name: TIDEPOOL_KEYCLOAK_MIGRATION_SECRET
           valueFrom:
