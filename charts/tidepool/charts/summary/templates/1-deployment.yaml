@@ -30,6 +30,7 @@ spec:
     spec:
       containers:
       - env:
+        {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
         - name: TIDEPOOL_SUMMARY_SERVICE_DOMAIN
@@ -41,24 +42,6 @@ spec:
               key: ServiceAuth
         - name: TIDEPOOL_SUMMARY_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.summary}}
-        - name: TIDEPOOL_KAFKA_BROKERS
-          valueFrom:
-            configMapKeyRef:
-              name: kafka
-              key: Brokers
-              optional: false
-        - name: TIDEPOOL_KAFKA_TOPIC_PREFIX
-          valueFrom:
-            configMapKeyRef:
-              name: kafka
-              key: TopicPrefix
-              optional: false
-        - name: TIDEPOOL_KAFKA_DEVICEDATA_TOPIC
-          valueFrom:
-            configMapKeyRef:
-              name: kafka
-              key: DeviceDataTopic
-              optional: false
         image: "{{ .Values.deployment.image }}"
         {{ template "charts.platform.probes" .Values.global.ports.summary}}
         name: summary
