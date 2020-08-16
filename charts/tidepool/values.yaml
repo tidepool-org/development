@@ -37,7 +37,8 @@ global:
     user: 9221                                     # user service internal port
     seagull: 9120                                  # seagull service internal port
     shoreline: 9107                                # shoreline service internal port
-    tidewhisperer: 9127                            # tidewhisperer service in
+    summary: 9230                                  # summary service internal port
+    tidewhisperer: 9127                            # tidewhisperer service internal port
   secret:
     enabled: false
     generated: false
