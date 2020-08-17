@@ -17,6 +17,9 @@ spec:
       single:
         upstream:
           name: summary
+    options:
+      jwt:
+        disable: true
   - matchers:
     - methods:
       - POST
@@ -25,4 +28,7 @@ spec:
       single:
         upstream:
           name: summary
+    options:
+      jwt:
+        disable: true
 {{- end }}
