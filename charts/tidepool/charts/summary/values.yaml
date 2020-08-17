@@ -16,3 +16,5 @@ pdb:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+mongo:
+  secretName: mongo
