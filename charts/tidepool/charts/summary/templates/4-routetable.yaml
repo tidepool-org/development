@@ -23,6 +23,17 @@ spec:
   - matchers:
     - methods:
       - POST
+      regex: /v1/users/[^/]+/summaries
+    routeAction:
+      single:
+        upstream:
+          name: summary
+    options:
+      jwt:
+        disable: true
+  - matchers:
+    - methods:
+      - POST
       regex: /v1/clinics/[^/]+/summaries
     routeAction:
       single:
