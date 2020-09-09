@@ -41,21 +41,10 @@ spec:
         {{ include "charts.mongo.params" .}}
         - name: TIDEPOOL_STORE_DATABASE
           value: gatekeeper
-        - name: DISCOVERY_HOST
-          value: 'hakken'
-        - name: GATEKEEPER_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: userdata
-              key: GroupIdEncryptionKey
         - name: NODE_ENV
           value: '{{.Values.nodeEnvironment}}'
         - name: PORT
           value: "{{.Values.global.ports.gatekeeper}}"
-        - name: PUBLISH_HOST
-          value: 'hakken'
-        - name: SKIP_HAKKEN
-          value: "true"
         - name: SERVER_SECRET
           valueFrom:
             secretKeyRef:
@@ -63,8 +52,8 @@ spec:
               key: ServiceAuth
         - name: SERVICE_NAME
           value: gatekeeper
-        - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
+        - name: USERSERVICE
+          value: "shoreline:{{.Values.global.ports.shoreline}}"
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
