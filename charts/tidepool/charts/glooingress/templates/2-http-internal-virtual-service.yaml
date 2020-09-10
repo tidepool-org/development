@@ -23,7 +23,7 @@ spec:
       stats:
 {{- toYaml $spec.options.stats | nindent 8 }}
 {{- end }}
-{{- if .Values.global.glooingress.exteauth.enabled }}
+{{- if .Values.global.glooingress.extauth.enabled }}
 {{- if not $optionsExist }}
 {{ $optionsExist = true }}
     options:
@@ -32,13 +32,6 @@ spec:
         configRef:
           name: 'remote-auth'
           namespace: {{ .Release.Namespace }}
-{{- end }}
-{{- if and $spec.jwt $spec.jwt.enabled }}
-{{- if not $optionsExist }}
-{{ $optionsExist = true }}
-    options:
-{{- end }}
-{{- toYaml $spec.jwt.config | nindent 6 }}
 {{- end }}
     domains:
     - internal.{{ .Release.Namespace }}

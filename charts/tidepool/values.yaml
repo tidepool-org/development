@@ -26,7 +26,7 @@ global:
   glooingress:
     # global.glooingress.enabled -- whether to use Gloo API Gateway for ingress
     enabled: true
-    exteauth:
+    extauth:
       enabled: false
     jwt:
       enabled: false

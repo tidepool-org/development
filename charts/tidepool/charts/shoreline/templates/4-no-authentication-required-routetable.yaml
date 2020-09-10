@@ -20,7 +20,7 @@ spec:
           name: shoreline
     options:
       prefixRewrite: /serverlogin
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -32,7 +32,7 @@ spec:
         upstream:
           name: shoreline
     options:
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -45,7 +45,7 @@ spec:
           name: shoreline
     options:
       prefixRewrite: /user
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -59,7 +59,7 @@ spec:
     options:
       prefixRewrite: /login
       timeout: '30s'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -73,7 +73,7 @@ spec:
     options:
       prefixRewrite: /logout
       timeout: '30s'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -87,6 +87,6 @@ spec:
     options:
       prefixRewrite: /private
       timeout: '30s'
-      jwt:
+      extauth:
         disable: true
 {{- end }}
