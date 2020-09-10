@@ -1,0 +1,21 @@
+{{ if and .Values.global.glooingress.enabled .Values.global.glooingress.exteauth.enabled }}
+apiVersion: enterprise.gloo.solo.io/v1
+kind: AuthConfig
+metadata:
+  name: remote-auth
+  namespace: {{ .Release.Namespace }}
+spec:
+  configs:
+  - pluginAuth:
+      name: RemoteAuth
+      pluginFileName: RemoteAuth.so
+      exportedSymbolName: Plugin
+      config:
+        AuthUrl: http://shoreline.{{ .Release.Namespace }}.svc.cluster.local:{{.Values.global.ports.shoreline}}/user
+        ForwardRequestHeaders:
+          - x-tidepool-session-token
+        ResponseHeaders:
+          isserver: x-auth-server-access
+          userid: x-auth-user-id
+          roles: x-auth-user-roles
+{{- end }}

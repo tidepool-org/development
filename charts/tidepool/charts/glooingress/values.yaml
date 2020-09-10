@@ -4,6 +4,8 @@ discovery: {}
   # discovery.namespace -- namespace where the Gloo discovery service runs
   #namespace:                           
 global:
+  extauth:
+    enabled: false
   gateway:
     proxy: 
       # global.gateway.proxy -- name of the Gloo gateway proxy that will host the virtual service
@@ -22,8 +24,6 @@ virtualServices:
     redirect: false                     
     labels: {}
     options: {}
-    extauth:
-      enabled: false
     jwt:
       enabled: false
   https:
@@ -44,8 +44,6 @@ virtualServices:
     name: http-internal
     labels: {}
     options: {}
-    extauth:
-      enabled: false
     jwt:
       enabled: false
 nodeSelector: {}

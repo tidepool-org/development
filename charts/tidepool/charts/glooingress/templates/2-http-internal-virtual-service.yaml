@@ -23,15 +23,15 @@ spec:
       stats:
 {{- toYaml $spec.options.stats | nindent 8 }}
 {{- end }}
-{{- if and $spec.extauth $spec.extauth.enabled }}
+{{- if .Values.global.glooingress.exteauth.enabled }}
 {{- if not $optionsExist }}
 {{ $optionsExist = true }}
     options:
 {{- end }}
       extauth:
         configRef:
-          name: {{ $spec.extauth.name }}
-          namespace: {{ $spec.extauth.namespace }}
+          name: 'remote-auth'
+          namespace: {{ .Release.Namespace }}
 {{- end }}
 {{- if and $spec.jwt $spec.jwt.enabled }}
 {{- if not $optionsExist }}
