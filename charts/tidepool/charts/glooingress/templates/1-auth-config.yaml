@@ -11,7 +11,7 @@ spec:
       pluginFileName: RemoteAuth.so
       exportedSymbolName: Plugin
       config:
-        AuthUrl: http://shoreline.{{ .Release.Namespace }}.svc.cluster.local:{{.Values.global.ports.shoreline}}/user
+        AuthUrl: http://shoreline.{{ .Release.Namespace }}.svc.cluster.local:{{.Values.global.ports.shoreline}}/token
         ForwardRequestHeaders:
           - x-tidepool-session-token
         ResponseHeaders:
