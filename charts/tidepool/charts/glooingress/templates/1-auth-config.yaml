@@ -1,4 +1,4 @@
-{{ if and .Values.global.glooingress.enabled .Values.global.glooingress.exteauth.enabled }}
+{{ if and .Values.global.glooingress.enabled .Values.global.glooingress.extauth.enabled }}
 apiVersion: enterprise.gloo.solo.io/v1
 kind: AuthConfig
 metadata:
