@@ -12,7 +12,7 @@ global:
       #namespace:                         
       port: 80
 extauth:
-  enabled: true
+  enabled: false
 virtualServices:
   http:
     name: http
