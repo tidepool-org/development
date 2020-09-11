@@ -17,6 +17,6 @@ spec:
         upstream:
           name: blip
     options:
-      jwt:
+      extauth:
         disable: true
 {{- end }}

@@ -18,7 +18,7 @@ spec:
         upstream:
           name: highwater
     options:
-      jwt:
+      extauth:
         disable: true
   - matchers:
     - prefix: /metrics/

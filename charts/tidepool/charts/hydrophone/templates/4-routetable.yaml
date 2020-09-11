@@ -19,7 +19,7 @@ spec:
         upstream:
           name: hydrophone
     options:
-      jwt:
+      extauth:
         disable: true
       prefixRewrite: /status
 
@@ -33,7 +33,7 @@ spec:
           name: hydrophone
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -46,7 +46,7 @@ spec:
           name: hydrophone
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -59,7 +59,7 @@ spec:
           name: hydrophone
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -72,7 +72,7 @@ spec:
           name: hydrophone
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -85,7 +85,7 @@ spec:
           name: hydrophone
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -98,7 +98,7 @@ spec:
           name: hydrophone
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -111,7 +111,7 @@ spec:
           name: hydrophone
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -124,7 +124,7 @@ spec:
           name: hydrophone
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -137,7 +137,7 @@ spec:
           name: hydrophone
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true   
 
 {{- end }}

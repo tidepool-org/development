@@ -19,7 +19,7 @@ spec:
         upstream:
           name: summary
     options:
-      jwt:
+      extauth:
         disable: true
   - matchers:
     - methods:
@@ -30,7 +30,7 @@ spec:
         upstream:
           name: summary
     options:
-      jwt:
+      extauth:
         disable: true
   - matchers:
     - methods:
@@ -41,7 +41,7 @@ spec:
         upstream:
           name: summary
     options:
-      jwt:
+      extauth:
         disable: true
 {{- end }}
 {{- end }}

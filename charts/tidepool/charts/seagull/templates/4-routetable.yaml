@@ -18,7 +18,7 @@ spec:
         upstream:
           name: seagull
     options:
-      jwt:
+      extauth:
         disable: true
   - matchers:
     - prefix: /metadata/

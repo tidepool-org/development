@@ -103,7 +103,7 @@ spec:
         upstream:
           name: data
     options:
-      jwt:
+      extauth:
         disable: true
   - matchers:
     - methods:
@@ -114,7 +114,7 @@ spec:
         upstream:
           name: data
     options:
-      jwt:
+      extauth:
         disable: true
       prefixRewrite: /v1/time
   - matchers:

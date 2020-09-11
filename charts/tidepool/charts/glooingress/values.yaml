@@ -24,8 +24,6 @@ virtualServices:
     redirect: false                     
     labels: {}
     options: {}
-    jwt:
-      enabled: false
   https:
     name: https
     # virtualServices.https -- DNS names served with HTTPS
@@ -36,16 +34,10 @@ virtualServices:
     hsts: false                         
     labels: {}
     options: {}
-    extauth:
-      enabled: false
-    jwt:
-      enabled: false
   httpInternal:
     name: http-internal
     labels: {}
     options: {}
-    jwt:
-      enabled: false
 nodeSelector: {}
 tolerations: []
 affinity: {}
