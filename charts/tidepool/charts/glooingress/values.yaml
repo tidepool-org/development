@@ -4,8 +4,6 @@ discovery: {}
   # discovery.namespace -- namespace where the Gloo discovery service runs
   #namespace:                           
 global:
-  extauth:
-    enabled: false
   gateway:
     proxy: 
       # global.gateway.proxy -- name of the Gloo gateway proxy that will host the virtual service
@@ -13,6 +11,8 @@ global:
       # global.gateway.namespace -- namespace of the Gloo gateway proxy that will host the virtual service
       #namespace:                         
       port: 80
+extauth:
+  enabled: false
 virtualServices:
   http:
     name: http
