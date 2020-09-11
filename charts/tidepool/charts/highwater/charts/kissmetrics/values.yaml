@@ -1,7 +1,0 @@
-secret:
-  enabled: false
-  data_:
-    APIKey: ""
-    Token: ""
-    UCSFAPIKey: ""
-    UCSFWhitelist: ""

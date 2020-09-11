@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"user.oauth_access"},{"v":1,"key":{"refreshtoken":1},"name":"refreshtoken_1","ns":"user.oauth_access","background":true,"sparse":true}]}

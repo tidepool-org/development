@@ -1,8 +1,0 @@
-configmap:
-  enabled: true
-  Brokers: "kafka-kafka-bootstrap.kafka.svc.cluster.local:9092"
-  TopicPrefix: ""
-  EmailsTopic: "emails"
-nodeSelector: {}
-tolerations: []
-affinity: {}

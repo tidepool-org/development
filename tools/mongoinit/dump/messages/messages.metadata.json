@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"messages.messages"},{"v":1,"key":{"groupid":1,"timestamp":1},"name":"groupid_1_timestamp_1","ns":"messages.messages"}]}

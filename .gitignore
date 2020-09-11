@@ -1,7 +1,0 @@
-docker-compose.override.yml
-*.swp
-local/*
-!local/README.md
-!local/metrics-server.yml
-!local/tilt/
-.envrc
