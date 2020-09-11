@@ -22,7 +22,7 @@ spec:
       stats:
 {{- toYaml $spec.options.stats | nindent 8 }}
 {{- end }}
-{{- if .Values.global.glooingress.extauth.enabled }}
+{{- if .Values.extauth.enabled }}
 {{- if not $optionsExist }}
 {{ $optionsExist = true }}
     options:
