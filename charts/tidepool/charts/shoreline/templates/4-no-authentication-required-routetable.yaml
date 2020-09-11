@@ -9,7 +9,6 @@ metadata:
     app: tidepool
 spec:
   routes:
-
   - matchers:
     - methods:
       - POST
@@ -22,7 +21,6 @@ spec:
       prefixRewrite: /serverlogin
       extauth:
         disable: true
-
   - matchers:
     - methods:
       - POST
@@ -34,7 +32,6 @@ spec:
     options:
       extauth:
         disable: true
-
   - matchers:
     - methods:
       - POST
@@ -47,7 +44,6 @@ spec:
       prefixRewrite: /user
       extauth:
         disable: true
-
   - matchers:
     - methods:
       - POST
@@ -61,7 +57,6 @@ spec:
       timeout: '30s'
       extauth:
         disable: true
-
   - matchers:
     - methods:
       - POST
@@ -75,7 +70,6 @@ spec:
       timeout: '30s'
       extauth:
         disable: true
-
   - matchers:
     - methods:
       - GET
@@ -86,6 +80,72 @@ spec:
           name: shoreline
     options:
       prefixRewrite: /private
+      timeout: '30s'
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      prefix: /auth/token/
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+    options:
+      prefixRewrite: /token/
+      timeout: '30s'
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      prefix: /auth/users
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+    options:
+      prefixRewrite: /users
+      timeout: '30s'
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      - DELETE
+      prefix: /auth/user/
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+    options:
+      prefixRewrite: /user/
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      prefix: /auth/user
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+    options:
+      prefixRewrite: /user
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      prefix: /auth/login
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+    options:
+      prefixRewrite: /login
       timeout: '30s'
       extauth:
         disable: true
