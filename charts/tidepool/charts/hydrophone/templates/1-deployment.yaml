@@ -58,7 +58,7 @@ spec:
           value: "{{.Values.deployment.env.fromAddress}}"
         - name: WEB_URL
           value: {{ include "charts.host.app" . | quote }}
-        - name: LISTEN_ADDRESS
+        - name: SERVICE_LISTEN_ADDRESS
           value: ":{{ .Values.global.ports.hydrophone }}"
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: "http://shoreline:{{.Values.global.ports.shoreline}}"
