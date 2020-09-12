@@ -53,11 +53,11 @@ spec:
         - name: AWS_REGION
           value: {{.Values.global.region | quote }}
         - name: ASSET_URL
-          value: {{- include "charts.hydrophone.s3.url" . | quote }}
+          value: {{ include "charts.hydrophone.s3.url" . | quote }}
         - name: FROM_ADDRESS
           value: "{{.Values.deployment.env.fromAddress}}"
         - name: WEB_URL
-          value: {{- include "charts.host.app" . | quote }}
+          value: {{ include "charts.host.app" . | quote }}
         - name: LISTEN_ADDRESS
           value: ":{{ .Values.global.ports.hydrophone }}"
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
