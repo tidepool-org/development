@@ -1,3 +1,4 @@
+{{ if .Values.enabled }}
 {{ if .Values.global.glooingress.enabled }}
 apiVersion: gateway.solo.io/v1
 kind: RouteTable
@@ -42,4 +43,5 @@ spec:
     options:
       jwt:
         disable: true
+{{- end }}
 {{- end }}

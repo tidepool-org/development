@@ -1,3 +1,4 @@
+{{ if .Values.enabled }}
 {{ if .Values.global.glooingress.enabled }}
 apiVersion: gloo.solo.io/v1
 kind: Upstream
@@ -9,4 +10,5 @@ spec:
     serviceName: summary
     serviceNamespace: {{ .Release.Namespace }}
     servicePort: {{ .Values.global.ports.summary }}
+{{- end }}
 {{- end }}
