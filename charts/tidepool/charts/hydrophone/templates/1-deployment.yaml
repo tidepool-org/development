@@ -122,12 +122,22 @@ spec:
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
+        {{- if .Values.livenessProbe.enabled }}
         livenessProbe:
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
           httpGet:
-            path: /status
-            port: {{.Values.global.ports.hydrophone}}
-          initialDelaySeconds: 30
-          periodSeconds: 10
+            path: {{ .Values.livenessProbe.path }}
+            port: http
+        {{- end }}
+        {{- if .Values.readinessProbe.enabled }}
+        readinessProbe:
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          httpGet:
+            path: {{ .Values.readinessProbe.path }}
+            port: http
+        {{- end }}
         name: hydrophone
         ports:
         - containerPort: {{.Values.global.ports.hydrophone}}

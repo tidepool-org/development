@@ -23,3 +23,13 @@ mongo:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+livenessProbe:
+  enabled: false
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  path: /live
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  path: /status
