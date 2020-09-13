@@ -100,8 +100,8 @@ spec:
                    "tokenRefreshInterval": "1h"
                }
            }
-       - name: TIDEPOOL_HYDROPHONE_SERVICE
-         value: |
+        - name: TIDEPOOL_HYDROPHONE_SERVICE
+          value: |
            {
                "hydrophone": {
                    "assetUrl": {{- include "charts.hydrophone.s3.url" . | quote }},
@@ -127,7 +127,7 @@ spec:
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
           httpGet:
-            path: {{ .Values.livenessProbe.path }}
+            path: {{ .Values.livenessProbe.path | quote }}
             port: http
         {{- end }}
         {{- if .Values.readinessProbe.enabled }}
@@ -135,7 +135,7 @@ spec:
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
           httpGet:
-            path: {{ .Values.readinessProbe.path }}
+            path: {{ .Values.readinessProbe.path | quote }}
             port: http
         {{- end }}
         name: hydrophone
