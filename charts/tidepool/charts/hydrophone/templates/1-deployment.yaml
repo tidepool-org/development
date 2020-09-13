@@ -70,6 +70,15 @@ spec:
           value: "http://highwater:{{.Values.global.ports.highwater}}"
         - name: PROTOCOL
           value: "{{ .Values.global.gateway.default.protocol }}"
+# DEPRECATED - will be removed
+        - name: PUBLISH_HOST
+          value: 'hakken'
+        - name: DISCOVERY_HOST
+          value: 'hakken'
+        - name: SKIP_HAKKEN
+          value: "true"
+        - name: USER_API_SERVICE
+          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
         - name: TIDEPOOL_HYDROPHONE_ENV
           value: |
            {
