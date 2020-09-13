@@ -51,6 +51,7 @@ spec:
             secretKeyRef:
               name: timescaledb-single-passwords
               key: postgres
+              optional: true
         - name: TIDEPOOL_STORE_DATABASE
           value: data
         - name: SERVER_SECRET
