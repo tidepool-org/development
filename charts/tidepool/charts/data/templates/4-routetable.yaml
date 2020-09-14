@@ -118,18 +118,6 @@ spec:
         disable: true
       prefixRewrite: /v1/time
   - matchers:
-    - methods:
-      - GET
-      exact: /dataservices/status
-    routeAction:
-      single:
-        upstream:
-          name: data
-    options:
-      extauth:
-        disable: true
-      prefixRewrite: /status
-  - matchers:
     - prefix: /dataservices/
     routeAction:
       single:
