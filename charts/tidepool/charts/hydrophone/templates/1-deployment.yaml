@@ -71,6 +71,11 @@ spec:
         - name: TIDEPOOL_PROTOCOL
           value: "{{ .Values.global.gateway.default.protocol }}"
 # DEPRECATED - will be removed
+        - name: SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server
+              key: ServiceAuth
         - name: PUBLISH_HOST
           value: 'hakken'
         - name: DISCOVERY_HOST
