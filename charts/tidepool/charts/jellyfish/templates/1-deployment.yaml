@@ -47,7 +47,13 @@ spec:
         - name: TIDEPOOL_STORE_DATABASE_PREFIX
           value: {{ .Values.store.prefix | quote }}
         - name: MINIMUM_UPLOADER_VERSION
-          value: 0.251.0
+          valueFrom:
+            configMapKeyRef:
+              name: jellyfish
+              key: MinimumUploaderVersion
+              optional: true
+        - name: NODE_ENV
+          value: '{{.Values.nodeEnvironment}}'
         - name: PORT
           value: "{{.Values.global.ports.jellyfish}}"
         - name: TIDEPOOL_SERVER_SECRET
