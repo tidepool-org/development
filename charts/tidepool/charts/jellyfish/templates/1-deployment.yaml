@@ -51,7 +51,11 @@ spec:
         - name: GATEKEEPER_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.global.ports.gatekeeper}}"}]}'
         - name: MINIMUM_UPLOADER_VERSION
-          value: 0.251.0
+          valueFrom:
+            configMapKeyRef:
+              name: jellyfish
+              key: MinimumUploaderVersion
+              optional: true
         - name: NODE_ENV
           value: '{{.Values.nodeEnvironment}}'
         - name: PORT
