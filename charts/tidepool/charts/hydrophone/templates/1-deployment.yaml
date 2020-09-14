@@ -43,23 +43,23 @@ spec:
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
+        - name: HYDROPHONE_ASSET_URL
+          value: {{ include "charts.hydrophone.s3.url" . | quote }}
+        - name: HYDROPHONE_WEB_URL
+          value: {{ include "charts.host.app" . | quote }}
+        - name: SES_REGION
+          value: {{.Values.global.region | quote }}
+        - name: SES_FROM_ADDRESS
+          value: "{{.Values.deployment.env.fromAddress}}"
+        - name: SERVICE_LISTEN_ADDRESS
+          value: ":{{ .Values.global.ports.hydrophone }}"
         - name: TIDEPOOL_STORE_DATABASE
           value: confirm
-        - name: SERVER_SECRET
+        - name: TIDEPOOL_SERVER_SECRET
           valueFrom:
             secretKeyRef:
               name: server
               key: ServiceAuth
-        - name: AWS_REGION
-          value: {{.Values.global.region | quote }}
-        - name: ASSET_URL
-          value: {{ include "charts.hydrophone.s3.url" . | quote }}
-        - name: FROM_ADDRESS
-          value: "{{.Values.deployment.env.fromAddress}}"
-        - name: WEB_URL
-          value: {{ include "charts.host.app" . | quote }}
-        - name: SERVICE_LISTEN_ADDRESS
-          value: ":{{ .Values.global.ports.hydrophone }}"
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: "http://shoreline:{{.Values.global.ports.shoreline}}"
         - name: TIDEPOOL_SEAGULL_CLIENT_ADDRESS
@@ -68,7 +68,7 @@ spec:
           value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
         - name: TIDEPOOL_METRICS_CLIENT_ADDRESS
           value: "http://highwater:{{.Values.global.ports.highwater}}"
-        - name: PROTOCOL
+        - name: TIDEPOOL_PROTOCOL
           value: "{{ .Values.global.gateway.default.protocol }}"
 # DEPRECATED - will be removed
         - name: PUBLISH_HOST
