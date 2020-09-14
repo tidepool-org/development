@@ -51,16 +51,19 @@ spec:
             configMapKeyRef:
               name: kafka
               key: Brokers
+              optional: true
         - name: KAFKA_TOPIC
           valueFrom:
             configMapKeyRef:
               name: kafka
               key: MarketoTopic
+              optional: true
         - name: KAFKA_PREFIX
           valueFrom:
             configMapKeyRef:
               name: kafka
               key: TopicPrefix
+              optional: true
         - name: MARKETO_CLINIC_ROLE
           valueFrom:
             configMapKeyRef:
