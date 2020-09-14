@@ -28,8 +28,6 @@ global:
     enabled: true
     extauth:
       enabled: false
-    jwt:
-      enabled: false
   linkerdsupport:
     # linkerdsupport.enabled -- whether to include linkerdsupport subchart with Linkerd service profiles
     enabled: true
