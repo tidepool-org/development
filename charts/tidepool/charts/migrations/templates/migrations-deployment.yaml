@@ -48,7 +48,7 @@ spec:
             secretKeyRef:
               key: GroupIdEncryptionKey
               name: userdata
-              optional: false
+              optional: true
         - name: TIDEPOOL_SESSION_STORE_DATABASE
           value: user
         image: {{ .Values.deployment.image | quote}}
