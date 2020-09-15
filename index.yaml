@@ -29,6 +29,20 @@ entries:
     version: 0.1.0
   tidepool:
   - apiVersion: v2
+    created: "2020-09-15T06:32:05.914342153Z"
+    description: A Helm chart for Tidepool
+    digest: 12b1b7683d42d6fa846cac6bd53a88056a2b1b51b422b3d0dedf417524997ea6
+    home: https://github.com/tidepool-org/development/charts
+    icon: https://www.tidepool.org/static/media/tidepool-t-logo.41feef82.png
+    maintainers:
+    - email: derrick@tidepool.org
+      name: Derrick Burns
+      url: https://github.com/derrickburns
+    name: tidepool
+    urls:
+    - https://github.com/tidepool-org/development/releases/download/tidepool-0.7.50/tidepool-0.7.50.tgz
+    version: 0.7.50
+  - apiVersion: v2
     created: "2020-09-15T05:34:15.752960286Z"
     description: A Helm chart for Tidepool
     digest: 4487b96692aaa2c2403803eeaef54021858e71d59888ca3ad3022a98e66336f8
@@ -348,7 +362,7 @@ entries:
       url: https://github.com/derrickburns
     name: tidepool
     urls:
-      - https://github.com/tidepool-org/tidepool-helm/blob/master/tidepool-0.7.25.tgz
+    - https://github.com/tidepool-org/tidepool-helm/blob/master/tidepool-0.7.25.tgz
     version: 0.7.25
   - apiVersion: v2
     created: "2020-09-11T10:45:41.959358-07:00"
