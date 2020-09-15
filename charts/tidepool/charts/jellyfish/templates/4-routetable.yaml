@@ -27,6 +27,9 @@ spec:
     - methods:
       - GET
       prefix: /info
+    options:
+      jwt:
+        disable: true
     routeAction:
       single:
         upstream:
