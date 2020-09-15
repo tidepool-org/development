@@ -12,30 +12,6 @@ spec:
   - matchers:
     - methods:
       - POST
-      prefix: /v1/device/upload/cl
-    routeAction:
-      single:
-        upstream:
-          name: jellyfish
-  - matchers:
-    - methods:
-      - GET
-      prefix: /v1/device/data/
-    routeAction:
-      single:
-        upstream:
-          name: jellyfish
-  - matchers:
-    - methods:
-      - GET
-      prefix: /v1/synctasks/
-    routeAction:
-      single:
-        upstream:
-          name: jellyfish
-  - matchers:
-    - methods:
-      - POST
       prefix: /data/
     routeAction:
       single:
