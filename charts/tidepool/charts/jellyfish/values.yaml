@@ -28,3 +28,6 @@ affinity: {}
 store:
   database: data
   prefix: ""
+configmap:
+  enabled:
+    false
