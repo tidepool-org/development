@@ -12,8 +12,7 @@ A Helm chart for Kubernetes
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | nodeSelector | object | `{}` |  |
-| secret.data_.GroupIdEncryptionKey | string | `""` |  |
-| secret.data_.UserIdSalt | string | `""` |  |
-| secret.data_.UserPasswordSalt | string | `""` |  |
-| secret.enabled | bool | `false` |  |
+| secret.data_.UserIdSalt | string | `""` | plaintext user id salt |
+| secret.data_.UserPasswordSalt | string | `""` | plaintext user password salt |
+| secret.enabled | bool | `false` | whether to create userdata secret |
 | tolerations | list | `[]` |  |

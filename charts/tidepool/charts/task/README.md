@@ -13,10 +13,11 @@ A Helm chart for Kubernetes
 | affinity | object | `{}` |  |
 | deployment.env.queue.delay | int | `5` |  |
 | deployment.env.queue.workers | int | `5` |  |
-| deployment.image | string | `"tidepool/platform-task:master-latest"` |  |
+| deployment.image | string | `"tidepool/platform-task:master-latest"` | Docker image |
 | deployment.replicas | int | `1` |  |
-| hpa.enabled | bool | `false` |  |
-| hpa.minReplicas | int | `1` |  |
+| hpa.enabled | bool | `false` | whether to create a horizontal pod autoscalers for all pods of given deployment |
+| hpa.maxReplicas | string | `nil` | maximum number of replicas that HPA will maintain |
+| hpa.minReplicas | int | `1` | minimum number of replicas that HPA will maintain |
 | mongo.secretName | string | `"mongo"` |  |
 | nodeSelector | object | `{}` |  |
 | pdb.enabled | bool | `false` |  |
@@ -24,7 +25,7 @@ A Helm chart for Kubernetes
 | podAnnotations | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
 | resources | object | `{}` |  |
-| secret.data_.ServiceAuth | string | `""` |  |
+| secret.data_.ServiceAuth | string | `""` | task authorization, if empty, random value is generated |
 | secret.enabled | bool | `false` |  |
 | securityContext | object | `{}` |  |
 | tolerations | list | `[]` |  |

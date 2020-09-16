@@ -1,8 +1,10 @@
 secret:
   enabled: false
   data_:
+    # secret.data_.ServiceAuth -- task authorization, if empty, random value is generated
     ServiceAuth: ""
 deployment:
+  # deployment.image -- Docker image
   image: tidepool/platform-task:master-latest
   replicas: 1
   env:
@@ -14,8 +16,12 @@ podSecurityContext: {}
 podAnnotations: {}
 securityContext: {}
 hpa:
+  # hpa.enabled -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
+  # hpa.minReplicas -- minimum number of replicas that HPA will maintain
   minReplicas: 1
+  # hpa.maxReplicas -- maximum number of replicas that HPA will maintain
+  maxReplicas: null
 pdb:
   enabled: false
   minAvailable: "50%"

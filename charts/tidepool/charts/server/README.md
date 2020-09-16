@@ -12,6 +12,6 @@ A Helm chart for Kubernetes
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | nodeSelector | object | `{}` |  |
-| secret.data_.ServiceAuth | string | `""` |  |
-| secret.enabled | bool | `false` |  |
+| secret.data_.ServiceAuth | string | `""` | service authorization, if empty, random value is generated |
+| secret.enabled | bool | `false` | whether to create secret |
 | tolerations | list | `[]` |  |

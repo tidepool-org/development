@@ -11,15 +11,16 @@ A Helm chart for Kubernetes
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| deployment.env.store.file.directory | string | `"_data/image"` |  |
-| deployment.env.store.file.prefix | string | `"images"` |  |
-| deployment.env.store.s3.bucket | string | `"data"` |  |
+| deployment.env.store.file.directory | string | `"_data/image"` | directory to use when storing images on file storage |
+| deployment.env.store.file.prefix | string | `"images"` | file prefix to use when storing images on file storage |
+| deployment.env.store.s3.bucket | string | `"data"` | S3 bucket where image data is written |
 | deployment.env.store.s3.prefix | string | `"images"` |  |
-| deployment.env.store.type | string | `"file"` |  |
-| deployment.image | string | `"tidepool/platform-image:master-latest"` |  |
+| deployment.env.store.type | string | `"file"` | if `s3`, store image data in Amazon S3. If `file` store image data in local file |
+| deployment.image | string | `"tidepool/platform-image:master-latest"` | Docker image |
 | deployment.replicas | int | `1` |  |
-| hpa.enabled | bool | `false` |  |
-| hpa.minReplicas | int | `1` |  |
+| hpa.enabled | bool | `false` | whether to create a horizontal pod autoscalers for all pods of given deployment |
+| hpa.maxReplicas | string | `nil` | maximum number of replicas that HPA will maintain |
+| hpa.minReplicas | int | `1` | minimum number of replicas that HPA will maintain |
 | iamRole | string | `""` |  |
 | mongo.secretName | string | `"mongo"` |  |
 | nodeSelector | object | `{}` |  |
@@ -28,8 +29,8 @@ A Helm chart for Kubernetes
 | podAnnotations | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
 | resources | object | `{}` |  |
-| secret.data_.ServiceAuth | string | `""` |  |
-| secret.enabled | bool | `false` |  |
+| secret.data_.ServiceAuth | string | `""` | plaintext service authorization secret |
+| secret.enabled | bool | `false` | whether to create image secret |
 | securityContext | object | `{}` |  |
 | serviceAccount.create | bool | `false` |  |
 | tolerations | list | `[]` |  |

@@ -14,8 +14,8 @@ A Helm chart for Kubernetes
 | configmap.enabled | bool | `true` |  |
 | configmap.redirectURL | string | `""` |  |
 | nodeSelector | object | `{}` |  |
-| secret.data_.ClientId | string | `""` |  |
-| secret.data_.ClientSecret | string | `""` |  |
-| secret.data_.StateSalt | string | `""` |  |
-| secret.enabled | bool | `false` |  |
+| secret.data_.ClientId | string | `""` | plaintext Dexcom Oauth2 client id |
+| secret.data_.ClientSecret | string | `""` | plaintext Dexcom Oauth2 client secret |
+| secret.data_.StateSalt | string | `""` | plaintext Dexcom Oauth2 state salt |
+| secret.enabled | bool | `false` | whether to create dexcom secret |
 | tolerations | list | `[]` |  |

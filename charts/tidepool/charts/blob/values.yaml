@@ -1,20 +1,25 @@
 secret:
+  # secret.enabled -- whether to create blob secret
   enabled: false
   data_:
+    # secret.data_.ServiceAuth -- plaintext service authorization secret
     ServiceAuth: ""
 deployment:
   replicas: 1
+  # deployment.image -- default Docker image
   image: tidepool/platform-blob:master-latest
   env:
     store:
       s3:
+        # deployment.env.store.s3.bucket -- S3 bucket where blob data is written
         bucket: "data"
         prefix: "blobs"
       file:
         prefix: "blobs"
-        directory: "_data/blobs"                                            # directory to use if using local file storage
+        # deployment.env.store.file.directory -- directory to use when storing blobs on file storage
+        directory: "_data/blobs" 
+      # deployment.env.store.type -- if `s3`, store blob data in Amazon S3. If `file` store blob data in local files.
       type: file
-      #type: s3
 resources: {}
 podSecurityContext: {}
 podAnnotations: {}
@@ -22,8 +27,12 @@ securityContext: {}
 serviceAccount:
   create: false
 hpa:
+  # hpa.enabled -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
+  # hpa.minReplicas -- minimum number of replicas that HPA will maintain
   minReplicas: 1
+  # hpa.maxReplicas -- maximum number of replicas that HPA will maintain
+  maxReplicas: null
 pdb:
   enabled: false
   minAvailable: "50%"

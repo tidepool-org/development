@@ -1,18 +1,25 @@
-enabled: true                           # whether to enable the Gloo API Gateway integration
+# enabled -- whether to enable the Gloo API Gateway integration
+enabled: true                           
 discovery: {}
-  #namespace:                           # namespace where the Gloo discovery service runs
+  # discovery.namespace -- namespace where the Gloo discovery service runs
+  #namespace:                           
 global:
   gateway:
     proxy: 
-      name: "gateway-proxy"               # name of the Gloo gateway proxy that will host the virtual service
-      #namespace:                         # namespace of the Gloo gateway proxy that will host the virtual service
+      # global.gateway.proxy -- name of the Gloo gateway proxy that will host the virtual service
+      name: "gateway-proxy"
+      # global.gateway.namespace -- namespace of the Gloo gateway proxy that will host the virtual service
+      #namespace:                         
       port: 80
 virtualServices:
   http:
     name: http
-    dnsNames: [ "localhost" ]           # DNS names served with HTTP 
-    enabled: true                       # whether to accept HTTP requests
-    redirect: false                     # whether to redirect HTTP requests to HTTPS
+    # virtualServices.http.name -- DNS names served with HTTP 
+    dnsNames: [ "localhost" ]
+    # virtualServices.http.enabled -- whether to accept HTTP requests 
+    enabled: true
+    # virtualServices.http.redirect -- whether to redirect HTTP requests to HTTPS
+    redirect: false                     
     labels: {}
     options: {}
     extauth:
@@ -21,9 +28,12 @@ virtualServices:
       enabled: false
   https:
     name: https
-    dnsNames: []                        # DNS names served with HTTPS
-    enabled: false                      # whether to serve HTTPS
-    hsts: false                         # whether to require Strict Transport Security
+    # virtualServices.https -- DNS names served with HTTPS
+    dnsNames: []  
+    # virtualServices.enabled -- whether to serve HTTPS                      
+    enabled: false
+    # virtualServices.hsts -- whether to require Strict Transport Security
+    hsts: false                         
     labels: {}
     options: {}
     extauth:

@@ -12,10 +12,11 @@ A Helm chart for Kubernetes
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | deployment.env.window | int | `21` |  |
-| deployment.image | string | `"tidepool/message-api:master-latest"` |  |
+| deployment.image | string | `"tidepool/message-api:master-latest"` | Docker image |
 | deployment.replicas | int | `1` |  |
-| hpa.enabled | bool | `false` |  |
-| hpa.minReplicas | int | `1` |  |
+| hpa.enabled | bool | `false` | whether to create a horizontal pod autoscalers for all pods of given deployment |
+| hpa.maxReplicas | string | `nil` | maximum number of replicas that HPA will maintain |
+| hpa.minReplicas | int | `1` | minimum number of replicas that HPA will maintain |
 | mongo.secretName | string | `"mongo"` |  |
 | nodeEnvironment | string | `"production"` |  |
 | nodeSelector | object | `{}` |  |

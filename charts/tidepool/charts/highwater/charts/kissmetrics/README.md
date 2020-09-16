@@ -10,8 +10,8 @@ A Helm chart for Kubernetes
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| secret.data_.APIKey | string | `""` |  |
-| secret.data_.Token | string | `""` |  |
-| secret.data_.UCSFAPIKey | string | `""` |  |
-| secret.data_.UCSFWhitelist | string | `""` |  |
-| secret.enabled | bool | `false` |  |
+| secret.data_.APIKey | string | `""` | plaintext Kissmetrics API Key |
+| secret.data_.Token | string | `""` | plaintext Kissmetrics Token |
+| secret.data_.UCSFAPIKey | string | `""` | plaintext UCSF Kissmetrics Token |
+| secret.data_.UCSFWhitelist | string | `""` | plaintext UCSF metrics whitelist |
+| secret.enabled | bool | `false` | Whether to use create kissmetrics secret |

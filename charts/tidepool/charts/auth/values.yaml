@@ -9,6 +9,7 @@ configmap:
     AppleDeviceCheckKeyId: "B542R658GF"
     AppleDeviceCheckUseDevelopment: "true"
 deployment:
+  # deployment.image -- auth Docker image
   image: tidepool/platform-auth:master-latest
   replicas: 1
 resources: {}
@@ -17,8 +18,12 @@ podSecurityContext: {}
 podAnnotations: {}
 securityContext: {}
 hpa:
+  # hpa.enabled -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
+  # hpa.minReplicas -- minimum number of replicas that HPA will maintain
   minReplicas: 1
+  # hpa.maxReplicas -- maximum number of replicas that HPA will maintain
+  maxReplicas: null
 pdb:
   enabled: false
   minAvailable: "50%"

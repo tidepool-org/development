@@ -13,10 +13,11 @@ A Helm chart for Kubernetes
 | affinity | object | `{}` |  |
 | deployment.env.fromAddress | string | `"Tidepool <noreply@tidepool.org>"` |  |
 | deployment.env.store.s3.bucket | string | `"asset"` |  |
-| deployment.image | string | `"tidepool/hydrophone:master-latest"` |  |
+| deployment.image | string | `"tidepool/hydrophone:master-latest"` | Docker image |
 | deployment.replicas | int | `1` |  |
-| hpa.enabled | bool | `false` |  |
-| hpa.minReplicas | int | `1` |  |
+| hpa.enabled | bool | `false` | whether to create a horizontal pod autoscalers for all pods of given deployment |
+| hpa.maxReplicas | string | `nil` | maximum number of replicas that HPA will maintain |
+| hpa.minReplicas | int | `1` | minimum number of replicas that HPA will maintain |
 | livenessProbe.enabled | bool | `false` |  |
 | livenessProbe.initialDelaySeconds | int | `30` |  |
 | livenessProbe.path | string | `"/live"` |  |

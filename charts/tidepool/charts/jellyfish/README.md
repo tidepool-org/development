@@ -12,15 +12,13 @@ A Helm chart for Kubernetes
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | configmap.enabled | bool | `false` |  |
-| deployment.env.store.s3.bucket | string | `"data"` |  |
-| deployment.env.type | string | `"file"` |  |
 | deployment.image | string | `"tidepool/jellyfish:master-latest"` |  |
 | deployment.replicas | int | `1` |  |
-| enabled | bool | `true` |  |
-| hpa.enabled | bool | `false` |  |
-| hpa.minReplicas | int | `1` |  |
+| enabled | bool | `true` |  whether to enable service |
+| hpa.enabled | bool | `false` | whether to create a horizontal pod autoscalers for all pods of given deployment |
+| hpa.maxReplicas | string | `nil` | maximum number of replicas that HPA will maintain |
+| hpa.minReplicas | int | `1` | minimum number of replicas that HPA will maintain |
 | mongo.secretName | string | `"mongo"` |  |
-| nodeEnvironment | string | `"production"` |  |
 | nodeSelector | object | `{}` |  |
 | pdb.enabled | bool | `false` |  |
 | pdb.minAvailable | string | `"50%"` |  |

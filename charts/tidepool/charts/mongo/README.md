@@ -12,12 +12,12 @@ A Helm chart for Kubernetes
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | nodeSelector | object | `{}` |  |
-| secret.data_.Addresses | string | `""` |  |
-| secret.data_.Database | string | `""` |  |
-| secret.data_.OptParams | string | `""` |  |
-| secret.data_.Password | string | `""` |  |
-| secret.data_.Scheme | string | `""` |  |
-| secret.data_.Tls | string | `""` |  |
-| secret.data_.Username | string | `""` |  |
-| secret.enabled | bool | `false` |  |
+| secret.data_.Addresses | string | `""` | plaintext comma-separated list of Mongo `host[:port]` addresses |
+| secret.data_.Database | string | `""` | plaintext Mongo database name |
+| secret.data_.OptParams | string | `""` | plaintext additional Mongo connection params |
+| secret.data_.Password | string | `""` | plaintext Mongo password |
+| secret.data_.Scheme | string | `""` | plaintext Mongo DB scheme, either `mongodb` or `mongodb+srv` |
+| secret.data_.Tls | string | `""` | plaintext, If true, use SSL on Mongo connection |
+| secret.data_.Username | string | `""` | plaintext, If non-empty, Mongo username |
+| secret.enabled | bool | `false` | whether to create mongo secret |
 | tolerations | list | `[]` |  |

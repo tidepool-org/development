@@ -1,12 +1,8 @@
+# enabled --  whether to enable service
 enabled: true
 deployment:
   image: tidepool/jellyfish:master-latest
   replicas: 1
-  env:
-    store:
-      s3:
-        bucket: "data"
-    type: file
 resources: {}
 podSecurityContext: {}
 podAnnotations: {}
@@ -14,9 +10,12 @@ securityContext: {}
 serviceAccount:
   create: false
 hpa:
+  # hpa.enabled -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
+  # hpa.minReplicas -- minimum number of replicas that HPA will maintain
   minReplicas: 1
-nodeEnvironment: production
+  # hpa.maxReplicas -- maximum number of replicas that HPA will maintain
+  maxReplicas: null
 pdb:
   enabled: false
   minAvailable: "50%"

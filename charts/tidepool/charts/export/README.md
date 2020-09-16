@@ -14,8 +14,9 @@ A Helm chart for Kubernetes
 | deployment.image | string | `"tidepool/export:master-latest"` |  |
 | deployment.replicas | int | `1` |  |
 | enabled | bool | `true` |  |
-| hpa.enabled | bool | `false` |  |
-| hpa.minReplicas | int | `1` |  |
+| hpa.enabled | bool | `false` | whether to create a horizontal pod autoscalers for all pods of given deployment |
+| hpa.maxReplicas | string | `nil` | maximum number of replicas that HPA will maintain |
+| hpa.minReplicas | int | `1` | minimum number of replicas that HPA will maintain |
 | mongo.secretName | string | `"mongo"` |  |
 | nodeSelector | object | `{}` |  |
 | pdb.enabled | bool | `false` |  |
