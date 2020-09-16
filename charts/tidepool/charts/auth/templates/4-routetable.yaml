@@ -18,7 +18,7 @@ spec:
         upstream:
           name: auth
     options:
-      jwt:
+      extauth:
         disable: true
       prefixRewrite: /status
   - matchers:
@@ -78,7 +78,7 @@ spec:
         upstream:
           name: auth
     options:
-      jwt:
+      extauth:
         disable: true
   - matchers:
     - methods:
@@ -89,7 +89,7 @@ spec:
         upstream:
           name: auth
     options:
-      jwt:
+      extauth:
         disable: true
   - matchers:
     - methods:

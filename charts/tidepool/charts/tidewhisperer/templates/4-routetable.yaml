@@ -18,7 +18,7 @@ spec:
         upstream:
           name: tidewhisperer
     options:
-      jwt:
+      extauth:
         disable: true
       prefixRewrite: /status
   - matchers:
@@ -30,7 +30,7 @@ spec:
         upstream:
           name: tidewhisperer
     options:
-      jwt:
+      extauth:
         disable: true
       timeout: '3m'
 {{- end }}

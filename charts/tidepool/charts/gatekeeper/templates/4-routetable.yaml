@@ -18,7 +18,7 @@ spec:
         upstream:
           name: gatekeeper
     options:
-      jwt:
+      extauth:
         disable: true
   - matchers:
     - methods:
