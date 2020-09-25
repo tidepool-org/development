@@ -3,6 +3,9 @@ enabled: true
 deployment:
   image: tidepool/jellyfish:master-latest
   replicas: 1
+  env:
+    store:
+      type: "s3"
 resources: {}
 podSecurityContext: {}
 podAnnotations: {}
@@ -30,3 +33,4 @@ store:
 configmap:
   enabled:
     false
+
