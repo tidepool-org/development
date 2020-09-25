@@ -6,6 +6,7 @@ deployment:
   env:
     store:
       type: "s3"
+      bucket: "none"
 resources: {}
 podSecurityContext: {}
 podAnnotations: {}
