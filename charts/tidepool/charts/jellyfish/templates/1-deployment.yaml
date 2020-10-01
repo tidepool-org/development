@@ -65,41 +65,6 @@ spec:
           value: "seagull:{{.Values.global.ports.seagull}}"
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
           value: "gatekeeper:{{.Values.global.ports.gatekeeper}}"
-  #deprecated
-        - name: NODE_ENV
-          value: '{{.Values.nodeEnvironment}}'
-        - name: SERVE_STATIC
-          value: dist
-        - name: SALT_DEPLOY
-          valueFrom:
-            secretKeyRef:
-              name: carelink
-              key: CarelinkSalt
-        - name: STORAGE_DEFAULT
-          value: '{{ .Values.deployment.env.store.type }}'
-        - name: STORAGE_TYPES
-          value: '{"s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.global.region}}", "bucket": "{{ .Values.deployment.env.store.s3.bucket }}" }}'
-        - name: SCHEMA_VERSION
-          value: "3"
-        - name: DISCOVERY_HOST
-          value: 'hakken'
-        - name: SKIP_HAKKEN
-          value: "true"
-        - name: GATEKEEPER_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.global.ports.gatekeeper}}"}]}'
-        - name: PUBLISH_HOST
-          value: 'hakken'
-        - name: SEAGULL_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:{{.Values.global.ports.seagull}}"}]}'
-        - name: SERVER_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: server
-              key: ServiceAuth
-        - name: SERVICE_NAME
-          value: jellyfish
-        - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
