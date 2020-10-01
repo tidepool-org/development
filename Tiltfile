@@ -45,6 +45,9 @@ def main():
       print("Preparing mongodb service...")
       local('while ! nc -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
 
+    # Provision kafka
+    k8s_yaml('./tools/kafka/kafka.yaml')
+
   else:
     # Shut down the mongodb and gateway services
     if not getNested(config, 'mongodb.useExternal'):
@@ -292,7 +295,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
         run_commands.append(run(overrides.get('rebuildCommand')))
 
       # Apply container process restart if specified
-      entrypoint = overrides.get('restartContainerCommand', []);
+      entrypoint = overrides.get('restartContainerCommand', '');
       if overrides.get('restartContainerCommand'):
         run_commands.append(run('./tilt/restart.sh'))
 
