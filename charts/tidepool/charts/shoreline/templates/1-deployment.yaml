@@ -52,41 +52,11 @@ spec:
               name: kafka
               key: Brokers
               optional: true
-        - name: KAFKA_CONSUMER_GROUP
-          valueFrom:
-            configMapKeyRef:
-              name: kafka
-              key: ConsumerGroup
-              optional: true
-        - name: KAFKA_USER_NAME
-          valueFrom:
-            configMapKeyRef:
-              name: kafka
-              key: UserName
-              optional: true
-        - name: KAFKA_USER_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: kafka
-              key: UserPassword
-              optional: true
-        - name: KAFKA_VERSION
-          valueFrom:
-            configMapKeyRef:
-              name: kafka
-              key: Version
-              optional: false
-        - name: KAFKA_REQUIRE_SSL
-          valueFrom:
-            configMapKeyRef:
-              name: kafka
-              key: SSL
-              optional: true
         - name: KAFKA_TOPIC
           valueFrom:
             configMapKeyRef:
               name: kafka
-              key: UserEvent
+              key: MarketoTopic
               optional: true
         - name: KAFKA_PREFIX
           valueFrom:
