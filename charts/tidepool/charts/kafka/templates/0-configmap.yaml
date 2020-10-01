@@ -14,5 +14,8 @@ data:
   TopicPrefix: "{{ .Release.Namespace }}-"
 {{ end }}
   EmailsTopic: {{ .Values.configmap.EmailsTopic }}
-  MarketoTopic: {{ .Values.configmap.MarketoTopic | default "marketo"}}
+  UserEvent: {{ .Values.configmap.UserEvent | default "events" }}
+  Version: {{ .Values.configmap.Version | default "2.4.0" }}
+  SSL: {{ .Values.configmap.SSL | default true }}
+  ConsumerGroup: {{ .Values.configmap.ConsumerGroup }}
 {{ end }}
