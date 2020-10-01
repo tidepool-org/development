@@ -2,7 +2,7 @@ configmap:
   enabled: true
   EmailsTopic: "emails"
   Brokers: "b-1.default-ops.gxm6gl.c4.kafka.us-west-2.amazonaws.com:9094,b-2.default-ops.gxm6gl.c4.kafka.us-west-2.amazonaws.com:9094,b-3.default-ops.gxm6gl.c4.kafka.us-west-2.amazonaws.com:9094"
-  RequireSSL: true
+  RequireSSL: "true"
   TopicPrefix: ""
   UserEventsTopic: "user-events"
   UserEventsShorelineDeadLettersTopic: "user-events-shoreline-dl"
