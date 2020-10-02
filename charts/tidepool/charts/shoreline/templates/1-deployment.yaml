@@ -44,10 +44,10 @@ spec:
         {{ include "charts.mongo.params" .}}
         - name: API_HOST
           value: {{ .Values.global.gateway.default.apiHost | default .Values.global.gateway.default.host }}
-        - name: CLOUD_EVENTS_SOURCE
-          value: "shoreline"
         - name: TIDEPOOL_STORE_DATABASE
           value: user
+        - name: CLOUD_EVENTS_SOURCE
+          value: "shoreline"
         - name: KAFKA_CONSUMER_GROUP
           value: "shoreline"
         - name: KAFKA_BROKERS

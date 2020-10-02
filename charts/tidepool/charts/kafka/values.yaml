@@ -5,6 +5,7 @@ configmap:
   RequireSSL: "true"
   TopicPrefix: ""
   UserEventsTopic: "user-events"
+  UserEventsDataDeadLettersTopic: "user-events-data-dl"
   UserEventsShorelineDeadLettersTopic: "user-events-shoreline-dl"
   UserEventsMarketoDeadLettersTopic: "user-events-marketo-dl"
   Version: "2.4.0"

@@ -54,6 +54,8 @@ def main():
     # Clean up any tilt up backround processes
     local('for pid in $(ps -ef | awk "/tilt\r up/ {print $2}"); do kill -9 $pid; done')
 
+  k8s_yaml('./tools/kafka/kafka.yaml')
+
   # Apply any service overrides
   tidepool_helm_template_cmd += '-f {baseConfig} -f {overrides} '.format(
     baseConfig=tidepool_helm_values_file,
@@ -99,7 +101,6 @@ def provisionServerSecrets ():
   required_secrets = [
     'auth',
     'blob',
-    'carelink',
     'data',
     'dexcom',
     'export',
@@ -295,7 +296,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
         run_commands.append(run(overrides.get('rebuildCommand')))
 
       # Apply container process restart if specified
-      entrypoint = overrides.get('restartContainerCommand', []);
+      entrypoint = overrides.get('restartContainerCommand', '');
       if overrides.get('restartContainerCommand'):
         run_commands.append(run('./tilt/restart.sh'))
 

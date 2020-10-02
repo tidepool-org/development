@@ -70,11 +70,6 @@ spec:
           value: '{{.Values.nodeEnvironment}}'
         - name: SERVE_STATIC
           value: dist
-        - name: SALT_DEPLOY
-          valueFrom:
-            secretKeyRef:
-              name: carelink
-              key: CarelinkSalt
         - name: STORAGE_DEFAULT
           value: '{{ .Values.deployment.env.store.type }}'
         - name: STORAGE_TYPES

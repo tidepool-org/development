@@ -55,6 +55,46 @@ spec:
           value: data
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
+        - name: CLOUD_EVENTS_SOURCE
+          value: "data"
+        - name: KAFKA_CONSUMER_GROUP
+          value: "data"
+        - name: KAFKA_BROKERS
+          valueFrom:
+            configMapKeyRef:
+              name: kafka
+              key: Brokers
+              optional: true
+        - name: KAFKA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: kafka
+              key: UserEventsTopic
+              optional: true
+        - name: KAFKA_DEAD_LETTERS_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: kafka
+              key: UserEventsDataDeadLettersTopic
+              optional: true
+        - name: KAFKA_TOPIC_PREFIX
+          valueFrom:
+            configMapKeyRef:
+              name: kafka
+              key: TopicPrefix
+              optional: true
+        - name: KAFKA_REQUIRE_SSL
+          valueFrom:
+            configMapKeyRef:
+              name: kafka
+              key: RequireSSL
+              optional: true
+        - name: KAFKA_VERSION
+          valueFrom:
+            configMapKeyRef:
+              name: kafka
+              key: Version
+              optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
