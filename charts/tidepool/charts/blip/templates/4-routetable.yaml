@@ -16,8 +16,7 @@ spec:
       single:
         upstream:
           name: blip
-          namespace: {{ .Release.Namespace }}
     options:
-      jwt:
+      extauth:
         disable: true
 {{- end }}

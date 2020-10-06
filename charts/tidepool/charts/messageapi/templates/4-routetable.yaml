@@ -8,19 +8,8 @@ metadata:
     namespace: {{ .Release.Namespace }}
     app: tidepool
 spec:
+  weight: 10
   routes:
-  - matchers:
-    - methods:
-      - GET
-      exact: /message/status
-    routeAction:
-      single:
-        upstream:
-          name: messageapi
-          namespace: {{ .Release.Namespace }}
-    options:
-      jwt:
-        disable: true
   - matchers:
     - methods:
       - GET
@@ -33,7 +22,6 @@ spec:
       single:
         upstream:
           name: messageapi
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: '30s'
 {{- end }}

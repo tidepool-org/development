@@ -17,9 +17,8 @@ spec:
       single:
         upstream:
           name: gatekeeper
-          namespace: {{ .Release.Namespace }}
     options:
-      jwt:
+      extauth:
         disable: true
   - matchers:
     - methods:
@@ -29,7 +28,6 @@ spec:
       single:
         upstream:
           name: gatekeeper
-          namespace: {{ .Release.Namespace }}
   - matchers:
     - methods:
       - GET
@@ -39,7 +37,6 @@ spec:
       single:
         upstream:
           name: gatekeeper
-          namespace: {{ .Release.Namespace }}
   - matchers:
     - methods:
       - GET
@@ -48,7 +45,6 @@ spec:
       single:
         upstream:
           name: gatekeeper
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: '30s'
 {{- end }}

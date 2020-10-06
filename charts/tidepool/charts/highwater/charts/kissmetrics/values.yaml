@@ -1,7 +1,12 @@
 secret:
+  # secret.enabled -- Whether to use create kissmetrics secret
   enabled: false
   data_:
+    # secret.data_.APIKey -- plaintext Kissmetrics API Key
     APIKey: ""
+    # secret.data_.Token -- plaintext Kissmetrics Token
     Token: ""
+    # secret.data_.UCSFAPIKey -- plaintext UCSF Kissmetrics Token
     UCSFAPIKey: ""
+    # secret.data_.UCSFWhitelist -- plaintext UCSF metrics whitelist
     UCSFWhitelist: ""

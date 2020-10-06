@@ -1,0 +1,26 @@
+enabled: false
+secret:
+  enabled: false
+  data_:
+    ServiceAuth: ""
+deployment:
+  image: tidepool/summary:master-latest
+  replicas: 1
+  podAnnotations: {}
+resources: {}
+securityContext: {}
+hpa:
+  # hpa.enabled -- whether to create a horizontal pod autoscalers for all pods of given deployment
+  enabled: false
+  # hpa.minReplicas -- minimum number of replicas that HPA will maintain
+  minReplicas: 1
+  # hpa.maxReplicas -- maximum number of replicas that HPA will maintain
+  maxReplicas: null
+pdb:
+  enabled: false
+  minAvailable: "50%"
+nodeSelector: {}
+tolerations: []
+affinity: {}
+mongo:
+  secretName: mongo

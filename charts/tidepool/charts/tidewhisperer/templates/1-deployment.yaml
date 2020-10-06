@@ -40,6 +40,18 @@ spec:
       containers:
       - env:
         {{- include "charts.mongo.params" . }}
+        - name: TIMESCALEDB_HOST
+          value: timescaledb-single.timescaledb.svc.cluster.local
+        - name: TIMESCALEDB_USER
+          value: postgres
+        - name: TIMESCALEDB_DBNAME
+          value: postgres
+        - name: TIMESCALEDB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: timescaledb-single-passwords
+              key: postgres
+              optional: true
         - name: TIDEPOOL_STORE_DATABASE
           value: data
         - name: SERVER_SECRET

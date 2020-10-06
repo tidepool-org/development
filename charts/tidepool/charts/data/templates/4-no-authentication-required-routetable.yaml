@@ -1,0 +1,28 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: data-no-authentication-required
+  namespace: "{{ .Release.Namespace }}"
+  labels:
+    namespace: "{{ .Release.Namespace }}"
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+    - methods:
+      - GET
+      exact: /dataservices/status
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      extauth:
+        disable: true
+      prefixRewrite: /status
+{{- if .Values.shadowing }}
+      shadowing:
+{{- toYaml .Values.shadowing | nindent 8 }}
+{{- end }}
+{{- end }}

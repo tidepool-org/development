@@ -17,7 +17,6 @@ spec:
       single:
         upstream:
           name: blob
-          namespace: {{ .Release.Namespace }}
   - matchers:
     - methods:
       - GET
@@ -28,7 +27,6 @@ spec:
       single:
         upstream:
           name: blob
-          namespace: {{ .Release.Namespace }}
   - matchers:
     - methods:
       - GET
@@ -38,5 +36,4 @@ spec:
       single:
         upstream:
           name: blob
-          namespace: {{ .Release.Namespace }}
 {{- end }}

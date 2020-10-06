@@ -8,7 +8,7 @@ metadata:
   name: jellyfish
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},carelink"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }}"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -43,45 +43,28 @@ spec:
       - env:
         {{ include "charts.mongo.params" .}}
         - name: TIDEPOOL_STORE_DATABASE
-          value: 'data'
-        - name: SKIP_HAKKEN
-          value: "true"
-        - name: DISCOVERY_HOST
-          value: 'hakken'
-        - name: GATEKEEPER_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "gatekeeper:{{.Values.global.ports.gatekeeper}}"}]}'
+          value: {{ .Values.store.database | quote }}
+        - name: TIDEPOOL_STORE_DATABASE_PREFIX
+          value: {{ .Values.store.prefix | quote }}
         - name: MINIMUM_UPLOADER_VERSION
-          value: 0.251.0
-        - name: NODE_ENV
-          value: '{{.Values.nodeEnvironment}}'
+          valueFrom:
+            configMapKeyRef:
+              name: jellyfish
+              key: MinimumUploaderVersion
+              optional: true
         - name: PORT
           value: "{{.Values.global.ports.jellyfish}}"
-        - name: PUBLISH_HOST
-          value: 'hakken'
-        - name: SALT_DEPLOY
-          valueFrom:
-            secretKeyRef:
-              name: carelink
-              key: CarelinkSalt
-        - name: SCHEMA_VERSION
-          value: "3"
-        - name: SEAGULL_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "seagull:{{.Values.global.ports.seagull}}"}]}'
-        - name: SERVER_SECRET
+        - name: TIDEPOOL_SERVER_SECRET
           valueFrom:
             secretKeyRef:
               name: server
               key: ServiceAuth
-        - name: SERVE_STATIC
-          value: dist
-        - name: SERVICE_NAME
-          value: jellyfish
-        - name: STORAGE_TYPES
-          value: '{"s3": {"type": "aws/s3", "encryption": "none", "region": "{{.Values.global.region}}", "bucket": "{{ .Values.deployment.env.store.s3.bucket }}" }}'
-        - name: STORAGE_DEFAULT
-          value: '{{ .Values.deployment.env.store.type }}'
-        - name: USER_API_SERVICE
-          value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: "shoreline:{{.Values.global.ports.shoreline}}"
+        - name: TIDEPOOL_SEAGULL_CLIENT_ADDRESS
+          value: "seagull:{{.Values.global.ports.seagull}}"
+        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
+          value: "gatekeeper:{{.Values.global.ports.gatekeeper}}"
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}

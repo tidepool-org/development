@@ -12,8 +12,12 @@ securityContext: {}
 serviceMonitor:
   enabled: false
 hpa:
+  # hpa.enabled -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
+  # hpa.minReplicas -- minimum number of replicas that HPA will maintain
   minReplicas: 1
+  # hpa.maxReplicas -- maximum number of replicas that HPA will maintain
+  maxReplicas: null
 pdb:
   enabled: false
   minAvailable: "50%"

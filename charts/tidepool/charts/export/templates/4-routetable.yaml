@@ -17,9 +17,8 @@ spec:
       single:
         upstream:
           name: export
-          namespace: {{ .Release.Namespace }}
     options:
-      jwt:
+      extauth:
        disable: true
   - matchers:
     - prefix: /export/
@@ -27,9 +26,8 @@ spec:
       single:
         upstream:
           name: export
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: '3m'
-      jwt:
+      extauth:
        disable: true
 {{- end }}

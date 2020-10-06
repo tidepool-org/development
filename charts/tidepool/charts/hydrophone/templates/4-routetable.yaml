@@ -18,9 +18,8 @@ spec:
       single:
         upstream:
           name: hydrophone
-          namespace: {{ .Release.Namespace }}
     options:
-      jwt:
+      extauth:
         disable: true
       prefixRewrite: /status
 
@@ -32,10 +31,9 @@ spec:
       single:
         upstream:
           name: hydrophone
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -46,10 +44,9 @@ spec:
       single:
         upstream:
           name: hydrophone
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -60,10 +57,9 @@ spec:
       single:
         upstream:
           name: hydrophone
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -74,10 +70,9 @@ spec:
       single:
         upstream:
           name: hydrophone
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -88,10 +83,9 @@ spec:
       single:
         upstream:
           name: hydrophone
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -102,10 +96,9 @@ spec:
       single:
         upstream:
           name: hydrophone
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -116,10 +109,9 @@ spec:
       single:
         upstream:
           name: hydrophone
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -130,10 +122,9 @@ spec:
       single:
         upstream:
           name: hydrophone
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true
 
   - matchers:
@@ -144,10 +135,9 @@ spec:
       single:
         upstream:
           name: hydrophone
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: '1m'
-      jwt:
+      extauth:
         disable: true   
 
 {{- end }}

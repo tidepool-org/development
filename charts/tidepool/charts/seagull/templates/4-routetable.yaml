@@ -17,9 +17,8 @@ spec:
       single:
         upstream:
           name: seagull
-          namespace: {{ .Release.Namespace }}
     options:
-      jwt:
+      extauth:
         disable: true
   - matchers:
     - prefix: /metadata/
@@ -27,7 +26,6 @@ spec:
       single:
         upstream:
           name: seagull
-          namespace: {{ .Release.Namespace }}
     options:
       retries:
         retryOn: '5xx'

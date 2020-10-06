@@ -42,6 +42,24 @@ spec:
         {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
+        - name: KAFKA_BROKERS
+          valueFrom:
+            configMapKeyRef:
+              name: kafka
+              key: Brokers
+              optional: true
+        - name: KAFKA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: kafka
+              key: MarketoTopic
+              optional: true
+        - name: KAFKA_PREFIX
+          valueFrom:
+            configMapKeyRef:
+              name: kafka
+              key: TopicPrefix
+              optional: true
         - name: TIDEPOOL_USER_SERVICE_SECRET
           valueFrom:
             secretKeyRef:

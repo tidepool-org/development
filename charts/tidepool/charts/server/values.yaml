@@ -1,6 +1,8 @@
 secret:
+  # secret.enabled -- whether to create secret
   enabled: false
   data_:
+    # secret.data_.ServiceAuth -- service authorization, if empty, random value is generated
     ServiceAuth: ""
 nodeSelector: {}
 tolerations: []

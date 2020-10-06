@@ -12,39 +12,11 @@ spec:
   - matchers:
     - methods:
       - POST
-      prefix: /v1/device/upload/cl
-    routeAction:
-      single:
-        upstream:
-          name: jellyfish
-          namespace: {{ .Release.Namespace }}
-  - matchers:
-    - methods:
-      - GET
-      prefix: /v1/device/data/
-    routeAction:
-      single:
-        upstream:
-          name: jellyfish
-          namespace: {{ .Release.Namespace }}
-  - matchers:
-    - methods:
-      - GET
-      prefix: /v1/synctasks/
-    routeAction:
-      single:
-        upstream:
-          name: jellyfish
-          namespace: {{ .Release.Namespace }}
-  - matchers:
-    - methods:
-      - POST
       prefix: /data/
     routeAction:
       single:
         upstream:
           name: jellyfish
-          namespace: {{ .Release.Namespace }}
     options:
       timeout: "60s"
 {{- if .Values.shadowing }}
@@ -55,9 +27,11 @@ spec:
     - methods:
       - GET
       prefix: /info
+    options:
+      extauth:
+        disable: true
     routeAction:
       single:
         upstream:
           name: jellyfish
-          namespace: {{ .Release.Namespace }}
 {{- end }}

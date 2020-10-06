@@ -9,7 +9,6 @@ metadata:
     app: tidepool
 spec:
   routes:
-
   - matchers:
     - methods:
       - POST
@@ -18,12 +17,10 @@ spec:
       single:
         upstream:
           name: shoreline
-          namespace: {{ .Release.Namespace }}
     options:
       prefixRewrite: /serverlogin
-      jwt:
+      extauth:
         disable: true
-
   - matchers:
     - methods:
       - POST
@@ -32,11 +29,9 @@ spec:
       single:
         upstream:
           name: shoreline
-          namespace: {{ .Release.Namespace }}
     options:
-      jwt:
+      extauth:
         disable: true
-
   - matchers:
     - methods:
       - POST
@@ -45,12 +40,10 @@ spec:
       single:
         upstream:
           name: shoreline
-          namespace: {{ .Release.Namespace }}
     options:
       prefixRewrite: /user
-      jwt:
+      extauth:
         disable: true
-
   - matchers:
     - methods:
       - POST
@@ -59,13 +52,11 @@ spec:
       single:
         upstream:
           name: shoreline
-          namespace: {{ .Release.Namespace }}
     options:
       prefixRewrite: /login
       timeout: '30s'
-      jwt:
+      extauth:
         disable: true
-
   - matchers:
     - methods:
       - POST
@@ -74,13 +65,11 @@ spec:
       single:
         upstream:
           name: shoreline
-          namespace: {{ .Release.Namespace }}
     options:
       prefixRewrite: /logout
       timeout: '30s'
-      jwt:
+      extauth:
         disable: true
-
   - matchers:
     - methods:
       - GET
@@ -89,10 +78,75 @@ spec:
       single:
         upstream:
           name: shoreline
-          namespace: {{ .Release.Namespace }}
     options:
       prefixRewrite: /private
       timeout: '30s'
-      jwt:
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      prefix: /auth/token/
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+    options:
+      prefixRewrite: /token/
+      timeout: '30s'
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      prefix: /auth/users
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+    options:
+      prefixRewrite: /users
+      timeout: '30s'
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      - DELETE
+      prefix: /auth/user/
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+    options:
+      prefixRewrite: /user/
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      - PUT
+      prefix: /auth/user
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+    options:
+      prefixRewrite: /user
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      prefix: /auth/login
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+    options:
+      prefixRewrite: /login
+      timeout: '30s'
+      extauth:
         disable: true
 {{- end }}

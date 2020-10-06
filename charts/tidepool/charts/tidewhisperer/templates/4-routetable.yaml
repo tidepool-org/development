@@ -17,9 +17,8 @@ spec:
       single:
         upstream:
           name: tidewhisperer
-          namespace: {{ .Release.Namespace }}
     options:
-      jwt:
+      extauth:
         disable: true
       prefixRewrite: /status
   - matchers:
@@ -30,9 +29,8 @@ spec:
       single:
         upstream:
           name: tidewhisperer
-          namespace: {{ .Release.Namespace }}
     options:
-      jwt:
+      extauth:
         disable: true
       timeout: '3m'
 {{- end }}
