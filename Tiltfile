@@ -99,7 +99,6 @@ def provisionServerSecrets ():
   required_secrets = [
     'auth',
     'blob',
-    'carelink',
     'data',
     'dexcom',
     'export',
