@@ -16,6 +16,6 @@ spec:
           - x-tidepool-session-token
         ResponseHeaders:
           isserver: x-auth-server-access
-          userid: x-auth-user-id
-          roles: x-auth-user-roles
+          userid: x-auth-subject-id
+          roles: x-auth-roles
 {{- end }}
