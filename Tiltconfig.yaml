@@ -261,14 +261,6 @@ hydrophone:
   containerPath: '/go/src/github.com/tidepool-org/hydrophone'
   rebuildCommand: './build.sh'
 
-image:
-  deployment:
-    # image: tidepool-k8s-image # Uncomment to build and run local image or a specific remote image
-  # hostPath: ../platform       # Uncomment to build and run local image
-  containerPath: '/go/src/github.com/tidepool-org/platform'
-  dockerFile: 'Dockerfile.image'
-  rebuildCommand: 'SERVICE=image make service-build'
-
 jellyfish:
   deployment:
     # image: tidepool-k8s-jellyfish # Uncomment to build and run local image or a specific remote image
@@ -288,14 +280,6 @@ migrations:
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.migrations'
   rebuildCommand: 'SERVICE=migrations make service-build'
-
-notification:
-  deployment:
-    # image: tidepool-k8s-notification # Uncomment to build and run local image or a specific remote image
-  # hostPath: ../platform              # Uncomment to build and run local image
-  containerPath: '/go/src/github.com/tidepool-org/platform'
-  dockerFile: 'Dockerfile.notification'
-  rebuildCommand: 'SERVICE=notification make service-build'
 
 prescription:
   deployment:

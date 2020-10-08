@@ -40,10 +40,8 @@ A Helm chart for Tidepool
 | global.ports.gatekeeper | int | `9123` | gatekeeper service internal port |
 | global.ports.highwater | int | `9191` | highwater service internal port |
 | global.ports.hydrophone | int | `9157` | hydrophone service internal port |
-| global.ports.image | int | `9226` | image service internal port |
 | global.ports.jellyfish | int | `9122` | jellyfish service internal port |
 | global.ports.messageapi | int | `9119` | messageapi service internal port |
-| global.ports.notification | int | `9223` | notification service internal port |
 | global.ports.prescription | int | `9227` | prescription service internal port |
 | global.ports.seagull | int | `9120` | seagull service internal port |
 | global.ports.shoreline | int | `9107` | shoreline service internal port |
