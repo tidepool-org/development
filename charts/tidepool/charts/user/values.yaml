@@ -30,6 +30,9 @@ pdb:
 mongo:
   # -- name of the secret containing the credentials of the mongo database to use
   secretName: mongo
+kafka:
+  # -- name of the configmap containing the kafka broker and credentials to use
+  configmapName: kafka
 # -- node selector configuration
 nodeSelector: {}
 # -- tolerations

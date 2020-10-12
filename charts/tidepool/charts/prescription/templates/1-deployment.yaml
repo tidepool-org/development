@@ -10,6 +10,7 @@ metadata:
   namespace: {{.Release.Namespace}}
   annotations:
     secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},prescription"
+    configmap.reloader.stakater.com/reload: "{{ .Values.kafka.configmapName }}"
 spec:
   selector:
     matchLabels:
@@ -48,19 +49,19 @@ spec:
         - name: TIDEPOOL_KAFKA_BROKERS
           valueFrom:
             configMapKeyRef:
-              name: kafka
+              name: {{ .Values.kafka.configmapName }}
               key: Brokers
               optional: false
         - name: TIDEPOOL_KAFKA_TOPIC_PREFIX
           valueFrom:
             configMapKeyRef:
-              name: kafka
+              name: {{ .Values.kafka.configmapName }}
               key: TopicPrefix
               optional: false
         - name: TIDEPOOL_KAFKA_EMAILS_TOPIC
           valueFrom:
             configMapKeyRef:
-              name: kafka
+              name: {{ .Values.kafka.configmapName }}
               key: EmailsTopic
               optional: false
         - name: TIDEPOOL_WEBAPP_URL
