@@ -8,27 +8,29 @@ secret:
 deployment:
   # -- Docker image
   image: tidepool/platform-image:master-latest
+  # -- number of replicas to run
   replicas: 1
   env:
     store:
       file:
         # -- directory to use when storing images on file storage
         directory: "_data/image"
+        # -- prefix of files, used when storing images on file storage
         prefix: "images"
       s3:
         # -- S3 bucket where image data is written
         bucket:  "data"
-        # -- file prefix to use when storing images on file storage
+        # -- object prefix to use when storing images on object storage
         prefix: "images"
       # -- if `s3`, store image data in Amazon S3. If `file` store image data in local file
       type: file
-      #type: s3
+# -- memory and cpu resources for pods
 resources: {}
+# -- security context for each pod in deployment
 podSecurityContext: {}
+# -- annotations for each pod in deployment
 podAnnotations: {}
 securityContext: {}
-serviceAccount:
-  create: false
 hpa:
   # -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
@@ -37,10 +39,15 @@ hpa:
   # -- maximum number of replicas that HPA will maintain
   maxReplicas: null
 pdb:
+  # -- whether to apply a pod disruption budget
   enabled: false
   minAvailable: "50%"
 mongo:
+  # -- name of the secret containing the credentials of the mongo database to use
   secretName: mongo
+# -- node selector configuration
 nodeSelector: {}
+# -- tolerations
 tolerations: []
+# -- affinity
 affinity: {}
