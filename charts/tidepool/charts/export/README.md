@@ -24,7 +24,7 @@ A Helm chart for Kubernetes
 | podAnnotations | object | `{}` | annotations for each pod in deployment |
 | podSecurityContext | object | `{}` | security context for each pod in deployment |
 | resources | object | `{}` | memory and cpu resources for pods |
-| secret.data_.SessionEncryptionKey | string | `""` |  |
+| secret.data_.SessionEncryptionKey | string | `""` | in memory encryption of cookies and tokens |
 | securityContext | object | `{}` |  |
 | serviceMonitor.enabled | bool | `false` | whether to generate a prometheus-operator ServiceMonitor resource |
 | tolerations | list | `[]` | tolerations |

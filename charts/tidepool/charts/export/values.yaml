@@ -2,6 +2,7 @@
 enabled: true
 secret:
   data_:
+    # -- in memory encryption of cookies and tokens
     SessionEncryptionKey: ""
 deployment:
   # -- default Docker image
