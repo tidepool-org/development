@@ -1,4 +1,5 @@
-{{ if .Values.global.glooingress.enabled }}
+{{ if .Values.enabled }}
+{{- if .Values.global.glooingress.enabled }}
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
@@ -9,4 +10,5 @@ spec:
     serviceName: image
     serviceNamespace: {{ .Release.Namespace }}
     servicePort: {{ .Values.global.ports.image }}
+{{- end }}
 {{- end }}

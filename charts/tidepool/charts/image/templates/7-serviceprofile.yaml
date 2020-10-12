@@ -1,3 +1,4 @@
+{{ if .Values.enabled }}
 {{ if .Values.global.linkerdsupport.enabled }}
 apiVersion: linkerd.io/v1alpha2
 kind: ServiceProfile
@@ -42,4 +43,5 @@ spec:
       method: DELETE
       pathRegex: /v1/images.*
     name: /v1/images_delete_image
+{{- end }}
 {{- end }}

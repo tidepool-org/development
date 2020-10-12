@@ -18,10 +18,10 @@ A Helm chart for Kubernetes
 | deployment.env.store.type | string | `"file"` | if `s3`, store image data in Amazon S3. If `file` store image data in local file |
 | deployment.image | string | `"tidepool/platform-image:master-latest"` | Docker image |
 | deployment.replicas | int | `1` | number of replicas to run |
+| enabled | bool | `false` | whether to disable the service |
 | hpa.enabled | bool | `false` | whether to create a horizontal pod autoscalers for all pods of given deployment |
 | hpa.maxReplicas | string | `nil` | maximum number of replicas that HPA will maintain |
 | hpa.minReplicas | int | `1` | minimum number of replicas that HPA will maintain |
-| iamRole | string | `""` |  |
 | mongo.secretName | string | `"mongo"` | name of the secret containing the credentials of the mongo database to use |
 | nodeSelector | object | `{}` | node selector configuration |
 | pdb.enabled | bool | `false` | whether to apply a pod disruption budget |

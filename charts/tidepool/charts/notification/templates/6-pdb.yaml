@@ -1,4 +1,5 @@
-{{ if .Values.pdb.enabled }}
+{{ if .Values.enabled }}
+{{- if .Values.pdb.enabled }}
 {{- if or (and .Values.hpa.enabled (gt (.Values.hpa.minReplicas | int) 1)) (gt (.Values.deployment.replicas | int) 1) -}}
 ---
 apiVersion: policy/v1beta1
@@ -13,5 +14,6 @@ spec:
       app: {{ include "charts.name" . }}
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-{{ end }}
-{{ end }}
+{{- end }}
+{{- end }}
+{{- end }}

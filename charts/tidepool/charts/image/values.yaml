@@ -1,4 +1,5 @@
-iamRole: ""
+# -- whether to disable the service
+enabled: false
 secret:
   # -- whether to create image secret
   enabled: false
