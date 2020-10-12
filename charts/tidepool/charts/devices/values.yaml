@@ -1,14 +1,26 @@
 deployment:
   image: tidepool/devices:master-latest
   replicas: 0
+  # -- annotations for each pod in deployment
   podAnnotations: {}
+
+# -- memory and cpu resources for pods
 resources: {}
 securityContext: {}
 hpa:
+  # -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
+  # -- minimum number of replicas that HPA will maintain
+  minReplicas: 1
+  # -- maximum number of replicas that HPA will maintain
+  maxReplicas: null
 pdb:
+  # -- whether to apply a pod disruption budget
   enabled: false
   minAvailable: "50%"
+# -- node selector configuration
 nodeSelector: {}
+# -- tolerations
 tolerations: []
+# -- affinity
 affinity: {}
