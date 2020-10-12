@@ -6,6 +6,7 @@ secret:
     AppleDeviceCheckKey: ""
 configmap:
   data_:
+    # -- used for checking generating jwts, which are required for checking the validity of apple device tokens during the insulet authorization flow. 
     AppleDeviceCheckKeyIssuer: "75U4X84TEG"
     AppleDeviceCheckKeyId: "B542R658GF"
     AppleDeviceCheckUseDevelopment: "true"
@@ -14,9 +15,10 @@ deployment:
   image: tidepool/platform-auth:master-latest
   # -- number of replicas to deploy
   replicas: 1
+initContainers: []
+
 # -- memory and cpu resources for pods
 resources: {}
-initContainers: []
 # -- security context for each pod in deployment
 podSecurityContext: {}
 # -- annotations for each pod in deployment

@@ -12,7 +12,7 @@ A Helm chart for Kubernetes
 |-----|------|---------|-------------|
 | affinity | object | `{}` | affinity |
 | configmap.data_.AppleDeviceCheckKeyId | string | `"B542R658GF"` |  |
-| configmap.data_.AppleDeviceCheckKeyIssuer | string | `"75U4X84TEG"` |  |
+| configmap.data_.AppleDeviceCheckKeyIssuer | string | `"75U4X84TEG"` | used for checking generating jwts, which are required for checking the validity of apple device tokens during the insulet authorization flow.  |
 | configmap.data_.AppleDeviceCheckUseDevelopment | string | `"true"` |  |
 | deployment.image | string | `"tidepool/platform-auth:master-latest"` | auth Docker image |
 | deployment.replicas | int | `1` | number of replicas to deploy |
