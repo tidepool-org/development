@@ -11,4 +11,4 @@ tar -xf /tmp/helm-docs.tar.gz helm-docs
 ./helm-docs
 git add .
 git commit -m "Update helm docs"
-git push
+git push origin HEAD:master
