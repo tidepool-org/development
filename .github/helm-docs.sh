@@ -9,4 +9,6 @@ tar -xf /tmp/helm-docs.tar.gz helm-docs
 
 # validate docs
 ./helm-docs
-git diff 
+git add
+git commit -m "Update helm docs"
+git push
