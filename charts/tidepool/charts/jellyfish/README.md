@@ -12,6 +12,8 @@ A Helm chart for Kubernetes
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | configmap.enabled | bool | `false` |  |
+| deployment.env.store.s3.bucket | string | `"none"` |  |
+| deployment.env.store.type | string | `"s3"` |  |
 | deployment.image | string | `"tidepool/jellyfish:master-latest"` |  |
 | deployment.replicas | int | `1` |  |
 | enabled | bool | `true` |  whether to enable service |

@@ -1,6 +1,6 @@
 # tidepool
 
-![Version: 0.7.51](https://img.shields.io/badge/Version-0.7.51-informational?style=flat-square)
+![Version: 0.8.1](https://img.shields.io/badge/Version-0.8.1-informational?style=flat-square)
 
 A Helm chart for Tidepool
 
@@ -25,7 +25,7 @@ A Helm chart for Tidepool
 | global.gateway.proxy.name | string | `"gateway-proxy"` |  |
 | global.gateway.proxy.namespace | string | `"gloo-system"` |  |
 | global.glooingress.enabled | bool | `true` | whether to use Gloo API Gateway for ingress |
-| global.glooingress.jwt.enabled | bool | `false` |  |
+| global.glooingress.extauth.enabled | bool | `false` |  |
 | global.linkerdsupport.enabled | bool | `true` |  |
 | global.logLevel | string | `"info"` | the default log level for all services |
 | global.maxTimeout | string | `"120s"` | maximum timeout for any web request |
