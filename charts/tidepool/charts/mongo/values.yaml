@@ -16,6 +16,3 @@ secret:
     Tls: ""
     # -- plaintext additional Mongo connection params
     OptParams: ""
-nodeSelector: {}
-tolerations: []
-affinity: {}
