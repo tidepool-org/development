@@ -43,12 +43,6 @@ spec:
         {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
-        - name: GATEKEEPER_SECRET
-          valueFrom:
-            secretKeyRef:
-              key: GroupIdEncryptionKey
-              name: userdata
-              optional: true
         - name: TIDEPOOL_SESSION_STORE_DATABASE
           value: user
         image: {{ .Values.deployment.image | quote}}
