@@ -6,6 +6,3 @@ secret:
     UserPasswordSalt: ""
     # -- plaintext user id salt
     UserIdSalt: ""
-nodeSelector: {}
-tolerations: []
-affinity: {}
