@@ -8,6 +8,7 @@ metadata:
 {{ include "charts.labels.standard" . }}
 data:
   Brokers: {{ .Values.configmap.Brokers }}
+  RequireSSL: "{{ .Values.configmap.RequireSSL }}"
 {{ if .Values.configmap.TopicPrefix }}
   TopicPrefix: {{ .Values.configmap.TopicPrefix }}
 {{ else }}
@@ -15,4 +16,8 @@ data:
 {{ end }}
   EmailsTopic: {{ .Values.configmap.EmailsTopic }}
   MarketoTopic: {{ .Values.configmap.MarketoTopic | default "marketo"}}
+  UserEventsTopic: {{ .Values.configmap.UserEventsTopic }}
+  UserEventsShorelineDeadLettersTopic: {{ .Values.configmap.UserEventsShorelineDeadLettersTopic }}
+  UserEventsMarketoDeadLettersTopic: {{ .Values.configmap.UserEventsMarketoDeadLettersTopic }}
+  Version: {{ .Values.configmap.Version }}
 {{ end }}

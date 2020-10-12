@@ -1,8 +1,13 @@
 configmap:
   enabled: true
-  Brokers: "kafka-kafka-bootstrap.kafka.svc.cluster.local:9092"
-  TopicPrefix: ""
   EmailsTopic: "emails"
+  Brokers: ""
+  RequireSSL: "true"
+  TopicPrefix: ""
+  UserEventsTopic: "user-events"
+  UserEventsShorelineDeadLettersTopic: "user-events-shoreline-dl"
+  UserEventsMarketoDeadLettersTopic: "user-events-marketo-dl"
+  Version: "2.4.0"
 nodeSelector: {}
 tolerations: []
 affinity: {}
