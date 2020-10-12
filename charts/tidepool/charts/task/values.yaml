@@ -1,4 +1,5 @@
 secret:
+  # -- whether to generate a secret
   enabled: false
   data_:
     # -- task authorization, if empty, random value is generated
@@ -6,13 +7,17 @@ secret:
 deployment:
   # deployment.image -- Docker image
   image: tidepool/platform-task:master-latest
+  # -- number of replicas
   replicas: 1
   env:
     queue:
       delay: 5
       workers: 5
+# -- memory and cpu resources for pods
 resources: {}
+# -- security context for each pod in deployment
 podSecurityContext: {}
+# -- annotations for each pod in deployment
 podAnnotations: {}
 securityContext: {}
 hpa:
@@ -23,10 +28,15 @@ hpa:
   # -- maximum number of replicas that HPA will maintain
   maxReplicas: null
 pdb:
+  # -- whether to apply a pod disruption budget
   enabled: false
   minAvailable: "50%"
 mongo:
+  # -- name of the secret containing the credentials of the mongo database to use
   secretName: mongo
+# -- node selector configuration
 nodeSelector: {}
+# -- tolerations
 tolerations: []
+# -- affinity
 affinity: {}
