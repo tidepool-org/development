@@ -4,6 +4,3 @@ secret:
   data_:
     # -- service authorization, if empty, random value is generated
     ServiceAuth: ""
-nodeSelector: {}
-tolerations: []
-affinity: {}
