@@ -1,9 +1,16 @@
 deployment:
   # -- tidewhisperer Docker image
   image: tidepool/tide-whisperer:master-latest
+  # -- number of replicas
   replicas: 1
+serviceMonitor:
+  # -- whether to generate a prometheus-operator service monitor
+  enabled: false
+# -- memory and cpu resources for pods
 resources: {}
+# -- security context for each pod in deployment
 podSecurityContext: {}
+# -- annotations for each pod in deployment
 podAnnotations: {}
 securityContext: {}
 hpa:
@@ -14,12 +21,15 @@ hpa:
   # -- maximum number of replicas that HPA will maintain
   maxReplicas: null
 pdb:
+  # -- whether to apply a pod disruption budget
   enabled: false
   minAvailable: "50%"
 mongo:
+  # -- name of the secret containing the credentials of the mongo database to use
   secretName: mongo
-serviceMonitor:
-  enabled: false
+# -- node selector configuration
 nodeSelector: {}
+# -- tolerations
 tolerations: []
+# -- affinity
 affinity: {}
