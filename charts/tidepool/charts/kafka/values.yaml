@@ -1,13 +1,19 @@
 configmap:
+  # -- whether to generate a configmap 
   enabled: true
+  # -- base name of topic used for emails to be sent
   EmailsTopic: "emails"
+  # -- comma-separated list of broker URLs
   Brokers: ""
+  # -- whether SSL is required for communication
   RequireSSL: "true"
+  # -- prefix to apply to all topic names 
   TopicPrefix: ""
+  # -- name for the user events topic
   UserEventsTopic: "user-events"
+  # -- name for the shoreline dead letter topic
   UserEventsShorelineDeadLettersTopic: "user-events-shoreline-dl"
+  # -- name for the marketo dead letter topic
   UserEventsMarketoDeadLettersTopic: "user-events-marketo-dl"
+  # -- required version of Kafka server
   Version: "2.4.0"
-nodeSelector: {}
-tolerations: []
-affinity: {}
