@@ -9,8 +9,6 @@ secret:
     # -- plaintext Dexcom Oauth2 state salt
     StateSalt: ""                            # the Dexcom client API url
 configmap:
+  # -- whether to generate a configmap
   enabled: true
   redirectURL: ""
-nodeSelector: {}
-tolerations: []
-affinity: {}
