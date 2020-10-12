@@ -1,9 +1,10 @@
 deployment:
-  # deployment.image -- Docker image
+  # -- Docker image
   image: tidepool/hydrophone:master-latest
   replicas: 1
   env:
-    fromAddress: "Tidepool <noreply@tidepool.org>"                      # from address for emails that we send
+    # -- from address for emails that we send
+    fromAddress: "Tidepool <noreply@tidepool.org>"
     store:
       s3:
         bucket: "asset"
@@ -14,11 +15,11 @@ securityContext: {}
 serviceAccount:
   create: false
 hpa:
-  # hpa.enabled -- whether to create a horizontal pod autoscalers for all pods of given deployment
+  # -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
-  # hpa.minReplicas -- minimum number of replicas that HPA will maintain
+  # -- minimum number of replicas that HPA will maintain
   minReplicas: 1
-  # hpa.maxReplicas -- maximum number of replicas that HPA will maintain
+  # -- maximum number of replicas that HPA will maintain
   maxReplicas: null
 pdb:
   enabled: false

@@ -1,26 +1,26 @@
 iamRole: ""
 secret:
-  # secret.enabled -- whether to create image secret
+  # -- whether to create image secret
   enabled: false
   data_:
-    # secret.data_.ServiceAuth -- plaintext service authorization secret
+    # -- plaintext service authorization secret
     ServiceAuth: ""
 deployment:
-  # deployment.image -- Docker image
+  # -- Docker image
   image: tidepool/platform-image:master-latest
   replicas: 1
   env:
     store:
       file:
-        # deployment.env.store.file.directory -- directory to use when storing images on file storage
+        # -- directory to use when storing images on file storage
         directory: "_data/image"
         prefix: "images"
       s3:
-        # deployment.env.store.s3.bucket -- S3 bucket where image data is written
+        # -- S3 bucket where image data is written
         bucket:  "data"
-        # deployment.env.store.file.prefix -- file prefix to use when storing images on file storage
+        # -- file prefix to use when storing images on file storage
         prefix: "images"
-      # deployment.env.store.type -- if `s3`, store image data in Amazon S3. If `file` store image data in local file
+      # -- if `s3`, store image data in Amazon S3. If `file` store image data in local file
       type: file
       #type: s3
 resources: {}
@@ -30,11 +30,11 @@ securityContext: {}
 serviceAccount:
   create: false
 hpa:
-  # hpa.enabled -- whether to create a horizontal pod autoscalers for all pods of given deployment
+  # -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
-  # hpa.minReplicas -- minimum number of replicas that HPA will maintain
+  # -- minimum number of replicas that HPA will maintain
   minReplicas: 1
-  # hpa.maxReplicas -- maximum number of replicas that HPA will maintain
+  # -- maximum number of replicas that HPA will maintain
   maxReplicas: null
 pdb:
   enabled: false

@@ -1,20 +1,20 @@
 secret:
-  # secret.enabled -- whether to create mongo secret
+  # -- whether to create mongo secret
   enabled: false
   data_:
-    # secret.data_.Scheme -- plaintext Mongo DB scheme, either `mongodb` or `mongodb+srv`
+    # -- plaintext Mongo DB scheme, either `mongodb` or `mongodb+srv`
     Scheme: ""
-    # secret.data_.Addresses -- plaintext comma-separated list of Mongo `host[:port]` addresses
+    # -- plaintext comma-separated list of Mongo `host[:port]` addresses
     Addresses: ""
-    # secret.data_.Username -- plaintext, If non-empty, Mongo username
+    # -- plaintext, If non-empty, Mongo username
     Username: ""
-    # secret.data_.Password -- plaintext Mongo password
+    # -- plaintext Mongo password
     Password: ""
-    # secret.data_.Database -- plaintext Mongo database name
+    # -- plaintext Mongo database name
     Database: ""
-    # secret.data_.Tls -- plaintext, If true, use SSL on Mongo connection
+    # -- plaintext, If true, use SSL on Mongo connection
     Tls: ""
-    # secret.data_.OptParams -- plaintext additional Mongo connection params
+    # -- plaintext additional Mongo connection params
     OptParams: ""
 nodeSelector: {}
 tolerations: []

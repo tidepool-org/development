@@ -1,10 +1,10 @@
 secret: 
-  # secret.enabled -- whether to create userdata secret
+  # -- whether to create userdata secret
   enabled: false
   data_: 
-    # secret.data_.UserPasswordSalt -- plaintext user password salt
+    # -- plaintext user password salt
     UserPasswordSalt: ""
-    # secret.data_.UserIdSalt -- plaintext user id salt
+    # -- plaintext user id salt
     UserIdSalt: ""
 nodeSelector: {}
 tolerations: []
