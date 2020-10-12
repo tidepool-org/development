@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   dremio:
   - apiVersion: v1
+    created: "2020-10-12T22:56:09.909752612Z"
+    digest: babdfe53f41d8e1f5a018a88d1c512c023a32ecc0a0dd344765ff7c8e7bb152d
+    home: https://www.dremio.com/
+    keywords:
+    - dremio
+    - data
+    name: dremio
+    urls:
+    - https://github.com/tidepool-org/development/releases/download/dremio-0.7.1/dremio-0.7.1.tgz
+    version: 0.7.1
+  - apiVersion: v1
     created: "2020-09-11T19:42:29.739014978Z"
     digest: 3a8399e04f285f770ed8b5c8392d4df527131d6f9f488083b2e891688866c8c6
     home: https://www.dremio.com/
@@ -12,6 +23,19 @@ entries:
     urls:
     - https://github.com/tidepool-org/development/releases/download/dremio-0.7.0/dremio-0.7.0.tgz
     version: 0.7.0
+  mongo-init:
+  - apiVersion: v1
+    created: "2020-10-12T22:56:10.059286949Z"
+    description: A Helm chart to initialize a Mongo database
+    digest: 9ad25a38d23205f458877f48cf6bcd5aee775fa172facb09fbe000f008aefefb
+    home: https://github.com/tidepool-org/development/charts
+    maintainers:
+    - email: derrick@tidepool.org
+      name: Derrick Burns
+    name: mongo-init
+    urls:
+    - https://github.com/tidepool-org/development/releases/download/mongo-init-0.1.1/mongo-init-0.1.1.tgz
+    version: 0.1.1
   superset:
   - apiVersion: v1
     appVersion: "1.0"
@@ -28,6 +52,20 @@ entries:
     - https://github.com/tidepool-org/development/releases/download/superset-0.1.0/superset-0.1.0.tgz
     version: 0.1.0
   tidepool:
+  - apiVersion: v2
+    created: "2020-10-12T22:56:10.223670487Z"
+    description: A Helm chart for Tidepool
+    digest: f941210968b0d6c00c43bef2ad81ba63d3bca59f10d2881674c0c08ab4dacf93
+    home: https://github.com/tidepool-org/development/charts
+    icon: https://www.tidepool.org/static/media/tidepool-t-logo.41feef82.png
+    maintainers:
+    - email: derrick@tidepool.org
+      name: Derrick Burns
+      url: https://github.com/derrickburns
+    name: tidepool
+    urls:
+    - https://github.com/tidepool-org/development/releases/download/tidepool-0.9.0/tidepool-0.9.0.tgz
+    version: 0.9.0
   - apiVersion: v2
     created: "2020-10-08T19:46:57.200000548Z"
     description: A Helm chart for Tidepool
