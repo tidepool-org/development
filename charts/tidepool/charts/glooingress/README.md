@@ -16,15 +16,10 @@ A Helm chart to use Gloo for Tidepool ingress
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| affinity | object | `{}` |  |
-| discovery | object | `{}` |  |
 | enabled | bool | `true` | whether to enable the Gloo API Gateway integration |
 | extauth.enabled | bool | `false` |  |
-| global | object | `{"gateway":{"proxy":{"name":"gateway-proxy","port":80}}}` | namespace where the Gloo discovery service runs |
 | global.gateway.proxy.name | string | `"gateway-proxy"` | name of the Gloo gateway proxy that will host the virtual service |
 | global.gateway.proxy.port | int | `80` | namespace of the Gloo gateway proxy that will host the virtual service |
-| nodeSelector | object | `{}` |  |
-| tolerations | list | `[]` |  |
 | virtualServices.http.dnsNames | list | `["localhost"]` | DNS names served with HTTP  |
 | virtualServices.http.enabled | bool | `true` | whether to accept HTTP requests  |
 | virtualServices.http.labels | object | `{}` |  |

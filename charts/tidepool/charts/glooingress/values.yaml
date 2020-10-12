@@ -1,8 +1,5 @@
 # -- whether to enable the Gloo API Gateway integration
 enabled: true                           
-discovery: {}
-  # -- namespace where the Gloo discovery service runs
-  #namespace:                           
 global:
   gateway:
     proxy: 
@@ -38,6 +35,3 @@ virtualServices:
     name: http-internal
     labels: {}
     options: {}
-nodeSelector: {}
-tolerations: []
-affinity: {}
