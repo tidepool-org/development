@@ -43,6 +43,8 @@ spec:
         {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
+        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
+          value: http://image:9226
         - name: KAFKA_BROKERS
           valueFrom:
             configMapKeyRef:
