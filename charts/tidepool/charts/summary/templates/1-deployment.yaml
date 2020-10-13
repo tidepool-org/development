@@ -31,9 +31,11 @@ spec:
     spec:
       containers:
       - env:
-        {{ include "charts.platform.env.mongo" .}}
+        {{ include "charts.mongo.params" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
+        - name: TIDEPOOL_STORE_DATABASE
+          value: {{ .Values.mongo.database }}
         - name: TIDEPOOL_SUMMARY_SERVICE_DOMAIN
           value: {{ .Values.global.gateway.default.domain }}
         - name: TIDEPOOL_SUMMARY_SERVICE_SERVER_ADDRESS

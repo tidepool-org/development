@@ -33,6 +33,8 @@ pdb:
 mongo:
   # -- name of the secret containing the credentials of the mongo database to use
   secretName: mongo
+  # -- Mongo database to use
+  database: data
 # -- node selector configuration
 nodeSelector: {}
 # -- tolerations
