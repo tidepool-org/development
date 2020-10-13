@@ -16,6 +16,7 @@ A Helm chart for Kubernetes
 | hpa.enabled | bool | `false` | whether to create a horizontal pod autoscalers for all pods of given deployment |
 | hpa.maxReplicas | string | `nil` | maximum number of replicas that HPA will maintain |
 | hpa.minReplicas | int | `1` | minimum number of replicas that HPA will maintain |
+| kafka.configmapName | string | `"kafka"` | name of the configmap containing the kafka broker and credentials to use |
 | mongo.secretName | string | `"mongo"` | name of the secret containing the credentials of the mongo database to use |
 | nodeSelector | object | `{}` | node selector configuration |
 | pdb.enabled | bool | `false` | whether to apply a pod disruption budget |
