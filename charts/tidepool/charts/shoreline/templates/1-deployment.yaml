@@ -81,6 +81,18 @@ spec:
               name: {{ .Values.kafka.configmapName }}
               key: RequireSSL
               optional: true
+        - name: KAFKA_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: Username
+              optional: true
+        - name: KAFKA_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.secretName }}
+              key: Password
+              optional: true
         - name: KAFKA_VERSION
           valueFrom:
             configMapKeyRef:

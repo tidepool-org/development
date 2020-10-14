@@ -15,5 +15,7 @@ configmap:
   UserEventsShorelineDeadLettersTopic: "user-events-shoreline-dl"
   # -- name for the marketo dead letter topic
   UserEventsMarketoDeadLettersTopic: "user-events-marketo-dl"
+  # -- username for scram authentication
+  Username: "admin"
   # -- required version of Kafka server
-  Version: "2.4.0"
+  Version: "2.5.0"
