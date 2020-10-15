@@ -17,8 +17,9 @@ data:
   EmailsTopic: {{ .Values.configmap.EmailsTopic }}
   MarketoTopic: {{ .Values.configmap.MarketoTopic | default "marketo"}}
   UserEventsTopic: {{ .Values.configmap.UserEventsTopic }}
-  UserEventsShorelineDeadLettersTopic: {{ .Values.configmap.UserEventsShorelineDeadLettersTopic }}
   UserEventsMarketoDeadLettersTopic: {{ .Values.configmap.UserEventsMarketoDeadLettersTopic }}
+  UserEventsShorelineDeadLettersTopic: {{ .Values.configmap.UserEventsShorelineDeadLettersTopic }}
+  UserEventsUserDeadLettersTopic: {{ .Values.configmap.UserEventsUserDeadLettersTopic }}
   Username: {{ .Values.configmap.Username }}
   Version: {{ .Values.configmap.Version }}
 {{ end }}
