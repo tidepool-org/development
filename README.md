@@ -14,6 +14,7 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [Install Kubernetes Client](#install-kubernetes-client)
   - [Install Helm](#install-helm)
   - [Install Tilt](#install-tilt)
+  - [Install Netcat](#install-netcat)
   - [Clone This Repository](#clone-this-repository)
   - [Add Tidepool Helper Script (recommended)](#add-tidepool-helper-script-recommended)
   - [Environment Setup (recommended)](#environment-setup-recommended)
@@ -127,6 +128,25 @@ curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.16.1/tilt.0.
 ```
 
 After installing Tilt, you can verify the correct version by typing `tilt version` in your terminal.
+
+## Install Netcat
+
+Netcat should be installed by default on an recent versions of MacOS. If it is not, you can install it via homebrew.
+
+On Linux, you will need to use the appropriate package manager to install it.
+
+```bash
+# CentOS/RHEL
+yum install nc
+
+# Fedora 22+ and RHEL 8
+dnf install nc
+
+# Debian/Ubuntu
+sudo apt-get install Netcat
+```
+
+After installing Netcat, you can verify it's working by typing `nc -h` in your terminal.
 
 ## Clone This Repository
 
