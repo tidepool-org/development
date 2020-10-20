@@ -1,37 +1,58 @@
 configmap:
+  # -- whether to generate a configmap
   enabled: false
   data:
     ClinicDemoUserId: ""
 secret:
+  # -- whether to generate a secret
   enabled: false
   data_:
-    # secret.data_.ServiceAuth -- service authorization secret
+    # -- service authorization secret
     ServiceAuth: ""
+    # -- the token to use for long term logins
     UserLongTermKey:
+    # -- the string to append to emails to forgo verification
     UserMailVerification: ""
+    # -- the Tidepool user id of the Clinic demo account
     ClinicDemoUserId: ""
 deployment:
-  # deployment.image -- Docker image
+  # -- Docker image
   image: tidepool/shoreline:master-latest
+  # -- the number of replicas to use
   replicas: 1
+serviceMonitor:
+  # whether to generate a prometheus-operator service monitor
+  enabled: false
+
+# -- memory and cpu resources for pods
 resources: {}
+# -- security context for each pod in deployment
 podSecurityContext: {}
+# -- annotations for each pod in deployment
 podAnnotations: {}
 securityContext: {}
-serviceMonitor:
-  enabled: false
 hpa:
-  # hpa.enabled -- whether to create a horizontal pod autoscalers for all pods of given deployment
+  # -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
-  # hpa.minReplicas -- minimum number of replicas that HPA will maintain
+  # -- minimum number of replicas that HPA will maintain
   minReplicas: 1
-  # hpa.maxReplicas -- maximum number of replicas that HPA will maintain
+  # -- maximum number of replicas that HPA will maintain
   maxReplicas: null
 pdb:
+  # -- whether to apply a pod disruption budget
   enabled: false
   minAvailable: "50%"
 mongo:
+  # -- name of the secret containing the credentials of the mongo database to use
   secretName: mongo
+kafka:
+  # -- name of the configmap containing the kafka broker and credentials to use
+  configmapName: kafka
+  # -- name of the configmap containing the kafka broker and credentials to use
+  secretName: kafka
+# -- node selector configuration
 nodeSelector: {}
+# -- tolerations
 tolerations: []
+# -- affinity
 affinity: {}

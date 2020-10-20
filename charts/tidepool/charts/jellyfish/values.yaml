@@ -1,38 +1,46 @@
-# enabled --  whether to enable service
+# --  whether to enable service
 enabled: true
+configmap:
+  # -- whether to generate configmap
+  enabled: false
 deployment:
+  # -- docker image to deploy
   image: tidepool/jellyfish:master-latest
+  # -- number of replicas to deploy
   replicas: 1
-  env:
-    store:
-      type: "s3"
-      s3: 
-        bucket: "none"
+store:
+  # -- base name of mongo database to use
+  database: data
+  # -- prefix to apply to mongo database name
+  prefix: ""
+serviceAccount:
+  # -- whether to create a service account
+  create: false
+
+# -- memory and cpu resources for pods
 resources: {}
+# -- security context for each pod in deployment
 podSecurityContext: {}
+# -- annotations for each pod in deployment
 podAnnotations: {}
 securityContext: {}
-serviceAccount:
-  create: false
 hpa:
-  # hpa.enabled -- whether to create a horizontal pod autoscalers for all pods of given deployment
+  # -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
-  # hpa.minReplicas -- minimum number of replicas that HPA will maintain
+  # -- minimum number of replicas that HPA will maintain
   minReplicas: 1
-  # hpa.maxReplicas -- maximum number of replicas that HPA will maintain
+  # -- maximum number of replicas that HPA will maintain
   maxReplicas: null
 pdb:
+  # -- whether to apply a pod disruption budget
   enabled: false
   minAvailable: "50%"
 mongo:
+  # -- name of the secret containing the credentials of the mongo database to use
   secretName: mongo
+# -- node selector configuration
 nodeSelector: {}
+# -- tolerations
 tolerations: []
+# -- affinity
 affinity: {}
-store:
-  database: data
-  prefix: ""
-configmap:
-  enabled:
-    false
-

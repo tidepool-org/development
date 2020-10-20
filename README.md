@@ -14,6 +14,7 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [Install Kubernetes Client](#install-kubernetes-client)
   - [Install Helm](#install-helm)
   - [Install Tilt](#install-tilt)
+  - [Install Netcat](#install-netcat)
   - [Clone This Repository](#clone-this-repository)
   - [Add Tidepool Helper Script (recommended)](#add-tidepool-helper-script-recommended)
   - [Environment Setup (recommended)](#environment-setup-recommended)
@@ -128,6 +129,25 @@ curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.16.1/tilt.0.
 
 After installing Tilt, you can verify the correct version by typing `tilt version` in your terminal.
 
+## Install Netcat
+
+Netcat should be installed by default on an recent versions of MacOS. If it is not, you can install it via homebrew.
+
+On Linux, you will need to use the appropriate package manager to install it.
+
+```bash
+# CentOS/RHEL
+yum install nc
+
+# Fedora 22+ and RHEL 8
+dnf install nc
+
+# Debian/Ubuntu
+sudo apt-get install Netcat
+```
+
+After installing Netcat, you can verify it's working by typing `nc -h` in your terminal.
+
 ## Clone This Repository
 
 At a minimum you'll need to clone this very GitHub repository to your computer. Execute the following command in a terminal window, but be sure to replace the `<local-directory>` with the destination directory where you want the respository to be copied.
@@ -165,8 +185,6 @@ Most of this documentation will assume you've chosen to install the helper scrip
 * `TIDEPOOL_DOCKER_PLATFORM_AUTH_SERVICE_SECRET`
 * `TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_SECRET`
 * `TIDEPOOL_DOCKER_PLATFORM_DATA_SERVICE_SECRET`
-* `TIDEPOOL_DOCKER_PLATFORM_IMAGE_SERVICE_SECRET`
-* `TIDEPOOL_DOCKER_PLATFORM_NOTIFICATION_SERVICE_SECRET`
 * `TIDEPOOL_DOCKER_PLATFORM_TASK_SERVICE_SECRET`
 * `TIDEPOOL_DOCKER_PLATFORM_USER_SERVICE_SECRET`
 * `TIDEPOOL_DOCKER_SEAGULL_SALT`
@@ -518,7 +536,6 @@ Please note that the `platform` repository actually contains source code for mul
 | blob                  | Blob Storage                     |
 | data                  | Data Ingestion (next generation) |
 | migrations            | Database Migrations              |
-| notification          | Notifications (TBD)              |
 | task                  | Background Jobs                  |
 | tools                 | Tools, Utilities                 |
 | user                  | Users                            |
@@ -838,9 +855,7 @@ This will allow your changes to be tracked properly in version control, and Tilt
 | [platform-auth](https://github.com/tidepool-org/platform)         | 9222                   |
 | [platform-blob](https://github.com/tidepool-org/platform)         | 9225                   |
 | [platform-data](https://github.com/tidepool-org/platform)         | 9220                   |
-| [platform-image](https://github.com/tidepool-org/platform)        | 9226                   |
 | [platform-migrations](https://github.com/tidepool-org/platform)   | N/A (see below)        |
-| [platform-notification](https://github.com/tidepool-org/platform) | 9223                   |
 | [platform-task](https://github.com/tidepool-org/platform)         | 9224                   |
 | [platform-tools](https://github.com/tidepool-org/platform)        | N/A (see below)        |
 | [platform-user](https://github.com/tidepool-org/platform)         | 9221                   |

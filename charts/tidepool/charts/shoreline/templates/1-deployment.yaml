@@ -9,6 +9,7 @@ metadata:
   namespace: {{.Release.Namespace}}
   annotations:
     secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},shoreline,userdata"
+    configmap.reloader.stakater.com/reload: "{{ .Values.kafka.configmapName }}"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -46,23 +47,57 @@ spec:
           value: {{ .Values.global.gateway.default.apiHost | default .Values.global.gateway.default.host }}
         - name: TIDEPOOL_STORE_DATABASE
           value: user
+        - name: CLOUD_EVENTS_SOURCE
+          value: "shoreline"
+        - name: KAFKA_CONSUMER_GROUP
+          value: "shoreline"
         - name: KAFKA_BROKERS
           valueFrom:
             configMapKeyRef:
-              name: kafka
+              name: {{ .Values.kafka.configmapName }}
               key: Brokers
               optional: true
         - name: KAFKA_TOPIC
           valueFrom:
             configMapKeyRef:
-              name: kafka
-              key: MarketoTopic
+              name: {{ .Values.kafka.configmapName }}
+              key: UserEventsTopic
               optional: true
-        - name: KAFKA_PREFIX
+        - name: KAFKA_DEAD_LETTERS_TOPIC
           valueFrom:
             configMapKeyRef:
-              name: kafka
+              name: {{ .Values.kafka.configmapName }}
+              key: UserEventsShorelineDeadLettersTopic
+              optional: true
+        - name: KAFKA_TOPIC_PREFIX
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
               key: TopicPrefix
+              optional: true
+        - name: KAFKA_REQUIRE_SSL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: RequireSSL
+              optional: true
+        - name: KAFKA_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: Username
+              optional: true
+        - name: KAFKA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.kafka.secretName }}
+              key: Password
+              optional: true
+        - name: KAFKA_VERSION
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: Version
               optional: true
         - name: MARKETO_CLINIC_ROLE
           valueFrom:

@@ -1,34 +1,46 @@
 secret:
+  # -- whether to generate a secret
   enabled: false
   data_:
     ServiceAuth: ""
     AppleDeviceCheckKey: ""
 configmap:
   data_:
+    # -- used for checking generating jwts, which are required for checking the validity of apple device tokens during the insulet authorization flow. 
     AppleDeviceCheckKeyIssuer: "75U4X84TEG"
     AppleDeviceCheckKeyId: "B542R658GF"
     AppleDeviceCheckUseDevelopment: "true"
 deployment:
-  # deployment.image -- auth Docker image
+  # -- auth Docker image
   image: tidepool/platform-auth:master-latest
+  # -- number of replicas to deploy
   replicas: 1
-resources: {}
 initContainers: []
+
+# -- memory and cpu resources for pods
+resources: {}
+# -- security context for each pod in deployment
 podSecurityContext: {}
+# -- annotations for each pod in deployment
 podAnnotations: {}
 securityContext: {}
 hpa:
-  # hpa.enabled -- whether to create a horizontal pod autoscalers for all pods of given deployment
+  # -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
-  # hpa.minReplicas -- minimum number of replicas that HPA will maintain
+  # -- minimum number of replicas that HPA will maintain
   minReplicas: 1
-  # hpa.maxReplicas -- maximum number of replicas that HPA will maintain
+  # -- maximum number of replicas that HPA will maintain
   maxReplicas: null
 pdb:
+  # -- whether to apply a pod disruption budget
   enabled: false
   minAvailable: "50%"
 mongo:
+  # -- name of the secret containing the credentials of the mongo database to use
   secretName: mongo
+# -- node selector configuration
 nodeSelector: {}
+# -- tolerations
 tolerations: []
+# -- affinity
 affinity: {}

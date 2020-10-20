@@ -1,29 +1,45 @@
 secret:
+  # -- whether to generate a secret
   enabled: false
   data_:
     ServiceAuth: ""
 deployment:
+  # -- the Docker image to use
   image: tidepool/platform-prescription:master-latest
+  # -- the number of replicas
   replicas: 1
+  # -- annotations for each pod in deployment
   podAnnotations: {}
   env:
     store:
       s3:
         bucket: "asset"
+
+# -- memory and cpu resources for pods
 resources: {}
+# -- security context for each pod in deployment
+podSecurityContext: {}
 securityContext: {}
 hpa:
-  # hpa.enabled -- whether to create a horizontal pod autoscalers for all pods of given deployment
+  # -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
-  # hpa.minReplicas -- minimum number of replicas that HPA will maintain
+  # -- minimum number of replicas that HPA will maintain
   minReplicas: 1
-  # hpa.maxReplicas -- maximum number of replicas that HPA will maintain
+  # -- maximum number of replicas that HPA will maintain
   maxReplicas: null
 pdb:
+  # -- whether to apply a pod disruption budget
   enabled: false
   minAvailable: "50%"
 mongo:
+  # -- name of the secret containing the credentials of the mongo database to use
   secretName: mongo
+kafka:
+  # -- name of the configmap containing the kafka broker and credentials to use
+  configmapName: kafka
+# -- node selector configuration
 nodeSelector: {}
+# -- tolerations
 tolerations: []
+# -- affinity
 affinity: {}

@@ -1,78 +1,78 @@
 global:
-  # global.maxTimeout -- maximum timeout for any web request
+  # -- maximum timeout for any web request
   maxTimeout: 120s
   fullnameOverride: ""                             #
-  # global.nameOverride -- if non-empty, Helm chart name to use
+  # -- if non-empty, Helm chart name to use
   nameOverride: ""
-  # global.region -- aws region that services run in
+  # -- aws region that services run in
   region: "us-west-2"
-  # global.logLevel -- the default log level for all services
+  # -- the default log level for all services
   logLevel: info
   gateway:
     default:
-      # global.default.protocol -- scheme to use for web service
+      # -- scheme to use for web service
       protocol: http
-      # global.default.host -- hostname of web service
+      # -- hostname of web service
       host: localhost
-      # global.gateway.default.apiHost -- host to use for API calls
+      # -- host to use for API calls
       apiHost: ""
-      # global.gateway.default.appHost -- host to use for front end calls
+      # -- host to use for front end calls
       appHost: ""
-      # global.gateway.default.domain -- domain to use for cookies
+      # -- domain to use for cookies
       domain: ""
     proxy:
       name: gateway-proxy
       namespace: gloo-system
   glooingress:
-    # global.glooingress.enabled -- whether to use Gloo API Gateway for ingress
+    # -- whether to use Gloo API Gateway for ingress
     enabled: true
     extauth:
       enabled: false
   linkerdsupport:
-    # linkerdsupport.enabled -- whether to include linkerdsupport subchart with Linkerd service profiles
+    # -- whether to include linkerdsupport subchart with Linkerd service profiles
     enabled: true
   ports:
-    # global.ports.blip -- blip service internal port
+    # -- blip service internal port
     blip: 3000
-    # global.ports.devices_grpc -- devices service grpc internal port
+    # -- devices service grpc internal port
     devices_grpc: 9228                             
-    # global.ports.devices_http -- devices service http internal port
+    # -- devices service http internal port
     devices_http: 9229 
-    # global.ports.export -- export service internal port
+    # -- export service internal port
     export: 9300
-    # global.ports.gatekeeper -- gatekeeper service internal port
+    # -- gatekeeper service internal port
     gatekeeper: 9123
-    # global.ports.highwater -- highwater service internal port
+    # -- highwater service internal port
     highwater: 9191
-    # global.ports.hydrophone -- hydrophone service internal port
+    # -- hydrophone service internal port
     hydrophone: 9157
-    # global.ports.jellyfish -- jellyfish service internal port
+    # -- jellyfish service internal port
     jellyfish: 9122
-    # global.ports.messageapi -- messageapi service internal port
+    # -- messageapi service internal port
     messageapi: 9119
-    # global.ports.auth -- auth service internal port
+    # -- auth service internal port
     auth: 9222
-    # global.ports.blob -- blob service internal port
+    # -- blob service internal port
     blob: 9225
-    # global.ports.data -- data service internal port
+    # -- data service internal port
     data: 9220
-    # global.ports.image -- image service internal port
+    # -- image service internal port
     image: 9226
-    # global.ports.notification -- notification service internal port
+    # -- notification service internal port
     notification: 9223
-    # global.ports.prescription -- prescription service internal port
+    # -- prescription service internal port
     prescription: 9227
-    # global.ports.task -- task service internal port
+    # -- task service internal port
     task: 9224
-    # global.ports.user -- user service internal port
+    # -- user service internal port
     user: 9221
-    # global.ports.seagull -- seagull service internal port
+    # -- seagull service internal port
     seagull: 9120
-    # global.ports.shoreline -- shoreline service internal port
+    # -- shoreline service internal port
     shoreline: 9107
-    # global.ports.summary -- summary service internal port
+    # -- summary service internal port
     summary: 9230
-    # global.ports.tidewhisperer -- tidewhisperer service internal port
+    # -- tidewhisperer service internal port
     tidewhisperer: 9127
   secret:
     enabled: false

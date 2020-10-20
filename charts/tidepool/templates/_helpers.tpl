@@ -75,12 +75,8 @@ Create environment variables used by all platform services.
             configMapKeyRef:
               name: dexcom
               key: AuthorizeURL
-        - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
-          value: http://image:{{.Values.global.ports.image}}
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
           value: "http://internal.{{.Release.Namespace}}"
-        - name: TIDEPOOL_NOTIFICATION_CLIENT_ADDRESS
-          value: http://notification:{{.Values.global.ports.notification}}
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
           value: http://gatekeeper:{{.Values.global.ports.gatekeeper}}
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS

@@ -1,16 +1,14 @@
 secret:
-  # secret.enabled -- whether to create dexcom secret
+  # -- whether to create dexcom secret
   enabled: false
   data_:
-    # secret.data_.ClientId -- plaintext Dexcom Oauth2 client id
+    # -- plaintext Dexcom Oauth2 client id
     ClientId: ""
-    # secret.data_.ClientSecret -- plaintext Dexcom Oauth2 client secret
+    # -- plaintext Dexcom Oauth2 client secret
     ClientSecret: ""
-    # secret.data_.StateSalt -- plaintext Dexcom Oauth2 state salt
+    # -- plaintext Dexcom Oauth2 state salt
     StateSalt: ""                            # the Dexcom client API url
 configmap:
+  # -- whether to generate a configmap
   enabled: true
   redirectURL: ""
-nodeSelector: {}
-tolerations: []
-affinity: {}

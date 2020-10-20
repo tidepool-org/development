@@ -1,14 +1,11 @@
-# enabled -- whether to enable the Gloo API Gateway integration
+# -- whether to enable the Gloo API Gateway integration
 enabled: true                           
-discovery: {}
-  # discovery.namespace -- namespace where the Gloo discovery service runs
-  #namespace:                           
 global:
   gateway:
     proxy: 
-      # global.gateway.proxy -- name of the Gloo gateway proxy that will host the virtual service
+      # -- name of the Gloo gateway proxy that will host the virtual service
       name: "gateway-proxy"
-      # global.gateway.namespace -- namespace of the Gloo gateway proxy that will host the virtual service
+      # -- namespace of the Gloo gateway proxy that will host the virtual service
       #namespace:                         
       port: 80
 extauth:
@@ -16,21 +13,21 @@ extauth:
 virtualServices:
   http:
     name: http
-    # virtualServices.http.name -- DNS names served with HTTP 
+    # -- DNS names served with HTTP 
     dnsNames: [ "localhost" ]
-    # virtualServices.http.enabled -- whether to accept HTTP requests 
+    # -- whether to accept HTTP requests 
     enabled: true
-    # virtualServices.http.redirect -- whether to redirect HTTP requests to HTTPS
+    # -- whether to redirect HTTP requests to HTTPS
     redirect: false                     
     labels: {}
     options: {}
   https:
     name: https
-    # virtualServices.https -- DNS names served with HTTPS
+    # -- DNS names served with HTTPS
     dnsNames: []  
-    # virtualServices.enabled -- whether to serve HTTPS                      
+    # -- whether to serve HTTPS                      
     enabled: false
-    # virtualServices.hsts -- whether to require Strict Transport Security
+    # -- whether to require Strict Transport Security
     hsts: false                         
     labels: {}
     options: {}
@@ -38,6 +35,3 @@ virtualServices:
     name: http-internal
     labels: {}
     options: {}
-nodeSelector: {}
-tolerations: []
-affinity: {}

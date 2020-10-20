@@ -1,14 +1,18 @@
 secret:
+  # -- whether to generate a secret
   enabled: false
   data_:
+    # -- is to use to authenticate with Marketo
     ID: ""
+    # -- shared secret to use to authenticate with Marketo
     Secret: ""
+    # -- URL of Marketo service
     URL: ""
 configmap:
   data_:
+    # -- name of role to use for Clinics
     ClinicRole: "clinic"
+    # -- name of role to use for Patients
     PatientRole: "user"
+    # -- timeout for marketo access in microseconds
     Timeout: "15000000"
-nodeSelector: {}
-tolerations: []
-affinity: {}
