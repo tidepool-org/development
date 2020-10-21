@@ -14,7 +14,7 @@ A Helm chart for Kubernetes
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| mongodb.image | string | `"mongo:3.6"` |  |
+| mongodb.image | string | `"mongo:4.0"` |  |
 | mongodb.persistent | bool | `true` |  |
 | mongodb.port | string | `"27017"` |  |
 | mongodb.seed | bool | `false` |  |
