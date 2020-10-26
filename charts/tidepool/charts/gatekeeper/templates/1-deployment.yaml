@@ -39,6 +39,8 @@ spec:
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
+        {{ include "charts.kafka.common" .}}
+        {{ include "charts.kafka.ce.client" (dict "Values" .Values "client" "gatekeeper") }}
         - name: TIDEPOOL_STORE_DATABASE
           value: gatekeeper
         - name: NODE_ENV

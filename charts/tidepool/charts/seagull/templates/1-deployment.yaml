@@ -39,6 +39,8 @@ spec:
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
+        {{ include "charts.kafka.common" .}}
+        {{ include "charts.kafka.ce.client" (dict "Values" .Values "client" "seagull") }}
         - name: TIDEPOOL_STORE_DATABASE
           value: seagull
         - name: DISCOVERY_HOST

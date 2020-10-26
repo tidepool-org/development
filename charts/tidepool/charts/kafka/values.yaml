@@ -11,8 +11,20 @@ configmap:
   TopicPrefix: ""
   # -- name for the user events topic
   UserEventsTopic: "user-events"
+  # -- name for the auth service dead letter topic
+  UserEventsAuthDeadLettersTopic: "user-events-auth-dl"
+  # -- name for the blob service dead letter topic
+  UserEventsBlobDeadLettersTopic: "user-events-blob-dl"
+  # -- name for the data service dead letter topic
+  UserEventsDataDeadLettersTopic: "user-events-data-dl"
+  # -- name for the gatekeeper service dead letter topic
+  UserEventsGatekeeperDeadLettersTopic: "user-events-gatekeeper-dl"
+  # -- name for the marketo dead letter topic
+  UserEventsHydrophoneDeadLettersTopic: "user-events-hydrophone-dl"
   # -- name for the marketo dead letter topic
   UserEventsMarketoDeadLettersTopic: "user-events-marketo-dl"
+  # -- name for the message-api dead letter topic
+  UserEventsMessageapiDeadLettersTopic: "user-events-messageapi-dl"
   # -- name for the shoreline dead letter topic
   UserEventsShorelineDeadLettersTopic: "user-events-shoreline-dl"
   # -- name for the user service dead letter topic

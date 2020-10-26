@@ -38,6 +38,8 @@ spec:
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
+        {{ include "charts.kafka.common" .}}
+        {{ include "charts.kafka.ce.client" (dict "Values" .Values "client" "messageapi") }}
         - name: TIDEPOOL_STORE_DATABASE
           value: 'messages'
         - name: DISCOVERY_HOST

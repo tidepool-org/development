@@ -200,3 +200,61 @@ Create liveness and readiness probes for platform services.
 {{- define "charts.service.type" -}} 
 {{ .Values.gloo.gatewayProxies.gatewayProxyV2.service.type }}
 {{ end }}
+
+{{- define "charts.kafka.common" -}}
+        - name: KAFKA_BROKERS
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: Brokers
+              optional: true
+        - name: KAFKA_TOPIC_PREFIX
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: TopicPrefix
+              optional: true
+        - name: KAFKA_REQUIRE_SSL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: RequireSSL
+              optional: true
+        - name: KAFKA_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: Username
+              optional: true
+        - name: KAFKA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.kafka.secretName }}
+              key: Password
+              optional: true
+        - name: KAFKA_VERSION
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: Version
+              optional: true
+{{ end }}
+
+{{- define "charts.kafka.ce.client" -}}
+        - name: CLOUD_EVENTS_SOURCE
+          value: {{ .client | quote }}
+        - name: KAFKA_CONSUMER_GROUP
+          value: {{ .client | quote }}
+        - name: KAFKA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: UserEventsTopic
+              optional: true
+        - name: KAFKA_DEAD_LETTERS_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: UserEvents{{ .client | title }}DeadLettersTopic
+              optional: true
+{{ end }}
