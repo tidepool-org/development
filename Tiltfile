@@ -51,8 +51,8 @@ def main():
       local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.mongodb &>/dev/null &')
     local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.gateway &>/dev/null &')
 
-    # Clean up any tilt up backround processes
-    local('for pid in $(ps -ef | awk "/tilt\r up/ {print $2}"); do kill -9 $pid; done')
+    # Clean up any tilt up background processes
+    local('for pid in $(ps -o pid,args | awk \'$2 ~ /tilt/ && $3 ~ /up/ {print $1}\'); do kill -9 $pid; done')
 
   # Apply any service overrides
   tidepool_helm_template_cmd += '-f {baseConfig} -f {overrides} '.format(
