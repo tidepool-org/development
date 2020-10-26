@@ -25,6 +25,7 @@ data:
   UserEventsMarketoDeadLettersTopic: {{ .Values.configmap.UserEventsMarketoDeadLettersTopic }}
   UserEventsMessageapiDeadLettersTopic: {{ .Values.configmap.UserEventsMessageapiDeadLettersTopic }}
   UserEventsShorelineDeadLettersTopic: {{ .Values.configmap.UserEventsShorelineDeadLettersTopic }}
+  UserEventsSeagullDeadLettersTopic: {{ .Values.configmap.UserEventsSeagullDeadLettersTopic }}
   UserEventsUserDeadLettersTopic: {{ .Values.configmap.UserEventsUserDeadLettersTopic }}
   Username: {{ .Values.configmap.Username }}
   Version: {{ .Values.configmap.Version }}

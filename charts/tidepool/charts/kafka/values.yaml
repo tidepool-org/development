@@ -27,6 +27,8 @@ configmap:
   UserEventsMessageapiDeadLettersTopic: "user-events-messageapi-dl"
   # -- name for the shoreline dead letter topic
   UserEventsShorelineDeadLettersTopic: "user-events-shoreline-dl"
+  # -- name for the seagull dead letter topic
+  UserEventsSeagullDeadLettersTopic: "user-events-seagull-dl"
   # -- name for the user service dead letter topic
   UserEventsUserDeadLettersTopic: "user-events-user-dl"
   # -- username for scram authentication
