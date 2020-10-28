@@ -44,7 +44,7 @@ spec:
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
         {{ include "charts.kafka.common" .}}
-        {{ include "charts.kafka.ce.client" (dict "Values" .Values "client" "user") }}
+        {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "user") }}
         - name: TIDEPOOL_IMAGE_CLIENT_ADDRESS
           value: http://image:9226
         - name: TIDEPOOL_USER_SERVICE_SECRET

@@ -240,11 +240,11 @@ Create liveness and readiness probes for platform services.
               optional: true
 {{ end }}
 
-{{- define "charts.kafka.ce.client" -}}
+{{- define "charts.kafka.cloudevents.client" -}}
         - name: CLOUD_EVENTS_SOURCE
           value: {{ .client | quote }}
         - name: KAFKA_CONSUMER_GROUP
-          value: {{ .client | quote }}
+          value: {{ printf "%s-%s" .Release.Namespace .client | quote }}
         - name: KAFKA_TOPIC
           valueFrom:
             configMapKeyRef:
