@@ -42,6 +42,8 @@ spec:
         {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
+        {{ include "charts.kafka.common" .}}
+        {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "data") }}
         - name: TIDEPOOL_DATA_SERVICE_SECRET
           valueFrom:
             secretKeyRef:

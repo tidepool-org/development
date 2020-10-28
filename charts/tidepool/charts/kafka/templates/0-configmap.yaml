@@ -17,8 +17,15 @@ data:
   EmailsTopic: {{ .Values.configmap.EmailsTopic }}
   MarketoTopic: {{ .Values.configmap.MarketoTopic | default "marketo"}}
   UserEventsTopic: {{ .Values.configmap.UserEventsTopic }}
+  UserEventsAuthDeadLettersTopic: {{ .Values.configmap.UserEventsAuthDeadLettersTopic }}
+  UserEventsBlobDeadLettersTopic: {{ .Values.configmap.UserEventsBlobDeadLettersTopic }}
+  UserEventsDataDeadLettersTopic: {{ .Values.configmap.UserEventsDataDeadLettersTopic }}
+  UserEventsGatekeeperDeadLettersTopic: {{ .Values.configmap.UserEventsGatekeeperDeadLettersTopic }}
+  UserEventsHydrophoneDeadLettersTopic: {{ .Values.configmap.UserEventsHydrophoneDeadLettersTopic }}
   UserEventsMarketoDeadLettersTopic: {{ .Values.configmap.UserEventsMarketoDeadLettersTopic }}
+  UserEventsMessageapiDeadLettersTopic: {{ .Values.configmap.UserEventsMessageapiDeadLettersTopic }}
   UserEventsShorelineDeadLettersTopic: {{ .Values.configmap.UserEventsShorelineDeadLettersTopic }}
+  UserEventsSeagullDeadLettersTopic: {{ .Values.configmap.UserEventsSeagullDeadLettersTopic }}
   UserEventsUserDeadLettersTopic: {{ .Values.configmap.UserEventsUserDeadLettersTopic }}
   Username: {{ .Values.configmap.Username }}
   Version: {{ .Values.configmap.Version }}
