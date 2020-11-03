@@ -167,7 +167,7 @@ userdata:
 ### Tidepool Services Config Start ###
 auth:
   deployment:
-    # image: tidepool-k8s-auth # Uncomment to build and run local image or a specific remote image
+    image: tidepool/platform-auth:master-6c7838890dc42100f7b3fb1af36f367f34306216 # Uncomment to build and run local image or a specific remote image
   # hostPath: ../platform      # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.auth'
@@ -213,7 +213,7 @@ blip:
 
 blob:
   deployment:
-    # image: tidepool-k8s-blob # Uncomment to build and run local image or a specific remote image
+    image: tidepool/platform-blob:master-6c7838890dc42100f7b3fb1af36f367f34306216 # Uncomment to build and run local image or a specific remote image
   # hostPath: ../platform      # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.blob'
@@ -221,7 +221,7 @@ blob:
 
 data:
   deployment:
-    # image: tidepool-k8s-data # Uncomment to build and run local image or a specific remote image
+    image: tidepool/platform-data:master-6c7838890dc42100f7b3fb1af36f367f34306216 # Uncomment to build and run local image or a specific remote image
   # hostPath: ../platform      # Uncomment to build and run local image
   containerPath: ../platform
   dockerFile: 'Dockerfile.data'
@@ -230,7 +230,7 @@ data:
 devices:
   deployment:
     replicas: 1
-    # image: tidepool-k8s-devices                        # Uncomment to build and run local image or a specific remote image
+    image: tidepool/devices:master-40bf0e6ef236056aab908af07fad4e5530dfa04f                        # Uncomment to build and run local image or a specific remote image
   # hostPath: '~/go/src/github.com/tidepool-org/devices' # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/devices'
   buildTarget: 'build'
@@ -238,44 +238,44 @@ devices:
 
 export:
   deployment:
-    # image: tidepool-k8s-export # Uncomment to build and run local image or a specific remote image
+    image: tidepool/export:master-5ba82458cb94534a18850ba4e6940fb9b58cd55c # Uncomment to build and run local image or a specific remote image
   # hostPath: ../export          # Uncomment to build and run local image
   containerPath: '/app'
 
 gatekeeper:
   deployment:
-    # image: tidepool-k8s-gatekeeper # Uncomment to build and run local image or a specific remote image
+    image: tidepool/gatekeeper:master-1eb6eea37079370127cea6fff947c8e04477e78d # Uncomment to build and run local image or a specific remote image
   # hostPath: ../gatekeeper          # Uncomment to build and run local image
   containerPath: '/app'
 
 highwater:
   deployment:
-    # image: tidepool-k8s-highwater # Uncomment to build and run local image or a specific remote image
+    image: tidepool/highwater:master-d1a0d56db0c4c41c822e3562e3467c5602ea20f4 # Uncomment to build and run local image or a specific remote image
   # hostPath: ../highwater          # Uncomment to build and run local image
   containerPath: '/app'
 
 hydrophone:
   deployment:
-    # image: tidepool-k8s-hydrophone # Uncomment to build and run local image or a specific remote image
+    image: tidepool/hydrophone:master-7c152bf41c5da57b6135ae1971ee74607c2283d5 # Uncomment to build and run local image or a specific remote image
   # hostPath: ../hydrophone          # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/hydrophone'
   rebuildCommand: './build.sh'
 
 jellyfish:
   deployment:
-    # image: tidepool-k8s-jellyfish # Uncomment to build and run local image or a specific remote image
+    image: tidepool/jellyfish:master-c75e6acfd8368dfc596a1c273a37fc97753cd94d # Uncomment to build and run local image or a specific remote image
   # hostPath: ../jellyfish          # Uncomment to build and run local image
   containerPath: '/app'
 
-message-api:
+messageapi:
   deployment:
-    # image: tidepool-k8s-message-api # Uncomment to build and run local image or a specific remote image
+    image: tidepool/message-api:master-ccaac32133dc77406df711e4cd6a13312cb1c448 # Uncomment to build and run local image or a specific remote image
   # hostPath: ../message-api          # Uncomment to build and run local image
   containerPath: '/app'
 
 migrations:
   deployment:
-    # image: tidepool-k8s-migrations # Uncomment to build and run local image or a specific remote image
+    image: tidepool/platform-migrations:master-6c7838890dc42100f7b3fb1af36f367f34306216 # Uncomment to build and run local image or a specific remote image
   # hostPath: ../platform            # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.migrations'
@@ -284,7 +284,7 @@ migrations:
 prescription:
   deployment:
     replicas: 1
-    # image: tidepool-k8s-prescription                    # Uncomment to build and run local image or a specific remote image
+    image: tidepool/platform-prescription:master-e445d74476ebfed3065a9b677f31aa674ba14d7c                    # Uncomment to build and run local image or a specific remote image
   # hostPath: '~/go/src/github.com/tidepool-org/platform' # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.prescription'
@@ -292,13 +292,13 @@ prescription:
 
 seagull:
   deployment:
-    # image: tidepool-k8s-seagull # Uncomment to build and run local image or a specific remote image
+    image: tidepool/seagull:master-8f48cb89cc4e6bc1b97d44e72065421813e6d5a6 # Uncomment to build and run local image or a specific remote image
   # hostPath: ../seagull          # Uncomment to build and run local image
   containerPath: '/app'
 
 shoreline:
   deployment:
-    # image: tidepool-k8s-shoreline # Uncomment to build and run local image or a specific remote image
+    image: tidepool/shoreline:master-00c6c15eb6e29c9fa8097ddebc55aba61ffaafd9 # Uncomment to build and run local image or a specific remote image
   # hostPath: ../shoreline          # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/shoreline'
   rebuildCommand: './build.sh'
@@ -309,22 +309,22 @@ shoreline:
 
 task:
   deployment:
-    # image: tidepool-k8s-task # Uncomment to build and run local image or a specific remote image
+    image: tidepool/platform-task:master-e445d74476ebfed3065a9b677f31aa674ba14d7c # Uncomment to build and run local image or a specific remote image
   # hostPath: ../platform      # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.task'
   rebuildCommand: 'SERVICE=task make service-build'
 
-tide-whisperer:
+tidewhisperer:
   deployment:
-    # image: tidepool-k8s-tide-whisperer # Uncomment to build and run local image or a specific remote image
+    image: tidepool/tide-whisperer:master-882805726eedf7da94256202034e938b3efde6f1 # Uncomment to build and run local image or a specific remote image
   # hostPath: ../tide-whisperer          # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/tide-whisperer'
   rebuildCommand: './build.sh'
 
 tools:
   deployment:
-    # image: tidepool-k8s-tools # Uncomment to build and run local image or a specific remote image
+    image: tidepool/platform-tools:master-e445d74476ebfed3065a9b677f31aa674ba14d7c # Uncomment to build and run local image or a specific remote image
   # hostPath: ../platform       # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.tools'
@@ -332,7 +332,7 @@ tools:
 
 user:
   deployment:
-    # image: tidepool-k8s-user # Uncomment to build and run local image or a specific remote image
+    image: tidepool/platform-user:master-6c7838890dc42100f7b3fb1af36f367f34306216 # Uncomment to build and run local image or a specific remote image
   # hostPath: ../platform      # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.user'
