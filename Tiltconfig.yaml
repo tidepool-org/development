@@ -267,7 +267,7 @@ jellyfish:
   # hostPath: ../jellyfish          # Uncomment to build and run local image
   containerPath: '/app'
 
-message-api:
+messageapi:
   deployment:
     image: tidepool/message-api:master-ccaac32133dc77406df711e4cd6a13312cb1c448 # Uncomment to build and run local image or a specific remote image
   # hostPath: ../message-api          # Uncomment to build and run local image
@@ -315,7 +315,7 @@ task:
   dockerFile: 'Dockerfile.task'
   rebuildCommand: 'SERVICE=task make service-build'
 
-tide-whisperer:
+tidewhisperer:
   deployment:
     image: tidepool/tide-whisperer:master-882805726eedf7da94256202034e938b3efde6f1 # Uncomment to build and run local image or a specific remote image
   # hostPath: ../tide-whisperer          # Uncomment to build and run local image
