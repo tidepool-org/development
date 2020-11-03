@@ -43,6 +43,8 @@ spec:
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
+        {{ include "charts.kafka.common" .}}
+        {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "hydrophone") }}
         - name: HYDROPHONE_ASSET_URL
           value: {{ include "charts.hydrophone.s3.url" . | quote }}
         - name: HYDROPHONE_WEB_URL

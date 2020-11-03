@@ -149,4 +149,16 @@ spec:
       timeout: '30s'
       extauth:
         disable: true
+  - matchers:
+    - methods:
+      - DELETE
+      prefix: /v1/users/
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+    options:
+      prefixRewrite: /user/
+      extauth:
+        disable: true
 {{- end }}
