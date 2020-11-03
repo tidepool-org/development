@@ -45,6 +45,9 @@ def main():
       print("Preparing mongodb service...")
       local('while ! nc -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
 
+    # Provision kafka
+    k8s_yaml('./tools/kafka/kafka.yaml')
+
   else:
     # Shut down the mongodb and gateway services
     if not getNested(config, 'mongodb.useExternal'):
@@ -53,8 +56,6 @@ def main():
 
     # Clean up any tilt up backround processes
     local('for pid in $(ps -ef | awk "/tilt\r up/ {print $2}"); do kill -9 $pid; done')
-
-  k8s_yaml('./tools/kafka/kafka.yaml')
 
   # Apply any service overrides
   tidepool_helm_template_cmd += '-f {baseConfig} -f {overrides} '.format(
