@@ -1,5 +1,5 @@
 configmap:
-  # -- whether to generate a configmap 
+  # -- whether to generate a configmap
   enabled: true
   # -- base name of topic used for emails to be sent
   EmailsTopic: "emails"
@@ -7,7 +7,7 @@ configmap:
   Brokers: ""
   # -- whether SSL is required for communication
   RequireSSL: "true"
-  # -- prefix to apply to all topic names 
+  # -- prefix to apply to all topic names
   TopicPrefix: ""
   # -- name for the user events topic
   UserEventsTopic: "user-events"
