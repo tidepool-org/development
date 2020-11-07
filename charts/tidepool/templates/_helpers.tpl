@@ -86,6 +86,18 @@ Create environment variables used by all platform services.
 {{ end }}
 
 {{ define "charts.platform.env.misc" }}
+        - name: POD_NAME
+          valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
         - name: AWS_REGION
           value: {{ .Values.global.region }}
         - name: TIDEPOOL_ENV
