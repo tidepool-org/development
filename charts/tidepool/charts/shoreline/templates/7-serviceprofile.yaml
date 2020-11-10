@@ -36,6 +36,11 @@ spec:
     name: /user_get_shoreline
     timeout: 30s
   - condition:
+      method: GET
+      pathRegex: /token/.*
+    name: /token_get_shoreline
+    timeout: 30s
+  - condition:
       method: POST
       pathRegex: /user
     name: /user_post_shoreline
