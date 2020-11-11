@@ -40,6 +40,7 @@ spec:
         {{ include "charts.mongo.params" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "messageapi") }}
+        {{ include "charts.tracing.common" .}}
         - name: TIDEPOOL_STORE_DATABASE
           value: 'messages'
         - name: DISCOVERY_HOST

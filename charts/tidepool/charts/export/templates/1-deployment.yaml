@@ -39,6 +39,7 @@ spec:
       {{- end }}
       containers:
       - env:
+        {{ include "charts.tracing.common" .}}
         - name: API_HOST
           value: "http://internal.{{.Release.Namespace}}"
         - name: DEBUG_LEVEL

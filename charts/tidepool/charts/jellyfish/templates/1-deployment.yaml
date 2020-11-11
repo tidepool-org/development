@@ -42,6 +42,7 @@ spec:
       containers:
       - env:
         {{ include "charts.mongo.params" .}}
+        {{ include "charts.tracing.common" .}}
         - name: TIDEPOOL_STORE_DATABASE
           value: {{ .Values.store.database | quote }}
         - name: TIDEPOOL_STORE_DATABASE_PREFIX

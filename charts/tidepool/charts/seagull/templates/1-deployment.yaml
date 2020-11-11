@@ -41,6 +41,7 @@ spec:
         {{ include "charts.mongo.params" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "seagull") }}
+        {{ include "charts.tracing.common" .}}
         - name: TIDEPOOL_STORE_DATABASE
           value: seagull
         - name: DISCOVERY_HOST

@@ -45,6 +45,7 @@ spec:
         {{ include "charts.mongo.params" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "shoreline") }}
+        {{ include "charts.tracing.common" .}}
         - name: API_HOST
           value: {{ .Values.global.gateway.default.apiHost | default .Values.global.gateway.default.host }}
         - name: TIDEPOOL_STORE_DATABASE
