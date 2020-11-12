@@ -157,11 +157,11 @@ spec:
                     "host": "localhost:{{.Values.global.ports.shoreline}}",
                     "protocol": "http",
                     "service": "shoreline"
-                }
+                },
                 "user": {
                     "longTermDaysDuration": 30,
                     "tokenDurationSecs": 2592000
-                },
+                }
             }
         image: "{{ .Values.deployment.image }}"
         securityContext:
