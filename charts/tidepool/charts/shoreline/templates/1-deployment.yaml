@@ -133,6 +133,8 @@ spec:
               name: shoreline
               key: UserLongTermKey 
               optional: true
+        - name: SERVICE_LISTEN_ADDRESS
+          value: ":{{ .Values.global.ports.shoreline }}"
         - name: TIDEPOOL_SHORELINE_ENV
           value: |
             {
@@ -151,21 +153,15 @@ spec:
         - name: TIDEPOOL_SHORELINE_SERVICE
           value: |
             {
-                "mongo": {
-                    "connectionString": ""
-                },
-                "oauth2": {
-                    "expireDays": 14
-                },
                 "service": {
                     "host": "localhost:{{.Values.global.ports.shoreline}}",
                     "protocol": "http",
                     "service": "shoreline"
-                },
+                }
                 "user": {
                     "longTermDaysDuration": 30,
                     "tokenDurationSecs": 2592000
-                }
+                },
             }
         image: "{{ .Values.deployment.image }}"
         securityContext:
