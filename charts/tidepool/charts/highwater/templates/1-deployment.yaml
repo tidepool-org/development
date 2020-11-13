@@ -37,9 +37,6 @@ spec:
       {{- end }}
       containers:
       - env:
-        {{ include "charts.kafka.common" .}}
-        {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "highwater") }}
-        {{ include "charts.tracing.common" .}}
         - name: KAFKA_TOPIC
           valueFrom:
             configMapKeyRef:
@@ -52,6 +49,9 @@ spec:
               key: MetricEventsHighwaterDeadLettersTopic
               name: kafka
               optional: true
+        {{ include "charts.kafka.common" .}}
+        {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "highwater") }}
+        {{ include "charts.tracing.common" .}}
         - name: SKIP_HAKKEN
           value: "true"
         - name: DISCOVERY_HOST
