@@ -16,6 +16,7 @@ data:
 {{ end }}
   EmailsTopic: {{ .Values.configmap.EmailsTopic }}
   MarketoTopic: {{ .Values.configmap.MarketoTopic | default "marketo"}}
+  MetricEventsTopic: {{ .Values.configmap.MetricEventsTopic | default "metrics" }}
   UserEventsTopic: {{ .Values.configmap.UserEventsTopic }}
   UserEventsAuthDeadLettersTopic: {{ .Values.configmap.UserEventsAuthDeadLettersTopic }}
   UserEventsBlobDeadLettersTopic: {{ .Values.configmap.UserEventsBlobDeadLettersTopic }}
