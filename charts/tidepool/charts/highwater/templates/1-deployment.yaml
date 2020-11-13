@@ -40,6 +40,17 @@ spec:
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "highwater") }}
         {{ include "charts.tracing.common" .}}
+        - name: KAFKA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              key: MetricEventsTopic
+              name: kafka
+              optional: true
+        - name: KAFKA_DEAD_LETTERS_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              key: MetricEventsHighwaterDeadLettersTopic
+              optional: true
         - name: SKIP_HAKKEN
           value: "true"
         - name: DISCOVERY_HOST
