@@ -50,6 +50,7 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: MetricEventsHighwaterDeadLettersTopic
+              name: kafka
               optional: true
         - name: SKIP_HAKKEN
           value: "true"
