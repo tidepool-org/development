@@ -63,6 +63,8 @@ The Tidepool stack relies on [Docker](https://www.docker.com) and [Docker Compos
 
 Follow the appropriate link for your platform (Mac OSx or Linux recommended) at https://docs.docker.com/install/#supported-platforms and follow the directions to install and run Docker on your computer.
 
+**IMPORTANT:** This stack is VERY resource intensive.  You will need a fairly robust computer to run it efficiently, and will need to provide Docker with at least 60 GB of disk space and 4 GB of RAM. The default 2 GB RAM for Docker on MacOS won't cut it, and will need to be increased via the preferences panel. We recommend 8 GB or higher if you have 12 GB or more available.
+
 ## Install Docker Compose
 
 We use [Docker Compose](https://docs.docker.com/compose/) to run a local Kubernetes cluster within Docker. There are a number of _Kubernetes-in-Docker_ solutions available, but the one we've settled on as offering the best all-around fit for local development is [bsycorp/kind](https://github.com/bsycorp/kind/).
@@ -880,14 +882,15 @@ Stay Tuned :)
 
 ## Troubleshooting
 
-| Issue                                                           | Things to try                                                                                                                                                                                                                                                                    |
-| ---                                                             | ---                                                                                                                                                                                                                                                                              |
-| kubectl errors when provisioning services                       | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config)                                        |
-| kubectl errors when starting k9s                                | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config)                                        |
-| Tidepool Web ('blip') not loading                               | Check the service logs, either in the Tilt UI or with `tidepool logs blip` to make sure it's finished compiling successfully.  If it has compiled, see [Tidepool Web becomes inaccessible](#tidepool-web-becomes-inaccessible)                                                   |
-| `tidepool start` hangs at "Preparing mongodb service..."        | NOTE: It's normal for this to take a few minutes the first time you run this. Otherwise, check to see if mongodb pods are still provisioning in [k9s](#monitor-kubernetes-state-with-k9s-optional), and if so, wait, else cancel the `tidepool start` process and re-run it      |
-| `tidepool start` hangs at "Preparing gateway services..."       | NOTE: It's normal for this to take a few minutes the first time you run this. Otherwise, check to see if gloo gateway pods are still provisioning in [k9s](#monitor-kubernetes-state-with-k9s-optional), and if so, wait, else cancel the `tidepool start` process and re-run it |
-| Services are crashed and k9s shows them in an **evicted** state | The docker environment running the k8s server node has run out of disk space, likely due to old image build layers. Run `tidepool server-prune`. Afterwards, within a few minutes, services should begin re-deploying again automatically |
+| Issue                                                           | Things to try                                                                                                                                                                                                                                                                                                                           |
+| ---                                                             | ---                                                                                                                                                                                                                                                                                                                                     |
+| kubectl errors when provisioning services                       | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config)                                                                                               |
+| kubectl errors when starting k9s                                | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config)                                                                                               |
+| Tidepool Web ('blip') not loading                               | Check the service logs, either in the Tilt UI or with `tidepool logs blip` to make sure it's finished compiling successfully.  If it has compiled, see [Tidepool Web becomes inaccessible](#tidepool-web-becomes-inaccessible)                                                                                                          |
+| `tidepool start` hangs at "Preparing mongodb service..."        | NOTE: It's normal for this to take a few minutes the first time you run this. Otherwise, check to see if mongodb pods are still provisioning in [k9s](#monitor-kubernetes-state-with-k9s-optional), and if so, wait, else cancel the `tidepool start` process and re-run it                                                             |
+| `tidepool start` hangs at "Preparing gateway services..."       | NOTE: It's normal for this to take a few minutes the first time you run this. Otherwise, check to see if gloo gateway pods are still provisioning in [k9s](#monitor-kubernetes-state-with-k9s-optional), and if so, wait, else cancel the `tidepool start` process and re-run it                                                        |
+| `tidepool start` has numerous "Bad Address: shoreline" errors   | NOTE: It's normal for this to happen while services wait for shoreline to be provisioned.  This can go on for a quite a while during the first time running the stack, due to the extra time it takes to download all the service images. Give it a few minutes, and as long as shoreline comes up eventually, it should resolve itself |
+| Services are crashed and k9s shows them in an **evicted** state | The docker environment running the k8s server node has run out of disk space, likely due to old image build layers. Run `tidepool server-prune`. Afterwards, within a few minutes, services should begin re-deploying again automatically                                                                                               |
 
 ## Known Issues
 
@@ -915,7 +918,7 @@ Currently, there is a known issue where at times the gateway proxy service that 
 
 This will present itself usually with the web app getting stuck in a loading state in the browser, or possibly resolving with an error message like: `‘No healthy upstream on blip (http://localhost:3000)`
 
-The solution is to restart the `gateway-proxy` service, which should instantly restore access:
+The solution first solution to try is to restart the `gateway-proxy` service, which should restore access in a few moments:
 
 ```bash
 tidepool restart gateway-proxy
@@ -923,5 +926,7 @@ tidepool restart gateway-proxy
 # or use the built-in shortcut
 tidepool restart-proxy
 ```
+
+If this doesn't work, simply stop the running `tidepool start` process, and re-run it. This will terminate and re-provision the entire stack, and should fix the issue. This second approach is often needed after the initial provisioning of the stack, likely due to some timeouts stemming from the extra time it takes for all the images to be downloaded the first time.
 
 [[back to top]](#welcome)
