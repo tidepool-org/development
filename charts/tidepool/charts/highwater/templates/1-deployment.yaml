@@ -37,6 +37,7 @@ spec:
       {{- end }}
       containers:
       - env:
+      {{ include "charts.tracing.common" .}}
         - name: SKIP_HAKKEN
           value: "true"
         - name: DISCOVERY_HOST

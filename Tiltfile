@@ -65,10 +65,15 @@ def main():
   tidepool_helm_template_cmd += '--set "gloo.enabled=false" --set "gloo.created=true" '
 
   # Deploy and watch the helm charts
-  k8s_yaml(local('{helmCmd} {chartDir}'.format(
-    chartDir=tidepool_helm_chart_dir,
-    helmCmd=tidepool_helm_template_cmd
-  )))
+  k8s_yaml(
+    [
+      # Start kafka before Tidepool services
+      './tools/kafka/kafka.yaml',
+      local('{helmCmd} {chartDir}'.format(
+      chartDir=tidepool_helm_chart_dir,
+      helmCmd=tidepool_helm_template_cmd)),
+    ]
+  )
 
   # To update on helm chart source changes, uncomment below
   # watch_file(tidepool_helm_chart_dir)
@@ -292,7 +297,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
         run_commands.append(run(overrides.get('rebuildCommand')))
 
       # Apply container process restart if specified
-      entrypoint = overrides.get('restartContainerCommand', []);
+      entrypoint = overrides.get('restartContainerCommand', '');
       if overrides.get('restartContainerCommand'):
         run_commands.append(run('./tilt/restart.sh'))
 

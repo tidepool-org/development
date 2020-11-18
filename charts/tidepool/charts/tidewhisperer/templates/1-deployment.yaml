@@ -40,6 +40,7 @@ spec:
       containers:
       - env:
         {{- include "charts.mongo.params" . }}
+        {{ include "charts.tracing.common" .}}
         - name: TIMESCALEDB_HOST
           value: timescaledb-single.timescaledb.svc.cluster.local
         - name: TIMESCALEDB_USER

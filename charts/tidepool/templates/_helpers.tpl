@@ -85,7 +85,27 @@ Create environment variables used by all platform services.
           value: "http://internal.{{.Release.Namespace}}"
 {{ end }}
 
+{{ define "charts.tracing.common" }}
+        - name: POD_NAME
+          valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+        - name: OC_AGENT_HOST
+          value: "oc-collector.tracing:55678"
+        - name: OTEL_COLLECTOR_HOST
+          value: "otel-collector.observability:55680"
+{{ end }}
+
 {{ define "charts.platform.env.misc" }}
+{{ include "charts.tracing.common" . }}
         - name: AWS_REGION
           value: {{ .Values.global.region }}
         - name: TIDEPOOL_ENV
@@ -99,8 +119,6 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: auth
               key: ServiceAuth
-        - name: OC_AGENT_HOST
-          value: "oc-collector.tracing:55678"
 {{ end }}
 
 {{ define "charts.mongo.params" }}
