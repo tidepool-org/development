@@ -10,5 +10,6 @@ metadata:
 data:
   ClinicDemoUserId: {{ .Values.configmap.data.ClinicDemoUserId | quote }}
   KeycloakClientId: {{ .Values.configmap.data.KeycloakClientId | quote }}
+  KeycloakBackendClientId: {{ .Values.configmap.data.KeycloakBackendClientId | quote }}
   KeycloakRealmUrl: {{ .Values.configmap.data.KeycloakRealmUrl | quote }}
 {{- end }}

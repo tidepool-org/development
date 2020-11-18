@@ -188,6 +188,18 @@ spec:
               name: shoreline
               key: KeycloakClientSecret
               optional: true
+        - name: TIDEPOOL_KEYCLOAK_BACKEND_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: shoreline
+              key: KeycloakBackendClientId
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_BACKEND_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: shoreline
+              key: KeycloakBackendClientSecret
+              optional: true
         - name: TIDEPOOL_KEYCLOAK_ADMIN_USERNAME
           valueFrom:
             configMapKeyRef:
