@@ -63,6 +63,8 @@ The Tidepool stack relies on [Docker](https://www.docker.com) and [Docker Compos
 
 Follow the appropriate link for your platform (Mac OSx or Linux recommended) at https://docs.docker.com/install/#supported-platforms and follow the directions to install and run Docker on your computer.
 
+**IMPORTANT:** This stack is VERY resource intensive.  You will need a fairly robust computer to run it efficiently, and will need to provide Docker with at least 60 GB of disk space and 4 GB of RAM. The default 2 GB RAM for Docker on MacOS won't cut it, and will need to be increased via the preferences panel. We recommend 8 GB or higher if you have 12 GB or more available.
+
 ## Install Docker Compose
 
 We use [Docker Compose](https://docs.docker.com/compose/) to run a local Kubernetes cluster within Docker. There are a number of _Kubernetes-in-Docker_ solutions available, but the one we've settled on as offering the best all-around fit for local development is [bsycorp/kind](https://github.com/bsycorp/kind/).
