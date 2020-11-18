@@ -915,7 +915,7 @@ Currently, there is a known issue where at times the gateway proxy service that 
 
 This will present itself usually with the web app getting stuck in a loading state in the browser, or possibly resolving with an error message like: `‘No healthy upstream on blip (http://localhost:3000)`
 
-The solution is to restart the `gateway-proxy` service, which should instantly restore access:
+The solution first solution to try is to restart the `gateway-proxy` service, which should restore access in a few moments:
 
 ```bash
 tidepool restart gateway-proxy
@@ -923,5 +923,7 @@ tidepool restart gateway-proxy
 # or use the built-in shortcut
 tidepool restart-proxy
 ```
+
+If this doesn't work, simply stop the running `tidepool start` process, and re-run it. This will terminate and re-provision the entire stack, and should fix the issue. This second approach is often needed after the initial provisioning of the stack, likely due to some timeouts stemming from the extra time it takes for all the images to be downloaded the first time.
 
 [[back to top]](#welcome)
