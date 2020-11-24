@@ -9,6 +9,8 @@ configmap:
   RequireSSL: "true"
   # -- prefix to apply to all topic names
   TopicPrefix: ""
+  # -- name for the metrics events topic
+  MetricEventsTopic: "metric-events"
   # -- name for the user events topic
   UserEventsTopic: "user-events"
   # -- name for the auth service dead letter topic
