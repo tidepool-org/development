@@ -11,8 +11,6 @@ configmap:
   TopicPrefix: ""
   # -- name for the metrics events topic
   MetricEventsTopic: "metric-events"
-  # -- name for the highwater service dead letter topic
-  MetricEventsHighwaterDeadLettersTopic: "metric-events-highwater-dl"
   # -- name for the user events topic
   UserEventsTopic: "user-events"
   # -- name for the auth service dead letter topic

@@ -45,12 +45,6 @@ spec:
               key: MetricEventsTopic
               name: kafka
               optional: true
-        - name: KAFKA_DEAD_LETTERS_TOPIC
-          valueFrom:
-            configMapKeyRef:
-              key: MetricEventsHighwaterDeadLettersTopic
-              name: kafka
-              optional: true
         - name: CLOUD_EVENTS_SOURCE
           value: highwater
         - name: KAFKA_CONSUMER_GROUP

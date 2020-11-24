@@ -17,7 +17,6 @@ data:
   EmailsTopic: {{ .Values.configmap.EmailsTopic }}
   MarketoTopic: {{ .Values.configmap.MarketoTopic | default "marketo"}}
   MetricEventsTopic: {{ .Values.configmap.MetricEventsTopic | default "metric-events" }}
-  MetricEventsHighwaterDeadLettersTopic: {{ .Values.configmap.MetricEventsHighwaterDeadLettersTopic | default "metric-events-highwater-dl"}}
   UserEventsTopic: {{ .Values.configmap.UserEventsTopic }}
   UserEventsAuthDeadLettersTopic: {{ .Values.configmap.UserEventsAuthDeadLettersTopic }}
   UserEventsBlobDeadLettersTopic: {{ .Values.configmap.UserEventsBlobDeadLettersTopic }}
