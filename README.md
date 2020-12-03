@@ -251,7 +251,7 @@ One-time initial startup:
 tidepool server-init
 ```
 
-This will save the Kubernetes server config to the path defined in your `$KUBECONFIG` environment variable and install the `metrics-server` service. This is only required for the initial server provisioning.
+This will save the Kubernetes server config to the path defined in your `$KUBECONFIG` environment variable. This is only required for the initial server provisioning.
 
 For subsequent server starts, run:
 
