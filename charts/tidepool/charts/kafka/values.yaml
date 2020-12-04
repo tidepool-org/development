@@ -11,6 +11,8 @@ configmap:
   TopicPrefix: ""
   # -- name for the metrics events topic
   MetricEventsTopic: "metric-events"
+  # -- name for the metrics events dead letter topic topic
+  MetricEventsKissMetricsDeadLettersTopic: "metric-events-kissmetrics-dl"
   # -- name for the user events topic
   UserEventsTopic: "user-events"
   # -- name for the auth service dead letter topic
