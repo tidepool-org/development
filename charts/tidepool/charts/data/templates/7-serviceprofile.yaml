@@ -76,17 +76,17 @@ spec:
       method: POST
       pathRegex: /v1/datasets.*
     name: /v1/datasets_post_data
-    timeout: 30s
+    timeout: 60s
   - condition:
       method: PUT
       pathRegex: /v1/datasets.*
     name: /v1/datasets_put_data
-    timeout: 30s
+    timeout: 60s
   - condition:
       method: DELETE
       pathRegex: /v1/datasets.*
     name: /v1/datasets_delete_data
-    timeout: 30s
+    timeout: 60s
   - condition:
       method: GET
       pathRegex: /v1/time.*
