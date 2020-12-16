@@ -161,4 +161,15 @@ spec:
       prefixRewrite: /user/
       extauth:
         disable: true
+  - matchers:
+    - methods:
+      - GET
+      regex: /v1/users/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: shoreline
+    options:
+      extauth:
+        disable: true
 {{- end }}
