@@ -3,8 +3,10 @@ configmap:
   enabled: false
   data:
     ClinicDemoUserId: ""
-    KeycloakClientId: ""
-    KeycloakRealmUrl: ""
+    KeycloakAdminUsername: ""
+    KeycloakBackendClientId: ""
+    KeycloakBaseUrl: ""
+    KeycloakRealm: ""
 secret:
   # -- whether to generate a secret
   enabled: false
@@ -17,7 +19,11 @@ secret:
     UserMailVerification: ""
     # -- the Tidepool user id of the Clinic demo account
     ClinicDemoUserId: ""
-    KeycloakClientSecret: ""
+    # -- the password of the keycloak admin account
+    KeycloakAdminPassword: ""
+    # -- the client secret for the backend service client
+    KeycloakBackendClientSecret: ""
+    # -- the migration secret
     KeycloakMigrationSecret: ""
 deployment:
   # -- Docker image
