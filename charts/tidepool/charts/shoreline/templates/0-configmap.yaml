@@ -9,7 +9,9 @@ metadata:
 {{ include "charts.labels.standard" .}}
 data:
   ClinicDemoUserId: {{ .Values.configmap.data.ClinicDemoUserId | quote }}
-  KeycloakClientId: {{ .Values.configmap.data.KeycloakClientId | quote }}
+  KeycloakAdminUsername: {{ .Values.configmap.data.KeycloakAdminUsername | quote }}
+  KeycloakBaseUrl: {{ .Values.configmap.data.KeycloakBaseUrl | quote }}
   KeycloakBackendClientId: {{ .Values.configmap.data.KeycloakBackendClientId | quote }}
-  KeycloakRealmUrl: {{ .Values.configmap.data.KeycloakRealmUrl | quote }}
+  KeycloakClientId: {{ .Values.configmap.data.KeycloakClientId | quote }}
+  KeycloakRealm: {{ .Values.configmap.data.KeycloakRealm | quote }}
 {{- end }}
