@@ -4,6 +4,7 @@ configmap:
   data:
     ClinicDemoUserId: ""
     KeycloakAdminUsername: ""
+    KeycloakClientId: ""
     KeycloakBackendClientId: ""
     KeycloakBaseUrl: ""
     KeycloakRealm: ""
@@ -23,6 +24,8 @@ secret:
     KeycloakAdminPassword: ""
     # -- the client secret for the backend service client
     KeycloakBackendClientSecret: ""
+    # -- the client secret for the shoreline client
+    KeycloakClientSecret: ""
     # -- the migration secret
     KeycloakMigrationSecret: ""
 deployment:

@@ -12,5 +12,6 @@ data:
   KeycloakAdminUsername: {{ .Values.configmap.data.KeycloakAdminUsername | quote }}
   KeycloakBaseUrl: {{ .Values.configmap.data.KeycloakBaseUrl | quote }}
   KeycloakBackendClientId: {{ .Values.configmap.data.KeycloakBackendClientId | quote }}
+  KeycloakClientId: {{ .Values.configmap.data.KeycloakClientId | quote }}
   KeycloakRealm: {{ .Values.configmap.data.KeycloakRealm | quote }}
 {{- end }}
