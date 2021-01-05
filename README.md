@@ -409,7 +409,7 @@ See [Building Local Images](#building-local-images) for more details
 
 If you wish to use an alternate Mongo host running outside of Docker, then you'll need to do a few things.
 
-Set the `mongodb.useExternal` flag to `true` in your `local/Tiltconfig.yaml` file as required, and update `mongo.secret._data` section as needed. For example:
+Set the `mongodb.useExternal` flag to `true` in your `local/Tiltconfig.yaml` file as required, and update `mongo.secret.data_` section as needed. For example:
 
 ```yaml
 mongodb:
@@ -418,7 +418,7 @@ mongodb:
 
 mongo:
   secret:
-    _data:
+    data_:
       Scheme: "mongodb"
       Addresses: "http://host:port" # comma-separated list of MongoDB host[:port] addresses
       Username: ""                  # the MongoDB port to connect to
@@ -434,7 +434,7 @@ If you are running Mongo natively on your local Mac (not in Docker, but via anot
 ```yaml
 mongo:
   secret:
-    _data:
+    data_:
       Addresses: "host.docker.internal"
     # ...
 ```

@@ -3,6 +3,11 @@ configmap:
   enabled: false
   data:
     ClinicDemoUserId: ""
+    KeycloakAdminUsername: ""
+    KeycloakClientId: ""
+    KeycloakBackendClientId: ""
+    KeycloakBaseUrl: ""
+    KeycloakRealm: ""
 secret:
   # -- whether to generate a secret
   enabled: false
@@ -15,6 +20,14 @@ secret:
     UserMailVerification: ""
     # -- the Tidepool user id of the Clinic demo account
     ClinicDemoUserId: ""
+    # -- the password of the keycloak admin account
+    KeycloakAdminPassword: ""
+    # -- the client secret for the backend service client
+    KeycloakBackendClientSecret: ""
+    # -- the client secret for the shoreline client
+    KeycloakClientSecret: ""
+    # -- the migration secret
+    KeycloakMigrationSecret: ""
 deployment:
   # -- Docker image
   image: tidepool/shoreline:master-latest

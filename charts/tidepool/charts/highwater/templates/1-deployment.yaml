@@ -39,7 +39,16 @@ spec:
       - env:
         {{ include "charts.kafka.common" .}}
         {{ include "charts.tracing.common" .}}
-        {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "highwater") }}
+        - name: KAFKA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              key: MetricEventsTopic
+              name: kafka
+              optional: true
+        - name: CLOUD_EVENTS_SOURCE
+          value: highwater
+        - name: KAFKA_CONSUMER_GROUP
+          value: highwater
         - name: SKIP_HAKKEN
           value: "true"
         - name: DISCOVERY_HOST

@@ -12,14 +12,6 @@ spec:
   - matchers:
     - methods:
       - GET
-      regex: /v1/users/[^/]+
-    routeAction:
-      single:
-        upstream:
-          name: user
-  - matchers:
-    - methods:
-      - GET
       prefix: /userservices/status
     routeAction:
       single:

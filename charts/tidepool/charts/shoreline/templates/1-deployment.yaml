@@ -176,6 +176,60 @@ spec:
                     "tokenDurationSecs": 2592000
                 }
             }
+        - name: TIDEPOOL_KEYCLOAK_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: shoreline
+              key: KeycloakClientId
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: shoreline
+              key: KeycloakClientSecret
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_BACKEND_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: shoreline
+              key: KeycloakBackendClientId
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_BACKEND_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: shoreline
+              key: KeycloakBackendClientSecret
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_ADMIN_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: shoreline
+              key: KeycloakAdminUsername
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: shoreline
+              key: KeycloakAdminPassword
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: shoreline
+              key: KeycloakBaseUrl
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_REALM
+          valueFrom:
+            configMapKeyRef:
+              name: shoreline
+              key: KeycloakRealm
+              optional: true
+        - name: TIDEPOOL_KEYCLOAK_MIGRATION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: shoreline
+              key: KeycloakMigrationSecret
+              optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}

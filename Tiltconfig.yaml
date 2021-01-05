@@ -52,7 +52,7 @@ mongodb:
 
 mongo:
   secret:
-    _data:
+    data_:
       Scheme: "mongodb"
       Addresses: "mongodb"
       Username: ""
