@@ -49,5 +49,7 @@ keycloak:
     - name: KEYCLOAK_IMPORT
       value: /realm/realm.json
   postgresql:
+    persistence:
+      size: 500Mi
     volumePermissions:
       enabled: true
