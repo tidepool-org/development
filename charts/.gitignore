@@ -1,1 +1,3 @@
 ingress-cert
+keycloak/charts/*.tgz
+tidepool/charts/*.tgz

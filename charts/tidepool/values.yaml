@@ -85,3 +85,5 @@ tidepool:
   namespace:
     create: true
     annotations: {}
+keycloak:
+  enabled: false
