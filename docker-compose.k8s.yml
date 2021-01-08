@@ -1,7 +1,7 @@
 version: '3'
 services:
   server:
-    image: tidepool/kind:1.18.2
+    image: bsycorp/kind:latest-1.18
     privileged: true
     network_mode: bridge
     ports:

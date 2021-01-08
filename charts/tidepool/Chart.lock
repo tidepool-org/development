@@ -1,0 +1,6 @@
+dependencies:
+- name: keycloak
+  repository: file://../keycloak
+  version: 0.1.0
+digest: sha256:ac85a2d572d923f8f7ea40c4462a6ce62c97c0b4222d47c57849cfdfb20bf602
+generated: "2021-01-08T11:44:43.146975+02:00"

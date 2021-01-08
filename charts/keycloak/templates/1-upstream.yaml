@@ -1,0 +1,10 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: keycloak
+  namespace: {{ .Release.Namespace }}
+spec:
+  kube:
+    serviceName: keycloak-http
+    serviceNamespace: {{ .Release.Namespace }}
+    servicePort: 80
