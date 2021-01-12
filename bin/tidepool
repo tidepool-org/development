@@ -14,7 +14,6 @@ USAGE: tidepool command [service] [...additional args]
   server-init                     Used once to initially provision the k8s stack. Specifically, it:
                                     1. Provisions and starts the Kubernetes server
                                     2. Saves the Kubernetes server config to ${KUBECONFIG}.
-                                    3. Deploys metrics-server to monitor CPU and MEM usage for resources
 
   server-start                    Start (and provision if needed) the Kubernetes server
   server-stop                     Stop the Kubernetes server
@@ -178,11 +177,6 @@ init_metrics_server() {
     until kubectl get nodes; do
       sleep 5;
     done
-
-    # (Re)Install metrics server
-    helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-    helm uninstall metrics-server || true
-    helm install metrics-server stable/metrics-server -f ${DIR}/local/metrics-server.yml
 }
 
 case ${1-help} in
