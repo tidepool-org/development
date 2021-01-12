@@ -2,7 +2,9 @@
 
 Welome to [Tidepool](https://tidepool.org) at GitHub!
 
-This GitHub repository is your launching pad to running and developing the Tidepool software on your very own computer. You can use it to run your own installation of Tidepool, take a quick peek at the Tidepool code, and even help us at Tidepool design and develop the next new and amazing feature!
+This GitHub repository is your launching pad to running and developing the Tidepool software on your very own computer. You can use it to run your own local installation of Tidepool, take a quick peek at the Tidepool code, and even help us at Tidepool design and develop the next new and amazing feature!
+
+Please note that this repository is intended on a local machine. We do not recommend using this to provision remote, production-grade instances, nor can we support those who choose to do so.
 
 Of course, if you haven't already done so, you should check out [Tidepool](https://tidepool.org) and [Tidepool Web](https://app.tidepool.org). It's a snap to create an account, upload your or your loved one's diabetes device data, and visualize it all in one place. We've already done the hard work of setting up the servers, software, databases, backups, and more, so you don't have to. Check it out!
 
@@ -355,7 +357,7 @@ k9s
 
 # Using Tidepool
 
-## Identity And Access Management 
+## Identity And Access Management
 
 Tidepool uses Keycloak as its main identity and access management solution. Legacy mongo user accounts are migrated from mongo to Keycloak as users sign in (so their credentials can be migrated as well).
 
