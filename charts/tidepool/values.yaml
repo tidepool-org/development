@@ -64,8 +64,6 @@ global:
     prescription: 9227
     # -- task service internal port
     task: 9224
-    # -- user service internal port
-    user: 9221
     # -- seagull service internal port
     seagull: 9120
     # -- shoreline service internal port

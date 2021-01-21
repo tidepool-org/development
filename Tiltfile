@@ -122,7 +122,6 @@ def provisionServerSecrets ():
     'server',
     'shoreline',
     'task',
-    'user',
     'userdata',
   ]
 

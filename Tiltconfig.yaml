@@ -354,11 +354,4 @@ tools:
   dockerFile: 'Dockerfile.tools'
   rebuildCommand: 'SERVICE=tools make service-build'
 
-user:
-  deployment:
-    # image: tidepool-k8s-user # Uncomment to build and run local image or a specific remote image
-  # hostPath: ../platform      # Uncomment to build and run local image
-  containerPath: '/go/src/github.com/tidepool-org/platform'
-  dockerFile: 'Dockerfile.user'
-  rebuildCommand: 'SERVICE=user make service-build'
 ### Tidepool Services Config End ###
