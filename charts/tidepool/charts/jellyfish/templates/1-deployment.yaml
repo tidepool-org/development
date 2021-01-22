@@ -73,8 +73,11 @@ spec:
           httpGet:
             path: /status
             port: {{ .Values.global.ports.jellyfish }}
-          initialDelaySeconds: 3
-          periodSeconds: 10
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: {{ .Values.global.ports.jellyfish }}
         name: jellyfish
         ports:
         - containerPort: {{ .Values.global.ports.jellyfish }}
