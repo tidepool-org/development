@@ -100,12 +100,10 @@ spec:
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
-        livenessProbe:
+        readinessProbe:
           httpGet:
             path: /status
             port: {{.Values.global.ports.highwater}}
-          initialDelaySeconds: 3
-          periodSeconds: 10
         name: highwater
         ports:
         - containerPort: {{.Values.global.ports.highwater}}
