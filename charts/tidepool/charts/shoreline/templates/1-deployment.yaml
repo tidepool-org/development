@@ -131,7 +131,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: shoreline
-              key: UserLongTermKey 
+              key: UserLongTermKey
               optional: true
         - name: SERVICE_LISTEN_ADDRESS
           value: ":{{ .Values.global.ports.shoreline }}"
@@ -233,7 +233,7 @@ spec:
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
-        livenessProbe:
+        readinessProbe:
           httpGet:
             path: /status
             port: {{ .Values.global.ports.shoreline }}
