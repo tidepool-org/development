@@ -70,12 +70,10 @@ spec:
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
-        livenessProbe:
+        readinessProbe:
           httpGet:
             path: /status
             port: {{.Values.global.ports.seagull}}
-          initialDelaySeconds: 30
-          periodSeconds: 10
         name: seagull
         ports:
         - containerPort: {{.Values.global.ports.seagull}}
