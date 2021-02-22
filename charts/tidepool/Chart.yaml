@@ -1,11 +1,17 @@
 apiVersion: v2
 description: A Helm chart for Tidepool
 name: tidepool
-version: 0.12.0
+version: 0.12.1
 maintainers:
   - name: Derrick Burns
     email: derrick@tidepool.org
     url: https://github.com/derrickburns
+  - name: Todd Kazakov
+    email: todd@tidepool.org
+    url: https://github.com/toddkazakov
+  - name: Adin Hodovic
+    email: adin@tidepool.org
+    url: https://github.com/adinhodovic
 icon: https://www.tidepool.org/static/media/tidepool-t-logo.41feef82.png
 home: https://github.com/tidepool-org/development/charts
 dependencies:
