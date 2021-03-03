@@ -87,7 +87,6 @@ kafka:
     Brokers: "kafka:9092"
     RequireSSL: "false"
     TopicPrefix: "local-"
-    UserEventsTopic: "user-events"
 ### Kafka API Config End ###
 
 ### JWT Token Signing Keys Config Start ###
