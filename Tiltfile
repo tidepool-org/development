@@ -25,6 +25,7 @@ def main():
   mongodb_port_forward_host_port = mongodb_port_forwards[0].split(':')[0]
 
   if not is_shutdown:
+    updateHelmDependancies()
     provisionClusterRoleBindings()
     provisionServerSecrets()
     provisionConfigMaps()
@@ -67,11 +68,6 @@ def main():
   # Set release name
   tidepool_helm_template_cmd += '--name-template "tp" '
 
-  if not is_shutdown:
-    # update dependencies
-    local('cd charts/tidepool && for dep in $(helm dep list | grep "file://" | cut -f 3 | sed s#file:/#.#); do  helm dep update $dep; done')
-    local('cd charts/tidepool && helm dep up')
-
   # Deploy and watch the helm charts
   k8s_yaml(
     [
@@ -89,6 +85,13 @@ def main():
   # Back out of actual provisioning for debugging purposes by uncommenting below
   # fail('NOT YET ;)')
 ### Main End ###
+
+### Update Helm Dependancies Start ###
+def updateHelmDependancies():
+  # update dependencies
+  local('cd charts/tidepool && for dep in $(helm dep list | grep "file://" | cut -f 3 | sed s#file:/#.#); do helm dep update $dep; done')
+  local('cd charts/tidepool && helm dep up')
+### Update Helm Dependancies End ###
 
 ### Cluster Role Bindings Start ###
 def provisionClusterRoleBindings():
