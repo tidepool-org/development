@@ -88,7 +88,7 @@ def main():
 
 ### Helm Dependancies Update Start ###
 def updateHelmDependancies():
-  local('cd charts/tidepool && for dep in $(helm dep list | grep "file://" | cut -f 3 | sed s#file:/#.#); do  helm dep update $dep; done')
+  local('cd charts/tidepool && for dep in $(helm dep list | grep "file://" | cut -f 3 | sed s#file:/#.#); do helm dep update $dep; done')
   local('cd charts/tidepool && helm dep up')
 ### Helm Dependancies Update End ###
 
