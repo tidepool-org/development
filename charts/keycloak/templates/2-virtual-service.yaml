@@ -1,0 +1,18 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: keycloak
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  displayName: keycloak
+  virtualHost:
+    domains:
+    - '*:8081'
+    routes:
+    - matchers:
+      - prefix: '/'
+      routeAction:
+        single:
+          upstream:
+            name: keycloak
+            namespace: '{{ .Release.Namespace }}'

@@ -1,12 +1,10 @@
-{{ if .Values.global.glooingress.enabled }}
 apiVersion: gloo.solo.io/v1
 kind: Upstream
 metadata:
-  name: user
+  name: keycloak
   namespace: {{ .Release.Namespace }}
 spec:
   kube:
-    serviceName: user
+    serviceName: keycloak-http
     serviceNamespace: {{ .Release.Namespace }}
-    servicePort: {{ .Values.global.ports.user }}
-{{- end }}
+    servicePort: 80

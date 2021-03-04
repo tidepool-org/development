@@ -1,0 +1,55 @@
+# -- whether to enable Keycloak integr
+enabled: true
+keycloak:
+  fullnameOverride: 'keycloak'
+  image:
+    repository: 'docker.io/jboss/keycloak'
+    tag: '12.0.1'
+  extraInitContainers: |-
+    - "command":
+      - "wget"
+      - "-O"
+      - "/deployments/keycloak-rest-provider-0.3.jar"
+      - "https://github.com/toddkazakov/keycloak-user-migration/releases/download/0.3/keycloak-rest-provider-0.3.jar"
+      "image": "busybox"
+      "imagePullPolicy": "IfNotPresent"
+      "name": "rest-provider"
+      "volumeMounts":
+      - "mountPath": "/deployments"
+        "name": "extensions"
+    - "command":
+      - "/bin/sh"
+      - "-c"
+      - "wget -O /deployments/admin-0.0.6.jar https://github.com/tidepool-org/keycloak-extensions/releases/download/0.0.6/admin-0.0.6.jar"
+      "image": "busybox"
+      "imagePullPolicy": "IfNotPresent"
+      "name": "tidepool-extensions"
+      "volumeMounts":
+      - "mountPath": "/deployments"
+        "name": "extensions"
+  extraVolumeMounts: |-
+    - "mountPath": "/opt/jboss/keycloak/standalone/deployments"
+      "name": "extensions"
+    - name: keycloak-realm
+      mountPath: "/realm/"
+      readOnly: true
+  extraVolumes: |-
+    - "emptyDir": {}
+      "name": "extensions"
+    - name: keycloak-realm
+      secret:
+        secretName: keycloak-realm
+  extraEnv: |-
+    - name: KEYCLOAK_USER
+      value: admin
+    - name: KEYCLOAK_PASSWORD
+      value: admin
+    - name: PROXY_ADDRESS_FORWARDING
+      value: "true"
+    - name: KEYCLOAK_IMPORT
+      value: /realm/realm.json
+  postgresql:
+    persistence:
+      size: 500Mi
+    volumePermissions:
+      enabled: true

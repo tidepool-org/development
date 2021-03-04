@@ -26,7 +26,7 @@ global:
 
 ### Gateway Config Start ###
 gateway-proxy:
-  portForwards: ['3000']
+  portForwards: ['3000', '8081']
 
 glooingress:
   enabled: true
@@ -41,6 +41,9 @@ glooingress:
 apiServer:
   enable: false
 ### Gateway Config End ###
+
+keycloak:
+  enabled: true
 
 ### MongoDB Config Start ###
 mongodb:
@@ -312,9 +315,21 @@ shoreline:
   containerPath: '/go/src/github.com/tidepool-org/shoreline'
   rebuildCommand: './build.sh'
   configmap:
-    enabled: false
+    enabled: true
     data:
       ClinicDemoUserId: ""
+      KeycloakAdminUsername: "admin"
+      KeycloakBaseUrl: "http://keycloak-http.default.svc.cluster.local"
+      KeycloakBackendClientId: "backend"
+      KeycloakClientId: "shoreline"
+      KeycloakRealm: "dev"
+  secret:
+    enabled: true
+    data_:
+      KeycloakClientSecret: "d06e8001-94f5-4054-8086-69feb7f90e77"
+      KeycloakBackendClientSecret: "8f10ee82-f56f-44c3-854d-40ae4997f337"
+      KeycloakAdminPassword: "admin"
+      KeycloakMigrationSecret: "806a29b9-9ef0-47d4-8a0a-bdfdbb5f78d4"
 
 task:
   deployment:
@@ -339,11 +354,4 @@ tools:
   dockerFile: 'Dockerfile.tools'
   rebuildCommand: 'SERVICE=tools make service-build'
 
-user:
-  deployment:
-    # image: tidepool-k8s-user # Uncomment to build and run local image or a specific remote image
-  # hostPath: ../platform      # Uncomment to build and run local image
-  containerPath: '/go/src/github.com/tidepool-org/platform'
-  dockerFile: 'Dockerfile.user'
-  rebuildCommand: 'SERVICE=user make service-build'
 ### Tidepool Services Config End ###

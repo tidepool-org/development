@@ -2,7 +2,9 @@
 
 Welome to [Tidepool](https://tidepool.org) at GitHub!
 
-This GitHub repository is your launching pad to running and developing the Tidepool software on your very own computer. You can use it to run your own installation of Tidepool, take a quick peek at the Tidepool code, and even help us at Tidepool design and develop the next new and amazing feature!
+This GitHub repository is your launching pad to running and developing the Tidepool software on your very own computer. You can use it to run your own local installation of Tidepool, take a quick peek at the Tidepool code, and even help us at Tidepool design and develop the next new and amazing feature!
+
+Please note that this repository is only intended to run a simplified version of the Tidepool stack on a local machine. We do not recommend using this to provision remote, production-grade instances, nor can we support those who choose to do so.
 
 Of course, if you haven't already done so, you should check out [Tidepool](https://tidepool.org) and [Tidepool Web](https://app.tidepool.org). It's a snap to create an account, upload your or your loved one's diabetes device data, and visualize it all in one place. We've already done the hard work of setting up the servers, software, databases, backups, and more, so you don't have to. Check it out!
 
@@ -23,6 +25,7 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [Without The Tidepool Helper Script](#without-the-tidepool-helper-script)
   - [Monitor Kubernetes State With K9s (Optional)](#monitor-kubernetes-state-with-k9s-optional)
 - [Using Tidepool](#using-tidepool)
+  - [Identity And Access Management](#identity-and-access-management)
   - [Creating An Account](#creating-an-account)
   - [Verifying An Account Email](#verifying-an-account-email)
   - [Uploading Data](#uploading-data)
@@ -354,13 +357,29 @@ k9s
 
 # Using Tidepool
 
+## Identity And Access Management
+
+Tidepool uses Keycloak as its main identity and access management solution. Legacy mongo user accounts are migrated from mongo to Keycloak as users sign in (so their credentials can be migrated as well).
+
+Keycloak admin console is available at http://localhost:8081. To login as an administrtor you can use the default credentials:
+```
+username: admin
+password: admin
+```
+
+The administrator credentials can be tweaked by setting KEYCLOAK_USER and KEYCLOAK_PASSWORD environment variables in the keycloak chart.
+
 ## Creating An Account
 
 Once your local Tidepool is running, open your Chrome browser and browse to http://localhost:3000. You should see the Tidepool login page running from your local computer, assuming everything worked as expected. Go ahead and signup for a new account. Remember, all accounts and data created via this local Tidepool are _ONLY_ stored on your computer. _No_ data is stored on any of the Tidepool servers.
 
 ## Verifying An Account Email
 
-Since your local Tidepool does not have a configured email server, no emails will be sent at all. This includes the verification email sent during account creation. To get around this when running locally, you need to verify the email account in the mongo database directly by setting the `authenticated` field to true for the user you've created, which can be found at `db.user.users`.
+Since your local Tidepool does not have a configured email server, no emails will be sent at all. This includes the verification email sent during account creation. To get around this when running locally, you need to verify the email account manually.
+
+Accounts created in Keycloak can be verified using the Keycloak admin console which is available at http://localhost:8081.
+
+Legacy accounts in mongo can be verified in the database directly by setting the `authenticated` field to true for the user you've created, which can be found at `db.user.users`.
 
 This can be done by connecting to the mongo client within the mongo container (out of scope for this document), or, more conveniently, with the `tidepool` helper script:
 

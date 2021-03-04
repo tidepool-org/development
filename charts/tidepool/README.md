@@ -48,7 +48,6 @@ A Helm chart for Tidepool
 | global.ports.summary | int | `9230` | summary service internal port |
 | global.ports.task | int | `9224` | task service internal port |
 | global.ports.tidewhisperer | int | `9127` | tidewhisperer service internal port |
-| global.ports.user | int | `9221` | user service internal port |
 | global.region | string | `"us-west-2"` | aws region that services run in |
 | global.secret.enabled | bool | `false` |  |
 | global.secret.generated | bool | `false` |  |

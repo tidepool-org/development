@@ -25,6 +25,7 @@ def main():
   mongodb_port_forward_host_port = mongodb_port_forwards[0].split(':')[0]
 
   if not is_shutdown:
+    updateHelmDependancies()
     provisionClusterRoleBindings()
     provisionServerSecrets()
     provisionConfigMaps()
@@ -64,6 +65,9 @@ def main():
   # Don't provision the gloo gateway here - we do that in Tiltfile.gateway
   tidepool_helm_template_cmd += '--set "gloo.enabled=false" --set "gloo.created=true" '
 
+  # Set release name
+  tidepool_helm_template_cmd += '--name-template "tp" '
+
   # Deploy and watch the helm charts
   k8s_yaml(
     [
@@ -81,6 +85,12 @@ def main():
   # Back out of actual provisioning for debugging purposes by uncommenting below
   # fail('NOT YET ;)')
 ### Main End ###
+
+### Helm Dependancies Update Start ###
+def updateHelmDependancies():
+  local('cd charts/tidepool && for dep in $(helm dep list | grep "file://" | cut -f 3 | sed s#file:/#.#); do helm dep update $dep; done')
+  local('cd charts/tidepool && helm dep up')
+### Helm Dependancies Update End ###
 
 ### Cluster Role Bindings Start ###
 def provisionClusterRoleBindings():
@@ -114,7 +124,6 @@ def provisionServerSecrets ():
     'server',
     'shoreline',
     'task',
-    'user',
     'userdata',
   ]
 
