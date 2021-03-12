@@ -73,15 +73,13 @@ spec:
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
         - name: SKIP_HAKKEN
           value: "true"
-        image: "{{ .Values.deployment.image }}" 
+        image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
-        livenessProbe:
+        readinessProbe:
           httpGet:
             path: /status
             port: {{.Values.global.ports.messageapi}}
-          initialDelaySeconds: 3
-          periodSeconds: 10
         name: message-api
         ports:
         - containerPort: {{.Values.global.ports.messageapi}}
