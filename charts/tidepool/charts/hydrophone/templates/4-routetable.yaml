@@ -138,6 +138,30 @@ spec:
     options:
       timeout: '1m'
       extauth:
-        disable: true   
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      regex: /v1/clinics/[^/]+/invites/patients
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+    options:
+      timeout: '1m'
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - PUT
+      regex: /v1/clinics/[^/]+/invites/patients/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+    options:
+      timeout: '1m'
+      extauth:
+        disable: true
 
 {{- end }}
