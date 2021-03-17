@@ -71,6 +71,8 @@ spec:
           value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
         - name: TIDEPOOL_METRICS_CLIENT_ADDRESS
           value: "http://highwater:{{.Values.global.ports.highwater}}"
+        - name: TIDEPOOL_CLINIC_CLIENT_ADDRESS
+          value: "http://clinic:{{.Values.global.ports.clinic}}"
         - name: TIDEPOOL_PROTOCOL
           value: "{{ .Values.global.gateway.default.protocol }}"
         image: "{{ .Values.deployment.image }}"
