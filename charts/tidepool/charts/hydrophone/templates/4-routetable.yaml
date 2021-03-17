@@ -8,8 +8,8 @@ metadata:
     namespace: {{ .Release.Namespace }}
     app: tidepool
 spec:
+  weight: 5
   routes:
-
   - matchers:
     - methods:
       - GET
