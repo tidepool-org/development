@@ -34,6 +34,8 @@ global:
   ports:
     # -- blip service internal port
     blip: 3000
+    # -- clinic service internal port
+    clinic: 8080
     # -- devices service grpc internal port
     devices_grpc: 9228                             
     # -- devices service http internal port
