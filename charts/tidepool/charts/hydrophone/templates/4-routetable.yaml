@@ -187,6 +187,19 @@ spec:
         disable: true
   - matchers:
       - methods:
+          - PUT
+          - DELETE
+        regex: /v1/clinicians/[^/]+/invites/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+    options:
+      timeout: '1m'
+      extauth:
+        disable: true
+  - matchers:
+      - methods:
           - PATCH
           - PUT
           - DELETE
