@@ -175,6 +175,19 @@ spec:
         disable: true
   - matchers:
       - methods:
+          - PATCH
+          - DELETE
+        regex: /v1/clinics/[^/]+/invites/clinicians/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+    options:
+      timeout: '1m'
+      extauth:
+        disable: true
+  - matchers:
+      - methods:
           - GET
         regex: /v1/clinicians/[^/]+/invites
     routeAction:
@@ -190,20 +203,6 @@ spec:
           - PUT
           - DELETE
         regex: /v1/clinicians/[^/]+/invites/[^/]+
-    routeAction:
-      single:
-        upstream:
-          name: hydrophone
-    options:
-      timeout: '1m'
-      extauth:
-        disable: true
-  - matchers:
-      - methods:
-          - PATCH
-          - PUT
-          - DELETE
-        regex: /v1/clinics/[^/]+/invites/clinicians/[^/]+
     routeAction:
       single:
         upstream:

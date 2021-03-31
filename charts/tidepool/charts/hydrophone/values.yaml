@@ -3,6 +3,8 @@ deployment:
   image: tidepool/hydrophone:master-latest
   replicas: 1
   env:
+    # -- whether to enable the integration with the clinic service
+    clinicServiceEnabled: false
     # -- from address for emails that we send
     fromAddress: "Tidepool <noreply@tidepool.org>"
     store:
