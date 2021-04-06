@@ -72,7 +72,7 @@ spec:
         - name: TIDEPOOL_METRICS_CLIENT_ADDRESS
           value: "http://highwater:{{.Values.global.ports.highwater}}"
         - name: TIDEPOOL_CLINIC_CLIENT_ADDRESS
-          value: "http://clinic:{{.Values.global.ports.clinic}}"
+          value: "http://internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_PROTOCOL
           value: "{{ .Values.global.gateway.default.protocol }}"
         - name: TIDEPOOL_CLINIC_SERVICE_ENABLED

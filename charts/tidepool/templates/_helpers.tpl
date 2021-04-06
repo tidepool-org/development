@@ -84,7 +84,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
           value: "http://internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_CLINIC_CLIENT_ADDRESS
-          value: "http://clinic:{{.Values.global.ports.clinic}}"
+          value: "http://internal.{{.Release.Namespace}}"
 {{ end }}
 
 {{ define "charts.tracing.common" }}
