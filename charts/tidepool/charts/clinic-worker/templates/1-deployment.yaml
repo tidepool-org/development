@@ -56,7 +56,7 @@ spec:
           value: "http://hydrophone:{{.Values.global.ports.hydrophone}}"
         - name: KAFKA_CONSUMER_GROUP
           value: {{ printf "%s-%s" .Release.Namespace "clinic-worker" | quote }}
-            - name: KAFKA_BROKERS
+        - name: KAFKA_BROKERS
           valueFrom:
             configMapKeyRef:
               name: {{ .Values.kafka.configmapName }}
