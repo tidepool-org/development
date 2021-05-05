@@ -1,0 +1,94 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: clinic-worker
+{{ include "charts.labels.standard" .}}
+  name: clinic-worker
+  namespace: {{.Release.Namespace}}
+  annotations:
+    secret.reloader.stakater.com/reload: "server,{{ .Values.kafka.secretName }}"
+    configmap.reloader.stakater.com/reload: "{{ .Values.kafka.configmapName }}"
+{{ if .Values.deployment.annotations }}
+    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: clinic-worker
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: {{ .Values.deployment.replicas }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: clinic-worker
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+{{ if .Values.podAnnotations }}
+      annotations:
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
+    spec:
+      {{ if .Values.initContainers }}
+      initContainers:
+{{- with .Values.initContainers }}
+{{toYaml . | indent 6}}{{- end }}
+      {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- end }}
+      containers:
+      - env:
+        {{ include "charts.kafka.common" .}}
+        {{ include "charts.tracing.common" .}}
+        - name: TIDEPOOL_SERVER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: server
+              key: ServiceAuth
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: "http://shoreline:{{.Values.global.ports.shoreline}}"
+        - name: TIDEPOOL_SEAGULL_CLIENT_ADDRESS
+          value: "http://seagull:{{.Values.global.ports.seagull}}"
+        - name: TIDEPOOL_CONFIRMATION_CLIENT_ADDRESS
+          value: "http://hydrophone:{{.Values.global.ports.hydrophone}}"
+        - name: KAFKA_CONSUMER_GROUP
+          value: {{ printf "%s-%s" .Release.Namespace "clinic-worker" | quote }}
+        - name: KAFKA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: "clinic-worker"
+              key: KafkaTopic
+        image: "{{ .Values.deployment.image }}"
+        securityContext:
+          {{- .Values.podSecurityContext | toYaml | nindent 10 }}
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: {{ .Values.global.ports.clinic_worker }}
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        name: clinic-worker
+        ports:
+        - containerPort: {{ .Values.global.ports.clinic_worker }}
+          name: "http"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      restartPolicy: Always
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
