@@ -8,5 +8,6 @@ metadata:
   labels:
 {{ include "charts.labels.standard" .}}
 data:
+  KafkaTopicPrefix: {{ .Values.configmap.data.KafkaTopicPrefix | quote }}
   KafkaTopic: {{ .Values.configmap.data.KafkaTopic | quote }}
 {{- end }}

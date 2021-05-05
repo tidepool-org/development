@@ -3,9 +3,10 @@ configmap:
   enabled: false
   data:
     KafkaTopic: "clinic.patients"
+    KafkaTopicPrefix: ""
 deployment:
   # -- Docker image
-  image: tidepool/clinic-worker:master-latest
+  image: tidepool/clinic-worker:main-latest
   # -- the number of replicas to use
   replicas: 1
 serviceMonitor:
