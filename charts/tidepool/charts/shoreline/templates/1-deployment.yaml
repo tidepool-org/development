@@ -230,6 +230,8 @@ spec:
               name: shoreline
               key: KeycloakMigrationSecret
               optional: true
+        - name: TIDEPOOL_CLINIC_SERVICE_ENABLED
+          value: "{{.Values.deployment.env.clinicServiceEnabled}}"
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
