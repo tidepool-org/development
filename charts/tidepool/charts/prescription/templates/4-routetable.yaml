@@ -29,4 +29,24 @@ spec:
       single:
         upstream:
           name: prescription
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - DELETE
+      prefix: /v1/clinics/[^/]+/prescriptions
+    routeAction:
+      single:
+        upstream:
+          name: prescription
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PATCH
+      prefix: /v1/patients/[^/]+/prescriptions
+    routeAction:
+      single:
+        upstream:
+          name: prescription
 {{- end }}
