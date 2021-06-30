@@ -152,6 +152,7 @@ spec:
   - matchers:
     - methods:
       - PUT
+      - DELETE
       regex: /v1/clinics/[^/]+/invites/patients/[^/]+
     routeAction:
       single:
