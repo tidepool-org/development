@@ -49,6 +49,19 @@ spec:
 
   - matchers:
     - methods:
+      - PATCH
+      prefix: /confirm/resend/invite
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+    options:
+      timeout: '1m'
+      extauth:
+        disable: true
+
+  - matchers:
+    - methods:
       - PUT
       prefix: /confirm/accept/
     routeAction:
