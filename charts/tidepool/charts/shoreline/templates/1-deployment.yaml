@@ -148,6 +148,8 @@ spec:
           value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
         - name: TIDEPOOL_METRICS_CLIENT_ADDRESS
           value: "http://highwater:{{.Values.global.ports.highwater}}"
+        - name: TIDEPOOL_CLINIC_CLIENT_ADDRESS
+          value: "http://internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_SHORELINE_ENV
           value: |
             {
@@ -230,6 +232,8 @@ spec:
               name: shoreline
               key: KeycloakMigrationSecret
               optional: true
+        - name: TIDEPOOL_CLINIC_SERVICE_ENABLED
+          value: "{{.Values.deployment.env.clinicServiceEnabled}}"
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}

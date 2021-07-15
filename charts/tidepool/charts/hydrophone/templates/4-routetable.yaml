@@ -9,7 +9,6 @@ metadata:
     app: tidepool
 spec:
   routes:
-
   - matchers:
     - methods:
       - GET
@@ -22,7 +21,6 @@ spec:
       extauth:
         disable: true
       prefixRewrite: /status
-
   - matchers:
     - methods:
       - POST
@@ -40,6 +38,19 @@ spec:
     - methods:
       - POST
       prefix: /confirm/resend/signup
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+    options:
+      timeout: '1m'
+      extauth:
+        disable: true
+
+  - matchers:
+    - methods:
+      - PATCH
+      prefix: /confirm/resend/invite
     routeAction:
       single:
         upstream:
@@ -138,6 +149,80 @@ spec:
     options:
       timeout: '1m'
       extauth:
-        disable: true   
-
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      regex: /v1/clinics/[^/]+/invites/patients
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+    options:
+      timeout: '1m'
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - PUT
+      - DELETE
+      regex: /v1/clinics/[^/]+/invites/patients/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+    options:
+      timeout: '1m'
+      extauth:
+        disable: true
+  - matchers:
+      - methods:
+          - POST
+        regex: /v1/clinics/[^/]+/invites/clinicians
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+    options:
+      timeout: '1m'
+      extauth:
+        disable: true
+  - matchers:
+      - methods:
+          - PATCH
+          - DELETE
+        regex: /v1/clinics/[^/]+/invites/clinicians/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+    options:
+      timeout: '1m'
+      extauth:
+        disable: true
+  - matchers:
+      - methods:
+          - GET
+        regex: /v1/clinicians/[^/]+/invites
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+    options:
+      timeout: '1m'
+      extauth:
+        disable: true
+  - matchers:
+      - methods:
+          - PUT
+          - DELETE
+        regex: /v1/clinicians/[^/]+/invites/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: hydrophone
+    options:
+      timeout: '1m'
+      extauth:
+        disable: true
 {{- end }}
