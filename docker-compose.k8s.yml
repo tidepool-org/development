@@ -4,9 +4,17 @@ services:
     image: tidepool/kind:latest-1.21
     privileged: true
     network_mode: bridge
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+    dns_opt: ["options", "single-request"]
     ports:
       - 127.0.0.1:8443:8443
       - 127.0.0.1:10080:10080
       - 127.0.0.1:2375:2375
     volumes:
       - ${TIDEPOOL_DOCKER_MONGO_VOLUME}:/data/db
+networks:                                
+  default:                               
+    driver: bridge                       
+    driver_opts:                         
+      com.docker.network.driver.mtu: 1412
