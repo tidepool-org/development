@@ -13,8 +13,8 @@ services:
       - 127.0.0.1:2375:2375
     volumes:
       - ${TIDEPOOL_DOCKER_MONGO_VOLUME}:/data/db
-networks:                                
-  default:                               
-    driver: bridge                       
-    driver_opts:                         
+networks:
+  default:
+    driver: bridge
+    driver_opts:
       com.docker.network.driver.mtu: 1412
