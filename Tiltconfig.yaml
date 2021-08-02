@@ -354,4 +354,19 @@ tools:
   dockerFile: 'Dockerfile.tools'
   rebuildCommand: 'SERVICE=tools make service-build'
 
+clinic-worker:
+  deployment:
+    replicas: 1
+    #image: tidepool/clinic-worker # Uncomment to build and run local image or a specific remote image
+  #hostPath: ../clinic-worker      # Uncomment to build and run local image
+  #containerPath: '/go/src/github.com/tidepool-org/clinic-worker'
+  #rebuildCommand: 'make build'
+clinic:
+  deployment:
+    replicas: 1
+    image: tidepool/clinic # Uncomment to build and run local image or a specific remote image
+  hostPath: ../clinic      # Uncomment to build and run local image
+  containerPath: '/go/src/github.com/tidepool-org/clinic'
+  rebuildCommand: 'make build'
+
 ### Tidepool Services Config End ###

@@ -6,7 +6,7 @@ configmap:
     KafkaTopicPrefix: ""
 deployment:
   # -- Docker image
-  image: tidepool/clinic-worker:main-latest
+  image: tidepool/clinic:main-latest
   # -- the number of replicas to use
   replicas: 0
 serviceMonitor:
