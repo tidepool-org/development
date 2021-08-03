@@ -161,7 +161,7 @@ Create environment variables used by all platform services.
 {{ include "charts.mongo.params" . }}
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
-{{ end }}        
+{{ end }}
 
 {{/*
 Create liveness and readiness probes for platform services.

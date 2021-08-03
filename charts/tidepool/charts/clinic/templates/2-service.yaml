@@ -10,7 +10,7 @@ metadata:
 spec:
   ports:
   - name: "http"
-    port: {{.Values.global.ports.clinic_worker}}
+    port: {{.Values.global.ports.clinic}}
     targetPort: "http"
   selector:
     app: clinic

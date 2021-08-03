@@ -43,6 +43,7 @@ spec:
       containers:
       - env:
         {{ include "charts.tracing.common" .}}
+        {{ include "charts.mongo.params" .}}
         - name: TIDEPOOL_SERVER_SECRET
           valueFrom:
             secretKeyRef:
@@ -100,15 +101,15 @@ spec:
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
-        readinessProbe:
-          httpGet:
-            path: /status
-            port: {{ .Values.global.ports.clinic_worker }}
-          initialDelaySeconds: 3
-          periodSeconds: 10
+        #readinessProbe:
+        #  httpGet:
+        #    path: /status
+        #    port: {{ .Values.global.ports.clinic }}
+        #  initialDelaySeconds: 3
+        #  periodSeconds: 10
         name: clinic
         ports:
-        - containerPort: {{ .Values.global.ports.clinic_worker }}
+        - containerPort: {{ .Values.global.ports.clinic }}
           name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}

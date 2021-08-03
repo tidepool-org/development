@@ -1,0 +1,144 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: clinic
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  routes:
+  - matchers:
+      - methods:
+          - GET
+        regex: "/v1/patients/[^/]+/clinics"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - DELETE
+        regex: "/v1/clinics/[^/]+/patients/[^/]+/permissions/[^/]+"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - PUT
+        regex: "/v1/clinics/[^/]+/patients/[^/]+/permissions"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - GET
+          - POST
+          - DELETE
+          - PUT
+        regex: "/v1/clinics/[^/]+/patients/[^/]+"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - GET
+          - POST
+        regex: "/v1/clinics/[^/]+/patients"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - GET
+          - POST
+        regex: "/v1/clinics/[^/]+/migrations"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - POST
+        regex: "/v1/clinics/[^/]+/migrate"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - DELETE
+          - GET
+          - PATCH
+        regex: "/v1/clinics/[^/]+/invites/clinicians/[^/]+/clinician"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - DELETE
+          - GET
+          - PUT
+        regex: "/v1/clinics/[^/]+/clinicians/[^/]+"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - GET
+          - POST
+        regex: "/v1/clinics/[^/]+/clinicians"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - GET
+        regex: "/v1/clinics/share_code/[^/]+"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - POST
+        regex: "/v1/clinicians/[^/]+/migrate"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - GET
+        regex: "/v1/clinicians/[^/]+/clinics"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - PUT
+          - GET
+        regex: "/v1/clinics/[^/]+"
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+  - matchers:
+      - methods:
+          - PUT
+          - POST
+        prefix: /v1/clinics
+    routeAction:
+      single:
+        upstream:
+          name: clinic
+{{- end }}

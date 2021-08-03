@@ -43,3 +43,6 @@ nodeSelector: {}
 tolerations: []
 # -- affinity
 affinity: {}
+mongo:
+  # -- name of the secret containing the credentials of the mongo database to use
+  secretName: mongo

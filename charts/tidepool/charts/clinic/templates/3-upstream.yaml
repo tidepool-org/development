@@ -8,5 +8,5 @@ spec:
   kube:
     serviceName: clinic
     serviceNamespace: {{ .Release.Namespace }}
-    servicePort: {{ .Values.global.ports.clinic_worker }}
+    servicePort: {{ .Values.global.ports.clinic }}
 {{- end }}

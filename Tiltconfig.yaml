@@ -360,13 +360,13 @@ clinic-worker:
     #image: tidepool/clinic-worker # Uncomment to build and run local image or a specific remote image
   #hostPath: ../clinic-worker      # Uncomment to build and run local image
   #containerPath: '/go/src/github.com/tidepool-org/clinic-worker'
-  #rebuildCommand: 'make build'
+  rebuildCommand: './build.sh'
 clinic:
   deployment:
     replicas: 1
     image: tidepool/clinic # Uncomment to build and run local image or a specific remote image
   hostPath: ../clinic      # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/clinic'
-  rebuildCommand: 'make build'
+  rebuildCommand: './build.sh'
 
 ### Tidepool Services Config End ###
