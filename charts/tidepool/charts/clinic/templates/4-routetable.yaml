@@ -134,7 +134,7 @@ spec:
           name: clinic
   - matchers:
       - methods:
-          - PUT
+          - GET
           - POST
         prefix: /v1/clinics
     routeAction:
