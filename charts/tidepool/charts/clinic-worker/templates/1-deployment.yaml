@@ -52,6 +52,10 @@ spec:
           value: "http://shoreline:{{.Values.global.ports.shoreline}}"
         - name: TIDEPOOL_SEAGULL_CLIENT_ADDRESS
           value: "http://seagull:{{.Values.global.ports.seagull}}"
+        - name: TIDEPOOL_GATEKEEPER_CLIENT_ADDRESS
+          value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
+        - name: TIDEPOOL_CLINIC_CLIENT_ADDRESS
+          value: "http://internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_CONFIRMATION_CLIENT_ADDRESS
           value: "http://hydrophone:{{.Values.global.ports.hydrophone}}"
         - name: KAFKA_CONSUMER_GROUP
