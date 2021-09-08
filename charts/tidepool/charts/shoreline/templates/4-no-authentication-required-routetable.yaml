@@ -99,6 +99,7 @@ spec:
   - matchers:
     - methods:
       - GET
+      - DELETE
       prefix: /auth/users
     routeAction:
       single:
