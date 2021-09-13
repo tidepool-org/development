@@ -33,8 +33,24 @@ spec:
     - methods:
       - GET
       - POST
+      regex: /v1/clinics/[^/]+/prescriptions
+    routeAction:
+      single:
+        upstream:
+          name: prescription
+  - matchers:
+    - methods:
+      - GET
       - DELETE
-      prefix: /v1/clinics/[^/]+/prescriptions
+      regex: /v1/clinics/[^/]+/prescriptions/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: prescription
+  - matchers:
+    - methods:
+      - GET
+      regex: /v1/clinics/[^/]+/prescriptions/[^/]+/revisions
     routeAction:
       single:
         upstream:
@@ -43,8 +59,16 @@ spec:
     - methods:
       - GET
       - POST
+      regex: /v1/patients/[^/]+/prescriptions
+    routeAction:
+      single:
+        upstream:
+          name: prescription
+  - matchers:
+    - methods:
+      - GET
       - PATCH
-      prefix: /v1/patients/[^/]+/prescriptions
+      regex: /v1/patients/[^/]+/prescriptions/[^/]+
     routeAction:
       single:
         upstream:
