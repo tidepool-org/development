@@ -1,0 +1,13 @@
+{{ if .Values.configmap.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: clinic-worker
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "charts.labels.standard" .}}
+data:
+  KafkaTopicPrefix: {{ .Values.configmap.data.KafkaTopicPrefix | quote }}
+  KafkaTopic: {{ .Values.configmap.data.KafkaTopic | quote }}
+{{- end }}

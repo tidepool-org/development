@@ -101,4 +101,12 @@ spec:
       single:
         upstream:
           name: auth
+  - matchers:
+    - methods:
+      - POST
+      prefix: /v1/device_check
+    routeAction:
+      single:
+        upstream:
+          name: auth
 {{- end }}

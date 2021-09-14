@@ -33,6 +33,9 @@ deployment:
   image: tidepool/shoreline:master-latest
   # -- the number of replicas to use
   replicas: 1
+  env:
+    # -- whether to enable the integration with the clinic service
+    clinicServiceEnabled: false
 serviceMonitor:
   # whether to generate a prometheus-operator service monitor
   enabled: false
