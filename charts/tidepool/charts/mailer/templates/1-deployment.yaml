@@ -1,3 +1,4 @@
+{{- define "charts.mailer.s3.url" -}} {{include "charts.s3.url" .}}/{{ .Values.deployment.env.store.s3.bucket }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -44,6 +45,14 @@ spec:
       - env:
         {{ include "charts.tracing.common" .}}
         {{ include "charts.kafka.common" .}}
+        - name: TIDEPOOL_ASSET_URL
+          value: {{ include "charts.mailer.s3.url" . | quote }}
+        - name: TIDEPOOL_WEBAPP_URL
+          value: {{ include "charts.host.app" . | quote }}
+        - name: SES_REGION
+          value: {{.Values.global.region | quote }}
+        - name: SES_FROM_ADDRESS
+          value: "{{.Values.deployment.env.fromAddress}}"
         - name: KAFKA_CONSUMER_GROUP
           value: {{ printf "%s-%s" .Release.Namespace "mailer" | quote }}
         - name: TIDEPOOL_MAILER_BACKEND
