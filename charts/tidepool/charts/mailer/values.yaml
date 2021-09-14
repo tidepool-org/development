@@ -5,7 +5,8 @@ deployment:
   replicas: 0
   env:
     backend: "ses"
-    fromAddress: "Tidepool <noreply@tidepool.org>"
+    fromName: "Tidepool"
+    fromAddress: "noreply@tidepool.org"
     store:
       s3:
         bucket: "asset"

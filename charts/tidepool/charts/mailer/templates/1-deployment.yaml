@@ -49,9 +49,11 @@ spec:
           value: {{ include "charts.mailer.s3.url" . | quote }}
         - name: TIDEPOOL_WEBAPP_URL
           value: {{ include "charts.host.app" . | quote }}
-        - name: SES_REGION
+        - name: TIDEPOOL_SES_REGION
           value: {{.Values.global.region | quote }}
-        - name: SES_FROM_ADDRESS
+        - name: TIDEPOOL_EMAIL_SENDER_NAME
+          value: "{{.Values.deployment.env.fromName}}"
+        - name: TIDEPOOL_EMAIL_SENDER_ADDRESS
           value: "{{.Values.deployment.env.fromAddress}}"
         - name: KAFKA_CONSUMER_GROUP
           value: {{ printf "%s-%s" .Release.Namespace "mailer" | quote }}
