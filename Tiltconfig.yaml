@@ -180,7 +180,7 @@ userdata:
 auth:
   deployment:
     # image: tidepool-k8s-auth # Uncomment to build and run local image or a specific remote image
-  # hostPath: ../platform      # Uncomment to build and run local image
+  # hostPath: ~/go/src/github.com/tidepool-org/platform      # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.auth'
   rebuildCommand: 'SERVICE=auth make service-build'
@@ -208,7 +208,7 @@ blip:
 
     - name: tidepool-platform-client
       packageName: tidepool-platform-client
-      hostPath: ../platform-client
+      hostPath: ~/go/src/github.com/tidepool-org/platform-client
       enabled: false
   securityContext:
     allowPrivilegeEscalation: false
@@ -219,6 +219,7 @@ blip:
       - ALL
   # i18nEnabled: 'true'                                       # Uncomment to enable internationalization UI
   # rxEnabled: 'true'                                         # Uncomment to enable prescriptions UI
+  # clinicsEnabled: 'true'                                    # Uncomment to enable clinics UI
   # disableDevTools: true                                     # Uncomment if working with large data sets is sluggish in development build
   # buildTarget: production                                   # Uncomment to run minified production builds
   # restartContainerCommand: './tilt/start.sh npm run server' # Uncomment if buildTarget = `production`
@@ -226,7 +227,7 @@ blip:
 blob:
   deployment:
     # image: tidepool-k8s-blob # Uncomment to build and run local image or a specific remote image
-  # hostPath: ../platform      # Uncomment to build and run local image
+  # hostPath: ~/go/src/github.com/tidepool-org/platform      # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.blob'
   rebuildCommand: 'SERVICE=blob make service-build'
@@ -234,7 +235,7 @@ blob:
 data:
   deployment:
     # image: tidepool-k8s-data # Uncomment to build and run local image or a specific remote image
-  # hostPath: ../platform      # Uncomment to build and run local image
+  # hostPath: ~/go/src/github.com/tidepool-org/platform      # Uncomment to build and run local image
   containerPath: ../platform
   dockerFile: 'Dockerfile.data'
   rebuildCommand: 'SERVICE=data make service-build'
@@ -269,7 +270,7 @@ highwater:
 hydrophone:
   deployment:
     # image: tidepool-k8s-hydrophone # Uncomment to build and run local image or a specific remote image
-  # hostPath: ../hydrophone          # Uncomment to build and run local image
+  # hostPath: ~/go/src/github.com/tidepool-org/hydrophone          # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/hydrophone'
   rebuildCommand: './build.sh'
 
@@ -288,7 +289,7 @@ message-api:
 migrations:
   deployment:
     # image: tidepool-k8s-migrations # Uncomment to build and run local image or a specific remote image
-  # hostPath: ../platform            # Uncomment to build and run local image
+  # hostPath: ~/go/src/github.com/tidepool-org/platform            # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.migrations'
   rebuildCommand: 'SERVICE=migrations make service-build'
@@ -334,7 +335,7 @@ shoreline:
 task:
   deployment:
     # image: tidepool-k8s-task # Uncomment to build and run local image or a specific remote image
-  # hostPath: ../platform      # Uncomment to build and run local image
+  # hostPath: ~/go/src/github.com/tidepool-org/platform      # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.task'
   rebuildCommand: 'SERVICE=task make service-build'
@@ -349,7 +350,7 @@ tide-whisperer:
 tools:
   deployment:
     # image: tidepool-k8s-tools # Uncomment to build and run local image or a specific remote image
-  # hostPath: ../platform       # Uncomment to build and run local image
+  # hostPath: ~/go/src/github.com/tidepool-org/platform       # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.tools'
   rebuildCommand: 'SERVICE=tools make service-build'
