@@ -10,6 +10,9 @@ deployment:
     store:
       s3:
         bucket: "asset"
+serviceAccount:
+  # -- whether to create a service account
+  create: false
 serviceMonitor:
   # whether to generate a prometheus-operator service monitor
   enabled: false
