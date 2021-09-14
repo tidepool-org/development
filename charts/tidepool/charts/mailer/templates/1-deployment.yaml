@@ -67,7 +67,7 @@ spec:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         readinessProbe:
           httpGet:
-            path: /status
+            path: /ready
             port: {{ .Values.global.ports.mailer }}
           initialDelaySeconds: 3
           periodSeconds: 10
