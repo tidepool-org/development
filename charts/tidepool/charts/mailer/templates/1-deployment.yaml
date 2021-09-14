@@ -1,5 +1,5 @@
-{{- define "charts.mailer.s3.url" -}} {{include "charts.s3.url" .}}/{{ .Values.deployment.env.store.s3.bucket }}
 ---
+{{- define "charts.mailer.s3.url" -}} {{include "charts.s3.url" .}}/{{ .Values.deployment.env.store.s3.bucket }}  {{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
