@@ -46,6 +46,8 @@ spec:
         {{ include "charts.kafka.common" .}}
         - name: KAFKA_CONSUMER_GROUP
           value: {{ printf "%s-%s" .Release.Namespace "mailer" | quote }}
+        - name: TIDEPOOL_MAILER_BACKEND
+          value: {{ .Values.deployment.env.backend }}
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
