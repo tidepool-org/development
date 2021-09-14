@@ -1,0 +1,12 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: clinic-worker
+  namespace: {{ .Release.Namespace }}
+spec:
+  kube:
+    serviceName: clinic-worker
+    serviceNamespace: {{ .Release.Namespace }}
+    servicePort: {{ .Values.global.ports.clinic_worker }}
+{{- end }}
