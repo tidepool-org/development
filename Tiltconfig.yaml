@@ -220,6 +220,7 @@ blip:
   # i18nEnabled: 'true'                                       # Uncomment to enable internationalization UI
   # rxEnabled: 'true'                                         # Uncomment to enable prescriptions UI
   # clinicsEnabled: 'true'                                    # Uncomment to enable clinics UI
+  pendoEnabled: 'false'                                       # Set to `true` to enable pendo
   # disableDevTools: true                                     # Uncomment if working with large data sets is sluggish in development build
   # buildTarget: production                                   # Uncomment to run minified production builds
   # restartContainerCommand: './tilt/start.sh npm run server' # Uncomment if buildTarget = `production`
