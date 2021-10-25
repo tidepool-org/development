@@ -341,7 +341,7 @@ task:
   dockerFile: 'Dockerfile.task'
   rebuildCommand: 'SERVICE=task make service-build'
 
-tide-whisperer:
+tidewhisperer:
   deployment:
     # image: tidepool-k8s-tide-whisperer # Uncomment to build and run local image or a specific remote image
   # hostPath: ../tide-whisperer          # Uncomment to build and run local image
