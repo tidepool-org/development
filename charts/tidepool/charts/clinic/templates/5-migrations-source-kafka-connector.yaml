@@ -1,0 +1,24 @@
+{{ if .Values.global.kafka.kafkaConnectEnabled }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  labels:
+    app: migrations-source
+    strimzi.io/cluster: {{ .Values.global.kafka.kafkaConnectClusterName }}
+  name: migrations-source
+  namespace: {{ .Release.Namespace }}
+spec:
+  class: com.mongodb.kafka.connect.MongoSourceConnector
+  config:
+    change.stream.full.document: updateLookup
+    collection: migrations
+    connection.uri: ${file:/opt/kafka/external-configuration/connector-config/debezium-mongo-credentials.properties:Scheme}://${file:/opt/kafka/external-configuration/connector-config/debezium-mongo-credentials.properties:Username}:${file:/opt/kafka/external-configuration/connector-config/debezium-mongo-credentials.properties:Password}@${file:/opt/kafka/external-configuration/connector-config/debezium-mongo-credentials.properties:Addresses}/?ssl=true
+    copy.existing: true
+    database: clinic
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: false
+    topic.prefix: {{ .Release.Namespace }}
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: false
+  tasksMax: 1
+{{- end }}

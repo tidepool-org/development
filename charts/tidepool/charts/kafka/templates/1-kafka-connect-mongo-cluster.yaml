@@ -1,0 +1,38 @@
+{{ if .Values.global.kafka.kafkaConnectEnabled }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  labels:
+    app: {{ .Values.global.kafka.kafkaConnectClusterName }}
+  name: {{ .Values.global.kafka.kafkaConnectClusterName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  authentication:
+    passwordSecret:
+      password: Password
+      secretName: kafka
+    type: scram-sha-512
+    username: {{ .Values.configmap.Username }}
+  bootstrapServers: {{ .Values.configmap.Brokers }}
+  config:
+    config.providers: file
+    config.providers.file.class: org.apache.kafka.common.config.provider.FileConfigProvider
+    config.storage.replication.factor: 3
+    config.storage.topic:{{ .Values.global.kafka.kafkaConnectClusterName }}-cluster-configs
+    group.id: {{ .Values.global.kafka.kafkaConnectClusterName }}
+    key.converter.schemas.enable: "false"
+    offset.storage.replication.factor: 3
+    offset.storage.topic: {{ .Values.global.kafka.kafkaConnectClusterName }}-cluster-offsets
+    status.storage.replication.factor: 3
+    status.storage.topic: {{ .Values.global.kafka.kafkaConnectClusterName }}-cluster-status
+    value.converter.schemas.enable: "false"
+  externalConfiguration:
+    volumes:
+      - name: connector-config
+        secret:
+          secretName: kafka
+  image: tidepool/connect-debezium:0.24.0-kafka-2.7.1
+  replicas: 2
+  tls:
+    trustedCertificates: []
+{{- end }}

@@ -1,0 +1,47 @@
+configmap:
+  # -- whether to generate a configmap
+  enabled: false
+  data:
+    KafkaTopic: "clinic.patients"
+    KafkaTopicPrefix: ""
+deployment:
+  # -- Docker image
+  image: tidepool/clinic:master-latest
+  # -- the number of replicas to use
+  replicas: 0
+serviceMonitor:
+  # whether to generate a prometheus-operator service monitor
+  enabled: false
+
+# -- memory and cpu resources for pods
+resources: {}
+
+# -- security context for each pod in deployment
+podSecurityContext: {}
+# -- annotations for each pod in deployment
+podAnnotations: {}
+securityContext: {}
+hpa:
+  # -- whether to create a horizontal pod autoscalers for all pods of given deployment
+  enabled: false
+  # -- minimum number of replicas that HPA will maintain
+  minReplicas: 1
+  # -- maximum number of replicas that HPA will maintain
+  maxReplicas: null
+pdb:
+  # -- whether to apply a pod disruption budget
+  enabled: false
+  minAvailable: "50%"
+kafka:
+  # -- name of the configmap containing the kafka broker and credentials to use
+  configmapName: kafka
+  # -- name of the configmap containing the kafka broker and credentials to use
+  secretName: kafka
+  # -- name of kafka connect cluster to use
+  connectClusterName: kafka-connect-mongo
+# -- node selector configuration
+nodeSelector: {}
+# -- tolerations
+tolerations: []
+# -- affinity
+affinity: {}

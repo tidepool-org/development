@@ -28,6 +28,9 @@ global:
     enabled: true
     extauth:
       enabled: false
+  kafka:
+    kafkaConnectEnabled: false
+    kafkaConnectClusterName: kafka-connect-mongo
   linkerdsupport:
     # -- whether to include linkerdsupport subchart with Linkerd service profiles
     enabled: true
