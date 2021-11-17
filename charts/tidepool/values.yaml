@@ -62,6 +62,8 @@ global:
     data: 9220
     # -- image service internal port
     image: 9226
+    # -- mailer service internal port
+    mailer: 8080
     # -- notification service internal port
     notification: 9223
     # -- prescription service internal port
