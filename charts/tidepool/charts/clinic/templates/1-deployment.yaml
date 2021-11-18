@@ -42,6 +42,7 @@ spec:
       {{- end }}
       containers:
       - env:
+        {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.tracing.common" .}}
         - name: TIDEPOOL_SERVER_TOKEN
           valueFrom:
