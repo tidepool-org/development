@@ -3,8 +3,8 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnect
 metadata:
   labels:
-    app: {{ .Values.global.kafka.connect.clusterName }}
-  name: {{ .Values.global.kafka.connect.clusterName }}
+    app: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
+  name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
   namespace: {{ .Release.Namespace }}
 spec:
   authentication:
@@ -19,7 +19,7 @@ spec:
     config.providers.file.class: org.apache.kafka.common.config.provider.FileConfigProvider
     config.storage.replication.factor: 3
     config.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-configs
-    group.id: {{ .Values.global.kafka.connect.clusterName }}
+    group.id: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
     key.converter.schemas.enable: "false"
     offset.storage.replication.factor: 3
     offset.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-offsets
