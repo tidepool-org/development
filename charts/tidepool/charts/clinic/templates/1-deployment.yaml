@@ -43,7 +43,7 @@ spec:
       containers:
       - env:
         {{ include "charts.tracing.common" .}}
-        - name: TIDEPOOL_SERVER_SECRET
+        - name: TIDEPOOL_SERVER_TOKEN
           valueFrom:
             secretKeyRef:
               name: server
