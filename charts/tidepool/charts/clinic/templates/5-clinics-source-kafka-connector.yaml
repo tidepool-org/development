@@ -1,10 +1,10 @@
-{{ if .Values.global.kafka.kafkaConnectEnabled }}
+{{ if .Values.global.kafka.connect.enabled }}
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
   labels:
     app: clinics-source
-    strimzi.io/cluster: {{ .Values.global.kafka.kafkaConnectClusterName }}
+    strimzi.io/cluster: {{ .Values.global.kafka.connect.clusterName }}
   name: clinics-source
   namespace: {{ .Release.Namespace }}
 spec:
@@ -20,5 +20,5 @@ spec:
     topic.prefix: {{ .Release.Namespace }}
     value.converter: org.apache.kafka.connect.json.JsonConverter
     value.converter.schemas.enable: false
-  tasksMax: 1
+  tasksMax: {{ .Values.global.kafka.connect.sourceTasksMax | int }}
 {{- end }}

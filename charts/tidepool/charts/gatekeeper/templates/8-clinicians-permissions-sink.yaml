@@ -1,10 +1,10 @@
-{{ if .Values.global.kafka.kafkaConnectEnabled }}
+{{ if .Values.global.kafka.connect.enabled }}
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
   labels:
     app: clinician-permissions-sink
-    strimzi.io/cluster: {{ .Values.global.kafka.kafkaConnectClusterName }}
+    strimzi.io/cluster: {{ .Values.global.kafka.connect.clusterName }}
   name: clinician-permissions-sink
   namespace: {{ .Release.Namespace }}
 spec:
@@ -22,5 +22,5 @@ spec:
     value.converter.schemas.enable: false
     value.projection.list: _id,userId,clinicId,inviteId,permissions
     value.projection.type: AllowList
-  tasksMax: 1
+  tasksMax: {{ .Values.global.kafka.connect.sinkTasksMax | int }}
 {{- end }}

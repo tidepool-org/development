@@ -1,10 +1,10 @@
-{{ if .Values.global.kafka.kafkaConnectEnabled }}
+{{ if .Values.global.kafka.connect.enabled }}
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnect
 metadata:
   labels:
-    app: {{ .Values.global.kafka.kafkaConnectClusterName }}
-  name: {{ .Values.global.kafka.kafkaConnectClusterName }}
+    app: {{ .Values.global.kafka.connect.clusterName }}
+  name: {{ .Values.global.kafka.connect.clusterName }}
   namespace: {{ .Release.Namespace }}
 spec:
   authentication:
@@ -18,13 +18,13 @@ spec:
     config.providers: file
     config.providers.file.class: org.apache.kafka.common.config.provider.FileConfigProvider
     config.storage.replication.factor: 3
-    config.storage.topic:{{ .Values.global.kafka.kafkaConnectClusterName }}-cluster-configs
-    group.id: {{ .Values.global.kafka.kafkaConnectClusterName }}
+    config.storage.topic:{{ .Values.global.kafka.connect.clusterName }}-cluster-configs
+    group.id: {{ .Values.global.kafka.connect.clusterName }}
     key.converter.schemas.enable: "false"
     offset.storage.replication.factor: 3
-    offset.storage.topic: {{ .Values.global.kafka.kafkaConnectClusterName }}-cluster-offsets
+    offset.storage.topic: {{ .Values.global.kafka.connect.clusterName }}-cluster-offsets
     status.storage.replication.factor: 3
-    status.storage.topic: {{ .Values.global.kafka.kafkaConnectClusterName }}-cluster-status
+    status.storage.topic: {{ .Values.global.kafka.connect.clusterName }}-cluster-status
     value.converter.schemas.enable: "false"
   externalConfiguration:
     volumes:
@@ -32,7 +32,7 @@ spec:
         secret:
           secretName: kafka
   image: tidepool/connect-debezium:0.24.0-kafka-2.7.1
-  replicas: 2
+  replicas: {{ .Values.global.kafka.connect.replicas | int }}
   tls:
     trustedCertificates: []
 {{- end }}
