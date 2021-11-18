@@ -18,13 +18,13 @@ spec:
     config.providers: file
     config.providers.file.class: org.apache.kafka.common.config.provider.FileConfigProvider
     config.storage.replication.factor: 3
-    config.storage.topic: {{ .Values.global.kafka.connect.clusterName }}-cluster-configs
+    config.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-configs
     group.id: {{ .Values.global.kafka.connect.clusterName }}
     key.converter.schemas.enable: "false"
     offset.storage.replication.factor: 3
-    offset.storage.topic: {{ .Values.global.kafka.connect.clusterName }}-cluster-offsets
+    offset.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-offsets
     status.storage.replication.factor: 3
-    status.storage.topic: {{ .Values.global.kafka.connect.clusterName }}-cluster-status
+    status.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-status
     value.converter.schemas.enable: "false"
   externalConfiguration:
     volumes:
