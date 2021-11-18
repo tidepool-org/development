@@ -96,11 +96,6 @@ spec:
               name: "clinic-worker"
               key: KafkaTopicPrefix
               optional: true
-        - name: KAFKA_TOPIC
-          valueFrom:
-            configMapKeyRef:
-              name: "clinic-worker"
-              key: KafkaTopic
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
