@@ -30,7 +30,7 @@ spec:
     volumes:
       - name: connector-config
         secret:
-          secretName: kafka
+          secretName: {{ .Values.mongo.secretName }}
   image: tidepool/connect-debezium:0.24.0-kafka-2.7.1
   replicas: {{ .Values.global.kafka.connect.replicas | int }}
   tls:

@@ -12,7 +12,7 @@ spec:
   config:
     change.stream.full.document: updateLookup
     collection: migrations
-    connection.uri: ${file:/opt/kafka/external-configuration/connector-config/debezium-mongo-credentials.properties:Scheme}://${file:/opt/kafka/external-configuration/connector-config/debezium-mongo-credentials.properties:Username}:${file:/opt/kafka/external-configuration/connector-config/debezium-mongo-credentials.properties:Password}@${file:/opt/kafka/external-configuration/connector-config/debezium-mongo-credentials.properties:Addresses}/?ssl=true
+    connection.uri: ${directory:/opt/kafka/external-configuration/connector-config:Scheme}://${directory:/opt/kafka/external-configuration/connector-config:Username}:${directory:/opt/kafka/external-configuration/connector-config:Password}@${directory:/opt/kafka/external-configuration/connector-config:Addresses}/?ssl=${directory:/opt/kafka/external-configuration/connector-config:Tls}
     copy.existing: true
     database: clinic
     key.converter: org.apache.kafka.connect.json.JsonConverter

@@ -39,5 +39,7 @@ configmap:
   Username: "admin"
   # -- required version of Kafka server
   Version: "2.5.0"
+mongo:
+  secretName: "mongo"
 secret:
   enabled: false
