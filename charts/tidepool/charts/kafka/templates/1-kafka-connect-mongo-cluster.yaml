@@ -2,6 +2,8 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnect
 metadata:
+  annotation:
+    strimzi.io/use-connector-resources: "true"
   labels:
     app: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
   name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
