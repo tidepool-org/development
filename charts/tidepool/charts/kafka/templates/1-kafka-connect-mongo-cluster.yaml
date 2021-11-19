@@ -18,7 +18,7 @@ spec:
   bootstrapServers: {{ .Values.configmap.Brokers }}
   config:
     config.providers: directory
-    config.providers.file.class: org.apache.kafka.common.config.provider.DirectoryConfigProvider
+    config.providers.directory.class: org.apache.kafka.common.config.provider.DirectoryConfigProvider
     config.storage.replication.factor: 3
     config.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-configs
     group.id: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
