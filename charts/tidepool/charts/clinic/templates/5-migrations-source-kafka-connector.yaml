@@ -4,7 +4,7 @@ kind: KafkaConnector
 metadata:
   labels:
     app: migrations-source
-    strimzi.io/cluster: {{ .Values.global.kafka.connect.clusterName }}
+    strimzi.io/cluster: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
   name: migrations-source
   namespace: {{ .Release.Namespace }}
 spec:

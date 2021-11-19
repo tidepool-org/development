@@ -4,7 +4,7 @@ kind: KafkaConnector
 metadata:
   labels:
     app: clinician-permissions-sink
-    strimzi.io/cluster: {{ .Values.global.kafka.connect.clusterName }}
+    strimzi.io/cluster: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
   name: clinician-permissions-sink
   namespace: {{ .Release.Namespace }}
 spec:

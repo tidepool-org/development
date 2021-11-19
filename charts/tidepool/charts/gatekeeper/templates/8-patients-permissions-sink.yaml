@@ -4,7 +4,7 @@ kind: KafkaConnector
 metadata:
   labels:
     app: patients-permissions
-    strimzi.io/cluster: {{ .Values.global.kafka.connect.clusterName }}
+    strimzi.io/cluster: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
   name: patients-permissions
   namespace: {{ .Release.Namespace }}
 spec:
