@@ -1,0 +1,24 @@
+{{ if .Values.global.kafka.connect.enabled }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  labels:
+    app: clinics-source
+    strimzi.io/cluster: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
+  name: clinics-source
+  namespace: {{ .Release.Namespace }}
+spec:
+  class: com.mongodb.kafka.connect.MongoSourceConnector
+  config:
+    change.stream.full.document: updateLookup
+    collection: clinics
+    connection.uri: ${directory:/opt/kafka/external-configuration/connector-config:Scheme}://${directory:/opt/kafka/external-configuration/connector-config:Username}:${directory:/opt/kafka/external-configuration/connector-config:Password}@${directory:/opt/kafka/external-configuration/connector-config:Addresses}/?ssl=${directory:/opt/kafka/external-configuration/connector-config:Tls}
+    copy.existing: true
+    database: clinic
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: false
+    topic.prefix: {{ .Release.Namespace }}
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: false
+  tasksMax: {{ .Values.global.kafka.connect.sourceTasksMax | int }}
+{{- end }}

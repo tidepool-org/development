@@ -28,6 +28,18 @@ global:
     enabled: true
     extauth:
       enabled: false
+  kafka:
+    connect:
+      # -- whether to generate strimzi resources for CDC
+      enabled: false
+      # -- the name of the kafka connect cluster
+      clusterName: kafka-connect-mongo
+      # -- the number of replicas for the kafka connect cluster
+      replicas: 2
+      # -- max tasks for sink connectors
+      sinkTasksMax: 2
+      # -- max tasks for source connectors
+      sourceTasksMax: 2
   linkerdsupport:
     # -- whether to include linkerdsupport subchart with Linkerd service profiles
     enabled: true

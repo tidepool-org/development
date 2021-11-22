@@ -1,0 +1,40 @@
+{{ if .Values.global.kafka.connect.enabled }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+  labels:
+    app: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
+  name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  authentication:
+    passwordSecret:
+      password: Password
+      secretName: kafka
+    type: scram-sha-512
+    username: {{ .Values.configmap.Username }}
+  bootstrapServers: {{ .Values.configmap.Brokers }}
+  config:
+    config.providers: directory
+    config.providers.directory.class: org.apache.kafka.common.config.provider.DirectoryConfigProvider
+    config.storage.replication.factor: 3
+    config.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-configs
+    group.id: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
+    key.converter.schemas.enable: "false"
+    offset.storage.replication.factor: 3
+    offset.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-offsets
+    status.storage.replication.factor: 3
+    status.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-status
+    value.converter.schemas.enable: "false"
+  externalConfiguration:
+    volumes:
+      - name: connector-config
+        secret:
+          secretName: {{ .Values.mongo.secretName }}
+  image: tidepool/connect-debezium:0.24.0-kafka-2.7.1-mongo-1.6.1
+  replicas: {{ .Values.global.kafka.connect.replicas | int }}
+  tls:
+    trustedCertificates: []
+{{- end }}

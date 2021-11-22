@@ -1,0 +1,56 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  labels:
+    app: tidepool
+    namespace: {{ .Release.Namespace }}
+  name: clinics
+  namespace: {{ .Release.Namespace }}
+spec:
+  routes:
+    - matchers:
+        - methods:
+            - GET
+            - DELETE
+            - PATCH
+            - POST
+            - PUT
+          prefix: /v1/clinics
+      options:
+        jwt:
+          disable: false
+      routeAction:
+        single:
+          upstream:
+            name: clinic
+            namespace: {{ .Release.Namespace }}
+    - matchers:
+        - methods:
+            - GET
+          regex: /v1/clinicians/[^/]+/clinics
+      routeAction:
+        single:
+          upstream:
+            name: clinic
+            namespace: {{ .Release.Namespace }}
+    - matchers:
+        - methods:
+            - POST
+          regex: /v1/clinicians/[^/]+/migrate
+      routeAction:
+        single:
+          upstream:
+            name: clinic
+            namespace: {{ .Release.Namespace }}
+    - matchers:
+        - methods:
+            - GET
+          regex: /v1/patients/[^/]+/clinics
+      routeAction:
+        single:
+          upstream:
+            name: clinic
+            namespace: {{ .Release.Namespace }}
+  weight: 30
+{{- end }}

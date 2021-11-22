@@ -3,9 +3,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: clinic-worker
+    app: clinic
 {{ include "charts.labels.standard" .}}
-  name: clinic-worker
+  name: clinic
   namespace: {{.Release.Namespace}}
   annotations:
     secret.reloader.stakater.com/reload: "server,{{ .Values.kafka.secretName }}"
@@ -16,7 +16,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: clinic-worker
+      app: clinic
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: {{ .Values.deployment.replicas }}
@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       labels:
-        app: clinic-worker
+        app: clinic
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
 {{ if .Values.podAnnotations }}
@@ -42,8 +42,9 @@ spec:
       {{- end }}
       containers:
       - env:
+        {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.tracing.common" .}}
-        - name: TIDEPOOL_SERVER_SECRET
+        - name: TIDEPOOL_SERVER_TOKEN
           valueFrom:
             secretKeyRef:
               name: server
@@ -54,60 +55,20 @@ spec:
           value: "http://seagull:{{.Values.global.ports.seagull}}"
         - name: TIDEPOOL_GATEKEEPER_CLIENT_ADDRESS
           value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
-        - name: TIDEPOOL_CLINIC_CLIENT_ADDRESS
-          value: "http://clinic:{{.Values.global.ports.clinic}}"
         - name: TIDEPOOL_CONFIRMATION_CLIENT_ADDRESS
           value: "http://hydrophone:{{.Values.global.ports.hydrophone}}"
-        - name: KAFKA_CONSUMER_GROUP
-          value: {{ printf "%s-%s" .Release.Namespace "clinic-worker" | quote }}
-        - name: KAFKA_BROKERS
-          valueFrom:
-            configMapKeyRef:
-              name: {{ .Values.kafka.configmapName }}
-              key: Brokers
-              optional: true
-        - name: KAFKA_REQUIRE_SSL
-          valueFrom:
-            configMapKeyRef:
-              name: {{ .Values.kafka.configmapName }}
-              key: RequireSSL
-              optional: true
-        - name: KAFKA_USERNAME
-          valueFrom:
-            configMapKeyRef:
-              name: {{ .Values.kafka.configmapName }}
-              key: Username
-              optional: true
-        - name: KAFKA_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.kafka.secretName }}
-              key: Password
-              optional: true
-        - name: KAFKA_VERSION
-          valueFrom:
-            configMapKeyRef:
-              name: {{ .Values.kafka.configmapName }}
-              key: Version
-              optional: true
-        - name: KAFKA_TOPIC_PREFIX
-          valueFrom:
-            configMapKeyRef:
-              name: "clinic-worker"
-              key: KafkaTopicPrefix
-              optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         readinessProbe:
           httpGet:
-            path: /status
-            port: {{ .Values.global.ports.clinic_worker }}
+            path: /ready
+            port: {{ .Values.global.ports.clinic }}
           initialDelaySeconds: 3
           periodSeconds: 10
-        name: clinic-worker
+        name: clinic
         ports:
-        - containerPort: {{ .Values.global.ports.clinic_worker }}
+        - containerPort: {{ .Values.global.ports.clinic }}
           name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
