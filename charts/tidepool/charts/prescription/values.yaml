@@ -37,6 +37,8 @@ mongo:
 kafka:
   # -- name of the configmap containing the kafka broker and credentials to use
   configmapName: kafka
+  # -- name of the configmap containing the kafka broker and credentials to use
+  secretName: kafka
 # -- node selector configuration
 nodeSelector: {}
 # -- tolerations

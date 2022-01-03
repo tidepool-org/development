@@ -1,0 +1,38 @@
+load('./Tiltfile.global', 'getAbsoluteDir', 'getNested', 'getConfig')
+load('ext://helm_remote', 'helm_remote')
+
+allow_k8s_contexts('kind-admin@mk')
+
+### Config Start ###
+config = getConfig()
+### Config End ###
+
+### Main Start ###
+def main():
+
+  provisionstrimzi()
+  provisionkafka()
+
+  # Back out of actual provisioning for debugging purposes by uncommenting below
+  # fail('NOT YET ;)')
+### Main End ###
+
+def provisionstrimzi():
+  # Deploy and watch the helm charts
+  helm_remote('strimzi-kafka-operator',
+	repo_name='strimzi',
+	repo_url='https://strimzi.io/charts/',
+	namespace='default',
+	set=['resources.limits.memory=1024Mi', 'resources.requests.memory=Mi']
+  )
+
+def provisionkafka():
+  k8s_yaml(
+    [
+      './tools/kafka/kafka.yaml',
+      './tools/kafka/kafkauser.yaml'
+    ]
+  )
+
+# Unleash the beast
+main()

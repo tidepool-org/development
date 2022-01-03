@@ -1,0 +1,36 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  annotations:
+    strimzi.io/use-connector-resources: 'true'
+  labels:
+    app: kafka-connect-mongo
+  name: kafka-connect-mongo
+  namespace: default
+spec:
+  authentication:
+    passwordSecret:
+      password: password
+      secretName: {{ .Values.kafka.secretName }}
+    type: scram-sha-512
+    username: {{ .Values.kafka.secretName }}
+  bootstrapServers: kafka-kafka-bootstrap:9092
+  config:
+    config.providers: file
+    config.providers.file.class: org.apache.kafka.common.config.provider.FileConfigProvider
+    config.storage.replication.factor: 1
+    config.storage.topic: kafka-connect-mongo-cluster-configs
+    group.id: kafka-connect-mongo
+    key.converter.schemas.enable: 'false'
+    offset.storage.replication.factor: 1
+    offset.storage.topic: kafka-connect-mongo-cluster-offsets
+    status.storage.replication.factor: 1
+    status.storage.topic: kafka-connect-mongo-cluster-status
+    value.converter.schemas.enable: 'false'
+  externalConfiguration:
+    volumes:
+    - name: connector-config
+      secret:
+        secretName: kafka-connect-mongo
+  image: tidepool/connect-debezium:0.24.0-kafka-2.7.1
+  replicas: 1

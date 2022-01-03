@@ -36,10 +36,12 @@ configmap:
   # -- name for the user service dead letter topic
   UserEventsUserDeadLettersTopic: "user-events-user-dl"
   # -- username for scram authentication
-  Username: "admin"
+  Username: "kafka"
   # -- required version of Kafka server
   Version: "2.5.0"
 mongo:
   secretName: "mongo"
+kafka:
+  secretName: "kafka"
 secret:
   enabled: false

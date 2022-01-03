@@ -87,7 +87,7 @@ dexcom:
 kafka:
   configmap:
     enabled: true
-    Brokers: "kafka:9092"
+    Brokers: "kafka-kafka-bootstrap:9092"
     RequireSSL: "false"
     TopicPrefix: "local-"
 ### Kafka API Config End ###
@@ -355,5 +355,4 @@ tools:
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.tools'
   rebuildCommand: 'SERVICE=tools make service-build'
-
 ### Tidepool Services Config End ###
