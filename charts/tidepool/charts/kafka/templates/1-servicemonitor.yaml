@@ -14,7 +14,7 @@ spec:
     matchNames:
       - {{ .Release.Namespace }}
   endpoints:
-    - port: metrics
+    - port: tcp-prometheus
       path: /metrics
       scheme: http
 {{ end }}
