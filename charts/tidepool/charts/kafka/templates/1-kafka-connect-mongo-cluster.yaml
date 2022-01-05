@@ -28,12 +28,12 @@ spec:
     status.storage.replication.factor: 3
     status.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-status
     value.converter.schemas.enable: "false"
-    metricsConfig:
-      type: jmxPrometheusExporter
-      valueFrom:
-        configMapKeyRef:
-          name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-jmx
-          key: metrics-config.yml
+  metricsConfig:
+    type: jmxPrometheusExporter
+    valueFrom:
+      configMapKeyRef:
+        name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-jmx
+        key: metrics-config.yml
   externalConfiguration:
     volumes:
       - name: connector-config
