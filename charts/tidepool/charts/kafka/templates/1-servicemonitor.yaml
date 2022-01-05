@@ -1,0 +1,20 @@
+{{- if and .Values.global.kafka.connect.enabled .Values.serviceMonitor.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
+  labels:
+    app: strimzi
+spec:
+  selector:
+    matchLabels:
+      strimzi.io/kind: KafkaConnect
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  endpoints:
+    - port: metrics
+      path: /metrics
+      scheme: http
+{{ end }}
