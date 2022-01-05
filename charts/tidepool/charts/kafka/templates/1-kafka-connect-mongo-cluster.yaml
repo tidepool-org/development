@@ -28,18 +28,18 @@ spec:
     status.storage.replication.factor: 3
     status.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-status
     value.converter.schemas.enable: "false"
-    metricsConfig:
-      type: jmxPrometheusExporter
-      valueFrom:
-        configMapKeyRef:
-          name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-jmx
-          key: metrics-config.yml
+  metricsConfig:
+    type: jmxPrometheusExporter
+    valueFrom:
+      configMapKeyRef:
+        name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-jmx
+        key: metrics-config.yml
   externalConfiguration:
     volumes:
       - name: connector-config
         secret:
           secretName: {{ .Values.mongo.secretName }}
-  image: tidepool/connect-debezium:0.24.0-kafka-2.7.1-mongo-1.6.1
+  image: tidepool/connect-debezium:0.26.0-kafka-2.8.0-mongo-1.6.1
   replicas: {{ .Values.global.kafka.connect.replicas | int }}
   tls:
     trustedCertificates: []

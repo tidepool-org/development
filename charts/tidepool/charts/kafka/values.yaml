@@ -43,5 +43,5 @@ mongo:
   secretName: "mongo"
 secret:
   enabled: false
-serviceMonitor:
+podMonitor:
   enabled: true
