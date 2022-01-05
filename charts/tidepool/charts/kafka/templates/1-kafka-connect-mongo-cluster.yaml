@@ -39,7 +39,7 @@ spec:
       - name: connector-config
         secret:
           secretName: {{ .Values.mongo.secretName }}
-  image: tidepool/connect-debezium:0.24.0-kafka-2.7.1-mongo-1.6.1
+  image: tidepool/connect-debezium:0.26.0-kafka-2.8.0-mongo-1.6.1
   replicas: {{ .Values.global.kafka.connect.replicas | int }}
   tls:
     trustedCertificates: []
