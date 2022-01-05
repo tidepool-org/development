@@ -1,20 +1,50 @@
-{{- if and .Values.global.kafka.connect.enabled .Values.serviceMonitor.enabled }}
+{{- if and .Values.global.kafka.connect.enabled .Values.podMonitor.enabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind: PodMonitor
 metadata:
   name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
   labels:
-    app: strimzi
+    app: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
 spec:
   selector:
-    matchLabels:
-      strimzi.io/kind: KafkaConnect
+    matchExpressions:
+      - key: "strimzi.io/kind"
+        operator: In
+        values: ["Kafka", "KafkaConnect", "KafkaMirrorMaker", "KafkaMirrorMaker2"]
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
-  endpoints:
-    - port: tcp-prometheus
-      path: /metrics
-      scheme: http
+  podMetricsEndpoints:
+    - path: /metrics
+      port: tcp-prometheus
+      relabelings:
+        - separator: ;
+          regex: __meta_kubernetes_pod_label_(strimzi_io_.+)
+          replacement: $1
+          action: labelmap
+        - sourceLabels: [__meta_kubernetes_namespace]
+          separator: ;
+          regex: (.*)
+          targetLabel: namespace
+          replacement: $1
+          action: replace
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          separator: ;
+          regex: (.*)
+          targetLabel: kubernetes_pod_name
+          replacement: $1
+          action: replace
+        - sourceLabels: [__meta_kubernetes_pod_node_name]
+          separator: ;
+          regex: (.*)
+          targetLabel: node_name
+          replacement: $1
+          action: replace
+        - sourceLabels: [__meta_kubernetes_pod_host_ip]
+          separator: ;
+          regex: (.*)
+          targetLabel: node_ip
+          replacement: $1
+          action: replace
 {{ end }}
