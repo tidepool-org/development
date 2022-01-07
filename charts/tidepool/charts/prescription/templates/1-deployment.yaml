@@ -9,7 +9,7 @@ metadata:
   name: prescription
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},prescription"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},prescription,{{ .Values.kafka.secretName}}"
     configmap.reloader.stakater.com/reload: "{{ .Values.kafka.configmapName }}"
 spec:
   selector:
@@ -46,28 +46,38 @@ spec:
               key: ServiceAuth
         - name: TIDEPOOL_PRESCRIPTION_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.prescription}}
-        - name: TIDEPOOL_KAFKA_BROKERS
+        - name: KAFKA_CONSUMER_GROUP
+          value: {{ printf "%s-%s" .Release.Namespace "prescription" | quote }}
+        - name: KAFKA_BROKERS
           valueFrom:
             configMapKeyRef:
               name: {{ .Values.kafka.configmapName }}
               key: Brokers
-              optional: false
-        - name: TIDEPOOL_KAFKA_TOPIC_PREFIX
+              optional: true
+        - name: KAFKA_REQUIRE_SSL
           valueFrom:
             configMapKeyRef:
               name: {{ .Values.kafka.configmapName }}
-              key: TopicPrefix
-              optional: false
-        - name: TIDEPOOL_KAFKA_EMAILS_TOPIC
+              key: RequireSSL
+              optional: true
+        - name: KAFKA_USERNAME
           valueFrom:
             configMapKeyRef:
               name: {{ .Values.kafka.configmapName }}
-              key: EmailsTopic
-              optional: false
-        - name: TIDEPOOL_WEBAPP_URL
-          value: "{{ include "charts.host.app" . }}"
-        - name: TIDEPOOL_ASSETS_URL
-          value: "{{ include "charts.assets.s3.url" . }}"
+              key: Username
+              optional: true
+        - name: KAFKA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.kafka.secretName }}
+              key: Password
+              optional: true
+        - name: KAFKA_VERSION
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: Version
+              optional: true
         image: "{{ .Values.deployment.image }}"
         {{ template "charts.platform.probes" .Values.global.ports.prescription}}
         name: prescription
