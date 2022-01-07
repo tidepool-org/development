@@ -82,7 +82,7 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: {{ .Values.kafka.configmapName }}
-              key: KafkaTopicPrefix
+              key: TopicPrefix
               optional: true
         image: "{{ .Values.deployment.image }}"
         {{ template "charts.platform.probes" .Values.global.ports.prescription}}
