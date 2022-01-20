@@ -45,3 +45,5 @@ kafka:
   secretName: "kafka"
 secret:
   enabled: false
+podMonitor:
+  enabled: true
