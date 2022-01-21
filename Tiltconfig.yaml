@@ -22,6 +22,9 @@ global:
     enabled: false
     templated: false
     generated: false
+  kafka:
+    replicas: 1
+    passwordKeyName: password
 ### Global Config End ###
 
 ### Gateway Config Start ###
@@ -90,6 +93,7 @@ kafka:
     Brokers: "kafka-kafka-bootstrap:9092"
     RequireSSL: "false"
     TopicPrefix: "local-"
+    Username: "kafka"
 ### Kafka API Config End ###
 
 ### JWT Token Signing Keys Config Start ###
