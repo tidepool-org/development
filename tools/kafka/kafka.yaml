@@ -4,11 +4,6 @@ metadata:
   name: kafka
 spec:
   kafka:
-    template:
-      pod:
-        securityContext:
-          runAsUser: 1000
-          fsGroup: 1000
     replicas: 1
     listeners:
       - name: plain
@@ -33,7 +28,7 @@ spec:
       - id: 0
         type: persistent-claim
         size: 10Gi
-        deleteClaim: false
+        deleteClaim: true
     authorization:
       type: simple
       superUsers:
@@ -45,16 +40,11 @@ spec:
       transaction.state.log.min.isr: 1
       auto.create.topics.enable: "true"
   zookeeper:
-    template:
-      pod:
-        securityContext:
-          runAsUser: 1000
-          fsGroup: 1000
     replicas: 1
     storage:
       type: persistent-claim
       size: 10Gi
-      deleteClaim: false
+      deleteClaim: true
   entityOperator:
     topicOperator: {}
     userOperator: {}
