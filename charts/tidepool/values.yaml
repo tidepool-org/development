@@ -1,7 +1,7 @@
 global:
   # -- maximum timeout for any web request
   maxTimeout: 120s
-  fullnameOverride: ""                             #
+  fullnameOverride: ""
   # -- if non-empty, Helm chart name to use
   nameOverride: ""
   # -- aws region that services run in

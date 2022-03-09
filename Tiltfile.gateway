@@ -159,7 +159,7 @@ def provisionGlooGateway():
     templateCmd=gloo_helm_template_cmd,
     baseConfig=tidepool_helm_values_file,
     overridesFile=tidepool_helm_overrides_file,
-  )))
+  )), allow_duplicates=True)
 
   # Expose the gateway proxy on a host port
   gateway_port_forwards = getNested(config,'gateway-proxy.portForwards', ['3000'])

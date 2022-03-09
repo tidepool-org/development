@@ -11,21 +11,21 @@ metadata:
 spec:
   authentication:
     passwordSecret:
-      password: Password
-      secretName: kafka
+      password: {{ .Values.global.kafka.passwordKeyName | default "Password" }}
+      secretName: {{ .Values.kafka.secretName }}
     type: scram-sha-512
     username: {{ .Values.configmap.Username }}
   bootstrapServers: {{ .Values.configmap.Brokers }}
   config:
     config.providers: directory
     config.providers.directory.class: org.apache.kafka.common.config.provider.DirectoryConfigProvider
-    config.storage.replication.factor: 3
+    config.storage.replication.factor: {{ .Values.global.kafka.connect.replicas | int }}
     config.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-configs
     group.id: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
     key.converter.schemas.enable: "false"
-    offset.storage.replication.factor: 3
+    offset.storage.replication.factor: {{ .Values.global.kafka.connect.replicas | int }}
     offset.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-offsets
-    status.storage.replication.factor: 3
+    status.storage.replication.factor: {{ .Values.global.kafka.connect.replicas | int }}
     status.storage.topic: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-cluster-status
     value.converter.schemas.enable: "false"
   metricsConfig:

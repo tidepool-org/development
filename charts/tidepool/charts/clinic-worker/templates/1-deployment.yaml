@@ -82,8 +82,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ .Values.kafka.secretName }}
-              key: Password
-              optional: true
+              key: {{ .Values.global.kafka.passwordKeyName | default "Password" }}
         - name: KAFKA_VERSION
           valueFrom:
             configMapKeyRef:
