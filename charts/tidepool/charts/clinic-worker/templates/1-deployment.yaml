@@ -92,8 +92,8 @@ spec:
         - name: KAFKA_TOPIC_PREFIX
           valueFrom:
             configMapKeyRef:
-              name: "clinic-worker"
-              key: KafkaTopicPrefix
+              name: {{ .Values.kafka.configmapName }}
+              key: TopicPrefix
               optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:

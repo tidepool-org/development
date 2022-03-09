@@ -23,7 +23,10 @@ global:
     templated: false
     generated: false
   kafka:
-    replicas: 1
+    connect:
+      enabled: true
+      tlsEnabled: false
+    replicas: 2
     passwordKeyName: password
 ### Global Config End ###
 
@@ -94,6 +97,8 @@ kafka:
     RequireSSL: "false"
     TopicPrefix: "local-"
     Username: "kafka"
+  podMonitor:
+    enabled: false
 ### Kafka API Config End ###
 
 ### JWT Token Signing Keys Config Start ###
@@ -228,6 +233,24 @@ blip:
   # disableDevTools: true                                     # Uncomment if working with large data sets is sluggish in development build
   # buildTarget: production                                   # Uncomment to run minified production builds
   # restartContainerCommand: './tilt/start.sh npm run server' # Uncomment if buildTarget = `production`
+
+clinic:
+  deployment:
+    replicas: 1
+    # image: tidepool-k8s-clinic # Uncomment to build and run local image or a specific remote image
+  # hostPath: ~/go/src/github.com/tidepool-org/clinic      # Uncomment to build and run local image
+  containerPath: '/go/src/github.com/tidepool-org/clinic'
+  dockerFile: 'Dockerfile'
+  rebuildCommand: 'SERVICE=make build'
+
+clinic-worker:
+  deployment:
+    replicas: 1
+    # image: tidepool-k8s-clinic-worker # Uncomment to build and run local image or a specific remote image
+  # hostPath: ~/go/src/github.com/tidepool-org/clinic-worker      # Uncomment to build and run local image
+  containerPath: '/go/src/github.com/tidepool-org/clinic-worker'
+  dockerFile: 'Dockerfile'
+  rebuildCommand: 'SERVICE=make build'
 
 blob:
   deployment:

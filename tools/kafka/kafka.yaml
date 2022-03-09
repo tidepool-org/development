@@ -4,7 +4,7 @@ metadata:
   name: kafka
 spec:
   kafka:
-    replicas: 1
+    replicas: 2
     listeners:
       - name: plain
         port: 9092

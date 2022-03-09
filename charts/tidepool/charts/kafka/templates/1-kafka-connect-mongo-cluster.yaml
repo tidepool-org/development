@@ -41,6 +41,8 @@ spec:
           secretName: {{ .Values.mongo.secretName }}
   image: tidepool/connect-debezium:0.26.0-kafka-2.8.0-mongo-1.6.1
   replicas: {{ .Values.global.kafka.connect.replicas | int }}
+{{ if .Values.global.kafka.connect.tlsEnabled }}
   tls:
     trustedCertificates: []
+{{- end }}
 {{- end }}
