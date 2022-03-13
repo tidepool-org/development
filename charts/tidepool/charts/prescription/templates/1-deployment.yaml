@@ -48,8 +48,6 @@ spec:
               key: ServiceAuth
         - name: TIDEPOOL_PRESCRIPTION_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.prescription}}
-        - name: KAFKA_CONSUMER_GROUP
-          value: {{ printf "%s-%s" .Release.Namespace "prescription" | quote }}
         image: "{{ .Values.deployment.image }}"
         {{ template "charts.platform.probes" .Values.global.ports.prescription}}
         name: prescription
