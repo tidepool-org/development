@@ -167,13 +167,6 @@ Create environment variables used by all platform services.
 Create liveness and readiness probes for platform services.
 */}}
 {{- define "charts.platform.probes" -}}
-        livenessProbe:
-          httpGet:
-            path: /status
-            port: {{.}}
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
         readinessProbe:
           httpGet:
             path: /status
@@ -183,12 +176,6 @@ Create liveness and readiness probes for platform services.
           timeoutSeconds: 5
 {{- end -}}
 {{- define "charts.platform.grpc_probes" -}}
-        livenessProbe:
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:{{.}}"]
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
         readinessProbe:
           exec:
             command: ["/bin/grpc_health_probe", "-addr=:{{.}}"]
