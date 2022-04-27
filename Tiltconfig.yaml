@@ -26,7 +26,7 @@ global:
     connect:
       enabled: true
       tlsEnabled: false
-    replicas: 2
+      replicas: 1
     passwordKeyName: password
 ### Global Config End ###
 
