@@ -40,6 +40,10 @@ global:
       sinkTasksMax: 2
       # -- max tasks for source connectors
       sourceTasksMax: 2
+      # -- enable tls
+      tlsEnabled: true
+    # -- The password key ref
+    passwordKeyName: "Password"
   linkerdsupport:
     # -- whether to include linkerdsupport subchart with Linkerd service profiles
     enabled: true
