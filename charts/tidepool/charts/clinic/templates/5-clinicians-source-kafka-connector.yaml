@@ -12,7 +12,7 @@ spec:
   config:
     change.stream.full.document: updateLookup
     collection: clinicians
-    connection.uri: ${directory:/opt/kafka/external-configuration/connector-config:Scheme}://${directory:/opt/kafka/external-configuration/connector-config:Username}:${directory:/opt/kafka/external-configuration/connector-config:Password}@${directory:/opt/kafka/external-configuration/connector-config:Addresses}/?ssl=${directory:/opt/kafka/external-configuration/connector-config:Tls}
+    connection.uri: {{ .Values.global.kafka.connect.connectionUri }}
     copy.existing: true
     database: clinic
     key.converter: org.apache.kafka.connect.json.JsonConverter
