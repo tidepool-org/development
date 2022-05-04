@@ -91,4 +91,24 @@ spec:
       method: GET
       pathRegex: /v1/time.*
     name: /v1/time_get_data
+  - condition:
+      method: GET
+      pathRegex: /v1/summaries/[^/]+
+    name: /v1/summaries_get
+    timeout: 60s
+  - condition:
+      method: POST
+      pathRegex: /v1/summaries/[^/]+
+    name: /v1/summaries_update
+    timeout: 60s
+  - condition:
+      method: POST
+      pathRegex: /v1/summaries
+    name: /v1/summaries_backfill
+    timeout: 300s
+  - condition:
+      method: GET
+      pathRegex: /v1/summaries
+    name: /v1/summaries_list
+    timeout: 60s
 {{- end }}
