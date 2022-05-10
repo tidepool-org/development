@@ -42,6 +42,7 @@ global:
       sourceTasksMax: 2
       # -- enable tls
       tlsEnabled: true
+      connectionUri: ${directory:/opt/kafka/external-configuration/connector-config:Scheme}://${directory:/opt/kafka/external-configuration/connector-config:Username}:${directory:/opt/kafka/external-configuration/connector-config:Password}@${directory:/opt/kafka/external-configuration/connector-config:Addresses}/?ssl=${directory:/opt/kafka/external-configuration/connector-config:Tls}
     # -- The password key ref
     passwordKeyName: "Password"
   linkerdsupport:

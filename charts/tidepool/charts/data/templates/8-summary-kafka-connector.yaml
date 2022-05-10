@@ -3,18 +3,18 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
   labels:
-    app: clinics-source
+    app: summary-source
     strimzi.io/cluster: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
-  name: clinics-source
+  name: summary-source
   namespace: {{ .Release.Namespace }}
 spec:
   class: com.mongodb.kafka.connect.MongoSourceConnector
   config:
     change.stream.full.document: updateLookup
-    collection: clinics
+    collection: summary
     connection.uri: {{ .Values.global.kafka.connect.connectionUri }}
     copy.existing: true
-    database: clinic
+    database: data
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: false
     topic.prefix: {{ .Release.Namespace }}
