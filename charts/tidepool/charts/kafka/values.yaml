@@ -20,6 +20,8 @@ configmap:
   # -- name for the blob service dead letter topic
   UserEventsBlobDeadLettersTopic: "user-events-blob-dl"
   # -- name for the data service dead letter topic
+  UserEventsClinicWorkerDeadLettersTopic: "user-events-clinic-worker-dl"
+  # -- name for the data service dead letter topic
   UserEventsDataDeadLettersTopic: "user-events-data-dl"
   # -- name for the gatekeeper service dead letter topic
   UserEventsGatekeeperDeadLettersTopic: "user-events-gatekeeper-dl"

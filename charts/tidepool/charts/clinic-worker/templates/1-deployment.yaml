@@ -89,6 +89,11 @@ spec:
               name: {{ .Values.kafka.configmapName }}
               key: Version
               optional: true
+        - name: KAFKA_DEAD_LETTERS_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: UserEventsClinicWorkerDeadLettersTopic
         - name: KAFKA_TOPIC_PREFIX
           valueFrom:
             configMapKeyRef:
