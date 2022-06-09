@@ -6,3 +6,4 @@ local/*
 .envrc
 .helm
 tilt_modules/
+.idea/
