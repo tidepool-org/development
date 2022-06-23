@@ -9,4 +9,6 @@ metadata:
 {{ include "charts.labels.standard" .}}
 data:
   MinimumUploaderVersion: {{ .Values.configmap.data.MinimumUploaderVersion | default "0.251.0" }}
+  AuthRealm: {{ .Values.configmap.data.AuthRealm }}
+  AuthUrl: {{ .Values.configmap.data.AuthUrl }}
 {{- end }}

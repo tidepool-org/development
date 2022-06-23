@@ -53,6 +53,18 @@ spec:
               name: jellyfish
               key: MinimumUploaderVersion
               optional: true
+        - name: KEYCLOAK_AUTH_REALM
+          valueFrom:
+            configMapKeyRef:
+              name: jellyfish
+              key: AuthRealm
+              optional: true
+        - name: KEYCLOAK_AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              name: jellyfish
+              key: AuthUrl
+              optional: true
         - name: PORT
           value: "{{.Values.global.ports.jellyfish}}"
         - name: TIDEPOOL_SERVER_SECRET
