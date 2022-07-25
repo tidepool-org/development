@@ -8,27 +8,6 @@ usage() {
 =======================================================
 USAGE: tidepool command [service] [...additional args]
 
-
-  ### Kubernetes Server Commands ###
-
-  server-init                     Used once to initially provision the k8s stack. Specifically, it:
-                                    1. Provisions and starts the Kubernetes server
-                                    2. Saves the Kubernetes server config to ${KUBECONFIG}.
-
-  server-start                    Start (and provision if needed) the Kubernetes server
-  server-stop                     Stop the Kubernetes server
-  server-logs                     Tail logs for the Kubernetes server
-
-  server-docker [...cmds]         Run docker commands within the context of the Kubernetes server
-  server-exec [...cmds]           Run shell commands in the Kubernetes server container
-
-  server-prune                    Remove any unused images, containers, and volumes within the
-                                  Kubernetes server
-
-  server-destroy                  Shut down and completely remove the local Kubernetes server and
-                                  all services
-
-
   ### Tidepool Services Commands ###
 
   start                           Provision and start the Tidepool services
@@ -68,15 +47,9 @@ USAGE: tidepool command [service] [...additional args]
 EOF
 }
 
-run_docker() { args="${@:1}" && (set_docker_env && docker ${args}) }
-
-run_docker_compose() { args="${@:1}" && (docker-compose -f 'docker-compose.k8s.yml' ${args}) }
-
 restart() { (for P in ${@}; do kubectl scale deployment --replicas=0 ${P} && kubectl scale deployment --replicas=1 ${P}; done) }
 
 run_exec() { args="${@:2}" && (kubectl exec -ti svc/${1} -c ${1} -- /bin/sh -c "${args}") }
-
-mongo_exec() { args="${@:1}" && (kubectl exec -ti svc/mongodb -c mongo -- /bin/sh -c "${args}") }
 
 check_version() {
   pkg=${1}
@@ -124,13 +97,7 @@ run_yarn() {
   fi
 }
 
-set_docker_env() {
-  export DOCKER_HOST=tcp://127.0.0.1:2375
-}
-
 set_tilt_env() {
-  set_docker_env
-
   case "$1" in
     --trap-shutdown) trap 'SHUTTING_DOWN=1 tilt down' EXIT;;
     --shutdown) export SHUTTING_DOWN=1;;
@@ -153,41 +120,13 @@ destroy() {
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
-    cd ${DIR} && run_docker_compose rm -fsv
     rm -r ${DIR}/local/charts
   else
     echo "Destroy command aborted"
   fi
 }
 
-server_init() {
-  $0 server-start
-  set_kubeconfig
-  init_metrics_server
-}
-
-init_metrics_server() {
-    cd ${DIR} && docker-compose -f 'docker-compose.k8s.yml' exec server sh -c "if ! grep -qF 'authentication-token-webhook=true' kubelet.sh; then sed -i '/--authorization-mode=Webhook/a --authentication-token-webhook=true \\\' kubelet.sh; fi"
-
-    # Restart the server and wait till ready
-    cd ${DIR} && run_docker_compose restart
-    wait_for_kubernetes_ready
-
-    # Wait until kubectl ready
-    until kubectl get nodes; do
-      sleep 5;
-    done
-}
-
 case ${1-help} in
-  server-init) server_init;;
-  server-start) (cd ${DIR} && run_docker_compose up -d ${2-});;
-  server-stop) (cd ${DIR} && run_docker_compose stop ${2-});;
-  server-logs) (cd ${DIR} && run_docker_compose logs --tail=100 -f server);;
-  server-docker) run_docker "${@:2}";;
-  server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
-  server-prune) (run_docker "system prune --volumes -af" && run_docker "builder prune --all -f");;
-  server-destroy) (cd ${DIR} && destroy);;
   start) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up -dv --port=0 --legacy ${2-});;
   stop) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
   restart) shift 1 && restart ${@};;
