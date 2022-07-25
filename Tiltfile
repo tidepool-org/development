@@ -33,18 +33,18 @@ def main():
     # Ensure kafka service is deployed
     kafka_service = local('kubectl get service kafka-kafka-bootstrap --ignore-not-found')
     if not kafka_service:
-      local('tilt up --file=Tiltfile.kafka --hud=0 --port=0 >/dev/null 2>&1 &')
+      local('tilt up --file=Tiltfile.kafka --legacy=0 --port=0 >/dev/null 2>&1 &')
 
     # Ensure mongodb service is deployed
     if not getNested(config, 'mongodb.useExternal'):
       mongodb_service = local('kubectl get service mongodb --ignore-not-found')
       if not mongodb_service:
-        local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 >/dev/null 2>&1 &')
+        local('tilt up --file=Tiltfile.mongodb --legacy=0 --port=0 >/dev/null 2>&1 &')
 
     # Ensure proxy services are deployed
     gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found')
     if not gateway_proxy_service:
-      local('tilt up --file=Tiltfile.gateway --hud=0 --port=0 >/dev/null 2>&1 &')
+      local('tilt up --file=Tiltfile.gateway --legacy=0 --port=0 >/dev/null 2>&1 &')
 
     # Wait until mongodb and gateway proxy services are forwarding before provisioning rest of stack
     if not getNested(config, 'mongodb.useExternal'):
