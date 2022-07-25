@@ -195,7 +195,7 @@ case ${1-help} in
   exec) run_exec ${2} ${@:3};;
   yarn) run_yarn ${2} "${@:3}";;
   port-forward) (cd ${DIR} && kubectl port-forward svc/${2} ${3});;
-  verify-account-email) mongo_exec "mongo --eval 'db.users.update({username: \"${@:2}\"},{\$set:{\"authenticated\":true}});' user";;
+  verify-account-email) mongo --eval "db.users.update({username: \"${@:2}\"},{\$set:{\"authenticated\":true}});" user;;
   restart-proxy) restart gateway-proxy;;
   doctor) doctor;;
   *) usage;;
