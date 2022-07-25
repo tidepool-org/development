@@ -335,7 +335,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
         entrypoint=entrypoint,
         command='{} {} {}'.format(preBuildCommand, buildCommand, postBuildCommand),
         deps=build_deps,
-        disable_push=True,
+        disable_push=False,
         tag='tilt',
         live_update=live_update_commands
       )
