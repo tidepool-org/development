@@ -35,6 +35,10 @@ global:
 gateway-proxy:
   portForwards: ['3000', '8081']
 
+gateway:
+  validation:
+    enabled: false
+
 glooingress:
   enabled: true
   jwt:
@@ -252,6 +256,10 @@ clinic-worker:
   containerPath: '/go/src/github.com/tidepool-org/clinic-worker'
   dockerFile: 'Dockerfile'
   rebuildCommand: 'SERVICE=make build'
+  configmap:
+    enabled: true
+    data:
+      KafkaTopicPrefix: "default."
 
 blob:
   deployment:
