@@ -10,6 +10,10 @@ USAGE: tidepool command [service] [...additional args]
 
   ### Kubernetes Server Commands ###
 
+  server-init                     Used to initialize or update the k8s stack. Specifically, it:
+                                    1. Provisions and starts the Kubernetes server and registry
+                                    2. Saves the Kubernetes server config to ${KUBECONFIG}.
+
   server-start                    Start the Kind server and private registry containers
   server-stop                     Stop the Kind server and private registry containers
 
@@ -92,6 +96,7 @@ check_environment() {
 doctor() {
   set +u
   echo "Checking dependancy versions..."
+  check_version ctlptl 'version' 0.8.5
   check_version helm 'version --short' 3.9.1
   check_version tilt 'version' 0.30.5
   check_version docker '-v' 20.10.17
@@ -147,6 +152,7 @@ destroy() {
 }
 
 case ${1-help} in
+  server-init) (cd ${DIR} && ctlptl apply -f Kindconfig.yaml);;
   server-start) server_start;;
   server-stop) server_stop;;
   server-destroy) destroy;;
