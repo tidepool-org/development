@@ -13,3 +13,8 @@ kindV1Alpha4Cluster:
     extraPortMappings:
     - containerPort: 27017
       hostPort: 27017
+---
+apiVersion: ctlptl.dev/v1alpha1
+kind: Registry
+name: ctlptl-registry
+port: 5000

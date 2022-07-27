@@ -67,6 +67,9 @@ EOF
 }
 
 server_init() {
+  # Ensure docker is running before provisioning
+  check_docker_running
+
   cd ${DIR} && ctlptl apply -f Kindconfig.yaml
 }
 
@@ -90,10 +93,7 @@ stop() {
 
 up() {
   # Ensure docker is running before provisioning
-  if (! docker stats --no-stream ); then
-    echo "Docker is not running"
-    exit 0;
-  fi
+  check_docker_running
 
   # Ensure local database connection before provisioning
   mongo --eval "db.version()"
@@ -119,6 +119,14 @@ check_version() {
       echo "✔ ${pkg} is up to date"
   else
       echo "✘ ${pkg} is out of date. Please install version >= ${min}"
+  fi
+}
+
+check_docker_running() {
+  # Ensure docker is running
+  if (! docker stats --no-stream ); then
+    echo "Docker is not running"
+    exit 0;
   fi
 }
 
