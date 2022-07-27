@@ -8,6 +8,12 @@ usage() {
 =======================================================
 USAGE: tidepool command [service] [...additional args]
 
+  ### K8s Server Commands ###
+
+  server-start                    Start the Kind server and private registry containers
+  server-stop                     Stop the Kind server and private registry containers
+
+
   ### Tidepool Services Commands ###
 
   start                           Provision and start the Tidepool services
@@ -45,6 +51,16 @@ USAGE: tidepool command [service] [...additional args]
   doctor                          Check to see if all dependancies are up-to-date, and recommended
                                   environment variables are set
 EOF
+}
+
+server_start() {
+  docker start tidepool-kind-control-plane
+  docker start ctlptl-registry
+}
+
+server_stop() {
+  docker stop tidepool-kind-control-plane
+  docker stop ctlptl-registry
 }
 
 restart() { (for P in ${@}; do kubectl scale deployment --replicas=0 ${P} && kubectl scale deployment --replicas=1 ${P}; done) }
@@ -127,6 +143,8 @@ destroy() {
 }
 
 case ${1-help} in
+  server-start) server_start;;
+  server-stop) server_stop;;
   start) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up -dv --port=0 --legacy ${2-});;
   stop) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
   restart) shift 1 && restart ${@};;
