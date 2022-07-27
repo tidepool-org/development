@@ -8,10 +8,13 @@ usage() {
 =======================================================
 USAGE: tidepool command [service] [...additional args]
 
-  ### K8s Server Commands ###
+  ### Kubernetes Server Commands ###
 
   server-start                    Start the Kind server and private registry containers
   server-stop                     Stop the Kind server and private registry containers
+
+  server-destroy                  Shut down and completely remove the local Kubernetes server and
+                                  all services
 
 
   ### Tidepool Services Commands ###
@@ -136,6 +139,8 @@ destroy() {
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
+    docker rm -fv tidepool-kind-control-plane
+    docker rm -fv ctlptl-registry
     rm -r ${DIR}/local/charts
   else
     echo "Destroy command aborted"
@@ -145,6 +150,7 @@ destroy() {
 case ${1-help} in
   server-start) server_start;;
   server-stop) server_stop;;
+  server-destroy) destroy;;
   start) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up -dv --port=0 --legacy ${2-});;
   stop) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
   restart) shift 1 && restart ${@};;
