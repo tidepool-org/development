@@ -8,6 +8,15 @@ usage() {
 =======================================================
 USAGE: tidepool command [service] [...additional args]
 
+  ### Global Commands ###
+
+  up                              Start the Kubernetes server and Tidepool services, in that order
+  down                            Stop the Tidepool services and Kubernetes server, in that order
+
+  destroy                         Shut down and completely remove the local Kubernetes server and
+                                  all services
+
+
   ### Kubernetes Server Commands ###
 
   server-init                     Used to initialize or update the k8s stack. Specifically, it:
@@ -17,14 +26,11 @@ USAGE: tidepool command [service] [...additional args]
   server-start                    Start the Kind server and private registry containers
   server-stop                     Stop the Kind server and private registry containers
 
-  server-destroy                  Shut down and completely remove the local Kubernetes server and
-                                  all services
-
 
   ### Tidepool Services Commands ###
 
-  start                           Provision and start the Tidepool services
-  stop                            Stop and remove the Tidepool services
+  start                           Provision and start the Tidepool services via Tilt
+  stop                            Stop and remove the Tidepool services via Tilt
   restart [service]               Restart the specified service
   logs [service]                  Tail logs for the specified service
 
@@ -60,6 +66,10 @@ USAGE: tidepool command [service] [...additional args]
 EOF
 }
 
+server_init() {
+  cd ${DIR} && ctlptl apply -f Kindconfig.yaml
+}
+
 server_start() {
   docker start tidepool-kind-control-plane
   docker start ctlptl-registry
@@ -68,6 +78,26 @@ server_start() {
 server_stop() {
   docker stop tidepool-kind-control-plane
   docker stop ctlptl-registry
+}
+
+start() {
+  cd ${DIR} && tilt up -dv --port=0 --legacy
+}
+
+stop() {
+  cd ${DIR} && set_tilt_env --shutdown && tilt down
+}
+
+up() {
+  # Ensure local database connection before provisioning
+  mongo --eval "db.version()"
+  server_start
+  start
+}
+
+down() {
+  stop
+  server_stop
 }
 
 restart() { (for P in ${@}; do kubectl scale deployment --replicas=0 ${P} && kubectl scale deployment --replicas=1 ${P}; done) }
@@ -152,12 +182,14 @@ destroy() {
 }
 
 case ${1-help} in
-  server-init) (cd ${DIR} && ctlptl apply -f Kindconfig.yaml);;
+  up) up;;
+  down) down;;
+  destroy) destroy;;
+  server-init) server_init;;
   server-start) server_start;;
   server-stop) server_stop;;
-  server-destroy) destroy;;
-  start) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up -dv --port=0 --legacy ${2-});;
-  stop) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
+  start) start;;
+  stop) stop;;
   restart) shift 1 && restart ${@};;
   logs) (cd ${DIR} && kubectl logs svc/${2} --tail=100 -c ${2} -f);;
   exec) run_exec ${2} ${@:3};;
