@@ -33,7 +33,7 @@ global:
 
 ### Gateway Config Start ###
 gateway-proxy:
-  portForwards: ['3000', '8081']
+  portForwards: ['3000']
 
 gateway:
   validation:
@@ -82,17 +82,14 @@ keycloak:
 
 ### MongoDB Config Start ###
 mongodb:
-  persistent: true
   enabled: false       # False to disable the helm-chart-defined mongo, as we deploy our own directly within the Tiltfile
-  useExternal: false   # Set to true and update the global mongo config below if using an external mongo db
-  hostPath: '/data/db' # Note: this path is relative to the k8s server container defined in `docker-compose.k8s.yml`. Local machine path is volume-mounted using the TIDEPOOL_DOCKER_MONGO_VOLUME environment variable.
-  portForwards: ['27017']
+  useExternal: true   # Set to true and update the global mongo config below if using an external mongo db
 
 mongo:
   secret:
     data_:
       Scheme: "mongodb"
-      Addresses: "mongodb"
+      Addresses: "192.168.65.2" # Default docker host IP for Mac and Windows. Change to 172.17.0.1 for Linux hosts
       Username: ""
       Password: ""
       Database: "admin"
@@ -270,7 +267,7 @@ clinic:
   # hostPath: ~/go/src/github.com/tidepool-org/clinic      # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/clinic'
   dockerFile: 'Dockerfile'
-  rebuildCommand: 'SERVICE=make build'
+  rebuildCommand: 'make build'
 
 clinic-worker:
   deployment:
@@ -279,7 +276,7 @@ clinic-worker:
   # hostPath: ~/go/src/github.com/tidepool-org/clinic-worker      # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/clinic-worker'
   dockerFile: 'Dockerfile'
-  rebuildCommand: 'SERVICE=make build'
+  rebuildCommand: 'make build'
   configmap:
     enabled: true
     data:
