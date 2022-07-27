@@ -81,7 +81,7 @@ server_stop() {
 }
 
 start() {
-  cd ${DIR} && tilt up -dv --port=0 --legacy
+  cd ${DIR} && set_tilt_env ${1-} && tilt up -dv --port=0 --legacy
 }
 
 stop() {
@@ -89,8 +89,15 @@ stop() {
 }
 
 up() {
+  # Ensure docker is running before provisioning
+  if (! docker stats --no-stream ); then
+    echo "Docker is not running"
+    exit 0;
+  fi
+
   # Ensure local database connection before provisioning
   mongo --eval "db.version()"
+
   server_start
   start
 }
@@ -151,9 +158,10 @@ run_yarn() {
 }
 
 set_tilt_env() {
-  case "$1" in
+  case "${1-}" in
     --trap-shutdown) trap 'SHUTTING_DOWN=1 tilt down' EXIT;;
     --shutdown) export SHUTTING_DOWN=1;;
+    *) ;;
   esac
 }
 
@@ -188,7 +196,7 @@ case ${1-help} in
   server-init) server_init;;
   server-start) server_start;;
   server-stop) server_stop;;
-  start) start;;
+  start) start ${2-"--trap-shutdown"};;
   stop) stop;;
   restart) shift 1 && restart ${@};;
   logs) (cd ${DIR} && kubectl logs svc/${2} --tail=100 -c ${2} -f);;
