@@ -1,0 +1,14 @@
+apiVersion: ctlptl.dev/v1alpha1
+kind: Cluster
+product: kind
+registry: ctlptl-registry
+kindV1Alpha4Cluster:
+  name: tidepool-kind
+  networking:
+    ipFamily: dual
+    apiServerAddress: 127.0.0.1
+  nodes:
+  - role: control-plane
+    extraPortMappings:
+    - containerPort: 27017
+      hostPort: 27017
