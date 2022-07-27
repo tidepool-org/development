@@ -1,7 +1,8 @@
 apiVersion: ctlptl.dev/v1alpha1
 kind: Cluster
-product: kind
+kubernetesVersion: v1.21.12
 registry: ctlptl-registry
+product: kind
 kindV1Alpha4Cluster:
   name: tidepool-kind
   networking:
