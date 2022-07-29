@@ -21,9 +21,6 @@ def main():
   # Set up tidepool helm template command
   tidepool_helm_template_cmd = 'helm template --namespace default '
 
-  mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
-  mongodb_port_forward_host_port = mongodb_port_forwards[0].split(':')[0]
-
   if not is_shutdown:
     updateHelmDependancies()
     provisionClusterRoleBindings()
@@ -35,22 +32,10 @@ def main():
     if not kafka_service:
       local('tilt up --file=Tiltfile.kafka --legacy=0 --port=0 >/dev/null 2>&1 &')
 
-    # Ensure mongodb service is deployed
-    if not getNested(config, 'mongodb.useExternal'):
-      mongodb_service = local('kubectl get service mongodb --ignore-not-found')
-      if not mongodb_service:
-        local('tilt up --file=Tiltfile.mongodb --legacy=0 --port=0 >/dev/null 2>&1 &')
-
     # Ensure proxy services are deployed
     gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found')
     if not gateway_proxy_service:
       local('tilt up --file=Tiltfile.gateway --legacy=0 --port=0 >/dev/null 2>&1 &')
-
-    # Wait until mongodb and gateway proxy services are forwarding before provisioning rest of stack
-    if not getNested(config, 'mongodb.useExternal'):
-      print("Preparing mongodb service...")
-      local('while ! nc -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
-      print("Mongodb ready.")
 
     # Wait until kafka is ready and kafka secrets are created
     if not kafka_service:
@@ -59,9 +44,6 @@ def main():
       print("Kafka ready.")
 
   else:
-    # Shut down the mongodb, kafka, and gateway services
-    if not getNested(config, 'mongodb.useExternal'):
-      local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.mongodb &>/dev/null &')
     local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.gateway &>/dev/null &')
 
     local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.kafka &>/dev/null &')
