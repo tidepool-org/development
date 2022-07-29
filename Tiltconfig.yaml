@@ -267,7 +267,7 @@ clinic:
   # hostPath: ~/go/src/github.com/tidepool-org/clinic      # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/clinic'
   dockerFile: 'Dockerfile'
-  rebuildCommand: 'make build'
+  buildTarget: development
 
 clinic-worker:
   deployment:
@@ -327,6 +327,8 @@ highwater:
 
 hydrophone:
   deployment:
+    env:
+      clinicServiceEnabled: true
     # image: tidepool-k8s-hydrophone # Uncomment to build and run local image or a specific remote image
   # hostPath: ~/go/src/github.com/tidepool-org/hydrophone          # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/hydrophone'
@@ -369,6 +371,8 @@ seagull:
 
 shoreline:
   deployment:
+    env:
+      clinicServiceEnabled: true
     # image: tidepool-k8s-shoreline # Uncomment to build and run local image or a specific remote image
   # hostPath: ../shoreline          # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/shoreline'
