@@ -142,16 +142,17 @@ check_environment() {
 
 doctor() {
   set +u
+  echo "Checking environment config..."
+  check_environment KUBECONFIG
+  check_environment MONGO_SHELL
+  echo
   echo "Checking dependancy versions..."
   check_version ctlptl 'version' 0.8.5
   check_version helm 'version --short' 3.9.1
   check_version tilt 'version' 0.30.5
   check_version docker '-v' 20.10.17
   check_version kubectl 'version --client --short' 1.21.12
-  check_version mongo '--eval "db.version()"' 5.0.7
-  echo
-  echo "Checking environment config..."
-  check_environment KUBECONFIG
+  check_version $MONGO_SHELL '--eval "db.version()"' 4.4.0
 }
 
 run_yarn() {
@@ -213,7 +214,7 @@ case ${1-help} in
   exec) run_exec ${2} ${@:3};;
   yarn) run_yarn ${2} "${@:3}";;
   port-forward) (cd ${DIR} && kubectl port-forward svc/${2} ${3});;
-  verify-account-email) mongo --eval "db.users.update({username: \"${@:2}\"},{\$set:{\"authenticated\":true}});" user;;
+  verify-account-email) $MONGO_SHELL --eval "db.users.update({username: \"${@:2}\"},{\$set:{\"authenticated\":true}});" user;;
   restart-gateway) restart gloo gateway-proxy gateway discovery;;
   restart-kafka) restart default-kafka-connect-mongo-connect kafka-entity-operator strimzi-cluster-operator;;
   doctor) doctor;;
