@@ -10,7 +10,7 @@ kindV1Alpha4Cluster:
     apiServerAddress: 127.0.0.1
   nodes:
   - role: control-plane
-    extraPortMappings:
+    extraPortMappings: # These port mappings are optional for Linux users
     - containerPort: 27017
       hostPort: 27017
 ---
