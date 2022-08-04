@@ -141,8 +141,6 @@ ctlptl apply -f Kindconfig.yaml
 
 This config will provision and start up the Kubernetes server, and a private docker registry that Tilt will deploy development builds to as you work locally on the Tidepool services.
 
-**Note:** Windows and Mac users will need to ensure that MongoDB is not running locally when running the `ctlptl` command above, since it will error due to the `extraPortMappings` for `27017` in the `Kindconfig.yaml` already being in use on the host machine. After provisioning, the MongoDB service can be restarted without issue. Linux users, if they encounter this issue, can simply remove the `extraPortMappings` section from the `Kindconfig.yaml`.
-
 ## Install Netcat
 
 Netcat should be installed by default on an recent versions of MacOS. If it is not, you can install it via homebrew.
@@ -170,7 +168,7 @@ We recommend installing a local instance of MongoDB Community Edition with a sin
 
 For local installation of MongoDB, please follow [these installation instructions](https://www.mongodb.com/docs/manual/administration/install-community/) for your platform.
 
-The stack has been tested with version `6.x`, which is the latest version available at the time of writing. The minimum required version is `4.4`.
+The stack has been tested with version `6.x`, which is the latest version available at the time of writing. The minimum supported version is `5.0`.
 
 After installing MongoDB locally, you will need to set up your `mongo.conf` to allow local connections, and configure it as a replica set (it will be a standalone instance by default).
 
@@ -319,12 +317,12 @@ It's recommended that you export them in a persistent way, such as within your l
 export KUBECONFIG="$HOME/.kube/config"
 ```
 
-`MONGODB_SHELL` - This is the path used run the MongoDB shell on your local machine. It will vary depending on the version of MongoDB you're running, and the platform you run it on. Some common possibilities are `mongo`, `mongos`, `mongosh`
+`MONGODB_SHELL` - This is the path used run the MongoDB shell on your local machine. By default, if unset, the `tidepool` script will use the path resolved by running `which mongosh`.
 
-For example, if the command you run to open the MongoDB shell is `/usr/local/bin/mongosh`, then just set the value of the environment variable like so:
+If you would like to override this, for instance, if the command you run to open the MongoDB shell is `/usr/local/bin/mongo`, then just set the value of the environment variable like so:
 
 ```bash
-export MONGODB_SHELL="/usr/local/bin/mongosh"
+export MONGODB_SHELL="/usr/local/bin/mongo"
 ```
 
 [[back to top]](#welcome)
