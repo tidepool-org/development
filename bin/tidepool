@@ -2,6 +2,7 @@
 shopt -s extglob
 
 DIR=$(cd $(dirname $(dirname ${0})); pwd)
+MONGODB_SHELL=${MONGODB_SHELL:-`which mongosh`}
 
 usage() {
   cat <<EOF
@@ -97,8 +98,8 @@ up() {
   # Ensure docker is running before provisioning
   check_docker_running
 
-  # Ensure local database connection before provisioning
-  mongo --eval "db.version()"
+  # Ensure mongodb replicaset connection before provisioning
+  $MONGODB_SHELL --eval "rs.status()"
 
   server_start
   start
@@ -152,7 +153,7 @@ doctor() {
   check_version tilt 'version' 0.30.5
   check_version docker '-v' 20.10.17
   check_version kubectl 'version --client --short' 1.21.12
-  check_version $MONGODB_SHELL '--eval "db.version()"' 4.4.0
+  check_version $MONGODB_SHELL '--eval "db.version()"' 5.0.0
 }
 
 run_yarn() {
