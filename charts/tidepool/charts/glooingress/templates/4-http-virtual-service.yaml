@@ -32,6 +32,14 @@ spec:
           name: 'remote-auth'
           namespace: {{ .Release.Namespace }}
 {{- end }}
+{{- if $spec.options.cors }}
+{{- if not $optionsExist }}
+{{ $optionsExist = true }}
+    options:
+{{- end }}
+      cors:
+{{- toYaml $spec.options.cors | nindent 8 }}
+{{- end }}
     domains:
 {{- if and $spec.serveAllDomains }}
     - '*'

@@ -2,37 +2,36 @@
 shopt -s extglob
 
 DIR=$(cd $(dirname $(dirname ${0})); pwd)
+MONGODB_SHELL=${MONGODB_SHELL:-`which mongosh`}
 
 usage() {
   cat <<EOF
 =======================================================
 USAGE: tidepool command [service] [...additional args]
 
+  ### Global Commands ###
+
+  up                              Start the Kubernetes server and Tidepool services, in that order
+  down                            Stop the Tidepool services and Kubernetes server, in that order
+
+  destroy                         Shut down and completely remove the local Kubernetes server and
+                                  all services
+
 
   ### Kubernetes Server Commands ###
 
-  server-init                     Used once to initially provision the k8s stack. Specifically, it:
-                                    1. Provisions and starts the Kubernetes server
+  server-init                     Used to initialize or update the k8s stack. Specifically, it:
+                                    1. Provisions and starts the Kubernetes server and registry
                                     2. Saves the Kubernetes server config to ${KUBECONFIG}.
 
-  server-start                    Start (and provision if needed) the Kubernetes server
-  server-stop                     Stop the Kubernetes server
-  server-logs                     Tail logs for the Kubernetes server
-
-  server-docker [...cmds]         Run docker commands within the context of the Kubernetes server
-  server-exec [...cmds]           Run shell commands in the Kubernetes server container
-
-  server-prune                    Remove any unused images, containers, and volumes within the
-                                  Kubernetes server
-
-  server-destroy                  Shut down and completely remove the local Kubernetes server and
-                                  all services
+  server-start                    Start the Kind server and private registry containers
+  server-stop                     Stop the Kind server and private registry containers
 
 
   ### Tidepool Services Commands ###
 
-  start                           Provision and start the Tidepool services
-  stop                            Stop and remove the Tidepool services
+  start                           Provision and start the Tidepool services via Tilt
+  stop                            Stop and remove the Tidepool services via Tilt
   restart [service]               Restart the specified service
   logs [service]                  Tail logs for the specified service
 
@@ -57,8 +56,10 @@ USAGE: tidepool command [service] [...additional args]
   port-forward [service] [port]   Forward a port to a running service container
   verify-account-email [email]    Complete the email address verification step for a created account
 
-  restart-proxy                   Restart the external gateway proxy
+  restart-gateway                 Restart the gloo gateway services
                                   Useful if the exposed "blip" port stops responding on host machine
+
+  restart-kafka                   Restart the kafka services
 
 
   ### Other Commands ###
@@ -68,15 +69,50 @@ USAGE: tidepool command [service] [...additional args]
 EOF
 }
 
-run_docker() { args="${@:1}" && (set_docker_env && docker ${args}) }
+server_init() {
+  # Ensure docker is running before provisioning
+  check_docker_running
 
-run_docker_compose() { args="${@:1}" && (docker-compose -f 'docker-compose.k8s.yml' ${args}) }
+  cd ${DIR} && ctlptl apply -f Kindconfig.yaml
+}
+
+server_start() {
+  docker start tidepool-kind-control-plane
+  docker start ctlptl-registry
+}
+
+server_stop() {
+  docker stop tidepool-kind-control-plane
+  docker stop ctlptl-registry
+}
+
+start() {
+  cd ${DIR} && set_tilt_env ${1-} && tilt up -dv --port=0 --legacy
+}
+
+stop() {
+  cd ${DIR} && set_tilt_env --shutdown && tilt down
+}
+
+up() {
+  # Ensure docker is running before provisioning
+  check_docker_running
+
+  # Ensure mongodb replicaset connection before provisioning
+  $MONGODB_SHELL --eval "rs.status()"
+
+  server_start
+  start
+}
+
+down() {
+  stop
+  server_stop
+}
 
 restart() { (for P in ${@}; do kubectl scale deployment --replicas=0 ${P} && kubectl scale deployment --replicas=1 ${P}; done) }
 
 run_exec() { args="${@:2}" && (kubectl exec -ti svc/${1} -c ${1} -- /bin/sh -c "${args}") }
-
-mongo_exec() { args="${@:1}" && (kubectl exec -ti svc/mongodb -c mongo -- /bin/sh -c "${args}") }
 
 check_version() {
   pkg=${1}
@@ -86,6 +122,14 @@ check_version() {
       echo "✔ ${pkg} is up to date"
   else
       echo "✘ ${pkg} is out of date. Please install version >= ${min}"
+  fi
+}
+
+check_docker_running() {
+  # Ensure docker is running
+  if (! docker stats --no-stream ); then
+    echo "Docker is not running"
+    exit 0;
   fi
 }
 
@@ -99,16 +143,17 @@ check_environment() {
 
 doctor() {
   set +u
-  echo "Checking dependancy versions..."
-  check_version helm 'version --short' 3.0.2
-  check_version tilt 'version' 0.16.1
-  check_version docker '-v' 19.0.0
-  check_version docker-compose '-v' 1.25.0
-  check_version kubectl 'version --client --short' 1.18.2
-  echo
   echo "Checking environment config..."
   check_environment KUBECONFIG
-  check_environment TIDEPOOL_DOCKER_MONGO_VOLUME
+  check_environment MONGODB_SHELL
+  echo
+  echo "Checking dependancy versions..."
+  check_version ctlptl 'version' 0.8.5
+  check_version helm 'version --short' 3.9.1
+  check_version tilt 'version' 0.30.5
+  check_version docker '-v' 20.10.17
+  check_version kubectl 'version --client --short' 1.21.12
+  check_version $MONGODB_SHELL '--eval "db.version()"' 5.0.0
 }
 
 run_yarn() {
@@ -124,16 +169,11 @@ run_yarn() {
   fi
 }
 
-set_docker_env() {
-  export DOCKER_HOST=tcp://127.0.0.1:2375
-}
-
 set_tilt_env() {
-  set_docker_env
-
-  case "$1" in
+  case "${1-}" in
     --trap-shutdown) trap 'SHUTTING_DOWN=1 tilt down' EXIT;;
     --shutdown) export SHUTTING_DOWN=1;;
+    *) ;;
   esac
 }
 
@@ -153,50 +193,31 @@ destroy() {
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
-    cd ${DIR} && run_docker_compose rm -fsv
+    docker rm -fv tidepool-kind-control-plane
+    docker rm -fv ctlptl-registry
     rm -r ${DIR}/local/charts
   else
     echo "Destroy command aborted"
   fi
 }
 
-server_init() {
-  $0 server-start
-  set_kubeconfig
-  init_metrics_server
-}
-
-init_metrics_server() {
-    cd ${DIR} && docker-compose -f 'docker-compose.k8s.yml' exec server sh -c "if ! grep -qF 'authentication-token-webhook=true' kubelet.sh; then sed -i '/--authorization-mode=Webhook/a --authentication-token-webhook=true \\\' kubelet.sh; fi"
-
-    # Restart the server and wait till ready
-    cd ${DIR} && run_docker_compose restart
-    wait_for_kubernetes_ready
-
-    # Wait until kubectl ready
-    until kubectl get nodes; do
-      sleep 5;
-    done
-}
-
 case ${1-help} in
+  up) up;;
+  down) down;;
+  destroy) destroy;;
   server-init) server_init;;
-  server-start) (cd ${DIR} && run_docker_compose up -d ${2-});;
-  server-stop) (cd ${DIR} && run_docker_compose stop ${2-});;
-  server-logs) (cd ${DIR} && run_docker_compose logs --tail=100 -f server);;
-  server-docker) run_docker "${@:2}";;
-  server-exec) (cd ${DIR} && run_docker_compose exec server sh);;
-  server-prune) (run_docker "system prune --volumes -af" && run_docker "builder prune --all -f");;
-  server-destroy) (cd ${DIR} && destroy);;
-  start) (cd ${DIR} && set_tilt_env --trap-shutdown && tilt up -dv --port=0 --hud=true ${2-});;
-  stop) (cd ${DIR} && set_tilt_env --shutdown && tilt down);;
+  server-start) server_start;;
+  server-stop) server_stop;;
+  start) start ${2-"--trap-shutdown"};;
+  stop) stop;;
   restart) shift 1 && restart ${@};;
   logs) (cd ${DIR} && kubectl logs svc/${2} --tail=100 -c ${2} -f);;
   exec) run_exec ${2} ${@:3};;
   yarn) run_yarn ${2} "${@:3}";;
   port-forward) (cd ${DIR} && kubectl port-forward svc/${2} ${3});;
-  verify-account-email) mongo_exec "mongo --eval 'db.users.update({username: \"${@:2}\"},{\$set:{\"authenticated\":true}});' user";;
-  restart-proxy) restart gateway-proxy;;
+  verify-account-email) $MONGODB_SHELL --eval "db.users.update({username: \"${@:2}\"},{\$set:{\"authenticated\":true}});" user;;
+  restart-gateway) restart gloo gateway-proxy gateway discovery;;
+  restart-kafka) restart default-kafka-connect-mongo-connect kafka-entity-operator strimzi-cluster-operator;;
   doctor) doctor;;
   *) usage;;
 esac

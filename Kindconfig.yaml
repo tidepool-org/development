@@ -1,0 +1,17 @@
+apiVersion: ctlptl.dev/v1alpha1
+kind: Cluster
+kubernetesVersion: v1.21.12
+registry: ctlptl-registry
+product: kind
+kindV1Alpha4Cluster:
+  name: tidepool-kind
+  networking:
+    ipFamily: ipv4
+    apiServerAddress: 127.0.0.1
+  nodes:
+  - role: control-plane
+---
+apiVersion: ctlptl.dev/v1alpha1
+kind: Registry
+name: ctlptl-registry
+port: 5000

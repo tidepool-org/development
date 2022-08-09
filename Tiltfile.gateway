@@ -17,7 +17,7 @@ local_downloads_dir = getAbsoluteDir('./local/downloads')
 
 is_shutdown = isShutdown()
 
-gloo_version = '1.4.4'
+gloo_version = '1.11.23'
 gloo_archive_name = 'gloo-{}.tgz'.format(gloo_version)
 gloo_helm_url = 'https://storage.googleapis.com/solo-public-helm/charts/{}'.format(gloo_archive_name)
 
@@ -57,19 +57,23 @@ def extractGlooGatewayCharts():
 ### Custom Resource Definitions Start ###
 def provisionCRDs():
   crds_filename_map = {
-    'authconfig': 'auth_config',
-    'gateway': 'gateway',
-    'proxy': 'proxy',
-    'routetable': 'route_table',
-    'settings': 'settings',
-    'upstreamgroup': 'upstream_group',
-    'upstream': 'upstream',
-    'virtualservice': 'virtual_service',
+    'authconfig': 'v1_AuthConfig',
+    'gateway': 'v1_Gateway',
+    'httpgateway': 'v1_MatchableHttpGateway',
+    'routeoptions': 'v1_RouteOption',
+    'routetable': 'v1_RouteTable',
+    'virtualhostoptions': 'v1_VirtualHostOption',
+    'virtualservice': 'v1_VirtualService',
+    'proxy': 'v1_Proxy',
+    'settings': 'v1_Settings',
+    'upstream': 'v1_Upstream',
+    'upstreamgroup': 'v1_UpstreamGroup',
+    'graphqlapi': 'v1beta1_GraphQLApi.yaml',
+    'ratelimitconfig': 'ratelimit_config',
   }
 
   gloo_crds = listdir('{}/gloo/crds'.format(absolute_gloo_chart_dir))
 
-  print(gloo_crds);
   for crd in crds_filename_map.keys():
     createdCRD = local('kubectl get crd {crd} --ignore-not-found'.format(
       crd = crd

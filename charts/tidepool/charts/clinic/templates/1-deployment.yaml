@@ -44,6 +44,12 @@ spec:
       - env:
         {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.tracing.common" .}}
+        - name: DEMO_CLINIC_USER_ID
+          valueFrom:
+            configMapKeyRef:
+              name: shoreline
+              key: ClinicDemoUserId
+              optional: true
         - name: TIDEPOOL_SERVER_TOKEN
           valueFrom:
             secretKeyRef:
