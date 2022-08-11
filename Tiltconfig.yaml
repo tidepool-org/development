@@ -35,6 +35,11 @@ global:
 gateway-proxy:
   portForwards: ['3000']
 
+gatewayProxies:
+  gatewayProxy:
+    podTemplate:
+      httpPort: 80
+
 gateway:
   validation:
     enabled: false
