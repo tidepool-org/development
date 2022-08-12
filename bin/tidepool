@@ -195,7 +195,6 @@ destroy() {
   then
     docker rm -fv tidepool-kind-control-plane
     docker rm -fv ctlptl-registry
-    rm -r ${DIR}/local/charts
   else
     echo "Destroy command aborted"
   fi
