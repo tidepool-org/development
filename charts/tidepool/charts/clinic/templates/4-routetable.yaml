@@ -18,8 +18,10 @@ spec:
             - PUT
           prefix: /v1/clinics
       options:
+{{ if not .Values.global.glooingress.jwt.disabled }}
         jwt:
           disable: false
+{{- end }}
       routeAction:
         single:
           upstream:

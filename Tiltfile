@@ -33,7 +33,7 @@ def main():
       local('tilt up --file=Tiltfile.kafka --legacy=0 --port=0 >/dev/null 2>&1 &')
 
     # Ensure proxy services are deployed
-    gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found -n gloo-system')
+    gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found -n default')
     if not gateway_proxy_service:
       fail("Gateway service is missing. Please install gateway via glooctl")
 

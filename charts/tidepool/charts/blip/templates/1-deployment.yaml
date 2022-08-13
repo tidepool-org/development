@@ -48,6 +48,8 @@ spec:
         env:
         - name: SKIP_HAKKEN
           value: "true"
+        - name: PORT
+          value: "{{.Values.global.ports.blip}}"
 {{ if .Values.webpackPublicPath }}
         - name: WEBPACK_PUBLIC_PATH
           value: {{ .Values.webpackPublicPath }}

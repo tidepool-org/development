@@ -6,3 +6,9 @@ gatewayProxies:
       httpsPort: 32500
       httpNodePort: 31500
       httpsNodePort: 32500
+
+settings:
+  create: true
+  writeNamespace: default
+  watchNamespaces:
+  - default
