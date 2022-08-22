@@ -18,6 +18,7 @@ global:
     proxy:
       name: gateway-proxy
       namespace: default
+      targetPort: 31500
   linkerdsupport:
     enabled: false
   ports:
@@ -45,7 +46,6 @@ glooingress:
       name: "internal"
       dnsNames: ["*"]
       port: "31500"
-      # serveAllDomains: true
       options:
         cors:
           allowCredentials: true
