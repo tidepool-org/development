@@ -16,6 +16,7 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [Install Helm](#install-helm)
   - [Install Tilt](#install-tilt)
   - [Install Tilt "cattle patrol" (ctlptl)](#install-ctlptl)
+  - [Install Gloo Gateway CLI (glooctl)](#install-glooctl)
   - [Install Netcat](#install-netcat)
   - [Install and Configure MongoDB](#install-and-configure-mongodb)
   - [Clone This Repository](#clone-this-repository)
@@ -140,6 +141,18 @@ ctlptl apply -f Kindconfig.yaml
 ```
 
 This config will provision and start up the Kubernetes server, and a private docker registry that Tilt will deploy development builds to as you work locally on the Tidepool services.
+
+## Install glooctl
+
+We provision the Gloo gateway, which is responsible for service routing, using glooctl. Please follow the [glooctl Installation Instructions](https://docs.solo.io/gloo-edge/master/installation/glooctl_setup/).
+
+Once installed, you can provision the kubernetes stack with `glooctl`, using the `Glooconfig.yaml` configuration provided at the root of this repo.
+
+```
+glooctl install gateway -n default --values Glooconfig.yaml
+```
+
+This config will provision the Gloo gateway in the `default` namespace. This only needs to be provisioned once.
 
 ## Install Netcat
 
@@ -442,7 +455,7 @@ The administrator credentials can be tweaked by setting KEYCLOAK_USER and KEYCLO
 
 ## Creating An Account
 
-Once your local Tidepool is running, open your Chrome browser and browse to http://localhost:3000. You should see the Tidepool login page running from your local computer, assuming everything worked as expected. Go ahead and signup for a new account. Remember, all accounts and data created via this local Tidepool are _ONLY_ stored on your computer. _No_ data is stored on any of the Tidepool servers.
+Once your local Tidepool is running, open your Chrome browser and browse to http://localhost:31500. You should see the Tidepool login page running from your local computer, assuming everything worked as expected. Go ahead and signup for a new account. Remember, all accounts and data created via this local Tidepool are _ONLY_ stored on your computer. _No_ data is stored on any of the Tidepool servers.
 
 ## Verifying An Account Email
 
@@ -573,7 +586,7 @@ becomes
 
 | Repository Name                                                  | Docker Container Name (`<docker-container-name>`) | Description                     | Language                       | Git Clone URL (`<git-clone-url>`)                  | Default Clone Directory (`<default-clone-directory>`)     |
 | ---------------------------------------------------------------- | ------------------------------------------------- | ------------------------------- | ------------------------------ | -------------------------------------------------- | --------------------------------------------------------- |
-| [blip](https://github.com/tidepool-org/blip)                     | blip                                              | Web (ie. http://localhost:3000) | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/blip.git           | ../blip                                                      |
+| [blip](https://github.com/tidepool-org/blip)                     | blip                                              | Web (ie. http://localhost:31500) | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/blip.git           | ../blip                                                      |
 | [gatekeeper](https://github.com/tidepool-org/gatekeeper)         | gatekeeper                                        | Permissions                     | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/gatekeeper.git     | ../gatekeeper                                                |
 | [highwater](https://github.com/tidepool-org/highwater)           | highwater                                         | Metrics                         | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/highwater.git      | ../highwater                                                 |
 | [hydrophone](https://github.com/tidepool-org/hydrophone)         | hydrophone                                        | Email, Invitations              | [Golang](https://golang.org/)  | https://github.com/tidepool-org/hydrophone.git     | ~/go/src/github.com/tidepool-org/hydrophone               |
@@ -761,9 +774,9 @@ blip:
     image: tidepool-k8s-blip # Uncommented
   hostPath: ../blip # Uncommented and path matches the cloned blip repo location
   containerPath: "/app"
-  apiHost: "http://localhost:3000"
+  apiHost: "http://localhost:31500"
   webpackDevTool: cheap-module-eval-source-map
-  webpackPublicPath: "http://localhost:3000"
+  webpackPublicPath: "http://localhost:31500"
   linkedPackages:
     - name: tideline
       packageName: tideline
@@ -793,9 +806,9 @@ blip:
     image: tidepool-k8s-blip
   hostPath: ../blip
   containerPath: "/app"
-  apiHost: "http://localhost:3000"
+  apiHost: "http://localhost:31500"
   webpackDevTool: cheap-module-eval-source-map
-  webpackPublicPath: "http://localhost:3000"
+  webpackPublicPath: "http://localhost:31500"
   linkedPackages:
     # ...
     - name: viz
@@ -897,7 +910,7 @@ This will allow your changes to be tracked properly in version control, and Tilt
 
 | Service                                                           | Standard Port(s)       |
 | ----------------------------------------------------------------- | ---------------------- |
-| [blip](https://github.com/tidepool-org/blip)                      |                 3000                   |
+| [blip](https://github.com/tidepool-org/blip)                      |                 31500                   |
 | [export](https://github.com/tidepool-org/export)                  | 9300                   |
 | [gatekeeper](https://github.com/tidepool-org/gatekeeper)          | 9123                   |
 | [hakken](https://github.com/tidepool-org/hakken)                  | 8000                   |
@@ -966,7 +979,7 @@ If your services are running properly, you can simply ignore the state reporting
 
 Currently, there is a known issue where at times the gateway proxy service that handles incoming requests loses track of the local blip service.
 
-This will present itself usually with the web app getting stuck in a loading state in the browser, or possibly resolving with an error message like: `‘No healthy upstream on blip (http://localhost:3000)`
+This will present itself usually with the web app getting stuck in a loading state in the browser, or possibly resolving with an error message like: `‘No healthy upstream on blip (http://localhost:31500)`
 
 The solution first solution to try is to restart the gloo `gateway` services, which should restore access in a few moments:
 
