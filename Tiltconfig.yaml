@@ -18,7 +18,7 @@ global:
     proxy:
       name: gateway-proxy
       namespace: default
-      targetPort: 31500
+      targetPort: 0
   linkerdsupport:
     enabled: false
   ports:
@@ -326,6 +326,7 @@ hydrophone:
   deployment:
     env:
       clinicServiceEnabled: true
+      useMockNotifier: true
     # image: tidepool-k8s-hydrophone # Uncomment to build and run local image or a specific remote image
   # hostPath: ~/go/src/github.com/tidepool-org/hydrophone          # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/hydrophone'
