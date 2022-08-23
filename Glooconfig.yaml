@@ -2,8 +2,8 @@ gatewayProxies:
   gatewayProxy:
     service:
       type: NodePort
-      httpPort: 31500
-      httpsPort: 32500
+      httpPort: 80
+      httpsPort: 443
       httpNodePort: 31500
       httpsNodePort: 32500
 
