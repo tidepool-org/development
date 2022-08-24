@@ -1,6 +1,0 @@
-mongodb:
-  image: mongo:4.0
-  port: '27017'
-  volume: mongo2
-  persistent: true
-  seed: false

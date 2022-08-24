@@ -10,6 +10,13 @@ kindV1Alpha4Cluster:
     apiServerAddress: 127.0.0.1
   nodes:
   - role: control-plane
+    extraPortMappings:
+    - containerPort: 31500
+      hostPort: 31500
+      protocol: TCP
+    - containerPort: 32500
+      hostPort: 32500
+      protocol: TCP
 ---
 apiVersion: ctlptl.dev/v1alpha1
 kind: Registry

@@ -4,14 +4,21 @@
 
 ### Global Config Start ###
 global:
+  glooingress:
+    enabled: true
+    jwt:
+      disabled: true
+    extauth:
+      enabled: false
   gateway:
     default:
       protocol: http
-      host: localhost:3000
+      host: localhost:31500
       domain: localhost
     proxy:
       name: gateway-proxy
       namespace: default
+      targetPort: 0
   linkerdsupport:
     enabled: false
   ports:
@@ -32,22 +39,13 @@ global:
 ### Global Config End ###
 
 ### Gateway Config Start ###
-gateway-proxy:
-  portForwards: ['3000']
-
-gateway:
-  validation:
-    enabled: false
-
 glooingress:
   enabled: true
-  jwt:
-    enabled: false
   virtualServices:
     http:
       name: "internal"
       dnsNames: ["*"]
-      serveAllDomains: true
+      port: "31500"
       options:
         cors:
           allowCredentials: true
@@ -71,7 +69,6 @@ glooingress:
           - x-tidepool-trace-request
           - x-tidepool-trace-session
           maxAge: 600s
-      port: "3000"
 
 apiServer:
   enable: false
@@ -225,11 +222,11 @@ blip:
     # image: tidepool-k8s-blip # Uncomment to build and run local image or a specific remote image
   # hostPath: ../blip          # Uncomment to build and run local image
   containerPath: '/app'
-  apiHost: 'http://localhost:3000'
+  apiHost: 'http://localhost:31500'
   rollbarPostServerToken: '' # Rollbar post_server_item access token for posting source maps on production builds
   webpackDevTool: cheap-module-eval-source-map
   webpackDevToolViz: cheap-source-map # Suggest changing `cheap-source-map` to the slower, but far more helpful `source-map` if debugging errors in viz package files
-  webpackPublicPath: 'http://localhost:3000/'
+  webpackPublicPath: 'http://localhost:31500/'
   linkedPackages:
     - name: viz
       packageName: '@tidepool/viz'
@@ -329,6 +326,7 @@ hydrophone:
   deployment:
     env:
       clinicServiceEnabled: true
+      useMockNotifier: true
     # image: tidepool-k8s-hydrophone # Uncomment to build and run local image or a specific remote image
   # hostPath: ~/go/src/github.com/tidepool-org/hydrophone          # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/hydrophone'

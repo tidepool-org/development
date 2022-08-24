@@ -50,6 +50,8 @@ spec:
           value: {{ include "charts.hydrophone.s3.url" . | quote }}
         - name: HYDROPHONE_WEB_URL
           value: {{ include "charts.host.app" . | quote }}
+        - name: HYDROPHONE_USE_MOCK_NOTIFIER
+          value: "{{.Values.deployment.env.useMockNotifier}}"
         - name: SES_REGION
           value: {{.Values.global.region | quote }}
         - name: SES_FROM_ADDRESS
