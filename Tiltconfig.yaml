@@ -291,7 +291,7 @@ data:
   deployment:
     # image: tidepool-k8s-data # Uncomment to build and run local image or a specific remote image
   # hostPath: ~/go/src/github.com/tidepool-org/platform      # Uncomment to build and run local image
-  containerPath: ../platform
+  containerPath: /go/src/github.com/tidepool-org/platform
   dockerFile: 'Dockerfile.data'
   rebuildCommand: 'SERVICE=data make service-build'
 
