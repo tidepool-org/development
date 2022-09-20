@@ -12,7 +12,7 @@ spec:
   config:
     change.data.capture.handler: com.mongodb.kafka.connect.sink.cdc.mongodb.ChangeStreamHandler
     collection: clinician_permissions
-    connection.uri: {{ .Values.global.kafka.connect.connectionUri }}
+    connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
     database: gatekeeper
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: false

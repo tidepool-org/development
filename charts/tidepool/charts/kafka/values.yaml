@@ -43,6 +43,9 @@ configmap:
   Version: "2.5.0"
 mongo:
   secretName: "mongo"
+keycloak:
+  enabled: false
+  secretName: "keycloak"
 kafka:
   secretName: "kafka"
 secret:
