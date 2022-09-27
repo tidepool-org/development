@@ -39,7 +39,7 @@ spec:
       - name: connector-config
         secret:
           secretName: {{ .Values.mongo.secretName }}
-{{ if .Values.keycloak.enabled }}
+{{ if .Values.global.kafka.connect.keycloak.enabled }}
       - name: keycloak-config
         secret:
           secretName: {{ .Values.keycloak.secretName }}

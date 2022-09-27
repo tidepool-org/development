@@ -1,0 +1,27 @@
+{{ if .Values.global.kafka.connect.enabled and .Values.global.kafka.connect.keycloak.enabled}}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  labels:
+    app: users-source
+    strimzi.io/cluster: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
+  name: users-source
+  namespace: {{ .Release.Namespace }}
+spec:
+  class: io.debezium.connector.postgresql.PostgresConnector
+  config:
+    'tasks.max': 1,
+    'plugin.name': 'wal2json',
+    'database.hostname': '${directory:/opt/kafka/external-configuration/keycloak-config:Hostname}',
+    'database.port': '${directory:/opt/kafka/external-configuration/keycloak-config:Port}',
+    'database.user': '${directory:/opt/kafka/external-configuration/keycloak-config:User}',
+    'database.password': '${directory:/opt/kafka/external-configuration/keycloak-config:Password}',
+    'database.dbname': '${directory:/opt/kafka/external-configuration/keycloak-config:Database}',
+    'database.server.name': 'keycloak-'{{ .Release.Namespace }},
+    'key.converter': 'org.apache.kafka.connect.json.JsonConverter',
+    'key.converter.schemas.enable': false,
+    'value.converter': 'org.apache.kafka.connect.json.JsonConverter',
+    'value.converter.schemas.enable': false,
+    'snapshot.mode': 'always',
+  tasksMax: 1
+{{- end }}

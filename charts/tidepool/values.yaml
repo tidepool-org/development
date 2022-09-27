@@ -46,6 +46,9 @@ global:
       tlsEnabled: true
       # -- mongo connection uri
       mongoConnectionUri: ${directory:/opt/kafka/external-configuration/connector-config:Scheme}://${directory:/opt/kafka/external-configuration/connector-config:Username}:${directory:/opt/kafka/external-configuration/connector-config:Password}@${directory:/opt/kafka/external-configuration/connector-config:Addresses}/?ssl=${directory:/opt/kafka/external-configuration/connector-config:Tls}
+      # -- enable keycloak kafka connector
+      keycloak:
+        enabled: false
     # -- The password key ref
     passwordKeyName: "Password"
   linkerdsupport:
