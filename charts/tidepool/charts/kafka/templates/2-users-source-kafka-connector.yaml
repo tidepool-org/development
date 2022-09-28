@@ -1,4 +1,4 @@
-{{ if .Values.global.kafka.connect.enabled and .Values.global.kafka.connect.keycloak.enabled}}
+{{ if and .Values.global.kafka.connect.enabled .Values.global.kafka.connect.keycloak.enabled}}
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
