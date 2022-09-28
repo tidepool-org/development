@@ -10,18 +10,18 @@ metadata:
 spec:
   class: io.debezium.connector.postgresql.PostgresConnector
   config:
-    'tasks.max': 1,
-    'plugin.name': 'wal2json',
-    'database.hostname': '${directory:/opt/kafka/external-configuration/keycloak-config:Hostname}',
-    'database.port': '${directory:/opt/kafka/external-configuration/keycloak-config:Port}',
-    'database.user': '${directory:/opt/kafka/external-configuration/keycloak-config:User}',
-    'database.password': '${directory:/opt/kafka/external-configuration/keycloak-config:Password}',
-    'database.dbname': '${directory:/opt/kafka/external-configuration/keycloak-config:Database}',
-    'database.server.name': 'keycloak-'{{ .Release.Namespace }},
-    'key.converter': 'org.apache.kafka.connect.json.JsonConverter',
-    'key.converter.schemas.enable': false,
-    'value.converter': 'org.apache.kafka.connect.json.JsonConverter',
-    'value.converter.schemas.enable': false,
-    'snapshot.mode': 'always',
+    tasks.max: 1
+    plugin.name: 'wal2json'
+    database.hostname: '${directory:/opt/kafka/external-configuration/keycloak-config:Hostname}'
+    database.port: '${directory:/opt/kafka/external-configuration/keycloak-config:Port}'
+    database.user: '${directory:/opt/kafka/external-configuration/keycloak-config:User}'
+    database.password: '${directory:/opt/kafka/external-configuration/keycloak-config:Password}'
+    database.dbname: '${directory:/opt/kafka/external-configuration/keycloak-config:Database}'
+    database.server.name: 'keycloak-'{{ .Release.Namespace }}
+    key.converter: 'org.apache.kafka.connect.json.JsonConverter'
+    key.converter.schemas.enable: false
+    value.converter: 'org.apache.kafka.connect.json.JsonConverter'
+    value.converter.schemas.enable: false
+    snapshot.mode: 'always'
   tasksMax: 1
 {{- end }}
