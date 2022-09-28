@@ -23,5 +23,6 @@ spec:
     value.converter: 'org.apache.kafka.connect.json.JsonConverter'
     value.converter.schemas.enable: false
     snapshot.mode: 'always'
+    table.include.list: 'public.user_entity,public.user_role_mapping'
   tasksMax: 1
 {{- end }}
