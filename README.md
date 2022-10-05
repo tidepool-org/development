@@ -1,3 +1,5 @@
+# DISCLAIMER: The `k8s-stable` branch is no longer maintained. Please use the `master` branch
+
 # Welcome!
 
 Welome to [Tidepool](https://tidepool.org) at GitHub!
