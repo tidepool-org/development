@@ -3,96 +3,78 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: jellyfish
+    app: clinic
 {{ include "charts.labels.standard" .}}
-  name: jellyfish
+  name: clinic
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }}"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.kafka.secretName }}"
+    configmap.reloader.stakater.com/reload: "{{ .Values.kafka.configmapName }}"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
 spec:
   selector:
     matchLabels:
-      app: jellyfish
+      app: clinic
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: {{ .Values.deployment.replicas }}
   strategy: {}
   template:
     metadata:
+      labels:
+        app: clinic
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
 {{ if .Values.podAnnotations }}
       annotations:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
-      labels:
-        app: jellyfish
-        app.kubernetes.io/name: {{ include "charts.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       {{ if .Values.initContainers }}
       initContainers:
 {{- with .Values.initContainers }}
 {{toYaml . | indent 6}}{{- end }}
       {{- end }}
-{{ if .Values.serviceAccount.name }}
-      serviceAccountName: {{ .Values.serviceAccount.name }}
-{{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- end }}
       containers:
       - env:
-        {{ include "charts.mongo.params" .}}
+        {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.tracing.common" .}}
-        - name: TIDEPOOL_STORE_DATABASE
-          value: {{ .Values.store.database | quote }}
-        - name: TIDEPOOL_STORE_DATABASE_PREFIX
-          value: {{ .Values.store.prefix | quote }}
-        - name: MINIMUM_UPLOADER_VERSION
+        - name: CLINIC_DEMO_PATIENT_USER_ID
           valueFrom:
             configMapKeyRef:
-              name: jellyfish
-              key: MinimumUploaderVersion
+              name: shoreline
+              key: ClinicDemoUserId
               optional: true
-        - name: KEYCLOAK_AUTH_REALM
-          valueFrom:
-            configMapKeyRef:
-              name: jellyfish
-              key: AuthRealm
-              optional: true
-        - name: KEYCLOAK_AUTH_URL
-          valueFrom:
-            configMapKeyRef:
-              name: jellyfish
-              key: AuthUrl
-              optional: true
-        - name: PORT
-          value: "{{.Values.global.ports.jellyfish}}"
-        - name: TIDEPOOL_SERVER_SECRET
+        - name: TIDEPOOL_SERVER_TOKEN
           valueFrom:
             secretKeyRef:
               name: server
               key: ServiceAuth
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
-          value: "shoreline:{{.Values.global.ports.shoreline}}"
+          value: "http://shoreline:{{.Values.global.ports.shoreline}}"
         - name: TIDEPOOL_SEAGULL_CLIENT_ADDRESS
-          value: "seagull:{{.Values.global.ports.seagull}}"
-        - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
-          value: "gatekeeper:{{.Values.global.ports.gatekeeper}}"
+          value: "http://seagull:{{.Values.global.ports.seagull}}"
+        - name: TIDEPOOL_GATEKEEPER_CLIENT_ADDRESS
+          value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
+        - name: TIDEPOOL_CONFIRMATION_CLIENT_ADDRESS
+          value: "http://hydrophone:{{.Values.global.ports.hydrophone}}"
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
-        livenessProbe:
-          httpGet:
-            path: /status
-            port: {{ .Values.global.ports.jellyfish }}
-          failureThreshold: 5
         readinessProbe:
           httpGet:
-            path: /status
-            port: {{ .Values.global.ports.jellyfish }}
-        name: jellyfish
+            path: /ready
+            port: {{ .Values.global.ports.clinic }}
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        name: clinic
         ports:
-        - containerPort: {{ .Values.global.ports.jellyfish }}
+        - containerPort: {{ .Values.global.ports.clinic }}
           name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}

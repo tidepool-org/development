@@ -55,7 +55,7 @@ spec:
         - name: TIDEPOOL_GATEKEEPER_CLIENT_ADDRESS
           value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
         - name: TIDEPOOL_CLINIC_CLIENT_ADDRESS
-          value: "http://internal.{{.Release.Namespace}}"
+          value: "http://clinic:{{.Values.global.ports.clinic}}"
         - name: TIDEPOOL_CONFIRMATION_CLIENT_ADDRESS
           value: "http://hydrophone:{{.Values.global.ports.hydrophone}}"
         - name: KAFKA_CONSUMER_GROUP
@@ -82,25 +82,24 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ .Values.kafka.secretName }}
-              key: Password
-              optional: true
+              key: {{ .Values.global.kafka.passwordKeyName | default "Password" }}
         - name: KAFKA_VERSION
           valueFrom:
             configMapKeyRef:
               name: {{ .Values.kafka.configmapName }}
               key: Version
               optional: true
+        - name: KAFKA_DEAD_LETTERS_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.kafka.configmapName }}
+              key: UserEventsClinicWorkerDeadLettersTopic
         - name: KAFKA_TOPIC_PREFIX
           valueFrom:
             configMapKeyRef:
               name: "clinic-worker"
               key: KafkaTopicPrefix
               optional: true
-        - name: KAFKA_TOPIC
-          valueFrom:
-            configMapKeyRef:
-              name: "clinic-worker"
-              key: KafkaTopic
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}

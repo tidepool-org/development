@@ -22,6 +22,7 @@ data:
   UserEventsAuthDeadLettersTopic: {{ .Values.configmap.UserEventsAuthDeadLettersTopic }}
   UserEventsBlobDeadLettersTopic: {{ .Values.configmap.UserEventsBlobDeadLettersTopic }}
   UserEventsDataDeadLettersTopic: {{ .Values.configmap.UserEventsDataDeadLettersTopic }}
+  UserEventsClinicWorkerDeadLettersTopic: {{ .Values.configmap.UserEventsClinicWorkerDeadLettersTopic }}
   UserEventsGatekeeperDeadLettersTopic: {{ .Values.configmap.UserEventsGatekeeperDeadLettersTopic }}
   UserEventsHydrophoneDeadLettersTopic: {{ .Values.configmap.UserEventsHydrophoneDeadLettersTopic }}
   UserEventsMarketoDeadLettersTopic: {{ .Values.configmap.UserEventsMarketoDeadLettersTopic }}

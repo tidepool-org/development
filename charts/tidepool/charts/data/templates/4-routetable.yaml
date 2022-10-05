@@ -130,4 +130,25 @@ spec:
       shadowing:
 {{- toYaml .Values.shadowing | nindent 8 }}
 {{- end }}
+  - matchers:
+    - methods:
+      - POST
+      exact: '/v1/summaries'
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      timeout: "300s"
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      prefix: /v1/summaries
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      timeout: "60s"
 {{- end }}

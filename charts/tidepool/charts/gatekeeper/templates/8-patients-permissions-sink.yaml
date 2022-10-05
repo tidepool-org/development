@@ -1,0 +1,26 @@
+{{ if .Values.global.kafka.connect.enabled }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  labels:
+    app: patients-permissions-sink
+    strimzi.io/cluster: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
+  name: patients-permissions-sink
+  namespace: {{ .Release.Namespace }}
+spec:
+  class: com.mongodb.kafka.connect.MongoSinkConnector
+  config:
+    change.data.capture.handler: com.mongodb.kafka.connect.sink.cdc.mongodb.ChangeStreamHandler
+    collection: patient_permissions
+    connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
+    database: gatekeeper
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: false
+    post.processor.chain: com.mongodb.kafka.connect.sink.processor.AllowListValueProjector
+    topics: {{ .Release.Namespace }}.clinic.patients
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: false
+    value.projection.list: _id,userId,clinicId,permissions
+    value.projection.type: AllowList
+  tasksMax: {{ .Values.global.kafka.connect.sinkTasksMax | int }}
+{{- end }}

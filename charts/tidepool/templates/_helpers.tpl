@@ -167,13 +167,6 @@ Create environment variables used by all platform services.
 Create liveness and readiness probes for platform services.
 */}}
 {{- define "charts.platform.probes" -}}
-        livenessProbe:
-          httpGet:
-            path: /status
-            port: {{.}}
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
         readinessProbe:
           httpGet:
             path: /status
@@ -183,12 +176,6 @@ Create liveness and readiness probes for platform services.
           timeoutSeconds: 5
 {{- end -}}
 {{- define "charts.platform.grpc_probes" -}}
-        livenessProbe:
-          exec:
-            command: ["/bin/grpc_health_probe", "-addr=:{{.}}"]
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
         readinessProbe:
           exec:
             command: ["/bin/grpc_health_probe", "-addr=:{{.}}"]
@@ -200,24 +187,24 @@ Create liveness and readiness probes for platform services.
       - name: init-shoreline
         image: busybox:1.31.1
         command: ['sh', '-c', 'until nc -zvv shoreline {{.Values.global.ports.shoreline}}; do echo waiting for shoreline; sleep 2; done;']
-{{- end -}} 
+{{- end -}}
 
-{{- define "charts.labels.standard" }} 
+{{- define "charts.labels.standard" }}
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "charts.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{- define "charts.service.https.port" -}} 
+{{- define "charts.service.https.port" -}}
 {{ .Values.gloo.gatewayProxies.gatewayProxyV2.service.httpsPort }}
 {{ end }}
 
-{{- define "charts.service.http.port" -}} 
+{{- define "charts.service.http.port" -}}
 {{ .Values.gloo.gatewayProxies.gatewayProxyV2.service.httpPort }}
 {{ end }}
 
-{{- define "charts.service.type" -}} 
+{{- define "charts.service.type" -}}
 {{ .Values.gloo.gatewayProxies.gatewayProxyV2.service.type }}
 {{ end }}
 
@@ -250,8 +237,7 @@ Create liveness and readiness probes for platform services.
           valueFrom:
             secretKeyRef:
               name: {{ .Values.kafka.secretName }}
-              key: Password
-              optional: true
+              key: {{ .Values.global.kafka.passwordKeyName | default "Password" }}
         - name: KAFKA_VERSION
           valueFrom:
             configMapKeyRef:

@@ -189,6 +189,7 @@ spec:
         disable: true
   - matchers:
       - methods:
+          - GET
           - PATCH
           - DELETE
         regex: /v1/clinics/[^/]+/invites/clinicians/[^/]+

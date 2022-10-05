@@ -1,7 +1,7 @@
 global:
   # -- maximum timeout for any web request
   maxTimeout: 120s
-  fullnameOverride: ""                             #
+  fullnameOverride: ""
   # -- if non-empty, Helm chart name to use
   nameOverride: ""
   # -- aws region that services run in
@@ -26,22 +26,45 @@ global:
   glooingress:
     # -- whether to use Gloo API Gateway for ingress
     enabled: true
+    jwt:
+      disabled: false
     extauth:
       enabled: false
+  kafka:
+    connect:
+      # -- whether to generate strimzi resources for CDC
+      enabled: false
+      # -- the name of the kafka connect cluster
+      clusterName: kafka-connect-mongo
+      # -- the number of replicas for the kafka connect cluster
+      replicas: 2
+      # -- max tasks for sink connectors
+      sinkTasksMax: 2
+      # -- max tasks for source connectors
+      sourceTasksMax: 2
+      # -- enable tls
+      tlsEnabled: true
+      # -- mongo connection uri
+      mongoConnectionUri: ${directory:/opt/kafka/external-configuration/connector-config:Scheme}://${directory:/opt/kafka/external-configuration/connector-config:Username}:${directory:/opt/kafka/external-configuration/connector-config:Password}@${directory:/opt/kafka/external-configuration/connector-config:Addresses}/?ssl=${directory:/opt/kafka/external-configuration/connector-config:Tls}
+      # -- enable keycloak kafka connector
+      keycloak:
+        enabled: false
+    # -- The password key ref
+    passwordKeyName: "Password"
   linkerdsupport:
     # -- whether to include linkerdsupport subchart with Linkerd service profiles
     enabled: true
   ports:
     # -- blip service internal port
-    blip: 3000
+    blip: 31500
     # -- clinic service internal port
     clinic: 8080
     # -- clinic worker internal port
     clinic_worker: 8080
     # -- devices service grpc internal port
-    devices_grpc: 9228                             
+    devices_grpc: 9228
     # -- devices service http internal port
-    devices_http: 9229 
+    devices_http: 9229
     # -- export service internal port
     export: 9300
     # -- gatekeeper service internal port
@@ -62,6 +85,8 @@ global:
     data: 9220
     # -- image service internal port
     image: 9226
+    # -- mailer service internal port
+    mailer: 8080
     # -- notification service internal port
     notification: 9223
     # -- prescription service internal port

@@ -21,36 +21,32 @@ def main():
   # Set up tidepool helm template command
   tidepool_helm_template_cmd = 'helm template --namespace default '
 
-  mongodb_port_forwards = getNested(config,'mongodb.portForwards', ['27017'])
-  mongodb_port_forward_host_port = mongodb_port_forwards[0].split(':')[0]
-
   if not is_shutdown:
     updateHelmDependancies()
     provisionClusterRoleBindings()
     provisionServerSecrets()
     provisionConfigMaps()
 
-    # Ensure mongodb service is deployed
-    if not getNested(config, 'mongodb.useExternal'):
-      mongodb_service = local('kubectl get service mongodb --ignore-not-found')
-      if not mongodb_service:
-        local('tilt up --file=Tiltfile.mongodb --hud=0 --port=0 >/dev/null 2>&1 &')
+    # Ensure kafka service is deployed
+    kafka_service = local('kubectl get service kafka-kafka-bootstrap --ignore-not-found')
+    if not kafka_service:
+      local('tilt up --file=Tiltfile.kafka --legacy=0 --port=0 >/dev/null 2>&1 &')
 
     # Ensure proxy services are deployed
-    gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found')
+    gateway_proxy_service = local('kubectl get service gateway-proxy --ignore-not-found -n default')
     if not gateway_proxy_service:
-      local('tilt up --file=Tiltfile.gateway --hud=0 --port=0 >/dev/null 2>&1 &')
+      fail("Gateway service is missing. Please install gateway via glooctl")
 
-    # Wait until mongodb and gateway proxy services are forwarding before provisioning rest of stack
-    if not getNested(config, 'mongodb.useExternal'):
-      print("Preparing mongodb service...")
-      local('while ! nc -z localhost {}; do sleep 1; done'.format(mongodb_port_forward_host_port))
+    # Wait until kafka is ready and kafka secrets are created
+    if not kafka_service:
+      print("Preparing kafka service...")
+      local('while [ -z "$(kubectl get secret kafka --ignore-not-found)" ]; do sleep 5; done')
+      print("Kafka ready.")
 
   else:
-    # Shut down the mongodb and gateway services
-    if not getNested(config, 'mongodb.useExternal'):
-      local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.mongodb &>/dev/null &')
     local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.gateway &>/dev/null &')
+
+    local('SHUTTING_DOWN=1 tilt down --file=Tiltfile.kafka &>/dev/null &')
 
     # Clean up any tilt up background processes
     local('for pid in $(ps -o pid,args | awk \'$2 ~ /tilt/ && $3 ~ /up/ {print $1}\'); do kill -9 $pid; done')
@@ -71,8 +67,6 @@ def main():
   # Deploy and watch the helm charts
   k8s_yaml(
     [
-      # Start kafka before Tidepool services
-      './tools/kafka/kafka.yaml',
       local('{helmCmd} {chartDir}'.format(
       chartDir=tidepool_helm_chart_dir,
       helmCmd=tidepool_helm_template_cmd)),
@@ -170,6 +164,10 @@ def provisionConfigMaps ():
 
   if getNested(config, 'shoreline.configmap.enabled'):
     required_configmaps.append('shoreline')
+  if getNested(config, 'clinic.configmap.enabled'):
+    required_configmaps.append('clinic')
+  if getNested(config, 'clinic-worker.configmap.enabled'):
+    required_configmaps.append('clinic-worker')
 
   # Skip configmaps already available on cluster
   existing_configmaps = str(local("kubectl get --ignore-not-found configmaps -o=jsonpath='{.items[].metadata.name}'")).split()
@@ -319,7 +317,7 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
         entrypoint=entrypoint,
         command='{} {} {}'.format(preBuildCommand, buildCommand, postBuildCommand),
         deps=build_deps,
-        disable_push=True,
+        disable_push=False,
         tag='tilt',
         live_update=live_update_commands
       )

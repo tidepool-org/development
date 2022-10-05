@@ -4,3 +4,6 @@ local/*
 !local/README.md
 !local/tilt/
 .envrc
+.helm
+tilt_modules/
+.idea/

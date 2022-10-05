@@ -12,11 +12,13 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
 
 - [Initial Setup](#initial-setup)
   - [Install Docker](#install-docker)
-  - [Install Docker Compose](#install-docker-compose)
   - [Install Kubernetes Client](#install-kubernetes-client)
   - [Install Helm](#install-helm)
   - [Install Tilt](#install-tilt)
+  - [Install Tilt "cattle patrol" (ctlptl)](#install-ctlptl)
+  - [Install Gloo Gateway CLI (glooctl)](#install-glooctl)
   - [Install Netcat](#install-netcat)
+  - [Install and Configure MongoDB](#install-and-configure-mongodb)
   - [Clone This Repository](#clone-this-repository)
   - [Add Tidepool Helper Script (recommended)](#add-tidepool-helper-script-recommended)
   - [Environment Setup (recommended)](#environment-setup-recommended)
@@ -48,8 +50,6 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
 
 # Initial Setup
 
-**IMPORTANT NOTE:** You must run the [k8s-stable](https://github.com/tidepool-org/development/tree/k8s-stable) branch of this repo. The default `master` branch is subject to changes at any moment and it’s not always possible to keep the local enviroment config up to date. The `k8s-stable` branch will always be the latest functioning local development enviroment.
-
 It's easy to get up and running quickly as long as you know a bit about your computer and your way around a terminal window.
 
 **WINDOWS USERS:**
@@ -67,12 +67,6 @@ The Tidepool stack relies on [Docker](https://www.docker.com) and [Docker Compos
 Follow the appropriate link for your platform (Mac OSx or Linux recommended) at https://docs.docker.com/install/#supported-platforms and follow the directions to install and run Docker on your computer.
 
 **IMPORTANT:** This stack is VERY resource intensive.  You will need a fairly robust computer to run it efficiently, and will need to provide Docker with at least 60 GB of disk space and 4 GB of RAM. The default 2 GB RAM for Docker on MacOS won't cut it, and will need to be increased via the preferences panel. We recommend 8 GB or higher if you have 12 GB or more available.
-
-## Install Docker Compose
-
-We use [Docker Compose](https://docs.docker.com/compose/) to run a local Kubernetes cluster within Docker. There are a number of _Kubernetes-in-Docker_ solutions available, but the one we've settled on as offering the best all-around fit for local development is [bsycorp/kind](https://github.com/bsycorp/kind/).
-
-If you installed Docker Desktop, the `docker-compose` tool will have been automatically installed with it.  If you installed Docker on Linux, you'll need to download the binary by following the [Docker Compose Installation Instructions](https://docs.docker.com/compose/install/#install-compose)
 
 ## Install Kubernetes Client
 
@@ -134,6 +128,30 @@ curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.16.1/tilt.0.
 
 After installing Tilt, you can verify the correct version by typing `tilt version` in your terminal.
 
+## Install ctlptl
+
+We provision the kubernetes backend using a Tilt-provided tool called ctlptl. This sets up a Kubernetes-in-Docker (kind) server that integrates well with Tilt. Please follow the [ctlptl Installation Instructions](https://github.com/tilt-dev/ctlptl).
+
+Once installed, you can provision the kubernetes stack with `ctlptl`, using the `Kindconfig.yaml` configuration provided at the root of this repo.
+
+```
+ctlptl apply -f Kindconfig.yaml
+```
+
+This config will provision and start up the Kubernetes server, and a private docker registry that Tilt will deploy development builds to as you work locally on the Tidepool services.
+
+## Install glooctl
+
+We provision the Gloo gateway, which is responsible for service routing, using glooctl. Please follow the [glooctl Installation Instructions](https://docs.solo.io/gloo-edge/master/installation/glooctl_setup/).
+
+Once installed, you can provision the kubernetes stack with `glooctl`, using the `Glooconfig.yaml` configuration provided at the root of this repo.
+
+```
+glooctl install gateway -n default --values Glooconfig.yaml
+```
+
+This config will provision the Gloo gateway in the `default` namespace. This only needs to be provisioned once.
+
 ## Install Netcat
 
 Netcat should be installed by default on an recent versions of MacOS. If it is not, you can install it via homebrew.
@@ -153,6 +171,86 @@ sudo apt-get install Netcat
 
 After installing Netcat, you can verify it's working by typing `nc -h` in your terminal.
 
+## Install and configure MongoDB
+
+In order to run the local Tidepool services, you will need to provide a running MongoDB replica set.
+
+We recommend installing a local instance of MongoDB Community Edition with a single member for this purpose, though you should be fine with providing an already-running remote instance as well if you have one available by providing the appropriate address and auth details in the `Tiltconfig.yaml` referenced below.
+
+For local installation of MongoDB, please follow [these installation instructions](https://www.mongodb.com/docs/manual/administration/install-community/) for your platform.
+
+The stack has been tested with version `6.x`, which is the latest version available at the time of writing. The minimum supported version is `5.0`.
+
+After installing MongoDB locally, you will need to set up your `mongo.conf` to allow local connections, and configure it as a replica set (it will be a standalone instance by default).
+
+If, for instance, you installed via homebrew on Mac, the default file location will be `/usr/local/etc/mongod.conf`. This is the configuration we recommend for local use. Note, however, that this is very permissive, and allows all incoming connections, so you may want to
+
+```bash
+systemLog:
+  destination: file
+  path: /usr/local/var/log/mongodb/mongo.log # Update this path as desired
+  logAppend: true
+storage:
+  dbPath: /usr/local/var/mongodb # Update this path as desired
+  journal:
+    enabled: true
+net:
+  bindIp: ::,0.0.0.0 # Restrict as required if your machine is publicly accessible
+replication:
+  replSetName: rs0
+```
+
+After setting up the config, you may need to restart your MongoDB service in order for the changes to take effect.
+
+At this point, you'll now need to initiate the replica set (`rs0`) that you defined in the `mongod.conf`.  To do so, enter your mongo shell, and run:
+
+```js
+// Initiate the replica set
+rs.initiate()
+
+// Confirm that it's set up
+rs.conf()
+
+// Should output something like:
+/*
+{
+  _id: 'rs0',
+  version: 1,
+  term: 3,
+  protocolVersion: Long("1"),
+  writeConcernMajorityJournalDefault: true,
+  members: [
+    {
+      _id: 0,
+      priority: 1,
+      votes: 1
+      ...
+    }
+  ],
+  settings: {
+    ...
+  }
+}
+*/
+
+// Exit the shell
+quit()
+```
+
+At this point, your MongoDB service is ready.
+
+**Note for Linux users:** If you are running this stack on a Linux machine, then you will likely need to use the Docker host IP of `172.17.0.1` to point to the MongoDB. For example, in `local/Tiltconfig.yaml`:
+
+```yaml
+mongo:
+  secret:
+    data_:
+      Addresses: "172.17.0.1"
+    # ...
+```
+
+For more information about setting up overrides to the Tilt config, see [Tilt Config Overrides](#tilt-config-overrides)
+
 ## Clone This Repository
 
 At a minimum you'll need to clone this very GitHub repository to your computer. Execute the following command in a terminal window, but be sure to replace the `<local-directory>` with the destination directory where you want the respository to be copied.
@@ -165,12 +263,6 @@ For example, if you want the code to be cloned into the `~/Tidepool/development`
 
 ```bash
 git clone https://github.com/tidepool-org/development.git ~/Tidepool/development
-```
-
-After cloning the repository, you'll need to check out the `k8s-stable` branch.
-
-```bash
-git checkout k8s-stable
 ```
 
 For more information about `git`, please see [Git](https://git-scm.com/) and [Try Git](https://try.github.io/).
@@ -230,12 +322,12 @@ It's recommended that you export them in a persistent way, such as within your l
 export KUBECONFIG="$HOME/.kube/config"
 ```
 
-`TIDEPOOL_DOCKER_MONGO_VOLUME` - This is the path used to persist your local MongoDB data. You don't need to set this, but if you don't, you'll be restarting from a blank slate each time you start up your dev environment.
+`MONGODB_SHELL` - This is the path used run the MongoDB shell on your local machine. By default, if unset, the `tidepool` script will use the path resolved by running `which mongosh`.
 
-For example, if you want to store the Mongo data in the `~/MyMongoData` directory, then just set the value of the environment variable like so:
+If you would like to override this, for instance, if the command you run to open the MongoDB shell is `/usr/local/bin/mongo`, then just set the value of the environment variable like so:
 
 ```bash
-export TIDEPOOL_DOCKER_MONGO_VOLUME="~/MyMongoData"
+export MONGODB_SHELL="/usr/local/bin/mongo"
 ```
 
 [[back to top]](#welcome)
@@ -288,43 +380,26 @@ tidepool server-stop
 
 **NOTE:** All commands must be run from the root of this repo.
 
-### Start the kubernetes server
+### Initial provisioning of the kubernetes server and registry
 
 ```bash
-docker-compose -f 'docker-compose.k8s.yml' up -d
+ctlptl apply -f 'Kindconfig.yaml'
 ```
+This will save the Kubernetes server config to the path defined in your `$KUBECONFIG` environment variable. This is only required for the initial server provisioning.
 
-### Retrieve and store the Kubernetes server config
+For subsequent server starts, run:
 
 ```bash
-docker-compose -f 'docker-compose.k8s.yml' logs -f server
+docker start tidepool-kind-control-plane
+docker start ctlptl-registry
 ```
-
-We can move on once we see the following message:
-
-```bash
-INFO exited: start (exit status 0; expected)
-```
-
-Now that the server has started, we need to retrieve the Kubernetes config and store it to the path we exported our `KUBECONFIG` variable to.
-
-```bash
-# Replace ~/.kube/config as needed if you
-# chose a different path for KUBECONFIG
-curl http://127.0.0.1:10080/config > ~/.kube/config
-```
-
 
 ### Start the tidepool services
 
 ```bash
-# First, set the DOCKER_HOST variable to allow using the docker process
-# inside the server container for retrieving and building images
-export DOCKER_HOST=tcp://127.0.0.1:2375
-
 # Start the tidepool services with Tilt,
 # with trap to shut down properly upon exit
-trap 'SHUTTING_DOWN=1 tilt down' EXIT; tilt up --port=0
+trap 'SHUTTING_DOWN=1 tilt down' EXIT; tilt up -dv --port=0 --legacy
 ```
 
 ### Stop the tidepool services
@@ -335,10 +410,11 @@ You can stop the Tidepool services either by exiting the Tilt UI with `ctrl-c`, 
 export SHUTTING_DOWN=1; tilt down
 ```
 
-### Stop the kubernetes server
+### Stop the kubernetes server and registry
 
 ```bash
-docker-compose -f 'docker-compose.k8s.yml' stop
+docker stop tidepool-kind-control-plane
+docker stop ctlptl-registry
 ```
 
 ## Monitor Kubernetes State With K9s (Optional)
@@ -371,7 +447,7 @@ The administrator credentials can be tweaked by setting KEYCLOAK_USER and KEYCLO
 
 ## Creating An Account
 
-Once your local Tidepool is running, open your Chrome browser and browse to http://localhost:3000. You should see the Tidepool login page running from your local computer, assuming everything worked as expected. Go ahead and signup for a new account. Remember, all accounts and data created via this local Tidepool are _ONLY_ stored on your computer. _No_ data is stored on any of the Tidepool servers.
+Once your local Tidepool is running, open your Chrome browser and browse to http://localhost:31500. You should see the Tidepool login page running from your local computer, assuming everything worked as expected. Go ahead and signup for a new account. Remember, all accounts and data created via this local Tidepool are _ONLY_ stored on your computer. _No_ data is stored on any of the Tidepool servers.
 
 ## Verifying An Account Email
 
@@ -397,7 +473,7 @@ NOTE: If you wish to upload to our official, production Tidepool later, you'll h
 
 ## Data Retention
 
-Remember, this is all running on your computer only. This means that all accounts you create and all data you upload to your local Tidepool are _ONLY_ stored in a Mongo database located in the local directory on your computer that you defined with the `TIDEPOOL_DOCKER_MONGO_VOLUME` environment variable (See [Environment Setup (recommended)](#environment-setup-recommended)). If you delete that directory, then all of the data you uploaded locally is gone, **permanently**. If you are going to run Tidepool locally as a permanent solution, then we very **strongly** suggest regular backups of the `mongo` directory.
+Remember, this is all running on your computer only. This means that all accounts you create and all data you upload to your local Tidepool are _ONLY_ stored in a Mongo database located in the local directory on your computer.
 
 Fortunately, at [Tidepool Web](https://app.tidepool.org), we worry about that for you and make sure all of your data is secure and backed up regularly.
 
@@ -423,42 +499,6 @@ Both the root `Tiltconfig.yaml` and the overrides file is read by the `Tiltfile`
 In addition to the helm chart overrides, there are some extra configuration parameters to instruct Tilt on how to build local images for any of the Tidepool services.
 
 See [Building Local Images](#building-local-images) for more details
-
-## Alternate MongoDB Host
-
-If you wish to use an alternate Mongo host running outside of Docker, then you'll need to do a few things.
-
-Set the `mongodb.useExternal` flag to `true` in your `local/Tiltconfig.yaml` file as required, and update `mongo.secret.data_` section as needed. For example:
-
-```yaml
-mongodb:
-  useExternal: true
-  # ...
-
-mongo:
-  secret:
-    data_:
-      Scheme: "mongodb"
-      Addresses: "http://host:port" # comma-separated list of MongoDB host[:port] addresses
-      Username: ""                  # the MongoDB port to connect to
-      Password: ""                  # a username in the Mongo instance
-      Tls: "false"                  # whether to use SSL to communicate with Mongo
-      OptParams: ""                 # optional parameters to pass on the Mongo connection string
-      Database: "admin"             # database to connect to
-  # ...
-```
-
-If you are running Mongo natively on your local Mac (not in Docker, but via another installation, such as [Homebrew](https://brew.sh/)), then you can use the Docker-specific, container-accessible-only address `host.docker.internal` to point to the alternate Mongo host. For example,
-
-```yaml
-mongo:
-  secret:
-    data_:
-      Addresses: "host.docker.internal"
-    # ...
-```
-
-If the alternate Mongo host requires a TLS/SSL connection, be sure to set the `global.mongo.ssl` flag to `true`.
 
 ## Dexcom API integration
 
@@ -538,7 +578,7 @@ becomes
 
 | Repository Name                                                  | Docker Container Name (`<docker-container-name>`) | Description                     | Language                       | Git Clone URL (`<git-clone-url>`)                  | Default Clone Directory (`<default-clone-directory>`)     |
 | ---------------------------------------------------------------- | ------------------------------------------------- | ------------------------------- | ------------------------------ | -------------------------------------------------- | --------------------------------------------------------- |
-| [blip](https://github.com/tidepool-org/blip)                     | blip                                              | Web (ie. http://localhost:3000) | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/blip.git           | ../blip                                                      |
+| [blip](https://github.com/tidepool-org/blip)                     | blip                                              | Web (ie. http://localhost:31500) | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/blip.git           | ../blip                                                      |
 | [gatekeeper](https://github.com/tidepool-org/gatekeeper)         | gatekeeper                                        | Permissions                     | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/gatekeeper.git     | ../gatekeeper                                                |
 | [highwater](https://github.com/tidepool-org/highwater)           | highwater                                         | Metrics                         | [Node.js](https://nodejs.org/) | https://github.com/tidepool-org/highwater.git      | ../highwater                                                 |
 | [hydrophone](https://github.com/tidepool-org/hydrophone)         | hydrophone                                        | Email, Invitations              | [Golang](https://golang.org/)  | https://github.com/tidepool-org/hydrophone.git     | ~/go/src/github.com/tidepool-org/hydrophone               |
@@ -726,9 +766,9 @@ blip:
     image: tidepool-k8s-blip # Uncommented
   hostPath: ../blip # Uncommented and path matches the cloned blip repo location
   containerPath: "/app"
-  apiHost: "http://localhost:3000"
+  apiHost: "http://localhost:31500"
   webpackDevTool: cheap-module-eval-source-map
-  webpackPublicPath: "http://localhost:3000"
+  webpackPublicPath: "http://localhost:31500"
   linkedPackages:
     - name: tideline
       packageName: tideline
@@ -758,9 +798,9 @@ blip:
     image: tidepool-k8s-blip
   hostPath: ../blip
   containerPath: "/app"
-  apiHost: "http://localhost:3000"
+  apiHost: "http://localhost:31500"
   webpackDevTool: cheap-module-eval-source-map
-  webpackPublicPath: "http://localhost:3000"
+  webpackPublicPath: "http://localhost:31500"
   linkedPackages:
     # ...
     - name: viz
@@ -821,21 +861,18 @@ exit
 This is overkill when just doing a simple command (streamlined alternative outlined below), but it's very hand when you need to perform multiple operations or simply poke around the container's file system.
 
 
-| Command                       | Description                                                                                                                                                         |
-|-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `up [service]`                | start and/or (re)build the entire tidepool stack or the specified service                                                                                           |
-| `down`                        | shut down and remove the entire tidepool stack                                                                                                                      |
-| `stop`                        | shut down the entire tidepool stack or the specified service                                                                                                        |
-| `rm [service]`                | stops and removes containers and volumes for the entire tidepool stack or the specified service                                                                     |
-| `restart [service]`           | restart the entire tidepool stack or the specified service                                                                                                          |
-| `pull [service]`              | pull the latest images for the entire tidepool stack or the specified service                                                                                       |
-| `logs [service]`              | tail logs for the entire tidepool stack or the specified service                                                                                                    |
-| `rebuild [service]`           | rebuild and run image for all services in the tidepool stack or the specified service                                                                               |
-| `exec service [...cmds]`      | run arbitrary shell commands in the currently running service container                                                                                             |
-| `link node_service package`   | yarn link a mounted package and restart the Node.js service (package must be mounted into a root directory that matches it's name)                                  |
-| `unlink node_service package` | yarn unlink a mounted package, reinstall the remote package, and restart the Node.js service (package must be mounted into a root directory that matches it's name) |
-| `yarn node_service [...cmds]` | shortcut to run yarn commands against the specified Node.js service                                                                                                 |
-| `help`                        | show more detailed usage text than what's listed here                                                                                                               |
+| Command                       | Description                                                              |
+|-------------------------------|--------------------------------------------------------------------------|
+| `up [service]`                | Start the Kubernetes server and Tidepool services, in that order         |
+| `down`                        | Stop the Tidepool services and Kubernetes server, in that order          |
+| `destroy`                     | Shut down and completely remove the local Kubernetes server and services |
+| `start`                       | Provision and start the Tidepool services via Tilt                       |
+| `stop`                        | Stop and remove the Tidepool services via Tilt                           |
+| `restart [service]`           | Restart the specified service                                            |
+| `logs [service]`              | tail logs for the entire tidepool stack or the specified service         |
+| `exec service [...cmds]`      | run arbitrary shell commands in the currently running service container  |
+| `yarn node_service [...cmds]` | shortcut to run yarn commands against the specified Node.js service      |
+| `help`                        | show more detailed usage text than what's listed here                    |
 
 ```bash
 # Examples (from your local terminal)
@@ -865,7 +902,7 @@ This will allow your changes to be tracked properly in version control, and Tilt
 
 | Service                                                           | Standard Port(s)       |
 | ----------------------------------------------------------------- | ---------------------- |
-| [blip](https://github.com/tidepool-org/blip)                      | N/A (see below)        |
+| [blip](https://github.com/tidepool-org/blip)                      |                 31500                   |
 | [export](https://github.com/tidepool-org/export)                  | 9300                   |
 | [gatekeeper](https://github.com/tidepool-org/gatekeeper)          | 9123                   |
 | [hakken](https://github.com/tidepool-org/hakken)                  | 8000                   |
@@ -906,7 +943,6 @@ Stay Tuned :)
 | kubectl errors when provisioning services                       | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config)                                                                                               |
 | kubectl errors when starting k9s                                | Make sure you've set the `KUBECONFIG` environment variable. See [Environment Setup (recommended)](#environment-setup-recommended) and [Retrieve and store the Kubernetes server config](#retrieve-and-store-the-kubernetes-server-config)                                                                                               |
 | Tidepool Web ('blip') not loading                               | Check the service logs, either in the Tilt UI or with `tidepool logs blip` to make sure it's finished compiling successfully.  If it has compiled, see [Tidepool Web becomes inaccessible](#tidepool-web-becomes-inaccessible)                                                                                                          |
-| `tidepool start` hangs at "Preparing mongodb service..."        | NOTE: It's normal for this to take a few minutes the first time you run this. Otherwise, check to see if mongodb pods are still provisioning in [k9s](#monitor-kubernetes-state-with-k9s-optional), and if so, wait, else cancel the `tidepool start` process and re-run it                                                             |
 | `tidepool start` hangs at "Preparing gateway services..."       | NOTE: It's normal for this to take a few minutes the first time you run this. Otherwise, check to see if gloo gateway pods are still provisioning in [k9s](#monitor-kubernetes-state-with-k9s-optional), and if so, wait, else cancel the `tidepool start` process and re-run it                                                        |
 | `tidepool start` has numerous "Bad Address: shoreline" errors   | NOTE: It's normal for this to happen while services wait for shoreline to be provisioned.  This can go on for a quite a while during the first time running the stack, due to the extra time it takes to download all the service images. Give it a few minutes, and as long as shoreline comes up eventually, it should resolve itself |
 | Services are crashed and k9s shows them in an **evicted** state | The docker environment running the k8s server node has run out of disk space, likely due to old image build layers. Run `tidepool server-prune`. Afterwards, within a few minutes, services should begin re-deploying again automatically                                                                                               |
@@ -935,15 +971,12 @@ If your services are running properly, you can simply ignore the state reporting
 
 Currently, there is a known issue where at times the gateway proxy service that handles incoming requests loses track of the local blip service.
 
-This will present itself usually with the web app getting stuck in a loading state in the browser, or possibly resolving with an error message like: `‘No healthy upstream on blip (http://localhost:3000)`
+This will present itself usually with the web app getting stuck in a loading state in the browser, or possibly resolving with an error message like: `‘No healthy upstream on blip (http://localhost:31500)`
 
-The solution first solution to try is to restart the `gateway-proxy` service, which should restore access in a few moments:
+The solution first solution to try is to restart the gloo `gateway` services, which should restore access in a few moments:
 
 ```bash
-tidepool restart gateway-proxy
-
-# or use the built-in shortcut
-tidepool restart-proxy
+tidepool restart-gateway
 ```
 
 If this doesn't work, simply stop the running `tidepool start` process, and re-run it. This will terminate and re-provision the entire stack, and should fix the issue. This second approach is often needed after the initial provisioning of the stack, likely due to some timeouts stemming from the extra time it takes for all the images to be downloaded the first time.
