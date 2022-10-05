@@ -50,8 +50,6 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
 
 # Initial Setup
 
-**IMPORTANT NOTE:** You must run the [k8s-stable](https://github.com/tidepool-org/development/tree/k8s-stable) branch of this repo. The default `master` branch is subject to changes at any moment and it’s not always possible to keep the local enviroment config up to date. The `k8s-stable` branch will always be the latest functioning local development enviroment.
-
 It's easy to get up and running quickly as long as you know a bit about your computer and your way around a terminal window.
 
 **WINDOWS USERS:**
@@ -265,12 +263,6 @@ For example, if you want the code to be cloned into the `~/Tidepool/development`
 
 ```bash
 git clone https://github.com/tidepool-org/development.git ~/Tidepool/development
-```
-
-After cloning the repository, you'll need to check out the `k8s-stable` branch.
-
-```bash
-git checkout k8s-stable
 ```
 
 For more information about `git`, please see [Git](https://git-scm.com/) and [Try Git](https://try.github.io/).

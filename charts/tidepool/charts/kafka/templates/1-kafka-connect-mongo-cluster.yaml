@@ -39,7 +39,12 @@ spec:
       - name: connector-config
         secret:
           secretName: {{ .Values.mongo.secretName }}
-  image: tidepool/connect-debezium:0.26.0-kafka-2.8.0-mongo-1.6.1
+{{ if .Values.global.kafka.connect.keycloak.enabled }}
+      - name: keycloak-config
+        secret:
+          secretName: {{ .Values.keycloak.secretName }}
+{{- end }}
+  image: tidepool/connect-debezium:0.26.0-kafka-2.8.0-mongo-1.6.1-pg-1.9.5
   replicas: {{ .Values.global.kafka.connect.replicas | int }}
 {{ if .Values.global.kafka.connect.tlsEnabled }}
   tls:
