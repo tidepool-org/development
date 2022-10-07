@@ -62,9 +62,9 @@ If you do get this working on Windows before we get to it, please consider contr
 
 ## Install Docker
 
-The Tidepool stack relies on [Docker](https://www.docker.com) and [Docker Compose](https://docs.docker.com/compose) to run all of the code on your computer.
+The Tidepool stack relies on [Docker](https://www.docker.com) to run all of the code on your computer.
 
-Follow the appropriate link for your platform (Mac OSx or Linux recommended) at https://docs.docker.com/install/#supported-platforms and follow the directions to install and run Docker on your computer.
+Follow the appropriate link for your platform (Mac OSx or Linux recommended) at https://docs.docker.com/install/#supported-platforms and follow the directions to install and run Docker on your computer. The minimum supported version is `20.10.17`
 
 **IMPORTANT:** This stack is VERY resource intensive.  You will need a fairly robust computer to run it efficiently, and will need to provide Docker with at least 60 GB of disk space and 4 GB of RAM. The default 2 GB RAM for Docker on MacOS won't cut it, and will need to be increased via the preferences panel. We recommend 8 GB or higher if you have 12 GB or more available.
 
@@ -72,18 +72,18 @@ Follow the appropriate link for your platform (Mac OSx or Linux recommended) at 
 
 The Kubernetes command-line tool, [kubectl](https://kubernetes.io/docs/user-guide/kubectl/), allows you to run commands against Kubernetes clusters.
 
-It's important to install a version that's at minimum up-to-date with the version of the Kubernetes server we're running locally (currently `1.18.2`). Please follow the [kubectl installation instructions](https://kubernetes.io/docs/tasks/tools/install-kubectl/) for your operating system.
+It's important to install a version that's at minimum up-to-date with the version of the Kubernetes server we're running locally (currently `1.21.12`). Please follow the [kubectl installation instructions](https://kubernetes.io/docs/tasks/tools/install-kubectl/) for your operating system.
 
 For reference, the following should work:
 
 ```bash
 # MacOS
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.2/bin/darwin/amd64/kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.21.12/bin/darwin/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 
 # Linux
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.2/bin/linux/amd64/kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.21.12/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 ```
@@ -98,14 +98,14 @@ kubectl version
 
 The Tidepool services (and supporting services such as the [MongoDB](https://www.mongodb.com/) database and the [Gloo Gateway](https://gloo.solo.io/) for routing requests) are defined by [Helm](https://helm.sh/) templates, which the `helm` tool uses to convert into manifests that can be applied to the our local [Kubernetes](https://kubernetes.io/) (K8s) cluster.
 
-**IMPORTANT NOTE:** We currently run against version `v3.0.2` of Helm, so be sure to install the correct version when following the [Helm Installation Instructions](https://helm.sh/docs/intro/install/#from-the-binary-releases).
+**IMPORTANT NOTE:** We currently run against version `v3.9.1` of Helm, so be sure to install the correct version when following the [Helm Installation Instructions](https://helm.sh/docs/intro/install/#from-the-binary-releases).
 
 ```bash
 # MacOS
-curl -fsSL https://get.helm.sh/helm-v3.0.2-darwin-amd64.tar.gz | tar -xzv darwin-amd64 && sudo mv darwin-amd64/helm /usr/local/bin/helm
+curl -fsSL https://get.helm.sh/helm-v3.9.1-darwin-amd64.tar.gz | tar -xzv darwin-amd64 && sudo mv darwin-amd64/helm /usr/local/bin/helm
 
 # Linux
-curl -fsSL https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz | tar -xzv linux-amd64 && sudo mv linux-amd64/helm /usr/local/bin/helm
+curl -fsSL https://get.helm.sh/helm-v3.9.1-linux-amd64.tar.gz | tar -xzv linux-amd64 && sudo mv linux-amd64/helm /usr/local/bin/helm
 ```
 
 After installing Helm, you can verify the correct version by typing `helm version` in your terminal.
@@ -116,14 +116,14 @@ Managing a K8s cluster can be very challenging, and even more so when using one 
 
 By using our Tilt setup, developers can very easily run a live-reloading instance of any of our frontend or backend services without needing to directly use or understand Helm or Kubernetes. All that's needed is uncommenting a couple of lines in a `Tiltconfig.yaml` file, and updating the local paths to where the developer has checked out the respective git repo, if different than the default defined in the config.
 
-**IMPORTANT NOTE:** We currently run against version `v0.16.1` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
+**IMPORTANT NOTE:** We currently run against version `v0.30.5` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
 
 ```bash
 # MacOS
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.16.1/tilt.0.16.1.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.30.5/tilt.0.30.5.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 
 # Linux
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.16.1/tilt.0.16.1.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.30.5/tilt.0.30.5.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 ```
 
 After installing Tilt, you can verify the correct version by typing `tilt version` in your terminal.
