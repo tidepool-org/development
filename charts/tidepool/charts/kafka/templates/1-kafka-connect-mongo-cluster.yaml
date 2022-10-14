@@ -35,6 +35,9 @@ spec:
         name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-jmx
         key: metrics-config.yml
   externalConfiguration:
+    env:
+    - name: ENABLE_DEBEZIUM_SCRIPTING
+      value: true
     volumes:
       - name: connector-config
         secret:
