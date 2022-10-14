@@ -37,7 +37,10 @@ spec:
   externalConfiguration:
     env:
     - name: ENABLE_DEBEZIUM_SCRIPTING
-      value: true
+      valueFrom:
+        configMapKeyRef:
+          name: kafka-connect-env
+          key: EnableDebeziumScripting
     volumes:
       - name: connector-config
         secret:
