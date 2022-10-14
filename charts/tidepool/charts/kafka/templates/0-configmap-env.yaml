@@ -6,4 +6,4 @@ metadata:
   labels:
 {{ include "charts.labels.standard" . }}
 data:
-  EnableDebeziumScripting: true
+  EnableDebeziumScripting: "true"
