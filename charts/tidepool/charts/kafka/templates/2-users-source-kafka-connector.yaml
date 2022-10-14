@@ -21,7 +21,7 @@ spec:
     database.user: '${directory:/opt/kafka/external-configuration/keycloak-config:User}'
     database.password: '${directory:/opt/kafka/external-configuration/keycloak-config:Password}'
     database.dbname: '${directory:/opt/kafka/external-configuration/keycloak-config:Database}'
-    database.server.name: {{ .Release.Namespace }}.keycloak
+    database.server.name: {{ .Release.Namespace }}.keycloak 
     key.converter: 'org.apache.kafka.connect.json.JsonConverter'
     key.converter.schemas.enable: false
     value.converter: 'org.apache.kafka.connect.json.JsonConverter'
