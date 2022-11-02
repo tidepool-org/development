@@ -46,6 +46,7 @@ mongo:
 keycloak:
   enabled: false
   secretName: "keycloak"
+  realm: ""
 kafka:
   secretName: "kafka"
 secret:

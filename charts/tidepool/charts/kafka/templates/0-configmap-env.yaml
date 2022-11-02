@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-connect-env
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "charts.labels.standard" . }}
+data:
+  EnableDebeziumScripting: "true"

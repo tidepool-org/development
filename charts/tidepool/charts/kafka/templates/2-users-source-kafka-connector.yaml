@@ -1,4 +1,8 @@
 {{ if and .Values.global.kafka.connect.enabled .Values.global.kafka.connect.keycloak.enabled}}
+{{- $realm := .Values.keycloak.realm -}}
+{{ if not .Values.keycloak.realm }}
+  {{- $realm = .Release.Namespace -}}
+{{ end}}
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
@@ -17,12 +21,17 @@ spec:
     database.user: '${directory:/opt/kafka/external-configuration/keycloak-config:User}'
     database.password: '${directory:/opt/kafka/external-configuration/keycloak-config:Password}'
     database.dbname: '${directory:/opt/kafka/external-configuration/keycloak-config:Database}'
-    database.server.name: keycloak-{{ .Release.Namespace }}
+    database.server.name: {{ .Release.Namespace }}.keycloak
     key.converter: 'org.apache.kafka.connect.json.JsonConverter'
     key.converter.schemas.enable: false
     value.converter: 'org.apache.kafka.connect.json.JsonConverter'
     value.converter.schemas.enable: false
-    snapshot.mode: 'always'
+    snapshot.mode: 'initial'
     table.include.list: 'public.user_entity,public.user_role_mapping'
+    transforms: 'filter'
+    transforms.filter.type: 'io.debezium.transforms.Filter'
+    transforms.filter.language: 'jsr223.groovy'
+    transforms.filter.topic.regex: '.+\.public.user_entity'
+    transforms.filter.condition: "value.op && (((value.op == 'r' || value.op == 'c' || value.op == 'u') && (value.after && value.after.realm_id && value.after.realm_id == '{{ $realm }}')) || (value.op == 'd'))"
   tasksMax: 1
 {{- end }}
