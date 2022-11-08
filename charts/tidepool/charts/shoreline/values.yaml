@@ -6,6 +6,7 @@ configmap:
     KeycloakAdminUsername: ""
     KeycloakClientId: ""
     KeycloakBackendClientId: ""
+    KeycloakLongLivedClientId: ""
     KeycloakBaseUrl: ""
     KeycloakRealm: ""
 secret:
@@ -22,10 +23,12 @@ secret:
     ClinicDemoUserId: ""
     # -- the password of the keycloak admin account
     KeycloakAdminPassword: ""
-    # -- the client secret for the backend service client
-    KeycloakBackendClientSecret: ""
     # -- the client secret for the shoreline client
     KeycloakClientSecret: ""
+    # -- the client secret for the backend service client
+    KeycloakBackendClientSecret: ""
+    # -- the client secret for the long-lived token client
+    KeycloakLongLivedClientSecret: ""
     # -- the migration secret
     KeycloakMigrationSecret: ""
 deployment:
