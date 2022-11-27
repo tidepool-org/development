@@ -110,6 +110,12 @@ dexcom:
       ClientId: ""
       ClientSecret: ""
       StateSalt: ""
+  configmap:
+    enabled: true
+    redirectURL: ""
+    tokenURL: "https://sandbox-api.dexcom.com/v1/oauth2/token"
+    authorizeURL: "https://sandbox-api.dexcom.com/v1/oauth2/login?prompt=login"
+    clientURL: "https://sandbox-api.dexcom.com"
 ### Dexcom API Config End ###
 
 ### Kafka config start ###
@@ -118,7 +124,7 @@ kafka:
     enabled: true
     Brokers: "kafka-kafka-bootstrap:9092"
     RequireSSL: "false"
-    TopicPrefix: "local-"
+    TopicPrefix: "default-"
     Username: "kafka"
   podMonitor:
     enabled: false
@@ -337,6 +343,16 @@ jellyfish:
     # image: tidepool-k8s-jellyfish # Uncomment to build and run local image or a specific remote image
   # hostPath: ../jellyfish          # Uncomment to build and run local image
   containerPath: '/app'
+
+mailer:
+  deployment:
+    replicas: 1
+    env:
+      backend: "console"
+  #   image: tidepool-k8s-mailer
+  # hostPath: ~/go/src/github.com/tidepool-org/mailer
+  containerPath: '/go/src/github.com/tidepool-org/mailer'
+  dockerFile: 'Dockerfile.development'
 
 message-api:
   deployment:
