@@ -79,6 +79,8 @@ Create environment variables used by all platform services.
           value: "http://internal.{{.Release.Namespace}}"
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
           value: http://gatekeeper:{{.Values.global.ports.gatekeeper}}
+        - name: TIDEPOOL_CONFIRMATION_CLIENT_ADDRESS
+          value: "http://hydrophone:{{.Values.global.ports.hydrophone}}"
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS
           value: http://task:{{.Values.global.ports.task}}
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
@@ -161,7 +163,7 @@ Create environment variables used by all platform services.
 {{ include "charts.mongo.params" . }}
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
-{{ end }}        
+{{ end }}
 
 {{/*
 Create liveness and readiness probes for platform services.
