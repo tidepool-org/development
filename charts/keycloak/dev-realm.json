@@ -660,7 +660,7 @@
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "http://localhost:31500/*" ],
+    "redirectUris" : [ "http://localhost:31500/*", "http://localhost:3000/*" ],
     "webOrigins" : [ "+" ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -2153,7 +2153,7 @@
     "oauth2DeviceCodeLifespan" : "600",
     "parRequestUriLifespan" : "60",
     "clientSessionMaxLifespan" : "0",
-    "frontendUrl" : "https://localhost:32000"
+    "frontendUrl" : "http://localhost:32000"
   },
   "keycloakVersion" : "20.0.1",
   "userManagedAccessAllowed" : false,
