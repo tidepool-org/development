@@ -82,9 +82,9 @@ keycloakx:
       value: "true"
     - name: KC_CACHE
       value: local
-    - name: KC_HOSTNAME
-      value: "localhost"
-    - name: KC_HOSTNAME_PORT
-      value: "32000"
+    - name: KC_HOSTNAME_ADMIN_URL
+      value: "http://localhost:32000"
+    - name: KC_HOSTNAME_URL
+      value: "http://localhost:32000"
   http:
     relativePath: '/'
