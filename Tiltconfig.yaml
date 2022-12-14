@@ -404,6 +404,7 @@ shoreline:
     enabled: true
     data_:
       KeycloakClientSecret: "d06e8001-94f5-4054-8086-69feb7f90e77"
+      KeycloakLongLivedClientSecret: "d06e8001-94f5-4054-8086-69feb7f90e77"
       KeycloakBackendClientSecret: "8f10ee82-f56f-44c3-854d-40ae4997f337"
       KeycloakAdminPassword: "admin"
       KeycloakMigrationSecret: "806a29b9-9ef0-47d4-8a0a-bdfdbb5f78d4"
