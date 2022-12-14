@@ -7,7 +7,7 @@ spec:
   displayName: keycloak
   virtualHost:
     domains:
-    - '*:8081'
+    - '*:32000'
     routes:
     - matchers:
       - prefix: '/'

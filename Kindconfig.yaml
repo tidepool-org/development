@@ -17,6 +17,9 @@ kindV1Alpha4Cluster:
     - containerPort: 32500
       hostPort: 32500
       protocol: TCP
+    - containerPort: 32000
+      hostPort: 32000
+      protocol: TCP
 ---
 apiVersion: ctlptl.dev/v1alpha1
 kind: Registry
