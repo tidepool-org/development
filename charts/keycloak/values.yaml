@@ -32,23 +32,6 @@ keycloakx:
         "name": "providers"
       - "mountPath": "/tidepool"
         "name": "tidepool-theme"
-#    - "command":
-#      - "/opt/keycloak/bin/kc.sh"
-#      - "import"
-#      - "--dir"
-#      - "/opt/keycloak/data/import"
-#      "image": "quay.io/keycloak/keycloak:20.0.1"
-#      "imagePullPolicy": "IfNotPresent"
-#      "name": "import-realm"
-#      "volumeMounts":
-#      - "mountPath": "/opt/keycloak/providers"
-#        "name": "providers"
-#      - "mountPath": "/opt/keycloak/themes/tidepool"
-#        "name": "tidepool-theme"
-#      - "mountPath": "/opt/keycloak/data/h2"
-#        "name": "db"
-#      - "mountPath": "/opt/keycloak/data/import"
-#        "name": "keycloak-import"
   extraVolumeMounts: |-
     - "mountPath": "/opt/keycloak/providers"
       "name": "providers"

@@ -337,6 +337,11 @@ jellyfish:
     # image: tidepool-k8s-jellyfish # Uncomment to build and run local image or a specific remote image
   # hostPath: ../jellyfish          # Uncomment to build and run local image
   containerPath: '/app'
+  configmap:
+    enabled: true
+    data:
+      AuthRealm: "dev"
+      AuthUrl: "http://localhost:32000"
 
 message-api:
   deployment:
