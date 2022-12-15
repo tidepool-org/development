@@ -1,6 +1,12 @@
 gatewayProxies:
   gatewayProxy:
     service:
+      customPorts:
+        - port: 32000
+          nodePort: 32000
+          targetPort: 8080
+          protocol: TCP
+          name: keycloak
       type: NodePort
       httpPort: 80
       httpsPort: 443
