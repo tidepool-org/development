@@ -229,6 +229,7 @@ blip:
   # hostPath: ../blip          # Uncomment to build and run local image
   containerPath: '/app'
   apiHost: 'http://localhost:31500'
+  realmHost: 'http://localhost:32000'
   rollbarPostServerToken: '' # Rollbar post_server_item access token for posting source maps on production builds
   webpackDevTool: cheap-module-eval-source-map
   webpackDevToolViz: cheap-source-map # Suggest changing `cheap-source-map` to the slower, but far more helpful `source-map` if debugging errors in viz package files

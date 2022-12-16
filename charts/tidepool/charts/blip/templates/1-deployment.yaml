@@ -70,6 +70,10 @@ spec:
         - name: API_HOST
           value: {{ .Values.apiHost }}
 {{- end }}
+{{ if .Values.realmHost }}
+        - name: REALM_HOST
+          value: {{ .Values.realmHost }}
+{{- end }}
         name: blip
         ports:
         - containerPort: {{.Values.global.ports.blip}}
