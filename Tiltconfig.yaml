@@ -110,6 +110,12 @@ dexcom:
       ClientId: ""
       ClientSecret: ""
       StateSalt: ""
+  configmap:
+    enabled: true
+    redirectURL: ""
+    tokenURL: "https://sandbox-api.dexcom.com/v1/oauth2/token"
+    authorizeURL: "https://sandbox-api.dexcom.com/v1/oauth2/login?prompt=login"
+    clientURL: "https://sandbox-api.dexcom.com"
 ### Dexcom API Config End ###
 
 ### Kafka config start ###
@@ -118,7 +124,7 @@ kafka:
     enabled: true
     Brokers: "kafka-kafka-bootstrap:9092"
     RequireSSL: "false"
-    TopicPrefix: "local-"
+    TopicPrefix: "default-"
     Username: "kafka"
   podMonitor:
     enabled: false
@@ -223,6 +229,7 @@ blip:
   # hostPath: ../blip          # Uncomment to build and run local image
   containerPath: '/app'
   apiHost: 'http://localhost:31500'
+  realmHost: 'http://localhost:32000'
   rollbarPostServerToken: '' # Rollbar post_server_item access token for posting source maps on production builds
   webpackDevTool: cheap-module-eval-source-map
   webpackDevToolViz: cheap-source-map # Suggest changing `cheap-source-map` to the slower, but far more helpful `source-map` if debugging errors in viz package files
@@ -340,8 +347,18 @@ jellyfish:
   configmap:
     enabled: true
     data:
-      AuthRealm: "dev"
-      AuthUrl: "http://localhost:32000"
+      AuthRealm: dev
+      AuthUrl: http://localhost:32000
+
+mailer:
+  deployment:
+    replicas: 1
+    env:
+      backend: "console"
+  #   image: tidepool-k8s-mailer
+  # hostPath: ~/go/src/github.com/tidepool-org/mailer
+  containerPath: '/go/src/github.com/tidepool-org/mailer'
+  dockerFile: 'Dockerfile.development'
 
 message-api:
   deployment:

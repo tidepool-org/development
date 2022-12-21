@@ -3,18 +3,18 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
   labels:
-    app: summary-source
+    app: data-sources-source
     strimzi.io/cluster: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
-  name: summary-source
+  name: data-sources-source
   namespace: {{ .Release.Namespace }}
 spec:
   class: com.mongodb.kafka.connect.MongoSourceConnector
   config:
     change.stream.full.document: updateLookup
-    collection: summary
+    collection: data_sources
     connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
     copy.existing: true
-    database: data
+    database: tidepool
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: false
     topic.prefix: {{ .Release.Namespace }}

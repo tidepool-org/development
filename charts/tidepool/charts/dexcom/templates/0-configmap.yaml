@@ -9,11 +9,11 @@ metadata:
 data:
 {{ if .Values.configmap.redirectURL }}
   RedirectURL: {{ .Values.configmap.redirectURL }}
-{{ else }} 
+{{ else }}
   RedirectURL: "{{include "charts.host.api" .}}/v1/oauth/dexcom/redirect"
 {{ end }}
-  TokenURL: "https://api.dexcom.com/v1/oauth2/token"                
-  AuthorizeURL: "https://api.dexcom.com/v1/oauth2/login?prompt=login" 
-  ClientURL: "https://api.dexcom.com"    
-  Scopes: "offline_access"    
+  TokenURL: {{ .Values.configmap.tokenURL | default "https://api.dexcom.com/v1/oauth2/token" }}
+  AuthorizeURL: {{ .Values.configmap.authorizeURL | default "https://api.dexcom.com/v1/oauth2/login?prompt=login" }}
+  ClientURL: {{ .Values.configmap.clientURL | default "https://api.dexcom.com" }}
+  Scopes: "offline_access"
 {{ end }}
