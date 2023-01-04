@@ -54,5 +54,14 @@ spec:
           upstream:
             name: clinic
             namespace: {{ .Release.Namespace }}
+    - matchers:
+        - methods:
+            - POST
+          regex: /v1/patients/[^/]+/decline_dexcom_connect_request
+      routeAction:
+        single:
+          upstream:
+            name: clinic
+            namespace: {{ .Release.Namespace }}
   weight: 30
 {{- end }}
