@@ -109,4 +109,20 @@ spec:
       single:
         upstream:
           name: auth
+  - matchers:
+    - methods:
+      - POST
+      prefix: /v1/attestations
+    routeAction:
+      single:
+        upstream:
+          name: auth
+  - matchers:
+    - methods:
+      - POST
+      prefix: /v1/assertions
+    routeAction:
+      single:
+        upstream:
+          name: auth
 {{- end }}
