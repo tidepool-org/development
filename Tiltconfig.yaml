@@ -113,8 +113,8 @@ dexcom:
   configmap:
     enabled: true
     redirectURL: ""
-    tokenURL: "https://sandbox-api.dexcom.com/v1/oauth2/token"
-    authorizeURL: "https://sandbox-api.dexcom.com/v1/oauth2/login?prompt=login"
+    tokenURL: "https://sandbox-api.dexcom.com/v2/oauth2/token"
+    authorizeURL: "https://sandbox-api.dexcom.com/v2/oauth2/login?prompt=login"
     clientURL: "https://sandbox-api.dexcom.com"
 ### Dexcom API Config End ###
 
