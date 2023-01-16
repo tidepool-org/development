@@ -46,6 +46,8 @@ global:
       tlsEnabled: true
       # -- mongo connection uri
       mongoConnectionUri: ${directory:/opt/kafka/external-configuration/connector-config:Scheme}://${directory:/opt/kafka/external-configuration/connector-config:Username}:${directory:/opt/kafka/external-configuration/connector-config:Password}@${directory:/opt/kafka/external-configuration/connector-config:Addresses}/?ssl=${directory:/opt/kafka/external-configuration/connector-config:Tls}
+      # -- mongo source connector heartbeat interval
+      mongoHeartbeatIntervalMs: 60000
       # -- enable keycloak kafka connector
       keycloak:
         enabled: false
