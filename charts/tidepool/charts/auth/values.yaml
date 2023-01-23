@@ -10,6 +10,10 @@ configmap:
     AppleDeviceCheckKeyIssuer: "75U4X84TEG"
     AppleDeviceCheckKeyId: "B542R658GF"
     AppleDeviceCheckUseDevelopment: "true"
+    # -- used for app attestation to determine if an app is a valid instance of an IOS app.
+    AppValidationUseDevelopment: "true"
+    AppValidationAppleAppID: "75U4X84TEG.org.tidepool.coastal.Loop"
+    AppValidationChallengeSize: "16"
 deployment:
   # -- auth Docker image
   image: tidepool/platform-auth:master-latest

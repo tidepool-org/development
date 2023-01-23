@@ -120,6 +120,24 @@ spec:
               name: auth
               key: AppleDeviceCheckUseDevelopment
               optional: true
+        - name: TIDEPOOL_APPVALIDATION_USE_DEVELOPMENT
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppValidationUseDevelopment
+              optional: true
+        - name: TIDEPOOL_APPVALIDATION_APPLE_APP_ID
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppValidationAppleAppID
+              optional: true
+        - name: TIDEPOOL_APPVALIDATION_CHALLENGE_SIZE
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppValidationChallengeSize
+              optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
