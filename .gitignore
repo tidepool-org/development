@@ -7,3 +7,4 @@ local/*
 .helm
 tilt_modules/
 .idea/
+.DS_Store

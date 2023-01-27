@@ -126,11 +126,11 @@ spec:
               name: auth
               key: AppValidationUseDevelopment
               optional: true
-        - name: TIDEPOOL_APPVALIDATION_APPLE_APP_ID
+        - name: TIDEPOOL_APPVALIDATION_APPLE_APP_IDS
           valueFrom:
             configMapKeyRef:
               name: auth
-              key: AppValidationAppleAppID
+              key: AppValidationAppleAppIDs
               optional: true
         - name: TIDEPOOL_APPVALIDATION_CHALLENGE_SIZE
           valueFrom:

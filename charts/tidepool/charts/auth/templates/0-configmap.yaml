@@ -12,6 +12,6 @@ data:
   AppleDeviceCheckKeyIssuer: {{ .AppleDeviceCheckKeyIssuer | default "" }}
   AppleDeviceCheckUseDevelopment: "{{ .AppleDeviceCheckUseDevelopment | default "true" }}"
   AppValidationUseDevelopment: "{{ .AppValidationUseDevelopment | default "true" }}"
-  AppValidationAppleAppID: "{{ .AppValidationAppleAppID | default "" }}"
+  AppValidationAppleAppIDs: "{{ .AppValidationAppleAppIDs | default "" }}"
   AppValidationChallengeSize: "{{ .AppValidationChallengeSize | default "16" }}"
 {{- end }}
