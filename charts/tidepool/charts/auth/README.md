@@ -14,6 +14,9 @@ Helm chart for the Tidepool auth service
 | configmap.data_.AppleDeviceCheckKeyId | string | `"B542R658GF"` |  |
 | configmap.data_.AppleDeviceCheckKeyIssuer | string | `"75U4X84TEG"` | used for checking generating jwts, which are required for checking the validity of apple device tokens during the insulet authorization flow.  |
 | configmap.data_.AppleDeviceCheckUseDevelopment | string | `"true"` |  |
+| configmap.data_.AppValidationUseDevelopment | string | `"true"` |  |
+| configmap.data_.AppValidationAppleAppIDs | string | `"75U4X84TEG.org.tidepool.coastal.Loop,75U4X84TEG.org.tidepool.Loop"` |  |
+| configmap.data_.AppValidationChallengeSize | string | `"16"` |  |
 | deployment.image | string | `"tidepool/platform-auth:master-latest"` | auth Docker image |
 | deployment.replicas | int | `1` | number of replicas to deploy |
 | hpa.enabled | bool | `false` | whether to create a horizontal pod autoscalers for all pods of given deployment |
