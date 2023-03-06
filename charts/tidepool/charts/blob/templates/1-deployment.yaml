@@ -64,6 +64,8 @@ spec:
           value: '{{.Values.deployment.env.store.s3.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
           value: '{{.Values.deployment.env.store.type}}'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_LOGS_BUCKET_LOGS_BUCKET
+          value: '{{.Values.deployment.env.store.logs_bucket.logs_bucket}}'
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
