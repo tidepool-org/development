@@ -14,9 +14,7 @@ deployment:
         # -- S3 bucket where blob data is written
         bucket: "data"
         prefix: "blobs"
-      logs_bucket:
         logs_bucket: "device_logs"
-        prefix: "blobs"
       file:
         prefix: "blobs"
         # -- directory to use when storing blobs on file storage
