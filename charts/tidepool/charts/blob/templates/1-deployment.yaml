@@ -64,7 +64,7 @@ spec:
           value: '{{.Values.deployment.env.store.blobs.s3.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
           value: '{{.Values.deployment.env.store.blobs.type}}'
-        - name: TIDEPOOL_DOCKER_PLATFORM_BLOB_SERVICE_UNSTRUCTURED_LOGS_STORE_TYPE
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_LOGS_STORE_FILE_DIRECTORY
           value: '{{.Values.deployment.env.store.device_logs.file.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_LOGS_STORE_S3_BUCKET
           value: '{{ .Values.deployment.env.store.device_logs.s3.bucket }}'
