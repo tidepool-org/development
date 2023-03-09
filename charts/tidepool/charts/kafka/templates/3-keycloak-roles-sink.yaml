@@ -20,7 +20,7 @@ spec:
     database: keycloak
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: false
-    topics: {{ $realm }}.keycloak.public.keycloak_roles
+    topics: {{ $realm }}.keycloak.public.keycloak_role
     value.converter: org.apache.kafka.connect.json.JsonConverter
     value.converter.schemas.enable: false
   tasksMax: {{ .Values.global.kafka.connect.sinkTasksMax | int }}
