@@ -9,8 +9,8 @@ deployment:
   # -- default Docker image
   image: tidepool/platform-blob:master-latest
   env:
-    store:
-      blobs:
+    blobs:
+      store:
         s3:
           # -- S3 bucket where blob data is written
           bucket: "data"
@@ -21,7 +21,8 @@ deployment:
           directory: "_data/blobs" 
         # -- if `s3`, store blob data in Amazon S3. If `file` store blob data in local files.
         type: file
-      device_logs:
+    logs:
+      store:
         s3:
           # -- S3 bucket where device_logs blob data is written
           bucket: "device_logs"
