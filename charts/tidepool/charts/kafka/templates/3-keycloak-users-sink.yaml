@@ -13,7 +13,7 @@ spec:
     change.data.capture.handler: com.mongodb.kafka.connect.sink.cdc.debezium.rdbms.postgres.PostgresHandler
     collection: keycloak_users
     connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
-    database: keycloak
+    database: user
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: false
     topics: {{ .Release.Namespace }}.keycloak.public.user_entity
