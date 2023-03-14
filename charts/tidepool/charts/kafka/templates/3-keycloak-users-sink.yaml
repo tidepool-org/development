@@ -1,8 +1,4 @@
 {{ if and .Values.global.kafka.connect.enabled .Values.global.kafka.connect.keycloak.enabled}}
-{{- $realm := .Values.keycloak.realm -}}
-{{ if not .Values.keycloak.realm }}
-  {{- $realm = .Release.Namespace -}}
-{{ end}}
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
@@ -20,7 +16,7 @@ spec:
     database: keycloak
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: false
-    topics: {{ $realm }}.keycloak.public.user_entity
+    topics: {{ .Release.Namespace }}.keycloak.public.user_entity
     value.converter: org.apache.kafka.connect.json.JsonConverter
     value.converter.schemas.enable: false
   tasksMax: {{ .Values.global.kafka.connect.sinkTasksMax | int }}
