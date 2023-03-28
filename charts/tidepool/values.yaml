@@ -56,6 +56,32 @@ global:
   linkerdsupport:
     # -- whether to include linkerdsupport subchart with Linkerd service profiles
     enabled: true
+  # -- service hostnames
+  hostnames:
+    # -- auth service hostname
+    auth: "auth"
+    # -- blob service hostname
+    blob: "blob"
+    # -- clinic service hostname
+    clinic: "clinic"
+    # -- data service hostname
+    data: "data"
+    # -- devices service hostname
+    devices: "devices"
+    # -- gatekeeper service hostname
+    gatekeeper: "gatekeeper"
+    # -- hydrophone service hostname
+    hydrophone: "hydrophone"
+    # -- internal virtual service hostname
+    internal: "internal"
+    # -- metric service hostname
+    metric: "highwater"
+    # -- shoreline service hostname
+    shoreline: "shoreline"
+    # -- task service hostname
+    task: "task"
+    # -- user service hostname
+    user: "user"
   ports:
     # -- blip service internal port
     blip: 31500
