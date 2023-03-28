@@ -51,24 +51,28 @@ Create environment variables used by all platform services.
 */}}
 }
 
+{{- define "hostname.internal" -}}
+{{- .Values.global.hostnames.internal | default (printf "internal-%s" .Release.Namespace) -}}
+{{- end -}}
+
 {{ define "charts.platform.env.clients" }}
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
-          value: http://auth:{{.Values.global.ports.auth}}
+          value: http://{{.Values.global.hostnames.auth}}:{{.Values.global.ports.auth}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: "http://internal.{{.Release.Namespace}}"
+          value: "http://{{ include "hostname.internal" .}}"
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
               name: server
               key: ServiceAuth
         - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
-          value: http://blob:{{.Values.global.ports.blob}}
+          value: http://{{.Values.global.hostnames.blob}}:{{.Values.global.ports.blob}}
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
-          value: http://data:{{.Values.global.ports.data}}
+          value: http://{{.Values.global.hostnames.data}}:{{.Values.global.ports.data}}
         - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
-          value: http://data:{{.Values.global.ports.data}}
+          value: http://{{.Values.global.hostnames.data}}:{{.Values.global.ports.data}}
         - name: TIDEPOOL_DEVICES_CLIENT_ADDRESS
-          value: devices:{{.Values.global.ports.devices_grpc}}
+          value: {{.Values.global.hostnames.devices}}:{{.Values.global.ports.devices_grpc}}
         - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
           valueFrom:
             configMapKeyRef:
@@ -80,17 +84,17 @@ Create environment variables used by all platform services.
               name: dexcom
               key: AuthorizeURL
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
-          value: "http://internal.{{.Release.Namespace}}"
+          value: "http://{{ include "hostname.internal" .}}"
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
-          value: http://gatekeeper:{{.Values.global.ports.gatekeeper}}
+          value: http://{{.Values.global.hostnames.gatekeeper}}:{{.Values.global.ports.gatekeeper}}
         - name: TIDEPOOL_CONFIRMATION_CLIENT_ADDRESS
-          value: "http://hydrophone:{{.Values.global.ports.hydrophone}}"
+          value: "http://{{.Values.global.hostnames.hydrophone}}:{{.Values.global.ports.hydrophone}}"
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS
-          value: http://task:{{.Values.global.ports.task}}
+          value: http://{{.Values.global.hostnames.task}}:{{.Values.global.ports.task}}
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
-          value: "http://internal.{{.Release.Namespace}}"
+          value: "http://{{ include "hostname.internal" .}}"
         - name: TIDEPOOL_CLINIC_CLIENT_ADDRESS
-          value: "http://internal.{{.Release.Namespace}}"
+          value: "http://{{ include "hostname.internal" .}}"
 {{ end }}
 
 {{ define "charts.tracing.common" }}
@@ -171,6 +175,12 @@ Create environment variables used by all platform services.
 {{ include "charts.mongo.params" . }}
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
+        - name: TIDEPOOL_DISABLE_INDEX_CREATION
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mongo.secretName }}
+              key: DisabledIndexCreation
+              optional: true
 {{ end }}
 
 {{- define "charts.routing.opts.shadowing" -}}
@@ -204,7 +214,7 @@ Create liveness and readiness probes for platform services.
 {{- define "charts.init.shoreline" -}}
       - name: init-shoreline
         image: busybox:1.31.1
-        command: ['sh', '-c', 'until nc -zvv shoreline {{.Values.global.ports.shoreline}}; do echo waiting for shoreline; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -zvv {{.Values.global.hostnames.shoreline}} {{.Values.global.ports.shoreline}}; do echo waiting for shoreline; sleep 2; done;']
 {{- end -}}
 
 {{- define "charts.labels.standard" }}
