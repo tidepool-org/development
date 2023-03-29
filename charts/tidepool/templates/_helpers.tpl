@@ -80,7 +80,7 @@ Create environment variables used by all platform services.
               name: dexcom
               key: AuthorizeURL
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
-          value: "http://{{ include "hostname.internal" .}}}"
+          value: "http://{{ include "hostname.internal" .}}"
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
           value: http://{{.Values.global.hostnames.gatekeeper}}:{{.Values.global.ports.gatekeeper}}
         - name: TIDEPOOL_CONFIRMATION_CLIENT_ADDRESS
