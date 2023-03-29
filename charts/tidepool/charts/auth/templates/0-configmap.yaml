@@ -11,4 +11,5 @@ data:
   AppleDeviceCheckKeyId: {{ .AppleDeviceCheckKeyId | default "" }}
   AppleDeviceCheckKeyIssuer: {{ .AppleDeviceCheckKeyIssuer | default "" }}
   AppleDeviceCheckUseDevelopment: "{{ .AppleDeviceCheckUseDevelopment | default "true" }}"
+  UserEventsHandlerDisable: "{{ .UserEventsHandlerDisable | default "false" }}"
 {{- end }}
