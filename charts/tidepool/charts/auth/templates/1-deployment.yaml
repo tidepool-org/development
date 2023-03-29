@@ -87,6 +87,12 @@ spec:
               name: dexcom
               key: StateSalt
               optional: true
+        - name: TIDEPOOL_AUTH_USER_EVENTS_HANDLER_DISABLE
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: UserEventsHandlerDisable
+              optional: true
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
           value: {{ .Values.global.gateway.default.domain }}
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
