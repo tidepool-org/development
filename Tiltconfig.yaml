@@ -91,7 +91,7 @@ mongo:
       Password: ""
       Database: "admin"
       Tls: "false"
-      OptParams: "connect=direct"
+      OptParams: "directConnection=true"
 ### MongoDB Config End ###
 
 ### Carelink API Config Start ###carelink:

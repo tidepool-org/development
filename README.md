@@ -507,12 +507,19 @@ The Dexcom API integration will not work out of the box as it requires a private
 Once you receive a developer id and secret from Dexcom, you add them to your `local/Tiltconfig.yaml` file as follows:
 
 ```yaml
-global:
-  secrets:
-    dexcomClientId: ""
-    dexcomClientSecret: ""
-    # ...
+dexcom:
+  secret:
+    enabled: true
+    data_:
+      ClientId: "<dexcom-generated-client-id>"
+      ClientSecret: "<dexcom-generated-client-secret>"
+      StateSalt: "<some-text>"
 ```
+
+NOTES: 
+ - ensure that in the dexcom developer setup the redirect URI is set correctly, for example if running locally `http://localhost:31500/v1/oauth/dexcom/redirect`
+
+ - you will need to restart the tidepool services for the config changes to take effect
 
 ## Running Alternate Remote Images
 

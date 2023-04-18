@@ -1,0 +1,23 @@
+{{ if and .Values.global.kafka.connect.enabled .Values.global.kafka.connect.keycloak.enabled}}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  labels:
+    app: keycloak-users-sink
+    strimzi.io/cluster: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
+  name: keycloak-users-sink
+  namespace: {{ .Release.Namespace }}
+spec:
+  class: com.mongodb.kafka.connect.MongoSinkConnector
+  config:
+    change.data.capture.handler: com.mongodb.kafka.connect.sink.cdc.debezium.rdbms.postgres.PostgresHandler
+    collection: keycloak_users
+    connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
+    database: user
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: false
+    topics: {{ .Release.Namespace }}.keycloak.public.user_entity
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: false
+  tasksMax: {{ .Values.global.kafka.connect.sinkTasksMax | int }}
+{{- end }}
