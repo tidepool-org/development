@@ -81,3 +81,5 @@ nodeSelector: {}
 tolerations: []
 # -- affinity
 affinity: {}
+# -- url path prefix to prepend to any shoreline calls
+authPathPrefix: "auth"

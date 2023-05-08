@@ -8,6 +8,7 @@ global:
   region: "us-west-2"
   # -- the default log level for all services
   logLevel: info
+  logLevel: info
   gateway:
     default:
       # -- scheme to use for web service
@@ -76,6 +77,8 @@ global:
     internal: "internal"
     # -- metric service hostname
     metric: "highwater"
+    # -- seagull service hostname
+    seagull: "seagull"
     # -- shoreline service hostname
     shoreline: "shoreline"
     # -- task service hostname

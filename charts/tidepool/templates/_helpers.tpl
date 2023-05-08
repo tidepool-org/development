@@ -55,12 +55,14 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://{{.Values.global.hostnames.auth}}:{{.Values.global.ports.auth}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: "http://{{ include "hostname.internal" .}}"
+          value: http://{{.Values.global.hostnames.shoreline}}:{{.Values.global.ports.shoreline}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
               name: server
               key: ServiceAuth
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_PATH_PREFIX
+          value: {{ .Values.authPathPrefix | quote }}
         - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
           value: http://{{.Values.global.hostnames.blob}}:{{.Values.global.ports.blob}}
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
@@ -161,19 +163,27 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: {{ .Values.mongo.secretName }}
               key: Tls
+        - name: TIDEPOOL_DISABLE_INDEX_CREATION
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mongo.secretName }}
+              key: DisableIndexCreation
+              optional: true
 {{ end }}
 
 {{ define "charts.platform.env.mongo" }}
 {{ include "charts.mongo.params" . }}
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
-        - name: TIDEPOOL_DISABLE_INDEX_CREATION
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.mongo.secretName }}
-              key: DisabledIndexCreation
-              optional: true
 {{ end }}
+
+{{- define "charts.routing.opts.shadowing" -}}
+      shadowing:
+        upstream:
+          name: {{ .Values.shadowing.upstreamName | quote }}
+          namespace: {{ .Values.shadowing.namespace | quote }}
+        percentage: {{ .Values.shadowing.percentage }}
+{{- end }}
 
 {{/*
 Create liveness and readiness probes for platform services.

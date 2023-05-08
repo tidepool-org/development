@@ -69,18 +69,18 @@ spec:
           value: |
             {
                 "auth": {
-                  "address": "http://auth:{{.Values.global.ports.auth}}",
+                  "address": "http://{{.Values.global.hostnames.shoreline}}:{{.Values.global.ports.shoreline}}",
                   "userAgent": "Tidepool-TideWhisperer"
                 },
-                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.global.ports.gatekeeper}}"]}},
+                "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://{{.Values.global.hostnames.gatekeeper}}:{{.Values.global.ports.gatekeeper}}"]}},
                 "hakken": {
                   "host": "hakken",
                   "skipHakken": true
                   },
-                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.global.ports.seagull}}"]}},
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://{{ .Values.global.hostnames.seagull }}:{{ .Values.global.ports.seagull }}"]}},
                 "shoreline": {
                     "name": "tide-whisperer",
-                    "serviceSpec": {"type": "static", "hosts": ["http://shoreline:{{.Values.global.ports.shoreline}}"]},
+                    "serviceSpec": {"type": "static", "hosts": ["http://{{ .Values.global.hostnames.shoreline }}:{{ .Values.global.ports.shoreline }}"]},
                     "tokenRefreshInterval": "1h"
                 }
             }
