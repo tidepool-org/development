@@ -73,7 +73,7 @@ spec:
                   "host": "hakken",
                   "skipHakken": true
                   },
-                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://seagull:{{.Values.global.ports.seagull}}"]}},
+                "seagull": {"serviceSpec": {"type": "static", "hosts": ["http://{{.Values.global.hostnames.seagull}}:{{.Values.global.ports.seagull}}"]}},
                 "shoreline": {
                     "name": "tide-whisperer",
                     "serviceSpec": {"type": "static", "hosts": ["http://{{.Values.global.hostnames.shoreline}}:{{.Values.global.ports.shoreline}}"]},
