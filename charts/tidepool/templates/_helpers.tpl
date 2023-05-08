@@ -55,7 +55,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: http://{{.Values.global.hostnames.auth}}:{{.Values.global.ports.auth}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: "http://{{ include "hostname.internal" .}}"
+          value: http://{{.Values.global.hostnames.shoreline}}:{{.Values.global.ports.shoreline}}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:

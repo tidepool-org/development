@@ -69,7 +69,7 @@ spec:
           value: |
             {
                 "auth": {
-                  "address": "http://auth:{{.Values.global.ports.auth}}",
+                  "address": "http://{{.Values.global.hostnames.shoreline}}:{{.Values.global.ports.shoreline}}",
                   "userAgent": "Tidepool-TideWhisperer"
                 },
                 "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://gatekeeper:{{.Values.global.ports.gatekeeper}}"]}},
