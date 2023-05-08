@@ -68,6 +68,10 @@ spec:
         - name: TIDEPOOL_TIDE_WHISPERER_ENV
           value: |
             {
+                "auth": {
+                  "address": "http://{{.Values.global.hostnames.shoreline}}:{{.Values.global.ports.shoreline}}",
+                  "userAgent": "Tidepool-TideWhisperer"
+                },
                 "gatekeeper": {"serviceSpec": {"type": "static", "hosts": ["http://{{.Values.global.hostnames.gatekeeper}}:{{.Values.global.ports.gatekeeper}}"]}},
                 "hakken": {
                   "host": "hakken",
