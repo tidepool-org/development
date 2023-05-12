@@ -63,6 +63,8 @@ spec:
           value: data
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_PATH_PREFIX
+          value: {{ .Values.deployment.authPathPrefix }}
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
