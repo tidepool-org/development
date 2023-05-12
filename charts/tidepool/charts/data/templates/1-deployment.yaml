@@ -19,8 +19,6 @@ spec:
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: {{ .Values.deployment.replicas }}
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
