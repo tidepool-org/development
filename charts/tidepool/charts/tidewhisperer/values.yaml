@@ -33,3 +33,8 @@ nodeSelector: {}
 tolerations: []
 # -- affinity
 affinity: {}
+shadowing:
+  enabled: false
+  upstreamName: "tidewhisperer"
+  namespace: "shadow"
+  percentage: 0
