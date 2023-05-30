@@ -20,7 +20,7 @@ spec:
 {{- if .Values.shadowing.enabled }}
       options:
       {{ include "charts.routing.opts.shadowing" . }}
-{{ end }}
+{{- end }}
   - matchers:
     - methods:
       - POST
@@ -42,7 +42,7 @@ spec:
       timeout: "60s"
 {{- if .Values.shadowing.enabled }}
       {{ include "charts.routing.opts.shadowing" . }}
-{{ end }}
+{{- end }}
   - matchers:
     - methods:
       - POST
@@ -64,7 +64,7 @@ spec:
 {{- if .Values.shadowing.enabled }}
     options:
       {{ include "charts.routing.opts.shadowing" . }}
-{{ end }}
+{{- end }}
   - matchers:
     - methods:
       - POST
@@ -84,7 +84,7 @@ spec:
 {{- if .Values.shadowing.enabled }}
       options:
       {{ include "charts.routing.opts.shadowing" . }}
-{{ end }}
+{{- end }}
   - matchers:
     - methods:
       - PUT
@@ -114,7 +114,7 @@ spec:
       timeout: "60s"
 {{- if .Values.shadowing.enabled }}
       {{ include "charts.routing.opts.shadowing" . }}
-{{ end }}
+{{- end }}
   - matchers:
     - methods:
       - POST
@@ -152,7 +152,7 @@ spec:
         disable: true
 {{- if .Values.shadowing.enabled }}
       {{ include "charts.routing.opts.shadowing" . }}
-{{ end }}
+{{- end }}
   - matchers:
     - methods:
       - GET
@@ -206,7 +206,7 @@ spec:
       timeout: "60s"
 {{- if .Values.shadowing.enabled }}
       {{ include "charts.routing.opts.shadowing" . }}
-{{ end }}
+{{- end }}
   - matchers:
     - methods:
       - POST

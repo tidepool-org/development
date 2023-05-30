@@ -180,7 +180,7 @@ Create environment variables used by all platform services.
         upstream:
           name: {{ .Values.shadowing.upstreamName | quote }}
           namespace: {{ .Values.shadowing.namespace | quote }}
-        percentage: .Values.shadowing.percentage
+        percentage: {{ .Values.shadowing.percentage }}
 {{- end }}
 
 {{/*
