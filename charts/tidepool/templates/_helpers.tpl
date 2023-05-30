@@ -165,7 +165,7 @@ Create environment variables used by all platform services.
           valueFrom:
             secretKeyRef:
               name: {{ .Values.mongo.secretName }}
-              key: DisabledIndexCreation
+              key: DisableIndexCreation
               optional: true
 {{ end }}
 
