@@ -71,6 +71,25 @@ entries:
     version: 0.1.0
   tidepool:
   - apiVersion: v2
+    created: "2023-06-08T02:44:23.671326013Z"
+    dependencies:
+    - condition: keycloak.enabled
+      name: keycloak
+      repository: file://../keycloak
+      version: 0.3.0
+    description: A Helm chart for Tidepool
+    digest: d3f8403355371413cccee6a9afdd4e495f3a0bed34892e8f70e92a6fa98e0a2d
+    home: https://github.com/tidepool-org/development/charts
+    icon: https://www.tidepool.org/static/media/tidepool-t-logo.41feef82.png
+    maintainers:
+    - email: todd@tidepool.org
+      name: Todd Kazakov
+      url: https://github.com/toddkazakov
+    name: tidepool
+    urls:
+    - https://github.com/tidepool-org/development/releases/download/tidepool-0.15.4/tidepool-0.15.4.tgz
+    version: 0.15.4
+  - apiVersion: v2
     created: "2023-03-14T16:17:58.842230614Z"
     dependencies:
     - condition: keycloak.enabled
