@@ -10,6 +10,7 @@ metadata:
 spec:
   class: com.mongodb.kafka.connect.MongoSourceConnector
   config:
+    pipeline: "[ {'$project': {'fullDocument.stats.buckets': 0} } ]"
     change.stream.full.document: updateLookup
     collection: summary
     connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
