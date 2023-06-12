@@ -76,6 +76,8 @@ global:
     internal: "internal"
     # -- metric service hostname
     metric: "highwater"
+    # -- seagull service hostname
+    seagull: "seagull"
     # -- shoreline service hostname
     shoreline: "shoreline"
     # -- task service hostname
