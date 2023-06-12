@@ -61,10 +61,8 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: server
               key: ServiceAuth
-        {{ if .Values.deployment.authPathPrefix }}
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_PATH_PREFIX
           value: {{ .Values.deployment.authPathPrefix }}
-        {{ end }}
         - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
           value: http://{{.Values.global.hostnames.blob}}:{{.Values.global.ports.blob}}
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
