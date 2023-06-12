@@ -7,7 +7,7 @@ deployment:
   # --  Docker image
   image: tidepool/platform-data:master-latest
   replicas: 1
-  # -- what url path prefix to prepend to any calls, if any.
+  # -- what url path prefix to prepend to any shoreline calls, if any.
   authPathPrefix: "auth"
 
 # -- memory and cpu resources for pods

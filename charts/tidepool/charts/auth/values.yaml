@@ -16,6 +16,8 @@ deployment:
   image: tidepool/platform-auth:master-latest
   # -- number of replicas to deploy
   replicas: 1
+  # -- what url path prefix to prepend to any shoreline calls, if any.
+  authPathPrefix: "auth"
 initContainers: []
 
 # -- memory and cpu resources for pods
