@@ -13,8 +13,6 @@ deployment:
     queue:
       delay: 5
       workers: 5
-  # -- what url path prefix to prepend to any shoreline calls, if any.
-  authPathPrefix: "auth"
 # -- memory and cpu resources for pods
 resources: {}
 # -- security context for each pod in deployment

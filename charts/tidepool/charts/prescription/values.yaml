@@ -14,8 +14,6 @@ deployment:
     store:
       s3:
         bucket: "asset"
-  # -- what url path prefix to prepend to any shoreline calls, if any.
-  authPathPrefix: "auth"
 
 # -- memory and cpu resources for pods
 resources: {}

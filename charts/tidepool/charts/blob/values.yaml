@@ -20,8 +20,6 @@ deployment:
         directory: "_data/blobs" 
       # -- if `s3`, store blob data in Amazon S3. If `file` store blob data in local files.
       type: file
-  # -- what url path prefix to prepend to any shoreline calls, if any.
-  authPathPrefix: "auth"
 serviceAccount:
   # -- whether to create a service account
   create: false
