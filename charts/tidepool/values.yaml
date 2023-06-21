@@ -85,9 +85,6 @@ global:
     task: "task"
     # -- user service hostname
     user: "user"
-  platform:
-    # -- What prefix to append to the path of any URL calls to the shoreline service for platform services
-    authPathPrefix: "auth"
   ports:
     # -- blip service internal port
     blip: 31500

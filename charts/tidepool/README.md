@@ -30,7 +30,6 @@ A Helm chart for Tidepool
 | global.logLevel | string | `"info"` | the default log level for all services |
 | global.maxTimeout | string | `"120s"` | maximum timeout for any web request |
 | global.nameOverride | string | `""` | if non-empty, Helm chart name to use |
-| global.platform.authPathPrefix | string | `"auth"` | the path to prepend to all paths to any platform service to shoreline calls. For example a value of "foobar" will make a call to shoreline with the path of "/login" to become "/foobar/login" |
 | global.ports.blip | int | `3000` | blip service internal port |
 | global.ports.blob | int | `9225` | blob service internal port |
 | global.ports.data | int | `9220` | data service internal port |
