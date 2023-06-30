@@ -169,7 +169,6 @@ curl -sL https://run.solo.io/gloo/install | sh
 export PATH=$HOME/.gloo/bin:$PATH
 ```
 
-
 Once installed, you can provision the kubernetes stack with `glooctl`, using the `Glooconfig.yaml` configuration provided at the root of this repo.
 
 ```
