@@ -12,6 +12,17 @@ spec:
   - matchers:
     - methods:
       - GET
+      regex: "/v1/users/[^/]+/data_sources"
+    routeAction:
+      single:
+        upstream:
+          name: data
+{{- if .Values.shadowing.enabled }}
+      options:
+      {{ include "charts.routing.opts.shadowing" . }}
+{{- end }}
+  - matchers:
+    - methods:
       - POST
       - DELETE
       regex: "/v1/users/[^/]+/data_sources"
@@ -22,21 +33,40 @@ spec:
   - matchers:
     - methods:
       - GET
+      regex: "/v1/users/[^/]+/data_sets"
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      timeout: "60s"
+{{- if .Values.shadowing.enabled }}
+      {{ include "charts.routing.opts.shadowing" . }}
+{{- end }}
+  - matchers:
+    - methods:
       - POST
       regex: "/v1/users/[^/]+/data_sets"
     routeAction:
       single:
-        upstream: 
+        upstream:
           name: data
     options:
       timeout: "60s"
-{{- if .Values.shadowing }}
-      shadowing:
-{{- toYaml .Values.shadowing | nindent 8 }}
-{{- end }}
   - matchers:
     - methods:
       - GET
+      regex: "/v1/users/[^/]+/datasets"
+    routeAction:
+      single:
+        upstream:
+          name: data
+{{- if .Values.shadowing.enabled }}
+    options:
+      {{ include "charts.routing.opts.shadowing" . }}
+{{- end }}
+  - matchers:
+    - methods:
       - POST
       regex: "/v1/users/[^/]+/datasets"
     routeAction:
@@ -46,6 +76,17 @@ spec:
   - matchers:
     - methods:
       - GET
+      regex: "/v1/data_sources/[^/]+"
+    routeAction:
+      single:
+        upstream:
+          name: data
+{{- if .Values.shadowing.enabled }}
+      options:
+      {{ include "charts.routing.opts.shadowing" . }}
+{{- end }}
+  - matchers:
+    - methods:
       - PUT
       - DELETE
       regex: "/v1/data_sources/[^/]+"
@@ -64,6 +105,18 @@ spec:
   - matchers:
     - methods:
       - GET
+      prefix: /v1/data_sets
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      timeout: "60s"
+{{- if .Values.shadowing.enabled }}
+      {{ include "charts.routing.opts.shadowing" . }}
+{{- end }}
+  - matchers:
+    - methods:
       - POST
       - DELETE
       - PUT
@@ -74,10 +127,6 @@ spec:
           name: data
     options:
       timeout: "60s"
-{{- if .Values.shadowing }}
-      shadowing:
-{{- toYaml .Values.shadowing | nindent 8 }}
-{{- end }}
   - matchers:
     - methods:
       - POST
@@ -90,10 +139,6 @@ spec:
           name: data
     options:
       timeout: "60s"
-{{- if .Values.shadowing }}
-      shadowing:
-{{- toYaml .Values.shadowing | nindent 8 }}
-{{- end }}
   - matchers:
     - methods:
       - GET
@@ -105,6 +150,9 @@ spec:
     options:
       extauth:
         disable: true
+{{- if .Values.shadowing.enabled }}
+      {{ include "charts.routing.opts.shadowing" . }}
+{{- end }}
   - matchers:
     - methods:
       - GET
@@ -126,10 +174,6 @@ spec:
     options:
       prefixRewrite: /
       timeout: "60s"
-{{- if .Values.shadowing }}
-      shadowing:
-{{- toYaml .Values.shadowing | nindent 8 }}
-{{- end }}
   - matchers:
     - methods:
       - POST
@@ -153,6 +197,18 @@ spec:
   - matchers:
     - methods:
       - GET
+      prefix: /v1/summaries
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      timeout: "60s"
+{{- if .Values.shadowing.enabled }}
+      {{ include "charts.routing.opts.shadowing" . }}
+{{- end }}
+  - matchers:
+    - methods:
       - POST
       prefix: /v1/summaries
     routeAction:
