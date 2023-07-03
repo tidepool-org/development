@@ -48,3 +48,6 @@ nodeSelector: {}
 tolerations: []
 # -- affinity
 affinity: {}
+# -- redox
+redox:
+  verify: false
