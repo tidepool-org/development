@@ -1,0 +1,21 @@
+{{ if .Values.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: data
+  namespace: {{.Release.Namespace}}
+  labels:
+    app: data
+{{ include "charts.labels.standard" . }}
+spec:
+  endpoints:
+  - path: /v1/metrics
+    port: http
+  jobLabel: tidepool/data
+  namespaceSelector:
+    matchNames:
+    - {{.Release.Namespace}}
+  selector:
+    matchLabels:
+      app: data
+{{ end }}

@@ -15,6 +15,9 @@ podSecurityContext: {}
 # -- annotations for each pod in deployment
 podAnnotations: {}
 securityContext: {}
+serviceMonitor:
+  # -- whether to generate a prometheus-operator service monitor
+  enabled: false
 hpa:
   # -- whether to create a horizontal pod autoscalers for all pods of given deployment
   enabled: false
