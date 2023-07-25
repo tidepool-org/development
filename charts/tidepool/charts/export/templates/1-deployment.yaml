@@ -57,6 +57,8 @@ spec:
               name: export
               key: Timeout
               optional: true
+        - name: PLOTLY_ORCA
+          value: "http://plotly-orca:{{.Values.global.ports.plotly_orca}}"
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
