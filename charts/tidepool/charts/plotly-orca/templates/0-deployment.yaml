@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: plotly-orca
+{{ include "charts.labels.standard" .}}
+  name: plotly-orca
+  namespace: {{.Release.Namespace}}
+spec:
+  selector:
+    matchLabels:
+      app: plotly-orca
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: {{ .Values.deployment.replicas }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: plotly-orca
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: plotly-orca
+        image: {{ .Values.deployment.image | quote }}
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: {{ .Values.global.ports.plotly_orca }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+        ports:
+        - containerPort: {{ .Values.global.ports.plotly_orca }}
+          name: "http"
+      restartPolicy: Always

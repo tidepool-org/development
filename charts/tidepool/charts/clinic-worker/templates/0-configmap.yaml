@@ -11,8 +11,8 @@ data:
   RedoxClientId: ""
   RedoxSourceId: ""
   RedoxSourceName: ""
-  RedoxTestMode: true
-  RedoxEnabled: false
+  RedoxTestMode: "true"
+  RedoxEnabled: "false"
   KafkaTopicPrefix: {{ .Values.configmap.data.KafkaTopicPrefix | quote }}
   KafkaTopic: {{ .Values.configmap.data.KafkaTopic | quote }}
 {{- end }}
