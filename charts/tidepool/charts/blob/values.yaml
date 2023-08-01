@@ -25,10 +25,10 @@ deployment:
       store:
         s3:
           # -- S3 bucket where device_logs blob data is written
-          bucket: "device_logs"
-          prefix: "blobs"
+          bucket: "data"
+          prefix: "device_logs"
         file:
-          prefix: "blobs"
+          prefix: "device_logs"
           # -- directory to use when storing device_logs on file storage
           directory: "_data/device_logs" 
         # -- if `s3`, store blob data in Amazon S3. If `file` store blob data in local files.
