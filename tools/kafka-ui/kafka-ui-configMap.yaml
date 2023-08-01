@@ -1,4 +1,9 @@
-# Provision with helm install kafka-ui kafka-ui/kafka-ui --set existingConfigMap="kafka-ui-helm-values"
+# Add config map:
+# create configmap kafka-ui-helm-values --from-file tools/kafka-ui/kafka-ui-configMap.yaml
+
+# Provision kafka-ui with:
+# helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
+# helm install kafka-ui kafka-ui/kafka-ui --set existingConfigMap="kafka-ui-helm-values"
 
 apiVersion: v1
 kind: ConfigMap
@@ -9,4 +14,4 @@ data:
   KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka-kafka-bootstrap:9092"
   KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM: "SCRAM-SHA-512"
   KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: "SASL_PLAINTEXT"
-  KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafka' password='xxxxxxxxxx';"
+  KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafka' password='**GET_FROM_KAFKA_SECRET**';"
