@@ -142,7 +142,7 @@ This config will provision and start up the Kubernetes server, and a private doc
 
 ## Install glooctl
 
-We provision the Gloo gateway, which is responsible for service routing, using glooctl. Please follow the [glooctl Installation Instructions](https://docs.solo.io/gloo-edge/master/installation/glooctl_setup/).
+We provision the Gloo gateway, which is responsible for service routing, using glooctl. Please follow the [glooctl Installation Instructions](https://docs.solo.io/gloo-edge/latest/installation/preparation/#glooctl).
 
 Once installed, you can provision the kubernetes stack with `glooctl`, using the `Glooconfig.yaml` configuration provided at the root of this repo.
 
