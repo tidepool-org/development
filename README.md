@@ -166,7 +166,7 @@ yum install nc
 dnf install nc
 
 # Debian/Ubuntu
-sudo apt-get install Netcat
+sudo apt-get install netcat-openbsd # or netcat-traditional
 ```
 
 After installing Netcat, you can verify it's working by typing `nc -h` in your terminal.
