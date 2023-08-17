@@ -15,11 +15,8 @@ spec:
     connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
     copy.existing: true
     database: clinic
-    key.converter: org.apache.kafka.connect.json.JsonConverter
-    key.converter.schemas.enable: false
     topic.prefix: {{ .Release.Namespace }}
-    value.converter: org.apache.kafka.connect.json.JsonConverter
-    value.converter.schemas.enable: false
+    output.json.formatter: com.mongodb.kafka.connect.source.json.formatter.ExtendedJson
     heartbeat.interval.ms: {{ .Values.global.kafka.connect.mongoHeartbeatIntervalMs }}
     heartbeat.topic.name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-heartbeat
   tasksMax: {{ .Values.global.kafka.connect.sourceTasksMax | int }}
