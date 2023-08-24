@@ -66,6 +66,8 @@ The Tidepool stack relies on [Docker](https://www.docker.com) to run all of the 
 
 Follow the appropriate link for your platform (Mac OSx or Linux recommended) at https://docs.docker.com/install/#supported-platforms and follow the directions to install and run Docker on your computer. The minimum supported version is `20.10.17`
 
+After installing Docker, ensure that Kubernetes is enabled. This can be done from the preferences pane.
+
 **IMPORTANT:** This stack is VERY resource intensive.  You will need a fairly robust computer to run it efficiently, and will need to provide Docker with at least 60 GB of disk space and 4 GB of RAM. The default 2 GB RAM for Docker on MacOS won't cut it, and will need to be increased via the preferences panel. We recommend 8 GB or higher if you have 12 GB or more available.
 
 ## Install Kubernetes Client
@@ -140,9 +142,32 @@ ctlptl apply -f Kindconfig.yaml
 
 This config will provision and start up the Kubernetes server, and a private docker registry that Tilt will deploy development builds to as you work locally on the Tidepool services.
 
+At this point, if you receive an error that the `kind` executable was not found on `$PATH`, this can be resolved by installing Kind. In order to do so you must [install Go](https://go.dev/doc/install) (if you don't already have it installed) and run the following command: 
+``` bash
+go install sigs.k8s.io/kind@v0.20.0
+```
+
+Next ensure that package binaries installed using Go can be invoked on the command line:
+
+``` bash
+# MacOS
+# Edit ~/.zshrc to add the following: 
+export PATH="$PATH:$(go env GOPATH)/bin"
+
+# Linux 
+# Edit ~/.bash_profile or vi ~/.bashrc to add the following: 
+export PATH="$PATH:$(go env GOPATH)/bin"
+```
+
 ## Install glooctl
 
-We provision the Gloo gateway, which is responsible for service routing, using glooctl. Please follow the [glooctl Installation Instructions](https://docs.solo.io/gloo-edge/master/installation/glooctl_setup/).
+We provision the Gloo gateway, which is responsible for service routing, using glooctl.
+
+```bash
+#MacOS and Linux 
+curl -sL https://run.solo.io/gloo/install | sh
+export PATH=$HOME/.gloo/bin:$PATH
+```
 
 Once installed, you can provision the kubernetes stack with `glooctl`, using the `Glooconfig.yaml` configuration provided at the root of this repo.
 
@@ -183,7 +208,7 @@ The stack has been tested with version `6.x`, which is the latest version availa
 
 After installing MongoDB locally, you will need to set up your `mongo.conf` to allow local connections, and configure it as a replica set (it will be a standalone instance by default).
 
-If, for instance, you installed via homebrew on Mac, the default file location will be `/usr/local/etc/mongod.conf`. This is the configuration we recommend for local use. Note, however, that this is very permissive, and allows all incoming connections, so you may want to
+If, for instance, you installed via homebrew on Mac, the default file location will be `/usr/local/etc/mongod.conf`. This is the configuration we recommend for local use. Note, however, that this is very permissive, and allows all incoming connections, so you may want to adjust which IP addresses the mongod service is bound to. See [mongo documentation](https://www.mongodb.com/docs/manual/core/security-mongodb-configuration/) for more details. 
 
 ```bash
 systemLog:
@@ -267,6 +292,29 @@ git clone https://github.com/tidepool-org/development.git ~/Tidepool/development
 
 For more information about `git`, please see [Git](https://git-scm.com/) and [Try Git](https://try.github.io/).
 
+## Environment Setup (recommended)
+
+There are 2 environment variables that we recommend you export before starting up the Tidepool stack for the first time.
+
+It's recommended that you export them in a persistent way, such as within your local `~/.bash_profile` (or whatever equivalent you use)
+
+`KUBECONFIG` - This is the path used by Tilt to issue commands to your Kubernetes cluster.
+
+```bash
+export KUBECONFIG="$HOME/.kube/config"
+```
+
+`MONGODB_SHELL` - This is the path used run the MongoDB shell on your local machine. By default, if unset, the `tidepool` script will use the path resolved by running `which mongosh`.
+
+If you would like to override this, for instance, if the command you run to open the MongoDB shell is `/usr/local/bin/mongo`, then just set the value of the environment variable like so:
+
+```bash
+export MONGODB_SHELL="/usr/local/bin/mongo"
+```
+
+[[back to top]](#welcome)
+
+
 ## Add Tidepool Helper Script (recommended)
 
 Though not strictly necessary, we recommend that you manage your local Tidepool stack via the `tidepool` helper script provided by this repo at `/bin/tidepool`.
@@ -309,28 +357,6 @@ tidepool help
 ```
 
 **NOTE:** `tidepool help` will describe and outline the use of all of the available commands.
-
-## Environment Setup (recommended)
-
-There are 2 environment variables that we recommend you export before starting up the Tidepool stack for the first time.
-
-It's recommended that you export them in a persistent way, such as within your local `~/.bash_profile` (or whatever equivalent you use)
-
-`KUBECONFIG` - This is the path used by Tilt to issue commands to your Kubernetes cluster.
-
-```bash
-export KUBECONFIG="$HOME/.kube/config"
-```
-
-`MONGODB_SHELL` - This is the path used run the MongoDB shell on your local machine. By default, if unset, the `tidepool` script will use the path resolved by running `which mongosh`.
-
-If you would like to override this, for instance, if the command you run to open the MongoDB shell is `/usr/local/bin/mongo`, then just set the value of the environment variable like so:
-
-```bash
-export MONGODB_SHELL="/usr/local/bin/mongo"
-```
-
-[[back to top]](#welcome)
 
 # Quick Start
 
