@@ -63,6 +63,12 @@ spec:
           value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
         - name: TIDEPOOL_CONFIRMATION_CLIENT_ADDRESS
           value: "http://hydrophone:{{.Values.global.ports.hydrophone}}"
+        - name: TIDEPOOL_REDOX_VERIFICATION_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: clinic
+              key: RedoxVerificationToken
+              optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
