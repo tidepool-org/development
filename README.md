@@ -455,6 +455,8 @@ Since your local Tidepool does not have a configured email server, no emails wil
 
 Accounts created in Keycloak can be verified using the Keycloak admin console which is available at [http://localhost:8081/](http://localhost:8081/).
 
+> Once viewing the Keycloak admin site, be sure to select the correct realm (probably "dev") via the drop-down in the upper left, under the Keycloak logo.
+
 Legacy accounts in mongo can be verified in the database directly by setting the `authenticated` field to true for the user you've created, which can be found at `db.user.users`.
 
 This can be done by connecting to the mongo client within the mongo container (out of scope for this document), or, more conveniently, with the `tidepool` helper script:
