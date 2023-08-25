@@ -437,7 +437,7 @@ k9s
 
 Tidepool uses Keycloak as its main identity and access management solution. Legacy mongo user accounts are migrated from mongo to Keycloak as users sign in (so their credentials can be migrated as well).
 
-Keycloak admin console is available at http://localhost:8081. To login as an administrtor you can use the default credentials:
+Keycloak admin console is available at [http://localhost:32000/](http://localhost:32000/). To login as an administrtor you can use the default credentials:
 ```
 username: admin
 password: admin
@@ -447,13 +447,13 @@ The administrator credentials can be tweaked by setting KEYCLOAK_USER and KEYCLO
 
 ## Creating An Account
 
-Once your local Tidepool is running, open your Chrome browser and browse to http://localhost:31500. You should see the Tidepool login page running from your local computer, assuming everything worked as expected. Go ahead and signup for a new account. Remember, all accounts and data created via this local Tidepool are _ONLY_ stored on your computer. _No_ data is stored on any of the Tidepool servers.
+Once your local Tidepool is running, open your Chrome browser and browse to [http://localhost:31500/](http://localhost:31500). You should see the Tidepool login page running from your local computer, assuming everything worked as expected. Go ahead and signup for a new account. Remember, all accounts and data created via this local Tidepool are _ONLY_ stored on your computer. _No_ data is stored on any of the Tidepool servers.
 
 ## Verifying An Account Email
 
 Since your local Tidepool does not have a configured email server, no emails will be sent at all. This includes the verification email sent during account creation. To get around this when running locally, you need to verify the email account manually.
 
-Accounts created in Keycloak can be verified using the Keycloak admin console which is available at http://localhost:8081.
+Accounts created in Keycloak can be verified using the Keycloak admin console which is available at [http://localhost:8081/](http://localhost:8081/).
 
 Legacy accounts in mongo can be verified in the database directly by setting the `authenticated` field to true for the user you've created, which can be found at `db.user.users`.
 
@@ -465,7 +465,7 @@ tidepool verify-account-email [user-email-address]
 
 ## Uploading Data
 
-To upload diabetes device data to your local Tidepool, first make sure the [Tidepool Uploader](https://tidepool.org/products/tidepool-uploader) is installed on your computer. Follow the directions at https://tidepool.org/products/tidepool-uploader.
+To upload diabetes device data to your local Tidepool, first make sure the [Tidepool Uploader](https://tidepool.org/products/tidepool-uploader) is installed on your computer. Follow the directions at [https://tidepool.org/products/tidepool-uploader](https://tidepool.org/products/tidepool-uploader).
 
 After installing and launching the Tidepool Uploader, _but before logging in_, right-click on the "Log In" button. From the popup menu displayed, first select "Change server" and then select "localhost". This directs the Tidepool Uploader to upload data to the running local Tidepool rather than our production servers. Then, login to the Tidepool Uploader using the account just created.
 
@@ -502,7 +502,7 @@ See [Building Local Images](#building-local-images) for more details
 
 ## Dexcom API integration
 
-The Dexcom API integration will not work out of the box as it requires a private developer id and secret known only to Dexcom and Tidepool. If you wish to enable this functionality, please see https://developer.dexcom.com/.
+The Dexcom API integration will not work out of the box as it requires a private developer id and secret known only to Dexcom and Tidepool. If you wish to enable this functionality, please see [https://developer.dexcom.com/](https://developer.dexcom.com/).
 
 Once you receive a developer id and secret from Dexcom, you add them to your `local/Tiltconfig.yaml` file as follows:
 
