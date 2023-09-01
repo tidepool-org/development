@@ -120,6 +120,66 @@ spec:
               name: auth
               key: AppleDeviceCheckUseDevelopment
               optional: true
+        - name: COASTAL_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: coastal
+              key: apiKey
+              optional: true
+        - name: COASTAL_BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: coastal
+              key: baseUrl
+              optional: true
+        - name: COASTAL_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: coastal
+              key: clientId
+              optional: true
+        - name: COSTAL_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: coastal
+              key: clientSecret
+              optional: true
+        - name: COASTAL_RC_TYPE_ID
+          valueFrom:
+            secretKeyRef:
+              name: coastal
+              key: rcTypeId
+              optional: true
+        - name: PALMTREE_BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: palmtree
+              key: baseUrl
+              optional: true
+        - name: PALMTREE_CAL_ID
+          valueFrom:
+            secretKeyRef:
+              name: palmtree
+              key: calId
+              optional: true
+        - name: PALMTREE_PROFILE_ID
+          valueFrom:
+            secretKeyRef:
+              name: palmtree
+              key: profileId
+              optional: true
+        - name: PALMTREE_TLS_CERT_DATA
+          valueFrom:
+            secretKeyRef:
+              name: palmtree
+              key: tlsCertData
+              optional: true
+        - name: PALMTREE_TLS_KEY_DATA
+          valueFrom:
+            secretKeyRef:
+              name: palmtree
+              key: tlsKeyData
+              optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
