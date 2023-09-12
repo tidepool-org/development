@@ -151,7 +151,7 @@ doctor() {
   echo "Checking dependancy versions..."
   check_version ctlptl 'version' 0.8.5
   check_version helm 'version --short' 3.9.1
-  check_version tilt 'version' 0.30.5
+  check_version tilt 'version' 0.33.5
   check_version docker '-v' 20.10.17
   check_version kubectl 'version --client --short' 1.21.12
   check_version $MONGODB_SHELL '--eval "db.version()"' 5.0.0
