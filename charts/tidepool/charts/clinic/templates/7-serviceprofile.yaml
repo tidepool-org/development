@@ -13,12 +13,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -27,12 +27,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -41,12 +41,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -55,12 +55,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -69,12 +69,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -83,12 +83,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: DELETE
@@ -97,12 +97,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -111,12 +111,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: PUT
@@ -125,12 +125,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -139,12 +139,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -153,12 +153,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: DELETE
@@ -167,12 +167,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -181,12 +181,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: PUT
@@ -195,12 +195,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -209,12 +209,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: DELETE
@@ -223,12 +223,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -237,12 +237,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: PATCH
@@ -251,12 +251,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -265,12 +265,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: PUT
@@ -279,12 +279,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -293,12 +293,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -307,12 +307,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -321,12 +321,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -335,12 +335,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: PATCH
@@ -349,12 +349,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -363,12 +363,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: DELETE
@@ -377,12 +377,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: PUT
@@ -391,12 +391,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -405,12 +405,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -419,12 +419,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -433,12 +433,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -447,12 +447,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: DELETE
@@ -461,12 +461,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -475,12 +475,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -489,12 +489,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: PUT
@@ -503,12 +503,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: PUT
@@ -517,12 +517,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: DELETE
@@ -531,12 +531,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -545,12 +545,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -559,12 +559,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -573,12 +573,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: PUT
@@ -587,12 +587,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -601,12 +601,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: PUT
@@ -615,12 +615,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -629,12 +629,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -643,12 +643,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -657,12 +657,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: GET
@@ -671,12 +671,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: PUT
@@ -685,12 +685,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -699,12 +699,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -713,12 +713,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -727,12 +727,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: DELETE
@@ -741,12 +741,12 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
     - condition:
         method: POST
@@ -755,11 +755,11 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 200
-              min: 399
+              min: 200
+              max: 399
         - condition:
             status:
-              max: 400
-              min: 599
+              min: 400
+              max: 599
           isFailure: true
 {{- end }}
