@@ -14,7 +14,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: GET
         pathRegex: /v1/clinicians/[^/]*/clinics
@@ -23,7 +28,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinicians/[^/]*/migrate
@@ -32,7 +42,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: GET
         pathRegex: /v1/clinics
@@ -41,19 +56,11 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
         - condition:
             status:
               max: 400
-              min: 400
-        - condition:
-            status:
-              max: 403
-              min: 403
-        - condition:
-            status:
-              max: 500
-              min: 500
+              min: 599
           isFailure: true
     - condition:
         method: POST
@@ -63,19 +70,11 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
         - condition:
             status:
               max: 400
-              min: 400
-        - condition:
-            status:
-              max: 403
-              min: 403
-        - condition:
-            status:
-              max: 500
-              min: 500
+              min: 599
           isFailure: true
     - condition:
         method: GET
@@ -85,7 +84,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: DELETE
         pathRegex: /v1/clinics/[^/]*
@@ -93,8 +97,13 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 204
-              min: 204
+              max: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: GET
         pathRegex: /v1/clinics/[^/]*
@@ -103,19 +112,11 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
         - condition:
             status:
               max: 400
-              min: 400
-        - condition:
-            status:
-              max: 403
-              min: 403
-        - condition:
-            status:
-              max: 500
-              min: 500
+              min: 599
           isFailure: true
     - condition:
         method: PUT
@@ -125,19 +126,11 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
         - condition:
             status:
               max: 400
-              min: 400
-        - condition:
-            status:
-              max: 403
-              min: 403
-        - condition:
-            status:
-              max: 500
-              min: 500
+              min: 599
           isFailure: true
     - condition:
         method: GET
@@ -147,7 +140,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/clinicians
@@ -156,7 +154,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: DELETE
         pathRegex: /v1/clinics/[^/]*/clinicians/[^/]*
@@ -165,7 +168,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: GET
         pathRegex: /v1/clinics/[^/]*/clinicians/[^/]*
@@ -174,7 +182,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: PUT
         pathRegex: /v1/clinics/[^/]*/clinicians/[^/]*
@@ -183,7 +196,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/ehr/sync
@@ -191,8 +209,13 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 202
-              min: 202
+              max: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: DELETE
         pathRegex: /v1/clinics/[^/]*/invites/clinicians/[^/]*/clinician
@@ -201,7 +224,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: GET
         pathRegex: /v1/clinics/[^/]*/invites/clinicians/[^/]*/clinician
@@ -210,7 +238,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: PATCH
         pathRegex: /v1/clinics/[^/]*/invites/clinicians/[^/]*/clinician
@@ -219,7 +252,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: GET
         pathRegex: /v1/clinics/[^/]*/membership_restrictions
@@ -228,7 +266,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: PUT
         pathRegex: /v1/clinics/[^/]*/membership_restrictions
@@ -237,7 +280,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/migrate
@@ -246,7 +294,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: GET
         pathRegex: /v1/clinics/[^/]*/migrations
@@ -255,7 +308,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/migrations
@@ -263,8 +321,13 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 202
-              min: 202
+              max: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: GET
         pathRegex: /v1/clinics/[^/]*/migrations/[^/]*
@@ -273,7 +336,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: PATCH
         pathRegex: /v1/clinics/[^/]*/migrations/[^/]*
@@ -282,7 +350,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/patient_tags
@@ -291,7 +364,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: DELETE
         pathRegex: /v1/clinics/[^/]*/patient_tags/[^/]*
@@ -300,7 +378,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: PUT
         pathRegex: /v1/clinics/[^/]*/patient_tags/[^/]*
@@ -309,7 +392,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: GET
         pathRegex: /v1/clinics/[^/]*/patients
@@ -318,7 +406,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/patients
@@ -327,7 +420,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/patients/assign_tag/[^/]*
@@ -336,7 +434,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/patients/delete_tag/[^/]*
@@ -345,7 +448,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: DELETE
         pathRegex: /v1/clinics/[^/]*/patients/[^/]*
@@ -353,8 +461,13 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 204
-              min: 204
+              max: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: GET
         pathRegex: /v1/clinics/[^/]*/patients/[^/]*
@@ -363,7 +476,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/patients/[^/]*
@@ -372,7 +490,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: PUT
         pathRegex: /v1/clinics/[^/]*/patients/[^/]*
@@ -381,7 +504,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: PUT
         pathRegex: /v1/clinics/[^/]*/patients/[^/]*/permissions
@@ -390,7 +518,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: DELETE
         pathRegex: /v1/clinics/[^/]*/patients/[^/]*/permissions/[^/]*
@@ -398,8 +531,13 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 204
-              min: 204
+              max: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/patients/[^/]*/send_dexcom_connect_request
@@ -408,7 +546,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/patients/[^/]*/upload_reminder
@@ -417,7 +560,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: GET
         pathRegex: /v1/clinics/[^/]*/settings/ehr
@@ -426,7 +574,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: PUT
         pathRegex: /v1/clinics/[^/]*/settings/ehr
@@ -435,7 +588,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: GET
         pathRegex: /v1/clinics/[^/]*/settings/mrn
@@ -444,7 +602,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: PUT
         pathRegex: /v1/clinics/[^/]*/settings/mrn
@@ -453,7 +616,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/suppressed_notifications
@@ -462,7 +630,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/tier
@@ -471,7 +644,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/patients/[^/]*/summary
@@ -480,11 +658,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
         - condition:
             status:
-              max: 404
-              min: 404
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: GET
         pathRegex: /v1/patients/[^/]*/clinics
@@ -493,7 +672,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: PUT
         pathRegex: /v1/patients/[^/]*/data_sources
@@ -502,11 +686,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
         - condition:
             status:
-              max: 404
-              min: 404
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/redox
@@ -515,7 +700,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/redox/match
@@ -524,11 +714,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
         - condition:
             status:
-              max: 404
-              min: 404
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/redox/verify
@@ -537,7 +728,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: DELETE
         pathRegex: /v1/users/[^/]*/clinics
@@ -546,7 +742,12 @@ spec:
         - condition:
             status:
               max: 200
-              min: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
     - condition:
         method: POST
         pathRegex: /v1/users/[^/]*/clinics
@@ -554,6 +755,11 @@ spec:
       responseClasses:
         - condition:
             status:
-              max: 204
-              min: 204
+              max: 200
+              min: 399
+        - condition:
+            status:
+              max: 400
+              min: 599
+          isFailure: true
 {{- end }}
