@@ -142,6 +142,8 @@ spec:
               name: "clinic-worker"
               key: RedoxEnabled
               optional: true
+        - name: TIDEPOOL_EXPORT_CLIENT_ADDRESS
+          value: "http://export:{{.Values.global.ports.export}}"
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
