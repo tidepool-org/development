@@ -100,6 +100,50 @@ spec:
               name: "clinic-worker"
               key: KafkaTopicPrefix
               optional: true
+        - name: TIDEPOOL_REDOX_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: "clinic-worker"
+              key: RedoxKeyId
+              optional: true
+        - name: TIDEPOOL_REDOX_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: "clinic-worker"
+              key: RedoxPrivateKey
+              optional: true
+        - name: TIDEPOOL_REDOX_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: "clinic-worker"
+              key: RedoxClientId
+              optional: true
+        - name: TIDEPOOL_REDOX_SOURCE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: "clinic-worker"
+              key: RedoxSourceId
+              optional: true
+        - name: TIDEPOOL_REDOX_SOURCE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: "clinic-worker"
+              key: RedoxSourceName
+              optional: true
+        - name: TIDEPOOL_REDOX_TEST_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: "clinic-worker"
+              key: RedoxTestMode
+              optional: true
+        - name: TIDEPOOL_REDOX_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: "clinic-worker"
+              key: RedoxEnabled
+              optional: true
+        - name: TIDEPOOL_EXPORT_CLIENT_ADDRESS
+          value: "http://export:{{.Values.global.ports.export}}"
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}

@@ -1,0 +1,25 @@
+{{ if .Values.global.kafka.connect.enabled }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  labels:
+    app: redox-source
+    strimzi.io/cluster: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
+  name: redox-source
+  namespace: {{ .Release.Namespace }}
+spec:
+  class: com.mongodb.kafka.connect.MongoSourceConnector
+  config:
+    change.stream.full.document: updateLookup
+    collection: redox
+    connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
+    copy.existing: true
+    database: clinic
+    topic.prefix: {{ .Release.Namespace }}
+    output.json.formatter: com.mongodb.kafka.connect.source.json.formatter.ExtendedJson
+    value.converter: org.apache.kafka.connect.storage.StringConverter
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    heartbeat.interval.ms: {{ .Values.global.kafka.connect.mongoHeartbeatIntervalMs }}
+    heartbeat.topic.name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-heartbeat
+  tasksMax: {{ .Values.global.kafka.connect.sourceTasksMax | int }}
+{{- end }}

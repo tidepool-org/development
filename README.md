@@ -116,14 +116,14 @@ Managing a K8s cluster can be very challenging, and even more so when using one 
 
 By using our Tilt setup, developers can very easily run a live-reloading instance of any of our frontend or backend services without needing to directly use or understand Helm or Kubernetes. All that's needed is uncommenting a couple of lines in a `Tiltconfig.yaml` file, and updating the local paths to where the developer has checked out the respective git repo, if different than the default defined in the config.
 
-**IMPORTANT NOTE:** We currently run against version `v0.30.5` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
+**IMPORTANT NOTE:** We currently run against version `v0.33.5` of Tilt, so be sure to install the correct version when following the [Tilt Installation Instructions](https://docs.tilt.dev/install.html#alternative-installation).
 
 ```bash
 # MacOS
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.30.5/tilt.0.30.5.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.33.5/tilt.0.33.5.mac.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 
 # Linux
-curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.30.5/tilt.0.30.5.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
+curl -fsSL https://github.com/windmilleng/tilt/releases/download/v0.33.5/tilt.0.33.5.linux.x86_64.tar.gz | tar -xzv tilt && sudo mv tilt /usr/local/bin/tilt
 ```
 
 After installing Tilt, you can verify the correct version by typing `tilt version` in your terminal.
@@ -142,7 +142,7 @@ This config will provision and start up the Kubernetes server, and a private doc
 
 ## Install glooctl
 
-We provision the Gloo gateway, which is responsible for service routing, using glooctl. Please follow the [glooctl Installation Instructions](https://docs.solo.io/gloo-edge/master/installation/glooctl_setup/).
+We provision the Gloo gateway, which is responsible for service routing, using glooctl. Please follow the [glooctl Installation Instructions](https://docs.solo.io/gloo-edge/latest/installation/preparation/#glooctl).
 
 Once installed, you can provision the kubernetes stack with `glooctl`, using the `Glooconfig.yaml` configuration provided at the root of this repo.
 
@@ -166,7 +166,7 @@ yum install nc
 dnf install nc
 
 # Debian/Ubuntu
-sudo apt-get install Netcat
+sudo apt-get install netcat-openbsd # or netcat-traditional
 ```
 
 After installing Netcat, you can verify it's working by typing `nc -h` in your terminal.
@@ -516,7 +516,7 @@ dexcom:
       StateSalt: "<some-text>"
 ```
 
-NOTES: 
+NOTES:
  - ensure that in the dexcom developer setup the redirect URI is set correctly, for example if running locally `http://localhost:31500/v1/oauth/dexcom/redirect`
 
  - you will need to restart the tidepool services for the config changes to take effect

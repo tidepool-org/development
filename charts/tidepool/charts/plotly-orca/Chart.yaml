@@ -1,0 +1,6 @@
+apiVersion: v2
+description: A Helm chart to use plotly/orca with Tidepool
+name: plotly-orca
+version: 0.1.0
+icon: https://www.tidepool.org/static/media/tidepool-t-logo.41feef82.png
+home: https://github.com/tidepool-org/development/charts

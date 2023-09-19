@@ -68,7 +68,7 @@ global:
     # -- devices service http internal port
     devices_http: 9229
     # -- export service internal port
-    export: 9300
+    export: 9301
     # -- gatekeeper service internal port
     gatekeeper: 9123
     # -- highwater service internal port
@@ -103,6 +103,8 @@ global:
     summary: 9230
     # -- tidewhisperer service internal port
     tidewhisperer: 9127
+    # -- plotly orca service internal port
+    plotly_orca: 9091
   secret:
     enabled: false
     generated: false
