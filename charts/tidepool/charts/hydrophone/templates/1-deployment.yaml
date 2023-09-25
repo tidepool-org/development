@@ -65,8 +65,11 @@ spec:
             secretKeyRef:
               name: server
               key: ServiceAuth
+
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: "http://shoreline:{{.Values.global.ports.shoreline}}"
+        - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+          value: "http://data:{{.Values.global.ports.data}}"
         - name: TIDEPOOL_SEAGULL_CLIENT_ADDRESS
           value: "http://seagull:{{.Values.global.ports.seagull}}"
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
