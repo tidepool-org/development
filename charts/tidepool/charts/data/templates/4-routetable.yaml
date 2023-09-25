@@ -161,4 +161,14 @@ spec:
           name: data
     options:
       timeout: "60s"
+  - matchers:
+    - methods:
+      - DELETE
+      - GET
+      - POST
+      prefix: /v1/alerts
+    routeAction:
+      single:
+        upstream:
+          name: data
 {{- end }}
