@@ -296,7 +296,7 @@
       } ],
       "security-admin-console" : [ ],
       "shoreline" : [ ],
-      "tidepool-uploader" : [ ],
+      "tidepool-uploader-sso" : [ ],
       "admin-cli" : [ ],
       "backend" : [ ],
       "account-console" : [ ],
@@ -440,7 +440,7 @@
     "client" : "shoreline_lt",
     "roles" : [ "clinician", "patient", "custodial_account", "clinic" ]
   }, {
-    "client" : "tidepool-uploader",
+    "client" : "tidepool-uploader-sso",
     "roles" : [ "clinician", "patient", "custodial_account", "clinic" ]
   }, {
     "clientScope" : "offline_access",
@@ -872,7 +872,7 @@
     "optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ]
   }, {
     "id" : "9a6e331c-a0de-44ce-a0a9-6dc044a00abe",
-    "clientId" : "tidepool-uploader",
+    "clientId" : "tidepool-uploader-sso",
     "name" : "",
     "description" : "",
     "adminUrl" : "",
@@ -881,7 +881,7 @@
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "http://localhost:31500/", "tidepooluploader://localhost/keycloak-redirect" ],
+    "redirectUris" : [ "http://localhost:31500/*", "tidepooluploader://localhost/keycloak-redirect", "http://localhost:3000/*" ],
     "webOrigins" : [ "file://", "+" ],
     "notBefore" : 0,
     "bearerOnly" : false,
