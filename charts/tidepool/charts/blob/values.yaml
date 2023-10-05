@@ -9,6 +9,7 @@ deployment:
   # -- default Docker image
   image: tidepool/platform-blob:master-latest
   env:
+    # old config removed in https://github.com/tidepool-org/development/pull/250
     store:
       s3:
         # -- S3 bucket where blob data is written
@@ -20,6 +21,30 @@ deployment:
         directory: "_data/blobs" 
       # -- if `s3`, store blob data in Amazon S3. If `file` store blob data in local files.
       type: file
+    blobs:
+      store:
+        s3:
+          # -- S3 bucket where blob data is written
+          bucket: "data"
+          prefix: "blobs"
+        file:
+          prefix: "blobs"
+          # -- directory to use when storing blobs on file storage
+          directory: "_data/blobs" 
+        # -- if `s3`, store blob data in Amazon S3. If `file` store blob data in local files.
+        type: file
+    logs:
+      store:
+        s3:
+          # -- S3 bucket where device_logs blob data is written
+          bucket: "data"
+          prefix: "device_logs"
+        file:
+          prefix: "device_logs"
+          # -- directory to use when storing device_logs on file storage
+          directory: "_data/device_logs" 
+        # -- if `s3`, store blob data in Amazon S3. If `file` store blob data in local files.
+        type: file
 serviceAccount:
   # -- whether to create a service account
   create: false

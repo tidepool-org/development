@@ -64,6 +64,22 @@ spec:
           value: '{{.Values.deployment.env.store.s3.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
           value: '{{.Values.deployment.env.store.type}}'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_BLOBS_STORE_FILE_DIRECTORY
+          value: '{{.Values.deployment.env.blobs.store.file.directory}}'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_BLOBS_STORE_S3_BUCKET
+          value: '{{ .Values.deployment.env.blobs.store.s3.bucket }}'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_BLOBS_STORE_S3_PREFIX
+          value: '{{.Values.deployment.env.blobs.store.s3.prefix}}'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_BLOBS_STORE_TYPE
+          value: '{{.Values.deployment.env.blobs.store.type}}'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_LOGS_STORE_FILE_DIRECTORY
+          value: '{{.Values.deployment.env.logs.store.file.directory}}'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_LOGS_STORE_S3_BUCKET
+          value: '{{ .Values.deployment.env.logs.store.s3.bucket }}'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_LOGS_STORE_S3_PREFIX
+          value: '{{.Values.deployment.env.logs.store.s3.prefix}}'
+        - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_LOGS_STORE_TYPE
+          value: '{{.Values.deployment.env.logs.store.type}}'
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}

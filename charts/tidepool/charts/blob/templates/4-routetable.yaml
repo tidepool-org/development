@@ -36,4 +36,12 @@ spec:
       single:
         upstream:
           name: blob
+  - matchers:
+    - methods:
+      - POST
+      regex: /v1/users/[^/]+/device-logs
+    routeAction:
+      single:
+        upstream:
+          name: blob
 {{- end }}
