@@ -138,7 +138,7 @@ spec:
               name: coastal
               key: clientId
               optional: true
-        - name: COSTAL_CLIENT_SECRET
+        - name: COASTAL_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
               name: coastal
@@ -149,6 +149,12 @@ spec:
             secretKeyRef:
               name: coastal
               key: rcTypeId
+              optional: true
+        - name: COASTAL_PRIVATE_KEY_DATA
+          valueFrom:
+            secretKeyRef:
+              name: coastal
+              key: privateKeyData
               optional: true
         - name: PALMTREE_BASE_URL
           valueFrom:
