@@ -49,6 +49,8 @@ spec:
           value: highwater
         - name: KAFKA_CONSUMER_GROUP
           value: highwater
+        - name: KAFKA_PRODUCER_ACKS
+          value: '0'
         - name: SKIP_HAKKEN
           value: "true"
         - name: DISCOVERY_HOST
