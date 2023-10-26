@@ -120,6 +120,24 @@ spec:
               name: auth
               key: AppleDeviceCheckUseDevelopment
               optional: true
+        - name: TIDEPOOL_APPVALIDATION_USE_DEVELOPMENT
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppValidationUseDevelopment
+              optional: true
+        - name: TIDEPOOL_APPVALIDATION_APPLE_APP_IDS
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppValidationAppleAppIds
+              optional: true
+        - name: TIDEPOOL_APPVALIDATION_CHALLENGE_SIZE
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppValidationChallengeSize
+              optional: true
         - name: COASTAL_API_KEY
           valueFrom:
             secretKeyRef:
