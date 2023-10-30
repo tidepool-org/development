@@ -8,6 +8,8 @@ metadata:
   labels:
 {{ include "charts.labels.standard" .}}
 data:
+  XealthEnabled: {{ .Values.configmap.data.XealthEnabled | quote }}
+  XealthClientId: {{ .Values.configmap.data.XealthClientId | quote }}
   KafkaTopicPrefix: {{ .Values.configmap.data.KafkaTopicPrefix | quote }}
   KafkaTopic: {{ .Values.configmap.data.KafkaTopic | quote }}
 {{- end }}

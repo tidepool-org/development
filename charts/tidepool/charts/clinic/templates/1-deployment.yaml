@@ -69,6 +69,30 @@ spec:
               name: clinic
               key: RedoxVerificationToken
               optional: true
+        - name: TIDEPOOL_XEALTH_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: clinic
+              key: XealthEnabled
+              optional: true
+        - name: TIDEPOOL_XEALTH_BEARER_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: clinic
+              key: XealthBearerToken
+              optional: true
+        - name: TIDEPOOL_XEALTH_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: clinic
+              key: XealthClientId
+              optional: true
+        - name: TIDEPOOL_XEALTH_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: clinic
+              key: XealthClientSecret
+              optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
