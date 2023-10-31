@@ -8,8 +8,8 @@ metadata:
   name: clinic
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.kafka.secretName }}"
-    configmap.reloader.stakater.com/reload: "{{ .Values.kafka.configmapName }}"
+    secret.reloader.stakater.com/reload: "clinic,server,{{ .Values.kafka.secretName }}"
+    configmap.reloader.stakater.com/reload: "clinic,{{ .Values.kafka.configmapName }}"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
