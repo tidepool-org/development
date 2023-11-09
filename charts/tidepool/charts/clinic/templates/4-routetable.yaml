@@ -65,5 +65,14 @@ spec:
             namespace: {{ .Release.Namespace }}
       options:
         prefixRewrite: {{ if not .Values.redox.verify }}/v1/redox{{ else }}/v1/redox/verify{{ end }}
+    - matchers:
+        - methods:
+            - POST
+          prefix: /v1/xealth
+      routeAction:
+        single:
+          upstream:
+            name: clinic
+            namespace: {{ .Release.Namespace }}
   weight: 30
 {{- end }}
