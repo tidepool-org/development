@@ -15,7 +15,7 @@ spec:
     connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
     copy.existing: true
     pipeline: '[ {$project: {"fullDocument.summary": 0, "updateDescription.updatedFields.summary.cgmStats": 0, "updateDescription.updatedFields.summary.bgmStats": 0}} ]'
-    startup.mode.copy.existing.pipeline: '[ {$project: {"fullDocument.summary": 0, "updateDescription.updatedFields.summary.cgmStats": 0, "updateDescription.updatedFields.summary.bgmStats": 0}} ]'
+    startup.mode.copy.existing.pipeline: '[ {$project: {"fullDocument.summary": 0, "updateDescription": 0, "updateDescription": 0}} ]'
     database: clinic
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: false
