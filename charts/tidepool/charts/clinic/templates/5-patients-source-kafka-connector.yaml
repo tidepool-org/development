@@ -14,8 +14,8 @@ spec:
     collection: patients
     connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
     copy.existing: true
-    pipeline: '[ {$project: {"fullDocument.summary.cgmStats.periods": 0, $project: {"fullDocument.summary.cgmStats.offsetPeriods": 0, "fullDocument.summary.bgmStats.periods": 0, "fullDocument.summary.bgmStats.offsetPeriods": 0, "updateDescription.updatedFields.summary.cgmStats.periods": 0, "updateDescription.updatedFields.summary.cgmStats.offsetPeriods": 0, "updateDescription.updatedFields.summary.bgmStats.periods": 0, "updateDescription.updatedFields.summary.bgmStats.offsetPeriods": 0}} ]'
-    startup.mode.copy.existing.pipeline: '[ {$project: {"fullDocument.summary.cgmStats.periods": 0, $project: {"fullDocument.summary.cgmStats.offsetPeriods": 0, "fullDocument.summary.bgmStats.periods": 0, "fullDocument.summary.bgmStats.offsetPeriods": 0, "updateDescription.updatedFields.summary.cgmStats.periods": 0, "updateDescription.updatedFields.summary.cgmStats.offsetPeriods": 0, "updateDescription.updatedFields.summary.bgmStats.periods": 0, "updateDescription.updatedFields.summary.bgmStats.offsetPeriods": 0}} ]'
+    pipeline: '[ {$project: {"fullDocument.summary": 0, "updateDescription.updatedFields.summary": 0}} ]'
+    startup.mode.copy.existing.pipeline: '[ {$project: {"fullDocument.summary": 0, "updateDescription.updatedFields.summary": 0}} ]'
     database: clinic
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: false
