@@ -48,7 +48,7 @@ spec:
     - matchers:
         - methods:
             - GET
-          regex: /v1/patients/[^/]+/clinics
+          prefix: /v1/patients
       routeAction:
         single:
           upstream:
