@@ -22,7 +22,7 @@ USAGE: tidepool command [service] [...additional args]
 
   server-init                     Used to initialize or update the k8s stack. Specifically, it:
                                     1. Provisions and starts the Kubernetes server and registry
-                                    2. Saves the Kubernetes server config to ${KUBECONFIG}.
+                                    2. Saves the Kubernetes server config to ${KUBECONFIG:-<undefined>}.
 
   server-start                    Start the Kind server and private registry containers
   server-stop                     Stop the Kind server and private registry containers
@@ -182,11 +182,6 @@ wait_for_kubernetes_ready() {
   until curl -s --fail http://127.0.0.1:10080/kubernetes-ready; do
     sleep 1;
   done
-}
-
-set_kubeconfig() {
-  wait_for_kubernetes_ready
-  curl http://127.0.0.1:10080/config | sed "s|172.30.99.1|127.0.0.1|g" > ${KUBECONFIG}
 }
 
 destroy() {
