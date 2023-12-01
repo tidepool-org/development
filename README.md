@@ -70,7 +70,7 @@ Follow the appropriate link for your platform (Mac OSx or Linux recommended) at 
 
 ## Install Kubernetes Client
 
-The Kubernetes command-line tool, [kubectl](https://kubernetes.io/docs/user-guide/kubectl/), allows you to run commands against Kubernetes clusters.
+The Kubernetes command-line tool, [kubectl](https://kubernetes.io/docs/reference/kubectl/), allows you to run commands against Kubernetes clusters.
 
 It's important to install a version that's at minimum up-to-date with the version of the Kubernetes server we're running locally (currently `1.21.12`). Please follow the [kubectl installation instructions](https://kubernetes.io/docs/tasks/tools/install-kubectl/) for your operating system.
 
@@ -360,7 +360,7 @@ tidepool server-start
 tidepool start
 ```
 
-This will start the Tidepool services in the kubernetes cluster via Tilt. You will see a terminal UI open that will allow you to view the both the build status, build logs and container logs for all of the Tidepool services.
+This will start the Tidepool services in the kubernetes cluster via Tilt. You will see a terminal UI open that will allow you to view the build status, build logs and container logs for all of the Tidepool services.
 
 ### Stop the tidepool services
 
@@ -972,7 +972,7 @@ This is where it's nice to run [k9s](#monitor-kubernetes-state-with-k9s-optional
 
 When Tilt is provisioning services, it polls the K8s server events to get the current state of a service, such as when a pod is pending, initializing, running, crashed, etc.
 
-Usually, this works just fine, but every now and then it stops sycning the K8s events properly. This seems to occur most often on the first time starting the services where everything takes longer, and perhaps Tilt is timing out.
+Usually, this works just fine, but every now and then it stops syncing the K8s events properly. This seems to occur most often on the first time starting the services where everything takes longer, and perhaps Tilt is timing out.
 
 If your services are running properly, you can simply ignore the state reporting in Tilt. Otherwise, simply restarting the Tilt process (`ctrl-c` and then `tidepool start` again) should fix it.
 

@@ -47,7 +47,8 @@ USAGE: tidepool command [service] [...additional args]
   yarn [service] [...cmds]        Run yarn commands against the specified Node.js-based service.
                                   [service] must be one of:
                                     blip, @tidepool/viz, tideline, tidepool-platform-client,
-                                    export, gatekeeper, highwater, jellyfish, message-api, seagull
+                                    export, gatekeeper, highwater, jellyfish, message-api, seagull,
+                                    uploader
                                   NOTE: tideline, @tidepool/viz, and tidepool-platform-client
                                   are optional Tilt-provided mounts within the blip service
                                     example: tidepool yarn @tidepool/viz stories
@@ -57,7 +58,7 @@ USAGE: tidepool command [service] [...additional args]
   verify-account-email [email]    Complete the email address verification step for a created account
 
   restart-gateway                 Restart the gloo gateway services
-                                  Useful if the exposed "blip" port stops responding on host machine
+                                  Useful if the exposed "blip" or "uploader" port stops responding on host machine
 
   restart-kafka                   Restart the kafka services
 
@@ -158,7 +159,7 @@ doctor() {
 }
 
 run_yarn() {
-  NODE_SERVICES='@(blip|export|gatekeeper|highwater|jellyfish|message-api|seagull)'
+  NODE_SERVICES='@(blip|export|gatekeeper|highwater|jellyfish|message-api|seagull|uploader)'
   BLIP_MOUNTED_NODE_SERVICES='@(tideline|tidepool-platform-client|@tidepool/viz)'
 
   if [[ ${BLIP_MOUNTED_NODE_SERVICES} =~ ${1} ]]; then

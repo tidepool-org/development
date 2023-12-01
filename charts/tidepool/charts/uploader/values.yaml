@@ -1,0 +1,22 @@
+deployment:
+  podAnnotations: {}
+  # -- default Docker image
+  image: tidepool/uploader:master-latest
+  replicas: 1
+resources: {}
+podSecurityContext: {}
+podAnnotations: {}
+securityContext: {}
+hpa:
+  # -- whether to create a horizontal pod autoscalers for all pods of given deployment
+  enabled: false
+  # -- minimum number of replicas that HPA will maintain
+  minReplicas: 1
+  # -- maximum number of replicas that HPA will maintain
+  maxReplicas: null
+pdb:
+  enabled: false
+  minAvailable: "50%"
+nodeSelector: {}
+tolerations: []
+affinity: {}

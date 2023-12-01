@@ -1,0 +1,103 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: uploader
+{{ include "charts.labels.standard" .}}
+  name: uploader
+  namespace: {{ .Release.Namespace }}
+  annotations:
+{{ if .Values.deployment.annotations }}
+    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: uploader
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: {{ .Values.deployment.replicas }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: uploader
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+{{ if .Values.podAnnotations }}
+      annotations:
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
+    spec:
+      {{ if .Values.initContainers }}
+      initContainers:
+{{- with .Values.initContainers }}
+{{toYaml . | indent 6}}{{- end }}
+      {{- end }}
+      containers:
+      - image: "{{ .Values.deployment.image }}"
+        securityContext:
+          {{- .Values.podSecurityContext | toYaml | nindent 10 }}
+{{ if .Values.command }}
+        command: {{ .Values.command }}
+{{- end }}
+{{ if .Values.args }}
+        args: {{ .Values.args }}
+{{- end }}
+        env:
+        - name: PORT
+          value: "{{ .Values.global.ports.uploader }}"
+{{ if .Values.webpackPublicPath }}
+        - name: WEBPACK_PUBLIC_PATH
+          value: {{ .Values.webpackPublicPath }}
+{{- end }}
+{{ if .Values.webpackDevTool }}
+        - name: WEBPACK_DEVTOOL
+          value: {{ .Values.webpackDevTool }}
+{{- end }}
+{{ if .Values.debugError }}
+        - name: DEBUG_ERROR
+          value: {{ .Values.debugError }}
+{{- end }}
+{{ if .Values.apiUrl }}
+        - name: API_URL
+          value: {{ .Values.apiUrl }}
+{{- end }}
+{{ if .Values.uploadUrl }}
+        - name: UPLOAD_URL
+          value: {{ .Values.uploadUrl }}
+{{- end }}
+{{ if .Values.dataUrl }}
+        - name: DATA_URL
+          value: {{ .Values.dataUrl }}
+{{- end }}
+{{ if .Values.blipUrl }}
+        - name: BLIP_URL
+          value: {{ .Values.blipUrl }}
+{{- end }}
+{{ if .Values.realmHost }}
+        - name: REALM_HOST
+          value: {{ .Values.realmHost }}
+{{- end }}
+        name: uploader
+        ports:
+        - containerPort: {{.Values.global.ports.uploader}}
+          name: "http"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      restartPolicy: Always
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

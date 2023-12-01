@@ -1,0 +1,18 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: uploader
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  displayName: uploader
+  virtualHost:
+    domains:
+    - '*:31501'
+    routes:
+    - matchers:
+      - prefix: '/'
+      routeAction:
+        single:
+          upstream:
+            name: uploader
+            namespace: '{{ .Release.Namespace }}'

@@ -265,6 +265,14 @@ blip:
   # buildTarget: production                                   # Uncomment to run minified production builds
   # restartContainerCommand: './tilt/start.sh npm run server' # Uncomment if buildTarget = `production`
 
+blob:
+  deployment:
+    # image: tidepool-k8s-blob # Uncomment to build and run local image or a specific remote image
+  # hostPath: ~/go/src/github.com/tidepool-org/platform      # Uncomment to build and run local image
+  containerPath: '/go/src/github.com/tidepool-org/platform'
+  dockerFile: 'Dockerfile.blob'
+  rebuildCommand: 'SERVICE=blob make service-build'
+
 clinic:
   deployment:
     replicas: 1
@@ -287,14 +295,6 @@ clinic-worker:
     data:
       KafkaTopicPrefix: "default."
 
-blob:
-  deployment:
-    # image: tidepool-k8s-blob # Uncomment to build and run local image or a specific remote image
-  # hostPath: ~/go/src/github.com/tidepool-org/platform      # Uncomment to build and run local image
-  containerPath: '/go/src/github.com/tidepool-org/platform'
-  dockerFile: 'Dockerfile.blob'
-  rebuildCommand: 'SERVICE=blob make service-build'
-
 data:
   deployment:
     # image: tidepool-k8s-data # Uncomment to build and run local image or a specific remote image
@@ -309,7 +309,7 @@ devices:
     # image: tidepool-k8s-devices                        # Uncomment to build and run local image or a specific remote image
   # hostPath: '~/go/src/github.com/tidepool-org/devices' # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/devices'
-  buildTarget: 'build'
+  buildTarget: release
   rebuildCommand: 'make generate && make build'
 
 export:
@@ -361,7 +361,7 @@ mailer:
   containerPath: '/go/src/github.com/tidepool-org/mailer'
   dockerFile: 'Dockerfile.development'
 
-message-api:
+messageapi:
   deployment:
     # image: tidepool-k8s-message-api # Uncomment to build and run local image or a specific remote image
   # hostPath: ../message-api          # Uncomment to build and run local image
@@ -438,4 +438,29 @@ tools:
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.tools'
   rebuildCommand: 'SERVICE=tools make service-build'
+
+uploader:
+  deployment:
+    # image: tidepool-k8s-uploader # Uncomment to build and run local image or a specific remote image
+  # hostPath: ../uploader          # Uncomment to build and run local image
+  containerPath: '/app'
+  apiUrl: 'http://localhost:31500'
+  uploadUrl: 'http://localhost:31500'
+  dataUrl: 'http://localhost:31500/dataservices'
+  blipUrl: 'http://localhost:31500'
+  realmHost: 'http://localhost:32000'
+  rollbarPostServerToken: '' # Rollbar post_server_item access token for posting source maps on production builds
+  webpackDevTool: cheap-module-eval-source-map
+  webpackPublicPath: 'http://localhost:31501/'
+  securityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 1000
+    capabilities:
+      drop:
+      - ALL
+  # i18nEnabled: 'true'                                       # Uncomment to enable internationalization UI
+  # rxEnabled: 'true'                                         # Uncomment to enable prescriptions UI
+  pendoEnabled: 'false'                                       # Set to `true` to enable pendo
+  buildTarget: production
 ### Tidepool Services Config End ###

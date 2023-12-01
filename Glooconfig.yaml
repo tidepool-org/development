@@ -2,6 +2,11 @@ gatewayProxies:
   gatewayProxy:
     service:
       customPorts:
+        - port: 31501
+          nodePort: 31501
+          targetPort: 8080
+          protocol: TCP
+          name: uploader
         - port: 32000
           nodePort: 32000
           targetPort: 8080

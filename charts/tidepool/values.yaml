@@ -105,6 +105,8 @@ global:
     tidewhisperer: 9127
     # -- plotly orca service internal port
     plotly_orca: 9091
+    # -- uploader service internal port
+    uploader: 31501
   secret:
     enabled: false
     generated: false
