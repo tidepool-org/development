@@ -451,7 +451,7 @@ uploader:
   realmHost: 'http://localhost:32000'
   rollbarPostServerToken: '' # Rollbar post_server_item access token for posting source maps on production builds
   webpackDevTool: cheap-module-eval-source-map
-  webpackPublicPath: 'http://localhost:31501/'
+  webpackPublicPath: 'http://localhost:31500/uploader/'
   securityContext:
     allowPrivilegeEscalation: false
     runAsNonRoot: true

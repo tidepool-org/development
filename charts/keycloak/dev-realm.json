@@ -881,7 +881,7 @@
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "http://localhost:31500/*", "http://localhost:31501/*", "tidepooluploader://localhost/keycloak-redirect", "http://localhost:3000/*", "http://localhost:3001/*" ],
+    "redirectUris" : [ "http://localhost:31500/*", "tidepooluploader://localhost/keycloak-redirect", "http://localhost:3000/*", "http://localhost:3001/*" ],
     "webOrigins" : [ "file://", "+" ],
     "notBefore" : 0,
     "bearerOnly" : false,

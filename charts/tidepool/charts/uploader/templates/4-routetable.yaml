@@ -1,0 +1,22 @@
+{{ if .Values.global.glooingress.enabled }}
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: uploader
+  namespace: {{ .Release.Namespace }}
+  labels:
+    namespace: {{ .Release.Namespace }}
+    app: tidepool
+spec:
+  weight: 9000
+  routes:
+  - matchers:
+    - prefix: /uploader
+    routeAction:
+      single:
+        upstream:
+          name: uploader
+    options:
+      extauth:
+        disable: true
+{{- end }}
