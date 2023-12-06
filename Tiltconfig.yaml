@@ -441,6 +441,7 @@ tools:
 
 uploader:
   deployment:
+    replicas: 1
     # image: tidepool-k8s-uploader # Uncomment to build and run local image or a specific remote image
   # hostPath: ../uploader          # Uncomment to build and run local image
   containerPath: '/app'
