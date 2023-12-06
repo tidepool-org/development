@@ -2,7 +2,7 @@ deployment:
   podAnnotations: {}
   # -- default Docker image
   image: tidepool/uploader:master-latest
-  replicas: 1
+  replicas: 0
 resources: {}
 podSecurityContext: {}
 podAnnotations: {}
