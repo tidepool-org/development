@@ -1,7 +1,7 @@
 apiVersion: v2
 description: A Helm chart for Tidepool
 name: tidepool
-version: 0.15.18
+version: 0.15.19
 maintainers:
   - name: Todd Kazakov
     email: todd@tidepool.org

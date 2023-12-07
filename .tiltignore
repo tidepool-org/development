@@ -3,7 +3,8 @@
 node_modules
 npm-debug.log
 _book
-artifact_node.sh
+artifact.sh
+artifact_docker.sh
 config/*
 !config/local.sh
 deploy
@@ -17,3 +18,5 @@ packageMounts
 local/*
 !local/Tiltconfig.yaml
 package.json
+*.coverprofile
+*.test

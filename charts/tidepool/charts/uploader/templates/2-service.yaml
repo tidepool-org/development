@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: uploader
+{{ include "charts.labels.standard" .}}
+  name: uploader
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - name: "http"
+    port: {{ .Values.global.ports.uploader }}
+    targetPort: "http"
+  selector:
+    app: uploader
+    app.kubernetes.io/name: {{ include "charts.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+status:
+  loadBalancer: {}

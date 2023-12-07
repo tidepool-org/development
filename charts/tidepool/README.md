@@ -31,7 +31,7 @@ A Helm chart for Tidepool
 | global.maxTimeout | string | `"120s"`          | maximum timeout for any web request |
 | global.nameOverride | string | `""`              | if non-empty, Helm chart name to use |
 | global.ports.auth | int | `9222`            | auth service internal port |
-| global.ports.blip | int | `3000`            | blip service internal port |
+| global.ports.blip | int | `31500`            | blip service internal port |
 | global.ports.blob | int | `9225`            | blob service internal port |
 | global.ports.data | int | `9220`            | data service internal port |
 | global.ports.devices_grpc | int | `9228`            | devices service grpc internal port |
@@ -48,6 +48,7 @@ A Helm chart for Tidepool
 | global.ports.summary | int | `9230`            | summary service internal port |
 | global.ports.task | int | `9224`            | task service internal port |
 | global.ports.tidewhisperer | int | `9127`            | tidewhisperer service internal port |
+| global.ports.uploader | int | `31501`            | uploader service internal port |
 | global.region | string | `"us-west-2"`     | aws region that services run in |
 | global.secret.enabled | bool | `false`           |  |
 | global.secret.generated | bool | `false`           |  |

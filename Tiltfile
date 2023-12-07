@@ -300,6 +300,19 @@ def applyServiceOverrides(tidepool_helm_template_cmd):
           rxEnabled=overrides.get('rxEnabled'),
         )
 
+      elif service == 'uploader':
+        # Force rebuild when webpack config changes
+        fallback_commands.append(fall_back_on([
+          '{}/{}'.format(hostPath, 'webpack.config.web.dev.babel.js'),
+        ]))
+
+        buildCommand += ' --build-arg ROLLBAR_POST_SERVER_TOKEN={rollbarPostServerToken} --build-arg PENDO_ENABLED={pendoEnabled} --build-arg I18N_ENABLED={i18nEnabled} --build-arg RX_ENABLED={rxEnabled}'.format(
+          rollbarPostServerToken=overrides.get('rollbarPostServerToken'),
+          pendoEnabled=overrides.get('pendoEnabled'),
+          i18nEnabled=overrides.get('i18nEnabled'),
+          rxEnabled=overrides.get('rxEnabled'),
+        )
+
       buildCommand += ' {}'.format(hostPath)
 
       # Apply any rebuild commands specified
