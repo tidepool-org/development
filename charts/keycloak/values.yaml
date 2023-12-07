@@ -1,4 +1,4 @@
-# -- whether to enable Keycloak integr
+# -- whether to enable Keycloak integration
 enabled: true
 keycloakx:
   fullnameOverride: 'keycloak'
