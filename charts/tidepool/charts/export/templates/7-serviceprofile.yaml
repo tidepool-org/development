@@ -10,7 +10,7 @@ spec:
       method: GET
       pathRegex: /export/.*
     name: /export/_get_export
-    timeout: 3m
+    timeout: 6m
   - condition:
       method: POST
       pathRegex: /export/.*
