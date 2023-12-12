@@ -27,7 +27,7 @@ spec:
         upstream:
           name: export
     options:
-      timeout: '3m'
+      timeout: '6m'
       extauth:
        disable: true
 {{- end }}
