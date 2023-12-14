@@ -1,0 +1,26 @@
+{{ if .Values.global.kafka.connect.enabled }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  labels:
+    app: alerts-source
+    strimzi.io/cluster: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
+  name: alerts-source
+  namespace: {{ .Release.Namespace }}
+spec:
+  class: com.mongodb.kafka.connect.MongoSourceConnector
+  config:
+    change.stream.full.document: updateLookup
+    collection: alerts
+    connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
+    copy.existing: true
+    database: data
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: false
+    topic.prefix: {{ .Release.Namespace }}
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: false
+    heartbeat.interval.ms: {{ .Values.global.kafka.connect.mongoHeartbeatIntervalMs }}
+    heartbeat.topic.name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-heartbeat
+  tasksMax: {{ .Values.global.kafka.connect.sourceTasksMax | int }}
+{{- end }}
