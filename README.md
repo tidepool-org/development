@@ -45,6 +45,7 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
   - [Working With Yarn For NodeJS Services](#working-with-yarn-for-nodejs-services)
 - [Misc](#misc)
   - [Tracing Internal Services](#tracing-internal-services)
+  - [Kafka CLI Usage](#kafka-cli-usage)
   - [Troubleshooting](#troubleshooting)
   - [Known Issues](#known-issues)
 
@@ -944,6 +945,32 @@ Unfortunately, due the version of the Gloo gateway (which handles internal netwo
 The good news is that we anticipate upgrading the Gloo version in the near future, and will support [Envoy's tracing capabilities](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/observability/tracing.html), as outlined in the [Gloo Tracing Documentation](https://gloo.solo.io/advanced_configuration/tracing/).
 
 Stay Tuned :)
+
+
+## Kafka CLI Usage
+
+A few notes for how to access/use the Kafka CLI. Accurate as of 2023-12-15 at least. :)
+
+The Kafka CLI (which is just a bunch a bash scripts) is accessible via the kafka pod:
+
+    $ kubectl exec -it kafka-kafka-0 -- bash
+    $ ls bin/kafka-* # to see all the various CLI commands
+
+However, a lot of the commands require authentication credentials, and those more or less have to come from a file. The kafka pod is lacking in editors, so here's one way to get around that:
+
+    $ cat - > /tmp/kafka.config <<EOF
+	KafkaClient {
+        security.protocol=SASL_PLAINTEXT
+        sasl.mechanism=SCRAM-SHA-512
+        sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="kafka" password="<password from kafka secret>";
+    };
+    EOF
+	$ bin/kafka-topics.sh --command-config=/tmp/kafka.config --list --bootstrap-server localhost:9092
+
+And remember that the password found in the kafka secret will be base64 encoded, so reverse that before you insert it in the file above.
+
+    $ kubectl get -o json secret kafka | jq -r '.data.password | @base64d'
+
 
 ## Troubleshooting
 
