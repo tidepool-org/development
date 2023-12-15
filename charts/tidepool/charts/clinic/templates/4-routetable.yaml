@@ -67,6 +67,8 @@ spec:
         prefixRewrite: {{ if not .Values.redox.verify }}/v1/redox{{ else }}/v1/redox/verify{{ end }}
     - matchers:
         - methods:
+            - GET
+            - PUT
             - POST
           prefix: /v1/xealth
       routeAction:
