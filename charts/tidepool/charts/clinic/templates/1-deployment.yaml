@@ -43,6 +43,7 @@ spec:
       containers:
       - env:
         {{ include "charts.platform.env.mongo" .}}
+        {{ include "charts.platform.env.clients" .}}
         {{ include "charts.tracing.common" .}}
         - name: CLINIC_DEMO_PATIENT_USER_ID
           valueFrom:
