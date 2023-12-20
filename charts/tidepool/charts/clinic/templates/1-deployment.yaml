@@ -93,6 +93,8 @@ spec:
               name: clinic
               key: XealthClientSecret
               optional: true
+        - name: TIDEPOOL_APPLICATION_URL
+          value: {{ include "charts.host.app" . | quote }}
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
