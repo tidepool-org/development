@@ -20,6 +20,9 @@ spec:
     options:
       extauth:
         disable: true
+{{- if .Values.shadowing.enabled }}
+      {{ include "charts.routing.opts.shadowing" . }}
+{{ else }}
       prefixRewrite: /status
   - matchers:
     - methods:
@@ -33,4 +36,7 @@ spec:
       extauth:
         disable: true
       timeout: '3m'
+{{- if .Values.shadowing.enabled }}
+      {{ include "charts.routing.opts.shadowing" . }}
+{{ end }}
 {{- end }}

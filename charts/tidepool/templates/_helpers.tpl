@@ -165,6 +165,14 @@ Create environment variables used by all platform services.
           value: tidepool
 {{ end }}
 
+{{- define "charts.routing.opts.shadowing" -}}
+      shadowing:
+        upstream:
+          name: {{ .Values.shadowing.upstreamName | quote }}
+          namespace: {{ .Values.shadowing.namespace | quote }}
+        percentage: {{ .Values.shadowing.percentage }}
+{{- end }}
+
 {{/*
 Create liveness and readiness probes for platform services.
 */}}
