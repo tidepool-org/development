@@ -40,3 +40,10 @@ nodeSelector: {}
 tolerations: []
 # -- affinity
 affinity: {}
+shadowing:
+  enabled: false
+  upstreamName: "data"
+  namespace: "shadow"
+  percentage: 0
+# -- url path prefix to prepend to any shoreline calls
+authPathPrefix: "auth"

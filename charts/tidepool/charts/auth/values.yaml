@@ -10,13 +10,13 @@ configmap:
     AppleDeviceCheckKeyIssuer: "75U4X84TEG"
     AppleDeviceCheckKeyId: "B542R658GF"
     AppleDeviceCheckUseDevelopment: "true"
+    UserEventsHandlerDisable: "false"
 deployment:
   # -- auth Docker image
   image: tidepool/platform-auth:master-latest
   # -- number of replicas to deploy
   replicas: 1
 initContainers: []
-
 # -- memory and cpu resources for pods
 resources: {}
 # -- security context for each pod in deployment
@@ -49,3 +49,5 @@ nodeSelector: {}
 tolerations: []
 # -- affinity
 affinity: {}
+# -- url path prefix to prepend to any shoreline calls
+authPathPrefix: "auth"
