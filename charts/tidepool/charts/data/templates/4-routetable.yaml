@@ -77,7 +77,7 @@ spec:
   - matchers:
     - methods:
       - GET
-     regex: "/v1/data_sources/[^/]+"
+      regex: "/v1/data_sources/[^/]+"
     routeAction:
       single:
         upstream:
@@ -106,7 +106,7 @@ spec:
   - matchers:
     - methods:
       - GET
-     prefix: /v1/data_sets
+      prefix: /v1/data_sets
     routeAction:
       single:
         upstream:

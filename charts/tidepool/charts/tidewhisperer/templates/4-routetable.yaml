@@ -24,6 +24,7 @@ spec:
       {{ include "charts.routing.opts.shadowing" . }}
 {{ else }}
       prefixRewrite: /status
+{{ end }}
   - matchers:
     - methods:
       - GET
