@@ -33,7 +33,6 @@ spec:
   - matchers:
     - methods:
       - GET
-      - POST
       regex: "/v1/users/[^/]+/data_sets"
     routeAction:
       single:
@@ -167,7 +166,25 @@ spec:
         disable: true
       prefixRewrite: /v1/time
   - matchers:
-    - prefix: /dataservices/
+    - methods:
+      - GET
+      prefix: /dataservices/
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      prefixRewrite: /
+      timeout: "60s"
+{{- if .Values.shadowing.enabled }}
+      {{ include "charts.routing.opts.shadowing" . }}
+{{- end }}
+  - matchers:
+    - methods:
+      - DELETE
+      - PUT
+      - POST
+    prefix: /dataservices/
     routeAction:
       single:
         upstream:
@@ -198,18 +215,6 @@ spec:
   - matchers:
     - methods:
       - GET
-      prefix: /v1/summaries
-    routeAction:
-      single:
-        upstream:
-          name: data
-    options:
-      timeout: "60s"
-{{- if .Values.shadowing.enabled }}
-      {{ include "charts.routing.opts.shadowing" . }}
-{{- end }}
-  - matchers:
-    - methods:
       - POST
       prefix: /v1/summaries
     routeAction:
