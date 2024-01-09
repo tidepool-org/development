@@ -40,3 +40,8 @@ nodeSelector: {}
 tolerations: []
 # -- affinity
 affinity: {}
+shadowing:
+  enabled: false
+  upstreamName: "data"
+  namespace: "shadow"
+  percentage: 0

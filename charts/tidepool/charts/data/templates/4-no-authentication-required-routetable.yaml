@@ -21,8 +21,7 @@ spec:
       extauth:
         disable: true
       prefixRewrite: /status
-{{- if .Values.shadowing }}
-      shadowing:
-{{- toYaml .Values.shadowing | nindent 8 }}
+{{- if .Values.shadowing.enabled }}
+  {{ include "charts.routing.opts.shadowing" . }}
 {{- end }}
 {{- end }}
