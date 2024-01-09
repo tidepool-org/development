@@ -184,7 +184,7 @@ spec:
       - DELETE
       - PUT
       - POST
-    prefix: /dataservices/
+      prefix: /dataservices/
     routeAction:
       single:
         upstream:
