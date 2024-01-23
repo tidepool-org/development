@@ -66,4 +66,8 @@ spec:
       method: DELETE
       pathRegex: /v1/restricted_tokens.*
     name: /v1/restricted_tokens_delete_auth
+  - condition:
+      method: POST
+      pathRegex: /v1/device_tokens/[^/]+
+    name: /v1/device_tokens/{id}
 {{- end }}

@@ -125,4 +125,12 @@ spec:
       single:
         upstream:
           name: auth
+  - matchers:
+    - methods:
+      - POST
+      regex: /v1/device_tokens/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: auth
 {{- end }}
