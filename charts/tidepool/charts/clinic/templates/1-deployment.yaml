@@ -94,13 +94,13 @@ spec:
               optional: true
         - name: TIDEPOOL_XEALTH_TOKEN_URL
           valueFrom:
-            secretKeyRef:
+            configMapKeyRef:
               name: clinic
               key: XealthTokenUrl
               optional: true
         - name: TIDEPOOL_XEALTH_SERVER_BASE_URL
           valueFrom:
-            secretKeyRef:
+            configMapKeyRef:
               name: clinic
               key: XealthServerBaseUrl
               optional: true
