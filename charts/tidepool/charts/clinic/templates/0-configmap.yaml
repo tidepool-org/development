@@ -10,6 +10,8 @@ metadata:
 data:
   XealthEnabled: {{ .Values.configmap.data.XealthEnabled | quote }}
   XealthClientId: {{ .Values.configmap.data.XealthClientId | quote }}
+  XealthTokenUrl: {{ .Values.configmap.data.XealthTokenUrl | quote }}
+  XealthServerBaseUrl: {{ .Values.configmap.data.XealthServerBaseUrl | quote }}
   KafkaTopicPrefix: {{ .Values.configmap.data.KafkaTopicPrefix | quote }}
   KafkaTopic: {{ .Values.configmap.data.KafkaTopic | quote }}
 {{- end }}

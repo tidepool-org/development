@@ -92,6 +92,18 @@ spec:
               name: clinic
               key: XealthClientSecret
               optional: true
+        - name: TIDEPOOL_XEALTH_TOKEN_URL
+          valueFrom:
+            secretKeyRef:
+              name: clinic
+              key: XealthTokenUrl
+              optional: true
+        - name: TIDEPOOL_XEALTH_SERVER_BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: clinic
+              key: XealthServerBaseUrl
+              optional: true
         - name: TIDEPOOL_APPLICATION_URL
           value: {{ include "charts.host.app" . | quote }}
         image: "{{ .Values.deployment.image }}"
