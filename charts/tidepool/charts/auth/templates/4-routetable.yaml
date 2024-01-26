@@ -128,7 +128,7 @@ spec:
   - matchers:
     - methods:
       - POST
-      regex: /v1/device_tokens/[^/]+
+      regex: /v1/users/[^/]+/device_tokens
     routeAction:
       single:
         upstream:
