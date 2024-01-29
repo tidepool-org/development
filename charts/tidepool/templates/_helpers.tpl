@@ -3,6 +3,10 @@
 Expand the name of the chart.
 */}}
 
+{{- define "charts.host.gateway" -}}
+{{- .Values.global.gateway.default.protocol -}}://{{- .Values.global.gateway.default.host }}
+{{- end }}
+
 {{- define "charts.host.app" -}}
 {{- .Values.global.gateway.default.protocol -}}://{{- .Values.global.gateway.default.appHost | default .Values.global.gateway.default.host }}
 {{- end }}
