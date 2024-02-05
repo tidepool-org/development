@@ -4,6 +4,12 @@ configmap:
   data:
     KafkaTopic: "clinic.patients"
     KafkaTopicPrefix: ""
+    XealthEnabled: 'false'
+    XealthClientId: ''
+    XealthClientSecret: ''
+    XealthBearerToken: ''
+    XealthTokenUrl: 'https://auth-staging.xealth.io/oauth2/token'
+    XealthServerBaseUrl: 'https://provider-staging.xealth.io/v2'
 deployment:
   # -- Docker image
   image: tidepool/clinic:master-latest

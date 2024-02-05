@@ -41,7 +41,7 @@ global:
       # -- max tasks for sink connectors
       sinkTasksMax: 2
       # -- max tasks for source connectors
-      sourceTasksMax: 2
+      sourceTasksMax: 1
       # -- enable tls
       tlsEnabled: true
       # -- mongo connection uri

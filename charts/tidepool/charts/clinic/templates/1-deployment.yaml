@@ -8,8 +8,8 @@ metadata:
   name: clinic
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.kafka.secretName }}"
-    configmap.reloader.stakater.com/reload: "{{ .Values.kafka.configmapName }}"
+    secret.reloader.stakater.com/reload: "clinic,server,{{ .Values.kafka.secretName }}"
+    configmap.reloader.stakater.com/reload: "clinic,{{ .Values.kafka.configmapName }}"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -43,6 +43,7 @@ spec:
       containers:
       - env:
         {{ include "charts.platform.env.mongo" .}}
+        {{ include "charts.platform.env.clients" .}}
         {{ include "charts.tracing.common" .}}
         - name: CLINIC_DEMO_PATIENT_USER_ID
           valueFrom:
@@ -55,20 +56,56 @@ spec:
             secretKeyRef:
               name: server
               key: ServiceAuth
-        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+        - name: TIDEPOOL_SHORELINE_CLIENT_ADDRESS
           value: "http://shoreline:{{.Values.global.ports.shoreline}}"
         - name: TIDEPOOL_SEAGULL_CLIENT_ADDRESS
           value: "http://seagull:{{.Values.global.ports.seagull}}"
         - name: TIDEPOOL_GATEKEEPER_CLIENT_ADDRESS
           value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
-        - name: TIDEPOOL_CONFIRMATION_CLIENT_ADDRESS
-          value: "http://hydrophone:{{.Values.global.ports.hydrophone}}"
         - name: TIDEPOOL_REDOX_VERIFICATION_TOKEN
           valueFrom:
             secretKeyRef:
               name: clinic
               key: RedoxVerificationToken
               optional: true
+        - name: TIDEPOOL_XEALTH_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: clinic
+              key: XealthEnabled
+              optional: true
+        - name: TIDEPOOL_XEALTH_BEARER_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: clinic
+              key: XealthBearerToken
+              optional: true
+        - name: TIDEPOOL_XEALTH_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: clinic
+              key: XealthClientId
+              optional: true
+        - name: TIDEPOOL_XEALTH_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: clinic
+              key: XealthClientSecret
+              optional: true
+        - name: TIDEPOOL_XEALTH_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: clinic
+              key: XealthTokenUrl
+              optional: true
+        - name: TIDEPOOL_XEALTH_SERVER_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: clinic
+              key: XealthServerBaseUrl
+              optional: true
+        - name: TIDEPOOL_APPLICATION_URL
+          value: {{ include "charts.host.gateway" . | quote }}
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
