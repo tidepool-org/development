@@ -5,8 +5,10 @@ secret:
     ServiceAuth: ""
     AppleDeviceCheckKey: ""
 configmap:
+  # -- whether to generate a configmap
+  enabled: false
   data_:
-    # -- used for checking generating jwts, which are required for checking the validity of apple device tokens during the insulet authorization flow. 
+    # -- used for checking generating jwts, which are required for checking the validity of apple device tokens during the insulet authorization flow.
     AppleDeviceCheckKeyIssuer: "75U4X84TEG"
     AppleDeviceCheckKeyId: "B542R658GF"
     AppleDeviceCheckUseDevelopment: "true"
