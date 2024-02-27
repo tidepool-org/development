@@ -179,7 +179,7 @@ spec:
         upstream:
           name: data
     options:
-      timeout: "300s"
+      timeout: "60s"
       regexRewrite:
         pattern:
           regex: '/dataservices/'
@@ -211,7 +211,7 @@ spec:
         upstream:
           name: data
     options:
-      timeout: "300s"
+      timeout: "60s"
       regexRewrite:
         pattern:
           regex: '/dataservices/'
