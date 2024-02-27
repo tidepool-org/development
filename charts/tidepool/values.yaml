@@ -108,6 +108,7 @@ global:
     # -- uploader service internal port
     uploader: 31501
   secret:
+    # -- whether to create secrets for various services which can override a subchart secret.enabled value
     enabled: false
     generated: false
     templated: false

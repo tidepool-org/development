@@ -852,7 +852,7 @@ The main issue is that you can't manage your node packages in the container usin
 
 This is for performance reasons, but also because we want the packages to be compiled for and running in the same environment/operating system (`linux` in our case).
 
-This results in us having to issue our `yarn` commands from **_within_** the containers, instead of from our native operating system.
+This results in us having to issue our `yarn` commands from **_within_** the containers instead of from our native operating system.
 
 The `tidepool` helper script (see [Add Tidepool Helper Script](#add-tidepool-helper-script-recommended)) allows us to shell into a container and run commands.
 
