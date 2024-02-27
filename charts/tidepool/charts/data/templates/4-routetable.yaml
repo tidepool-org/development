@@ -45,8 +45,8 @@ spec:
     options:
       regexRewrite:
         pattern:
-          regex: 'dataservices/'
-        substitution: ''
+          regex: '/dataservices/'
+        substitution: '/'
   - matchers:
     - methods:
       - GET
@@ -72,8 +72,8 @@ spec:
       timeout: "60s"
       regexRewrite:
         pattern:
-          regex: 'dataservices/'
-        substitution: ''
+          regex: '/dataservices/'
+        substitution: '/'
   - matchers:
     - methods:
       - GET
@@ -97,8 +97,8 @@ spec:
     options:
       regexRewrite:
         pattern:
-          regex: 'dataservices/'
-        substitution: ''
+          regex: '/dataservices/'
+        substitution: '/'
   - matchers:
     - methods:
       - GET
@@ -123,8 +123,8 @@ spec:
     options:
       regexRewrite:
         pattern:
-          regex: 'dataservices/'
-        substitution: ''
+          regex: '/dataservices/'
+        substitution: '/'
   - matchers:
     - methods:
       - DELETE
@@ -136,8 +136,8 @@ spec:
     options:
       regexRewrite:
         pattern:
-          regex: 'dataservices/'
-        substitution: ''
+          regex: '/dataservices/'
+        substitution: '/'
 {{- if .Values.shadowing.enabled }}
       {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{- end }}
@@ -167,8 +167,8 @@ spec:
       timeout: "60s"
       regexRewrite:
         pattern:
-          regex: 'dataservices/'
-        substitution: ''
+          regex: '/dataservices/'
+        substitution: '/'
   - matchers: # matcher for the modifications of the data (not the "contents" of an upload) belonging to a specific upload
     - methods:
       - DELETE
@@ -182,8 +182,8 @@ spec:
       timeout: "300s"
       regexRewrite:
         pattern:
-          regex: 'dataservices/'
-        substitution: ''
+          regex: '/dataservices/'
+        substitution: '/'
 {{- if .Values.shadowing.enabled }}
       {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{- end }}
@@ -200,8 +200,8 @@ spec:
       timeout: "60s"
       regexRewrite:
         pattern:
-          regex: 'dataservices/'
-        substitution: ''
+          regex: '/dataservices/'
+        substitution: '/'
   - matchers:
     - methods:
       - POST
@@ -214,8 +214,8 @@ spec:
       timeout: "300s"
       regexRewrite:
         pattern:
-          regex: 'dataservices/'
-        substitution: ''
+          regex: '/dataservices/'
+        substitution: '/'
 {{- if .Values.shadowing.enabled }}
       {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{- end }}
