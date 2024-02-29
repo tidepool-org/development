@@ -12,6 +12,33 @@ spec:
   - matchers:
     - methods:
       - GET
+      exact: /testingtableregex/data/status
+    routeAction:
+      single:
+        upstream:
+          name: tidewhisperer
+    options:
+      extauth:
+        disable: true
+      regexRewrite:
+        pattern:
+          regex: '/testingtableregex/data/'
+        substitution: '/'
+  - matchers:
+    - methods:
+      - GET
+      exact: /testingtableroute/data/status
+    routeAction:
+      single:
+        upstream:
+          name: tidewhisperer
+    options:
+      extauth:
+        disable: true
+      prefixRewrite: /status
+  - matchers:
+    - methods:
+      - GET
       exact: /data/status
     routeAction:
       single:
