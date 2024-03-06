@@ -217,6 +217,14 @@ spec:
         pattern:
           regex: '/dataservices/'
         substitution: '/'
+# We do not shadow POST requests to create an Upload because the Upload id is
+# random. We will rely on the changestream syncing to create the initial Upload.
+# But modifications must be shadowed because a deduplicator may be ran on the
+# data of the Upload (they must also still be synced in the changestreams as a
+# POST may internally do an update in platform-data).
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
   - matchers: # matcher for upload modifications
     - methods:
       - DELETE
@@ -228,7 +236,10 @@ spec:
           name: data
     options:
       timeout: "60s"
-  - matchers: # matcher for the modifications of the data (not the "contents" of an upload) belonging to a specific upload
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
+  - matchers: # matcher for the modifications of the data belonging to a specific Upload
     - methods:
       - DELETE
       - POST
@@ -246,7 +257,7 @@ spec:
 {{- if .Values.shadowing.enabled }}
       {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{- end }}
-  - matchers: # matcher for the modifications of the data (not the "contents" of an upload) belonging to a specific upload
+  - matchers: # matcher for the modifications of the data belonging to a specific Upload
     - methods:
       - DELETE
       - POST
