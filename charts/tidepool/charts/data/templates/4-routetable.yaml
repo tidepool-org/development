@@ -300,6 +300,9 @@ spec:
         pattern:
           regex: '/dataservices/'
         substitution: '/'
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
   - matchers:
     - methods:
       - POST
