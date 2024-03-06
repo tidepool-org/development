@@ -57,22 +57,24 @@ Create environment variables used by all platform services.
 
 {{ define "charts.platform.env.clients" }}
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
-          value: http://{{.Values.global.hostnames.auth}}:{{.Values.global.ports.auth}}
+          value: "http://{{ .Values.global.hostnames.auth }}:{{ .Values.global.ports.auth }}"
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_ADDRESS
-          value: "http://{{ include "hostname.internal" .}}"
+          value: "http://{{ .Values.global.hostnames.shoreline }}:{{ .Values.global.ports.shoreline }}"
         - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_SERVER_SESSION_TOKEN_SECRET
           valueFrom:
             secretKeyRef:
               name: server
               key: ServiceAuth
+        - name: TIDEPOOL_AUTH_CLIENT_EXTERNAL_PATH_PREFIX
+          value: {{ .Values.global.platformExternalAuthPathPrefix | quote }}
         - name: TIDEPOOL_BLOB_CLIENT_ADDRESS
-          value: http://{{.Values.global.hostnames.blob}}:{{.Values.global.ports.blob}}
+          value: "http://{{ .Values.global.hostnames.blob }}:{{ .Values.global.ports.blob }}"
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
-          value: http://{{.Values.global.hostnames.data}}:{{.Values.global.ports.data}}
+          value: "http://{{ .Values.global.hostnames.data }}:{{ .Values.global.ports.data }}"
         - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
-          value: http://{{.Values.global.hostnames.data}}:{{.Values.global.ports.data}}
+          value: "http://{{ .Values.global.hostnames.data }}:{{ .Values.global.ports.data }}"
         - name: TIDEPOOL_DEVICES_CLIENT_ADDRESS
-          value: {{.Values.global.hostnames.devices}}:{{.Values.global.ports.devices_grpc}}
+          value: "http://{{ .Values.global.hostnames.devices }}:{{ .Values.global.ports.devices_grpc }}"
         - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
           valueFrom:
             configMapKeyRef:
@@ -86,11 +88,11 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
           value: "http://{{ include "hostname.internal" .}}"
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
-          value: http://{{.Values.global.hostnames.gatekeeper}}:{{.Values.global.ports.gatekeeper}}
+          value: "http://{{ .Values.global.hostnames.gatekeeper }}:{{ .Values.global.ports.gatekeeper }}"
         - name: TIDEPOOL_CONFIRMATION_CLIENT_ADDRESS
-          value: "http://{{.Values.global.hostnames.hydrophone}}:{{.Values.global.ports.hydrophone}}"
+          value: "http://{{ .Values.global.hostnames.hydrophone }}:{{ .Values.global.ports.hydrophone }}"
         - name: TIDEPOOL_TASK_CLIENT_ADDRESS
-          value: http://{{.Values.global.hostnames.task}}:{{.Values.global.ports.task}}
+          value: "http://{{ .Values.global.hostnames.task }}:{{ .Values.global.ports.task }}"
         - name: TIDEPOOL_USER_CLIENT_ADDRESS
           value: "http://{{ include "hostname.internal" .}}"
         - name: TIDEPOOL_CLINIC_CLIENT_ADDRESS

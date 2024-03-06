@@ -56,6 +56,8 @@ global:
   linkerdsupport:
     # -- whether to include linkerdsupport subchart with Linkerd service profiles
     enabled: true
+  # -- for a shadowed cluster only, what URL path prefix should platform services add (if any) when calling out to shoreline
+  platformExternalAuthPathPrefix: ''
   # -- service hostnames
   hostnames:
     # -- auth service hostname
@@ -76,6 +78,8 @@ global:
     internal: "internal"
     # -- metric service hostname
     metric: "highwater"
+    # -- seagull service hostname
+    seagull: "seagull"
     # -- shoreline service hostname
     shoreline: "shoreline"
     # -- task service hostname
