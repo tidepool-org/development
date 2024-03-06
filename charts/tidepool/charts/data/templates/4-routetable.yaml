@@ -286,6 +286,11 @@ spec:
         pattern:
           regex: '/dataservices/'
         substitution: '/'
+# see note in "/dataservices/v1/data_sets/[^/]+" route for why me must shadow
+# non POST modifications to Uploads
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
   - matchers:
     - methods:
       - PUT
@@ -297,6 +302,9 @@ spec:
           name: data
     options:
       timeout: "60s"
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
   - matchers:
     - methods:
       - POST
