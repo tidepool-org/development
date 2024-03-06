@@ -171,18 +171,18 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: {{ .Values.mongo.secretName }}
               key: Tls
+        - name: TIDEPOOL_DISABLE_INDEX_CREATION
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mongo.secretName }}
+              key: DisableIndexCreation
+              optional: true
 {{ end }}
 
 {{ define "charts.platform.env.mongo" }}
 {{ include "charts.mongo.params" . }}
         - name: TIDEPOOL_STORE_DATABASE
           value: tidepool
-        - name: TIDEPOOL_DISABLE_INDEX_CREATION
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.mongo.secretName }}
-              key: DisabledIndexCreation
-              optional: true
 {{ end }}
 
 {{- define "charts.routing.opts.shadowing" -}}
