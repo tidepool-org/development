@@ -412,7 +412,7 @@ spec:
       - DELETE
       - GET
       - POST
-      prefix: /v1/alerts
+      regex: /v1/users/[^/]+/followers/[^/]+/alerts
     routeAction:
       single:
         upstream:
