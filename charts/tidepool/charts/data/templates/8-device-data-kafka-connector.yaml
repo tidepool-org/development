@@ -1,0 +1,36 @@
+{{ if .Values.global.kafka.connect.enabled }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  labels:
+    app: device-data-source
+    strimzi.io/cluster: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
+  name: device-data-source
+  namespace: {{ .Release.Namespace }}
+spec:
+  class: com.mongodb.kafka.connect.MongoSourceConnector
+  config:
+    change.stream.full.document: updateLookup
+    collection: deviceData
+    connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
+    copy.existing: false
+    database: data
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: false
+    pipeline: >-
+      [
+        {
+          $match: {
+            "fullDocument.type": { $in: [ "cbg", "dosingDecision" ] },
+            "fullDocument.provenance.clientID": "tidepool-loop",
+          }
+        }
+      ]
+    topic.prefix: {{ .Release.Namespace }}
+    topic.suffix: "alerts"
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: false
+    heartbeat.interval.ms: {{ .Values.global.kafka.connect.mongoHeartbeatIntervalMs }}
+    heartbeat.topic.name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-heartbeat
+  tasksMax: {{ .Values.global.kafka.connect.sourceTasksMax | int }}
+{{- end }}
