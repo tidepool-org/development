@@ -21,7 +21,7 @@ spec:
       extauth:
         disable: true
 {{- if .Values.shadowing.enabled }}
-      {{ include "charts.routing.opts.shadowing" . }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{ else }}
       prefixRewrite: /status
 {{ end }}
@@ -38,6 +38,6 @@ spec:
         disable: true
       timeout: '3m'
 {{- if .Values.shadowing.enabled }}
-      {{ include "charts.routing.opts.shadowing" . }}
-{{ end }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
 {{- end }}

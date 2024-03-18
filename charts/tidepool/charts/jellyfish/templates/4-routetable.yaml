@@ -19,9 +19,8 @@ spec:
           name: jellyfish
     options:
       timeout: "60s"
-{{- if .Values.shadowing }}
-      shadowing:
-{{- toYaml .Values.shadowing | nindent 8 }}
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{- end }}
   - matchers:
     - methods:

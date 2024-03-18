@@ -18,9 +18,35 @@ spec:
         upstream:
           name: data
 {{- if .Values.shadowing.enabled }}
-      options:
-      {{ include "charts.routing.opts.shadowing" . }}
+    options:
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{- end }}
+  - matchers:
+    - methods:
+      - GET
+      regex: "/v1/users/[^/]+/data_sources"
+    routeAction:
+      single:
+        upstream:
+          name: data
+{{- if .Values.shadowing.enabled }}
+    options:
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
+  - matchers:
+    - methods:
+      - POST
+      - DELETE
+      regex: "/dataservices/v1/users/[^/]+/data_sources"
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      regexRewrite:
+        pattern:
+          regex: '/dataservices/'
+        substitution: '/'
   - matchers:
     - methods:
       - POST
@@ -41,8 +67,22 @@ spec:
     options:
       timeout: "60s"
 {{- if .Values.shadowing.enabled }}
-      {{ include "charts.routing.opts.shadowing" . }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{- end }}
+  - matchers:
+    - methods:
+      - POST
+      regex: "/dataservices/v1/users/[^/]+/data_sets"
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      timeout: "60s"
+      regexRewrite:
+        pattern:
+          regex: '/dataservices/'
+        substitution: '/'
   - matchers:
     - methods:
       - POST
@@ -63,8 +103,21 @@ spec:
           name: data
 {{- if .Values.shadowing.enabled }}
     options:
-      {{ include "charts.routing.opts.shadowing" . }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{- end }}
+  - matchers:
+    - methods:
+      - POST
+      regex: "/dataservices/v1/users/[^/]+/datasets"
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      regexRewrite:
+        pattern:
+          regex: '/dataservices/'
+        substitution: '/'
   - matchers:
     - methods:
       - POST
@@ -82,9 +135,23 @@ spec:
         upstream:
           name: data
 {{- if .Values.shadowing.enabled }}
-      options:
-      {{ include "charts.routing.opts.shadowing" . }}
+    options:
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{- end }}
+  - matchers:
+    - methods:
+      - PUT
+      - DELETE
+      regex: "/dataservices/v1/data_sources/[^/]+"
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      regexRewrite:
+        pattern:
+          regex: '/dataservices/'
+        substitution: '/'
   - matchers:
     - methods:
       - PUT
@@ -97,11 +164,31 @@ spec:
   - matchers:
     - methods:
       - DELETE
+      regex: "/dataservices/v1/users/[^/]+/data"
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      regexRewrite:
+        pattern:
+          regex: '/dataservices/'
+        substitution: '/'
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
+  - matchers:
+    - methods:
+      - DELETE
       regex: "/v1/users/[^/]+/data"
     routeAction:
       single:
         upstream:
           name: data
+    options:
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
   - matchers:
     - methods:
       - GET
@@ -113,32 +200,141 @@ spec:
     options:
       timeout: "60s"
 {{- if .Values.shadowing.enabled }}
-      {{ include "charts.routing.opts.shadowing" . }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
+  - matchers: # matcher for upload modifications
+    - methods:
+      - DELETE
+      - PUT
+      regex: "/dataservices/v1/data_sets/[^/]+"
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      timeout: "60s"
+      regexRewrite:
+        pattern:
+          regex: '/dataservices/'
+        substitution: '/'
+# We do not shadow POST requests to create an Upload because the Upload id is
+# random. We will rely on the changestream syncing to create the initial Upload.
+# But modifications must be shadowed because a deduplicator may be ran on the
+# data of the Upload (they must also still be synced in the changestreams as a
+# POST may internally do an update in platform-data).
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
+  - matchers: # matcher for upload modifications
+    - methods:
+      - DELETE
+      - PUT
+      regex: "/v1/data_sets/[^/]+"
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      timeout: "60s"
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
+  - matchers: # matcher for the modifications of the data belonging to a specific Upload
+    - methods:
+      - DELETE
+      - POST
+      regex: "/dataservices/v1/data_sets/[^/]+/data"
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      timeout: "60s"
+      regexRewrite:
+        pattern:
+          regex: '/dataservices/'
+        substitution: '/'
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
+  - matchers: # matcher for the modifications of the data belonging to a specific Upload
+    - methods:
+      - DELETE
+      - POST
+      regex: "/v1/data_sets/[^/]+/data"
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      timeout: "60s"
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
+  - matchers:
+    - methods:
+      - PUT
+      - DELETE
+      regex: "/dataservices/v1/datasets/[^/]+"
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      timeout: "60s"
+      regexRewrite:
+        pattern:
+          regex: '/dataservices/'
+        substitution: '/'
+# see note in "/dataservices/v1/data_sets/[^/]+" route for why me must shadow
+# non POST modifications to Uploads
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
+  - matchers:
+    - methods:
+      - PUT
+      - DELETE
+      regex: "/v1/datasets/[^/]+"
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      timeout: "60s"
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{- end }}
   - matchers:
     - methods:
       - POST
-      - DELETE
-      - PUT
-      prefix: /v1/data_sets
+      regex: "/dataservices/v1/datasets/[^/]+/data"
     routeAction:
       single:
         upstream:
           name: data
     options:
       timeout: "60s"
+      regexRewrite:
+        pattern:
+          regex: '/dataservices/'
+        substitution: '/'
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
   - matchers:
     - methods:
       - POST
-      - PUT
-      - DELETE
-      prefix: /v1/datasets
+      regex: "/v1/datasets/[^/]+/data"
     routeAction:
       single:
         upstream:
           name: data
     options:
       timeout: "60s"
+{{- if .Values.shadowing.enabled }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
+{{- end }}
   - matchers:
     - methods:
       - GET
@@ -151,7 +347,7 @@ spec:
       extauth:
         disable: true
 {{- if .Values.shadowing.enabled }}
-      {{ include "charts.routing.opts.shadowing" . }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{- end }}
   - matchers:
     - methods:
@@ -177,21 +373,8 @@ spec:
       prefixRewrite: /
       timeout: "60s"
 {{- if .Values.shadowing.enabled }}
-      {{ include "charts.routing.opts.shadowing" . }}
+      {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{- end }}
-  - matchers:
-    - methods:
-      - DELETE
-      - PUT
-      - POST
-      prefix: /dataservices/
-    routeAction:
-      single:
-        upstream:
-          name: data
-    options:
-      prefixRewrite: /
-      timeout: "60s"
   - matchers:
     - methods:
       - POST
@@ -216,6 +399,7 @@ spec:
     - methods:
       - GET
       - POST
+      # not sure if these may also have a /dataservices prefix
       prefix: /v1/summaries
     routeAction:
       single:

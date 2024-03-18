@@ -170,11 +170,11 @@ Create environment variables used by all platform services.
 {{ end }}
 
 {{- define "charts.routing.opts.shadowing" -}}
-      shadowing:
-        upstream:
-          name: {{ .Values.shadowing.upstreamName | quote }}
-          namespace: {{ .Values.shadowing.namespace | quote }}
-        percentage: {{ .Values.shadowing.percentage }}
+shadowing:
+  upstream:
+    name: {{ .Values.shadowing.upstreamName | quote }}
+    namespace: {{ .Values.shadowing.namespace | quote }}
+  percentage: {{ .Values.shadowing.percentage }}
 {{- end }}
 
 {{/*
