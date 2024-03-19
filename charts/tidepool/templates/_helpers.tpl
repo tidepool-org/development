@@ -268,6 +268,7 @@ Create liveness and readiness probes for platform services.
             secretKeyRef:
               name: {{ .Values.kafka.secretName }}
               key: {{ .Values.global.kafka.passwordKeyName | default "Password" }}
+              optional: true
         - name: KAFKA_VERSION
           valueFrom:
             configMapKeyRef:
