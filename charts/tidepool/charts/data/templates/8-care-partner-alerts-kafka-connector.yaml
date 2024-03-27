@@ -15,10 +15,10 @@ spec:
     connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
     copy.existing: true
     database: data
-    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter: org.apache.kafka.connect.storage.StringConverter
     key.converter.schemas.enable: false
     topic.prefix: {{ .Release.Namespace }}
-    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter: org.apache.kafka.connect.storage.StringConverter
     value.converter.schemas.enable: false
     heartbeat.interval.ms: {{ .Values.global.kafka.connect.mongoHeartbeatIntervalMs }}
     heartbeat.topic.name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-heartbeat
