@@ -21,13 +21,27 @@ spec:
       extauth:
         disable: true
   - matchers:
-    - prefix: /metadata/
+    - regex: '/metadata/[^/]+/profile'
     routeAction:
       single:
         upstream:
           name: auth
     options:
-      prefixRewrite: /v1/users/
+      regexRewrite:
+        pattern:
+          regex: '/metadata/'
+        substitution: '/v1/users/'
+      retries:
+        retryOn: '5xx'
+        numRetries: 3
+        perTryTimeout: '15s'
+  - matchers:
+    - prefix: /metadata/
+    routeAction:
+      single:
+        upstream:
+          name: seagull
+    options:
       retries:
         retryOn: '5xx'
         numRetries: 3
