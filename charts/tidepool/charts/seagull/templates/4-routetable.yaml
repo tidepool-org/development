@@ -30,7 +30,7 @@ spec:
       regexRewrite:
         pattern:
           regex: '/metadata/'
-        substitution: '/v1/users/'
+        substitution: '/v1/users/legacy/'
       retries:
         retryOn: '5xx'
         numRetries: 3
