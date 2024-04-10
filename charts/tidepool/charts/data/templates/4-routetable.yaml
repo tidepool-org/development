@@ -408,6 +408,16 @@ spec:
     options:
       timeout: "60s"
   - matchers:
+      - methods:
+          - GET
+        prefix: "/v1/clinics/[^/]+/reports/realtime"
+    routeAction:
+      single:
+        upstream:
+          name: data
+    options:
+      timeout: "60s"
+  - matchers:
     - methods:
       - DELETE
       - GET
