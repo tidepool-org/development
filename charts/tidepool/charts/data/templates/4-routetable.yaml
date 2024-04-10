@@ -410,7 +410,7 @@ spec:
   - matchers:
       - methods:
           - GET
-        prefix: "/v1/clinics/[^/]+/reports/realtime"
+        regex: "/v1/clinics/[^/]+/reports/realtime"
     routeAction:
       single:
         upstream:
