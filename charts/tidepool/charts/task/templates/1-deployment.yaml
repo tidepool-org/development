@@ -90,6 +90,18 @@ spec:
               key: ServiceAuth
         - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
           value: :{{ .Values.global.ports.task }}
+        - name: TIDEPOOL_TASK_DISABLE_DEXCOM
+          valueFrom:
+            configMapKeyRef:
+              name: task
+              key: DisableDexcom
+              optional: true
+        - name: TIDEPOOL_TASK_DISABLE_CLINIC
+          valueFrom:
+            configMapKeyRef:
+              name: task
+              key: DisableClinic
+              optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
