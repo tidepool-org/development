@@ -12,6 +12,7 @@ configmap:
     AppleDeviceCheckKeyIssuer: "75U4X84TEG"
     AppleDeviceCheckKeyId: "B542R658GF"
     AppleDeviceCheckUseDevelopment: "true"
+    UserEventsHandlerDisable: "false"
 deployment:
   # -- auth Docker image
   image: tidepool/platform-auth:master-latest
