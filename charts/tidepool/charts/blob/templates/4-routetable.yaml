@@ -38,8 +38,9 @@ spec:
           name: blob
   - matchers:
     - methods:
+      - GET
       - POST
-      regex: /v1/users/[^/]+/device-logs
+      regex: /v1/users/[^/]+/device_logs
     routeAction:
       single:
         upstream:
