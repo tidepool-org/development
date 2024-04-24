@@ -1,73 +1,81 @@
 # -- whether to enable Keycloak integration
 enabled: true
 keycloakx:
-  fullnameOverride: 'keycloak'
-  image:
-    repository: 'quay.io/keycloak/keycloak'
-    tag: '20.0.1'
   command:
     - "/opt/keycloak/bin/kc.sh"
     - "start"
     - "--import-realm"
-  extraInitContainers: |-
-    - "command":
-      - "/bin/sh"
-      - "-c"
-      - "wget -O /providers/keycloak-rest-provider-1.0.jar https://github.com/toddkazakov/keycloak-user-migration/releases/download/v1.0/keycloak-rest-provider-1.0.jar"
-      "image": "busybox"
-      "imagePullPolicy": "IfNotPresent"
-      "name": "providers"
-      "volumeMounts":
-      - "mountPath": "/providers"
-        "name": "providers"
-    - "command":
-      - "/bin/sh"
-      - "-c"
-      - "cp /release/extensions/admin-LATEST.jar /providers && cp -R /release/tidepool-theme/* /tidepool"
-      "image": "docker.io/tidepool/keycloak-extensions:20.0.1-2022-11-16T11-44-06"
-      "imagePullPolicy": "IfNotPresent"
-      "name": "tidepool-extensions"
-      "volumeMounts":
-      - "mountPath": "/providers"
-        "name": "providers"
-      - "mountPath": "/tidepool"
-        "name": "tidepool-theme"
-  extraVolumeMounts: |-
-    - "mountPath": "/opt/keycloak/providers"
-      "name": "providers"
-    - "mountPath": "/opt/keycloak/themes/tidepool"
-      "name": "tidepool-theme"
-    - name: keycloak-import
-      mountPath: "/opt/keycloak/data/import"
-      readOnly: true
-  extraVolumes: |-
-    - "emptyDir": {}
-      "name": "providers"
-    - "emptyDir": {}
-      "name": "db"
-    - "emptyDir": {}
-      "name": "tidepool-theme"
-    - name: keycloak-import
-      secret:
-        secretName: keycloak-realm
   extraEnv: |-
-    - name: KEYCLOAK_ADMIN
-      value: admin
-    - name: KEYCLOAK_ADMIN_PASSWORD
-      value: admin
-    - name: KC_PROXY
-      value: edge
-    - name: KC_HOSTNAME_STRICT
-      value: "false"
-    - name: KC_HOSTNAME_STRICT_HTTPS
-      value: "false"
-    - name: KC_HTTP_ENABLED
-      value: "true"
-    - name: KC_CACHE
-      value: local
-    - name: KC_HOSTNAME_ADMIN_URL
-      value: "http://localhost:32000"
-    - name: KC_HOSTNAME_URL
-      value: "http://localhost:32000"
+    - "name": "KEYCLOAK_ADMIN"
+      "value": "admin"
+    - "name": "KEYCLOAK_ADMIN_PASSWORD"
+      "value": "admin"
+    - "name": "KC_FEATURES"
+      "value": "admin-fine-grained-authz,token-exchange,admin"
+    - "name": "KC_HOSTNAME_URL"
+      "value": "http://localhost:32000"
+    - "name": "KC_HOSTNAME_ADMIN_URL"
+      "value": "http://localhost:32000"
+    - "name": "KC_HOSTNAME_STRICT"
+      "value": "false"
+    - "name": "KC_PROXY"
+      "value": "edge"
+    - "name": "KC_SPI_STICKY_SESSION_ENCODER_INFINISPAN_SHOULD_ATTACH_ROUTE"
+      "value": "false"
+    - "name": "KC_HTTP_ENABLED"
+      "value": "true"
+    - "name": "KC_HOSTNAME_STRICT_HTTPS"
+      "value": "false"
+    - "name": "KC_CACHE"
+      "value": "local"
+    - "name": "KC_LOG_CONSOLE_OUTPUT"
+      "value": "json"
+    - "name": "KC_LOG_LEVEL"
+      "value": "INFO,org.keycloak.services.IdentityBrokerService:DEBUG,org.keycloak.saml:DEBUG"
+    - "name": "DISABLE_EXTERNAL_ACCESS"
+      "value": "false"
+    - "name": "TIDEPOOL_ASSETS_URL"
+      "value": "https://s3-us-west-2.amazonaws.com/tidepool-prd-asset"
+  extraInitContainers: |-
+    - "name": "keycloak-extensions"
+      "image": "docker.io/tidepool/keycloak-extensions:21.1.1-2024-04-23T23-54-52"
+      "imagePullPolicy": "IfNotPresent"
+      "volumeMounts":
+      - "name": "providers"
+        "mountPath": "/providers"
+      - "name": "tidepool-theme"
+        "mountPath": "/tidepool"
+      "command":
+      - "/bin/sh"
+      - "-c"
+      - "cp /release/extensions/*.jar /providers && cp -R /release/tidepool-theme/* /tidepool"      
+  extraVolumeMounts: |-
+    - "name": "providers"
+      "mountPath": "/opt/keycloak/providers"
+    - "name": "tidepool-theme"
+      "mountPath": "/opt/keycloak/themes/tidepool"
+    - "name": "keycloak-import"
+      "mountPath": "/opt/keycloak/data/import"
+      "readOnly": true
+  extraVolumes: |-
+    - "name": "providers"
+      "emptyDir": {}
+    - "name": "tidepool-theme"
+      "emptyDir": {}
+    - "name": "keycloak-import"
+      "secret":
+        "secretName": "keycloak-realm"
+    - "name": "db"
+      "emptyDir": {}
+  fullnameOverride: keycloak
   http:
-    relativePath: '/'
+    relativePath: /
+  image:
+    repository: quay.io/keycloak/keycloak
+    tag: 21.1.1
+  livenessProbe: |-
+    "httpGet":
+      "path": "/health/live"
+      "port": "http"
+    "initialDelaySeconds": 600
+    "timeoutSeconds": 20
