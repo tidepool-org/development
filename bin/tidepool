@@ -89,7 +89,7 @@ server_stop() {
 }
 
 start() {
-  cd ${DIR} && set_tilt_env ${1-} && tilt up -dv --port=0 --legacy
+  cd ${DIR} && set_tilt_env ${1-} && tilt up -dv --port=${TIDEPOOL_TILT_PORT:-0} --legacy
 }
 
 stop() {
