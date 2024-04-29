@@ -3,12 +3,21 @@ secret:
   data_:
     # -- service authorization secret
     ServiceAuth: ""
+    Pusher:
+      APNS:
+        SigningKey: ""
 deployment:
   # -- secrets used to pull images
   imagePullSecrets:
   # --  Docker image
   image: tidepool/platform-data:master-latest
   replicas: 1
+configmap:
+  enabled: true
+  data_:
+    PusherAPNSKeyID: "QA3495JW4S"
+    PusherAPNSTeamID: "75U4X84TEG"
+    PusherAPNSBundleID: "org.tidepool.carepartner"
 
 # -- memory and cpu resources for pods
 resources: {}
