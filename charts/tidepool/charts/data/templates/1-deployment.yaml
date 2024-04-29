@@ -44,6 +44,11 @@ spec:
         {{ include "charts.platform.env.clients" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "data") }}
+        # TODO move to a charts.platform config file or something probably? or from a configmap?
+        - name: KAFKA_ALERTS_CONSUMER_GROUP
+          value: "alerts"
+        - name: KAFKA_ALERTS_TOPICS
+          value: "alerts,deviceData.alerts"
         - name: TIDEPOOL_DATA_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
