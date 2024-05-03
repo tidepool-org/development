@@ -57,6 +57,26 @@ spec:
           value: data
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
+        - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_SIGNING_KEY
+          valueFrom:
+            secretKeyRef:
+              name: data
+              key: pusherAPNSSigningKey
+        - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_KEY_ID
+          valueFrom:
+            configMapKeyRef:
+              name: data
+              key: pusherAPNSKeyID
+        - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_TEAM_ID
+          valueFrom:
+            configMapKeyRef:
+              name: data
+              key: pusherAPNSTeamID
+        - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_BUNDLE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: data
+              key: pusherAPNSBundleID
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
