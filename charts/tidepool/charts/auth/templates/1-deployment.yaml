@@ -87,6 +87,42 @@ spec:
               name: dexcom
               key: StateSalt
               optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_AUTHORIZE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: AuthorizeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: twiist
+              key: ClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: twiist
+              key: ClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: twiist
+              key: StateSalt
+              optional: true
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
           value: {{ .Values.global.gateway.default.domain }}
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
