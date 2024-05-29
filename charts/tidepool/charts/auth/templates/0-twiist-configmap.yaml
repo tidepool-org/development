@@ -7,7 +7,9 @@ metadata:
   labels:
 {{ include "charts.labels.standard" . }}
 data:
-  ClientId: {{ .Values.configmap.twiist.data_.redirectURL | default "" }}
+{{ if .Values.configmap.twiist.data_.clientId }}
+  ClientId: {{ .Values.configmap.twiist.data_.clientId }}
+{{ end }}
 {{ if .Values.configmap.twiist.data_.redirectURL }}
   RedirectURL: {{ .Values.configmap.twiist.data_.redirectURL }}
 {{ else }}
