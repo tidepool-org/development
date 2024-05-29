@@ -107,7 +107,7 @@ spec:
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_ID
           valueFrom:
-            secretKeyRef:
+            configMapKeyRef:
               name: twiist
               key: ClientId
               optional: true
