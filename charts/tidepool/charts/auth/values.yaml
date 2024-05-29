@@ -4,6 +4,14 @@ secret:
   data_:
     ServiceAuth: ""
     AppleDeviceCheckKey: ""
+  twiist:
+      # -- whether to create dexcom secret
+    enabled: false
+    data_:
+      # -- plaintext Twiist Oauth2 client secret
+      clientSecret: ""
+      # -- plaintext Twiist Oauth2 state salt
+      stateSalt: ""
 configmap:
   # -- whether to generate a configmap
   enabled: false
@@ -12,6 +20,19 @@ configmap:
     AppleDeviceCheckKeyIssuer: "75U4X84TEG"
     AppleDeviceCheckKeyId: "B542R658GF"
     AppleDeviceCheckUseDevelopment: "true"
+  ## -- values for the twist config map
+  twiist:
+    # -- whether to generate a configmap
+    enabled: true
+    data_:
+      # -- plaintext Twiist Oauth2 client id
+      clientId: ""
+      # -- Twiist Oauth2 authorize endpoint url
+      authorizeURL: "https://"
+      # -- Twiist Oauth2 token endpoint url
+      tokenURL: "https://"
+      # -- Twiist client redirect url
+      redirectURL: ""
 deployment:
   # -- secrets used to pull images
   imagePullSecrets:
