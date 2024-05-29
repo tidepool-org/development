@@ -1,0 +1,18 @@
+{{ if .Values.configmap.twiist.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: twiist
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "charts.labels.standard" . }}
+data:
+  ClientId: {{ .Values.configmap.twiist.data_.redirectURL | default "" }}
+{{ if .Values.configmap.twiist.data_.redirectURL }}
+  RedirectURL: {{ .Values.configmap.twiist.data_.redirectURL }}
+{{ else }}
+  RedirectURL: "{{include "charts.host.api" .}}/v1/oauth/twiist/redirect"
+{{ end }}
+  TokenURL: {{ .Values.configmap.twiist.data_.tokenURL | default "https://mytwiistportal.com/auth" }}
+  AuthorizeURL: {{ .Values.configmap.twiist.data_.authorizeURL | default "https://mytwiistportal.com/integration/getTidepoolId" }}
+{{ end }}
