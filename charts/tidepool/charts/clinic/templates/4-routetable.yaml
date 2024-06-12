@@ -17,8 +17,8 @@ spec:
             - POST
             - PUT
           prefix: /v1/clinics
-      options:
 {{ if not .Values.global.glooingress.jwt.disabled }}
+      options:
         jwt:
           disable: false
 {{- end }}
