@@ -378,23 +378,13 @@ spec:
   - matchers:
     - methods:
       - POST
-      exact: '/v1/summaries/cgm'
+      prefix: /v1/summaries/backfill
     routeAction:
       single:
         upstream:
           name: data
     options:
-      timeout: "300s"
-  - matchers:
-      - methods:
-          - POST
-        exact: '/v1/summaries/bgm'
-    routeAction:
-      single:
-        upstream:
-          name: data
-    options:
-      timeout: "300s"
+      timeout: "900s"
   - matchers:
     - methods:
       - GET
