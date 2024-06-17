@@ -34,8 +34,8 @@ spec:
       {{ include "charts.init.shoreline" .}}
       containers:
       - env:
-        {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
+        {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.clients" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "prescription") }}
