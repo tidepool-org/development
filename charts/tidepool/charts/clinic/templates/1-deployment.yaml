@@ -45,6 +45,12 @@ spec:
         {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.clients" .}}
         {{ include "charts.tracing.common" .}}
+        - name: TIDEPOOL_AUTH_SERVICE_TOKEN_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: clinic
+              key: KeycloakTokenEndpoint
+              optional: true
         - name: CLINIC_DEMO_PATIENT_USER_ID
           valueFrom:
             configMapKeyRef:

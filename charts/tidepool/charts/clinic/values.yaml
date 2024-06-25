@@ -10,6 +10,7 @@ configmap:
     XealthBearerToken: ''
     XealthTokenUrl: 'https://auth-staging.xealth.io/oauth2/token'
     XealthServerBaseUrl: 'https://provider-staging.xealth.io/v2'
+    KeycloakTokenEndpoint: 'http://keycloak-http.default.svc.cluster.local/realms/dev/protocol/openid-connect/token'
 deployment:
   # -- Docker image
   image: tidepool/clinic:master-latest
