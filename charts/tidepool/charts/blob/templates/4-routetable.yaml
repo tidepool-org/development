@@ -40,7 +40,7 @@ spec:
     - methods:
       - GET
       - POST
-      regex: /v1/users/[^/]+/device_logs
+      regex: /v1/users/[^/]+/device_logs.*
     routeAction:
       single:
         upstream:
