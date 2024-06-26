@@ -14,4 +14,5 @@ data:
   XealthServerBaseUrl: {{ .Values.configmap.data.XealthServerBaseUrl | quote }}
   KafkaTopicPrefix: {{ .Values.configmap.data.KafkaTopicPrefix | quote }}
   KafkaTopic: {{ .Values.configmap.data.KafkaTopic | quote }}
+  KeycloakTokenEndpoint: {{ .Values.configmap.data.KeycloakTokenEndpoint | quote }}
 {{- end }}
