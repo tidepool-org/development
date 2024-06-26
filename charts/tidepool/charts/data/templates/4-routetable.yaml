@@ -185,8 +185,8 @@ spec:
       single:
         upstream:
           name: data
-    options:
 {{- if .Values.shadowing.enabled }}
+    options:
       {{- include "charts.routing.opts.shadowing" . | nindent 6 }}
 {{- end }}
   - matchers:
