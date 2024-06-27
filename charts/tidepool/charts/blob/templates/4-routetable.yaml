@@ -45,4 +45,12 @@ spec:
       single:
         upstream:
           name: blob
+  - matchers:
+    - methods:
+      - GET
+      prefix: /v1/device_logs
+    routeAction:
+      single:
+        upstream:
+          name: blob
 {{- end }}
