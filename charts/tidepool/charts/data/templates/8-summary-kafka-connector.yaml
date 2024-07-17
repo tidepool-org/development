@@ -1,4 +1,4 @@
-{{ if .Values.global.kafka.connect.enabled }}
+{{ if ( .Values.global.kafka.connect.enabled | default false ) }}
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
