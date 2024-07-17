@@ -7,7 +7,7 @@ metadata:
   labels:
 {{ include "charts.labels.standard" . }}
 data:
-  Brokers: {{ .Values.configmap.Brokers }}
+  Brokers: {{ .Values.configmap.Brokers | default "kafka-kafka-bootstrap:9092" }}
   RequireSSL: "{{ .Values.configmap.RequireSSL }}"
 {{ if .Values.configmap.TopicPrefix }}
   TopicPrefix: {{ .Values.configmap.TopicPrefix }}
