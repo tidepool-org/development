@@ -1515,13 +1515,10 @@
     "strictTransportSecurity" : "max-age=31536000; includeSubDomains"
   },
   "smtpServer" : {
-    "password" : "123456",
-    "auth" : "true",
-    "host" : "email-smtp.us-west-2.amazonaws.com",
+    "host" : "smtp",
+    "port" : "25",
     "from" : "noreply@tidepool.org",
-    "fromDisplayName" : "Tidepool",
-    "ssl" : "true",
-    "user" : "123456"
+    "fromDisplayName" : "Tidepool"
   },
   "loginTheme" : "tidepool",
   "emailTheme" : "tidepool",
