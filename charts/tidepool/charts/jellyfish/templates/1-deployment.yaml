@@ -65,6 +65,12 @@ spec:
               name: jellyfish
               key: AuthUrl
               optional: true
+        - name: PLATFORM_UPLOAD_USERS
+          valueFrom:
+            configMapKeyRef:
+              name: jellyfish
+                key: PlatformUploadUsers
+                optional: true
         - name: PORT
           value: "{{.Values.global.ports.jellyfish}}"
         - name: TIDEPOOL_SERVER_SECRET
