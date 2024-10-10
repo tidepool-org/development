@@ -62,7 +62,7 @@ spec:
       regex: "/v1/users/[^/]+/data_sets"
     routeAction:
       single:
-        upstream: 
+        upstream:
           name: data
     options:
       timeout: "60s"
@@ -414,6 +414,17 @@ spec:
       - GET
       - POST
       regex: /v1/users/[^/]+/followers/[^/]+/alerts
+    routeAction:
+      single:
+        upstream:
+          name: data
+  - matchers:
+    - methods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      prefix: /v1/partners/
     routeAction:
       single:
         upstream:
