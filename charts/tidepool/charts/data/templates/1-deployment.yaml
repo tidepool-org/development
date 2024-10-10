@@ -60,13 +60,10 @@ spec:
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
-        {{ template "charts.platform.probes" "http-management"}}
         name: data
         ports:
         - containerPort: {{.Values.global.ports.data}}
           name: "http"
-        - containerPort: {{.Values.global.ports.data}}
-          name: "http-management"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       securityContext:
