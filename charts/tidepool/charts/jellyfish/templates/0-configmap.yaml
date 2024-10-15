@@ -11,5 +11,5 @@ data:
   MinimumUploaderVersion: {{ .Values.configmap.data.MinimumUploaderVersion | default "2.53.0" }}
   AuthRealm: {{ .Values.configmap.data.AuthRealm }}
   AuthUrl: {{ .Values.configmap.data.AuthUrl }}
-  PlatformUploadUsers: {{ .Values.configmap.data.PlatformUploadUsers }}
+  UploaderPlatformUserIds: {{ .Values.configmap.data.UploaderPlatformUserIds }}
 {{- end }}

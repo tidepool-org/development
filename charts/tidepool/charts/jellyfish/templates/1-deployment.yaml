@@ -65,11 +65,11 @@ spec:
               name: jellyfish
               key: AuthUrl
               optional: true
-        - name: PLATFORM_UPLOAD_USERS
+        - name: UPLOADER_PLATFORM_USER_IDS
           valueFrom:
             configMapKeyRef:
               name: jellyfish
-                key: PlatformUploadUsers
+                key: UploaderPlatformUserIds
                 optional: true
         - name: PORT
           value: "{{.Values.global.ports.jellyfish}}"
