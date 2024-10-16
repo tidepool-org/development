@@ -15,7 +15,7 @@ spec:
     change.stream.full.document: updateLookup
     collection: summary
     connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
-    copy.existing: true
+    copy.existing: false
     database: data
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: false
