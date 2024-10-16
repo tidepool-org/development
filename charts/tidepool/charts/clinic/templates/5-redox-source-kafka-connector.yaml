@@ -13,7 +13,7 @@ spec:
     change.stream.full.document: updateLookup
     collection: redox
     connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
-    copy.existing: true
+    copy.existing: false
     database: clinic
     topic.prefix: {{ .Release.Namespace }}
     output.json.formatter: com.mongodb.kafka.connect.source.json.formatter.ExtendedJson

@@ -13,7 +13,7 @@ spec:
     change.stream.full.document: updateLookup
     collection: clinics
     connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
-    copy.existing: true
+    copy.existing: false
     database: clinic
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: false
