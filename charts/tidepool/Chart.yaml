@@ -10,6 +10,6 @@ icon: https://www.tidepool.org/static/media/tidepool-t-logo.41feef82.png
 home: https://github.com/tidepool-org/development/charts
 dependencies:
   - name: keycloak
-    version: 0.4.2
+    version: 0.4.3
     repository: "file://../keycloak"
     condition: keycloak.enabled
