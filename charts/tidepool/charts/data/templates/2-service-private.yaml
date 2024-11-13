@@ -13,6 +13,6 @@ spec:
     port: {{.Values.global.ports.data_private}}
     targetPort: "http"
   selector:
-    app: data_private
+    app: data-private
     app.kubernetes.io/name: {{ include "charts.name" . }}-private
     app.kubernetes.io/instance: {{ .Release.Name }}
