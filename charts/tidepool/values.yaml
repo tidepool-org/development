@@ -85,6 +85,8 @@ global:
     blob: 9225
     # -- data service internal port
     data: 9220
+    # -- data private service internal port
+    data_private: 9221
     # -- image service internal port
     image: 9226
     # -- mailer service internal port

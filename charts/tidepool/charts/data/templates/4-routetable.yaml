@@ -428,5 +428,5 @@ spec:
     routeAction:
       single:
         upstream:
-          name: data
+          name: data-private
 {{- end }}
