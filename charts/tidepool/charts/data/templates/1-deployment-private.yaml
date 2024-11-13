@@ -16,7 +16,7 @@ spec:
   selector:
     matchLabels:
       app: data-private
-      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/name: {{ include "charts.name" . }}-private
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: {{ .Values.deployment.replicas }}
   strategy: {}
@@ -24,7 +24,7 @@ spec:
     metadata:
       labels:
         app: data-private
-        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/name: {{ include "charts.name" . }}-private
         app.kubernetes.io/instance: {{ .Release.Name }}
 {{ if .Values.podAnnotations }}
       annotations:
