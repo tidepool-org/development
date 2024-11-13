@@ -15,6 +15,10 @@ spec:
     connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
     copy.existing: false
     database: data
+    # TODO: does the dead letter topic need to be set here?
+    errors.tolerance: all
+    errors.log.enable: true
+    errors.log.include.messages: true
     key.converter: org.apache.kafka.connect.storage.StringConverter
     key.converter.schemas.enable: false
     pipeline: >-
