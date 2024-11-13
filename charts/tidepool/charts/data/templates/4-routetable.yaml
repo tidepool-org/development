@@ -431,4 +431,5 @@ spec:
           ref:
             name: data-private
             namespace: {{ .Release.Namespace }}
+          port: {{ .Values.global.ports.data_private }}
 {{- end }}
