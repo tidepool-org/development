@@ -427,6 +427,8 @@ spec:
       prefix: /v1/partners/
     routeAction:
       single:
-        upstream:
-          name: data-private
+        kube:
+          ref:
+            name: data-private
+            namespace: {{ .Release.Namespace }}
 {{- end }}
