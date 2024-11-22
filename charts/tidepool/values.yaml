@@ -81,6 +81,8 @@ global:
     messageapi: 9119
     # -- auth service internal port
     auth: 9222
+    # -- auth private service internal port
+    auth_private: 9223
     # -- blob service internal port
     blob: 9225
     # -- data service internal port

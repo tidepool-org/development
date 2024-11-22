@@ -1,0 +1,231 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: auth-private
+{{ include "charts.labels.standard" .}}
+  name: auth-private
+  namespace: {{.Release.Namespace}}
+  annotations:
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},dexcom,auth"
+    configmap.reloader.stakater.com/reload: "dexcom"
+{{ if .Values.deployment.annotations }}
+    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: auth
+      app.kubernetes.io/name: {{ include "charts.name" . }}-private
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: {{ .Values.deployment.replicas | default 1 }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: auth
+        app.kubernetes.io/name: {{ include "charts.name" . }}-private
+        app.kubernetes.io/instance: {{ .Release.Name }}
+{{ if .Values.podAnnotations }}
+      annotations:
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
+    spec:
+      initContainers:
+      {{ include "charts.init.shoreline" .}}
+      {{ if .Values.initContainers }}
+{{- with .Values.initContainers }}
+{{toYaml . | indent 6}}{{- end }}
+      {{- end }}
+      containers:
+      - env:
+        {{ include "charts.platform.env.mongo" .}}
+        {{ include "charts.platform.env.misc" .}}
+        {{ include "charts.platform.env.clients" .}}
+        {{ include "charts.kafka.common" .}}
+        {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "auth") }}
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: AuthorizeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_SCOPES
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: Scopes
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: dexcom
+              key: ClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: dexcom
+              key: ClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: dexcom
+              key: StateSalt
+              optional: true
+        - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
+          value: {{ .Values.global.gateway.default.domain }}
+        - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
+          value: :{{.Values.global.ports.auth_private}}
+        - name: TIDEPOOL_AUTH_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth
+              key: ServiceAuth
+        - name: TIDEPOOL_APPLE_DEVICE_CHECKER_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: auth
+              key: AppleDeviceCheckKey
+              optional: true
+        - name: TIDEPOOL_APPLE_DEVICE_CHECKER_KEY_ID
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppleDeviceCheckKeyId
+              optional: true
+        - name: TIDEPOOL_APPLE_DEVICE_CHECKER_KEY_ISSUER
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppleDeviceCheckKeyIssuer
+              optional: true
+        - name: TIDEPOOL_APPLE_DEVICE_CHECKER_USE_DEVELOPMENT
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppleDeviceCheckUseDevelopment
+              optional: true
+        - name: TIDEPOOL_APPVALIDATION_USE_DEVELOPMENT
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppValidationUseDevelopment
+              optional: true
+        - name: TIDEPOOL_APPVALIDATION_APPLE_APP_IDS
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppValidationAppleAppIds
+              optional: true
+        - name: TIDEPOOL_APPVALIDATION_CHALLENGE_SIZE
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: AppValidationChallengeSize
+              optional: true
+        - name: COASTAL_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: coastal
+              key: apiKey
+              optional: true
+        - name: COASTAL_BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: coastal
+              key: baseUrl
+              optional: true
+        - name: COASTAL_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: coastal
+              key: clientId
+              optional: true
+        - name: COASTAL_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: coastal
+              key: clientSecret
+              optional: true
+        - name: COASTAL_RC_TYPE_ID
+          valueFrom:
+            secretKeyRef:
+              name: coastal
+              key: rcTypeId
+              optional: true
+        - name: COASTAL_PRIVATE_KEY_DATA
+          valueFrom:
+            secretKeyRef:
+              name: coastal
+              key: privateKeyData
+              optional: true
+        - name: PALMTREE_BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: palmtree
+              key: baseUrl
+              optional: true
+        - name: PALMTREE_CAL_ID
+          valueFrom:
+            secretKeyRef:
+              name: palmtree
+              key: calId
+              optional: true
+        - name: PALMTREE_PROFILE_ID
+          valueFrom:
+            secretKeyRef:
+              name: palmtree
+              key: profileId
+              optional: true
+        - name: PALMTREE_TLS_CERT_DATA
+          valueFrom:
+            secretKeyRef:
+              name: palmtree
+              key: tlsCertData
+              optional: true
+        - name: PALMTREE_TLS_KEY_DATA
+          valueFrom:
+            secretKeyRef:
+              name: palmtree
+              key: tlsKeyData
+              optional: true
+        image: "{{ .Values.deployment.image }}"
+        securityContext:
+          {{- .Values.podSecurityContext | toYaml | nindent 10 }}
+        {{ template "charts.platform.probes" .Values.global.ports.auth_private}}
+        name: auth
+        ports:
+        - containerPort: {{.Values.global.ports.auth_private}}
+          name: "http"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      restartPolicy: Always
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
