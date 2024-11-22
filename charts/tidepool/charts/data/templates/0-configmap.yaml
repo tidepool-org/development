@@ -9,8 +9,8 @@ metadata:
 {{ include "charts.labels.standard" . }}
 {{ with .Values.configmap.data_ }}
 data:
-  pusherAPNSKeyID: {{ .pusherAPNSKeyID | default "" }}
-  pusherAPNSTeamID: {{ .pusherAPNSTeamID | default "" }}
-  pusherAPNSBundleID: {{ .pusherAPNSBundleID | default "" }}
+  PusherAPNSKeyID: {{ .PusherAPNSKeyID | default "" }}
+  PusherAPNSTeamID: {{ .PusherAPNSTeamID | default "" }}
+  PusherAPNSBundleID: {{ .PusherAPNSBundleID | default "" }}
 {{- end }}
 {{- end }}

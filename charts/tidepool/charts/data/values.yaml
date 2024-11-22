@@ -13,9 +13,9 @@ deployment:
 configmap:
   enabled: true
   data_:
-    pusherAPNSKeyID: "QA3495JW4S"
-    pusherAPNSTeamID: "75U4X84TEG"
-    pusherAPNSBundleID: "org.tidepool.carepartner"
+    PusherAPNSKeyID: "QA3495JW4S"
+    PusherAPNSTeamID: "75U4X84TEG"
+    PusherAPNSBundleID: "org.tidepool.carepartner"
 
 # -- memory and cpu resources for pods
 resources: {}

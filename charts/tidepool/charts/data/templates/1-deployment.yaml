@@ -59,22 +59,22 @@ spec:
           valueFrom:
             secretKeyRef:
               name: data
-              key: pusherAPNSSigningKey
+              key: PusherAPNSSigningKey
         - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_KEY_ID
           valueFrom:
             configMapKeyRef:
               name: data
-              key: pusherAPNSKeyID
+              key: PusherAPNSKeyID
         - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_TEAM_ID
           valueFrom:
             configMapKeyRef:
               name: data
-              key: pusherAPNSTeamID
+              key: PusherAPNSTeamID
         - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_BUNDLE_ID
           valueFrom:
             configMapKeyRef:
               name: data
-              key: pusherAPNSBundleID
+              key: PusherAPNSBundleID
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
