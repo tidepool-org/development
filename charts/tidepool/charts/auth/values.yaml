@@ -15,6 +15,8 @@ configmap:
 deployment:
   # -- auth Docker image
   image: tidepool/platform-auth:master-latest
+  # -- auth Docker image
+  image_private: tidepool/platform-private-auth:master-latest
   # -- number of replicas to deploy
   replicas: 1
 initContainers: []

@@ -6,6 +6,8 @@ secret:
 deployment:
   # --  Docker image
   image: tidepool/platform-data:master-latest
+  # --  Docker image
+  image_private: tidepool/platform-private-data:master-latest
   replicas: 1
 
 # -- memory and cpu resources for pods
