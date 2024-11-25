@@ -55,7 +55,7 @@ spec:
           value: data
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
-        image: "{{ .Values.deployment.image_private }}"
+        image: "{{ .Values.deployment.imagePrivate }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.data_private }}

@@ -205,7 +205,7 @@ spec:
               name: palmtree
               key: tlsKeyData
               optional: true
-        image: "{{ .Values.deployment.image_private }}"
+        image: "{{ .Values.deployment.imagePrivate }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.auth_private}}

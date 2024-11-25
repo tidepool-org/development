@@ -16,7 +16,7 @@ deployment:
   # -- auth Docker image
   image: tidepool/platform-auth:master-latest
   # -- auth Docker image
-  image_private: tidepool/platform-private-auth:master-latest
+  imagePrivate: tidepool/platform-private-auth:master-latest
   # -- The name of the docker secret used for pulling the private images
   imagePullSecretName: null
   # -- number of replicas to deploy
