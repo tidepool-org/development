@@ -8,6 +8,8 @@ deployment:
   image: tidepool/platform-data:master-latest
   # --  Docker image
   image_private: tidepool/platform-private-data:master-latest
+  # -- The name of the docker secret used for pulling the private images
+  imagePullSecretName: null
   replicas: 1
 
 # -- memory and cpu resources for pods

@@ -1,3 +1,4 @@
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -214,6 +215,10 @@ spec:
           name: "http"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
+      {{ if .Values.deployment.imagePullSecretName }}
+      imagePullSecrets:
+        - name: {{- .Values.deployment.imagePullSecretName }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}
       restartPolicy: Always
