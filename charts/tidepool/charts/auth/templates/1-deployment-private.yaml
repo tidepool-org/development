@@ -217,7 +217,7 @@ spec:
           {{- toYaml .Values.resources | nindent 10 }}
       {{ if .Values.deployment.imagePullSecretName }}
       imagePullSecrets:
-        - name: {{- .Values.deployment.imagePullSecretName }}
+        name: {{- .Values.deployment.imagePullSecretName }}
       {{- end }}
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}
