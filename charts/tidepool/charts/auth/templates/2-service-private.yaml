@@ -13,6 +13,6 @@ spec:
     port: {{.Values.global.ports.auth_private}}
     targetPort: "http"
   selector:
-    app: auth-private
+    app: auth
     app.kubernetes.io/name: {{ include "charts.name" . }}-private
     app.kubernetes.io/instance: {{ .Release.Name }}
