@@ -3,4 +3,4 @@ dependencies:
   repository: file://../keycloak
   version: 0.4.3
 digest: sha256:9e8e11d23104da89789675b1676fe7299309fb7eeae7a22c0a2ba6ab169c3fa2
-generated: "2024-11-22T13:46:17.203655+02:00"
+generated: "2024-11-13T11:22:02.195889+02:00"

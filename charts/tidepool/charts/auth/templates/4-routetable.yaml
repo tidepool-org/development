@@ -83,6 +83,35 @@ spec:
   - matchers:
     - methods:
       - GET
+      - DELETE
+      exact: /v1/oauth/abbott/authorize
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: auth-private
+            namespace: {{ .Release.Namespace }}
+          port: {{ .Values.global.ports.auth_private }}
+    options:
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
+      exact: /v1/oauth/abbott/redirect
+    routeAction:
+      single:
+        kube:
+          ref:
+            name: auth-private
+            namespace: {{ .Release.Namespace }}
+          port: {{ .Values.global.ports.auth_private }}
+    options:
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
+      - GET
       regex: /v1/oauth/[^/]+/redirect
     routeAction:
       single:
