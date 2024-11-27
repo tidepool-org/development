@@ -1,5 +1,9 @@
 # --  whether to enable service
 enabled: true
+secret:
+  enabled: false
+  data_:
+    UserIdSalt:
 configmap:
   # -- whether to generate configmap
   enabled: false
