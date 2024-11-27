@@ -79,6 +79,11 @@ spec:
           value: "seagull:{{.Values.global.ports.seagull}}"
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
           value: "gatekeeper:{{.Values.global.ports.gatekeeper}}"
+        - name: USER_ID_SALT
+          valueFrom:
+            secretKeyRef:
+              name: jellyfish
+              key: UserIdSalt
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
