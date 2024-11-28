@@ -1,0 +1,19 @@
+{{ if .Values.configmap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: abbott
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "charts.labels.standard" . }}
+data:
+{{ if .Values.configmap.redirectURL }}
+  RedirectURL: {{ .Values.configmap.redirectURL }}
+{{ else }}
+  RedirectURL: "{{include "charts.host.api" .}}/v1/oauth/abbott/redirect"
+{{ end }}
+  TokenURL: {{ .Values.configmap.tokenURL }}
+  AuthorizeURL: {{ .Values.configmap.authorizeURL }}
+  ClientURL: {{ .Values.configmap.clientURL }}
+  Scopes: "openid,offline,read.glucose,read.device"
+{{ end }}

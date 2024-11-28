@@ -1,0 +1,16 @@
+secret:
+  # -- whether to create abbott secret
+  enabled: false
+  data_:
+    # -- plaintext Abbott Oauth2 client id
+    ClientId: ""
+    # -- plaintext Abbott Oauth2 client secret
+    ClientSecret: ""
+    # -- plaintext Abbott Oauth2 state salt
+    StateSalt: ""
+configmap:
+  # -- whether to generate a configmap
+  enabled: true
+  redirectURL: ""
+  clientURL: ""
+
