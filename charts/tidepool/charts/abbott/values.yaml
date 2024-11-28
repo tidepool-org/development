@@ -7,7 +7,7 @@ secret:
     # -- plaintext Abbott Oauth2 client secret
     ClientSecret: ""
     # -- plaintext Abbott Oauth2 state salt
-    StateSalt: ""                            # the Abbott client API url
+    StateSalt: ""
 configmap:
   # -- whether to generate a configmap
   enabled: true
