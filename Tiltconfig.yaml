@@ -118,6 +118,22 @@ dexcom:
     clientURL: "https://sandbox-api.dexcom.com"
 ### Dexcom API Config End ###
 
+### Abbott API Config Start ###
+abbott:
+  secret:
+    enabled: false
+    data_:
+      ClientId: ""
+      ClientSecret: ""
+      StateSalt: ""
+  configmap:
+    enabled: true
+    redirectURL: ""
+    tokenURL: ""
+    authorizeURL: ""
+    clientURL: ""
+### Abbott API Config End ###
+
 ### Kafka config start ###
 kafka:
   configmap:
