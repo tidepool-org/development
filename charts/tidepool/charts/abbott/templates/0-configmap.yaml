@@ -12,8 +12,8 @@ data:
 {{ else }}
   RedirectURL: "{{include "charts.host.api" .}}/v1/oauth/abbott/redirect"
 {{ end }}
-  TokenURL: {{ .Values.configmap.tokenURL | default "https://oauth.libreview.io/oauth2/token" }}
-  AuthorizeURL: {{ .Values.configmap.authorizeURL | default "https://oauth.libreview.io/oauth2/auth" }}
-  ClientURL: {{ .Values.configmap.clientURL | default "https://api.libreview.io" }}
+  TokenURL: {{ .Values.configmap.tokenURL }}
+  AuthorizeURL: {{ .Values.configmap.authorizeURL }}
+  ClientURL: {{ .Values.configmap.clientURL }}
   Scopes: "openid,offline,read.glucose,read.device"
 {{ end }}
