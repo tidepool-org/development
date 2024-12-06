@@ -129,9 +129,9 @@ abbott:
   configmap:
     enabled: true
     redirectURL: ""
-    tokenURL: "https://oauth.partner.int.adc-lv.io/oauth2/token"
-    authorizeURL: "https://oauth.partner.int.adc-lv.io/oauth2/auth"
-    clientURL: "https://api.partner.int.adc-lv.io"
+    tokenURL: ""
+    authorizeURL: ""
+    clientURL: ""
 ### Abbott API Config End ###
 
 ### Kafka config start ###
