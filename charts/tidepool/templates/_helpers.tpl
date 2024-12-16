@@ -153,13 +153,13 @@ Create environment variables used by all platform services.
             secretKeyRef:
               name: {{ .Values.mongo.secretName }}
               key: Addresses
-        - name: TIDEPOOL_STORE_OPT_PARAMS
+        - name: TIDEPOOL_STORE_OPT_PARAMS_BASE
           valueFrom:
             secretKeyRef:
               name: {{ .Values.mongo.secretName }}
               key: OptParams
-        - name: TIDEPOOL_STORE_APP_NAME
-          value: {{ .Chart.Name | quote }}
+        - name: TIDEPOOL_STORE_OPT_PARAMS
+          value: "$(TIDEPOOL_STORE_OPT_PARAMS_BASE)&appName={{ .Chart.Name | urlquery }}"
         - name: TIDEPOOL_STORE_TLS
           valueFrom:
             secretKeyRef:
