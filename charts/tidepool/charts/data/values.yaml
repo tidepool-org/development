@@ -4,6 +4,8 @@ secret:
     # -- service authorization secret
     ServiceAuth: ""
 deployment:
+  # -- secrets used to pull images
+  imagePullSecrets:
   # --  Docker image
   image: tidepool/platform-data:master-latest
   replicas: 1

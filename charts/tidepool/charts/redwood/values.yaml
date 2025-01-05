@@ -1,0 +1,13 @@
+configmap:
+  enabled: false
+  redirectURL: ""
+  tokenURL: ""
+  authorizeURL: ""
+  clientURL: ""
+  scopes: ""
+secret:
+  enabled: false
+  data_:
+    ClientId: ""
+    ClientSecret: ""
+    StateSalt: ""

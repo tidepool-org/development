@@ -31,6 +31,11 @@ spec:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
+{{- $imagePullSecrets := .Values.deployment.imagePullSecrets | default .Values.global.deployment.imagePullSecrets -}}
+{{- if $imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml $imagePullSecrets | nindent 6 }}
+{{- end }}
       initContainers:
       {{ include "charts.init.shoreline" .}}
       {{ if .Values.initContainers }}
@@ -44,6 +49,54 @@ spec:
         {{ include "charts.platform.env.clients" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "data") }}
+        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_AUTHORIZE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: redwood
+              key: AuthorizeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: redwood
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_SCOPES
+          valueFrom:
+            configMapKeyRef:
+              name: redwood
+              key: Scopes
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: redwood
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: redwood
+              key: ClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: redwood
+              key: ClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: redwood
+              key: StateSalt
+              optional: true
+        - name: TIDEPOOL_REDWOOD_CLIENT_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: redwood
+              key: ClientURL
+              optional: true
         - name: TIDEPOOL_DATA_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
