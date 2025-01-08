@@ -84,6 +84,7 @@ spec:
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.blob}}
+        {{ template "charts.service.lifecycle"}}
         name: blob
         ports:
         - containerPort: {{.Values.global.ports.blob}}
@@ -103,4 +104,4 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
- 
+

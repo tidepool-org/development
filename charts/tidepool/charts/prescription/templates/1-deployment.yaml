@@ -50,6 +50,7 @@ spec:
           value: :{{.Values.global.ports.prescription}}
         image: "{{ .Values.deployment.image }}"
         {{ template "charts.platform.probes" .Values.global.ports.prescription}}
+        {{ template "charts.service.lifecycle"}}
         name: prescription
         ports:
         - containerPort: {{.Values.global.ports.prescription}}
