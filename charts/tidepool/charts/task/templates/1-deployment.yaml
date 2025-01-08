@@ -94,6 +94,7 @@ spec:
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.task}}
+        {{ template "charts.service.lifecycle"}}
         name: task
         ports:
         - containerPort: {{.Values.global.ports.task}}

@@ -207,6 +207,16 @@ Create liveness and readiness probes for platform services.
         command: ['sh', '-c', 'until nc -zvv shoreline {{.Values.global.ports.shoreline}}; do echo waiting for shoreline; sleep 2; done;']
 {{- end -}}
 
+{{/*
+Lifecycle hooks for services
+*/}}
+{{- define "charts.service.lifecycle" -}}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh", "-c", "sleep 15"]
+{{- end -}}
+
 {{- define "charts.labels.standard" }}
     helm.sh/chart: {{ include "charts.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
