@@ -34,6 +34,9 @@ kafka:
   configmapName: kafka
   # -- name of the configmap containing the kafka broker and credentials to use
   secretName: kafka
+  connectors:
+    carePartnerAlerts:
+      enabled: false
 # -- node selector configuration
 nodeSelector: {}
 # -- tolerations
