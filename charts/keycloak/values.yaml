@@ -11,15 +11,15 @@ keycloakx:
     - "name": "KEYCLOAK_ADMIN_PASSWORD"
       "value": "admin"
     - "name": "KC_FEATURES"
-      "value": "admin-fine-grained-authz,token-exchange,admin"
-    - "name": "KC_HOSTNAME_URL"
+      "value": "admin-fine-grained-authz,token-exchange"
+    - "name": "KC_HOSTNAME"
       "value": "http://localhost:32000"
-    - "name": "KC_HOSTNAME_ADMIN_URL"
+    - "name": "KC_HOSTNAME_ADMIN"
       "value": "http://localhost:32000"
     - "name": "KC_HOSTNAME_STRICT"
       "value": "false"
-    - "name": "KC_PROXY"
-      "value": "edge"
+    - "name": "KC_PROXY_HEADERS"
+      "value": "xforwarded"
     - "name": "KC_SPI_STICKY_SESSION_ENCODER_INFINISPAN_SHOULD_ATTACH_ROUTE"
       "value": "false"
     - "name": "KC_HTTP_ENABLED"
@@ -32,13 +32,15 @@ keycloakx:
       "value": "json"
     - "name": "KC_LOG_LEVEL"
       "value": "INFO,org.keycloak.services.IdentityBrokerService:DEBUG,org.keycloak.saml:DEBUG"
+    - "name": "KC_HOSTNAME_BACKCHANNEL_DYNAMIC"
+      "value": "true"
     - "name": "DISABLE_EXTERNAL_ACCESS"
       "value": "false"
     - "name": "TIDEPOOL_ASSETS_URL"
       "value": "https://s3-us-west-2.amazonaws.com/tidepool-prd-asset"
   extraInitContainers: |-
     - "name": "keycloak-extensions"
-      "image": "docker.io/tidepool/keycloak-extensions:21.1.1-2024-04-23T23-54-52"
+      "image": "docker.io/tidepool/keycloak-extensions:25.0.6-2024-11-23T12-18-37"
       "imagePullPolicy": "IfNotPresent"
       "volumeMounts":
       - "name": "providers"
@@ -72,7 +74,7 @@ keycloakx:
     relativePath: /
   image:
     repository: quay.io/keycloak/keycloak
-    tag: 21.1.1
+    tag: 25.0.6
   livenessProbe: |-
     "httpGet":
       "path": "/health/live"

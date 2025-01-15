@@ -1,7 +1,7 @@
 apiVersion: v2
 description: A Helm chart for Tidepool
 name: tidepool
-version: 0.17.2
+version: 0.17.3
 maintainers:
   - name: Todd Kazakov
     email: todd@tidepool.org
@@ -10,6 +10,6 @@ icon: https://www.tidepool.org/static/media/tidepool-t-logo.41feef82.png
 home: https://github.com/tidepool-org/development/charts
 dependencies:
   - name: keycloak
-    version: 0.4.3
+    version: 0.4.4
     repository: "file://../keycloak"
     condition: keycloak.enabled
