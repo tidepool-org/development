@@ -4,6 +4,8 @@
 
 ### Global Config Start ###
 global:
+  deployment:
+    imagePullSecrets:
   glooingress:
     enabled: true
     jwt:

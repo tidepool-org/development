@@ -8,8 +8,8 @@ metadata:
   name: auth
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},dexcom,auth"
-    configmap.reloader.stakater.com/reload: "dexcom"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},dexcom,redwood,auth"
+    configmap.reloader.stakater.com/reload: "dexcom,redwood"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -32,7 +32,7 @@ spec:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
-{{- $imagePullSecrets := .Values.deployment.imagePullSecrets | default .Values.global.deployment.imagePullSecrets -}}
+{{- $imagePullSecrets := (.Values.deployment).imagePullSecrets | default (.Values.global.deployment).imagePullSecrets -}}
 {{- if $imagePullSecrets }}
       imagePullSecrets:
       {{- toYaml $imagePullSecrets | nindent 6 }}

@@ -8,7 +8,8 @@ metadata:
   name: data
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},data"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},redwood,data"
+    configmap.reloader.stakater.com/reload: "redwood"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -31,7 +32,7 @@ spec:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
-{{- $imagePullSecrets := .Values.deployment.imagePullSecrets | default .Values.global.deployment.imagePullSecrets -}}
+{{- $imagePullSecrets := (.Values.deployment).imagePullSecrets | default (.Values.global.deployment).imagePullSecrets -}}
 {{- if $imagePullSecrets }}
       imagePullSecrets:
       {{- toYaml $imagePullSecrets | nindent 6 }}
