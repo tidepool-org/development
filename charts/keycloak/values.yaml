@@ -75,9 +75,3 @@ keycloakx:
   image:
     repository: quay.io/keycloak/keycloak
     tag: 25.0.6
-  livenessProbe: |-
-    "httpGet":
-      "path": "/health/live"
-      "port": "http"
-    "initialDelaySeconds": 600
-    "timeoutSeconds": 20

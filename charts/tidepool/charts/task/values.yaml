@@ -5,6 +5,8 @@ secret:
     # -- task authorization, if empty, random value is generated
     ServiceAuth: ""
 deployment:
+  # -- secrets used to pull images
+  imagePullSecrets:
   # deployment.image -- Docker image
   image: tidepool/platform-task:master-latest
   # -- number of replicas
