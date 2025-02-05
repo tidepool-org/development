@@ -61,9 +61,9 @@ prescription:
     - name: registry
 ```
 
-# OAuth Provider Configuration (Dexcom/Redwood)
+# OAuth Provider Configuration (Abbott/Dexcom)
 
-To allow Tilt to use the Dexcom and Redwood OAuth providers it is necessary to enable the related Secret and
+To allow Tilt to use the Abbott and Dexcom OAuth providers it is necessary to enable the related Secret and
 ConfigMap. To do so, add the following to your `local/Tiltconfig.yaml`, once for each provider you wish to enable:
 
 ```
@@ -83,7 +83,7 @@ ConfigMap. To do so, add the following to your `local/Tiltconfig.yaml`, once for
       StateSalt: "<provider-state-salt>"
 ```
 
-The top-level `<provider>` should be replaced with `dexcom` or `redwood`, as appropriate. The other property values should
+The top-level `<provider>` should be replaced with `dexcom` or `abbott`, as appropriate. The other property values should
 be changed to use the provider-specific settings. Multiple providers may be specified, if so desired.
 
 ## Provider-Specific Settings
@@ -100,8 +100,8 @@ Use either:
 
 **Do NOT use any other configuration file as that may cause conflict with the environment.**
 
-## Redwood
+## Abbott
 
-Redwood settings can be found attached to the `Redwood Developer` item in the `Engineering` vault in 1Password.
+Abbott settings can be found attached to the `Abbott Developer` item in the `Engineering` vault in 1Password.
 
-Use the `local.yaml` for connecting to the Redwood Sandbox environment.
+Use the `local.yaml` for connecting to the Abbott Sandbox environment.

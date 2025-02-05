@@ -109,7 +109,7 @@ Create environment variables used by all platform services.
         - name: TIDEPOOL_ENV
           value: local
         - name: TIDEPOOL_LOGGER_LEVEL
-          value: {{ ((.Values.deployment).env).logLevel | default .Values.global.logLevel }}
+          value: {{ .Values.global.logLevel }}
         - name: TIDEPOOL_LOGGER_PACKAGE
           value: {{ .Values.global.loggerPackage | default "json" }}
         - name: TIDEPOOL_SERVER_TLS

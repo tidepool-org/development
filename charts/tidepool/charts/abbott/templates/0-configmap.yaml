@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: redwood
+  name: abbott
   namespace: {{ .Release.Namespace }}
   labels:
 {{ include "charts.labels.standard" . }}
@@ -10,7 +10,7 @@ data:
 {{ if .Values.configmap.redirectURL }}
   RedirectURL: {{ .Values.configmap.redirectURL }}
 {{ else }}
-  RedirectURL: "{{include "charts.host.api" .}}/v1/oauth/redwood/redirect"
+  RedirectURL: "{{include "charts.host.api" .}}/v1/oauth/abbott/redirect"
 {{ end }}
   TokenURL: {{ .Values.configmap.tokenURL | default "" }}
   AuthorizeURL: {{ .Values.configmap.authorizeURL | default "" }}

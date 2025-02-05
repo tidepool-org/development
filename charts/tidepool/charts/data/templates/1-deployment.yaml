@@ -8,8 +8,8 @@ metadata:
   name: data
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},redwood,data"
-    configmap.reloader.stakater.com/reload: "redwood"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,data"
+    configmap.reloader.stakater.com/reload: "abbott"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -32,7 +32,7 @@ spec:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
-{{- $imagePullSecrets := (.Values.deployment).imagePullSecrets | default (.Values.global.deployment).imagePullSecrets -}}
+{{- $imagePullSecrets := (.Values.deployment).imagePullSecrets | default ((.Values.global).deployment).imagePullSecrets -}}
 {{- if $imagePullSecrets }}
       imagePullSecrets:
       {{- toYaml $imagePullSecrets | nindent 6 }}
@@ -50,53 +50,59 @@ spec:
         {{ include "charts.platform.env.clients" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "data") }}
-        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_AUTHORIZE_URL
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:
-              name: redwood
+              name: abbott
               key: AuthorizeURL
               optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_REDIRECT_URL
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_REDIRECT_URL
           valueFrom:
             configMapKeyRef:
-              name: redwood
+              name: abbott
               key: RedirectURL
               optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_SCOPES
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_SCOPES
           valueFrom:
             configMapKeyRef:
-              name: redwood
+              name: abbott
               key: Scopes
               optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_TOKEN_URL
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_TOKEN_URL
           valueFrom:
             configMapKeyRef:
-              name: redwood
+              name: abbott
               key: TokenURL
               optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_CLIENT_ID
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: redwood
+              name: abbott
               key: ClientId
               optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_CLIENT_SECRET
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: redwood
+              name: abbott
               key: ClientSecret
               optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_REDWOOD_STATE_SALT
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_STATE_SALT
           valueFrom:
             secretKeyRef:
-              name: redwood
+              name: abbott
               key: StateSalt
               optional: true
-        - name: TIDEPOOL_REDWOOD_CLIENT_ADDRESS
+        - name: TIDEPOOL_ABBOTT_CLIENT_ADDRESS
           valueFrom:
             configMapKeyRef:
-              name: redwood
+              name: abbott
               key: ClientURL
+              optional: true
+        - name: TIDEPOOL_ABBOTT_CLIENT_PARTNER_ID
+          valueFrom:
+            secretKeyRef:
+              name: abbott
+              key: PartnerId
               optional: true
         - name: TIDEPOOL_DATA_SERVICE_SECRET
           valueFrom:
@@ -109,6 +115,10 @@ spec:
           value: data
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
+{{- range $key, $val := ((.Values.deployment).extraEnv | default ((.Values.global).deployment).extraEnv | default (dict)) }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+{{- end }}
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
