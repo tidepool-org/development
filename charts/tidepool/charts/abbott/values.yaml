@@ -1,5 +1,5 @@
 configmap:
-  enabled: false
+  enabled: true
   redirectURL: ""
   tokenURL: ""
   authorizeURL: ""
