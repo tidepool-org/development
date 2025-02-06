@@ -4,6 +4,8 @@
 
 ### Global Config Start ###
 global:
+  deployment:
+    imagePullSecrets:
   glooingress:
     enabled: true
     jwt:
@@ -222,6 +224,7 @@ auth:
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.auth'
   rebuildCommand: 'SERVICE=auth make service-build'
+  buildTarget: production
 
 blip:
   deployment:
@@ -233,7 +236,7 @@ blip:
   rollbarPostServerToken: '' # Rollbar post_server_item access token for posting source maps on production builds
   reactAppGAID: '' # Google Analytics 4 ID
   launchDarklyClientToken: '' # LaunchDarkly client token
-  webpackDevTool: cheap-module-eval-source-map
+  webpackDevTool: eval-cheap-module-source-map
   webpackDevToolViz: cheap-source-map # Suggest changing `cheap-source-map` to the slower, but far more helpful `source-map` if debugging errors in viz package files
   webpackPublicPath: 'http://localhost:31500/'
   linkedPackages:
@@ -272,6 +275,7 @@ blob:
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.blob'
   rebuildCommand: 'SERVICE=blob make service-build'
+  buildTarget: production
 
 clinic:
   deployment:
@@ -279,7 +283,6 @@ clinic:
     # image: tidepool-k8s-clinic # Uncomment to build and run local image or a specific remote image
   # hostPath: ~/go/src/github.com/tidepool-org/clinic      # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/clinic'
-  dockerFile: 'Dockerfile'
   buildTarget: development
 
 clinic-worker:
@@ -288,7 +291,6 @@ clinic-worker:
     # image: tidepool-k8s-clinic-worker # Uncomment to build and run local image or a specific remote image
   # hostPath: ~/go/src/github.com/tidepool-org/clinic-worker      # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/clinic-worker'
-  dockerFile: 'Dockerfile'
   rebuildCommand: 'make build'
   configmap:
     enabled: true
@@ -302,6 +304,7 @@ data:
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.data'
   rebuildCommand: 'SERVICE=data make service-build'
+  buildTarget: production
 
 devices:
   deployment:
@@ -335,6 +338,9 @@ hydrophone:
     env:
       clinicServiceEnabled: true
       useMockNotifier: true
+      store:
+        s3:
+          bucket: tidepool-prd-asset
     # image: tidepool-k8s-hydrophone # Uncomment to build and run local image or a specific remote image
   # hostPath: ~/go/src/github.com/tidepool-org/hydrophone          # Uncomment to build and run local image
   containerPath: '/go/src/github.com/tidepool-org/hydrophone'
@@ -374,6 +380,7 @@ migrations:
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.migrations'
   rebuildCommand: 'SERVICE=migrations make service-build'
+  buildTarget: production
 
 prescription:
   deployment:
@@ -383,6 +390,7 @@ prescription:
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.prescription'
   rebuildCommand: 'SERVICE=prescription make service-build'
+  buildTarget: production
 
 seagull:
   deployment:
@@ -423,6 +431,7 @@ task:
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.task'
   rebuildCommand: 'SERVICE=task make service-build'
+  buildTarget: production
 
 tidewhisperer:
   deployment:
@@ -438,6 +447,7 @@ tools:
   containerPath: '/go/src/github.com/tidepool-org/platform'
   dockerFile: 'Dockerfile.tools'
   rebuildCommand: 'SERVICE=tools make service-build'
+  buildTarget: production
 
 uploader:
   deployment:
@@ -451,7 +461,7 @@ uploader:
   blipUrl: 'http://localhost:31500'
   realmHost: 'http://localhost:32000'
   rollbarPostServerToken: '' # Rollbar post_server_item access token for posting source maps on production builds
-  webpackDevTool: cheap-module-eval-source-map
+  webpackDevTool: eval-cheap-module-source-map
   webpackPublicPath: 'http://localhost:31500/uploader/'
   securityContext:
     allowPrivilegeEscalation: false
