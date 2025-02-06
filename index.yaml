@@ -25,6 +25,23 @@ entries:
     version: 0.7.0
   keycloak:
   - apiVersion: v2
+    created: "2025-02-06T20:22:43.305382022Z"
+    dependencies:
+    - name: keycloakx
+      repository: https://codecentric.github.io/helm-charts
+      version: 2.5.0
+    description: A Helm chart to use Keycloak with Tidepool
+    digest: a90e052d69dd7619651c6bdf92d1c510ca759a17fa1840e4a2b6f0df527f1ec2
+    home: https://github.com/tidepool-org/development/charts
+    icon: https://www.tidepool.org/static/media/tidepool-t-logo.41feef82.png
+    maintainers:
+    - email: todd@tidepool.org
+      name: Todd Kazakov
+    name: keycloak
+    urls:
+    - https://github.com/tidepool-org/development/releases/download/keycloak-0.4.6/keycloak-0.4.6.tgz
+    version: 0.4.6
+  - apiVersion: v2
     created: "2025-01-15T16:50:23.990309288Z"
     dependencies:
     - name: keycloakx
@@ -155,6 +172,25 @@ entries:
     - https://github.com/tidepool-org/development/releases/download/superset-0.1.0/superset-0.1.0.tgz
     version: 0.1.0
   tidepool:
+  - apiVersion: v2
+    created: "2025-02-06T20:22:43.413647322Z"
+    dependencies:
+    - condition: keycloak.enabled
+      name: keycloak
+      repository: file://../keycloak
+      version: 0.4.6
+    description: A Helm chart for Tidepool
+    digest: fb42a55aac246a3d08eabca7c570b37f4bc7b8d73bb56da19de49544909d43a4
+    home: https://github.com/tidepool-org/development/charts
+    icon: https://www.tidepool.org/static/media/tidepool-t-logo.41feef82.png
+    maintainers:
+    - email: todd@tidepool.org
+      name: Todd Kazakov
+      url: https://github.com/toddkazakov
+    name: tidepool
+    urls:
+    - https://github.com/tidepool-org/development/releases/download/tidepool-0.17.6/tidepool-0.17.6.tgz
+    version: 0.17.6
   - apiVersion: v2
     created: "2025-01-15T16:50:24.138828465Z"
     dependencies:
