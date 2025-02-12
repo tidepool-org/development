@@ -16,4 +16,5 @@ data:
   AuthorizeURL: {{ .Values.configmap.authorizeURL | default "" }}
   ClientURL: {{ .Values.configmap.clientURL | default "" }}
   Scopes: {{ .Values.configmap.scopes | default "" }}
+  PartnerURL: {{ .Values.configmap.partnerURL | default "" }}
 {{ end }}
