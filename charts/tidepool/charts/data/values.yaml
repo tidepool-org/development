@@ -15,6 +15,7 @@ deployment:
 configmap:
   enabled: true
   data_:
+    AlertsRetryDelays: "1s" # comma-separated values for time.ParseDuration
     PusherAPNSKeyID: "QA3495JW4S"
     PusherAPNSTeamID: "75U4X84TEG"
     PusherAPNSBundleID: "org.tidepool.carepartner"
