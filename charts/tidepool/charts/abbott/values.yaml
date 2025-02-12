@@ -5,6 +5,7 @@ configmap:
   authorizeURL: ""
   clientURL: ""
   scopes: ""
+  partnerURL: ""
 secret:
   enabled: false
   data_:
