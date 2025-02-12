@@ -119,6 +119,12 @@ spec:
         - name: {{ $key }}
           value: {{ $val | quote }}
 {{- end }}
+        - name: TIDEPOOL_DATA_SERVICE_ALERTS_RETRY_DELAYS
+          valueFrom:
+            configMapKeyRef:
+              name: data
+              key: AlertsRetryDelays
+              optional: true
         - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_SIGNING_KEY
           valueFrom:
             secretKeyRef:
