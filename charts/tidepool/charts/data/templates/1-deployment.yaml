@@ -104,6 +104,12 @@ spec:
               name: abbott
               key: PartnerId
               optional: true
+        - name: TIDEPOOL_ABBOTT_CLIENT_PARTNER_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: PartnerURL
+              optional: true
         - name: TIDEPOOL_DATA_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
