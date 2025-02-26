@@ -8,8 +8,8 @@ metadata:
   name: auth
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,dexcom,auth"
-    configmap.reloader.stakater.com/reload: "abbott,dexcom"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,dexcom,twiist,auth"
+    configmap.reloader.stakater.com/reload: "abbott,dexcom,twiist"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -132,6 +132,48 @@ spec:
           valueFrom:
             secretKeyRef:
               name: dexcom
+              key: StateSalt
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_AUTHORIZE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: AuthorizeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_SCOPES
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: Scopes
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: twiist
+              key: ClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: twiist
+              key: ClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: twiist
               key: StateSalt
               optional: true
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
