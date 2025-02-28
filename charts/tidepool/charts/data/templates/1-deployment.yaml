@@ -48,6 +48,7 @@ spec:
         {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
+        {{ include "charts.platform.env.care-partner-alerts" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "data") }}
         - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTHORIZE_URL
