@@ -284,3 +284,30 @@ Lifecycle hooks for services
               key: UserEvents{{ .client | title }}DeadLettersTopic
               optional: true
 {{ end }}
+
+{{ define "charts.platform.env.care-partner-alerts" }}
+        - name: TIDEPOOL_CARE_PARTNER_ALERTS_APNS_SIGNING_KEY
+          valueFrom:
+            secretKeyRef:
+              name: care-partner-alerts
+              key: APNSSigningKey
+              optional: true
+        - name: TIDEPOOL_CARE_PARTNER_ALERTS_APNS_KEY_ID
+          valueFrom:
+            configMapKeyRef:
+              name: care-partner-alerts
+              key: APNSKeyID
+              optional: true
+        - name: TIDEPOOL_CARE_PARTNER_ALERTS_APNS_TEAM_ID
+          valueFrom:
+            configMapKeyRef:
+              name: care-partner-alerts
+              key: APNSTeamID
+              optional: true
+        - name: TIDEPOOL_CARE_PARTNER_ALERTS_APNS_BUNDLE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: care-partner-alerts
+              key: APNSBundleID
+              optional: true
+{{ end }}

@@ -48,6 +48,7 @@ spec:
         {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
+        {{ include "charts.platform.env.care-partner-alerts" .}}
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:
