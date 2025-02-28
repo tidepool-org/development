@@ -132,30 +132,6 @@ spec:
               name: data
               key: AlertsRetryDelays
               optional: true
-        - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_SIGNING_KEY
-          valueFrom:
-            secretKeyRef:
-              name: data
-              key: PusherAPNSSigningKey
-              optional: true
-        - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_KEY_ID
-          valueFrom:
-            configMapKeyRef:
-              name: data
-              key: PusherAPNSKeyID
-              optional: true
-        - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_TEAM_ID
-          valueFrom:
-            configMapKeyRef:
-              name: data
-              key: PusherAPNSTeamID
-              optional: true
-        - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_BUNDLE_ID
-          valueFrom:
-            configMapKeyRef:
-              name: data
-              key: PusherAPNSBundleID
-              optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
