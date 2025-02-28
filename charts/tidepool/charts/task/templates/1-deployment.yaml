@@ -97,30 +97,6 @@ spec:
               name: dexcom
               key: ClientURL
               optional: true
-        - name: TIDEPOOL_TASK_SERVICE_PUSHER_APNS_SIGNING_KEY
-          valueFrom:
-            secretKeyRef:
-              name: task
-              key: PusherAPNSSigningKey
-              optional: true
-        - name: TIDEPOOL_TASK_SERVICE_PUSHER_APNS_KEY_ID
-          valueFrom:
-            configMapKeyRef:
-              name: task
-              key: PusherAPNSKeyID
-              optional: true
-        - name: TIDEPOOL_TASK_SERVICE_PUSHER_APNS_TEAM_ID
-          valueFrom:
-            configMapKeyRef:
-              name: task
-              key: PusherAPNSTeamID
-              optional: true
-        - name: TIDEPOOL_TASK_SERVICE_PUSHER_APNS_BUNDLE_ID
-          valueFrom:
-            configMapKeyRef:
-              name: task
-              key: PusherAPNSBundleID
-              optional: true
         - name: TIDEPOOL_TASK_QUEUE_DELAY
           value: {{ .Values.deployment.env.queue.delay | quote }}
         - name: TIDEPOOL_TASK_QUEUE_WORKERS
