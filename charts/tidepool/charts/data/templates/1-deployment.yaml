@@ -48,6 +48,7 @@ spec:
         {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
+        {{ include "charts.platform.env.care-partner-alerts" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "data") }}
         - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTHORIZE_URL
@@ -172,30 +173,6 @@ spec:
             configMapKeyRef:
               name: data
               key: AlertsRetryDelays
-              optional: true
-        - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_SIGNING_KEY
-          valueFrom:
-            secretKeyRef:
-              name: data
-              key: PusherAPNSSigningKey
-              optional: true
-        - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_KEY_ID
-          valueFrom:
-            configMapKeyRef:
-              name: data
-              key: PusherAPNSKeyID
-              optional: true
-        - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_TEAM_ID
-          valueFrom:
-            configMapKeyRef:
-              name: data
-              key: PusherAPNSTeamID
-              optional: true
-        - name: TIDEPOOL_DATA_SERVICE_PUSHER_APNS_BUNDLE_ID
-          valueFrom:
-            configMapKeyRef:
-              name: data
-              key: PusherAPNSBundleID
               optional: true
         - name: TIDEPOOL_TWIIST_QUEUE_ARN
           valueFrom:
