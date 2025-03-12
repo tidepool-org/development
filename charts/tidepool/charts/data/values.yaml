@@ -3,10 +3,22 @@ secret:
   data_:
     # -- service authorization secret
     ServiceAuth: ""
+    Pusher:
+      APNS:
+        SigningKey: ""
 deployment:
+  # -- secrets used to pull images
+  imagePullSecrets:
   # --  Docker image
   image: tidepool/platform-data:master-latest
   replicas: 1
+configmap:
+  enabled: true
+  data_:
+    AlertsRetryDelays: "0s" # comma-separated values for time.ParseDuration
+    PusherAPNSKeyID: "QA3495JW4S"
+    PusherAPNSTeamID: "75U4X84TEG"
+    PusherAPNSBundleID: "org.tidepool.carepartner"
 
 # -- memory and cpu resources for pods
 resources: {}
@@ -34,6 +46,9 @@ kafka:
   configmapName: kafka
   # -- name of the configmap containing the kafka broker and credentials to use
   secretName: kafka
+  connectors:
+    carePartnerAlerts:
+      enabled: false
 # -- node selector configuration
 nodeSelector: {}
 # -- tolerations

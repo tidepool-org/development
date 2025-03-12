@@ -107,6 +107,7 @@ spec:
             path: {{ .Values.readinessProbe.path | quote }}
             port: http
         {{- end }}
+        {{ template "charts.service.lifecycle"}}
         name: hydrophone
         ports:
         - containerPort: {{.Values.global.ports.hydrophone}}

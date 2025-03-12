@@ -90,6 +90,7 @@ spec:
           httpGet:
             path: /status
             port: {{ .Values.global.ports.jellyfish }}
+        {{ template "charts.service.lifecycle"}}
         name: jellyfish
         ports:
         - containerPort: {{ .Values.global.ports.jellyfish }}

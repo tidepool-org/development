@@ -74,6 +74,7 @@ spec:
           httpGet:
             path: /status
             port: {{.Values.global.ports.seagull}}
+        {{ template "charts.service.lifecycle"}}
         name: seagull
         ports:
         - containerPort: {{.Values.global.ports.seagull}}

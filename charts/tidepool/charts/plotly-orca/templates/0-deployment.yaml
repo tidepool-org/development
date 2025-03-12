@@ -32,6 +32,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
           timeoutSeconds: 5
+        {{ template "charts.service.lifecycle"}}
         ports:
         - containerPort: {{ .Values.global.ports.plotly_orca }}
           name: "http"

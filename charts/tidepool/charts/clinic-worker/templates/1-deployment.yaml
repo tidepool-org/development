@@ -153,6 +153,7 @@ spec:
             port: {{ .Values.global.ports.clinic_worker }}
           initialDelaySeconds: 3
           periodSeconds: 10
+        {{ template "charts.service.lifecycle"}}
         name: clinic-worker
         ports:
         - containerPort: {{ .Values.global.ports.clinic_worker }}
