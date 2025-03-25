@@ -6,6 +6,8 @@ secret:
     ServiceAuth: ""
 deployment:
   replicas: 1
+  # -- secrets used to pull images
+  imagePullSecrets:
   # -- default Docker image
   image: tidepool/platform-blob:master-latest
   env:

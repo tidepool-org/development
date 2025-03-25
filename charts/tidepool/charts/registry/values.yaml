@@ -1,0 +1,9 @@
+secret:
+  # -- whether to create registry secret
+  enabled: false
+  # -- registry
+  registry: https://index.docker.io/v1/
+  # -- username
+  username:
+  # -- password
+  password:

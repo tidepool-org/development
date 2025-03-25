@@ -37,6 +37,7 @@ spec:
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.grpc_probes" .Values.global.ports.devices_grpc }}
+        {{ template "charts.service.lifecycle"}}
         name: devices
         ports:
         - containerPort: {{.Values.global.ports.devices_grpc}}

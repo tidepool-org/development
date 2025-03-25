@@ -31,6 +31,11 @@ spec:
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+{{- $imagePullSecrets := (.Values.deployment).imagePullSecrets | default ((.Values.global).deployment).imagePullSecrets -}}
+{{- if $imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml $imagePullSecrets | nindent 6 }}
+{{- end }}
       initContainers:
       {{ include "charts.init.shoreline" .}}
       {{ if .Values.initContainers }}
@@ -80,10 +85,15 @@ spec:
           value: '{{.Values.deployment.env.logs.store.s3.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_LOGS_STORE_TYPE
           value: '{{.Values.deployment.env.logs.store.type}}'
+{{- range $key, $val := ((.Values.deployment).extraEnv | default ((.Values.global).deployment).extraEnv | default (dict)) }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+{{- end }}
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.blob}}
+        {{ template "charts.service.lifecycle"}}
         name: blob
         ports:
         - containerPort: {{.Values.global.ports.blob}}
@@ -103,4 +113,4 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
- 
+

@@ -109,6 +109,7 @@ spec:
             port: {{.Values.global.ports.tidewhisperer}}
           initialDelaySeconds: 30
           periodSeconds: 10
+        {{ template "charts.service.lifecycle"}}
         name: tide-whisperer
         ports:
         - containerPort: {{.Values.global.ports.tidewhisperer}}
