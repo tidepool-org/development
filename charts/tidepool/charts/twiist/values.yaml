@@ -1,0 +1,13 @@
+configmap:
+  enabled: true
+  redirectURL: ""
+  tokenURL: ""
+  authorizeURL: ""
+  scopes: ""
+  jwksURL: ""
+secret:
+  enabled: false
+  data_:
+    clientId: ""
+    clientSecret: ""
+    stateSalt: ""

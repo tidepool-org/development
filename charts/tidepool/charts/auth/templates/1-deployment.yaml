@@ -152,9 +152,15 @@ spec:
               name: twiist
               key: TokenURL
               optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_ID
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_JWKS_URL
           valueFrom:
             configMapKeyRef:
+              name: twiist
+              key: JWKSURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
               name: twiist
               key: ClientId
               optional: true
