@@ -5,6 +5,7 @@ configmap:
   authorizeURL: ""
   scopes: ""
   jwksURL: ""
+  serviceAccountIDs: ""
 secret:
   enabled: false
   data_:

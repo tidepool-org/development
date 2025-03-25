@@ -16,4 +16,5 @@ data:
   AuthorizeURL: {{ .Values.configmap.authorizeURL | default "" }}
   JWKSURL: {{ .Values.configmap.jwksURL | default "" }}
   Scopes: {{ .Values.configmap.scopes | default "" }}
+  ServiceAccountIDs: {{ .Values.configmap.serviceAccountIDs | default "" }}
 {{ end }}
