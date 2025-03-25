@@ -162,7 +162,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: twiist
-              key: ClientId
+              key: ClientID
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_SECRET
           valueFrom:
