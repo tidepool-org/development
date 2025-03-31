@@ -176,6 +176,12 @@ spec:
               name: twiist
               key: StateSalt
               optional: true
+        - name: TIDEPOOL_TWIIST_SERVICE_ACCOUNT_IDS
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: ServiceAccountIDs
+              optional: true
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
           value: {{ .Values.global.gateway.default.domain }}
         - name: TIDEPOOL_AUTH_SERVICE_SERVER_ADDRESS
