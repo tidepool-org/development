@@ -429,4 +429,5 @@ spec:
       single:
         upstream:
           name: data
+  weight: 10
 {{- end }}

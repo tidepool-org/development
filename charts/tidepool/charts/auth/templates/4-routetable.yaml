@@ -133,4 +133,12 @@ spec:
       single:
         upstream:
           name: auth
+  - matchers:
+    - methods:
+      - DELETE
+      regex: /v1/partners/twiist/links/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: auth
 {{- end }}

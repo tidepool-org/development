@@ -111,6 +111,12 @@ spec:
               name: abbott
               key: PartnerURL
               optional: true
+        - name: TIDEPOOL_TWIIST_SERVICE_ACCOUNT_IDS
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: ServiceAccountIDs
+              optional: true
         - name: TIDEPOOL_DATA_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
