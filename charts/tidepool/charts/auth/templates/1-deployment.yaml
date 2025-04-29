@@ -146,23 +146,23 @@ spec:
               name: twiist
               key: RedirectURL
               optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_SCOPES
-          valueFrom:
-            configMapKeyRef:
-              name: twiist
-              key: Scopes
-              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_TOKEN_URL
           valueFrom:
             configMapKeyRef:
               name: twiist
               key: TokenURL
               optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_JWKS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: JWKSURL
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_ID
           valueFrom:
             secretKeyRef:
               name: twiist
-              key: ClientId
+              key: ClientID
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_SECRET
           valueFrom:
@@ -175,6 +175,12 @@ spec:
             secretKeyRef:
               name: twiist
               key: StateSalt
+              optional: true
+        - name: TIDEPOOL_TWIIST_SERVICE_ACCOUNT_IDS
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: ServiceAccountIDs
               optional: true
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
           value: {{ .Values.global.gateway.default.domain }}

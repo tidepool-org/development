@@ -1,13 +1,14 @@
 configmap:
-  enabled: true
+  enabled: false
   redirectURL: ""
   tokenURL: ""
   authorizeURL: ""
   scopes: ""
-  queueARN: ""
+  jwksURL: ""
+  serviceAccountIDs: ""
 secret:
   enabled: false
   data_:
-    ClientId: ""
-    ClientSecret: ""
-    StateSalt: ""
+    clientId: ""
+    clientSecret: ""
+    stateSalt: ""

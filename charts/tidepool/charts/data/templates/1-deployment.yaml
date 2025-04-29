@@ -8,8 +8,8 @@ metadata:
   name: data
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,twiist,data"
-    configmap.reloader.stakater.com/reload: "abbott,twiist"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,data"
+    configmap.reloader.stakater.com/reload: "abbott"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -93,48 +93,6 @@ spec:
               name: abbott
               key: StateSalt
               optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_AUTHORIZE_URL
-          valueFrom:
-            configMapKeyRef:
-              name: twiist
-              key: AuthorizeURL
-              optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_REDIRECT_URL
-          valueFrom:
-            configMapKeyRef:
-              name: twiist
-              key: RedirectURL
-              optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_SCOPES
-          valueFrom:
-            configMapKeyRef:
-              name: twiist
-              key: Scopes
-              optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_TOKEN_URL
-          valueFrom:
-            configMapKeyRef:
-              name: twiist
-              key: TokenURL
-              optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: twiist
-              key: ClientId
-              optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: twiist
-              key: ClientSecret
-              optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_STATE_SALT
-          valueFrom:
-            secretKeyRef:
-              name: twiist
-              key: StateSalt
-              optional: true
         - name: TIDEPOOL_ABBOTT_CLIENT_ADDRESS
           valueFrom:
             configMapKeyRef:
@@ -152,6 +110,12 @@ spec:
             configMapKeyRef:
               name: abbott
               key: PartnerURL
+              optional: true
+        - name: TIDEPOOL_TWIIST_SERVICE_ACCOUNT_IDS
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: ServiceAccountIDs
               optional: true
         - name: TIDEPOOL_DATA_SERVICE_SECRET
           valueFrom:
@@ -173,12 +137,6 @@ spec:
             configMapKeyRef:
               name: data
               key: AlertsRetryDelays
-              optional: true
-        - name: TIDEPOOL_TWIIST_QUEUE_ARN
-          valueFrom:
-            configMapKeyRef:
-              name: twiist
-              key: QueueARN
               optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:

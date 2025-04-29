@@ -14,7 +14,7 @@ data:
 {{ end }}
   TokenURL: {{ .Values.configmap.tokenURL | default "" }}
   AuthorizeURL: {{ .Values.configmap.authorizeURL | default "" }}
-  ClientURL: {{ .Values.configmap.clientURL | default "" }}
+  JWKSURL: {{ .Values.configmap.jwksURL | default "" }}
   Scopes: {{ .Values.configmap.scopes | default "" }}
-  QueueARN: {{ .Values.configmap.queueARN | default "" }}
+  ServiceAccountIDs: {{ .Values.configmap.serviceAccountIDs | default "" }}
 {{ end }}
