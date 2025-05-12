@@ -26,7 +26,9 @@ spec:
     key.converter.schemas.enable: false
     value.converter: 'org.apache.kafka.connect.json.JsonConverter'
     value.converter.schemas.enable: false
-    snapshot.mode: {{ .Values.keycloak.snapshotMode }}
+    snapshot.mode: "never"
+    slot.name: {{ .Release.Namespace | replace "-" "_" }}_shadowed_debezium
+    slot.drop.on.stop: true
     table.include.list: 'public.user_entity,public.user_role_mapping,public.keycloak_role'
     transforms: 'filter'
     transforms.filter.type: 'io.debezium.transforms.Filter'
