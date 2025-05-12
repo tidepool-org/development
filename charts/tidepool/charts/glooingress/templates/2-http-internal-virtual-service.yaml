@@ -2,7 +2,7 @@
 {{- $internal := .Values.virtualServices.httpInternal }}
 {{- $spec := .Values.virtualServices.http }}
 {{- $port := $spec.port | default "80" }}
-{{ if or (not $spec.enabled) ($spec.redirect) }}
+{{ if and (or (not $spec.enabled) ($spec.redirect)) (not $internal.disabled) }}
 ---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
