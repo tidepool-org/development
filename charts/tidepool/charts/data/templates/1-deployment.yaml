@@ -8,7 +8,8 @@ metadata:
   name: data
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},data"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,data"
+    configmap.reloader.stakater.com/reload: "abbott"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -30,6 +31,11 @@ spec:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
+{{- $imagePullSecrets := (.Values.deployment).imagePullSecrets | default ((.Values.global).deployment).imagePullSecrets -}}
+{{- if $imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml $imagePullSecrets | nindent 6 }}
+{{- end }}
       initContainers:
       {{ include "charts.init.shoreline" .}}
       {{ if .Values.initContainers }}
@@ -41,6 +47,7 @@ spec:
         {{ include "charts.platform.env.mongo" .}}
         {{ include "charts.platform.env.misc" .}}
         {{ include "charts.platform.env.clients" .}}
+        {{ include "charts.platform.env.care-partner-alerts" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "data") }}
         - name: TIDEPOOL_DATA_SERVICE_USER_EVENTS_HANDLER_DISABLE
@@ -48,6 +55,71 @@ spec:
             configMapKeyRef:
               name: data
               key: UserEventsHandlerDisable
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTHORIZE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: AuthorizeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_SCOPES
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: Scopes
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: abbott
+              key: ClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: abbott
+              key: ClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: abbott
+              key: StateSalt
+              optional: true
+        - name: TIDEPOOL_ABBOTT_CLIENT_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: ClientURL
+              optional: true
+        - name: TIDEPOOL_ABBOTT_CLIENT_PARTNER_ID
+          valueFrom:
+            secretKeyRef:
+              name: abbott
+              key: PartnerId
+              optional: true
+        - name: TIDEPOOL_ABBOTT_CLIENT_PARTNER_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: PartnerURL
+              optional: true
+        - name: TIDEPOOL_TWIIST_SERVICE_ACCOUNT_IDS
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: ServiceAccountIDs
               optional: true
         - name: TIDEPOOL_DATA_SERVICE_SECRET
           valueFrom:
@@ -60,10 +132,21 @@ spec:
           value: data
         - name: TIDEPOOL_SYNC_TASK_STORE_DATABASE
           value: data
+{{- range $key, $val := ((.Values.deployment).extraEnv | default ((.Values.global).deployment).extraEnv | default (dict)) }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+{{- end }}
+        - name: TIDEPOOL_DATA_SERVICE_ALERTS_RETRY_DELAYS
+          valueFrom:
+            configMapKeyRef:
+              name: data
+              key: AlertsRetryDelays
+              optional: true
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.data }}
+        {{ template "charts.service.lifecycle"}}
         name: data
         ports:
         - containerPort: {{.Values.global.ports.data}}

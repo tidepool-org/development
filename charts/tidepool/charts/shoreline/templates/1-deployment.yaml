@@ -255,6 +255,7 @@ spec:
             port: {{ .Values.global.ports.shoreline }}
           initialDelaySeconds: 3
           periodSeconds: 10
+        {{ template "charts.service.lifecycle"}}
         name: shoreline
         ports:
         - containerPort: {{ .Values.global.ports.shoreline }}

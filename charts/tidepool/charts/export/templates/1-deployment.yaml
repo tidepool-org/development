@@ -70,6 +70,7 @@ spec:
           failureThreshold: 6
           periodSeconds: 10
           timeoutSeconds: 10
+        {{ template "charts.service.lifecycle"}}
         name: export
         ports:
         - containerPort: {{.Values.global.ports.export}}

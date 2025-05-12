@@ -1,0 +1,17 @@
+{{ if .Values.configmap.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data # as in the data service
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "charts.labels.standard" . }}
+{{ with .Values.configmap.data_ }}
+data:
+  AlertsRetryDelays: {{ .AlertsRetryDelays | default "0s" }}
+  PusherAPNSKeyID: {{ .PusherAPNSKeyID | default "" }}
+  PusherAPNSTeamID: {{ .PusherAPNSTeamID | default "" }}
+  PusherAPNSBundleID: {{ .PusherAPNSBundleID | default "" }}
+{{- end }}
+{{- end }}

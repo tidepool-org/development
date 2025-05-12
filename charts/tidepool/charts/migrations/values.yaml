@@ -1,6 +1,8 @@
 # --  enable migrations deployment if true
 enabled: true
 deployment:
+  # -- secrets used to pull images
+  imagePullSecrets:
   # -- Docker image
   image: tidepool/platform-migrations:master-latest
   # -- number of replicas

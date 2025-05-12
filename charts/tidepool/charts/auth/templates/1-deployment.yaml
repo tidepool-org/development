@@ -8,8 +8,8 @@ metadata:
   name: auth
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},dexcom,auth"
-    configmap.reloader.stakater.com/reload: "dexcom"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,dexcom,auth,twiist"
+    configmap.reloader.stakater.com/reload: "abbott,dexcom,twiist"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -32,6 +32,11 @@ spec:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
+{{- $imagePullSecrets := (.Values.deployment).imagePullSecrets | default ((.Values.global).deployment).imagePullSecrets -}}
+{{- if $imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml $imagePullSecrets | nindent 6 }}
+{{- end }}
       initContainers:
       {{ include "charts.init.shoreline" .}}
       {{ if .Values.initContainers }}
@@ -45,6 +50,48 @@ spec:
         {{ include "charts.platform.env.clients" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "auth") }}
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTHORIZE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: AuthorizeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_SCOPES
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: Scopes
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: abbott
+              key: ClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: abbott
+              key: ClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: abbott
+              key: StateSalt
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:
@@ -92,6 +139,53 @@ spec:
             configMapKeyRef:
               name: auth
               key: UserEventsHandlerDisable
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_AUTHORIZE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: AuthorizeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_JWKS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: JWKSURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: twiist
+              key: ClientID
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: twiist
+              key: ClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: twiist
+              key: StateSalt
+              optional: true
+        - name: TIDEPOOL_TWIIST_SERVICE_ACCOUNT_IDS
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: ServiceAccountIDs
               optional: true
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
           value: {{ .Values.global.gateway.default.domain }}
@@ -210,10 +304,15 @@ spec:
               name: palmtree
               key: tlsKeyData
               optional: true
+{{- range $key, $val := ((.Values.deployment).extraEnv | default ((.Values.global).deployment).extraEnv | default (dict)) }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+{{- end }}
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.auth}}
+        {{ template "charts.service.lifecycle"}}
         name: auth
         ports:
         - containerPort: {{.Values.global.ports.auth}}

@@ -71,20 +71,12 @@ Create environment variables used by all platform services.
           value: "http://{{ .Values.global.hostnames.blob }}:{{ .Values.global.ports.blob }}"
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
           value: "http://{{ .Values.global.hostnames.data }}:{{ .Values.global.ports.data }}"
+        - name: TIDEPOOL_ALERTS_CLIENT_ADDRESS
+          value: "http://{{ .Values.global.hostnames.data }}:{{ .Values.global.ports.data }}"
         - name: TIDEPOOL_DATA_SOURCE_CLIENT_ADDRESS
           value: "http://{{ .Values.global.hostnames.data }}:{{ .Values.global.ports.data }}"
         - name: TIDEPOOL_DEVICES_CLIENT_ADDRESS
           value: "http://{{ .Values.global.hostnames.devices }}:{{ .Values.global.ports.devices_grpc }}"
-        - name: TIDEPOOL_DEXCOM_CLIENT_ADDRESS
-          valueFrom:
-            configMapKeyRef:
-              name: dexcom
-              key: ClientURL
-        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
-          valueFrom:
-            configMapKeyRef:
-              name: dexcom
-              key: AuthorizeURL
         - name: TIDEPOOL_METRIC_CLIENT_ADDRESS
           value: "http://{{ .Values.global.hostnames.metric }}:{{ .Values.global.ports.highwater }}"
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
@@ -165,7 +157,7 @@ Create environment variables used by all platform services.
               name: {{ .Values.mongo.secretName }}
               key: OptParams
         - name: TIDEPOOL_STORE_OPT_PARAMS
-          value: '$(TIDEPOOL_STORE_OPT_PARAMS_BASE)&appName={{ default .Chart.Name .Values.deployment.image | urlquery }}'
+          value: "$(TIDEPOOL_STORE_OPT_PARAMS_BASE)&appName={{ default .Chart.Name .Values.deployment.image | urlquery }}"
         - name: TIDEPOOL_STORE_TLS
           valueFrom:
             secretKeyRef:
@@ -217,6 +209,16 @@ Create liveness and readiness probes for platform services.
       - name: init-shoreline
         image: busybox:1.31.1
         command: ['sh', '-c', 'until nc -zvv {{.Values.global.hostnames.shoreline}} {{.Values.global.ports.shoreline}}; do echo waiting for shoreline; sleep 2; done;']
+{{- end -}}
+
+{{/*
+Lifecycle hooks for services
+*/}}
+{{- define "charts.service.lifecycle" -}}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh", "-c", "sleep 15"]
 {{- end -}}
 
 {{- define "charts.labels.standard" }}
@@ -293,5 +295,32 @@ Create liveness and readiness probes for platform services.
             configMapKeyRef:
               name: {{ .Values.kafka.configmapName }}
               key: UserEvents{{ .client | title }}DeadLettersTopic
+              optional: true
+{{ end }}
+
+{{ define "charts.platform.env.care-partner-alerts" }}
+        - name: TIDEPOOL_CARE_PARTNER_ALERTS_APNS_SIGNING_KEY
+          valueFrom:
+            secretKeyRef:
+              name: care-partner-alerts
+              key: APNSSigningKey
+              optional: true
+        - name: TIDEPOOL_CARE_PARTNER_ALERTS_APNS_KEY_ID
+          valueFrom:
+            configMapKeyRef:
+              name: care-partner-alerts
+              key: APNSKeyID
+              optional: true
+        - name: TIDEPOOL_CARE_PARTNER_ALERTS_APNS_TEAM_ID
+          valueFrom:
+            configMapKeyRef:
+              name: care-partner-alerts
+              key: APNSTeamID
+              optional: true
+        - name: TIDEPOOL_CARE_PARTNER_ALERTS_APNS_BUNDLE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: care-partner-alerts
+              key: APNSBundleID
               optional: true
 {{ end }}
