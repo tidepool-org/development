@@ -54,6 +54,12 @@ spec:
         {{ include "charts.platform.env.clients" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "blob") }}
+        - name: TIDEPOOL_BLOB_SERVICE_USER_EVENTS_HANDLER_DISABLE
+          valueFrom:
+            configMapKeyRef:
+              name: blob
+              key: UserEventsHandlerDisable
+              optional: true
         - name: TIDEPOOL_BLOB_SERVICE_SECRET
           valueFrom:
             secretKeyRef:

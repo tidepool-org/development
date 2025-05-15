@@ -108,6 +108,18 @@ spec:
               key: ServiceAuth
         - name: TIDEPOOL_TASK_SERVICE_SERVER_ADDRESS
           value: :{{ .Values.global.ports.task }}
+        - name: TIDEPOOL_TASK_DISABLE_DEXCOM
+          valueFrom:
+            configMapKeyRef:
+              name: task
+              key: DisableDexcom
+              optional: true
+        - name: TIDEPOOL_TASK_DISABLE_CLINIC
+          valueFrom:
+            configMapKeyRef:
+              name: task
+              key: DisableClinic
+              optional: true
 {{- range $key, $val := ((.Values.deployment).extraEnv | default ((.Values.global).deployment).extraEnv | default (dict)) }}
         - name: {{ $key }}
           value: {{ $val | quote }}
