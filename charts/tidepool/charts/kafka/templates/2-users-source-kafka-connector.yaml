@@ -36,4 +36,5 @@ spec:
     transforms.filter.topic.regex: '.+\.public.(user_entity|keycloak_role)'
     transforms.filter.condition: "value.op && (((value.op == 'r' || value.op == 'c' || value.op == 'u') && (value.after && value.after.realm_id && value.after.realm_id == '{{ $realm }}')) || (value.op == 'd'))"
   tasksMax: 1
+  state: {{ .Values.kafkaConnectorState }}
 {{- end }}

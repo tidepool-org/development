@@ -23,4 +23,5 @@ spec:
     heartbeat.interval.ms: {{ .Values.global.kafka.connect.mongoHeartbeatIntervalMs }}
     heartbeat.topic.name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-heartbeat
   tasksMax: {{ .Values.global.kafka.connect.sourceTasksMax | int }}
+  state: {{ .Values.kafkaConnectorState }}
 {{- end }}
