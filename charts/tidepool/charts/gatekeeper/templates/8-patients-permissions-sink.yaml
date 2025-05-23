@@ -23,5 +23,5 @@ spec:
     value.projection.list: _id,userId,clinicId,permissions
     value.projection.type: AllowList
   tasksMax: {{ .Values.global.kafka.connect.sinkTasksMax | int }}
-  state: {{ .Values.kafkaConnectorState }}
+  pause: {{ .Values.kafkaConnectorPause | default false }}
 {{- end }}

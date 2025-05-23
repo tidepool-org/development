@@ -20,5 +20,5 @@ spec:
     value.converter: org.apache.kafka.connect.json.JsonConverter
     value.converter.schemas.enable: false
   tasksMax: {{ .Values.global.kafka.connect.sinkTasksMax | int }}
-  state: {{ .Values.kafkaConnectorState }}
+  pause: {{ .Values.kafkaConnectorPause | default false }}
 {{- end }}
