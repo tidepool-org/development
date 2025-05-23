@@ -29,6 +29,7 @@ spec:
     snapshot.mode: "never"
     slot.name: {{ .Release.Namespace | replace "-" "_" }}_shadowed_debezium
     slot.drop.on.stop: true
+    heartbeat.interval.ms: {{ .Values.global.kafka.connect.mongoHeartbeatIntervalMs }}
     table.include.list: 'public.user_entity,public.user_role_mapping,public.keycloak_role'
     transforms: 'filter'
     transforms.filter.type: 'io.debezium.transforms.Filter'
