@@ -61,5 +61,5 @@ shadowing:
   namespace: "shadow"
   percentage: 0
 # -- state of the connector(s) -- one of `paused`, `stopped`, `running`. Set to null to use default of running.
-kafkaConnectorState: null
+kafkaConnectorState: paused
 
