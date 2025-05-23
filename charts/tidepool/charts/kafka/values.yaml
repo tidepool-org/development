@@ -55,4 +55,4 @@ secret:
 podMonitor:
   enabled: true
 # -- state of the connector(s) -- one of `paused`, `stopped`, `running`. Set to null to use default of running.
-kafkaConnectorPause: true
+kafkaConnectorPause: false
