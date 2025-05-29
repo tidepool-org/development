@@ -76,5 +76,14 @@ spec:
           upstream:
             name: clinic
             namespace: {{ .Release.Namespace }}
+    - matchers:
+        - methods:
+            - DELETE
+          regex: "/v1/summaries/[^/]+/clinics"
+      routeAction:
+        single:
+          upstream:
+            name: clinic
+            namespace: {{ .Release.Namespace }}
   weight: 30
 {{- end }}
