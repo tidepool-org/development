@@ -78,8 +78,8 @@ spec:
             namespace: {{ .Release.Namespace }}
     - matchers:
         - methods:
-          - DELETE
-        regex: "/v1/summaries/[^/]+/clinics"
+            - DELETE
+          regex: "/v1/summaries/[^/]+/clinics"
       routeAction:
         single:
           upstream:
