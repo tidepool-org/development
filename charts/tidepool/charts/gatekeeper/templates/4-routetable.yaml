@@ -47,4 +47,8 @@ spec:
           name: gatekeeper
     options:
       timeout: '30s'
+{{- $extraRoutes := (.Values.deployment).extraRoutes | default ((.Values.global).deployment).extraRoutes | default list -}}
+{{- if $extraRoutes }}
+{{- toYaml $extraRoutes | nindent 2 }}
+{{- end }}
 {{- end }}

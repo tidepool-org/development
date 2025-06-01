@@ -14,6 +14,7 @@ A Helm chart for Kubernetes
 | configmap.redirectURL | string | `""` | OAuth2 redirect URL |
 | configmap.tokenURL | string | `""` | OAuth2 token URL |
 | configmap.authorizeURL | string | `""` | OAuth2 authorization URL |
+| configmap.jwksURL | string | `""` | JWKS URL |
 | configmap.clientURL | string | `""` | client URL |
 | configmap.scopes | string | `""` | OAuth2 scopes |
 | configmap.partnerURL | string | `""` | partner URL |
