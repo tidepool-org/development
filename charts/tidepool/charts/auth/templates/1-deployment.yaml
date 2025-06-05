@@ -8,7 +8,7 @@ metadata:
   name: auth
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,dexcom,auth,twiist"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,dexcom,twiist,auth"
     configmap.reloader.stakater.com/reload: "abbott,dexcom,twiist"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
@@ -73,6 +73,12 @@ spec:
             configMapKeyRef:
               name: abbott
               key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_JWKS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: JWKSURL
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_CLIENT_ID
           valueFrom:

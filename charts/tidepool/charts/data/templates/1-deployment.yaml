@@ -75,6 +75,12 @@ spec:
               name: abbott
               key: TokenURL
               optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_JWKS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: JWKSURL
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_CLIENT_ID
           valueFrom:
             secretKeyRef:

@@ -14,6 +14,7 @@ data:
 {{ end }}
   TokenURL: {{ .Values.configmap.tokenURL | default "" }}
   AuthorizeURL: {{ .Values.configmap.authorizeURL | default "" }}
+  JWKSURL: {{ .Values.configmap.jwksURL | default "" }}
   ClientURL: {{ .Values.configmap.clientURL | default "" }}
   Scopes: {{ .Values.configmap.scopes | default "" }}
   PartnerURL: {{ .Values.configmap.partnerURL | default "" }}
