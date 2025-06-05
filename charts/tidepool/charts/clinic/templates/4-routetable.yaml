@@ -8,7 +8,6 @@ metadata:
   name: clinics
   namespace: {{ .Release.Namespace }}
 spec:
-  weight: 30
   routes:
     - matchers:
         - methods:
@@ -86,8 +85,5 @@ spec:
           upstream:
             name: clinic
             namespace: {{ .Release.Namespace }}
-{{- $extraRoutes := (.Values.deployment).extraRoutes | default ((.Values.global).deployment).extraRoutes | default list -}}
-{{- if $extraRoutes }}
-{{- toYaml $extraRoutes | nindent 2 }}
-{{- end }}
+  weight: 30
 {{- end }}
