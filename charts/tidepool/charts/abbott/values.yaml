@@ -3,6 +3,7 @@ configmap:
   redirectURL: ""
   tokenURL: ""
   authorizeURL: ""
+  jwksURL: ""
   clientURL: ""
   scopes: ""
   partnerURL: ""
