@@ -14,3 +14,4 @@ secret:
     ClientSecret: ""
     StateSalt: ""
     PartnerId: ""
+    PartnerSecret: ""
