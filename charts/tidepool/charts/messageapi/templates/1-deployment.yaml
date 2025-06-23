@@ -80,6 +80,7 @@ spec:
           httpGet:
             path: /status
             port: {{.Values.global.ports.messageapi}}
+        {{ template "charts.service.lifecycle"}}
         name: message-api
         ports:
         - containerPort: {{.Values.global.ports.messageapi}}

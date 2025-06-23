@@ -106,6 +106,7 @@ spec:
           httpGet:
             path: /status
             port: {{.Values.global.ports.highwater}}
+        {{ template "charts.service.lifecycle"}}
         name: highwater
         ports:
         - containerPort: {{.Values.global.ports.highwater}}

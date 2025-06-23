@@ -32,6 +32,11 @@ spec:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
+{{- $imagePullSecrets := (.Values.deployment).imagePullSecrets | default ((.Values.global).deployment).imagePullSecrets -}}
+{{- if $imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml $imagePullSecrets | nindent 6 }}
+{{- end }}
       initContainers:
       {{ include "charts.init.shoreline" .}}
       {{ if .Values.initContainers }}
@@ -45,6 +50,10 @@ spec:
         {{ include "charts.platform.env.clients" .}}
         - name: TIDEPOOL_SESSION_STORE_DATABASE
           value: user
+{{- range $key, $val := ((.Values.deployment).extraEnv | default ((.Values.global).deployment).extraEnv | default (dict)) }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+{{- end }}
         image: {{ .Values.deployment.image | quote}}
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}

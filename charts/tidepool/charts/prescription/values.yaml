@@ -4,6 +4,8 @@ secret:
   data_:
     ServiceAuth: ""
 deployment:
+  # -- secrets used to pull images
+  imagePullSecrets:
   # -- the Docker image to use
   image: tidepool/platform-prescription:master-latest
   # -- the number of replicas
