@@ -93,6 +93,17 @@ spec:
         disable: true
   - matchers:
     - methods:
+      - DELETE
+      regex: /v1/users/[^/]+/oauth/[^/]+/authorize
+    routeAction:
+      single:
+        upstream:
+          name: auth
+    options:
+      extauth:
+        disable: true
+  - matchers:
+    - methods:
       - GET
       - PUT
       - DELETE
