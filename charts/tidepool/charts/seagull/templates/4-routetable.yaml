@@ -20,21 +20,21 @@ spec:
     options:
       extauth:
         disable: true
-  - matchers:
-    - regex: '/metadata/[^/]+/profile'
-    routeAction:
-      single:
-        upstream:
-          name: auth
-    options:
-      regexRewrite:
-        pattern:
-          regex: '/metadata/'
-        substitution: '/v1/users/legacy/'
-      retries:
-        retryOn: '5xx'
-        numRetries: 3
-        perTryTimeout: '15s'
+  # - matchers:
+  #   - regex: '/metadata/[^/]+/profile'
+  #   routeAction:
+  #     single:
+  #       upstream:
+  #         name: auth
+  #   options:
+  #     regexRewrite:
+  #       pattern:
+  #         regex: '/metadata/'
+  #       substitution: '/v1/users/legacy/'
+  #     retries:
+  #       retryOn: '5xx'
+  #       numRetries: 3
+  #       perTryTimeout: '15s'
   - matchers:
     - prefix: /metadata/
     routeAction:
