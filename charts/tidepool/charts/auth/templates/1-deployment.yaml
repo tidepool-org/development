@@ -380,6 +380,44 @@ spec:
               name: shoreline
               key: KeycloakRealm
               optional: true
+        - name: SEAGULL_TIDEPOOL_STORE_SCHEME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mongo.secretName }}
+              key: Scheme
+              optional: true
+        - name: SEAGULL_TIDEPOOL_STORE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mongo.secretName }}
+              key: Username
+              optional: true
+        - name: SEAGULL_TIDEPOOL_STORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mongo.secretName }}
+              key: Password
+              optional: true
+        - name: SEAGULL_TIDEPOOL_STORE_ADDRESSES
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mongo.secretName }}
+              key: Addresses
+              optional: true
+        - name: SEAGULL_TIDEPOOL_STORE_TLS
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mongo.secretName }}
+              key: Tls
+              optional: true
+        - name: SEAGULL_TIDEPOOL_STORE_OPT_PARAMS
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mongo.secretName }}
+              key: OptParams
+              optional: true
+        - name: SEAGULL_TIDEPOOL_STORE_DATABASE
+          value: seagull
 {{- range $key, $val := ((.Values.deployment).extraEnv | default ((.Values.global).deployment).extraEnv | default (dict)) }}
         - name: {{ $key }}
           value: {{ $val | quote }}
