@@ -98,6 +98,8 @@ spec:
               name: abbott
               key: StateSalt
               optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTH_STYLE_IN_PARAMS
+          value: "true"
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:
