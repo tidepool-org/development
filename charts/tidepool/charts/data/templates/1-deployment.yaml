@@ -99,6 +99,8 @@ spec:
               name: abbott
               key: StateSalt
               optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTH_STYLE_IN_PARAMS
+          value: "true"
         - name: TIDEPOOL_ABBOTT_CLIENT_ADDRESS
           valueFrom:
             configMapKeyRef:
