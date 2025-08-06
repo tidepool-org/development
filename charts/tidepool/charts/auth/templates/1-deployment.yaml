@@ -241,6 +241,18 @@ spec:
               name: auth
               key: AppValidationChallengeSize
               optional: true
+        - name: TIDEPOOL_BIG_DATA_DONATION_PROJECT_SHARING_DISABLED
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: BigDataDonationProjectSharingDisabled
+              optional: false
+        - name: TIDEPOOL_BIG_DATA_DONATION_PROJECT_DATA_RECIPIENT_USER_ID
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: BigDataDonationProjectDataRecipientUserId
+              optional: true
         - name: COASTAL_API_KEY
           valueFrom:
             secretKeyRef:
