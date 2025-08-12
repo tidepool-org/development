@@ -63,7 +63,7 @@ spec:
       - GET
       - PUT
       - DELETE
-      regex: /v1/provider_sessions(/[^/]+)?
+      prefix: /v1/provider_sessions
     routeAction:
       single:
         upstream:
