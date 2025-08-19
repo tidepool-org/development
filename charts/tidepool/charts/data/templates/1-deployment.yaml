@@ -20,7 +20,6 @@ spec:
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: {{ .Values.deployment.replicas }}
-  strategy: {}
   template:
     metadata:
       labels:
@@ -51,6 +50,11 @@ spec:
         {{ include "charts.platform.env.care-partner-alerts" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "data") }}
+        - name: TIDEPOOL_DATA_SERVICE_USER_EVENTS_HANDLER_DISABLE
+          valueFrom:
+            configMapKeyRef:
+              name: data
+              key: UserEventsHandlerDisable
         - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:

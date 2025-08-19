@@ -2,7 +2,15 @@
 {{- $internal := .Values.virtualServices.httpInternal }}
 {{- $spec := .Values.virtualServices.http }}
 {{- $port := $spec.port | default "80" }}
-{{ if or (not $spec.enabled) ($spec.redirect) }}
+# The reason for using a "disabled" field instead of the "enabled" field that
+# we conventionally use elsewhere is because by default an internal
+# VirtualService is created if the http VirtualService is not enabled or it has
+# an https redirect. This means there's no way to NOT have any VirtualService.
+# This way, we can disable all VirtualServices for a Release. The field name is
+# "disabled" just in case some service actually depends on the original logic
+# of an internal VirtualService being created. This is used for shadowed clusters
+# where no VirtualServices are needed.
+{{ if and (or (not $spec.enabled) ($spec.redirect)) (not $internal.disabled) }}
 ---
 apiVersion: gateway.solo.io/v1
 kind: VirtualService

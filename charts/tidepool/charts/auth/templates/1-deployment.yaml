@@ -19,7 +19,7 @@ spec:
       app: auth
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: {{ .Values.deployment.replicas | default 1 }}
+  replicas: {{ .Values.deployment.replicas }}
   strategy: {}
   template:
     metadata:
@@ -142,6 +142,11 @@ spec:
               name: dexcom
               key: StateSalt
               optional: true
+        - name: TIDEPOOL_AUTH_SERVICE_USER_EVENTS_HANDLER_DISABLE
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: UserEventsHandlerDisable
         - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:
