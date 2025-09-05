@@ -12,5 +12,7 @@ data:
   AppleDeviceCheckKeyId: {{ .AppleDeviceCheckKeyId | default "" }}
   AppleDeviceCheckKeyIssuer: {{ .AppleDeviceCheckKeyIssuer | default "" }}
   AppleDeviceCheckUseDevelopment: "{{ .AppleDeviceCheckUseDevelopment | default "true" }}"
+  BigDataDonationProjectDataRecipientUserId: "{{ .BigDataDonationProjectDataRecipientUserId | default "" }}"
+  BigDataDonationProjectSharingDisabled: "{{ .BigDataDonationProjectSharingDisabled | default "true" }}"
 {{- end }}
 {{- end }}

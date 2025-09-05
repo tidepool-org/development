@@ -152,4 +152,32 @@ spec:
       single:
         upstream:
           name: auth
+  - matchers:
+      - methods:
+          - GET
+        prefix: /v1/consents
+    routeAction:
+      single:
+        upstream:
+          name: auth
+  - matchers:
+      - methods:
+          - GET
+          - POST
+        regex: /v1/users/[^/]+/consents
+    routeAction:
+      single:
+        upstream:
+          name: auth
+  - matchers:
+      - methods:
+          - GET
+          - PATCH
+          - DELETE
+        regex: /v1/users/[^/]+/consents/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: auth
+
 {{- end }}
