@@ -8,8 +8,8 @@ metadata:
   name: auth
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},dexcom,auth"
-    configmap.reloader.stakater.com/reload: "dexcom"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,dexcom,twiist,auth"
+    configmap.reloader.stakater.com/reload: "abbott,dexcom,twiist"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -32,6 +32,11 @@ spec:
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
+{{- $imagePullSecrets := (.Values.deployment).imagePullSecrets | default ((.Values.global).deployment).imagePullSecrets -}}
+{{- if $imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml $imagePullSecrets | nindent 6 }}
+{{- end }}
       initContainers:
       {{ include "charts.init.shoreline" .}}
       {{ if .Values.initContainers }}
@@ -45,6 +50,56 @@ spec:
         {{ include "charts.platform.env.clients" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "auth") }}
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTHORIZE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: AuthorizeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_SCOPES
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: Scopes
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_JWKS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: JWKSURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: abbott
+              key: ClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: abbott
+              key: ClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: abbott
+              key: StateSalt
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTH_STYLE_IN_PARAMS
+          value: "true"
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:
@@ -86,6 +141,54 @@ spec:
             secretKeyRef:
               name: dexcom
               key: StateSalt
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_AUTHORIZE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: AuthorizeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_JWKS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: JWKSURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: twiist
+              key: ClientID
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: twiist
+              key: ClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: twiist
+              key: StateSalt
+              optional: true
+        - name: TIDEPOOL_TWIIST_SERVICE_ACCOUNT_IDS
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: ServiceAccountIDs
               optional: true
         - name: TIDEPOOL_AUTH_SERVICE_DOMAIN
           value: {{ .Values.global.gateway.default.domain }}
@@ -137,6 +240,18 @@ spec:
             configMapKeyRef:
               name: auth
               key: AppValidationChallengeSize
+              optional: true
+        - name: TIDEPOOL_BIG_DATA_DONATION_PROJECT_SHARING_DISABLED
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: BigDataDonationProjectSharingDisabled
+              optional: false
+        - name: TIDEPOOL_BIG_DATA_DONATION_PROJECT_DATA_RECIPIENT_USER_ID
+          valueFrom:
+            configMapKeyRef:
+              name: auth
+              key: BigDataDonationProjectDataRecipientUserId
               optional: true
         - name: COASTAL_API_KEY
           valueFrom:
@@ -204,10 +319,15 @@ spec:
               name: palmtree
               key: tlsKeyData
               optional: true
+{{- range $key, $val := ((.Values.deployment).extraEnv | default ((.Values.global).deployment).extraEnv | default (dict)) }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+{{- end }}
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.auth}}
+        {{ template "charts.service.lifecycle"}}
         name: auth
         ports:
         - containerPort: {{.Values.global.ports.auth}}

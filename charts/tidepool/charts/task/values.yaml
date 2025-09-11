@@ -5,6 +5,8 @@ secret:
     # -- task authorization, if empty, random value is generated
     ServiceAuth: ""
 deployment:
+  # -- secrets used to pull images
+  imagePullSecrets:
   # deployment.image -- Docker image
   image: tidepool/platform-task:master-latest
   # -- number of replicas
@@ -13,6 +15,13 @@ deployment:
     queue:
       delay: 5
       workers: 5
+configmap:
+  enabled: true
+  data_:
+    PusherAPNSKeyID: "QA3495JW4S"
+    PusherAPNSTeamID: "75U4X84TEG"
+    PusherAPNSBundleID: "org.tidepool.carepartner"
+
 # -- memory and cpu resources for pods
 resources: {}
 # -- security context for each pod in deployment

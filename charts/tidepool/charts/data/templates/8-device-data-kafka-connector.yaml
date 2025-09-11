@@ -1,4 +1,5 @@
 {{ if .Values.global.kafka.connect.enabled }}
+{{ if .Values.kafka.connectors.carePartnerAlerts.enabled }}
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
@@ -33,4 +34,5 @@ spec:
     heartbeat.interval.ms: {{ .Values.global.kafka.connect.mongoHeartbeatIntervalMs }}
     heartbeat.topic.name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-heartbeat
   tasksMax: {{ .Values.global.kafka.connect.sourceTasksMax | int }}
+{{- end }}
 {{- end }}

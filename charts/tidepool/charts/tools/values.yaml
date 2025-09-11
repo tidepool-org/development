@@ -1,6 +1,8 @@
 # -- whether to enable tools service
 enabled: true
 deployment:
+  # -- secrets used to pull images
+  imagePullSecrets:
   # -- Docker image
   image: tidepool/platform-tools:master-latest
   # -- number of replicas

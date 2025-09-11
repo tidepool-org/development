@@ -121,6 +121,7 @@ spec:
             port: {{ .Values.global.ports.clinic }}
           initialDelaySeconds: 3
           periodSeconds: 10
+        {{ template "charts.service.lifecycle"}}
         name: clinic
         ports:
         - containerPort: {{ .Values.global.ports.clinic }}

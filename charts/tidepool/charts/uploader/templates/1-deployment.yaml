@@ -84,6 +84,7 @@ spec:
         ports:
         - containerPort: {{.Values.global.ports.uploader}}
           name: "http"
+        {{ template "charts.service.lifecycle"}}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       securityContext:

@@ -1,0 +1,11 @@
+configmap:
+  enabled: true
+  data_:
+    APNSKeyID: "QA3495JW4S"
+    APNSTeamID: "75U4X84TEG"
+    APNSBundleID: "org.tidepool.carepartner"
+
+secret:
+  enabled: false
+  data_:
+    APNSSigningKey: ""

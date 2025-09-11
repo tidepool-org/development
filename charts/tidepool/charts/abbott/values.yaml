@@ -1,0 +1,17 @@
+configmap:
+  enabled: true
+  redirectURL: ""
+  tokenURL: ""
+  authorizeURL: ""
+  jwksURL: ""
+  clientURL: ""
+  scopes: ""
+  partnerURL: ""
+secret:
+  enabled: false
+  data_:
+    ClientId: ""
+    ClientSecret: ""
+    StateSalt: ""
+    PartnerId: ""
+    PartnerSecret: ""

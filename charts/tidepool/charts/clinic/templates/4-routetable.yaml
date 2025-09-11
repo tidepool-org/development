@@ -17,8 +17,8 @@ spec:
             - POST
             - PUT
           prefix: /v1/clinics
-      options:
 {{ if not .Values.global.glooingress.jwt.disabled }}
+      options:
         jwt:
           disable: false
 {{- end }}
@@ -71,6 +71,15 @@ spec:
             - PUT
             - POST
           prefix: /v1/xealth
+      routeAction:
+        single:
+          upstream:
+            name: clinic
+            namespace: {{ .Release.Namespace }}
+    - matchers:
+        - methods:
+            - DELETE
+          regex: "/v1/summaries/[^/]+/clinics"
       routeAction:
         single:
           upstream:

@@ -12,7 +12,11 @@ configmap:
     AppleDeviceCheckKeyIssuer: "75U4X84TEG"
     AppleDeviceCheckKeyId: "B542R658GF"
     AppleDeviceCheckUseDevelopment: "true"
+    BigDataDonationProjectDataRecipientUserId: ""
+    BigDataDonationProjectSharingDisabled: "true"
 deployment:
+  # -- secrets used to pull images
+  imagePullSecrets:
   # -- auth Docker image
   image: tidepool/platform-auth:master-latest
   # -- number of replicas to deploy

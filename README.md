@@ -777,7 +777,7 @@ blip:
   hostPath: ../blip # Uncommented and path matches the cloned blip repo location
   containerPath: "/app"
   apiHost: "http://localhost:31500"
-  webpackDevTool: cheap-module-eval-source-map
+  webpackDevTool: eval-cheap-module-source-map
   webpackPublicPath: "http://localhost:31500"
   linkedPackages:
     - name: tideline
@@ -809,7 +809,7 @@ blip:
   hostPath: ../blip
   containerPath: "/app"
   apiHost: "http://localhost:31500"
-  webpackDevTool: cheap-module-eval-source-map
+  webpackDevTool: eval-cheap-module-source-map
   webpackPublicPath: "http://localhost:31500"
   linkedPackages:
     # ...
