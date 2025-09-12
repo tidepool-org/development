@@ -22,8 +22,9 @@ spec:
   strategy: {}
   template:
     metadata:
-{{ if .Values.podAnnotations }}
       annotations:
+        kubectl.kubernetes.io/default-container: jellyfish
+{{ if .Values.podAnnotations }}
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
       labels:

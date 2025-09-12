@@ -26,8 +26,9 @@ spec:
         app: tide-whisperer
         app.kubernetes.io/name: {{ include "charts.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-{{ if .Values.podAnnotations }}
       annotations:
+        kubectl.kubernetes.io/default-container: tide-whisperer
+{{ if .Values.podAnnotations }}
         {{- .Values.podAnnotations | toYaml | nindent 8 }}
 {{- end }}
     spec:
