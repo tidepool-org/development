@@ -1,3 +1,5 @@
 deployment:
-  image: quay.io/plotly/orca
+  # -- secrets used to pull images
+  imagePullSecrets:
+  image: tidepool/plotly-orca:latest
   replicas: 1
