@@ -1,3 +1,3 @@
 deployment:
-  image: quay.io/plotly/orca
+  image: tidepool/plotly-orca:latest
   replicas: 1
