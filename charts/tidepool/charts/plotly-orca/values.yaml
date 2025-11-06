@@ -1,3 +1,5 @@
 deployment:
+  # -- secrets used to pull images
+  imagePullSecrets:
   image: tidepool/plotly-orca:latest
   replicas: 1
