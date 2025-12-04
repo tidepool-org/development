@@ -14,5 +14,8 @@ data:
   AppleDeviceCheckUseDevelopment: "{{ .AppleDeviceCheckUseDevelopment | default "true" }}"
   BigDataDonationProjectDataRecipientUserId: "{{ .BigDataDonationProjectDataRecipientUserId | default "" }}"
   BigDataDonationProjectSharingDisabled: "{{ .BigDataDonationProjectSharingDisabled | default "true" }}"
+  CustomerIOSegmentID: "{{ .CustomerIOSegmentID | default "" }}"
+  CustomerIOSiteID: "{{ .CustomerIOSiteID | default "" }}"
+  JotformBaseURL: "{{ .JotformBaseURL | default "" }}"
 {{- end }}
 {{- end }}

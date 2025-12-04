@@ -4,6 +4,9 @@ secret:
   data_:
     ServiceAuth: ""
     AppleDeviceCheckKey: ""
+    CustomerIOAppAPIKey: ""
+    CustomerIOTrackAPIKey: ""
+    JotformAPIKey: ""
 configmap:
   # -- whether to generate a configmap
   enabled: false
@@ -14,6 +17,9 @@ configmap:
     AppleDeviceCheckUseDevelopment: "true"
     BigDataDonationProjectDataRecipientUserId: ""
     BigDataDonationProjectSharingDisabled: "true"
+    CustomerIOSegmentID: ""
+    CustomerIOSiteID: ""
+    JotformBaseURL: ""
 deployment:
   # -- secrets used to pull images
   imagePullSecrets:
