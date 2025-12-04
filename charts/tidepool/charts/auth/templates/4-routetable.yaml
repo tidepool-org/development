@@ -153,6 +153,14 @@ spec:
         upstream:
           name: auth
   - matchers:
+    - methods:
+      - POST
+      regex: /v1/partners/jotform/[^/]+
+    routeAction:
+      single:
+        upstream:
+          name: auth
+  - matchers:
       - methods:
           - GET
         prefix: /v1/consents
