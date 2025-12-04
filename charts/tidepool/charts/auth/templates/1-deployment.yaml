@@ -410,6 +410,54 @@ spec:
               name: palmtree
               key: tlsKeyData
               optional: true
+        - name: TIDEPOOL_OURA_JOTFORM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oura
+              key: JotformAPIKey
+              optional: true
+        - name: TIDEPOOL_OURA_JOTFORM_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: JotformBaseURL
+              optional: true
+        - name: TIDEPOOL_OURA_JOTFORM_FORM_ID
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: JotformFormId
+              optional: true
+        - name: TIDEPOOL_CUSTOMERIO_APP_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: auth
+              key: CustomerIOAppAPIKey
+              optional: true
+        - name: TIDEPOOL_CUSTOMERIO_TRACK_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: auth
+              key: CustomerIOTrackAPIKey
+              optional: true
+        - name: TIDEPOOL_OURA_SHOPIFY_STORE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: ShopifyStoreId
+              optional: true
+        - name: TIDEPOOL_OURA_SHOPIFY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: oura
+              key: ShopifyClientId
+              optional: true
+        - name: TIDEPOOL_OURA_SHOPIFY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: oura
+              key: ShopifyClientSecret
+              optional: true
 {{- range $key, $val := ((.Values.deployment).extraEnv | default ((.Values.global).deployment).extraEnv | default (dict)) }}
         - name: {{ $key }}
           value: {{ $val | quote }}
