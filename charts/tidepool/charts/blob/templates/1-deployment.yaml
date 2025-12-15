@@ -9,8 +9,8 @@ metadata:
   namespace: {{.Release.Namespace}}
   annotations:
     secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},blob"
-{{ if .Values.deployment.annotations }}
-    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{ if (.Values.deployment).annotations }}
+    {{- (.Values.deployment).annotations | toYaml | nindent 4 }}
 {{- end }}
 spec:
   selector:
@@ -18,7 +18,7 @@ spec:
       app: blob
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: {{ (.Values.deployment).replicas }}
   strategy: {}
   template:
     metadata:
@@ -63,34 +63,34 @@ spec:
         - name: TIDEPOOL_BLOB_SERVICE_SERVER_ADDRESS
           value: :{{.Values.global.ports.blob}}
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_FILE_DIRECTORY
-          value: '{{.Values.deployment.env.store.file.directory}}'
+          value: '{{(.Values.deployment).env.store.file.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_BUCKET
-          value: '{{ .Values.deployment.env.store.s3.bucket }}'
+          value: '{{ (.Values.deployment).env.store.s3.bucket }}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_S3_PREFIX
-          value: '{{.Values.deployment.env.store.s3.prefix}}'
+          value: '{{(.Values.deployment).env.store.s3.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_STORE_TYPE
-          value: '{{.Values.deployment.env.store.type}}'
+          value: '{{(.Values.deployment).env.store.type}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_BLOBS_STORE_FILE_DIRECTORY
-          value: '{{.Values.deployment.env.blobs.store.file.directory}}'
+          value: '{{(.Values.deployment).env.blobs.store.file.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_BLOBS_STORE_S3_BUCKET
-          value: '{{ .Values.deployment.env.blobs.store.s3.bucket }}'
+          value: '{{ (.Values.deployment).env.blobs.store.s3.bucket }}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_BLOBS_STORE_S3_PREFIX
-          value: '{{.Values.deployment.env.blobs.store.s3.prefix}}'
+          value: '{{(.Values.deployment).env.blobs.store.s3.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_BLOBS_STORE_TYPE
-          value: '{{.Values.deployment.env.blobs.store.type}}'
+          value: '{{(.Values.deployment).env.blobs.store.type}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_LOGS_STORE_FILE_DIRECTORY
-          value: '{{.Values.deployment.env.logs.store.file.directory}}'
+          value: '{{(.Values.deployment).env.logs.store.file.directory}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_LOGS_STORE_S3_BUCKET
-          value: '{{ .Values.deployment.env.logs.store.s3.bucket }}'
+          value: '{{ (.Values.deployment).env.logs.store.s3.bucket }}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_LOGS_STORE_S3_PREFIX
-          value: '{{.Values.deployment.env.logs.store.s3.prefix}}'
+          value: '{{(.Values.deployment).env.logs.store.s3.prefix}}'
         - name: TIDEPOOL_BLOB_SERVICE_UNSTRUCTURED_LOGS_STORE_TYPE
-          value: '{{.Values.deployment.env.logs.store.type}}'
+          value: '{{(.Values.deployment).env.logs.store.type}}'
 {{- range $key, $val := ((.Values.deployment).extraEnv | default ((.Values.global).deployment).extraEnv | default (dict)) }}
         - name: {{ $key }}
           value: {{ $val | quote }}
 {{- end }}
-        image: "{{ .Values.deployment.image }}"
+        image: "{{ (.Values.deployment).image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.blob}}
