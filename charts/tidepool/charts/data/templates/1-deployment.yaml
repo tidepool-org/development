@@ -10,8 +10,8 @@ metadata:
   annotations:
     secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,data"
     configmap.reloader.stakater.com/reload: "abbott"
-{{ if .Values.deployment.annotations }}
-    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{ if (.Values.deployment).annotations }}
+    {{- (.Values.deployment).annotations | toYaml | nindent 4 }}
 {{- end }}
 spec:
   selector:
@@ -19,7 +19,7 @@ spec:
       app: data
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: {{ (.Values.deployment).replicas }}
   strategy: {}
   template:
     metadata:
@@ -153,7 +153,7 @@ spec:
               name: data
               key: AlertsRetryDelays
               optional: true
-        image: "{{ .Values.deployment.image }}"
+        image: "{{ (.Values.deployment).image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.data }}
