@@ -50,7 +50,7 @@ spec:
         secret:
           secretName: {{ .Values.keycloak.secretName }}
 {{- end }}
-  image: tidepool/connect-debezium:0.48.0-kafka-4.1.0-mongo-1.14.1-pg-1.9.6
+  image: {{ .Values.connect.image | quote }}
   replicas: {{ .Values.global.kafka.connect.replicas | int }}
 {{ if .Values.global.kafka.connect.tlsEnabled }}
   tls:
