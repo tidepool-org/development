@@ -1,5 +1,5 @@
 {{ if and .Values.global.kafka.connect.enabled .Values.global.kafka.connect.keycloak.enabled}}
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnector
 metadata:
   labels:

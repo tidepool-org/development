@@ -1,5 +1,5 @@
 {{ if .Values.global.kafka.connect.enabled }}
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnect
 metadata:
   annotations:
@@ -9,6 +9,10 @@ metadata:
   name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}
   namespace: {{ .Release.Namespace }}
 spec:
+  groupId: kafka-connect-cluster
+  configStorageTopic: kafka-cluster-configs
+  offsetStorageTopic: kafka-cluster-offsets
+  statusStorageTopic: kafka-cluster-status
   authentication:
     passwordSecret:
       password: {{ .Values.global.kafka.passwordKeyName | default "Password" }}
@@ -34,21 +38,30 @@ spec:
       configMapKeyRef:
         name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-jmx
         key: metrics-config.yml
-  externalConfiguration:
-    env:
-    - name: ENABLE_DEBEZIUM_SCRIPTING
-      valueFrom:
-        configMapKeyRef:
-          name: kafka-connect-env
-          key: EnableDebeziumScripting
-    volumes:
-      - name: connector-config
-        secret:
-          secretName: {{ .Values.mongo.secretName }}
+  template:
+    connectContainer:
+      env:
+      - name: ENABLE_DEBEZIUM_SCRIPTING
+        valueFrom:
+          configMapKeyRef:
+            name: kafka-connect-env
+            key: EnableDebeziumScripting
+      volumeMounts:
+        - name: connector-config
+          mountPath: /mnt/connector-config
 {{ if .Values.global.kafka.connect.keycloak.enabled }}
-      - name: keycloak-config
-        secret:
-          secretName: {{ .Values.keycloak.secretName }}
+        - name: keycloak-config
+          mountPath: /mnt/keycloak-config
+{{- end }}
+    pod:
+      volumes:
+        - name: connector-config
+          secret:
+            secretName: {{ .Values.mongo.secretName }}
+{{ if .Values.global.kafka.connect.keycloak.enabled }}
+        - name: keycloak-config
+          secret:
+            secretName: {{ .Values.keycloak.secretName }}
 {{- end }}
   image: {{ .Values.connect.image | quote }}
   replicas: {{ .Values.global.kafka.connect.replicas | int }}

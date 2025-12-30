@@ -3,7 +3,7 @@
 {{ if not .Values.keycloak.realm }}
   {{- $realm = .Release.Namespace -}}
 {{ end}}
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnector
 metadata:
   labels:
@@ -16,11 +16,11 @@ spec:
   config:
     tasks.max: 1
     plugin.name: 'wal2json'
-    database.hostname: '${directory:/opt/kafka/external-configuration/keycloak-config:Hostname}'
-    database.port: '${directory:/opt/kafka/external-configuration/keycloak-config:Port}'
-    database.user: '${directory:/opt/kafka/external-configuration/keycloak-config:User}'
-    database.password: '${directory:/opt/kafka/external-configuration/keycloak-config:Password}'
-    database.dbname: '${directory:/opt/kafka/external-configuration/keycloak-config:Database}'
+    database.hostname: '${directory:/mnt/keycloak-config:Hostname}'
+    database.port: '${directory:/mnt/keycloak-config:Port}'
+    database.user: '${directory:/mnt/keycloak-config:User}'
+    database.password: '${directory:/mnt/keycloak-config:Password}'
+    database.dbname: '${directory:/mnt/keycloak-config:Database}'
     database.server.name: {{ .Release.Namespace }}.keycloak
     key.converter: 'org.apache.kafka.connect.json.JsonConverter'
     key.converter.schemas.enable: false

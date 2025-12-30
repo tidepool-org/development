@@ -1,6 +1,6 @@
 {{ if .Values.global.kafka.connect.enabled }}
 {{ if .Values.kafka.connectors.carePartnerAlerts.enabled }}
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnector
 metadata:
   labels:
