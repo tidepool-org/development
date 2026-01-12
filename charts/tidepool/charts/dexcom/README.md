@@ -11,7 +11,9 @@ A Helm chart for Kubernetes
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | configmap.enabled | bool | `true` | whether to generate a configmap |
+| configmap.acceptURL | string | `""` | OAuth2 accept URL |
 | configmap.redirectURL | string | `""` |  |
+| configmap.revokeURL | string | `""` | OAuth2 revoke URL |
 | secret.data_.ClientId | string | `""` | plaintext Dexcom Oauth2 client id |
 | secret.data_.ClientSecret | string | `""` | plaintext Dexcom Oauth2 client secret |
 | secret.data_.StateSalt | string | `""` | plaintext Dexcom Oauth2 state salt |

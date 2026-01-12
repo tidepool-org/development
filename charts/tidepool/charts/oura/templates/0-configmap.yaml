@@ -2,21 +2,21 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: twiist
+  name: oura
   namespace: {{ .Release.Namespace }}
   labels:
 {{ include "charts.labels.standard" . }}
 data:
+  AcceptURL: {{ .Values.configmap.acceptURL | default "" }}
+  AuthorizeURL: {{ .Values.configmap.authorizeURL | default "" }}
 {{ if .Values.configmap.redirectURL }}
   RedirectURL: {{ .Values.configmap.redirectURL }}
 {{ else }}
-  RedirectURL: "{{include "charts.host.api" .}}/v1/oauth/twiist/redirect"
+  RedirectURL: "{{include "charts.host.api" .}}/v1/oauth/oura/redirect"
 {{ end }}
   TokenURL: {{ .Values.configmap.tokenURL | default "" }}
-  AcceptURL: {{ .Values.configmap.acceptURL | default "" }}
-  AuthorizeURL: {{ .Values.configmap.authorizeURL | default "" }}
   RevokeURL: {{ .Values.configmap.revokeURL | default "" }}
-  JWKSURL: {{ .Values.configmap.jwksURL | default "" }}
   Scopes: {{ .Values.configmap.scopes | default "" }}
-  ServiceAccountIDs: {{ .Values.configmap.serviceAccountIDs | default "" }}
+  ClientURL: {{ .Values.configmap.clientURL | default "" }}
+  PartnerURL: {{ .Values.configmap.partnerURL | default "" }}
 {{ end }}

@@ -1,16 +1,17 @@
 configmap:
-  enabled: false
-  redirectURL: ""
-  tokenURL: ""
+  enabled: true
   acceptURL: ""
   authorizeURL: ""
+  redirectURL: ""
+  tokenURL: ""
   revokeURL: ""
   scopes: ""
-  jwksURL: ""
-  serviceAccountIDs: ""
+  clientURL: ""
+  partnerURL: ""
 secret:
   enabled: false
   data_:
     clientId: ""
     clientSecret: ""
     stateSalt: ""
+    partnerSecret: ""

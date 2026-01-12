@@ -2,7 +2,9 @@ configmap:
   enabled: true
   redirectURL: ""
   tokenURL: ""
+  acceptURL: ""
   authorizeURL: ""
+  revokeURL: ""
   jwksURL: ""
   clientURL: ""
   scopes: ""

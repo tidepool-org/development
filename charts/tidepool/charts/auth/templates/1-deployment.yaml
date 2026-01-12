@@ -8,8 +8,8 @@ metadata:
   name: auth
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,dexcom,twiist,auth"
-    configmap.reloader.stakater.com/reload: "abbott,dexcom,twiist"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,dexcom,oura,twiist,auth"
+    configmap.reloader.stakater.com/reload: "abbott,dexcom,oura,twiist"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -51,6 +51,12 @@ spec:
         {{ include "charts.platform.env.clients" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "auth") }}
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_ACCEPT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: AcceptURL
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:
@@ -74,6 +80,12 @@ spec:
             configMapKeyRef:
               name: abbott
               key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_REVOKE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: abbott
+              key: RevokeURL
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_JWKS_URL
           valueFrom:
@@ -101,6 +113,12 @@ spec:
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTH_STYLE_IN_PARAMS
           value: "true"
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_ACCEPT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: AcceptURL
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:
@@ -125,6 +143,12 @@ spec:
               name: dexcom
               key: TokenURL
               optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_REVOKE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: dexcom
+              key: RevokeURL
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_CLIENT_ID
           valueFrom:
             secretKeyRef:
@@ -143,6 +167,84 @@ spec:
               name: dexcom
               key: StateSalt
               optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_OURA_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: oura
+              key: ClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_OURA_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: oura
+              key: ClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_OURA_ACCEPT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: AcceptURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_OURA_AUTHORIZE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: AuthorizeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_OURA_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_OURA_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_OURA_REVOKE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: RevokeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_OURA_SCOPES
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: Scopes
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_OURA_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: oura
+              key: StateSalt
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_OURA_CLIENT_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: ClientURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_OURA_PARTNER_URL
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: PartnerURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_OURA_PARTNER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: oura
+              key: PartnerSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_ACCEPT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: AcceptURL
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:
@@ -160,6 +262,12 @@ spec:
             configMapKeyRef:
               name: twiist
               key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_REVOKE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: twiist
+              key: RevokeURL
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_JWKS_URL
           valueFrom:
