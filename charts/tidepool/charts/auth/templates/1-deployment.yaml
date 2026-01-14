@@ -51,12 +51,6 @@ spec:
         {{ include "charts.platform.env.clients" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "auth") }}
-        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_ACCEPT_URL
-          valueFrom:
-            configMapKeyRef:
-              name: abbott
-              key: AcceptURL
-              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:
@@ -113,12 +107,6 @@ spec:
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTH_STYLE_IN_PARAMS
           value: "true"
-        - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_ACCEPT_URL
-          valueFrom:
-            configMapKeyRef:
-              name: dexcom
-              key: AcceptURL
-              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:
@@ -238,12 +226,6 @@ spec:
             secretKeyRef:
               name: oura
               key: PartnerSecret
-              optional: true
-        - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_ACCEPT_URL
-          valueFrom:
-            configMapKeyRef:
-              name: twiist
-              key: AcceptURL
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_TWIIST_AUTHORIZE_URL
           valueFrom:

@@ -13,7 +13,6 @@ data:
   RedirectURL: "{{include "charts.host.api" .}}/v1/oauth/twiist/redirect"
 {{ end }}
   TokenURL: {{ .Values.configmap.tokenURL | default "" }}
-  AcceptURL: {{ .Values.configmap.acceptURL | default "" }}
   AuthorizeURL: {{ .Values.configmap.authorizeURL | default "" }}
   RevokeURL: {{ .Values.configmap.revokeURL | default "" }}
   JWKSURL: {{ .Values.configmap.jwksURL | default "" }}

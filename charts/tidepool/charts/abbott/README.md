@@ -13,7 +13,6 @@ A Helm chart for Kubernetes
 | configmap.enabled | bool | `false` | whether to generate a configmap |
 | configmap.redirectURL | string | `""` | OAuth2 redirect URL |
 | configmap.tokenURL | string | `""` | OAuth2 token URL |
-| configmap.acceptURL | string | `""` | OAuth2 accept URL |
 | configmap.authorizeURL | string | `""` | OAuth2 authorization URL |
 | configmap.revokeURL | string | `""` | OAuth2 revoke URL |
 | configmap.jwksURL | string | `""` | JWKS URL |

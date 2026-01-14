@@ -13,7 +13,6 @@ data:
   RedirectURL: "{{include "charts.host.api" .}}/v1/oauth/dexcom/redirect"
 {{ end }}
   TokenURL: {{ .Values.configmap.tokenURL | default "https://api.dexcom.com/v1/oauth2/token" }}
-  AcceptURL: {{ .Values.configmap.acceptURL | default "" }}
   AuthorizeURL: {{ .Values.configmap.authorizeURL | default "https://api.dexcom.com/v1/oauth2/login?prompt=login" }}
   RevokeURL: {{ .Values.configmap.revokeURL | default "" }}
   ClientURL: {{ .Values.configmap.clientURL | default "https://api.dexcom.com" }}

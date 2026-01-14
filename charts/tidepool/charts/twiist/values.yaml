@@ -2,7 +2,6 @@ configmap:
   enabled: false
   redirectURL: ""
   tokenURL: ""
-  acceptURL: ""
   authorizeURL: ""
   revokeURL: ""
   scopes: ""

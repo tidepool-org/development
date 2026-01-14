@@ -52,12 +52,6 @@ spec:
         {{ include "charts.platform.env.care-partner-alerts" .}}
         {{ include "charts.kafka.common" .}}
         {{ include "charts.kafka.cloudevents.client" (dict "Values" .Values "Release" .Release "client" "data") }}
-        - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_ACCEPT_URL
-          valueFrom:
-            configMapKeyRef:
-              name: abbott
-              key: AcceptURL
-              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_ABBOTT_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:

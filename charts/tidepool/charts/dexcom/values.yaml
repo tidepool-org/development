@@ -11,7 +11,6 @@ secret:
 configmap:
   # -- whether to generate a configmap
   enabled: true
-  acceptURL: ""
   redirectURL: ""
   revokeURL: ""
   clientURL: "https://api.dexcom.com"
