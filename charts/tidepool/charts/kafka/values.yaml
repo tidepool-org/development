@@ -41,6 +41,8 @@ configmap:
   Username: "admin"
   # -- required version of Kafka server
   Version: "2.5.0"
+connect:
+  image: "tidepool/connect-debezium:0.48.0-kafka-4.1.0-mongo-1.14.1-pg-1.9.6" 
 mongo:
   secretName: "mongo"
 keycloak:
