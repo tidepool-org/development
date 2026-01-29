@@ -4,8 +4,6 @@ secret:
   data_:
     ServiceAuth: ""
     AppleDeviceCheckKey: ""
-    CustomerIOAppAPIKey: ""
-    CustomerIOTrackAPIKey: ""
 configmap:
   # -- whether to generate a configmap
   enabled: false

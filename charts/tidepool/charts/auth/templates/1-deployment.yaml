@@ -8,8 +8,8 @@ metadata:
   name: auth
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,dexcom,oura,twiist,auth"
-    configmap.reloader.stakater.com/reload: "abbott,dexcom,oura,twiist"
+    secret.reloader.stakater.com/reload: "auth,server,{{ .Values.mongo.secretName }},abbott,customer-io,dexcom,oura,twiist"
+    configmap.reloader.stakater.com/reload: "abbott,auth,dexcom,oura,twiist"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -431,13 +431,13 @@ spec:
         - name: TIDEPOOL_CUSTOMERIO_APP_API_KEY
           valueFrom:
             secretKeyRef:
-              name: auth
+              name: customer-io
               key: CustomerIOAppAPIKey
               optional: true
         - name: TIDEPOOL_CUSTOMERIO_TRACK_API_KEY
           valueFrom:
             secretKeyRef:
-              name: auth
+              name: customer-io
               key: CustomerIOTrackAPIKey
               optional: true
         - name: TIDEPOOL_OURA_SHOPIFY_STORE_ID

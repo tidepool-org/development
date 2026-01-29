@@ -1,0 +1,8 @@
+secret:
+  # -- whether to generate a secret
+  enabled: false
+  data_:
+    # -- API key customer.io's App API
+    customerIOAppAPIKey: ""
+    # -- API key customer.io's Track API
+    customerIOTrackAPIKey: ""
