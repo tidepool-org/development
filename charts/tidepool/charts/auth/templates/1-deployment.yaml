@@ -8,8 +8,8 @@ metadata:
   name: auth
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,dexcom,oura,twiist,auth"
-    configmap.reloader.stakater.com/reload: "abbott,dexcom,oura,twiist"
+    secret.reloader.stakater.com/reload: "auth,server,{{ .Values.mongo.secretName }},abbott,customer-io,dexcom,oura,twiist"
+    configmap.reloader.stakater.com/reload: "abbott,auth,dexcom,oura,twiist"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -409,6 +409,54 @@ spec:
             secretKeyRef:
               name: palmtree
               key: tlsKeyData
+              optional: true
+        - name: TIDEPOOL_OURA_JOTFORM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oura
+              key: JotformAPIKey
+              optional: true
+        - name: TIDEPOOL_OURA_JOTFORM_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: JotformBaseURL
+              optional: true
+        - name: TIDEPOOL_OURA_JOTFORM_FORM_ID
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: JotformFormId
+              optional: true
+        - name: TIDEPOOL_CUSTOMERIO_APP_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: customer-io
+              key: CustomerIOAppAPIKey
+              optional: true
+        - name: TIDEPOOL_CUSTOMERIO_TRACK_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: customer-io
+              key: CustomerIOTrackAPIKey
+              optional: true
+        - name: TIDEPOOL_OURA_SHOPIFY_STORE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: ShopifyStoreId
+              optional: true
+        - name: TIDEPOOL_OURA_SHOPIFY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: oura
+              key: ShopifyClientId
+              optional: true
+        - name: TIDEPOOL_OURA_SHOPIFY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: oura
+              key: ShopifyClientSecret
               optional: true
 {{- range $key, $val := ((.Values.deployment).extraEnv | default ((.Values.global).deployment).extraEnv | default (dict)) }}
         - name: {{ $key }}
