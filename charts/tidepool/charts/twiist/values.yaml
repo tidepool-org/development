@@ -3,6 +3,7 @@ configmap:
   redirectURL: ""
   tokenURL: ""
   authorizeURL: ""
+  revokeURL: ""
   scopes: ""
   jwksURL: ""
   serviceAccountIDs: ""

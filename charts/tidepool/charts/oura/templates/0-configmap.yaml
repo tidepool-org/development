@@ -2,21 +2,24 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: abbott
+  name: oura
   namespace: {{ .Release.Namespace }}
   labels:
 {{ include "charts.labels.standard" . }}
 data:
+  AcceptURL: {{ .Values.configmap.acceptURL | default "" }}
+  AuthorizeURL: {{ .Values.configmap.authorizeURL | default "" }}
 {{ if .Values.configmap.redirectURL }}
   RedirectURL: {{ .Values.configmap.redirectURL }}
 {{ else }}
-  RedirectURL: "{{include "charts.host.api" .}}/v1/oauth/abbott/redirect"
+  RedirectURL: "{{include "charts.host.api" .}}/v1/oauth/oura/redirect"
 {{ end }}
   TokenURL: {{ .Values.configmap.tokenURL | default "" }}
-  AuthorizeURL: {{ .Values.configmap.authorizeURL | default "" }}
   RevokeURL: {{ .Values.configmap.revokeURL | default "" }}
-  JWKSURL: {{ .Values.configmap.jwksURL | default "" }}
-  ClientURL: {{ .Values.configmap.clientURL | default "" }}
   Scopes: {{ .Values.configmap.scopes | default "" }}
+  ClientURL: {{ .Values.configmap.clientURL | default "" }}
   PartnerURL: {{ .Values.configmap.partnerURL | default "" }}
+  JotformBaseURL: "{{ .Values.configmap.jotformBaseURL | default "" }}"
+  JotformFormId: "{{ .Values.configmap.jotformFormId | default "" }}"
+  ShopifyStoreId: "{{ .Values.configmap.shopifyStoreId | default "" }}"
 {{ end }}

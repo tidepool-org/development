@@ -14,6 +14,7 @@ data:
 {{ end }}
   TokenURL: {{ .Values.configmap.tokenURL | default "https://api.dexcom.com/v1/oauth2/token" }}
   AuthorizeURL: {{ .Values.configmap.authorizeURL | default "https://api.dexcom.com/v1/oauth2/login?prompt=login" }}
+  RevokeURL: {{ .Values.configmap.revokeURL | default "" }}
   ClientURL: {{ .Values.configmap.clientURL | default "https://api.dexcom.com" }}
   Scopes: {{ .Values.configmap.scopes | default "offline_access" }}
 {{ end }}

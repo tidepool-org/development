@@ -1,0 +1,11 @@
+{{ if .Values.configmap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: customer-io
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "charts.labels.standard" . }}
+data:
+  SiteId: "{{ .Values.configmap.siteId | default "" }}"
+{{ end }}
