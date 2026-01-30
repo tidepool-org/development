@@ -3,6 +3,11 @@ secret:
   enabled: false
   data_:
     # -- API key customer.io's App API
-    customerIOAppAPIKey: ""
+    appAPIKey: ""
     # -- API key customer.io's Track API
-    customerIOTrackAPIKey: ""
+    trackAPIKey: ""
+configmap:
+  # -- whether to generate a configmap
+  enabled: true
+  # -- Customer.io site ID
+  siteId: ""
