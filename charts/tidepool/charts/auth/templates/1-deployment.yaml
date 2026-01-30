@@ -9,7 +9,7 @@ metadata:
   namespace: {{.Release.Namespace}}
   annotations:
     secret.reloader.stakater.com/reload: "auth,server,{{ .Values.mongo.secretName }},abbott,customer-io,dexcom,oura,twiist"
-    configmap.reloader.stakater.com/reload: "abbott,auth,dexcom,oura,twiist"
+    configmap.reloader.stakater.com/reload: "abbott,auth,customer-io,dexcom,oura,twiist"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -428,17 +428,23 @@ spec:
               name: oura
               key: JotformFormId
               optional: true
+        - name: TIDEPOOL_CUSTOMERIO_SITE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: customer-io
+              key: SiteId
+              optional: true
         - name: TIDEPOOL_CUSTOMERIO_APP_API_KEY
           valueFrom:
             secretKeyRef:
               name: customer-io
-              key: CustomerIOAppAPIKey
+              key: AppAPIKey
               optional: true
         - name: TIDEPOOL_CUSTOMERIO_TRACK_API_KEY
           valueFrom:
             secretKeyRef:
               name: customer-io
-              key: CustomerIOTrackAPIKey
+              key: TrackAPIKey
               optional: true
         - name: TIDEPOOL_OURA_SHOPIFY_STORE_ID
           valueFrom:
