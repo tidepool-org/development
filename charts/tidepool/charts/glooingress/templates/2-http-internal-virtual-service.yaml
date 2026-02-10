@@ -44,5 +44,11 @@ spec:
             namespace: {{ .Release.Namespace }}
             app: tidepool
 
+    - matchers:
+      - regex: '/v1/clinics/[^/]*/merge'
+        methods:
+          - POST
+      options:
+        timeout: '60s'
 {{- end }}
 {{- end }}
