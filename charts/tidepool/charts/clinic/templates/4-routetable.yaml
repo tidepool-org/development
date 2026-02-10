@@ -11,6 +11,17 @@ spec:
   routes:
     - matchers:
         - methods:
+            - POST
+          regex: /v1/clinics/[^/]+/merge
+      routeAction:
+        single:
+          upstream:
+            name: clinic
+            namespace: {{ .Release.Namespace }}
+      options:
+        timeout: 1m
+    - matchers:
+        - methods:
             - GET
             - DELETE
             - PATCH
