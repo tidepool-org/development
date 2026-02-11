@@ -1,0 +1,43 @@
+configmap:
+  # -- whether to generate a configmap
+  enabled: true
+  # -- OAuth2 accept URL
+  acceptURL: ""
+  # -- OAuth2 authorization URL
+  authorizeURL: ""
+  # -- OAuth2 redirect URL
+  redirectURL: ""
+  # -- OAuth2 token URL
+  tokenURL: ""
+  # -- OAuth2 revoke URL
+  revokeURL: ""
+  # -- OAuth2 scopes
+  scopes: ""
+  # -- client URL
+  clientURL: ""
+  # -- partner URL
+  partnerURL: ""
+  # -- jotform base URL
+  jotformBaseURL: ""
+  # -- jotform OURA eligibility form ID
+  jotformFormId: ""
+  # -- shopify store ID
+  shopifyStoreId: ""
+secret:
+  # -- whether to create a secret
+  enabled: false
+  data_:
+    # -- plaintext OAuth2 client id
+    clientId: ""
+    # -- plaintext OAuth2 client secret
+    clientSecret: ""
+    # -- plaintext OAuth2 state salt
+    stateSalt: ""
+    # -- plaintext partner secret
+    partnerSecret: ""
+    # -- jotform API Key
+    jotformAPIKey: ""
+    # -- plaintext Shopify Client ID
+    shopifyClientId: ""
+    # -- plaintext Shopify Client Secret
+    shopifyClientSecret: ""
