@@ -19,7 +19,7 @@ spec:
             name: clinic
             namespace: {{ .Release.Namespace }}
       options:
-        timeout: 1m
+        timeout: 15m
     - matchers:
         - methods:
             - GET

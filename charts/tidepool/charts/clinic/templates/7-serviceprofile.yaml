@@ -290,7 +290,7 @@ spec:
         method: POST
         pathRegex: /v1/clinics/[^/]*/merge
       name: POST /v1/clinics/{clinicId}/merge
-      timeout: 1m
+      timeout: 15m
       responseClasses:
         - condition:
             status:
@@ -301,11 +301,6 @@ spec:
               min: 400
               max: 599
           isFailure: true
-    - condition:
-        method: POST
-        pathRegex: /v1/clinics/[^/]*/merge
-      name: POST /v1/clinics/{clinicId}/merge
-      timeout: 1m
     - condition:
         method: POST
         pathRegex: /v1/clinics/[^/]*/migrate
