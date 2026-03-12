@@ -29,7 +29,7 @@ Of course, if you haven't already done so, you should check out [Tidepool](https
 >
 > Tidepool reserves the right to take appropriate action, including but not limited to legal action, to enforce its Terms of Use and protect its trademarks, users' safety, and reputation.
 >
-> If you have questions about what is or is not permitted, please contact us **before** distributing your derived work.
+> If you have questions about what is or is not permitted, [please contact us](mailto:support@tidepool.org) **before** distributing your derived work.
 
 ## Quick Links
 
