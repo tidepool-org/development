@@ -20,6 +20,8 @@ data:
   ClientURL: {{ .Values.configmap.clientURL | default "" }}
   PartnerURL: {{ .Values.configmap.partnerURL | default "" }}
   JotformBaseURL: "{{ .Values.configmap.jotformBaseURL | default "" }}"
+  JotformEnabled: "{{ .Values.configmap.jotformEnabled }}"
   JotformFormId: "{{ .Values.configmap.jotformFormId | default "" }}"
+  JotformTeamId: "{{ .Values.configmap.jotformTeamId | default "" }}"
   ShopifyStoreId: "{{ .Values.configmap.shopifyStoreId | default "" }}"
 {{ end }}

@@ -19,8 +19,12 @@ configmap:
   partnerURL: ""
   # -- jotform base URL
   jotformBaseURL: ""
+  # -- jotform enabled
+  jotformEnabled: "false"
   # -- jotform OURA eligibility form ID
   jotformFormId: ""
+  # -- jotform team id
+  jotformTeamId: ""
   # -- shopify store ID
   shopifyStoreId: ""
 secret:
