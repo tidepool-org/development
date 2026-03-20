@@ -25,6 +25,8 @@ configmap:
   jotformFormId: ""
   # -- jotform team id
   jotformTeamId: ""
+  # -- shopify enabled
+  shopifyEnabled: "false"
   # -- shopify store ID
   shopifyStoreId: ""
 secret:

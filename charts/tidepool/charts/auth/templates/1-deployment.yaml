@@ -458,6 +458,12 @@ spec:
               name: customer-io
               key: TrackAPIKey
               optional: true
+        - name: TIDEPOOL_OURA_SHOPIFY_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: ShopifyEnabled
+              optional: true
         - name: TIDEPOOL_OURA_SHOPIFY_STORE_ID
           valueFrom:
             configMapKeyRef:

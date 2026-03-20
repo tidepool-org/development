@@ -23,5 +23,6 @@ data:
   JotformEnabled: "{{ .Values.configmap.jotformEnabled }}"
   JotformFormId: "{{ .Values.configmap.jotformFormId | default "" }}"
   JotformTeamId: "{{ .Values.configmap.jotformTeamId | default "" }}"
+  ShopifyEnabled: "{{ .Values.configmap.shopifyEnabled }}"
   ShopifyStoreId: "{{ .Values.configmap.shopifyStoreId | default "" }}"
 {{ end }}
