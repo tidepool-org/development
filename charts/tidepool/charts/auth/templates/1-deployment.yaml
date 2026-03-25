@@ -422,11 +422,23 @@ spec:
               name: oura
               key: JotformBaseURL
               optional: true
+        - name: TIDEPOOL_OURA_JOTFORM_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: JotformEnabled
+              optional: true
         - name: TIDEPOOL_OURA_JOTFORM_FORM_ID
           valueFrom:
             configMapKeyRef:
               name: oura
               key: JotformFormId
+              optional: true
+        - name: TIDEPOOL_OURA_JOTFORM_TEAM_ID
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: JotformTeamId
               optional: true
         - name: TIDEPOOL_CUSTOMERIO_SITE_ID
           valueFrom:
@@ -445,6 +457,12 @@ spec:
             secretKeyRef:
               name: customer-io
               key: TrackAPIKey
+              optional: true
+        - name: TIDEPOOL_OURA_SHOPIFY_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: oura
+              key: ShopifyEnabled
               optional: true
         - name: TIDEPOOL_OURA_SHOPIFY_STORE_ID
           valueFrom:
