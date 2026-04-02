@@ -32,6 +32,6 @@ spec:
     transforms.filter.type: 'io.debezium.transforms.Filter'
     transforms.filter.language: 'jsr223.groovy'
     transforms.filter.topic.regex: '.+\.public.(user_entity|keycloak_role|user_attribute)'
-    transforms.filter.condition: "value.op && (((value.op == 'r' || value.op == 'c' || value.op == 'u') && (value.after && (value.after?.realm_id == '{{ $realm }}' || value.after?.name == 'terms_and_conditions')) || (value.op == 'd'))"
+    transforms.filter.condition: "value.op && ((((value.op == 'r' || value.op == 'c' || value.op == 'u') && value?.after?.realm_id == '{{ $realm }}') || value.op == 'd') || ((value.op == 'r' || value.op == 'c' || value.op == 'u') && value?.after?.name == 'terms_and_conditions'))"
   tasksMax: 1
 {{- end }}
