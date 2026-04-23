@@ -28,10 +28,14 @@ spec:
     value.converter.schemas.enable: false
     snapshot.mode: {{ .Values.keycloak.snapshotMode }}
     table.include.list: 'public.user_entity,public.user_role_mapping,public.keycloak_role,public.user_attribute'
-    transforms: 'filter'
+    transforms: 'filter,filter_user_attr'
     transforms.filter.type: 'io.debezium.transforms.Filter'
     transforms.filter.language: 'jsr223.groovy'
-    transforms.filter.topic.regex: '.+\.public.(user_entity|keycloak_role|user_attribute)'
-    transforms.filter.condition: "value.op && ((((value.op == 'r' || value.op == 'c' || value.op == 'u') && value?.after?.realm_id == '{{ $realm }}') || value.op == 'd') || ((value.op == 'r' || value.op == 'c' || value.op == 'u') && value?.after?.name == 'terms_and_conditions'))"
+    transforms.filter.topic.regex: '.+\.public.(user_entity|keycloak_role)'
+    transforms.filter.condition: "value.op && (((value.op == 'r' || value.op == 'c' || value.op == 'u') && (value.after && value.after.realm_id && value.after.realm_id == '{{ $realm }}')) || (value.op == 'd'))"
+    transforms.filter_user_attr.type: 'io.debezium.transforms.Filter'
+    transforms.filter_user_attr.language: 'jsr223.groovy'
+    transforms.filter_user_attr.topic.regex: '.+\.public.(user_attribute)'
+    transforms.filter_user_attr.condition: "value.op && ((value.op == 'r' || value.op == 'c' || value.op == 'u') && value?.after?.name != null && value.after.name == 'terms_and_conditions')"
   tasksMax: 1
 {{- end }}
