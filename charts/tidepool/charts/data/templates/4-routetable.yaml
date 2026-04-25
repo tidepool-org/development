@@ -429,5 +429,13 @@ spec:
       single:
         upstream:
           name: data
+  - matchers:
+    - methods:
+      - POST
+      prefix: /v1/notifications/
+    routeAction:
+      single:
+        upstream:
+          name: data
   weight: 10
 {{- end }}

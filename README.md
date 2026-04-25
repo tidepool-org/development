@@ -8,6 +8,29 @@ Please note that this repository is only intended to run a simplified version of
 
 Of course, if you haven't already done so, you should check out [Tidepool](https://tidepool.org) and [Tidepool Web](https://app.tidepool.org). It's a snap to create an account, upload your or your loved one's diabetes device data, and visualize it all in one place. We've already done the hard work of setting up the servers, software, databases, backups, and more, so you don't have to. Check it out!
 
+> [!IMPORTANT]
+> ## ⚠️ Important Notice for Third-Party Developers
+>
+> You are welcome to fork Tidepool's open-source code to create derived works. However, please make sure you first read and understand our [Terms of Use](https://developer.tidepool.org/terms-of-use/), especially [Section 4. Content Licensing and Intellectual Property Rights](https://developer.tidepool.org/terms-of-use/#4-content-licensing-and-intellectual-property-rights) and [Section 6. Linked Sites and Third Parties](https://developer.tidepool.org/terms-of-use/#6-linked-sites-and-third-parties).
+>
+> **You are solely responsible for ensuring that any derived work complies with these terms.** In particular:
+>
+> - **Clear separation is required.** Your forked or derived product must be clearly and unambiguously distinguishable from Tidepool's official software. You **must not** represent or imply through naming, branding, user interface design, or any other means that your product is developed, endorsed, maintained, or supported by Tidepool.
+>
+> - **No use of Tidepool trademarks.** You may not use the Tidepool name, logo, or any Tidepool trademarks in your derived work except as strictly required for attribution under the applicable open-source license. Any permitted attribution must not suggest affiliation with or endorsement by Tidepool.
+>
+> - **No connection to Tidepool services.** Unless explicitly authorized in writing by Tidepool, your derived work **must not** connect to, transmit data to, or otherwise interact with Tidepool's servers, APIs, or backend services. You are responsible for providing and maintaining your own infrastructure.
+>
+> - **Safety and regulatory responsibility is yours.** Tidepool's software is designed for use by people managing diabetes, a context in which software errors may have health consequences. **Tidepool's regulatory clearances and approvals apply solely to Tidepool's official products and do not transfer to, extend to, or cover any forked, modified, or derived works.** Your derived work is an entirely new and uncleared product from a regulatory standpoint. If you distribute a derived work, **you** assume full responsibility for obtaining any and all required regulatory approvals, and for ensuring its safety, accuracy, and fitness for purpose. Tidepool accepts no liability whatsoever for any harm arising from the use of third-party forks or derived works.
+>
+> - **Third-party service accounts are your responsibility.** Tidepool's software integrates with third-party tools and services such as Zendesk, Pendo, Rollbar, and others. Tidepool's accounts, API keys, and licenses for these services are for Tidepool's exclusive use and must not be used by any forked or derived work. You are responsible for establishing and maintaining your own independent accounts, subscriptions, and API credentials with any third-party vendors your derived work requires.
+>
+> - **License obligations still apply.** Forking this code does not release you from the obligations of the applicable open-source license(s). You must comply with all license terms, including notice, attribution, and copyleft requirements where applicable.
+>
+> Tidepool reserves the right to take appropriate action, including but not limited to legal action, to enforce its Terms of Use and protect its trademarks, users' safety, and reputation.
+>
+> If you have questions about what is or is not permitted, [please contact us](mailto:support@tidepool.org) **before** distributing your derived work.
+
 ## Quick Links
 
 - [Initial Setup](#initial-setup)
