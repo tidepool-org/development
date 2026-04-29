@@ -50,7 +50,7 @@ spec:
         retryOn: '5xx'
         numRetries: 3
         perTryTimeout: '15s'
-  matchers:
+  - matchers:
     - prefix: /metadata/
     routeAction:
       single:
