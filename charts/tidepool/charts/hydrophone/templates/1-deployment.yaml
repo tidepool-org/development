@@ -78,7 +78,7 @@ spec:
         - name: TIDEPOOL_DATA_CLIENT_ADDRESS
           value: "http://data:{{.Values.global.ports.data}}"
         - name: TIDEPOOL_SEAGULL_CLIENT_ADDRESS
-          value: "http://seagull:{{.Values.global.ports.seagull}}"
+          value: "http://auth:{{.Values.global.ports.auth}}/metadata"
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
           value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
         - name: TIDEPOOL_METRICS_CLIENT_ADDRESS
