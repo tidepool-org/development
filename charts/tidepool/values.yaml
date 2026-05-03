@@ -49,6 +49,8 @@ global:
       # -- mongo source connector heartbeat interval
       mongoHeartbeatIntervalMs: 60000
       # -- enable keycloak kafka connector
+      postgresHeartbeatIntervalMs: 60000
+      # -- enable keycloak kafka connector
       keycloak:
         enabled: false
     # -- The password key ref

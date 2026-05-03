@@ -28,6 +28,9 @@ spec:
     value.converter.schemas.enable: false
     snapshot.mode: {{ .Values.keycloak.snapshotMode }}
     table.include.list: 'public.user_entity,public.user_role_mapping,public.keycloak_role'
+    heartbeat.interval.ms: {{ .Values.global.kafka.connect.postgresHeartbeatIntervalMs }}
+    heartbeat.topic.name: {{ .Release.Namespace }}-{{ .Values.global.kafka.connect.clusterName }}-heartbeat
+    heartbeat.action.query: "INSERT INTO test_heartbeat_table (text) VALUES ('test_heartbeat')"
     transforms: 'filter'
     transforms.filter.type: 'io.debezium.transforms.Filter'
     transforms.filter.language: 'jsr223.groovy'
