@@ -61,6 +61,7 @@ spec:
   - matchers:
     - methods:
       - GET
+      - POST
       - PUT
       - DELETE
       prefix: /v1/provider_sessions
