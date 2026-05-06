@@ -1,6 +1,6 @@
 deployment:
   image: tidepool/devices:master-latest
-  replicas: 0
+  replicas: 2
   # -- annotations for each pod in deployment
   podAnnotations: {}
 
