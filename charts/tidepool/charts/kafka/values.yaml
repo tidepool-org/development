@@ -56,6 +56,8 @@ kafka:
 resources:
   requests:
     memory: "600Mi"
+  limits:
+    memory: "2Gi"
 secret:
   enabled: false
 podMonitor:
