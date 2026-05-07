@@ -58,12 +58,11 @@ resources:
     memory: "600Mi"
   limits:
     memory: "2Gi"
-# -- explicit JVM heap sizing; works around Strimzi's dynamic-heap script
-# misreading the cgroup limit on some kernels (it falls back to host memory
-# and asks for ~75% of the box, triggering a cgroup OOMKill).
-jvmOptions:
-  "-Xms": "768m"
-  "-Xmx": "1024m"
+# -- optional JVM heap sizing passed through to KafkaConnect.spec.jvmOptions.
+# Leave unset to use Strimzi's dynamic heap calculation (75% of the cgroup
+# memory limit). Override (e.g. via tiltronic-values-local.yaml) on hosts
+# where Strimzi's cgroup detection fails and the dynamic calc overshoots.
+jvmOptions: {}
 secret:
   enabled: false
 podMonitor:
