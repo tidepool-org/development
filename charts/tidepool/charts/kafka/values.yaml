@@ -57,7 +57,7 @@ resources:
   requests:
     memory: "600Mi"
   limits:
-    memory: "2Gi"
+    memory: "4Gi"
 secret:
   enabled: false
 podMonitor:
