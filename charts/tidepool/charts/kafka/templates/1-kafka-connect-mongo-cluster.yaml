@@ -54,6 +54,10 @@ spec:
   replicas: {{ .Values.global.kafka.connect.replicas | int }}
   resources:
     {{- toYaml .Values.resources | nindent 10 }}
+{{- with .Values.jvmOptions }}
+  jvmOptions:
+    {{- toYaml . | nindent 4 }}
+{{- end }}
 {{ if .Values.global.kafka.connect.tlsEnabled }}
   tls:
     trustedCertificates: []

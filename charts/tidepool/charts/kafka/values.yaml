@@ -58,6 +58,12 @@ resources:
     memory: "600Mi"
   limits:
     memory: "2Gi"
+# -- explicit JVM heap sizing; works around Strimzi's dynamic-heap script
+# misreading the cgroup limit on some kernels (it falls back to host memory
+# and asks for ~75% of the box, triggering a cgroup OOMKill).
+jvmOptions:
+  "-Xms": "768m"
+  "-Xmx": "1024m"
 secret:
   enabled: false
 podMonitor:
