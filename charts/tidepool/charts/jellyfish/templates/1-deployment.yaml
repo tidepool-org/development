@@ -76,7 +76,7 @@ spec:
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: "shoreline:{{.Values.global.ports.shoreline}}"
         - name: TIDEPOOL_SEAGULL_CLIENT_ADDRESS
-          value: "seagull:{{.Values.global.ports.seagull}}"
+          value: "auth:{{.Values.global.ports.auth}}/metadata"
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
           value: "gatekeeper:{{.Values.global.ports.gatekeeper}}"
         image: "{{ .Values.deployment.image }}"

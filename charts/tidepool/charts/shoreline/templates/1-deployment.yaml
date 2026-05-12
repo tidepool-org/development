@@ -144,7 +144,7 @@ spec:
         - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
           value: "http://shoreline:{{.Values.global.ports.shoreline}}"
         - name: TIDEPOOL_SEAGULL_CLIENT_ADDRESS
-          value: "http://seagull:{{.Values.global.ports.seagull}}"
+          value: "http://auth:{{.Values.global.ports.auth}}/metadata"
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
           value: "http://gatekeeper:{{.Values.global.ports.gatekeeper}}"
         - name: TIDEPOOL_METRICS_CLIENT_ADDRESS
