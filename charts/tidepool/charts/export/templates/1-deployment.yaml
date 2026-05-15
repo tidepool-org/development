@@ -10,8 +10,8 @@ metadata:
   namespace: {{.Release.Namespace}}
   annotations:
     secret.reloader.stakater.com/reload: "export"
-{{ if .Values.deployment.annotations }}
-    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{ if (.Values.deployment).annotations }}
+    {{- (.Values.deployment).annotations | toYaml | nindent 4 }}
 {{- end }}
 spec:
   selector:
@@ -19,7 +19,7 @@ spec:
       app: export
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: {{ (.Values.deployment).replicas }}
   strategy: {}
   template:
     metadata:
@@ -60,7 +60,7 @@ spec:
               optional: true
         - name: PLOTLY_ORCA
           value: "http://plotly-orca:{{.Values.global.ports.plotly_orca}}"
-        image: "{{ .Values.deployment.image }}"
+        image: "{{ (.Values.deployment).image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         livenessProbe:

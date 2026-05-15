@@ -8,8 +8,8 @@ metadata:
   namespace: {{.Release.Namespace}}
   annotations:
     secret.reloader.stakater.com/reload: "server,highwater,userdata,kissmetrics"
-{{ if .Values.deployment.annotations }}
-    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{ if (.Values.deployment).annotations }}
+    {{- (.Values.deployment).annotations | toYaml | nindent 4 }}
 {{- end }}
 spec:
   selector:
@@ -17,7 +17,7 @@ spec:
       app: highwater
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: {{ (.Values.deployment).replicas }}
   strategy: {}
   template:
     metadata:
@@ -100,7 +100,7 @@ spec:
           value: highwater
         - name: USER_API_SERVICE
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
-        image: "{{ .Values.deployment.image }}"
+        image: "{{ (.Values.deployment).image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         readinessProbe:

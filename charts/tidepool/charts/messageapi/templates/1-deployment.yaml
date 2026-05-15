@@ -9,8 +9,8 @@ metadata:
   namespace: {{.Release.Namespace}}
   annotations:
     secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }}"
-{{ if .Values.deployment.annotations }}
-    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{ if (.Values.deployment).annotations }}
+    {{- (.Values.deployment).annotations | toYaml | nindent 4 }}
 {{- end }}
 spec:
   selector:
@@ -18,7 +18,7 @@ spec:
       app: message-api
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: {{ (.Values.deployment).replicas }}
   template:
     metadata:
       labels:
@@ -74,7 +74,7 @@ spec:
           value: '{"type": "static", "hosts": [{"protocol": "http", "host": "shoreline:{{.Values.global.ports.shoreline}}"}]}'
         - name: SKIP_HAKKEN
           value: "true"
-        image: "{{ .Values.deployment.image }}"
+        image: "{{ (.Values.deployment).image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         readinessProbe:

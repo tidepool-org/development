@@ -8,8 +8,8 @@ metadata:
   name: blip
   namespace: {{.Release.Namespace}}
   annotations:
-{{ if .Values.deployment.annotations }}
-    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{ if (.Values.deployment).annotations }}
+    {{- (.Values.deployment).annotations | toYaml | nindent 4 }}
 {{- end }}
 spec:
   selector:
@@ -17,7 +17,7 @@ spec:
       app: blip
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: {{ (.Values.deployment).replicas }}
   strategy: {}
   template:
     metadata:
@@ -37,7 +37,7 @@ spec:
 {{toYaml . | indent 6}}{{- end }}
       {{- end }}
       containers:
-      - image: "{{ .Values.deployment.image }}"
+      - image: "{{ (.Values.deployment).image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
 {{ if .Values.command }}

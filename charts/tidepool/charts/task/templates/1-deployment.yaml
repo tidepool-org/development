@@ -10,8 +10,8 @@ metadata:
   annotations:
     secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},task,dexcom"
     configmap.reloader.stakater.com/reload: "dexcom"
-{{ if .Values.deployment.annotations }}
-    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{ if (.Values.deployment).annotations }}
+    {{- (.Values.deployment).annotations | toYaml | nindent 4 }}
 {{- end }}
 spec:
   selector:
@@ -19,7 +19,7 @@ spec:
       app: task
       app.kubernetes.io/name: {{ include "charts.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: {{ (.Values.deployment).replicas }}
   strategy: {}
   template:
     metadata:
@@ -99,9 +99,9 @@ spec:
               key: ClientURL
               optional: true
         - name: TIDEPOOL_TASK_QUEUE_DELAY
-          value: {{ .Values.deployment.env.queue.delay | quote }}
+          value: {{ (.Values.deployment).env.queue.delay | quote }}
         - name: TIDEPOOL_TASK_QUEUE_WORKERS
-          value: {{ .Values.deployment.env.queue.workers | quote }}
+          value: {{ (.Values.deployment).env.queue.workers | quote }}
         - name: TIDEPOOL_TASK_SERVICE_SECRET
           valueFrom:
             secretKeyRef:
@@ -113,7 +113,7 @@ spec:
         - name: {{ $key }}
           value: {{ $val | quote }}
 {{- end }}
-        image: "{{ .Values.deployment.image }}"
+        image: "{{ (.Values.deployment).image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
         {{ template "charts.platform.probes" .Values.global.ports.task}}
