@@ -38,6 +38,8 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
         {{ template "charts.service.lifecycle"}}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
         ports:
         - containerPort: {{ .Values.global.ports.plotly_orca }}
           name: "http"

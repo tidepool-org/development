@@ -52,6 +52,12 @@ keycloak:
   snapshotMode: "never"
 kafka:
   secretName: "kafka"
+# -- memory and cpu resources for pods
+resources:
+  requests:
+    memory: "600Mi"
+  limits:
+    memory: "2Gi"
 secret:
   enabled: false
 podMonitor:

@@ -2,7 +2,7 @@ deployment:
   # -- Docker image
   image: tidepool/mailer:master-latest
   # -- the number of replicas to use
-  replicas: 0
+  replicas: 2
   env:
     backend: "ses"
     fromName: "Tidepool"
