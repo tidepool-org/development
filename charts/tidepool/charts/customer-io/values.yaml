@@ -1,0 +1,13 @@
+secret:
+  # -- whether to generate a secret
+  enabled: false
+  data_:
+    # -- API key customer.io's App API
+    appAPIKey: ""
+    # -- API key customer.io's Track API
+    trackAPIKey: ""
+configmap:
+  # -- whether to generate a configmap
+  enabled: true
+  # -- Customer.io site ID
+  siteId: ""

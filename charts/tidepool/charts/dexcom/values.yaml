@@ -12,5 +12,6 @@ configmap:
   # -- whether to generate a configmap
   enabled: true
   redirectURL: ""
+  revokeURL: ""
   clientURL: "https://api.dexcom.com"
 
