@@ -27,7 +27,9 @@ data:
 {{ else }}
   PartnerURL: "{{include "charts.host.api" .}}/v1/partners/oura"
 {{ end }}
-  JotformBaseURL: "{{ .Values.configmap.jotformBaseURL | default "" }}"
+{{ if .Values.configmap.jotformBaseURL }}
+  JotformBaseURL: "{{ .Values.configmap.jotformBaseURL }}"
+{{ end }}
   JotformEnabled: "{{ .Values.configmap.jotformEnabled }}"
   JotformFormId: "{{ .Values.configmap.jotformFormId | default "" }}"
   JotformTeamId: "{{ .Values.configmap.jotformTeamId | default "" }}"
