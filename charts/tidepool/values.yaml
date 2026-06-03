@@ -51,6 +51,7 @@ global:
       # -- enable keycloak kafka connector
       keycloak:
         enabled: false
+      postgresHeartbeatIntervalMs: 60000
     # -- The password key ref
     passwordKeyName: "Password"
   linkerdsupport:
