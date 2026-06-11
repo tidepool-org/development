@@ -47,6 +47,10 @@ spec:
     transforms.user_activity_filter.type: 'io.debezium.transforms.Filter'
     transforms.user_activity_filter.language: 'jsr223.groovy'
     transforms.user_activity_filter.topic.regex: '.+\.public.tidepool_user_activity_event'
+    # Drop pruning-delete tombstones (null value) for this topic instead of the
+    # default 'keep', so they don't reach the consumer. Scoped to this filter's
+    # topic.regex, so the keycloak tables' tombstones are unaffected.
+    transforms.user_activity_filter.null.handling.mode: 'drop'
     transforms.user_activity_filter.condition: "value.op && (value.op == 'r' || value.op == 'c' || value.op == 'u') && value.after && value.after.realm_id && value.after.realm_id == '{{ $realm }}'"
     transforms.filter_user_attr.type: 'io.debezium.transforms.Filter'
     transforms.filter_user_attr.language: 'jsr223.groovy'
