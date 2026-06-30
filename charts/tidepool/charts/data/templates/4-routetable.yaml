@@ -437,5 +437,13 @@ spec:
       single:
         upstream:
           name: data
+  - matchers:
+    - methods:
+      - GET
+      regex: /v1/provider_sessions/[^/]+/data_source
+    routeAction:
+      single:
+        upstream:
+          name: data
   weight: 10
 {{- end }}
