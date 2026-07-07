@@ -145,6 +145,11 @@ spec:
               optional: true
         - name: TIDEPOOL_EXPORT_CLIENT_ADDRESS
           value: "http://export:{{.Values.global.ports.export}}"
+        - name: TIDEPOOL_DATA_SERVICE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: data
+              key: ServiceAuth
         - name: EMAIL_REMINDERS_INTERVAL
           valueFrom:
             configMapKeyRef:
