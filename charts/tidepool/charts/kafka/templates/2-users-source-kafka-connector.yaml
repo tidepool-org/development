@@ -27,6 +27,7 @@ spec:
     value.converter: 'org.apache.kafka.connect.json.JsonConverter'
     value.converter.schemas.enable: false
     snapshot.mode: {{ .Values.keycloak.snapshotMode }}
+    slot.name: {{ .Values.global.kafka.connect.keycloak.slotName }}
     table.include.list: 'public.user_entity,public.user_role_mapping,public.keycloak_role,public.user_attribute,public.tidepool_user_activity_event'
     # Key the user-activity outbox by user_id (rather than the row's PK) so every
     # event for a user lands on one partition and is consumed in commit order. This
