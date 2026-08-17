@@ -51,6 +51,10 @@ spec:
           secretName: {{ .Values.keycloak.secretName }}
 {{- end }}
   image: {{ .Values.connect.image | quote }}
+{{- with .Values.connect.jvmOptions }}
+  jvmOptions:
+    {{- toYaml . | nindent 4 }}
+{{- end }}
   replicas: {{ .Values.global.kafka.connect.replicas | int }}
   resources:
     {{- toYaml .Values.resources | nindent 10 }}
