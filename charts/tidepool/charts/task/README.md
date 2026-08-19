@@ -11,6 +11,7 @@ A Helm chart for Kubernetes
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | affinity |
+| deployment.env.queue.dispatchTasksInterval | int | `5` |  |
 | deployment.env.queue.delay | int | `5` |  |
 | deployment.env.queue.workers | int | `5` |  |
 | deployment.image | string | `"tidepool/platform-task:master-latest"` | Docker image |

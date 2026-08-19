@@ -13,6 +13,7 @@ deployment:
   replicas: 1
   env:
     queue:
+      dispatchTasksInterval: 5
       delay: 5
       workers: 5
 configmap:
