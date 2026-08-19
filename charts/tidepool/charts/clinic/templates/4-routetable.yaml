@@ -96,5 +96,14 @@ spec:
           upstream:
             name: clinic
             namespace: {{ .Release.Namespace }}
+    - matchers:
+        - methods:
+            - POST
+          regex: "/v1/device_issues"
+      routeAction:
+        single:
+          upstream:
+            name: clinic
+            namespace: {{ .Release.Namespace }}
   weight: 30
 {{- end }}
