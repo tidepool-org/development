@@ -98,10 +98,10 @@ spec:
               name: dexcom
               key: ClientURL
               optional: true
-        - name: TIDEPOOL_TASK_QUEUE_DELAY
-          value: {{ .Values.deployment.env.queue.delay | quote }}
         - name: TIDEPOOL_TASK_QUEUE_DISPATCH_TASKS_DELAY
-          value: {{ .Values.deployment.env.queue.delay | quote }}
+          value: {{ .Values.deployment.env.queue.dispatchTasksInterval | quote }}
+        - name: TIDEPOOL_TASK_QUEUE_DISPATCH_TASKS_INTERVAL
+          value: {{ .Values.deployment.env.queue.dispatchTasksInterval | quote }}
         - name: TIDEPOOL_TASK_QUEUE_WORKERS
           value: {{ .Values.deployment.env.queue.workers | quote }}
         - name: TIDEPOOL_TASK_SERVICE_SECRET
