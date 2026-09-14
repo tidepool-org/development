@@ -582,6 +582,20 @@ spec:
               max: 599
           isFailure: true
     - condition:
+        method: POST
+        pathRegex: /v1/clinics/[^/]*/patients/[^/]*/invitation_resent
+      name: POST /v1/clinics/{clinicId}/patients/{patientId}/invitation_resent
+      responseClasses:
+        - condition:
+            status:
+              min: 200
+              max: 399
+        - condition:
+            status:
+              min: 400
+              max: 599
+          isFailure: true
+    - condition:
         method: GET
         pathRegex: /v1/clinics/[^/]*/settings/ehr
       name: GET /v1/clinics/{clinicId}/settings/ehr
