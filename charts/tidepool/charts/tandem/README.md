@@ -17,10 +17,13 @@ A Helm chart for Kubernetes
 | configmap.revokeURL | string | `""` | OAuth2 revoke URL |
 | configmap.jwksURL | string | `""` | JWKS URL |
 | configmap.clientURL | string | `""` | Tandem API client URL |
-| configmap.scopes | string | `""` | OAuth2 scopes |
+| configmap.userScopes | string | `""` | OAuth2 scopes for the user client (authorization code grant) |
+| configmap.serviceScopes | string | `""` | OAuth2 scopes for the service client (client credentials grant) |
 | secret.enabled | bool | `false` | whether to create a secret |
-| secret.data_.ClientId | string | `""` | plaintext OAuth2 client id |
-| secret.data_.ClientSecret | string | `""` | plaintext OAuth2 client secret |
+| secret.data_.UserClientId | string | `""` | plaintext OAuth2 client id for the user client (authorization code grant) |
+| secret.data_.UserClientSecret | string | `""` | plaintext OAuth2 client secret for the user client |
+| secret.data_.ServiceClientId | string | `""` | plaintext OAuth2 client id for the service client (client credentials grant) |
+| secret.data_.ServiceClientSecret | string | `""` | plaintext OAuth2 client secret for the service client |
 | secret.data_.StateSalt | string | `""` | plaintext OAuth2 state salt (also keys the PKCE code verifier) |
 
 ----------------------------------------------

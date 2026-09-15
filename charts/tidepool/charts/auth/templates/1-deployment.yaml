@@ -121,7 +121,7 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: tandem
-              key: Scopes
+              key: UserScopes
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_TOKEN_URL
           valueFrom:
@@ -145,19 +145,37 @@ spec:
           valueFrom:
             secretKeyRef:
               name: tandem
-              key: ClientId
+              key: UserClientId
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
               name: tandem
-              key: ClientSecret
+              key: UserClientSecret
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_STATE_SALT
           valueFrom:
             secretKeyRef:
               name: tandem
               key: StateSalt
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_SERVICE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: tandem
+              key: ServiceClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_SERVICE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: tandem
+              key: ServiceClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_SERVICE_SCOPES
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: ServiceScopes
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
           valueFrom:

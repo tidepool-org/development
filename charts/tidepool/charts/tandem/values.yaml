@@ -6,10 +6,13 @@ configmap:
   revokeURL: ""
   jwksURL: ""
   clientURL: ""
-  scopes: ""
+  userScopes: ""
+  serviceScopes: ""
 secret:
   enabled: false
   data_:
-    ClientId: ""
-    ClientSecret: ""
+    UserClientId: ""
+    UserClientSecret: ""
+    ServiceClientId: ""
+    ServiceClientSecret: ""
     StateSalt: ""

@@ -17,5 +17,6 @@ data:
   RevokeURL: {{ .Values.configmap.revokeURL | default "" }}
   JWKSURL: {{ .Values.configmap.jwksURL | default "" }}
   ClientURL: {{ .Values.configmap.clientURL | default "" }}
-  Scopes: {{ .Values.configmap.scopes | default "" }}
+  UserScopes: {{ .Values.configmap.userScopes | default "" }}
+  ServiceScopes: {{ .Values.configmap.serviceScopes | default "" }}
 {{ end }}
