@@ -177,6 +177,12 @@ spec:
               name: tandem
               key: ServiceScopes
               optional: true
+        - name: TIDEPOOL_TANDEM_CLIENT_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: ClientURL
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_DEXCOM_AUTHORIZE_URL
           valueFrom:
             configMapKeyRef:

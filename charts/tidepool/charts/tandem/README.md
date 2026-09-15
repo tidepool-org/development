@@ -16,7 +16,7 @@ A Helm chart for Kubernetes
 | configmap.authorizeURL | string | `""` | OAuth2 authorization URL |
 | configmap.revokeURL | string | `""` | OAuth2 revoke URL |
 | configmap.jwksURL | string | `""` | JWKS URL |
-| configmap.clientURL | string | `""` | Tandem API client URL |
+| configmap.clientURL | string | `""` | Tandem API base URL (host root; the data sharing endpoints live under `/pumpers`) |
 | configmap.userScopes | string | `""` | OAuth2 scopes for the user client (authorization code grant) |
 | configmap.serviceScopes | string | `""` | OAuth2 scopes for the service client (client credentials grant) |
 | secret.enabled | bool | `false` | whether to create a secret |
