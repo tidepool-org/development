@@ -8,6 +8,10 @@ configmap:
   clientURL: ""
   userScopes: ""
   serviceScopes: ""
+  eventHubConsumerGroup: ""
+  eventHubTopics: "tidepool-settings.hub,tidepool-pumplogs.hub"
+  eventHubConsumerCount: ""
+  eventHubInitialOffset: "oldest"
 secret:
   enabled: false
   data_:
@@ -16,3 +20,4 @@ secret:
     ServiceClientId: ""
     ServiceClientSecret: ""
     StateSalt: ""
+    EventHubConnectionString: ""

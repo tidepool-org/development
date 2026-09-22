@@ -208,6 +208,36 @@ spec:
               name: tandem
               key: ClientURL
               optional: true
+        - name: TIDEPOOL_TANDEM_EVENTHUB_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              name: tandem
+              key: EventHubConnectionString
+              optional: true
+        - name: TIDEPOOL_TANDEM_EVENTHUB_CONSUMER_GROUP
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: EventHubConsumerGroup
+              optional: true
+        - name: TIDEPOOL_TANDEM_EVENTHUB_TOPICS
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: EventHubTopics
+              optional: true
+        - name: TIDEPOOL_TANDEM_EVENTHUB_CONSUMER_COUNT
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: EventHubConsumerCount
+              optional: true
+        - name: TIDEPOOL_TANDEM_EVENTHUB_INITIAL_OFFSET
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: EventHubInitialOffset
+              optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_OURA_CLIENT_ID
           valueFrom:
             secretKeyRef:

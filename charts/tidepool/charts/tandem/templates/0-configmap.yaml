@@ -19,4 +19,11 @@ data:
   ClientURL: {{ .Values.configmap.clientURL | default "" }}
   UserScopes: {{ .Values.configmap.userScopes | default "" }}
   ServiceScopes: {{ .Values.configmap.serviceScopes | default "" }}
+  EventHubConsumerGroup: {{ .Values.configmap.eventHubConsumerGroup | default (printf "%s-tidepool-platform-data" .Release.Namespace) }}
+  EventHubInitialOffset: {{ .Values.configmap.eventHubInitialOffset | default "oldest" }}
+  EventHubTopics: {{ .Values.configmap.eventHubTopics | default "tidepool-settings.hub,tidepool-pumplogs.hub" | quote }}
+{{- /* Only emitted when set; an empty value would override the consumer's built-in default */}}
+{{ if .Values.configmap.eventHubConsumerCount }}
+  EventHubConsumerCount: {{ .Values.configmap.eventHubConsumerCount | toString | quote }}
+{{ end }}
 {{ end }}
