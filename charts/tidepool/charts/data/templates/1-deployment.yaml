@@ -208,6 +208,8 @@ spec:
               name: tandem
               key: ClientURL
               optional: true
+        - name: TIDEPOOL_CLOUD_DRIVERS_CLIENT_ADDRESS
+          value: http://cloud-drivers:{{.Values.global.ports.cloud_drivers}}
         - name: TIDEPOOL_TANDEM_EVENTHUB_CONNECTION_STRING
           valueFrom:
             secretKeyRef:
