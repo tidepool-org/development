@@ -681,6 +681,20 @@ spec:
           isFailure: true
     - condition:
         method: POST
+        pathRegex: /v1/patients/connection_issues
+      name: POST /v1/patients/connection_issues
+      responseClasses:
+        - condition:
+            status:
+              min: 200
+              max: 399
+        - condition:
+            status:
+              min: 400
+              max: 599
+          isFailure: true
+    - condition:
+        method: POST
         pathRegex: /v1/patients/[^/]*/summary
       name: POST /v1/patients/{patientId}/summary
       responseClasses:
