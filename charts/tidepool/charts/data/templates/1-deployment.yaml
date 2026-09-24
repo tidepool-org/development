@@ -8,8 +8,8 @@ metadata:
   name: data
   namespace: {{.Release.Namespace}}
   annotations:
-    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,oura,twiist,data"
-    configmap.reloader.stakater.com/reload: "abbott,oura,twiist"
+    secret.reloader.stakater.com/reload: "server,{{ .Values.mongo.secretName }},abbott,oura,tandem,twiist,data"
+    configmap.reloader.stakater.com/reload: "abbott,oura,tandem,twiist"
 {{ if .Values.deployment.annotations }}
     {{- .Values.deployment.annotations | toYaml | nindent 4 }}
 {{- end }}
@@ -129,6 +129,116 @@ spec:
             configMapKeyRef:
               name: abbott
               key: PartnerURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_AUTHORIZE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: AuthorizeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_REDIRECT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: RedirectURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_SCOPES
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: UserScopes
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_TOKEN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: TokenURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_REVOKE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: RevokeURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_JWKS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: JWKSURL
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: tandem
+              key: UserClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: tandem
+              key: UserClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_STATE_SALT
+          valueFrom:
+            secretKeyRef:
+              name: tandem
+              key: StateSalt
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_SERVICE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: tandem
+              key: ServiceClientId
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_SERVICE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: tandem
+              key: ServiceClientSecret
+              optional: true
+        - name: TIDEPOOL_SERVICE_PROVIDER_TANDEM_SERVICE_SCOPES
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: ServiceScopes
+              optional: true
+        - name: TIDEPOOL_TANDEM_CLIENT_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: ClientURL
+              optional: true
+        - name: TIDEPOOL_CLOUD_DRIVERS_CLIENT_ADDRESS
+          value: http://cloud-drivers:{{.Values.global.ports.cloud_drivers}}
+        - name: TIDEPOOL_TANDEM_EVENTHUB_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              name: tandem
+              key: EventHubConnectionString
+              optional: true
+        - name: TIDEPOOL_TANDEM_EVENTHUB_CONSUMER_GROUP
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: EventHubConsumerGroup
+              optional: true
+        - name: TIDEPOOL_TANDEM_EVENTHUB_TOPICS
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: EventHubTopics
+              optional: true
+        - name: TIDEPOOL_TANDEM_EVENTHUB_CONSUMER_COUNT
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: EventHubConsumerCount
+              optional: true
+        - name: TIDEPOOL_TANDEM_EVENTHUB_INITIAL_OFFSET
+          valueFrom:
+            configMapKeyRef:
+              name: tandem
+              key: EventHubInitialOffset
               optional: true
         - name: TIDEPOOL_SERVICE_PROVIDER_OURA_CLIENT_ID
           valueFrom:
