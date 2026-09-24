@@ -1,0 +1,75 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cloud-drivers
+{{ include "charts.labels.standard" .}}
+  name: cloud-drivers
+  namespace: {{ .Release.Namespace }}
+  annotations:
+{{ if .Values.deployment.annotations }}
+    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+{{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: cloud-drivers
+      app.kubernetes.io/name: {{ include "charts.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  replicas: {{ .Values.deployment.replicas }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: cloud-drivers
+        app.kubernetes.io/name: {{ include "charts.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        kubectl.kubernetes.io/default-container: cloud-drivers
+{{ if .Values.podAnnotations }}
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
+{{- end }}
+    spec:
+      {{ if .Values.initContainers }}
+      initContainers:
+{{- with .Values.initContainers }}
+{{toYaml . | indent 6}}{{- end }}
+      {{- end }}
+      containers:
+      - env:
+        - name: LOG_LEVEL
+          value: "{{ .Values.logLevel | default .Values.global.logLevel }}"
+        - name: PORT
+          value: "{{ .Values.global.ports.cloud_drivers }}"
+        - name: TIDEPOOL_AUTH_CLIENT_ADDRESS
+          value: "http://shoreline:{{ .Values.global.ports.shoreline }}"
+        image: "{{ .Values.deployment.image }}"
+        securityContext:
+          {{- .Values.podSecurityContext | toYaml | nindent 10 }}
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: {{ .Values.global.ports.cloud_drivers }}
+        {{ template "charts.service.lifecycle"}}
+        name: cloud-drivers
+        ports:
+        - containerPort: {{ .Values.global.ports.cloud_drivers }}
+          name: "http"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      restartPolicy: Always
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
