@@ -51,6 +51,7 @@ global:
       # -- enable keycloak kafka connector
       keycloak:
         enabled: false
+        slotName: debezium
     # -- The password key ref
     passwordKeyName: "Password"
   linkerdsupport:
