@@ -33,6 +33,7 @@ A Helm chart for Tidepool
 | global.ports.auth | int | `9222`            | auth service internal port |
 | global.ports.blip | int | `31500`            | blip service internal port |
 | global.ports.blob | int | `9225`            | blob service internal port |
+| global.ports.cloud_drivers | int | `9231`            | cloud-drivers service internal port |
 | global.ports.data | int | `9220`            | data service internal port |
 | global.ports.devices_grpc | int | `9228`            | devices service grpc internal port |
 | global.ports.devices_http | int | `9229`            | devices service http internal port |

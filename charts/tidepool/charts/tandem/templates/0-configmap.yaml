@@ -1,0 +1,29 @@
+{{ if .Values.configmap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tandem
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "charts.labels.standard" . }}
+data:
+{{ if .Values.configmap.redirectURL }}
+  RedirectURL: {{ .Values.configmap.redirectURL }}
+{{ else }}
+  RedirectURL: "{{include "charts.host.api" .}}/v1/oauth/tandem/redirect"
+{{ end }}
+  TokenURL: {{ .Values.configmap.tokenURL | default "" }}
+  AuthorizeURL: {{ .Values.configmap.authorizeURL | default "" }}
+  RevokeURL: {{ .Values.configmap.revokeURL | default "" }}
+  JWKSURL: {{ .Values.configmap.jwksURL | default "" }}
+  ClientURL: {{ .Values.configmap.clientURL | default "" }}
+  UserScopes: {{ .Values.configmap.userScopes | default "" }}
+  ServiceScopes: {{ .Values.configmap.serviceScopes | default "" }}
+  EventHubConsumerGroup: {{ .Values.configmap.eventHubConsumerGroup | default (printf "%s-tidepool-platform-data" .Release.Namespace) }}
+  EventHubInitialOffset: {{ .Values.configmap.eventHubInitialOffset | default "oldest" }}
+  EventHubTopics: {{ .Values.configmap.eventHubTopics | default "tidepool-settings.hub,tidepool-pumplogs.hub" | quote }}
+{{- /* Only emitted when set; an empty value would override the consumer's built-in default */}}
+{{ if .Values.configmap.eventHubConsumerCount }}
+  EventHubConsumerCount: {{ .Values.configmap.eventHubConsumerCount | toString | quote }}
+{{ end }}
+{{ end }}

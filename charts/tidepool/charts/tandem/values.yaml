@@ -1,0 +1,23 @@
+configmap:
+  enabled: true
+  redirectURL: ""
+  tokenURL: ""
+  authorizeURL: ""
+  revokeURL: ""
+  jwksURL: ""
+  clientURL: ""
+  userScopes: ""
+  serviceScopes: ""
+  eventHubConsumerGroup: ""
+  eventHubTopics: "tidepool-settings.hub,tidepool-pumplogs.hub"
+  eventHubConsumerCount: ""
+  eventHubInitialOffset: "oldest"
+secret:
+  enabled: false
+  data_:
+    UserClientId: ""
+    UserClientSecret: ""
+    ServiceClientId: ""
+    ServiceClientSecret: ""
+    StateSalt: ""
+    EventHubConnectionString: ""

@@ -61,9 +61,9 @@ prescription:
     - name: registry
 ```
 
-# OAuth Provider Configuration (Abbott/Dexcom)
+# OAuth Provider Configuration (Abbott/Dexcom/Tandem)
 
-To allow Tilt to use the Abbott and Dexcom OAuth providers it is necessary to enable the related Secret and
+To allow Tilt to use the Abbott, Dexcom and Tandem OAuth providers it is necessary to enable the related Secret and
 ConfigMap. To do so, add the following to your `local/Tiltconfig.yaml`, once for each provider you wish to enable:
 
 ```
@@ -83,7 +83,7 @@ ConfigMap. To do so, add the following to your `local/Tiltconfig.yaml`, once for
       StateSalt: "<provider-state-salt>"
 ```
 
-The top-level `<provider>` should be replaced with `dexcom` or `abbott`, as appropriate. The other property values should
+The top-level `<provider>` should be replaced with `dexcom`, `abbott` or `tandem`, as appropriate. The other property values should
 be changed to use the provider-specific settings. Multiple providers may be specified, if so desired.
 
 ## Provider-Specific Settings
@@ -105,3 +105,11 @@ Use either:
 Abbott settings can be found attached to the `Abbott Developer` item in the `Engineering` vault in 1Password.
 
 Use the `local.yaml` for connecting to the Abbott Sandbox environment.
+
+## Tandem
+
+Tandem requires the OAuth2 Authorization Code flow with PKCE, which the platform enables automatically for this provider. The `redirectURL` must be registered with Tandem for each environment. The `clientURL` is the Tandem API host root (the data sharing endpoints live under `/pumpers`) and is required by both the `auth` and `data` services once the provider is configured.
+
+Tandem uses two OAuth2 clients that share the `tokenURL`: a user client for the end-user authorization flow and a service client (client credentials grant) used when a patient disconnects the provider. Its keys therefore differ from the other providers: `configmap.userScopes` and `configmap.serviceScopes` in place of `scopes`, and `secret.data_` holds `UserClientId` and `UserClientSecret` for the user client, `ServiceClientId` and `ServiceClientSecret` for the service client, plus `StateSalt`.
+
+Tandem delivers pump data through an Azure Event Hubs feed that the `data` service consumes over the Kafka protocol. The consumer only starts when `secret.data_.EventHubConnectionString` is set. It joins the consumer group `configmap.eventHubConsumerGroup`, which defaults to `<namespace>-tidepool-platform-data` so that environments do not take each other's messages, and starts from `configmap.eventHubInitialOffset`, `oldest` by default, on the hubs listed in `configmap.eventHubTopics`, the settings and pump logs hubs by default. `configmap.eventHubConsumerCount` is optional and falls back to the data service default when left empty.

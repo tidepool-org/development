@@ -1,0 +1,19 @@
+{{ if .Values.hpa.enabled -}}
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+  name: cloud-drivers
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "charts.labels.standard" .}}
+spec:
+  maxReplicas: {{ .Values.hpa.maxReplicas | default 10 }}
+  minReplicas: {{ .Values.hpa.minReplicas | default 1 }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: cloud-drivers
+  targetCPUUtilizationPercentage: {{ .Values.hpa.targetCPUUtilizationPercentage | default 50 }}
+{{- end }}
