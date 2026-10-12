@@ -14,8 +14,56 @@ spec:
     collection: patients
     connection.uri: {{ .Values.global.kafka.connect.mongoConnectionUri }}
     copy.existing: false
-    pipeline: '[ {$project: {"fullDocument.summary": 0, "updateDescription.updatedFields.summary": 0}} ]'
-    startup.mode.copy.existing.pipeline: '[ {$project: {"fullDocument.summary": 0, "updateDescription.updatedFields.summary": 0}} ]'
+    # ---------------------------------------------------------------------------
+    # Change-stream pipeline (runs server-side on every event before it is sent
+    # to the connector, and also on the synthetic insert events produced by
+    # copy-existing).
+    #
+    # Goal: keep the large, frequently-updated `summary` subdocument (cgmStats /
+    # bgmStats) out of Kafka.
+    #
+    # Stage 1  $unset "fullDocument.summary"
+    #   Drops the blob from the full document.
+    #
+    # Stage 2  $set "updateDescription.updatedFields"
+    #   Change streams report a nested $set as a single key whose NAME contains
+    #   dots, e.g. updatedFields: { "summary.cgmStats": {...} }. $project/$unset
+    #   treat dots as path traversal and would never match that key, so we
+    #   rebuild the object instead:
+    #     $objectToArray  -> [{k: "updatedTime", v: ...}, {k: "summary.cgmStats", v: ...}]
+    #     $filter         -> keep entries whose key is not exactly "summary" and
+    #                        does not start with "summary." ($substrCP prefix
+    #                        check; covers summary.cgmStats, summary.bgmStats and
+    #                        any deeper path like summary.cgmStats.periods.7d)
+    #     $arrayToObject  -> back to a document
+    #   $ifNull ... "$$REMOVE": insert/delete events have no updateDescription,
+    #   so the expression evaluates to null there; $$REMOVE leaves the field
+    #   absent instead of writing updatedFields: null.
+    # ---------------------------------------------------------------------------
+    pipeline: >-
+      [
+        {"$unset": "fullDocument.summary"},
+        {"$set": {"updateDescription.updatedFields": {"$ifNull": [
+          {"$arrayToObject": {"$filter": {
+            "input": {"$objectToArray": "$updateDescription.updatedFields"},
+            "cond": {"$and": [
+              {"$ne": ["$$this.k", "summary"]},
+              {"$ne": [{"$substrCP": ["$$this.k", 0, 8]}, "summary."]}
+            ]}
+          }}},
+          "$$REMOVE"
+        ]}}}
+      ]
+
+    # ---------------------------------------------------------------------------
+    # Copy-existing pipeline. Unlike `pipeline`, this runs on the RAW collection
+    # documents before the connector wraps each one as { fullDocument: $$ROOT },
+    # so field names are un-prefixed ("summary", not "fullDocument.summary").
+    # Stripping here means the blob is never copied into fullDocument at all; the
+    # main `pipeline` above still runs afterwards and is a no-op on these events.
+    # ---------------------------------------------------------------------------
+    startup.mode.copy.existing.pipeline: >-
+      [{"$unset": "summary"}]
     database: clinic
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: false
