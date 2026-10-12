@@ -77,6 +77,15 @@ spec:
     - matchers:
         - methods:
             - POST
+          regex: /v1/patients/[^/]+/summary
+      routeAction:
+        single:
+          upstream:
+            name: clinic
+            namespace: {{ .Release.Namespace }}
+    - matchers:
+        - methods:
+            - POST
           prefix: /v1/redox
       routeAction:
         single:
