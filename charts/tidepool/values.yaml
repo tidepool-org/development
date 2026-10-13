@@ -64,6 +64,8 @@ global:
     clinic: 8080
     # -- clinic worker internal port
     clinic_worker: 8080
+    # -- cloud-drivers service internal port
+    cloud_drivers: 9231
     # -- devices service grpc internal port
     devices_grpc: 9228
     # -- devices service http internal port
