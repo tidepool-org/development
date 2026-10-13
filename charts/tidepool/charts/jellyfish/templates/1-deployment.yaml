@@ -79,6 +79,8 @@ spec:
           value: "seagull:{{.Values.global.ports.seagull}}"
         - name: TIDEPOOL_PERMISSION_CLIENT_ADDRESS
           value: "gatekeeper:{{.Values.global.ports.gatekeeper}}"
+        - name: TIDEPOOL_DATA_CLIENT_ADDRESS
+          value: "data:{{.Values.global.ports.data}}"
         image: "{{ .Values.deployment.image }}"
         securityContext:
           {{- .Values.podSecurityContext | toYaml | nindent 10 }}
