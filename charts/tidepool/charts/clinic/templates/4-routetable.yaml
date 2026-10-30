@@ -22,6 +22,17 @@ spec:
         timeout: 15m
     - matchers:
         - methods:
+            - POST
+          regex: /v1/clinics/[^/]+/bulk/patients
+      routeAction:
+        single:
+          upstream:
+            name: clinic
+            namespace: {{ .Release.Namespace }}
+      options:
+        timeout: 15m
+    - matchers:
+        - methods:
             - GET
             - DELETE
             - PATCH
