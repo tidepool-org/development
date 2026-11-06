@@ -70,4 +70,8 @@ spec:
       method: POST
       pathRegex: /v1/users/[^/]+/device_tokens
     name: /v1/users/{id}/device_tokens
+  - condition:
+      method: POST
+      pathRegex: /v1/udi
+    name: /v1/udi_post_auth
 {{- end }}
