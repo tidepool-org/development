@@ -31,6 +31,7 @@ Helm chart for the Tidepool auth service
 | secret.data_.ServiceAuth | string | `""` |  |
 | secret.enabled | bool | `false` | whether to generate a secret |
 | securityContext | object | `{}` |  |
+| serviceAccount.name | string | `""` | name of the service account, which may read the cluster release for the UDI; the namespace default service account if empty |
 | tolerations | list | `[]` | tolerations |
 
 ----------------------------------------------
