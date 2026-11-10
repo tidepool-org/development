@@ -44,6 +44,9 @@ spec:
 {{- with .Values.initContainers }}
 {{toYaml . | indent 6}}{{- end }}
       {{- end }}
+{{- if (.Values.serviceAccount).name }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+{{- end }}
       containers:
       - env:
         {{ include "charts.platform.env.mongo" .}}
