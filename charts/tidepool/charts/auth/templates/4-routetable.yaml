@@ -211,6 +211,12 @@ spec:
       - PUT
       - DELETE
       regex: /v1/users/(legacy/)?[^/]+/profile
+  # /v1/users/:userId/relaxedprofile is a temporary internal route only to be used during the one time migration of profiles. It should be deleted afterwards.
+  - matchers:
+    - methods:
+      - POST
+      - PUT
+      regex: /v1/users/[^/]+/relaxedprofile
     routeAction:
       single:
         upstream:
